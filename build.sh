@@ -48,8 +48,17 @@ if [ "${2-}" = "--list-update-jsons" ]; then
 	for table_name in $(toml_get_table_names); do
 		[ -z "$table_name" ] && continue
 		t=$(toml_get_table "$table_name")
-		bm=$(toml_get "$t" build-mode) || bm=$(toml_get "$main_config_t" build-mode) || bm="apk"
-		case "$bm" in both | module) update_json_name "$table_name" ;; esac
+		bm=$(toml_get "$t" build-mode) || bm=apk # app-table only, default apk (as the main loop below)
+		case "$bm" in both | module) ;; *) continue ;; esac
+		# mirror the arch fan-out below: arch=both builds one module (hence one update
+		# json) per ABI, with the arch folded into the table name build_rv slugifies.
+		arch=$(toml_get "$t" arch) || arch=all
+		if [ "$arch" = both ]; then
+			update_json_name "$table_name (arm64-v8a)"
+			update_json_name "$table_name (arm-v7a)"
+		else
+			update_json_name "$table_name"
+		fi
 	done
 	exit 0
 fi

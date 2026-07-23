@@ -923,8 +923,8 @@ build_rv() {
 		local base_template
 		base_template=$(mktemp -d -p "$TEMP_DIR")
 		cp -a $MODULE_TEMPLATE_DIR/. "$base_template"
-		local upj="${table,,}"
-		upj="${upj//\//-}-update.json" # sanitize '/' so the filename matches the module.prop updateJson URL
+		local upj # keep in sync with build.sh --list-update-jsons (shared slug helper)
+		upj=$(update_json_name "$table")
 
 		module_config "$base_template" "$pkg_name" "$version" "$arch"
 
