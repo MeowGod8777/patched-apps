@@ -40,6 +40,20 @@ if [ "${2-}" = "--config-update" ]; then
 	exit 0
 fi
 
+# print the *-update.json basenames every module-producing table should own, so
+# CI can prune orphans left behind by renames / build-mode switches. Config-driven
+# (not this-run's built subset) and independent of 'enabled' so a disabled-but-still
+# -configured module keeps its json.
+if [ "${2-}" = "--list-update-jsons" ]; then
+	for table_name in $(toml_get_table_names); do
+		[ -z "$table_name" ] && continue
+		t=$(toml_get_table "$table_name")
+		bm=$(toml_get "$t" build-mode) || bm=$(toml_get "$main_config_t" build-mode) || bm="apk"
+		case "$bm" in both | module) update_json_name "$table_name" ;; esac
+	done
+	exit 0
+fi
+
 : >build.md
 rm -f "$BUILT_PATCHES_FILE" "$TEMP_DIR"/built-patches.tsv # stale from a previous run
 ENABLE_MODULE_UPDATE=$(toml_get "$main_config_t" enable-module-update) || ENABLE_MODULE_UPDATE=true
