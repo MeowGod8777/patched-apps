@@ -27,6 +27,8 @@ toml_prep() {
 toml_get_table_names() { jq -r -e 'to_entries[] | select(.value | type == "object") | .key' <<<"$__TOML__"; }
 toml_get_table_main() { jq -r -e 'to_entries | map(select(.value | type != "object")) | from_entries' <<<"$__TOML__"; }
 toml_get_table() { jq -r -e ".\"${1}\"" <<<"$__TOML__"; }
+# canonical *-update.json basename for a table name: lowercase, '/' -> '-'
+update_json_name() { local s=${1,,}; echo "${s//\//-}-update.json"; }
 toml_get() {
 	local op quote_placeholder=$'\001'
 	op=$(jq -r ".\"${2}\" | values" <<<"$1")
@@ -922,8 +924,8 @@ build_rv() {
 		local base_template
 		base_template=$(mktemp -d -p "$TEMP_DIR")
 		cp -a $MODULE_TEMPLATE_DIR/. "$base_template"
-		local upj="${table,,}"
-		upj="${upj//\//-}-update.json" # sanitize '/' so the filename matches the module.prop updateJson URL
+		local upj # keep in sync with build.sh --list-update-jsons (shared slug helper)
+		upj=$(update_json_name "$table")
 
 		module_config "$base_template" "$pkg_name" "$version" "$arch"
 

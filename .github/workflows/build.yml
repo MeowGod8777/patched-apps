@@ -86,6 +86,11 @@ jobs:
       - name: Update modules changelog and update json
         id: update_config
         run: |
+          # capture the set of *-update.json a module-producing table should own, while
+          # config.toml + bin/ still exist on the build branch. Written outside the repo so
+          # it survives the branch switch below.
+          ./build.sh config.toml --list-update-jsons | sort -u >"$RUNNER_TEMP/expected-update-jsons.txt"
+
           git checkout -f update || git switch --discard-changes --orphan update
           cp -f build.tmp build.md
 
@@ -120,6 +125,17 @@ jobs:
             get_update_json "$VER" "$DLURL" >"../$UPDATE_JSON"
           done
           cd ..
+
+          # prune orphaned update jsons (renamed tables / apps switched to apk-only). The
+          # allowlist is config-driven, not this run's built subset, so jsons for modules not
+          # rebuilt this run are kept. Guard: skip pruning if the list is empty (build.sh error)
+          # so a glitch can never wipe the branch.
+          if [ -s "$RUNNER_TEMP/expected-update-jsons.txt" ]; then
+            for j in *-update.json; do
+              [ "$j" = "*-update.json" ] && continue
+              grep -qxF "$j" "$RUNNER_TEMP/expected-update-jsons.txt" || git rm -f "$j"
+            done
+          fi
 
           find . -name "*-update.json" | grep . || : >dummy-update.json
 
