@@ -119,3 +119,17 @@ build-mode = "both"
 apkmirror-dlurl = "https://www.apkmirror.com/apk/telegram-fz-llc/telegram/"
 uptodown-dlurl = "https://telegram.en.uptodown.com/android"
 archive-dlurl = "https://archive.org/download/andrews-apks/apks/org.telegram.messenger.web"
+
+[LINE-Andrew]
+app-name = "LINE"
+patches-source = "andrewliang25/morphe-patches"
+cli-source = "MorpheApp/morphe-cli"
+rv-brand = "Andrew"
+build-mode = "both"
+# 'auto' resolves to the patches' only supported build (26.11.0). LINE is self-hosted on
+# archive.org because apkmirror serves it only as an arch-split bundle that 403s from CI. The
+# uploaded apkm is arm64-v8a only (single-arch), so arch is pinned; no arm-v7a stock exists.
+# No 'clone' — the bundle ships no rename patch for LINE, and its identity is tied to the pkg.
+version = "auto"
+arch = "arm64-v8a"
+archive-dlurl = "https://archive.org/download/andrews-apks/apks/jp.naver.line.android"
