@@ -8,7 +8,7 @@ source utils.sh
 trap "abort" INT
 
 if [ "${1-}" = "clean" ]; then
-	rm -rf "$TEMP_DIR" "$BUILD_DIR" build.md "$BUILT_PATCHES_FILE"
+	rm -rf "$TEMP_DIR" "$BUILD_DIR" build.md "$BUILT_PATCHES_FILE" "$FAILED_BUILDS_FILE"
 	exit 0
 fi
 
@@ -78,6 +78,7 @@ for file in "$TEMP_DIR"/*/changelog.md; do
 	[ -f "$file" ] && : >"$file"
 done
 rm -f "$TEMP_DIR"/cli-changelog.md
+rm -f "$FAILED_BUILDS_FILE" # stale failures from a previous local run
 
 mkdir -p ${MODULE_TEMPLATE_DIR}/bin/arm64 ${MODULE_TEMPLATE_DIR}/bin/arm ${MODULE_TEMPLATE_DIR}/bin/x86 ${MODULE_TEMPLATE_DIR}/bin/x64
 gh_dl "${MODULE_TEMPLATE_DIR}/bin/arm64/cmpr" "https://github.com/j-hc/cmpr/releases/latest/download/cmpr-arm64-v8a"
@@ -203,6 +204,10 @@ for table_name in $(toml_get_table_names); do
 done
 wait
 _clean_tmp
+if [ -s "$FAILED_BUILDS_FILE" ]; then
+	epr "$(($(wc -l <"$FAILED_BUILDS_FILE"))) app(s) failed to build:"
+	while IFS=$'\t' read -r t r; do epr "  - ${t}: ${r}"; done <"$FAILED_BUILDS_FILE"
+fi
 if [ -z "$(ls -A1 "${BUILD_DIR}")" ]; then abort "All builds failed."; fi
 
 # fold this run's successfully-built bundles into a per-run JSON ({ "<app>": { "<src>": "<asset>" } }).
