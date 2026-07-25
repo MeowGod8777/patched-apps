@@ -845,7 +845,6 @@ build_rv() {
 			return 0
 		fi
 	fi
-	log "${table}: ${version}"
 
 	local microg_patch
 	microg_patch=$(grep "^Name: " <<<"$list_patches" | grep -i "gmscore\|microg" || :) microg_patch=${microg_patch#*: }
@@ -981,6 +980,9 @@ build_rv() {
 	# record the patch bundles this app was actually built with, keyed by its base table name
 	# (args[table_base] has no arch suffix) so config_update can skip it until a bundle changes.
 	if [ "$built_ok" = true ]; then
+		# release-notes line (build.md) — written only now that an artifact exists, so a failed
+		# build never lands in the release notes / changelog with no APK/module to back it.
+		log "${table}: ${version}"
 		log_built_patches "${args[table_base]}" "${args[patches_src]}" "${args[ptjar]}"
 		if [ -n "${args[ptjar_extra]:-}" ]; then
 			log_built_patches "${args[table_base]}" "${args[extra_patches_src]}" "${args[ptjar_extra]}"
