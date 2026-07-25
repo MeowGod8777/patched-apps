@@ -54,6 +54,25 @@ jobs:
           GITHUB_REPOSITORY: $GITHUB_REPOSITORY
           NEXT_VER_CODE: ${{ steps.next_ver_code.outputs.NEXT_VER_CODE }}
 
+      - name: Report per-app build failures
+        if: ${{ always() }}
+        env:
+          TG_TOKEN: ${{ secrets.TG_TOKEN }}
+          TG_CHAT: ${{ vars.TG_CHAT_ADMIN }}
+        run: |
+          [ -s failed-builds.txt ] || exit 0
+          {
+            echo "### ⚠️ Apps that failed to build"
+            echo ""
+            echo "| App | Reason |"
+            echo "| --- | --- |"
+            while IFS=$'\t' read -r t r; do echo "| \`${t}\` | ${r} |"; done <failed-builds.txt
+          } >> "$GITHUB_STEP_SUMMARY"
+          RUN_URL="$GITHUB_SERVER_URL/$GITHUB_REPOSITORY/actions/runs/$GITHUB_RUN_ID"
+          LIST=$(while IFS=$'\t' read -r t r; do echo "• ${t} — ${r}"; done <failed-builds.txt)
+          bash "$RUNNER_TEMP/tg-notify.sh" "⚠️ *Some apps failed to build* ([run]($RUN_URL))
+          ${LIST}"
+
       - name: Attest build provenance
         uses: actions/attest-build-provenance@v4
         with:

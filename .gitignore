@@ -7,5 +7,6 @@ test*
 build.md
 patches-state.json
 patches-built.json
+failed-builds.txt
 cmpr
 *-temporary-files

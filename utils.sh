@@ -11,6 +11,10 @@ DL_SRCS=("direct" "archive" "apkmirror" "uptodown")
 PATCHES_STATE_FILE="patches-state.json"
 # per-run partial that build.sh emits and build.yml merges into PATCHES_STATE_FILE.
 BUILT_PATCHES_FILE="patches-built.json"
+# per-run list of enabled apps that failed to produce any artifact ("<table>\t<reason>" lines).
+# build.sh summarizes it; build.yml reports it to the admin chat + job summary. A per-app failure
+# does not fail the job (other apps still ship), so without this the failure would be invisible.
+FAILED_BUILDS_FILE="failed-builds.txt"
 
 if [ "${GITHUB_TOKEN-}" ]; then GH_HEADER="Authorization: token ${GITHUB_TOKEN}"; else GH_HEADER=; fi
 NEXT_VER_CODE=${NEXT_VER_CODE:-$(date +'%Y%m%d')}
@@ -359,6 +363,9 @@ log() { echo -e "$1  " >>"build.md"; }
 # into the persistent PATCHES_STATE_FILE. only called on success so a failed build isn't
 # recorded (=> it stays eligible for a retry on the next run).
 log_built_patches() { printf '%s\t%s\t%s\n' "$1" "$2" "$(basename "$3")" >>"${TEMP_DIR}/built-patches.tsv"; }
+# record an enabled app that failed to ship (table + short reason), for build.sh/build.yml to
+# surface. Appended from background build_rv jobs; one short line per call keeps appends atomic.
+record_failure() { printf '%s\t%s\n' "$1" "${2:-build failed}" >>"$FAILED_BUILDS_FILE"; }
 get_highest_ver() {
 	local vers m
 	vers=$(tee)
@@ -765,6 +772,7 @@ build_rv() {
 
 	if [ -z "$pkg_name" ]; then
 		epr "empty pkg name, not building ${table}."
+		record_failure "$table" "could not resolve package name"
 		return 0
 	fi
 	pr "Package name of '${table}' is '$pkg_name'"
@@ -791,6 +799,7 @@ build_rv() {
 	fi
 	if [ -z "$version" ]; then
 		epr "empty version, not building ${table}."
+		record_failure "$table" "could not resolve version"
 		return 0
 	fi
 
@@ -824,6 +833,7 @@ build_rv() {
 		done
 		if [ ! -f "$stock_apk" ]; then
 			epr "Stock apk not found ($stock_apk)"
+			record_failure "$table" "stock apk download failed ($version)"
 			return 0
 		fi
 	fi
@@ -835,6 +845,7 @@ build_rv() {
 		for a in "${stock_apk}"-zip/*.apk; do
 			if ! sig_op=$(check_sig "$a" "$pkg_name" 2>&1); then
 				epr "Not building $table, apk signature mismatch '$a': $sig_op"
+				record_failure "$table" "stock apk signature mismatch"
 				return 0
 			fi
 		done
@@ -842,6 +853,7 @@ build_rv() {
 	else
 		if ! sig_op=$(check_sig "$stock_apk" "$pkg_name" 2>&1); then
 			epr "Not building $table, apk signature mismatch '$stock_apk': $sig_op"
+			record_failure "$table" "stock apk signature mismatch"
 			return 0
 		fi
 	fi
@@ -987,6 +999,9 @@ build_rv() {
 		if [ -n "${args[ptjar_extra]:-}" ]; then
 			log_built_patches "${args[table_base]}" "${args[extra_patches_src]}" "${args[ptjar_extra]}"
 		fi
+	else
+		# reached the build loop but produced no artifact (patch or packaging failed and break'd)
+		record_failure "$table" "patching/packaging failed (${version})"
 	fi
 }
 
