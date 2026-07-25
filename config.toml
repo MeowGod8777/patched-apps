@@ -106,12 +106,14 @@ build-mode = "apk"
 clone = true
 version = "auto"
 arch = "all"
-# 'Disable typing status' is the only enabled patch that pulls in Piko's
-# InboxActionBarButtonPatch, whose InboxActionBarBuilderFingerprint no longer matches the
-# auto-resolved (latest) Instagram build — so it hard-fails the whole run. Exclude it surgically
-# (not --continue-on-error) so any *other* future patch break still fails loudly. Drop this once
-# Piko re-fingerprints it.
-excluded-patches = "'Disable typing status'"
+# Piko 3.8.0 broke InboxActionBarButtonPatch (InboxActionBarBuilderFingerprint) on its OWN
+# supported build (435.0.0.37.76 — every 3.8.0 patch is version-locked to it, which is what
+# 'auto' resolves to): the four patches that depend on it hard-fail and abort the whole run.
+# Exclude exactly those four surgically (not --continue-on-error) so any *other* patch break
+# still fails loudly. All four are the "ghost mode" anonymous-view / hide-typing features. Verified
+# locally: with these excluded, 48/48 remaining patches apply cleanly. Drop them once Piko
+# re-fingerprints (or bumps its supported Instagram past 435).
+excluded-patches = "'Disable typing status' 'View DMs anonymously' 'View live anonymously' 'View stories anonymously'"
 archive-dlurl = "https://archive.org/download/andrews-apks/apks/com.instagram.android"
 apkmirror-dlurl = "https://www.apkmirror.com/apk/instagram/instagram-instagram/"
 uptodown-dlurl = "https://instagram.en.uptodown.com/android"
