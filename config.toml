@@ -106,6 +106,12 @@ build-mode = "apk"
 clone = true
 version = "auto"
 arch = "all"
+# 'Disable typing status' is the only enabled patch that pulls in Piko's
+# InboxActionBarButtonPatch, whose InboxActionBarBuilderFingerprint no longer matches the
+# auto-resolved (latest) Instagram build — so it hard-fails the whole run. Exclude it surgically
+# (not --continue-on-error) so any *other* future patch break still fails loudly. Drop this once
+# Piko re-fingerprints it.
+excluded-patches = "'Disable typing status'"
 archive-dlurl = "https://archive.org/download/andrews-apks/apks/com.instagram.android"
 apkmirror-dlurl = "https://www.apkmirror.com/apk/instagram/instagram-instagram/"
 uptodown-dlurl = "https://instagram.en.uptodown.com/android"
