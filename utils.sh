@@ -396,6 +396,10 @@ _highest_ver_for_jar() {
 	fi
 	pcount=$(head -1 <<<"$op") pcount=${pcount#*(} pcount=${pcount% *}
 	if [ -z "$pcount" ]; then
+		# patches exist for the package but none constrain the version (unparseable
+		# patch count): treat as no ceiling rather than aborting. $list_patches is the
+		# caller's (get_patch_last_supported_ver) list-patches output, in scope here.
+		{ [ "$lenient" = true ] || grep -Fq "$pkg_name" <<<"${list_patches:-}"; } && return
 		abort "No patches found for '$pkg_name' in patches '$pj'"
 	fi
 	grep -F "($pcount patch" <<<"$op" | sed 's/ (.* patch.*//' | get_highest_ver || return 1
