@@ -74,9 +74,7 @@ fi
 if ((COMPRESSION_LEVEL > 9)) || ((COMPRESSION_LEVEL < 0)); then abort "compression-level must be within 0-9"; fi
 
 rm -rf module/bin/*/tmp.*
-for file in "$TEMP_DIR"/*/changelog.md; do
-	[ -f "$file" ] && : >"$file"
-done
+rm -rf "$TEMP_DIR"/changelogs # per-source changelog fragments, rebuilt this run by get_prebuilts
 rm -f "$TEMP_DIR"/cli-changelog.md
 rm -f "$FAILED_BUILDS_FILE" # stale failures from a previous local run
 
@@ -221,6 +219,16 @@ fi
 log "\nInstall [MicroG-RE](https://github.com/MorpheApp/MicroG-RE/releases) for non-root Google APKs"
 log "Use [zygisk-detach](https://github.com/j-hc/zygisk-detach) to detach patched apps from Play Store"
 log "\nRepository: [Patched Apps](https://github.com/andrewliang25/patched-apps)\n"
-log "$(cat "$TEMP_DIR"/*/changelog.md "$TEMP_DIR"/cli-changelog.md 2>/dev/null)"
+# emit changelog fragments only for patch sources that actually shipped (built-patches.tsv is
+# written on success only), so a failed build's bundle never advertises a patch update. dedup the
+# source column preserving first-seen order; cli-changelog.md is appended last as before.
+cl_files=()
+if [ -f "$TEMP_DIR"/built-patches.tsv ]; then
+	while IFS= read -r built_src; do
+		built_cl=$(cl_changelog_file "$built_src")
+		[ -f "$built_cl" ] && cl_files+=("$built_cl")
+	done < <(cut -f2 "$TEMP_DIR"/built-patches.tsv | awk '!seen[$0]++')
+fi
+log "$(cat "${cl_files[@]}" "$TEMP_DIR"/cli-changelog.md 2>/dev/null)"
 
 pr "Done"
