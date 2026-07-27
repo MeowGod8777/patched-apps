@@ -8,7 +8,7 @@ source utils.sh
 trap "abort" INT
 
 if [ "${1-}" = "clean" ]; then
-	rm -rf "$TEMP_DIR" "$BUILD_DIR" build.md "$BUILT_PATCHES_FILE" "$FAILED_BUILDS_FILE"
+	rm -rf "$TEMP_DIR" "$BUILD_DIR" build.md "$BUILT_PATCHES_FILE" "$FAILED_BUILDS_FILE" "$BUILD_WARNINGS_FILE"
 	exit 0
 fi
 
@@ -76,7 +76,7 @@ if ((COMPRESSION_LEVEL > 9)) || ((COMPRESSION_LEVEL < 0)); then abort "compressi
 rm -rf module/bin/*/tmp.*
 rm -rf "$TEMP_DIR"/changelogs # per-source changelog fragments, rebuilt this run by get_prebuilts
 rm -f "$TEMP_DIR"/cli-changelog.md
-rm -f "$FAILED_BUILDS_FILE" # stale failures from a previous local run
+rm -f "$FAILED_BUILDS_FILE" "$BUILD_WARNINGS_FILE" # stale failures/warnings from a previous local run
 
 mkdir -p ${MODULE_TEMPLATE_DIR}/bin/arm64 ${MODULE_TEMPLATE_DIR}/bin/arm ${MODULE_TEMPLATE_DIR}/bin/x86 ${MODULE_TEMPLATE_DIR}/bin/x64
 gh_dl "${MODULE_TEMPLATE_DIR}/bin/arm64/cmpr" "https://github.com/j-hc/cmpr/releases/latest/download/cmpr-arm64-v8a"
@@ -205,6 +205,10 @@ _clean_tmp
 if [ -s "$FAILED_BUILDS_FILE" ]; then
 	epr "$(($(wc -l <"$FAILED_BUILDS_FILE"))) app(s) failed to build:"
 	while IFS=$'\t' read -r t r; do epr "  - ${t}: ${r}"; done <"$FAILED_BUILDS_FILE"
+fi
+if [ -s "$BUILD_WARNINGS_FILE" ]; then
+	wpr "$(($(wc -l <"$BUILD_WARNINGS_FILE"))) app(s) built with warnings:"
+	while IFS=$'\t' read -r t r; do wpr "  - ${t}: ${r}"; done <"$BUILD_WARNINGS_FILE"
 fi
 if [ -z "$(ls -A1 "${BUILD_DIR}")" ]; then abort "All builds failed."; fi
 
