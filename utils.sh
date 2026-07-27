@@ -15,6 +15,10 @@ BUILT_PATCHES_FILE="patches-built.json"
 # build.sh summarizes it; build.yml reports it to the admin chat + job summary. A per-app failure
 # does not fail the job (other apps still ship), so without this the failure would be invisible.
 FAILED_BUILDS_FILE="failed-builds.txt"
+# per-run list of apps that shipped with a non-fatal caveat ("<table>\t<message>" lines) — e.g.
+# an 'auto' build that stepped down below the latest supported version because it wasn't
+# downloadable. Surfaced to the admin chat + job summary alongside failures (see build.yml).
+BUILD_WARNINGS_FILE="build-warnings.txt"
 
 if [ "${GITHUB_TOKEN-}" ]; then GH_HEADER="Authorization: token ${GITHUB_TOKEN}"; else GH_HEADER=; fi
 NEXT_VER_CODE=${NEXT_VER_CODE:-$(date +'%Y%m%d')}
@@ -366,6 +370,9 @@ log_built_patches() { printf '%s\t%s\t%s\n' "$1" "$2" "$(basename "$3")" >>"${TE
 # record an enabled app that failed to ship (table + short reason), for build.sh/build.yml to
 # surface. Appended from background build_rv jobs; one short line per call keeps appends atomic.
 record_failure() { printf '%s\t%s\n' "$1" "${2:-build failed}" >>"$FAILED_BUILDS_FILE"; }
+# record a non-fatal build caveat (table + message) for build.sh/build.yml to surface, same
+# atomic one-line append as record_failure. Used for auto version step-downs.
+record_warning() { printf '%s\t%s\n' "$1" "${2:-}" >>"$BUILD_WARNINGS_FILE"; }
 get_highest_ver() {
 	local vers m
 	vers=$(tee)
@@ -882,6 +889,12 @@ build_rv() {
 		epr "Stock apk not found for ${table} (tried: ${version_candidates[*]})"
 		record_failure "$table" "stock apk download failed (${version_candidates[*]})"
 		return 0
+	fi
+	# auto stepped down: shipped a supported version below the latest one because the latter
+	# wasn't downloadable. Not a failure (the app builds), but worth flagging to the maintainer.
+	if [ "$version" != "${version_candidates[0]}" ]; then
+		wpr "'${table}' built '${version}', not latest supported '${version_candidates[0]}' (not downloadable)"
+		record_warning "$table" "built ${version} — latest supported ${version_candidates[0]} not downloadable"
 	fi
 
 	local sig_op

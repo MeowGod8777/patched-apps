@@ -73,6 +73,25 @@ jobs:
           bash "$RUNNER_TEMP/tg-notify.sh" "⚠️ *Some apps failed to build* ([run]($RUN_URL))
           ${LIST}"
 
+      - name: Report per-app build warnings
+        if: ${{ always() }}
+        env:
+          TG_TOKEN: ${{ secrets.TG_TOKEN }}
+          TG_CHAT: ${{ vars.TG_CHAT_ADMIN }}
+        run: |
+          [ -s build-warnings.txt ] || exit 0
+          {
+            echo "### ⚠️ Apps built with warnings"
+            echo ""
+            echo "| App | Warning |"
+            echo "| --- | --- |"
+            while IFS=$'\t' read -r t r; do echo "| \`${t}\` | ${r} |"; done <build-warnings.txt
+          } >> "$GITHUB_STEP_SUMMARY"
+          RUN_URL="$GITHUB_SERVER_URL/$GITHUB_REPOSITORY/actions/runs/$GITHUB_RUN_ID"
+          LIST=$(while IFS=$'\t' read -r t r; do echo "• ${t} — ${r}"; done <build-warnings.txt)
+          bash "$RUNNER_TEMP/tg-notify.sh" "⚠️ *Some apps built with a warning* ([run]($RUN_URL))
+          ${LIST}"
+
       - name: Attest build provenance
         uses: actions/attest-build-provenance@v4
         with:
