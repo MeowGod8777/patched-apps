@@ -81,9 +81,10 @@ get_prebuilts() {
 	local patches_src_bare=$patches_src
 	if [[ "$patches_src" == gitlab:* ]]; then patches_src_bare="${patches_src#gitlab:}"; fi
 	pr "Getting prebuilts (${patches_src_bare%/*})" >&2
-	local cl_dir=${patches_src_bare%/*}
-	cl_dir=${TEMP_DIR}/${cl_dir,,}-rv
-	[ -d "$cl_dir" ] || mkdir "$cl_dir"
+	# per-source changelog fragment; emitted into build.md only if this bundle ships (see build.sh).
+	local cl_file
+	cl_file=$(cl_changelog_file "$patches_src")
+	mkdir -p "$(dirname "$cl_file")"
 
 	for src_ver in "$patches_src Patches $patches_ver" "$cli_src CLI $cli_ver"; do
 		set -- $src_ver
@@ -183,7 +184,7 @@ get_prebuilts() {
 				# CLI line goes to a separate file so build.md lists it after all Patches lines
 				echo "$tag: $(cut -d/ -f1 <<<"$bare_src")/${name}  " >>"${TEMP_DIR}/cli-changelog.md"
 			else
-				echo "$tag: $(cut -d/ -f1 <<<"$bare_src")/${name}  " >>"${cl_dir}/changelog.md"
+				echo "$tag: $(cut -d/ -f1 <<<"$bare_src")/${name}  " >>"$cl_file"
 			fi
 		else
 			grab_cl=false
@@ -195,9 +196,9 @@ get_prebuilts() {
 		if [ "$tag" = "Patches" ]; then
 			if [ "$grab_cl" = true ]; then
 				if [ "$is_gitlab" = true ]; then
-					echo -e "[Changelog](https://gitlab.com/${bare_src}/-/releases/${tag_name})\n" >>"${cl_dir}/changelog.md"
+					echo -e "[Changelog](https://gitlab.com/${bare_src}/-/releases/${tag_name})\n" >>"$cl_file"
 				else
-					echo -e "[Changelog](https://github.com/${bare_src}/releases/tag/${tag_name})\n" >>"${cl_dir}/changelog.md"
+					echo -e "[Changelog](https://github.com/${bare_src}/releases/tag/${tag_name})\n" >>"$cl_file"
 				fi
 			fi
 			if [ "$REMOVE_RV_INTEGRATIONS_CHECKS" = true ]; then
@@ -363,6 +364,12 @@ log() { echo -e "$1  " >>"build.md"; }
 # into the persistent PATCHES_STATE_FILE. only called on success so a failed build isn't
 # recorded (=> it stays eligible for a retry on the next run).
 log_built_patches() { printf '%s\t%s\t%s\n' "$1" "$2" "$(basename "$3")" >>"${TEMP_DIR}/built-patches.tsv"; }
+# path of the per-patches-source changelog fragment (the "Patches:"/"[Changelog]" lines).
+# keyed by the full source string ($1, e.g. "crimera/piko" or "gitlab:inotia00/x-shim") so it
+# matches column 2 of built-patches.tsv. get_prebuilts writes it at download time; build.sh emits
+# only the fragments whose source actually shipped, so a failed build's bundle never appears in
+# the release notes. sanitize '/' and ':' -> '_' to make a flat filename.
+cl_changelog_file() { local k=${1//\//_}; k=${k//:/_}; echo "${TEMP_DIR}/changelogs/${k}.md"; }
 # record an enabled app that failed to ship (table + short reason), for build.sh/build.yml to
 # surface. Appended from background build_rv jobs; one short line per call keeps appends atomic.
 record_failure() { printf '%s\t%s\n' "$1" "${2:-build failed}" >>"$FAILED_BUILDS_FILE"; }
@@ -996,8 +1003,11 @@ build_rv() {
 	# record the patch bundles this app was actually built with, keyed by its base table name
 	# (args[table_base] has no arch suffix) so config_update can skip it until a bundle changes.
 	if [ "$built_ok" = true ]; then
-		# release-notes line (build.md) — written only now that an artifact exists, so a failed
-		# build never lands in the release notes / changelog with no APK/module to back it.
+		# release-notes version line (build.md) — written only now that an artifact exists, so a
+		# failed build never lands in the release notes with no APK/module to back it. The per-source
+		# "Patches:" changelog fragment is written eagerly by get_prebuilts, but build.sh emits only
+		# the fragments whose source appears in built-patches.tsv (recorded just below on success),
+		# so a failed build's bundle is likewise kept out of the release notes.
 		log "${table}: ${version}"
 		log_built_patches "${args[table_base]}" "${args[patches_src]}" "${args[ptjar]}"
 		if [ -n "${args[ptjar_extra]:-}" ]; then
