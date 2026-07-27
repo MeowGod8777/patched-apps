@@ -222,7 +222,11 @@ fi
 
 log "\nInstall [MicroG-RE](https://github.com/MorpheApp/MicroG-RE/releases) for non-root Google APKs"
 log "Use [zygisk-detach](https://github.com/j-hc/zygisk-detach) to detach patched apps from Play Store"
-log "\nRepository: [Patched Apps](https://github.com/andrewliang25/patched-apps)\n"
+log "\nRepository: [Patched Apps](https://github.com/andrewliang25/patched-apps)"
+log "\nEvery APK/module is published with [GitHub build provenance attestations](https://docs.github.com/actions/security-guides/using-artifact-attestations-to-establish-provenance-for-builds) — verify a downloaded file with the [GitHub CLI](https://cli.github.com):"
+log '```'
+log "gh attestation verify <file> --repo andrewliang25/patched-apps"
+log '```'
 # emit changelog fragments only for patch sources that actually shipped (built-patches.tsv is
 # written on success only), so a failed build's bundle never advertises a patch update. dedup the
 # source column preserving first-seen order; cli-changelog.md is appended last as before.
