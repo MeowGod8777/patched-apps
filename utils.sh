@@ -378,14 +378,22 @@ semver_validate() {
 	local ac="${a//[.0-9]/}"
 	[ ${#ac} = 0 ]
 }
-# highest version a single patches bundle supports for $pkg_name (uses $cli_jar/$pkg_name
-# from caller scope); echoes nothing when the bundle imposes no version constraint.
-# $2=lenient: when true, a bundle that reports no compatible versions is treated as
-# "no constraint" instead of a fatal error — used for extra-patches bundles, which may
+# sort a newline-separated version list highest-first (semver-aware). Mirrors get_highest_ver
+# but keeps the whole list instead of taking the top one; get_highest_ver == this | head -1.
+_sort_vers_desc() {
+	local vers m
+	vers=$(tee)
+	m=$(head -1 <<<"$vers")
+	if ! semver_validate "$m"; then echo "$vers"; else sort -s -t- -k1,1Vr <<<"$vers"; fi
+}
+# versions a single patches bundle supports for $pkg_name, highest-first, one per line (uses
+# $cli_jar/$pkg_name from caller scope); echoes nothing when the bundle imposes no version
+# constraint. $2=lenient: when true, a bundle that reports no compatible versions is treated
+# as "no constraint" instead of a fatal error — used for extra-patches bundles, which may
 # legitimately contribute no versioned patches (e.g. the x-shim shim applied alongside
 # Piko). morphe-desktop 1.11.0+ omits the versions section entirely for such bundles
 # (older CLIs printed "Any"); both cases mean the same thing here.
-_highest_ver_for_jar() {
+_supported_vers_for_jar() {
 	local pj=$1 lenient=${2:-false} op pcount
 	op=$(patches_list_versions "$cli_jar" "$pj" "$pkg_name") || return 1
 	op=$(sed -n '/Most common compatible versions:/,$p' <<<"$op" | sed '1d' | awk '{$1=$1}1')
@@ -402,8 +410,16 @@ _highest_ver_for_jar() {
 		{ [ "$lenient" = true ] || grep -Fq "$pkg_name" <<<"${list_patches:-}"; } && return
 		abort "No patches found for '$pkg_name' in patches '$pj'"
 	fi
-	grep -F "($pcount patch" <<<"$op" | sed 's/ (.* patch.*//' | get_highest_ver || return 1
+	# every version in the top tier (supported by all $pcount patches), highest-first
+	grep -F "($pcount patch" <<<"$op" | sed 's/ (.* patch.*//' | _sort_vers_desc || return 1
 }
+# echoes the versions jointly supported by the primary bundle and every extra-patches bundle,
+# highest-first (one per line); empty when no bundle constrains the version, non-zero exit on a
+# hard list-patches failure. The caller ('auto' mode) takes line 1 as the pick and, if that
+# version can't be downloaded from any source, walks down the rest (step-down) — so a version a
+# bundle over-declares (e.g. Paresh listing Telegram-web 12.9.1, which has no web APK) falls back
+# to the highest version that is actually obtainable. Name kept for upstream-merge stability
+# though it now returns the whole ranked list, not just the last (=line 1) version.
 get_patch_last_supported_ver() {
 	local list_patches=$1 pkg_name=$2 inc_sel=$3 _exc_sel=$4 _exclusive=$5 # TODO: resolve using all of these
 	local op
@@ -423,21 +439,24 @@ get_patch_last_supported_ver() {
 			# a version supported by all n constraining included patches appears n times
 			local common
 			common=$(sort <<<"$vers" | uniq -c | awk -v n="$n" '$1 == n {print $2}')
-			if [ "$common" ]; then get_highest_ver <<<"$common"; return; fi
+			if [ "$common" ]; then _sort_vers_desc <<<"$common"; return; fi
 		fi
 		# else fall through to the primary + extra-bundle resolution below
 	fi
-	# resolve the version supported by the primary bundle and every extra-patches bundle,
-	# then take the lowest ceiling so the picked version satisfies all bundles applied
-	# together (patches are downward-compatible, so the lower max is safe for both).
-	local vers ej
-	vers=$(_highest_ver_for_jar "$patches_jar") || return 1
+	# versions supported by the primary bundle AND every extra-patches bundle (intersection),
+	# highest-first. An extra bundle that imposes no version constraint (empty list, e.g. the
+	# x-shim shim) doesn't narrow the set. Patches are downward-compatible, so stepping down
+	# this list stays safe for every bundle applied together.
+	local vers ej ejv
+	vers=$(_supported_vers_for_jar "$patches_jar") || return 1
 	for ej in ${args[ptjar_extra]:-}; do
-		vers+=$'\n'$(_highest_ver_for_jar "$ej" true) || return 1
+		ejv=$(_supported_vers_for_jar "$ej" true) || return 1
+		[ -z "$ejv" ] && continue
+		vers=$(comm -12 <(sort <<<"$vers") <(sort <<<"$ejv"))
 	done
 	vers=$(grep -v '^$' <<<"$vers" || :)
 	if [ -z "$vers" ]; then return; fi
-	sort -s -t- -k1,1V <<<"$vers" | head -1
+	_sort_vers_desc <<<"$vers"
 }
 
 patches_list_versions() {
@@ -783,12 +802,22 @@ build_rv() {
 	local list_patches
 	list_patches=$(patches_list "$cli_jar" "$patches_jar" "$pkg_name") || return 1
 	local get_latest_ver=false
+	local -a version_candidates=()
 	if [ "$version_mode" = auto ]; then
-		if ! version=$(get_patch_last_supported_ver "$list_patches" "$pkg_name" \
+		local supported_vers
+		if ! supported_vers=$(get_patch_last_supported_ver "$list_patches" "$pkg_name" \
 			"${args[included_patches]}" "${args[excluded_patches]}" "${args[exclusive_patches]}"); then
 			epr "get_patch_last_supported_ver failed '$list_patches'"
 			return
-		elif [ -z "$version" ]; then get_latest_ver=true; fi
+		fi
+		if [ -z "$supported_vers" ]; then
+			get_latest_ver=true
+		else
+			# line 1 is the pick; the rest are step-down fallbacks, tried in order below if the
+			# pick can't be downloaded from any source (e.g. a version a bundle over-declares).
+			mapfile -t version_candidates <<<"$supported_vers"
+			version=${version_candidates[0]}
+		fi
 	elif isoneof "$version_mode" latest beta; then
 		get_latest_ver=true
 		p_patcher_args+=("-f")
@@ -806,6 +835,8 @@ build_rv() {
 		record_failure "$table" "could not resolve version"
 		return 0
 	fi
+	# non-auto modes and the get_latest_ver path resolve exactly one version (no step-down)
+	if [ ${#version_candidates[@]} -eq 0 ]; then version_candidates=("$version"); fi
 
 	if [ "$mode_arg" = module ]; then
 		build_mode_arr=(module)
@@ -815,11 +846,16 @@ build_rv() {
 		build_mode_arr=(apk module)
 	fi
 
-	pr "Choosing version '${version}' for ${table}"
-	local version_f=${version// /}
-	version_f=${version_f#v}
-	local stock_apk="${TEMP_DIR}/${pkg_name}-${version_f}-${arch_f}.apk"
-	if [ ! -f "$stock_apk" ]; then
+	# try each candidate version highest-first; the inner loop already tries every configured
+	# source, so a version is only abandoned once no source can serve it (step-down).
+	local version_f stock_apk cand dled=false
+	for cand in "${version_candidates[@]}"; do
+		version=$cand
+		pr "Choosing version '${version}' for ${table}"
+		version_f=${version// /}
+		version_f=${version_f#v}
+		stock_apk="${TEMP_DIR}/${pkg_name}-${version_f}-${arch_f}.apk"
+		if [ -f "$stock_apk" ]; then dled=true; break; fi
 		for dl_p in "${DL_SRCS[@]}"; do
 			if [ -z "${args[${dl_p}_dlurl]}" ]; then continue; fi
 			pr "Downloading '${table}' from '${dl_p}'"
@@ -828,18 +864,24 @@ build_rv() {
 					epr "ERROR: Could not get '${table}' from '${dl_p}'"
 					continue
 				fi
+				tried_dl+=("$dl_p")
 			fi
 			if ! dl_${dl_p} "${args[${dl_p}_dlurl]}" "$version" "$stock_apk" "$arch" "${args[dpi]}" "$get_latest_ver"; then
 				epr "ERROR: Could not download '${table}' from '${dl_p}' with version '${version}', arch '${arch}', dpi '${args[dpi]}'"
 				continue
 			fi
+			dled=true
 			break
 		done
-		if [ ! -f "$stock_apk" ]; then
-			epr "Stock apk not found ($stock_apk)"
-			record_failure "$table" "stock apk download failed ($version)"
-			return 0
+		if [ "$dled" = true ]; then break; fi
+		if [ ${#version_candidates[@]} -gt 1 ]; then
+			wpr "'${table}' version '${version}' not downloadable from any source; trying next supported version"
 		fi
+	done
+	if [ "$dled" != true ]; then
+		epr "Stock apk not found for ${table} (tried: ${version_candidates[*]})"
+		record_failure "$table" "stock apk download failed (${version_candidates[*]})"
+		return 0
 	fi
 
 	local sig_op
