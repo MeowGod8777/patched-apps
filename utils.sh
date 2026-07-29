@@ -413,7 +413,12 @@ _supported_vers_for_jar() {
 	op=$(sed -n '/Most common compatible versions:/,$p' <<<"$op" | sed '1d' | awk '{$1=$1}1')
 	if [ "$op" = "Any" ]; then return; fi
 	if [ -z "$op" ]; then
-		[ "$lenient" = true ] && return
+		# list-versions produced no version tier. Either the package genuinely has no patches in
+		# this bundle, or its patches impose no version constraint — a version-unconstrained
+		# package lists nothing here (empty), NOT "Any". Distinguish via the caller's list-patches
+		# output (in scope, same as the pcount branch below): if the package has patches, treat as
+		# no version ceiling (empty return => auto falls back to latest); otherwise it truly has none.
+		{ [ "$lenient" = true ] || grep -Fq "$pkg_name" <<<"${list_patches:-}"; } && return
 		abort "No patches found for '$pkg_name' in patches '$pj'"
 	fi
 	pcount=$(head -1 <<<"$op") pcount=${pcount#*(} pcount=${pcount% *}

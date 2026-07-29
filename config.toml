@@ -58,6 +58,10 @@ rv-brand = "De-Vanced"
 build-mode = "both"
 include-stock = "auto"
 clone = true
+# De-Vanced's orca patches are version-unconstrained (list-versions lists no supported version),
+# so 'auto' resolves to no ceiling and falls back to the latest downloadable build (currently the
+# only hosted one, 563.0.0.47.86). See _supported_vers_for_jar in utils.sh for the unconstrained
+# handling. arch pinned: archive hosts a single non-split arm64 apk.
 version = "auto"
 arch = "arm64-v8a"
 # 'Hide inbox ads' fingerprints com.facebook.messaging...InboxAdsItemSupplierImplementation

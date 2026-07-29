@@ -10,3 +10,4 @@ patches-built.json
 failed-builds.txt
 cmpr
 *-temporary-files
+local-build-out/
