@@ -1027,9 +1027,17 @@ build_rv() {
 
 		if [ "${args[include_stock]}" != "disable" ]; then
 			mkdir -p "${base_template}/stock/"
-			if [ "${args[include_stock]}" = "merged" ]; then
+			local stock_mode="${args[include_stock]}"
+			# 'auto': keep the genuine developer signature wherever the source shape allows it.
+			# A bundle source leaves a "${stock_apk}.apkm" beside the merged+re-signed apk -> install
+			# its ORIGINAL signed splits (no merge, so the signature survives). A single-apk source was
+			# never merged/re-signed, so "$stock_apk" is already genuine -> ship it as-is via 'merged'.
+			if [ "$stock_mode" = auto ]; then
+				if [ -f "${stock_apk}.apkm" ]; then stock_mode=split; else stock_mode=merged; fi
+			fi
+			if [ "$stock_mode" = "merged" ]; then
 				cp -f "$stock_apk" "${base_template}/stock/base.apk"
-			elif [ "${args[include_stock]}" = "split" ]; then
+			elif [ "$stock_mode" = "split" ]; then
 				if [ ! -f "${stock_apk}.apkm" ]; then
 					epr "Cannot include as 'split' because stock apk of $table_name is not a bundle"
 					break # not 'return': fall through so a mode that already shipped still records state

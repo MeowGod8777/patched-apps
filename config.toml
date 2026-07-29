@@ -140,4 +140,7 @@ build-mode = "both"
 # No 'clone' — the bundle ships no rename patch for LINE, and its identity is tied to the pkg.
 version = "auto"
 arch = "arm64-v8a"
+# keep LINE's genuine signature in the module: 'auto' -> installs the original LINE-signed
+# splits (no APKEditor merge/re-sign), which matters for LINE's server-side integrity checks.
+include-stock = "auto"
 archive-dlurl = "https://archive.org/download/andrews-apks/apks/jp.naver.line.android"
