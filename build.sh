@@ -147,8 +147,8 @@ for table_name in $(toml_get_table_names); do
 		fi
 	} || app_args[build_mode]=apk
 	app_args[include_stock]=$(toml_get "$t" include-stock) && {
-		if ! isoneof "${app_args[include_stock]}" disable merged split; then
-			abort "ERROR: include-stock '${app_args[include_stock]}' is not a valid option for '${table_name}': only 'disable', 'merged' or 'split' is allowed"
+		if ! isoneof "${app_args[include_stock]}" disable merged split auto; then
+			abort "ERROR: include-stock '${app_args[include_stock]}' is not a valid option for '${table_name}': only 'disable', 'merged', 'split' or 'auto' is allowed"
 		fi
 	} || app_args[include_stock]=merged
 

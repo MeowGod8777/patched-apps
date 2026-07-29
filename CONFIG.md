@@ -64,7 +64,9 @@ excluded-patches = """\
   """
 
 included-patches = "'Some Patch'"                          # whitespace seperated list of non-default patches to include. default: ""
-include-stock = "merged"                                   # 'merged', 'split' or 'disable'. default: merged
+include-stock = "merged"                                   # 'merged', 'split', 'auto' or 'disable'. default: merged
+                                                           #   auto = keep the genuine app signature when the source allows:
+                                                           #   original signed splits for bundle sources, the untouched single apk otherwise
 exclusive-patches = false                                  # exclude all patches by default. default: false
 
 apkmirror-dlurl = "https://www.apkmirror.com/apk/inc/app"

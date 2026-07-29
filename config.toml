@@ -7,6 +7,7 @@ patches-source = "MorpheApp/morphe-patches"
 cli-source = "MorpheApp/morphe-cli"
 rv-brand = "Morphe"
 build-mode = "both"
+include-stock = "auto"
 apkmirror-dlurl = "https://www.apkmirror.com/apk/google-inc/youtube"
 uptodown-dlurl = "https://youtube.en.uptodown.com/android"
 archive-dlurl = "https://archive.org/download/andrews-apks/apks/com.google.android.youtube"
@@ -17,6 +18,7 @@ patches-source = "MorpheApp/morphe-patches"
 cli-source = "MorpheApp/morphe-cli"
 rv-brand = "Morphe"
 build-mode = "both"
+include-stock = "auto"
 arch = "arm64-v8a"
 apkmirror-dlurl = "https://www.apkmirror.com/apk/google-inc/youtube-music"
 uptodown-dlurl = "https://youtube-music.en.uptodown.com/android"
@@ -28,6 +30,7 @@ patches-source = "MorpheApp/morphe-patches"
 cli-source = "MorpheApp/morphe-cli"
 rv-brand = "Morphe"
 build-mode = "both"
+include-stock = "auto"
 clone = true
 apkmirror-dlurl = "https://www.apkmirror.com/apk/redditinc/reddit/"
 archive-dlurl = "https://archive.org/download/andrews-apks/apks/com.reddit.frontpage"
@@ -40,6 +43,7 @@ patches-source = "RookieEnough/De-Vanced"
 cli-source = "MorpheApp/morphe-cli"
 rv-brand = "De-Vanced"
 build-mode = "both"
+include-stock = "auto"
 clone = true
 version = "auto"
 arch = "arm64-v8a"
@@ -52,7 +56,12 @@ patches-source = "RookieEnough/De-Vanced"
 cli-source = "MorpheApp/morphe-cli"
 rv-brand = "De-Vanced"
 build-mode = "both"
+include-stock = "auto"
 clone = true
+# De-Vanced's orca patches are version-unconstrained (list-versions lists no supported version),
+# so 'auto' resolves to no ceiling and falls back to the latest downloadable build (currently the
+# only hosted one, 563.0.0.47.86). See _supported_vers_for_jar in utils.sh for the unconstrained
+# handling. arch pinned: archive hosts a single non-split arm64 apk.
 version = "auto"
 arch = "arm64-v8a"
 # 'Hide inbox ads' fingerprints com.facebook.messaging...InboxAdsItemSupplierImplementation
@@ -69,6 +78,7 @@ patches-source = "RookieEnough/De-Vanced"
 cli-source = "MorpheApp/morphe-cli"
 rv-brand = "De-Vanced"
 build-mode = "both"
+include-stock = "auto"
 clone = true
 arch = "arm64-v8a"
 archive-dlurl = "https://archive.org/download/andrews-apks/apks/com.instagram.barcelona"
@@ -81,6 +91,7 @@ patches-source = "RookieEnough/De-Vanced"
 cli-source = "MorpheApp/morphe-cli"
 rv-brand = "De-Vanced"
 build-mode = "both"
+include-stock = "auto"
 clone = true
 apkmirror-dlurl = "https://www.apkmirror.com/apk/google-inc/photos/"
 uptodown-dlurl = "https://google-photos.en.uptodown.com/android"
@@ -124,6 +135,7 @@ patches-source = "gitlab:Paresh-Maheshwari/paresh-patches"
 cli-source = "MorpheApp/morphe-cli"
 rv-brand = "Paresh"
 build-mode = "both"
+include-stock = "auto"
 apkmirror-dlurl = "https://www.apkmirror.com/apk/telegram-fz-llc/telegram/"
 uptodown-dlurl = "https://telegram.en.uptodown.com/android"
 archive-dlurl = "https://archive.org/download/andrews-apks/apks/org.telegram.messenger.web"
@@ -135,9 +147,16 @@ cli-source = "MorpheApp/morphe-cli"
 rv-brand = "Andrew"
 build-mode = "both"
 # 'auto' resolves to the patches' only supported build (26.11.0). LINE is self-hosted on
-# archive.org because apkmirror serves it only as an arch-split bundle that 403s from CI. The
-# uploaded apkm is arm64-v8a only (single-arch), so arch is pinned; no arm-v7a stock exists.
+# archive.org as the primary source (archive precedes apkmirror/uptodown in DL_SRCS) because
+# apkmirror serves it only as an arch-split bundle that 403s from CI; apkmirror/uptodown are
+# kept below as fallbacks. The uploaded apkm is arm64-v8a only (single-arch), so arch is
+# pinned; no arm-v7a stock exists.
 # No 'clone' — the bundle ships no rename patch for LINE, and its identity is tied to the pkg.
 version = "auto"
 arch = "arm64-v8a"
+# keep LINE's genuine signature in the module: 'auto' -> installs the original LINE-signed
+# splits (no APKEditor merge/re-sign), which matters for LINE's server-side integrity checks.
+include-stock = "auto"
 archive-dlurl = "https://archive.org/download/andrews-apks/apks/jp.naver.line.android"
+apkmirror-dlurl = "https://www.apkmirror.com/apk/line-corporation/line"
+uptodown-dlurl = "https://line.en.uptodown.com/android"

@@ -413,7 +413,12 @@ _supported_vers_for_jar() {
 	op=$(sed -n '/Most common compatible versions:/,$p' <<<"$op" | sed '1d' | awk '{$1=$1}1')
 	if [ "$op" = "Any" ]; then return; fi
 	if [ -z "$op" ]; then
-		[ "$lenient" = true ] && return
+		# list-versions produced no version tier. Either the package genuinely has no patches in
+		# this bundle, or its patches impose no version constraint — a version-unconstrained
+		# package lists nothing here (empty), NOT "Any". Distinguish via the caller's list-patches
+		# output (in scope, same as the pcount branch below): if the package has patches, treat as
+		# no version ceiling (empty return => auto falls back to latest); otherwise it truly has none.
+		{ [ "$lenient" = true ] || grep -Fq "$pkg_name" <<<"${list_patches:-}"; } && return
 		abort "No patches found for '$pkg_name' in patches '$pj'"
 	fi
 	pcount=$(head -1 <<<"$op") pcount=${pcount#*(} pcount=${pcount% *}
@@ -1027,9 +1032,17 @@ build_rv() {
 
 		if [ "${args[include_stock]}" != "disable" ]; then
 			mkdir -p "${base_template}/stock/"
-			if [ "${args[include_stock]}" = "merged" ]; then
+			local stock_mode="${args[include_stock]}"
+			# 'auto': keep the genuine developer signature wherever the source shape allows it.
+			# A bundle source leaves a "${stock_apk}.apkm" beside the merged+re-signed apk -> install
+			# its ORIGINAL signed splits (no merge, so the signature survives). A single-apk source was
+			# never merged/re-signed, so "$stock_apk" is already genuine -> ship it as-is via 'merged'.
+			if [ "$stock_mode" = auto ]; then
+				if [ -f "${stock_apk}.apkm" ]; then stock_mode=split; else stock_mode=merged; fi
+			fi
+			if [ "$stock_mode" = "merged" ]; then
 				cp -f "$stock_apk" "${base_template}/stock/base.apk"
-			elif [ "${args[include_stock]}" = "split" ]; then
+			elif [ "$stock_mode" = "split" ]; then
 				if [ ! -f "${stock_apk}.apkm" ]; then
 					epr "Cannot include as 'split' because stock apk of $table_name is not a bundle"
 					break # not 'return': fall through so a mode that already shipped still records state
