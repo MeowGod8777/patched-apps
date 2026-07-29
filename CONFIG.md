@@ -66,7 +66,10 @@ excluded-patches = """\
 included-patches = "'Some Patch'"                          # whitespace seperated list of non-default patches to include. default: ""
 include-stock = "merged"                                   # 'merged', 'split', 'auto' or 'disable'. default: merged
                                                            #   auto = keep the genuine app signature when the source allows:
-                                                           #   original signed splits for bundle sources, the untouched single apk otherwise
+                                                           #   original signed splits for bundle (.apkm) sources, the untouched single apk otherwise
+                                                           #   NOTE (modules only; non-root APKs unaffected): switching an existing module from
+                                                           #   'merged' (ks.keystore-re-signed) to genuine 'split'/'auto' changes the signing key,
+                                                           #   so Android rejects the update over an install — users must uninstall first (data cleared)
 exclusive-patches = false                                  # exclude all patches by default. default: false
 
 apkmirror-dlurl = "https://www.apkmirror.com/apk/inc/app"
