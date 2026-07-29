@@ -147,8 +147,10 @@ cli-source = "MorpheApp/morphe-cli"
 rv-brand = "Andrew"
 build-mode = "both"
 # 'auto' resolves to the patches' only supported build (26.11.0). LINE is self-hosted on
-# archive.org because apkmirror serves it only as an arch-split bundle that 403s from CI. The
-# uploaded apkm is arm64-v8a only (single-arch), so arch is pinned; no arm-v7a stock exists.
+# archive.org as the primary source (archive precedes apkmirror/uptodown in DL_SRCS) because
+# apkmirror serves it only as an arch-split bundle that 403s from CI; apkmirror/uptodown are
+# kept below as fallbacks. The uploaded apkm is arm64-v8a only (single-arch), so arch is
+# pinned; no arm-v7a stock exists.
 # No 'clone' — the bundle ships no rename patch for LINE, and its identity is tied to the pkg.
 version = "auto"
 arch = "arm64-v8a"
@@ -156,3 +158,5 @@ arch = "arm64-v8a"
 # splits (no APKEditor merge/re-sign), which matters for LINE's server-side integrity checks.
 include-stock = "auto"
 archive-dlurl = "https://archive.org/download/andrews-apks/apks/jp.naver.line.android"
+apkmirror-dlurl = "https://www.apkmirror.com/apk/line-corporation/line"
+uptodown-dlurl = "https://line.en.uptodown.com/android"
