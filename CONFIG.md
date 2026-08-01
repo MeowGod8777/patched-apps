@@ -65,6 +65,14 @@ excluded-patches = """\
   """
 
 included-patches = "'Some Patch'"                          # whitespace seperated list of non-default patches to include. default: ""
+
+# (fork-specific) per-mode patch overrides, applied ON TOP of included/excluded-patches for a
+# single build-mode = "both" table — the YouTube GmsCore pattern generalized to any patch.
+# Use these to give the apk and module builds different patch sets from ONE table (default: "").
+apk-included-patches = "'Some Patch'"                      # include only in the apk (non-root) build
+apk-excluded-patches = "'Some Patch'"                      # exclude only in the apk (non-root) build
+module-included-patches = "'Some Patch'"                   # include only in the module (root) build
+module-excluded-patches = "'Some Patch'"                   # exclude only in the module (root) build
 include-stock = "merged"                                   # 'merged', 'split', 'auto' or 'disable'. default: merged
                                                            #   auto = keep the genuine app signature when the source allows:
                                                            #   original signed splits for bundle (.apkm) sources, the untouched single apk otherwise

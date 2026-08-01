@@ -134,6 +134,15 @@ for table_name in $(toml_get_table_names); do
 	if [ -n "${app_args[excluded_patches]}" ] && [[ ${app_args[excluded_patches]} != *'"'* ]]; then abort "patch names inside excluded-patches must be quoted"; fi
 	app_args[included_patches]=$(toml_get "$t" included-patches) || app_args[included_patches]=""
 	if [ -n "${app_args[included_patches]}" ] && [[ ${app_args[included_patches]} != *'"'* ]]; then abort "patch names inside included-patches must be quoted"; fi
+	# (fork-specific) per-mode patch overrides: like YouTube's automatic GmsCore toggle, but
+	# user-specified — include/exclude a patch only in apk mode or only in module mode from a
+	# single 'both' table. Applied on top of the shared included/excluded-patches in build_rv.
+	for _pm in apk module; do
+		app_args[${_pm}_excluded_patches]=$(toml_get "$t" "${_pm}-excluded-patches") || app_args[${_pm}_excluded_patches]=""
+		if [ -n "${app_args[${_pm}_excluded_patches]}" ] && [[ ${app_args[${_pm}_excluded_patches]} != *'"'* ]]; then abort "patch names inside ${_pm}-excluded-patches must be quoted"; fi
+		app_args[${_pm}_included_patches]=$(toml_get "$t" "${_pm}-included-patches") || app_args[${_pm}_included_patches]=""
+		if [ -n "${app_args[${_pm}_included_patches]}" ] && [[ ${app_args[${_pm}_included_patches]} != *'"'* ]]; then abort "patch names inside ${_pm}-included-patches must be quoted"; fi
+	done
 	app_args[exclusive_patches]=$(toml_get "$t" exclusive-patches) && vtf "${app_args[exclusive_patches]}" "exclusive-patches" || app_args[exclusive_patches]=false
 	app_args[version]=$(toml_get "$t" version) || app_args[version]="auto"
 	app_args[app_name]=$(toml_get "$t" app-name) || app_args[app_name]=$table_name

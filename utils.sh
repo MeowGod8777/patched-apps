@@ -957,6 +957,13 @@ build_rv() {
 		fi
 	fi
 
+	# per-mode patch overrides make the apk and module patched APKs differ, so (like microg/clone)
+	# they must be written to mode-suffixed filenames to avoid one mode overwriting the other's.
+	local per_mode_patches=false
+	if [ -n "${args[apk_included_patches]:-}" ] || [ -n "${args[apk_excluded_patches]:-}" ] ||
+		[ -n "${args[module_included_patches]:-}" ] || [ -n "${args[module_excluded_patches]:-}" ]; then
+		per_mode_patches=true
+	fi
 	local patcher_args patched_apk build_mode
 	local rv_brand_f=${args[rv_brand],,}
 	rv_brand_f=${rv_brand_f//[^a-z0-9]/-} # slug for filenames: spaces, '+', etc. -> '-'
@@ -964,7 +971,7 @@ build_rv() {
 	for build_mode in "${build_mode_arr[@]}"; do
 		patcher_args=("${p_patcher_args[@]}")
 		pr "Building '${table}' in '$build_mode' mode"
-		if [ -n "$microg_patch" ] || [ -n "$clone_patch" ]; then
+		if [ -n "$microg_patch" ] || [ -n "$clone_patch" ] || [ "$per_mode_patches" = true ]; then
 			patched_apk="${TEMP_DIR}/${app_name_l}-${rv_brand_f}-${version_f}-${arch_f}-${build_mode}.apk"
 		else
 			patched_apk="${TEMP_DIR}/${app_name_l}-${rv_brand_f}-${version_f}-${arch_f}.apk"
@@ -978,6 +985,15 @@ build_rv() {
 		fi
 		if [ -n "$clone_patch" ] && [ "$build_mode" = apk ]; then
 			patcher_args+=("-O packageName=${clone_pkg} -e \"${clone_patch}\"")
+		fi
+		# per-mode patch overrides (fork-specific): exclude (-d) / include (-e) patches only in
+		# this build_mode, on top of the shared included/excluded-patches already in patcher_args.
+		if [ "$build_mode" = apk ]; then
+			if [ -n "${args[apk_excluded_patches]:-}" ]; then patcher_args+=("$(join_args "${args[apk_excluded_patches]}" -d)"); fi
+			if [ -n "${args[apk_included_patches]:-}" ]; then patcher_args+=("$(join_args "${args[apk_included_patches]}" -e)"); fi
+		elif [ "$build_mode" = module ]; then
+			if [ -n "${args[module_excluded_patches]:-}" ]; then patcher_args+=("$(join_args "${args[module_excluded_patches]}" -d)"); fi
+			if [ -n "${args[module_included_patches]:-}" ]; then patcher_args+=("$(join_args "${args[module_included_patches]}" -e)"); fi
 		fi
 
 		local stock_apk_to_patch="${stock_apk}.stripped.apk"
