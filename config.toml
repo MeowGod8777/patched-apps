@@ -157,6 +157,14 @@ arch = "arm64-v8a"
 # keep LINE's genuine signature in the module: 'auto' -> installs the original LINE-signed
 # splits (no APKEditor merge/re-sign), which matters for LINE's server-side integrity checks.
 include-stock = "auto"
+# Per-mode patch divergence from this single 'both' table: the non-root apk gets the push-
+# notification fix; the root module excludes it. NOTE: patch NAME tracks 'latest' (currently
+# v1.3.0 -> 'Fix push notifications when app is closed', default-off). In the v1.4.0 line this
+# patch is renamed to 'Fix push notifications' AND becomes default-on -- when 1.4.0 goes stable,
+# update both keys to the new name (apk-included becomes redundant then; module-excluded becomes
+# the load-bearing one that removes the now-default-on patch from the module).
+apk-included-patches = "'Fix push notifications when app is closed'"
+module-excluded-patches = "'Fix push notifications when app is closed'"
 archive-dlurl = "https://archive.org/download/andrews-apks/apks/jp.naver.line.android"
 apkmirror-dlurl = "https://www.apkmirror.com/apk/line-corporation/line"
 uptodown-dlurl = "https://line.en.uptodown.com/android"
