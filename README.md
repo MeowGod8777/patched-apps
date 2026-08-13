@@ -91,7 +91,7 @@ Twitter and Instagram use [Piko](https://github.com/crimera/piko) (Twitter addit
 
 ### Config notes
 
-The config is kept comment-free; here's what the non-obvious settings mean:
+The config carries only brief inline notes; here's what the non-obvious settings mean:
 
 * **`clone = true`** (Reddit, Facebook, Messenger, Threads, Photos) — with `build-mode = "both"`, the non-root APK is package-renamed to `app.<patch>.<pkg>` so it installs alongside the official app, while the module keeps the original package to mount over stock. Instagram is `clone = true` but APK-only ([Piko-settings bug](#instagram-piko-module-piko-settings-wont-open)); Twitter is APK-only and not cloned.
 * **Twitter `extra-patches-source` (Piko + x-shim)** — newer X builds need [inotia00/x-shim](https://gitlab.com/inotia00/x-shim) applied *alongside* Piko, as a second bundle in one patch run. A new x-shim release self-triggers a daily rebuild. See [`CONFIG.md`](./CONFIG.md).
