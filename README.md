@@ -25,9 +25,9 @@ Contributors: please [sign your commits](CONTRIBUTING.md#signing-your-commits) s
 | <div align="center"><img src="assets/icons/instagram.svg" width="28"><br><b>Instagram</b></div> | Piko | Block ads/sponsored posts, download photos/videos/reels, hide story "seen", disable typing & read receipts | ✅ | ❌ | APK renamed to `app.piko.instagram.android` — **experimental** (APK-only; the mounted module is dropped, see [Piko-settings bug](#instagram-piko-module-piko-settings-wont-open)) |
 | <div align="center"><img src="assets/icons/facebook.svg" width="28"><br><b>Facebook</b></div> | De-Vanced | Block ads/sponsored posts, cleaner feed | ✅ | ✅ | arm64-v8a; tracks De-Vanced's supported build (currently `490.0.0.63.82`); APK renamed to `app.devanced.facebook.katana` — **experimental** (see [permission conflict](#meta-app-clones-duplicate-permission-conflict)) |
 | <div align="center"><img src="assets/icons/messenger.svg" width="28"><br><b>Messenger</b></div> | De-Vanced | Remove Meta AI, hide the Facebook tab, hide inbox subtabs, disable typing indicator | ✅ | ✅ | arm64-v8a; tracks De-Vanced's supported build (currently `563.0.0.47.86`); APK renamed to `app.devanced.facebook.orca` — **experimental** (see [permission conflict](#meta-app-clones-duplicate-permission-conflict)); `Hide inbox ads` excluded (fingerprint gone from current builds) |
-| <div align="center"><img src="assets/icons/threads.svg" width="28"><br><b>Threads</b></div> | Chiggi | Hide ads, remove the AD_ID (advertising ID) permission | ✅ | ✅ | arm64-v8a; pinned by the bundle to `434.0.0.41.74` (its only supported build); APK renamed to `app.chiggi.instagram.barcelona` — **experimental** (see [permission conflict](#meta-app-clones-duplicate-permission-conflict)). Moved off De-Vanced, which [dropped Threads](#threads-moved-from-de-vanced-to-chiggi) |
+| <div align="center"><img src="assets/icons/threads.svg" width="28"><br><b>Threads</b></div> | Chiggi | Hide ads, remove the AD_ID (advertising ID) permission | ✅ | ✅ | arm64-v8a; APK renamed to `app.chiggi.instagram.barcelona` — **experimental** (see [permission conflict](#meta-app-clones-duplicate-permission-conflict)). Moved off De-Vanced, which [dropped Threads](#threads-moved-from-de-vanced-to-chiggi) |
 | <div align="center"><img src="assets/icons/reddit.svg" width="28"><br><b>Reddit</b></div> | Morphe | Block ads, sanitize share links, hide recommendations/premium prompts, custom branding | ✅ | ✅ | non-root APK renamed to `app.morphe.reddit.frontpage` |
-| <div align="center"><img src="assets/icons/twitter.svg" width="28"><br><b>Twitter / X</b></div> | Piko + x-shim | Hide ads/promoted tweets, download media, restore chronological timeline, hide view counts | ✅ | ❌ | APK-only, not cloned — shares `com.twitter.android` with the Play Store build (the mounted module is [dropped](#twitterx-piko-module-dropped)). Patched with **two bundles** — Piko plus [x-shim](https://gitlab.com/inotia00/x-shim) for X 12.x support |
+| <div align="center"><img src="assets/icons/twitter.svg" width="28"><br><b>Twitter / X</b></div> | Piko + x-shim | Hide ads/promoted tweets, download media, restore chronological timeline, hide view counts | ✅ | ❌ | APK-only, not cloned — shares `com.twitter.android` with the Play Store build, so uninstall the official X app first (the mounted module was dropped over runtime issues). Patched with **two bundles** — Piko plus [x-shim](https://gitlab.com/inotia00/x-shim) for X 12.x support |
 | <div align="center"><img src="assets/icons/telegram.svg" width="28"><br><b>Telegram</b></div> | Paresh-Patches | Ghost mode (no read receipts), anti-delete/anti-edit, save restricted media | ✅ | ✅ | targets the standalone/website build `org.telegram.messenger.web`; not renamed (Paresh ships no rename patch) — already coexists with the Play Store build `org.telegram.messenger` |
 | <div align="center"><img src="assets/icons/line.svg" width="28"><br><b>LINE</b></div> | Andrew | Hide ads/banners, remove VOOM & Wallet / LINE TODAY tabs, hide Home modules, keep chats unread (no read receipts), open links externally | ✅ | ✅ | arm64-v8a; self-hosted stock (archive.org); not renamed — shares `jp.naver.line.android` with the Play Store build (uninstall the official app first for the non-root APK) |
 
@@ -61,25 +61,11 @@ The Instagram **module** has been dropped. On the mounted original-package build
 
 ### Threads: moved from De-Vanced to Chiggi
 
-De-Vanced stopped shipping Threads patches — from `patches-1.2.1.mpp` onward the bundle contains nothing for `com.instagram.barcelona`. Threads now builds from [durgesh0505/chiggi_morphe_patches](https://github.com/durgesh0505/chiggi_morphe_patches) instead.
-
-Two consequences for existing installs:
+Threads now builds from [Chiggi](https://github.com/durgesh0505/chiggi_morphe_patches) instead of De-Vanced. For existing installs:
 
 * **The clone APK changed package**, `app.devanced.instagram.barcelona` → `app.chiggi.instagram.barcelona`. Android treats it as a different app, so it installs alongside the old clone rather than upgrading it — uninstall the old one.
 * **The module is republished under a new name** (`threads-chiggi-*`), so Magisk/KernelSU sees a new module rather than an update to the old `threads-devanced-*` one.
-
-The patch set is smaller than De-Vanced's: **Hide ads** and **Remove AD_ID permission**. The bundle also ships `Change app name` and `Change package name`, both **enabled by default** — unlike De-Vanced, where the rename is off by default and `clone = true` is what enables it for the APK. Since `clone` only ever *enables* a rename (never disables one), the module would otherwise be renamed too and could not mount over the stock app, so the config disables them explicitly:
-
-```toml
-excluded-patches        = "'Change app name'"        # both modes
-module-excluded-patches = "'Change package name'"    # module only — the APK keeps the rename via clone
-```
-
-The bundle supports exactly one build, `434.0.0.41.74`, and apkmirror 403s it, so the stock APK is mirrored on the archive.org item like the other Meta apps.
-
-### Twitter/X Piko module: dropped
-
-The Twitter/X **module** has been dropped — the mounted, original-package build had runtime issues, while the patched non-root APK works. Twitter/X now ships **only** the non-root APK. That APK is *not* cloned, so it keeps the package `com.twitter.android` and can't coexist with the Play Store build — uninstall the official X app first.
+* **The patch set is smaller**: Hide ads and Remove AD_ID permission.
 
 ## Building locally
 
@@ -107,9 +93,9 @@ Twitter and Instagram use [Piko](https://github.com/crimera/piko) (Twitter addit
 
 The config is kept comment-free; here's what the non-obvious settings mean:
 
-* **`clone = true`** (Reddit, Facebook, Messenger, Threads, Photos) — with `build-mode = "both"`, the apk-mode output is package-renamed to `app.<patch>.<pkg>` (e.g. `app.devanced.facebook.katana`) so the **non-root APK** installs alongside the official app, while the **module** keeps the original package to mount over the stock app. (The clone APK *is* that renamed non-root APK — not a separate artifact.) Same single-entry pattern YouTube/YT Music get from MicroG-RE. **Instagram** is also `clone = true` but `build-mode = "apk"` — APK-only (renamed to `app.piko.instagram.android`); its mounted module was dropped over the [Piko-settings bug](#instagram-piko-module-piko-settings-wont-open). **Twitter** is `build-mode = "apk"` and *not* cloned; its mounted module was [dropped](#twitterx-piko-module-dropped) too.
-* **Twitter `extra-patches-source` (Piko + x-shim)** — newer X builds need [inotia00/x-shim](https://gitlab.com/inotia00/x-shim) applied *alongside* Piko. `extra-patches-source` adds it as a second patch bundle in one patch run, so Twitter tracks `version = "auto"` (~12.2.0) instead of pinning, and the old `'Block redirecting to X Lite'` exclusion is gone. A new x-shim release self-triggers a daily rebuild. See [`CONFIG.md`](./CONFIG.md).
-* **Self-hosted stock APKs (archive.org)** — Facebook, Messenger, Twitter, Instagram, Threads, and LINE stock APKs are mirrored on a self-hosted archive.org item because apkmirror 403s (and uptodown doesn't reliably serve) their builds. Threads is pinned by its bundle to `434.0.0.41.74`, which uptodown lists too far back in its version history for the builder's paging to reach, so the mirror is the only working source for it. LINE is served only as an arm64-v8a bundle (`jp.naver.line.android`), tracking `auto` (currently `26.11.0`). They track `auto`: Facebook resolves to the only De-Vanced–supported build (currently `490.0.0.63.82`) and Messenger to `563.0.0.47.86`, served from the archive while available, falling back to each app's secondary source (uptodown for Facebook, apkmirror for Messenger) if a newer resolved version isn't mirrored yet.
+* **`clone = true`** (Reddit, Facebook, Messenger, Threads, Photos) — with `build-mode = "both"`, the non-root APK is package-renamed to `app.<patch>.<pkg>` so it installs alongside the official app, while the module keeps the original package to mount over stock. Instagram is `clone = true` but APK-only ([Piko-settings bug](#instagram-piko-module-piko-settings-wont-open)); Twitter is APK-only and not cloned.
+* **Twitter `extra-patches-source` (Piko + x-shim)** — newer X builds need [inotia00/x-shim](https://gitlab.com/inotia00/x-shim) applied *alongside* Piko, as a second bundle in one patch run. A new x-shim release self-triggers a daily rebuild. See [`CONFIG.md`](./CONFIG.md).
+* **Self-hosted stock APKs (archive.org)** — Facebook, Messenger, Twitter, Instagram, Threads, and LINE are mirrored on a self-hosted archive.org item because apkmirror 403s (and uptodown doesn't reliably serve) their builds. They track `auto`, falling back to each app's secondary source if a newer resolved version isn't mirrored yet.
 * **`enable-module-update`** — set `false` to stop the modules from receiving in-app updates.
 
 ### CI notifications
