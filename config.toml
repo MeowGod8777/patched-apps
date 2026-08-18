@@ -1,155 +1,23 @@
-enable-module-update = true
+enable-module-update = false
 parallel-jobs = 1
-
-[YouTube-Morphe]
-app-name = "YouTube"
-patches-source = "MorpheApp/morphe-patches"
-cli-source = "MorpheApp/morphe-cli"
-rv-brand = "Morphe"
-build-mode = "both"
-include-stock = "auto"
-apkmirror-dlurl = "https://www.apkmirror.com/apk/google-inc/youtube"
-uptodown-dlurl = "https://youtube.en.uptodown.com/android"
-archive-dlurl = "https://archive.org/download/andrews-apks/apks/com.google.android.youtube"
-
-[Music-Morphe]
-app-name = "Music"
-patches-source = "MorpheApp/morphe-patches"
-cli-source = "MorpheApp/morphe-cli"
-rv-brand = "Morphe"
-build-mode = "both"
-include-stock = "auto"
-arch = "arm64-v8a"
-apkmirror-dlurl = "https://www.apkmirror.com/apk/google-inc/youtube-music"
-uptodown-dlurl = "https://youtube-music.en.uptodown.com/android"
-archive-dlurl = "https://archive.org/download/andrews-apks/apks/com.google.android.apps.youtube.music"
-
-[Reddit-Morphe]
-app-name = "Reddit"
-patches-source = "MorpheApp/morphe-patches"
-cli-source = "MorpheApp/morphe-cli"
-rv-brand = "Morphe"
-build-mode = "both"
-include-stock = "auto"
-clone = true
-apkmirror-dlurl = "https://www.apkmirror.com/apk/redditinc/reddit/"
-archive-dlurl = "https://archive.org/download/andrews-apks/apks/com.reddit.frontpage"
-uptodown-dlurl = "https://reddit-official-app.en.uptodown.com/android"
-dpi = "120-640dpi"
-
-[Facebook-DeVanced]
-app-name = "Facebook"
-patches-source = "RookieEnough/De-Vanced"
-cli-source = "MorpheApp/morphe-cli"
-rv-brand = "De-Vanced"
-build-mode = "both"
-include-stock = "auto"
-clone = true
-version = "auto"
-arch = "arm64-v8a"
-archive-dlurl = "https://archive.org/download/andrews-apks/apks/com.facebook.katana"
-uptodown-dlurl = "https://facebook.en.uptodown.com/android"
-
-[Messenger-DeVanced]
-app-name = "Messenger"
-patches-source = "RookieEnough/De-Vanced"
-cli-source = "MorpheApp/morphe-cli"
-rv-brand = "De-Vanced"
-build-mode = "both"
-include-stock = "auto"
-clone = true
-# orca patches impose no version ceiling, so 'auto' falls back to the latest downloadable build.
-version = "auto"
-arch = "arm64-v8a"
-# fingerprint gone from Messenger 563.x; drop once De-Vanced re-fingerprints it.
-excluded-patches = "'Hide inbox ads'"
-archive-dlurl = "https://archive.org/download/andrews-apks/apks/com.facebook.orca"
-apkmirror-dlurl = "https://www.apkmirror.com/apk/facebook-2/messenger/"
-
-[Threads-Chiggi]
-app-name = "Threads"
-patches-source = "durgesh0505/chiggi_morphe_patches"
-cli-source = "MorpheApp/morphe-cli"
-rv-brand = "Chiggi"
-build-mode = "both"
-include-stock = "auto"
-clone = true
-version = "auto"
-arch = "arm64-v8a"
-# both renames are default-ON here; 'Change package name' must stay out of excluded-patches
-# (collides with clone's apk-mode -e), so the module disables it on its own.
-excluded-patches = "'Change app name'"
-module-excluded-patches = "'Change package name'"
-# archive is the only source serving 434.0.0.41.74 (apkmirror 403s; uptodown buries it).
-archive-dlurl = "https://archive.org/download/andrews-apks/apks/com.instagram.barcelona"
-apkmirror-dlurl = "https://www.apkmirror.com/apk/meta-platforms-inc/threads-instagram/"
-uptodown-dlurl = "https://threads.en.uptodown.com/android"
-
-[Photos-DeVanced]
-app-name = "Photos"
-patches-source = "RookieEnough/De-Vanced"
-cli-source = "MorpheApp/morphe-cli"
-rv-brand = "De-Vanced"
-build-mode = "both"
-include-stock = "auto"
-clone = true
-apkmirror-dlurl = "https://www.apkmirror.com/apk/google-inc/photos/"
-uptodown-dlurl = "https://google-photos.en.uptodown.com/android"
-archive-dlurl = "https://archive.org/download/andrews-apks/apks/com.google.android.apps.photos"
-
-["Twitter/X-Piko+XShim"]
-app-name = "Twitter"
-patches-source = "crimera/piko"
-extra-patches-source = "gitlab:inotia00/x-shim"
-cli-source = "MorpheApp/morphe-cli"
-rv-brand = "Piko+XShim"
-build-mode = "apk"
-version = "auto"
-apkmirror-dlurl = "https://www.apkmirror.com/apk/x-corp/twitter/"
-archive-dlurl = "https://archive.org/download/andrews-apks/apks/com.twitter.android"
-
-[Instagram-Piko]
-app-name = "Instagram"
-patches-source = "crimera/piko"
-cli-source = "MorpheApp/morphe-cli"
-rv-brand = "Piko"
-build-mode = "apk"
-clone = true
-version = "auto"
-arch = "all"
-# ghost-mode patches: InboxActionBarBuilderFingerprint broke in Piko 3.8.0 and hard-fails the
-# run. Excluded surgically (not --continue-on-error) so other breakage still fails loudly.
-excluded-patches = "'Disable typing status' 'View DMs anonymously' 'View live anonymously' 'View stories anonymously'"
-archive-dlurl = "https://archive.org/download/andrews-apks/apks/com.instagram.android"
-apkmirror-dlurl = "https://www.apkmirror.com/apk/instagram/instagram-instagram/"
-uptodown-dlurl = "https://instagram.en.uptodown.com/android"
-
-[Telegram-Paresh]
-app-name = "Telegram"
-patches-source = "gitlab:Paresh-Maheshwari/paresh-patches"
-cli-source = "MorpheApp/morphe-cli"
-rv-brand = "Paresh"
-build-mode = "both"
-include-stock = "auto"
-apkmirror-dlurl = "https://www.apkmirror.com/apk/telegram-fz-llc/telegram/"
-uptodown-dlurl = "https://telegram.en.uptodown.com/android"
-archive-dlurl = "https://archive.org/download/andrews-apks/apks/org.telegram.messenger.web"
 
 [LINE-Andrew]
 app-name = "LINE"
 patches-source = "andrewliang25/morphe-patches"
 cli-source = "MorpheApp/morphe-cli"
 rv-brand = "Andrew"
-build-mode = "both"
-# archive hosts an arm64-only apkm (apkmirror 403s LINE's split bundle). No 'clone' — the
-# bundle ships no rename patch and LINE's identity is tied to its package.
-version = "auto"
+build-mode = "module"
+version = "26.11.0"
 arch = "arm64-v8a"
-# keeps LINE's genuine split signature, which its server-side integrity checks require.
 include-stock = "auto"
-# the push-notification fix is only needed by the re-signed apk; the module must not have it.
-apk-included-patches = "'Fix push notifications'"
-module-excluded-patches = "'Fix push notifications'"
+exclusive-patches = true
+included-patches = """\
+  'Hide ad views' \
+  'Remove banner ads' \
+  'Hide Home modules' \
+  'Disable VOOM' \
+  'Hide VOOM tab' \
+  """
 archive-dlurl = "https://archive.org/download/andrews-apks/apks/jp.naver.line.android"
 apkmirror-dlurl = "https://www.apkmirror.com/apk/line-corporation/line"
 uptodown-dlurl = "https://line.en.uptodown.com/android"
