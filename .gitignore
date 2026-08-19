@@ -11,3 +11,13 @@ failed-builds.txt
 cmpr
 *-temporary-files
 local-build-out/
+
+# Local fork safety: do not accidentally add personal secrets/signing material
+.env
+local-secrets/
+private/
+*.jks
+*.p12
+*.pem
+*.key
+*.keystore
