@@ -1,52 +1,54 @@
-# patched-apps — 本 Fork 繁中說明
+# patched-apps — 這個 Fork 的繁中說明
 
-這個 repository 是由 Andrew 的 `patched-apps` 衍生／fork 出來的 patch build 工作區。為了降低之後同步 upstream 時的大量衝突，根目錄原本的 `README.md`、builder 說明與 upstream 文件**保留原文**，不整份翻譯覆寫。
+這個 repo 是從 Andrew 的 `patched-apps` fork 出來，現在主要拿來 build LINE patch。
 
-## 這個 Fork 目前的用途
+根目錄原本的 `README.md`、builder 說明和 upstream 文件我不整份翻掉，因為之後同步 upstream 只會一直撞 merge conflict。自己這邊的說明就放這份。
 
-目前主要用來延續 LINE patch / build 流程。真正屬於本專案整理過的 LINE 行為差異、Root 相容性、XML Guard、版本風險與測試結論，集中放在另一個 repository：`LINE-Root-Patches`。
+## 這個 Fork 現在拿來幹嘛
 
-這樣分工可以避免：
+主要就是延續 LINE patch / build。
 
-- upstream 更新時，整份 README 因翻譯造成大量 merge conflict；
-- 把 Andrew 的原始文件誤寫成本專案自己驗證的結論；
-- LINE 專屬研究和通用 builder 混在一起，後續難以維護。
+LINE 實際改了什麼、Root 相容性、XML Guard、版本差異和日用結果，另外整理在 `LINE-Root-Patches`。這裡比較偏 build 工作區，不把兩邊混在一起。
 
-## 目前 `config.toml` 的實際 LINE build
+## 現在 `config.toml` 真正有開的 LINE patch
 
-目前本 fork 已核對的設定為：
+目前設定：
 
 - `version = "26.11.0"`
 - `arch = "arm64-v8a"`
 - `build-mode = "module"`
 - `exclusive-patches = true`
 - `enable-module-update = false`
-- 只啟用以下 5 個 LINE patches：
-  - `Hide ad views`
-  - `Remove banner ads`
-  - `Hide Home modules`
-  - `Disable VOOM`
-  - `Hide VOOM tab`
 
-因此，Andrew upstream README 中列出的其他 LINE 能力，例如 Wallet / LINE TODAY 移除、keep chats unread、外部連結改走瀏覽器等，**不能直接視為目前這個 fork 已啟用的功能**。本 fork 的實際行為應以 `config.toml`、當次 build 與 `LINE-Root-Patches` 的驗證紀錄為準。
+只開這 5 個：
 
-## 使用時要注意
+- `Hide ad views`
+- `Remove banner ads`
+- `Hide Home modules`
+- `Disable VOOM`
+- `Hide VOOM tab`
 
-- `patched-apps` upstream 文件中的功能與相容性，代表上游專案能力，不等於本 fork 目前 config 全部啟用。
-- patched module 安裝成功，不代表所有功能都與原版一致。
-- LINE 版本、patch bundle 或遠端配置更新後，需要重新驗證去廣告、Home、VOOM 與其他日用功能。
-- 若本 fork 與 Andrew upstream 有差異，應先確認 `config.toml`、patch source、build workflow 與 commit，而不是只看 upstream README。
-- signing key、token、CI secret 與帳號資料不要自行新增到公開 repository。
+所以 Andrew upstream README 裡寫的 Wallet / LINE TODAY、keep chats unread、外部連結改瀏覽器等功能，**不要直接當成現在這個 fork 也有開**。
 
-## Signing key 注意
+到底 build 了什麼，看 `config.toml`；到底日用起來怎樣，看 `LINE-Root-Patches`。
 
-此 fork 目前可看到的 `ks.keystore`、`ks-p12.keystore` 與 Andrew upstream 同名檔案一致，屬於上游本來就公開追蹤的 build key，不是這次整理時新增的私人 key。
+## 更新後要注意
 
-但 repository 本身是 Public，因此**不要把個人／正式使用的 signing key 拿來覆蓋或新增進 Git history**。本 fork 的 `.gitignore` 已另外加入 `.env`、`local-secrets/`、`*.jks`、`*.p12`、`*.pem`、`*.key`、`*.keystore` 等規則，降低之後誤加私人憑證的風險；既有 upstream 已追蹤檔案不會因新增 `.gitignore` 而自動消失。
+- upstream 寫的是它能做什麼，不代表本 fork 全開。
+- module 裝成功，也不代表 LINE 所有功能都跟原版一樣。
+- LINE 版本、patch bundle、遠端配置有改，就重新測廣告、Home、VOOM 和日用功能。
+- 跟 upstream 對不上時，先看 `config.toml`、patch source、workflow 和 commit，不要只看 README。
+- token、CI secret、帳號資料、自己的 signing key 不要丟進 Public repo。
 
-## 語言規則
+## Signing key
 
-本 fork 自己新增的說明與測試結論盡量使用繁體中文；upstream 原始 README、程式碼、config key、指令、package、patch 名稱與其他專有名詞維持原文。
+現在 repo 裡的 `ks.keystore`、`ks-p12.keystore` 跟 Andrew upstream 同名檔案一致，是 upstream 本來就公開追蹤的 build key，不是這次整理時加進去的私人 key。
+
+但這個 repo 是 Public，**不要拿自己的正式 signing key 去覆蓋或新增進 Git history**。
+
+`.gitignore` 已另外擋 `.env`、`local-secrets/`、`*.jks`、`*.p12`、`*.pem`、`*.key`、`*.keystore`。原本 upstream 已經 tracked 的檔案不會因為加 `.gitignore` 自己消失。
+
+自己新增的說明用繁中；upstream README、程式碼、config key、指令、package、patch 名稱保留原文。
 
 ---
 
