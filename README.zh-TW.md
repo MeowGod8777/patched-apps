@@ -4,7 +4,7 @@
 
 ## 這個 Fork 目前的用途
 
-目前主要用來延續 App patch / build 流程，尤其是 LINE 相關 patch 的建置與測試。真正屬於本專案整理過的 LINE 行為差異、Root 相容性、XML Guard、版本風險與測試結論，集中放在另一個 repository：`LINE-Root-Patches`。
+目前主要用來延續 LINE patch / build 流程。真正屬於本專案整理過的 LINE 行為差異、Root 相容性、XML Guard、版本風險與測試結論，集中放在另一個 repository：`LINE-Root-Patches`。
 
 這樣分工可以避免：
 
@@ -12,11 +12,29 @@
 - 把 Andrew 的原始文件誤寫成本專案自己驗證的結論；
 - LINE 專屬研究和通用 builder 混在一起，後續難以維護。
 
+## 目前 `config.toml` 的實際 LINE build
+
+目前本 fork 已核對的設定為：
+
+- `version = "26.11.0"`
+- `arch = "arm64-v8a"`
+- `build-mode = "module"`
+- `exclusive-patches = true`
+- `enable-module-update = false`
+- 只啟用以下 5 個 LINE patches：
+  - `Hide ad views`
+  - `Remove banner ads`
+  - `Hide Home modules`
+  - `Disable VOOM`
+  - `Hide VOOM tab`
+
+因此，Andrew upstream README 中列出的其他 LINE 能力，例如 Wallet / LINE TODAY 移除、keep chats unread、外部連結改走瀏覽器等，**不能直接視為目前這個 fork 已啟用的功能**。本 fork 的實際行為應以 `config.toml`、當次 build 與 `LINE-Root-Patches` 的驗證紀錄為準。
+
 ## 使用時要注意
 
-- `patched-apps` 中列出的功能與相容性，以實際 upstream patch、config、CI 結果和當前 App 版本為準。
-- patched APK / module 的安裝成功，不代表所有功能都與原版一致。
-- LINE patch 可能改變 Wallet / LINE Pay、VOOM、首頁模組、已讀／seen、收回訊息、外部連結與其他附加功能；實際行為應回到 `LINE-Root-Patches` 的版本化紀錄確認。
+- `patched-apps` upstream 文件中的功能與相容性，代表上游專案能力，不等於本 fork 目前 config 全部啟用。
+- patched module 安裝成功，不代表所有功能都與原版一致。
+- LINE 版本、patch bundle 或遠端配置更新後，需要重新驗證去廣告、Home、VOOM 與其他日用功能。
 - 若本 fork 與 Andrew upstream 有差異，應先確認 `config.toml`、patch source、build workflow 與 commit，而不是只看 upstream README。
 - signing key、token、CI secret 與帳號資料不要自行新增到公開 repository。
 
