@@ -38,6 +38,12 @@
 - 若本 fork 與 Andrew upstream 有差異，應先確認 `config.toml`、patch source、build workflow 與 commit，而不是只看 upstream README。
 - signing key、token、CI secret 與帳號資料不要自行新增到公開 repository。
 
+## Signing key 注意
+
+此 fork 目前可看到的 `ks.keystore`、`ks-p12.keystore` 與 Andrew upstream 同名檔案一致，屬於上游本來就公開追蹤的 build key，不是這次整理時新增的私人 key。
+
+但 repository 本身是 Public，因此**不要把個人／正式使用的 signing key 拿來覆蓋或新增進 Git history**。本 fork 的 `.gitignore` 已另外加入 `.env`、`local-secrets/`、`*.jks`、`*.p12`、`*.pem`、`*.key`、`*.keystore` 等規則，降低之後誤加私人憑證的風險；既有 upstream 已追蹤檔案不會因新增 `.gitignore` 而自動消失。
+
 ## 語言規則
 
 本 fork 自己新增的說明與測試結論盡量使用繁體中文；upstream 原始 README、程式碼、config key、指令、package、patch 名稱與其他專有名詞維持原文。
