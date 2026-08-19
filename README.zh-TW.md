@@ -14,6 +14,12 @@ Andrew `patched-apps` 的 fork，目前主要拿來 build LINE 模塊。
 
 LINE 實際日用結果、以前自己的修補、XML Guard、VGuard / security 相容性另外放 `LINE-Root-Patches`。
 
+### 進行時間
+
+- Andrew upstream 本身有自己的歷史，**不把 upstream 的開發時間算成本 fork 的時間。**
+- **本 fork 實際拿來做 LINE 26.11.0 module build／日用整理：2026-08 起。**
+- 之後 LINE / upstream 更新就繼續沿用這條時間線。
+
 ### 目前做到哪
 
 **🟢 LINE 26.11.0 build workspace 目前可用，持續跟 LINE / upstream 維護。**
@@ -114,10 +120,7 @@ repo 裡現有：
 - upstream `README.md` / `CONFIG.md` / `CONTRIBUTING.md`：保留 upstream。
 - `README.zh-TW.md`：本 fork 的中文狀態。
 - `LINE-Root-Patches`：日用／相容性／以前自己的 LINE 修補。
-
-### 待回收
-
-看 `MIGRATION_BACKLOG.md`。
+- `MIGRATION_BACKLOG.md`：舊資料／設定回收。
 
 ---
 
