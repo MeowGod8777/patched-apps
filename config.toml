@@ -10,13 +10,14 @@ build-mode = "module"
 version = "26.11.0"
 arch = "arm64-v8a"
 include-stock = "auto"
-exclusive-patches = true
-included-patches = """\
-  'Hide ad views' \
-  'Remove banner ads' \
-  'Hide Home modules' \
-  'Disable VOOM' \
-  'Hide VOOM tab' \
+excluded-patches = """\
+  'Hide Wallet tab' \
+  'Redirect LINE Pay' \
+  'Hide Transfer button' \
+  'Keep chats unread' \
+  'Hide community button' \
+  'Fix push notifications' \
+  'Fix chat backup sign-in via GmsCore' \
   """
 archive-dlurl = "https://archive.org/download/andrews-apks/apks/jp.naver.line.android"
 apkmirror-dlurl = "https://www.apkmirror.com/apk/line-corporation/line"
