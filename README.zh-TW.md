@@ -12,7 +12,7 @@ Andrew `patched-apps` 的 fork，目前主要拿來 build LINE 模塊。
 
 > **把 Andrew 的 LINE patch 按目前需要的設定 build 成 module。**
 
-LINE 實際日用結果、以前自己的修補、XML Guard、VGuard / security 相容性另外放 `LINE-Root-Patches`。
+LINE 實際日用結果、namespace mount、以前自己的修補、XML Guard、VGuard / security、Standalone LINE Pay 相容性另外放 `LINE-Root-Patches`。
 
 ### 進行時間
 
@@ -30,24 +30,47 @@ LINE 實際日用結果、以前自己的修補、XML Guard、VGuard / security 
 version = 26.11.0
 arch = arm64-v8a
 build-mode = module
-exclusive-patches = true
+include-stock = auto
 enable-module-update = false
 ```
 
-只開 5 個 patch：
+目前不是舊的 `exclusive-patches = true / 只開 5 個 patch` 配置，而是採 **Andrew default patches + exclusions**。
 
-- `Hide ad views`
-- `Remove banner ads`
-- `Hide Home modules`
-- `Disable VOOM`
-- `Hide VOOM tab`
+目前 exclusions：
 
-所以 Andrew upstream README 裡其他能力，**不代表本 fork 現在也有開。**
+- `Hide Wallet tab`
+- `Hide Transfer button`
+- `Keep chats unread`
+- `Hide community button`
+- `Fix push notifications`
+- `Fix chat backup sign-in via GmsCore`
+
+因此目前 build：
+
+- 保留 Wallet tab。
+- 保留聊天室 Transfer / LINE Pay button。
+- 保留社群 button。
+- 不開 `Keep chats unread`。
+- **`Redirect LINE Pay` 目前有啟用。**
+- Andrew 其餘 default patch 依 upstream 當前 default 狀態套用；不能再用舊文件的「只開 5 patch」描述。
+
+### 目前實機 payload
+
+2026-08-20 checkpoint：
+
+```text
+patched LINE base.apk SHA-256:
+683853ceecac06964eac7703e5f02c47fd43ac3afbeba2f80630e614fbd14289
+```
+
+這顆已在實機確認真的進 LINE process，不只是 master namespace 看得到。
+
+LINE Pay merchant `pay/payment/<reserveId>` redirect 也已實測能交給台灣獨立 LINE Pay App。Wallet / 好友轉帳的完整 standalone route 仍在 `LINE-Root-Patches` 繼續研究。
 
 ### 這裡跟 LINE repo 的差別
 
 - **這裡**：build workspace / upstream sync / `config.toml`。
-- **`LINE-Root-Patches`**：真正裝上去之後日用怎樣、以前自己的修補還要不要、版本副作用。
+- **`LINE-Root-Patches`**：真正裝上去之後日用怎樣、namespace mount、以前自己的修補還要不要、LINE Pay / VGuard / Root 相容性。
 
 ### Public repo 注意
 
@@ -66,31 +89,47 @@ enable-module-update = false
 目前：
 
 ```toml
+enable-module-update = false
+parallel-jobs = 1
+
+[LINE-Andrew]
+app-name = "LINE"
+patches-source = "andrewliang25/morphe-patches"
+cli-source = "MorpheApp/morphe-cli"
+rv-brand = "Andrew"
+build-mode = "module"
 version = "26.11.0"
 arch = "arm64-v8a"
-build-mode = "module"
-exclusive-patches = true
-enable-module-update = false
+include-stock = "auto"
+excluded-patches = """\
+  'Hide Wallet tab' \
+  'Hide Transfer button' \
+  'Keep chats unread' \
+  'Hide community button' \
+  'Fix push notifications' \
+  'Fix chat backup sign-in via GmsCore' \
+  """
 ```
 
-實際啟用：
+這代表：
 
-- `Hide ad views`
-- `Remove banner ads`
-- `Hide Home modules`
-- `Disable VOOM`
-- `Hide VOOM tab`
+- 不再維護一份手寫的「只開哪些 patch」清單。
+- Andrew default patch 變動時要重新 review。
+- exclusions 是目前刻意不套的功能。
+- `Redirect LINE Pay` 沒有被 exclude，所以目前會套用。
 
 ### 更新時要看什麼
 
 - LINE version。
-- Andrew upstream patch 名稱／行為。
+- Andrew upstream patch 名稱／default 行為。
 - workflow / builder 變動。
-- `config.toml` 是否還能套。
+- `config.toml` exclusions 是否仍合理。
 - module 能不能 build / 安裝。
-- 實機功能回歸。
+- patched payload SHA-256。
+- 實機 LINE process namespace 是否真的看到 patched payload。
+- LINE Pay / Wallet / Transfer / notification 等功能回歸。
 
-upstream 寫「支援」不等於本 fork 有啟用；到底 build 了什麼以 config / patch source / commit 為準。
+upstream 寫「支援」不等於本 fork 實機已驗證；到底 build 了什麼以 config / patch source / commit / payload 為準。
 
 ### Signing key
 
@@ -118,8 +157,8 @@ repo 裡現有：
 ### 文件分工
 
 - upstream `README.md` / `CONFIG.md` / `CONTRIBUTING.md`：保留 upstream。
-- `README.zh-TW.md`：本 fork 的中文狀態。
-- `LINE-Root-Patches`：日用／相容性／以前自己的 LINE 修補。
+- `README.zh-TW.md`：本 fork 的中文 build/config 狀態。
+- `LINE-Root-Patches`：日用／namespace mount／相容性／以前自己的 LINE 修補／LINE Pay。
 - `MIGRATION_BACKLOG.md`：舊資料／設定回收。
 
 ---
