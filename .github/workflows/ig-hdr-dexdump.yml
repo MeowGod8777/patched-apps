@@ -29,7 +29,7 @@ jobs:
           mkdir -p work/dex
           gh release download 8 --pattern "$APK_NAME" --dir work
           echo "$APK_SHA256  work/$APK_NAME" | sha256sum -c -
-          unzip -j "work/$APK_NAME" 'classes*.dex' -d work/dex
+          unzip -j "work/$APK_NAME" 'classes.dex' -d work/dex
 
       - name: Find dexdump
         run: |
@@ -37,66 +37,54 @@ jobs:
           test -n "$DEXDUMP"
           echo "DEXDUMP=$DEXDUMP" >> "$GITHUB_ENV"
 
-      - name: Trace exact 439 MobileConfig decoder
+      - name: Emit concise decoder report
         shell: bash
         run: |
           mkdir -p research/generated work/dis
-          REPORT=research/generated/instagram_439_hdr_decoder_report.txt
+          REPORT=research/generated/instagram_439_hdr_decoder_concise.txt
+          "$DEXDUMP" -d -f -h work/dex/classes.dex > work/dis/classes.txt
           : > "$REPORT"
           {
-            echo "Instagram 439 exact MobileConfig decoder probe"
-            echo "=============================================="
-            echo "APK: $APK_NAME"
-            echo "SHA256: $APK_SHA256"
-            echo "Known mapping anchor: 74463::20 = ig4a_groot_surface_optimization::enable_hdr_sdr_ratio"
-            echo "Exact 439 parser class: X.04Kj"
-            echo "Exact 439 universal-ID decoder: X.00Al.A00(J)I"
-            echo "Generated: $(date -u +%FT%TZ)"
+            echo "Instagram 439 MobileConfig decoder concise report"
+            echo "================================================"
+            echo "APK SHA256: $APK_SHA256"
+            echo "Mapping anchor: 74463::20 = ig4a_groot_surface_optimization::enable_hdr_sdr_ratio"
             echo
           } >> "$REPORT"
 
-          "$DEXDUMP" -d -f -h work/dex/classes.dex > work/dis/classes.txt
-
-          extract_class() {
-            local cls="$1"
-            local label="$2"
-            local line
+          slice_class() {
+            cls="$1"; label="$2"; span="$3"
             line="$(grep -nF "Class descriptor  : '$cls'" work/dis/classes.txt | head -1 | cut -d: -f1 || true)"
             {
-              echo
-              echo "===== $label ($cls) ====="
+              echo "===== $label ====="
               if [ -n "$line" ]; then
-                local start=$(( line > 15 ? line - 15 : 1 ))
-                local end=$(( line + 700 ))
+                start=$((line>8?line-8:1)); end=$((line+span))
                 sed -n "${start},${end}p" work/dis/classes.txt
               else
-                echo "CLASS NOT FOUND"
+                echo "NOT FOUND: $cls"
               fi
+              echo
             } >> "$REPORT"
           }
 
-          extract_class 'LX/00Al;' 'UNIVERSAL-ID DECODER'
-          extract_class 'LX/04Kj;' 'EXPERIMENT PARAMETER WRAPPER'
+          slice_class 'LX/00Al;' 'X.00Al universal-ID decoder' 180
+          slice_class 'LX/04Kj;' 'X.04Kj ExperimentParameter wrapper' 220
 
           {
-            echo
-            echo "===== ALL CALLS TO X.00Al.A00(J)I IN classes.dex ====="
-            grep -n -B 40 -A 80 -F 'LX/00Al;.A00:(J)I' work/dis/classes.txt || true
-            echo
-            echo "===== LARGE CONST-WIDE VALUES NEAR MOBILECONFIG QUERIES ====="
-            grep -n -B 20 -A 50 -E 'const-wide|LX/00Al;.A00:\(J\)I|ExperimentParameter|Failed to get config key with specifier' work/dis/classes.txt | head -n 12000 || true
+            echo "===== exact X.00Al.A00 callers ====="
+            grep -n -B 14 -A 28 -F 'LX/00Al;.A00:(J)I' work/dis/classes.txt || true
           } >> "$REPORT"
 
-          echo "===== DECODER SUMMARY ====="
-          grep -nE "UNIVERSAL-ID DECODER|X\.00Al\.A00|ushr-long|shr-long|shl-long|and-long|long-to-int|const-wide|return" "$REPORT" | head -n 1600 || true
+          wc -l "$REPORT"
+          sed -n '1,260p' "$REPORT"
 
-      - name: Commit decoder report
+      - name: Commit concise report
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add research/generated/instagram_439_hdr_decoder_report.txt
+          git add research/generated/instagram_439_hdr_decoder_concise.txt
           if ! git diff --cached --quiet; then
-            git commit -m "Add exact Instagram 439 MobileConfig decoder report"
+            git commit -m "Add concise Instagram 439 MobileConfig decoder report"
           fi
           git pull --rebase origin main
           git push origin HEAD:main
