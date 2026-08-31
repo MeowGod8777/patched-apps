@@ -1,0 +1,283 @@
+Instagram 439 MobileConfig decoder concise report
+================================================
+APK SHA256: 4015b171ac59f3e7172134d194ec2dcf701f64c3339f127c19d7a04c13d529c8
+Mapping anchor: 74463::20 = ig4a_groot_surface_optimization::enable_hdr_sdr_ratio
+
+===== X.00Al universal-ID decoder =====
+NOT FOUND: LX/00Al;
+
+===== X.04Kj ExperimentParameter wrapper =====
+annotations_off     : 0 (0x000000)
+class_data_off      : 1101367 (0x10ce37)
+static_fields_size  : 0
+instance_fields_size: 3
+direct_methods_size : 1
+virtual_methods_size: 4
+
+Class #15            -
+  Class descriptor  : 'LX/04Kj;'
+  Access flags      : 0x0401 (PUBLIC ABSTRACT)
+  Superclass        : 'Ljava/lang/Object;'
+  Interfaces        -
+  Static fields     -
+  Instance fields   -
+    #0              : (in LX/04Kj;)
+      name          : 'A00'
+      type          : 'J'
+      access        : 0x0011 (PUBLIC FINAL)
+    #1              : (in LX/04Kj;)
+      name          : 'A01'
+      type          : 'Ljava/lang/String;'
+      access        : 0x0011 (PUBLIC FINAL)
+    #2              : (in LX/04Kj;)
+      name          : 'A02'
+      type          : 'Ljava/lang/String;'
+      access        : 0x0011 (PUBLIC FINAL)
+  Direct methods    -
+    #0              : (in LX/04Kj;)
+      name          : '<init>'
+      type          : '(JLjava/lang/String;Ljava/lang/String;)V'
+      access        : 0x10001 (PUBLIC CONSTRUCTOR)
+      method_idx    : 1610
+      code          -
+      registers     : 5
+      ins           : 5
+      outs          : 1
+      insns size    : 10 16-bit code units
+08cde4:                                        |[08cde4] X.04Kj.<init>:(JLjava/lang/String;Ljava/lang/String;)V
+08cdf4: 7010 8f21 0000                         |0000: invoke-direct {v0}, Ljava/lang/Object;.<init>:()V // method@218f
+08cdfa: 5b03 d802                              |0003: iput-object v3, v0, LX/04Kj;.A01:Ljava/lang/String; // field@02d8
+08cdfe: 5b04 d902                              |0005: iput-object v4, v0, LX/04Kj;.A02:Ljava/lang/String; // field@02d9
+08ce02: 5a01 d702                              |0007: iput-wide v1, v0, LX/04Kj;.A00:J // field@02d7
+08ce06: 0e00                                   |0009: return-void
+      catches       : (none)
+      positions     :
+      locals        :
+
+  Virtual methods   -
+    #0              : (in LX/04Kj;)
+      name          : 'A02'
+      type          : '()I'
+      access        : 0x0011 (PUBLIC FINAL)
+      method_idx    : 1611
+      code          -
+      registers     : 5
+      ins           : 1
+      outs          : 4
+      insns size    : 27 16-bit code units
+08ce08:                                        |[08ce08] X.04Kj.A02:()I
+08ce18: 5340 d702                              |0000: iget-wide v0, v4, LX/04Kj;.A00:J // field@02d7
+08ce1c: 7120 fc00 1000                         |0002: invoke-static {v0, v1}, LX/00Al;.A00:(J)I // method@00fc
+08ce22: 0a00                                   |0005: move-result v0
+08ce24: 0f00                                   |0006: return v0
+08ce26: 0d03                                   |0007: move-exception v3
+08ce28: 5340 d702                              |0008: iget-wide v0, v4, LX/04Kj;.A00:J // field@02d7
+08ce2c: 7120 7d21 1000                         |000a: invoke-static {v0, v1}, Ljava/lang/Long;.valueOf:(J)Ljava/lang/Long; // method@217d
+08ce32: 0c00                                   |000d: move-result-object v0
+08ce34: 2410 7c12 0000                         |000e: filled-new-array {v0}, [Ljava/lang/Object; // type@127c
+08ce3a: 0c02                                   |0011: move-result-object v2
+08ce3c: 1a01 a906                              |0012: const-string v1, "ExperimentParameter" // string@06a9
+08ce40: 1a00 3407                              |0014: const-string v0, "Failed to get config key with specifier:%d" // string@0734
+08ce44: 7140 2601 0123                         |0016: invoke-static {v1, v0, v3, v2}, LX/00Iv;.A0J:(Ljava/lang/String;Ljava/lang/String;Ljava/lang/Throwable;[Ljava/lang/Object;)V // method@0126
+08ce4a: 12f0                                   |0019: const/4 v0, #int -1 // #ff
+08ce4c: 0f00                                   |001a: return v0
+      catches       : 1
+        0x0000 - 0x0007
+          LX/004d; -> 0x0007
+      positions     :
+      locals        :
+
+    #1              : (in LX/04Kj;)
+      name          : 'A03'
+      type          : '()Ljava/lang/Object;'
+      access        : 0x0011 (PUBLIC FINAL)
+      method_idx    : 1612
+      code          -
+      registers     : 8
+      ins           : 1
+      outs          : 2
+      insns size    : 66 16-bit code units
+08ce5c:                                        |[08ce5c] X.04Kj.A03:()Ljava/lang/Object;
+08ce6c: 5371 d702                              |0000: iget-wide v1, v7, LX/04Kj;.A00:J // field@02d7
+08ce70: 1300 3000                              |0002: const/16 v0, #int 48 // #30
+08ce74: a505 0100                              |0004: ushr-long v5, v1, v0
+08ce78: 1603 3f00                              |0006: const-wide/16 v3, #int 63 // #3f
+08ce7c: c035                                   |0008: and-long/2addr v5, v3
+08ce7e: 8453                                   |0009: long-to-int v3, v5
+08ce80: 1210                                   |000a: const/4 v0, #int 1 // #1
+08ce82: 3203 2e00                              |000b: if-eq v3, v0, 0039 // +002e
+08ce86: 1220                                   |000d: const/4 v0, #int 2 // #2
+08ce88: 3203 2200                              |000e: if-eq v3, v0, 0030 // +0022
+08ce8c: 1230                                   |0010: const/4 v0, #int 3 // #3
+08ce8e: 3203 1a00                              |0011: if-eq v3, v0, 002b // +001a
+08ce92: 1240                                   |0013: const/4 v0, #int 4 // #4
+08ce94: 3203 0e00                              |0014: if-eq v3, v0, 0022 // +000e
+08ce98: 1a00 3000                              |0016: const-string v0, " is not supported" // string@0030
+08ce9c: 7120 6a00 0300                         |0018: invoke-static {v3, v0}, LX/002b;.A04:(ILjava/lang/String;)Ljava/lang/String; // method@006a
+08cea2: 0c01                                   |001b: move-result-object v1
+08cea4: 2200 c211                              |001c: new-instance v0, Ljava/lang/IllegalStateException; // type@11c2
+08cea8: 7020 6d21 1000                         |001e: invoke-direct {v0, v1}, Ljava/lang/IllegalStateException;.<init>:(Ljava/lang/String;)V // method@216d
+08ceae: 2700                                   |0021: throw v0
+08ceb0: 7120 f900 2100                         |0022: invoke-static {v1, v2}, LX/00Aj;.A04:(J)D // method@00f9
+08ceb6: 0b00                                   |0025: move-result-wide v0
+08ceb8: 7120 5e21 1000                         |0026: invoke-static {v0, v1}, Ljava/lang/Double;.valueOf:(D)Ljava/lang/Double; // method@215e
+08cebe: 0c00                                   |0029: move-result-object v0
+08cec0: 1100                                   |002a: return-object v0
+08cec2: 7120 fb00 2100                         |002b: invoke-static {v1, v2}, LX/00Aj;.A0E:(J)Ljava/lang/String; // method@00fb
+08cec8: 0c00                                   |002e: move-result-object v0
+08ceca: 1100                                   |002f: return-object v0
+08cecc: 7120 fa00 2100                         |0030: invoke-static {v1, v2}, LX/00Aj;.A09:(J)J // method@00fa
+08ced2: 0b00                                   |0033: move-result-wide v0
+08ced4: 7120 7d21 1000                         |0034: invoke-static {v0, v1}, Ljava/lang/Long;.valueOf:(J)Ljava/lang/Long; // method@217d
+08ceda: 0c00                                   |0037: move-result-object v0
+08cedc: 1100                                   |0038: return-object v0
+08cede: 7120 8300 2100                         |0039: invoke-static {v1, v2}, LX/003s;.A04:(J)Z // method@0083
+08cee4: 0a00                                   |003c: move-result v0
+08cee6: 7110 3e21 0000                         |003d: invoke-static {v0}, Ljava/lang/Boolean;.valueOf:(Z)Ljava/lang/Boolean; // method@213e
+08ceec: 0c00                                   |0040: move-result-object v0
+08ceee: 1100                                   |0041: return-object v0
+      catches       : (none)
+      positions     :
+      locals        :
+
+    #2              : (in LX/04Kj;)
+      name          : 'equals'
+      type          : '(Ljava/lang/Object;)Z'
+      access        : 0x0011 (PUBLIC FINAL)
+      method_idx    : 1613
+      code          -
+      registers     : 7
+      ins           : 2
+      outs          : 0
+      insns size    : 22 16-bit code units
+08cef0:                                        |[08cef0] X.04Kj.equals:(Ljava/lang/Object;)Z
+08cf00: 3265 1200                              |0000: if-eq v5, v6, 0012 // +0012
+08cf04: 2060 7d03                              |0002: instance-of v0, v6, LX/04Kj; // type@037d
+08cf08: 3800 1000                              |0004: if-eqz v0, 0014 // +0010
+08cf0c: 1f06 7d03                              |0006: check-cast v6, LX/04Kj; // type@037d
+08cf10: 3806 0c00                              |0008: if-eqz v6, 0014 // +000c
+08cf14: 5353 d702                              |000a: iget-wide v3, v5, LX/04Kj;.A00:J // field@02d7
+08cf18: 5361 d702                              |000c: iget-wide v1, v6, LX/04Kj;.A00:J // field@02d7
+08cf1c: 3100 0301                              |000e: cmp-long v0, v3, v1
+08cf20: 3900 0400                              |0010: if-nez v0, 0014 // +0004
+08cf24: 1210                                   |0012: const/4 v0, #int 1 // #1
+08cf26: 0f00                                   |0013: return v0
+08cf28: 1200                                   |0014: const/4 v0, #int 0 // #0
+08cf2a: 0f00                                   |0015: return v0
+      catches       : (none)
+      positions     :
+      locals        :
+
+    #3              : (in LX/04Kj;)
+      name          : 'hashCode'
+      type          : '()I'
+      access        : 0x0011 (PUBLIC FINAL)
+      method_idx    : 1614
+      code          -
+      registers     : 3
+      ins           : 1
+      outs          : 2
+      insns size    : 15 16-bit code units
+08cf2c:                                        |[08cf2c] X.04Kj.hashCode:()I
+08cf3c: 5320 d702                              |0000: iget-wide v0, v2, LX/04Kj;.A00:J // field@02d7
+08cf40: 7120 7d21 1000                         |0002: invoke-static {v0, v1}, Ljava/lang/Long;.valueOf:(J)Ljava/lang/Long; // method@217d
+08cf46: 0c00                                   |0005: move-result-object v0
+08cf48: 2410 7c12 0000                         |0006: filled-new-array {v0}, [Ljava/lang/Object; // type@127c
+08cf4e: 0c00                                   |0009: move-result-object v0
+08cf50: 7110 4c22 0000                         |000a: invoke-static {v0}, Ljava/util/Arrays;.hashCode:([Ljava/lang/Object;)I // method@224c
+08cf56: 0a00                                   |000d: move-result v0
+08cf58: 0f00                                   |000e: return v0
+      catches       : (none)
+      positions     :
+      locals        :
+
+  source_file_idx   : 0 ()
+
+Class #16 header:
+class_idx           : 2028
+access_flags        : 1025 (0x0401)
+superclass_idx      : 4558
+interfaces_off      : 0 (0x000000)
+source_file_idx     : 0
+annotations_off     : 0 (0x000000)
+class_data_off      : 1101407 (0x10ce5f)
+static_fields_size  : 0
+instance_fields_size: 114
+direct_methods_size : 1
+virtual_methods_size: 0
+
+Class #16            -
+  Class descriptor  : 'LX/0AZh;'
+  Access flags      : 0x0401 (PUBLIC ABSTRACT)
+  Superclass        : 'Ljava/lang/Object;'
+  Interfaces        -
+  Static fields     -
+  Instance fields   -
+    #0              : (in LX/0AZh;)
+      name          : 'A00'
+      type          : 'I'
+      access        : 0x0001 (PUBLIC)
+    #1              : (in LX/0AZh;)
+      name          : 'A01'
+      type          : 'I'
+      access        : 0x0001 (PUBLIC)
+    #2              : (in LX/0AZh;)
+      name          : 'A02'
+      type          : 'LX/0IyP;'
+      access        : 0x0001 (PUBLIC)
+    #3              : (in LX/0AZh;)
+      name          : 'A03'
+      type          : 'LX/04Uz;'
+      access        : 0x0001 (PUBLIC)
+    #4              : (in LX/0AZh;)
+      name          : 'A04'
+      type          : 'Lcom/instagram/direct/model/genai/GenAIParamsMetadata;'
+      access        : 0x0001 (PUBLIC)
+    #5              : (in LX/0AZh;)
+      name          : 'A05'
+      type          : 'LX/0Bq5;'
+
+===== exact X.00Al.A00 callers =====
+8762-
+8763-  Virtual methods   -
+8764-    #0              : (in LX/04Kj;)
+8765-      name          : 'A02'
+8766-      type          : '()I'
+8767-      access        : 0x0011 (PUBLIC FINAL)
+8768-      method_idx    : 1611
+8769-      code          -
+8770-      registers     : 5
+8771-      ins           : 1
+8772-      outs          : 4
+8773-      insns size    : 27 16-bit code units
+8774-08ce08:                                        |[08ce08] X.04Kj.A02:()I
+8775-08ce18: 5340 d702                              |0000: iget-wide v0, v4, LX/04Kj;.A00:J // field@02d7
+8776:08ce1c: 7120 fc00 1000                         |0002: invoke-static {v0, v1}, LX/00Al;.A00:(J)I // method@00fc
+8777-08ce22: 0a00                                   |0005: move-result v0
+8778-08ce24: 0f00                                   |0006: return v0
+8779-08ce26: 0d03                                   |0007: move-exception v3
+8780-08ce28: 5340 d702                              |0008: iget-wide v0, v4, LX/04Kj;.A00:J // field@02d7
+8781-08ce2c: 7120 7d21 1000                         |000a: invoke-static {v0, v1}, Ljava/lang/Long;.valueOf:(J)Ljava/lang/Long; // method@217d
+8782-08ce32: 0c00                                   |000d: move-result-object v0
+8783-08ce34: 2410 7c12 0000                         |000e: filled-new-array {v0}, [Ljava/lang/Object; // type@127c
+8784-08ce3a: 0c02                                   |0011: move-result-object v2
+8785-08ce3c: 1a01 a906                              |0012: const-string v1, "ExperimentParameter" // string@06a9
+8786-08ce40: 1a00 3407                              |0014: const-string v0, "Failed to get config key with specifier:%d" // string@0734
+8787-08ce44: 7140 2601 0123                         |0016: invoke-static {v1, v0, v3, v2}, LX/00Iv;.A0J:(Ljava/lang/String;Ljava/lang/String;Ljava/lang/Throwable;[Ljava/lang/Object;)V // method@0126
+8788-08ce4a: 12f0                                   |0019: const/4 v0, #int -1 // #ff
+8789-08ce4c: 0f00                                   |001a: return v0
+8790-      catches       : 1
+8791-        0x0000 - 0x0007
+8792-          LX/004d; -> 0x0007
+8793-      positions     :
+8794-      locals        :
+8795-
+8796-    #1              : (in LX/04Kj;)
+8797-      name          : 'A03'
+8798-      type          : '()Ljava/lang/Object;'
+8799-      access        : 0x0011 (PUBLIC FINAL)
+8800-      method_idx    : 1612
+8801-      code          -
+8802-      registers     : 8
+8803-      ins           : 1
+8804-      outs          : 2
