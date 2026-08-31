@@ -165,14 +165,26 @@ A first runtime probe used `dumpsys media.metrics --all` while Instagram content
 
 Therefore this probe is **inconclusive** and must not be interpreted as evidence that Instagram selected an SDR rendition. It indicates only that `media.metrics` did not expose the relevant Instagram video decode path in this session.
 
-Next probe should observe the active codec/render path directly (`media.codec` and/or controlled `logcat` around codec configuration) rather than reuse the same `media.metrics` query.
+## Media-path probe #2: controlled codec logcat
+
+`dumpsys media.codec` is not available on this Android 16 V2329A build (`Can't find service: media.codec`), so that route is dropped.
+
+A controlled logcat capture after restarting target Instagram playback **did** capture the active video decoder path:
+
+```text
+MediaCodec: [c2.qti.av1.decoder] setting surface generation ...
+CCodec: Created component [c2.qti.av1.decoder]
+```
+
+The same process also initialized `c2.android.aac.decoder` for audio. The video path is therefore confirmed to use the Qualcomm hardware AV1 decoder on this session/content.
+
+This is useful but **not sufficient to classify SDR vs HDR**: AV1 can carry either SDR or HDR. The next probe must extract AV1 decoder color aspects / output dataspace, especially transfer, primaries, matrix/range, HDR static metadata, or SurfaceFlinger layer dataspace.
 
 ## Current repair direction
 
-Next high-information check is media/render-path comparison rather than more MetaConfig toggles:
+Next high-information check is the AV1 decoder/render metadata rather than more MetaConfig toggles:
 
-- determine the selected decoder input/output color transfer / dataspace for the same HDR Reel;
-- compare a device/session where Instagram actually enters HDR against V2329A;
+- determine the selected decoder color transfer / dataspace for the active `c2.qti.av1.decoder` session;
 - if V2329A receives SDR, patch/spoof Meta device capability / HDR rendition eligibility;
 - if V2329A receives HDR but SurfaceFlinger sees no HDR layer, patch Instagram Surface/headroom presentation.
 
