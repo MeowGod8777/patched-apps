@@ -37,7 +37,7 @@ jobs:
           test -n "$DEXDUMP"
           echo "DEXDUMP=$DEXDUMP" >> "$GITHUB_ENV"
 
-      - name: Extract exact MobileConfig helper classes
+      - name: Trace exact Piko MobileConfig fingerprint
         shell: bash
         run: |
           mkdir -p research/generated work/dis
@@ -49,40 +49,32 @@ jobs:
             echo "APK: $APK_NAME"
             echo "SHA256: $APK_SHA256"
             echo "Mapping anchor: 74463::20 = ig4a_groot_surface_optimization::enable_hdr_sdr_ratio"
-            echo "Piko runtime helpers: X.0B3D.A00(J)I, X.BSw, X.Sb1"
+            echo "Piko fingerprint: ExperimentParameter + Failed to get config key with specifier:%d"
             echo "Generated: $(date -u +%FT%TZ)"
             echo
           } >> "$REPORT"
 
           HIT=0
           for d in work/dex/classes*.dex; do
-            if grep -aEq 'LX/0B3D;|LX/BSw;|LX/Sb1;' "$d"; then
+            if grep -aFq 'Failed to get config key with specifier:%d' "$d"; then
               HIT=1
               b="$(basename "$d" .dex)"
-              echo "Helper descriptor hit in $d" | tee -a "$REPORT"
+              echo "Fingerprint string hit in $d" | tee -a "$REPORT"
               "$DEXDUMP" -d -f -h "$d" > "work/dis/$b.txt"
-              for cls in 'LX/0B3D;' 'LX/BSw;' 'LX/Sb1;'; do
-                line="$(grep -nF "Class descriptor  : '$cls'" "work/dis/$b.txt" | head -1 | cut -d: -f1 || true)"
-                {
-                  echo
-                  echo "===== $b EXACT CLASS $cls ====="
-                  if [ -n "$line" ]; then
-                    start=$(( line > 15 ? line - 15 : 1 ))
-                    end=$(( line + 500 ))
-                    sed -n "${start},${end}p" "work/dis/$b.txt"
-                  else
-                    echo "CLASS DESCRIPTOR NOT FOUND IN DEXDUMP TEXT"
-                    echo "Raw descriptor occurrences:"
-                    grep -nF "$cls" "work/dis/$b.txt" | head -50 || true
-                  fi
-                } >> "$REPORT"
-              done
+              {
+                echo
+                echo "===== $b EXACT FINGERPRINT CONTEXT: FAILED CONFIG KEY ====="
+                grep -n -B 180 -A 220 -F 'Failed to get config key with specifier:%d' "work/dis/$b.txt" || true
+                echo
+                echo "===== $b EXACT FINGERPRINT CONTEXT: ExperimentParameter ====="
+                grep -n -B 180 -A 220 -F 'ExperimentParameter' "work/dis/$b.txt" || true
+              } >> "$REPORT"
             fi
           done
           test "$HIT" -eq 1
 
-          echo "===== EXACT HELPER SUMMARY ====="
-          grep -nE "EXACT CLASS|Class descriptor|name[[:space:]]*: 'A00'|type[[:space:]]*: '\(J\)I'|ushr|shr-|and-|return" "$REPORT" | head -n 1200 || true
+          echo "===== FINGERPRINT SUMMARY ====="
+          grep -nE 'Fingerprint string hit|ExperimentParameter|Failed to get config key|invoke-static|const-wide|Class descriptor|name[[:space:]]*:' "$REPORT" | head -n 2000 || true
 
       - name: Commit fast probe report
         run: |
@@ -90,7 +82,7 @@ jobs:
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add research/generated/instagram_439_hdr_fast_dex_report.txt
           if ! git diff --cached --quiet; then
-            git commit -m "Refine Instagram 439 MobileConfig decoder report"
+            git commit -m "Trace exact Instagram 439 MobileConfig fingerprint"
           fi
           git pull --rebase origin main
           git push origin HEAD:main
