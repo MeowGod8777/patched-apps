@@ -1,0 +1,94 @@
+Instagram 439 Groot HDR A07 consumer summary
+============================================
+74463::20 true + API>=35 => X.02g4.A07=true
+
+===== classes15: A07 refs=3 =====
+WRITE: 483bae: 5c73 2b2d                              |0121: iput-boolean v3, v7, LX/02g4;.A07:Z // field@2d2b
+  METHOD: [48395c] X.02Ug.A00:(LX/02g4;)LX/02Vh;
+
+READ: 4a15e4: 5570 2b2d                              |0232: iget-boolean v0, v7, LX/02g4;.A07:Z // field@2d2b
+  METHOD: [4a1170] X.02g4.A00:()Ljava/util/HashMap;
+    4a15a2: 6e30 87ed 0301                         |0211: invoke-virtual {v3, v0, v1}, Ljava/util/AbstractMap;.put:(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object; // method@ed87
+    4a15a8: 1b00 3f0d 0100                         |0214: const-string/jumbo v0, "sc_cropAfterSetBufferSize" // string@00010d3f
+    4a15ae: 6e30 87ed 0302                         |0217: invoke-virtual {v3, v0, v2}, Ljava/util/AbstractMap;.put:(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object; // method@ed87
+    4a15b4: 1b00 840d 0100                         |021a: const-string/jumbo v0, "sc_useLayoutParamsForReparent" // string@00010d84
+    4a15ba: 6e30 87ed 0302                         |021d: invoke-virtual {v3, v0, v2}, Ljava/util/AbstractMap;.put:(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object; // method@ed87
+    4a15c0: 1b00 720d 0100                         |0220: const-string/jumbo v0, "sc_recycleSurfaceView" // string@00010d72
+    4a15c6: 6e30 87ed 0302                         |0223: invoke-virtual {v3, v0, v2}, Ljava/util/AbstractMap;.put:(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object; // method@ed87
+    4a15cc: 5570 2d2d                              |0226: iget-boolean v0, v7, LX/02g4;.A09:Z // field@2d2d
+    4a15d0: 7110 9eeb 0000                         |0228: invoke-static {v0}, Ljava/lang/Boolean;.valueOf:(Z)Ljava/lang/Boolean; // method@eb9e
+    4a15d6: 0c01                                   |022b: move-result-object v1
+    4a15d8: 1b00 3e0d 0100                         |022c: const-string/jumbo v0, "sc_cleanGrootControlSurfaceViewListenerAggressively" // string@00010d3e
+    4a15de: 6e30 87ed 0301                         |022f: invoke-virtual {v3, v0, v1}, Ljava/util/AbstractMap;.put:(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object; // method@ed87
+    4a15e4: 5570 2b2d                              |0232: iget-boolean v0, v7, LX/02g4;.A07:Z // field@2d2b
+    4a15e8: 7110 9eeb 0000                         |0234: invoke-static {v0}, Ljava/lang/Boolean;.valueOf:(Z)Ljava/lang/Boolean; // method@eb9e
+    4a15ee: 0c01                                   |0237: move-result-object v1
+    4a15f0: 1b00 3c0d 0100                         |0238: const-string/jumbo v0, "sc_applyDesiredHdrSdrRatio" // string@00010d3c
+    4a15f6: 6e30 87ed 0301                         |023b: invoke-virtual {v3, v0, v1}, Ljava/util/AbstractMap;.put:(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object; // method@ed87
+    4a15fc: 1500 c03f                              |023e: const/high16 v0, #int 1069547520 // #3fc0
+    4a1600: 7110 eeeb 0000                         |0240: invoke-static {v0}, Ljava/lang/Float;.valueOf:(F)Ljava/lang/Float; // method@ebee
+    4a1606: 0c01                                   |0243: move-result-object v1
+    4a1608: 1b00 400d 0100                         |0244: const-string/jumbo v0, "sc_desiredHdrSdrRatio" // string@00010d40
+    4a160e: 6e30 87ed 0301                         |0247: invoke-virtual {v3, v0, v1}, Ljava/util/AbstractMap;.put:(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object; // method@ed87
+    4a1614: 5570 392d                              |024a: iget-boolean v0, v7, LX/02g4;.A0L:Z // field@2d39
+    4a1618: 7110 9eeb 0000                         |024c: invoke-static {v0}, Ljava/lang/Boolean;.valueOf:(Z)Ljava/lang/Boolean; // method@eb9e
+    4a161e: 0c01                                   |024f: move-result-object v1
+    4a1620: 1b00 730d 0100                         |0250: const-string/jumbo v0, "sc_releaseListenerOnReuseTextureView" // string@00010d73
+    4a1626: 6e30 87ed 0301                         |0253: invoke-virtual {v3, v0, v1}, Ljava/util/AbstractMap;.put:(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object; // method@ed87
+    4a162c: 1b00 880d 0100                         |0256: const-string/jumbo v0, "sc_use_opaque_pixel_format" // string@00010d88
+    4a1632: 6e30 87ed 0302                         |0259: invoke-virtual {v3, v0, v2}, Ljava/util/AbstractMap;.put:(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object; // method@ed87
+    4a1638: 5270 252d                              |025c: iget v0, v7, LX/02g4;.A01:I // field@2d25
+    4a163c: 7110 01ec 0000                         |025e: invoke-static {v0}, Ljava/lang/Integer;.valueOf:(I)Ljava/lang/Integer; // method@ec01
+    4a1642: 0c01                                   |0261: move-result-object v1
+    4a1644: 1b00 6d0d 0100                         |0262: const-string/jumbo v0, "sc_lifecycle_strategy" // string@00010d6d
+    4a164a: 6e30 87ed 0301                         |0265: invoke-virtual {v3, v0, v1}, Ljava/util/AbstractMap;.put:(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object; // method@ed87
+    4a1650: 1600 ffff                              |0268: const-wide/16 v0, #int -1 // #ffff
+    4a1654: 7120 0aec 1000                         |026a: invoke-static {v0, v1}, Ljava/lang/Long;.valueOf:(J)Ljava/lang/Long; // method@ec0a
+    4a165a: 0c01                                   |026d: move-result-object v1
+    4a165c: 1b00 520d 0100                         |026e: const-string/jumbo v0, "sc_enable_release_on_post_frame" // string@00010d52
+    4a1662: 6e30 87ed 0301                         |0271: invoke-virtual {v3, v0, v1}, Ljava/util/AbstractMap;.put:(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object; // method@ed87
+    4a1668: 5570 432d                              |0274: iget-boolean v0, v7, LX/02g4;.A0V:Z // field@2d43
+
+READ: 4aa634: 5590 2b2d                              |00c4: iget-boolean v0, v9, LX/02g4;.A07:Z // field@2d2b
+  METHOD: [4aa49c] X.02q6.B0T:(Landroid/content/Context;LX/02Vx;LX/02Vx;)Landroid/view/View;
+    4aa600: 54ca f72f                              |00aa: iget-object v10, v12, LX/02q6;.A05:LX/0Zlj; // field@2ff7
+    4aa604: 2204 2432                              |00ac: new-instance v4, LX/06EF; // type@3224
+    4aa608: 7608 3770 0400                         |00ae: invoke-direct/range {v4, v5, v6, v7, v8, v9, v10, v11}, LX/06EF;.<init>:(Landroid/view/SurfaceControl;Landroid/view/SurfaceView;LX/02Vx;LX/02Vx;LX/02g4;LX/0Zlj;LX/0Akm;)V // method@7037
+    4aa60e: 54c0 f22f                              |00b1: iget-object v0, v12, LX/02q6;.A00:Landroid/view/Surface; // field@2ff2
+    4aa612: 5b40 5064                              |00b3: iput-object v0, v4, LX/06EF;.A00:Landroid/view/Surface; // field@6450
+    4aa616: 3801 0900                              |00b5: if-eqz v1, 00be // +0009
+    4aa61a: 6e10 5cc4 0600                         |00b7: invoke-virtual {v6}, Landroid/view/SurfaceView;.getHolder:()Landroid/view/SurfaceHolder; // method@c45c
+    4aa620: 0c00                                   |00ba: move-result-object v0
+    4aa622: 7220 5ac4 4000                         |00bb: invoke-interface {v0, v4}, Landroid/view/SurfaceHolder;.addCallback:(Landroid/view/SurfaceHolder$Callback;)V // method@c45a
+    4aa628: 6003 b693                              |00be: sget v3, Landroid/os/Build$VERSION;.SDK_INT:I // field@93b6
+    4aa62c: 1300 2300                              |00c0: const/16 v0, #int 35 // #23
+    4aa630: 3403 1a00                              |00c2: if-lt v3, v0, 00dc // +001a
+    4aa634: 5590 2b2d                              |00c4: iget-boolean v0, v9, LX/02g4;.A07:Z // field@2d2b
+    4aa638: 3800 1600                              |00c6: if-eqz v0, 00dc // +0016
+    4aa63c: 54c1 f62f                              |00c8: iget-object v1, v12, LX/02q6;.A04:Landroid/view/SurfaceView; // field@2ff6
+    4aa640: 3801 0700                              |00ca: if-eqz v1, 00d1 // +0007
+    4aa644: 1500 c03f                              |00cc: const/high16 v0, #int 1069547520 // #3fc0
+    4aa648: 6e20 5dc4 0100                         |00ce: invoke-virtual {v1, v0}, Landroid/view/SurfaceView;.setDesiredHdrHeadroom:(F)V // method@c45d
+    4aa64e: 2200 2b32                              |00d1: new-instance v0, LX/06EM; // type@322b
+    4aa652: 7020 3e70 9000                         |00d3: invoke-direct {v0, v9}, LX/06EM;.<init>:(LX/02g4;)V // method@703e
+    4aa658: 6e20 4070 5000                         |00d6: invoke-virtual {v0, v5}, LX/06EM;.A03:(Landroid/view/SurfaceControl;)V // method@7040
+    4aa65e: 6e20 3f70 5000                         |00d9: invoke-virtual {v0, v5}, LX/06EM;.A02:(Landroid/view/SurfaceControl;)V // method@703f
+    4aa664: 1300 2200                              |00dc: const/16 v0, #int 34 // #22
+    4aa668: 3403 0b00                              |00de: if-lt v3, v0, 00e9 // +000b
+    4aa66c: 54c1 f62f                              |00e0: iget-object v1, v12, LX/02q6;.A04:Landroid/view/SurfaceView; // field@2ff6
+    4aa670: 3801 0700                              |00e2: if-eqz v1, 00e9 // +0007
+    4aa674: 5290 252d                              |00e4: iget v0, v9, LX/02g4;.A01:I // field@2d25
+    4aa678: 6e20 5ec4 0100                         |00e6: invoke-virtual {v1, v0}, Landroid/view/SurfaceView;.setSurfaceLifecycle:(I)V // method@c45e
+    4aa67e: 5bc4 f42f                              |00e9: iput-object v4, v12, LX/02q6;.A02:LX/06EF; // field@2ff4
+    4aa682: 289c                                   |00eb: goto 0087 // -0064
+    4aa684: 1400 5297 ab37                         |00ec: const v0, #float 2.04553e-05 // #37ab9752
+    4aa68a: 7110 7826 0000                         |00ef: invoke-static {v0}, LX/01od;.A00:(I)V // method@2678
+    4aa690: 1106                                   |00f2: return-object v6
+    4aa692: 0d01                                   |00f3: move-exception v1
+    4aa694: 1400 95d4 ec25                         |00f4: const v0, #float 4.10835e-16 // #25ecd495
+    4aa69a: 7110 7826 0000                         |00f7: invoke-static {v0}, LX/01od;.A00:(I)V // method@2678
+    4aa6a0: 2701                                   |00fa: throw v1
+          catches       : 4
+            0x000a - 0x004a
+              <any> -> 0x00f3
+
