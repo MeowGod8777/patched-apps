@@ -1,0 +1,559 @@
+Instagram 439 Groot HDR A07 trace
+================================
+Config 74463::20 sets X.02g4.A07=true on API >=35
+
+===== classes13 exact A07 field references =====
+
+===== classes15 exact A07 field references =====
+504501-483a92: 0c05                                   |0093: move-result-object v5
+504502-483a94: 1800 6020 1e00 a206 8100               |0094: const-wide v0, #double 3.03071e-306 // #008106a2001e2060
+504503-483a9e: 1f05 6c7f                              |0099: check-cast v5, Lcom/facebook/mobileconfig/factory/MobileConfigUnsafeContext; // type@7f6c
+504504-483aa2: 7230 8ec9 0501                         |009b: invoke-interface {v5, v0, v1}, Lcom/facebook/mobileconfig/factory/MobileConfigUnsafeContext;.BTb:(J)Z // method@c98e
+504505-483aa8: 0a00                                   |009e: move-result v0
+504506-483aaa: 5c70 322d                              |009f: iput-boolean v0, v7, LX/02g4;.A0E:Z // field@2d32
+504507-483aae: 7110 a936 0400                         |00a1: invoke-static {v4}, LX/02qP;.A01:(LX/04BG;)LX/00AT; // method@36a9
+504508-483ab4: 0c05                                   |00a4: move-result-object v5
+504509-483ab6: 1800 6120 1f00 a206 8100               |00a5: const-wide v0, #double 3.03071e-306 // #008106a2001f2061
+504510-483ac0: 1f05 6c7f                              |00aa: check-cast v5, Lcom/facebook/mobileconfig/factory/MobileConfigUnsafeContext; // type@7f6c
+504511-483ac4: 7230 8ec9 0501                         |00ac: invoke-interface {v5, v0, v1}, Lcom/facebook/mobileconfig/factory/MobileConfigUnsafeContext;.BTb:(J)Z // method@c98e
+504512-483aca: 0a00                                   |00af: move-result v0
+504513-483acc: 5c70 312d                              |00b0: iput-boolean v0, v7, LX/02g4;.A0D:Z // field@2d31
+504514-483ad0: 7110 a936 0400                         |00b2: invoke-static {v4}, LX/02qP;.A01:(LX/04BG;)LX/00AT; // method@36a9
+504515-483ad6: 0c05                                   |00b5: move-result-object v5
+504516-483ad8: 1800 6520 2300 a206 8100               |00b6: const-wide v0, #double 3.03071e-306 // #008106a200232065
+504517-483ae2: 1f05 6c7f                              |00bb: check-cast v5, Lcom/facebook/mobileconfig/factory/MobileConfigUnsafeContext; // type@7f6c
+504518-483ae6: 7230 8ec9 0501                         |00bd: invoke-interface {v5, v0, v1}, Lcom/facebook/mobileconfig/factory/MobileConfigUnsafeContext;.BTb:(J)Z // method@c98e
+504519-483aec: 0a00                                   |00c0: move-result v0
+504520-483aee: df00 0001                              |00c1: xor-int/lit8 v0, v0, #int 1 // #01
+504521-483af2: 5c70 2c2d                              |00c3: iput-boolean v0, v7, LX/02g4;.A08:Z // field@2d2c
+504522-483af6: 7110 a936 0400                         |00c5: invoke-static {v4}, LX/02qP;.A01:(LX/04BG;)LX/00AT; // method@36a9
+504523-483afc: 0c05                                   |00c8: move-result-object v5
+504524-483afe: 1800 6a20 3200 a206 8100               |00c9: const-wide v0, #double 3.03071e-306 // #008106a20032206a
+504525-483b08: 1f05 6c7f                              |00ce: check-cast v5, Lcom/facebook/mobileconfig/factory/MobileConfigUnsafeContext; // type@7f6c
+504526-483b0c: 7230 8ec9 0501                         |00d0: invoke-interface {v5, v0, v1}, Lcom/facebook/mobileconfig/factory/MobileConfigUnsafeContext;.BTb:(J)Z // method@c98e
+504527-483b12: 0a00                                   |00d3: move-result v0
+504528-483b14: 5c70 372d                              |00d4: iput-boolean v0, v7, LX/02g4;.A0J:Z // field@2d37
+504529-483b18: 7110 a936 0400                         |00d6: invoke-static {v4}, LX/02qP;.A01:(LX/04BG;)LX/00AT; // method@36a9
+504530-483b1e: 0c05                                   |00d9: move-result-object v5
+504531-483b20: 1800 6920 3100 a206 8100               |00da: const-wide v0, #double 3.03071e-306 // #008106a200312069
+504532-483b2a: 1f05 6c7f                              |00df: check-cast v5, Lcom/facebook/mobileconfig/factory/MobileConfigUnsafeContext; // type@7f6c
+504533-483b2e: 7230 8ec9 0501                         |00e1: invoke-interface {v5, v0, v1}, Lcom/facebook/mobileconfig/factory/MobileConfigUnsafeContext;.BTb:(J)Z // method@c98e
+504534-483b34: 0a00                                   |00e4: move-result v0
+504535-483b36: 5c70 362d                              |00e5: iput-boolean v0, v7, LX/02g4;.A0I:Z // field@2d36
+504536-483b3a: 7110 a936 0400                         |00e7: invoke-static {v4}, LX/02qP;.A01:(LX/04BG;)LX/00AT; // method@36a9
+504537-483b40: 0c05                                   |00ea: move-result-object v5
+504538-483b42: 1800 f25a 0300 1b11 8100               |00eb: const-wide v0, #double 3.03799e-306 // #0081111b00035af2
+504539-483b4c: 1f05 6c7f                              |00f0: check-cast v5, Lcom/facebook/mobileconfig/factory/MobileConfigUnsafeContext; // type@7f6c
+504540-483b50: 7230 8ec9 0501                         |00f2: invoke-interface {v5, v0, v1}, Lcom/facebook/mobileconfig/factory/MobileConfigUnsafeContext;.BTb:(J)Z // method@c98e
+504541-483b56: 0a00                                   |00f5: move-result v0
+504542-483b58: 5c70 3d2d                              |00f6: iput-boolean v0, v7, LX/02g4;.A0P:Z // field@2d3d
+504543-483b5c: 7110 a936 0400                         |00f8: invoke-static {v4}, LX/02qP;.A01:(LX/04BG;)LX/00AT; // method@36a9
+504544-483b62: 0c05                                   |00fb: move-result-object v5
+504545-483b64: 1800 6720 2d00 a206 8100               |00fc: const-wide v0, #double 3.03071e-306 // #008106a2002d2067
+504546-483b6e: 1f05 6c7f                              |0101: check-cast v5, Lcom/facebook/mobileconfig/factory/MobileConfigUnsafeContext; // type@7f6c
+504547-483b72: 7230 8ec9 0501                         |0103: invoke-interface {v5, v0, v1}, Lcom/facebook/mobileconfig/factory/MobileConfigUnsafeContext;.BTb:(J)Z // method@c98e
+504548-483b78: 0a00                                   |0106: move-result v0
+504549-483b7a: 5c70 2f2d                              |0107: iput-boolean v0, v7, LX/02g4;.A0B:Z // field@2d2f
+504550-483b7e: 7110 a936 0400                         |0109: invoke-static {v4}, LX/02qP;.A01:(LX/04BG;)LX/00AT; // method@36a9
+504551-483b84: 0c05                                   |010c: move-result-object v5
+504552-483b86: 1800 5d20 1400 a206 8100               |010d: const-wide v0, #double 3.03071e-306 // #008106a20014205d
+504553-483b90: 1f05 6c7f                              |0112: check-cast v5, Lcom/facebook/mobileconfig/factory/MobileConfigUnsafeContext; // type@7f6c
+504554-483b94: 7230 8ec9 0501                         |0114: invoke-interface {v5, v0, v1}, Lcom/facebook/mobileconfig/factory/MobileConfigUnsafeContext;.BTb:(J)Z // method@c98e
+504555-483b9a: 0a00                                   |0117: move-result v0
+504556-483b9c: 3800 0b00                              |0118: if-eqz v0, 0123 // +000b
+504557-483ba0: 6001 b693                              |011a: sget v1, Landroid/os/Build$VERSION;.SDK_INT:I // field@93b6
+504558-483ba4: 1300 2300                              |011c: const/16 v0, #int 35 // #23
+504559-483ba8: 3501 0300                              |011e: if-ge v1, v0, 0121 // +0003
+504560-483bac: 1203                                   |0120: const/4 v3, #int 0 // #0
+504561:483bae: 5c73 2b2d                              |0121: iput-boolean v3, v7, LX/02g4;.A07:Z // field@2d2b
+504562-483bb2: 7110 a936 0400                         |0123: invoke-static {v4}, LX/02qP;.A01:(LX/04BG;)LX/00AT; // method@36a9
+504563-483bb8: 0c03                                   |0126: move-result-object v3
+504564-483bba: 1800 6220 2000 a206 8100               |0127: const-wide v0, #double 3.03071e-306 // #008106a200202062
+504565-483bc4: 1f03 6c7f                              |012c: check-cast v3, Lcom/facebook/mobileconfig/factory/MobileConfigUnsafeContext; // type@7f6c
+504566-483bc8: 7230 8ec9 0301                         |012e: invoke-interface {v3, v0, v1}, Lcom/facebook/mobileconfig/factory/MobileConfigUnsafeContext;.BTb:(J)Z // method@c98e
+504567-483bce: 0a00                                   |0131: move-result v0
+504568-483bd0: 3800 2300                              |0132: if-eqz v0, 0155 // +0023
+504569-483bd4: 1203                                   |0134: const/4 v3, #int 0 // #0
+504570-483bd6: 5461 7229                              |0135: iget-object v1, v6, LX/02Ug;.A0o:LX/0Akk; // field@2972
+504571-483bda: 7120 a45a 2100                         |0137: invoke-static {v1, v2}, LX/04l9;.A0j:(Ljava/lang/Object;I)V // method@5aa4
+504572-483be0: 2200 a81f                              |013a: new-instance v0, LX/03pP; // type@1fa8
+504573-483be4: 7020 644b 1000                         |013c: invoke-direct {v0, v1}, LX/03pP;.<init>:(LX/0Akk;)V // method@4b64
+504574-483bea: 1221                                   |013f: const/4 v1, #int 2 // #2
+504575-483bec: 2420 c589 3000                         |0140: filled-new-array {v0, v3}, [LX/0AVk; // type@89c5
+504576-483bf2: 0c00                                   |0143: move-result-object v0
+504577-483bf4: 7120 a3ed 1000                         |0144: invoke-static {v0, v1}, Ljava/util/Arrays;.copyOf:([Ljava/lang/Object;I)[Ljava/lang/Object; // method@eda3
+504578-483bfa: 0c01                                   |0147: move-result-object v1
+504579-483bfc: 1f01 c589                              |0148: check-cast v1, [LX/0AVk; // type@89c5
+504580-483c00: 2200 a51f                              |014a: new-instance v0, LX/03pM; // type@1fa5
+504581-483c04: 7020 5e4b 1000                         |014c: invoke-direct {v0, v1}, LX/03pM;.<init>:([LX/0AVk;)V // method@4b5e
+504582-483c0a: 2201 c34b                              |014f: new-instance v1, LX/09Zx; // type@4bc3
+504583-483c0e: 7030 a297 7100                         |0151: invoke-direct {v1, v7, v0}, LX/09Zx;.<init>:(LX/02g4;LX/03pM;)V // method@97a2
+504584-483c14: 2823                                   |0154: goto 0177 // +0023
+504585-483c16: 1204                                   |0155: const/4 v4, #int 0 // #0
+504586-483c18: 5463 7229                              |0156: iget-object v3, v6, LX/02Ug;.A0o:LX/0Akk; // field@2972
+504587-483c1c: 5461 7029                              |0158: iget-object v1, v6, LX/02Ug;.A0m:Landroid/os/Looper; // field@2970
+504588-483c20: 7120 a45a 2300                         |015a: invoke-static {v3, v2}, LX/04l9;.A0j:(Ljava/lang/Object;I)V // method@5aa4
+504589-483c26: 2200 d016                              |015d: new-instance v0, LX/02q2; // type@16d0
+504590-483c2a: 7030 7936 1003                         |015f: invoke-direct {v0, v1, v3}, LX/02q2;.<init>:(Landroid/os/Looper;LX/0Akk;)V // method@3679
+504591-483c30: 1221                                   |0162: const/4 v1, #int 2 // #2
+504592-483c32: 2420 cd89 4000                         |0163: filled-new-array {v0, v4}, [LX/0Akm; // type@89cd
+504593-483c38: 0c00                                   |0166: move-result-object v0
+504594-483c3a: 7120 a3ed 1000                         |0167: invoke-static {v0, v1}, Ljava/util/Arrays;.copyOf:([Ljava/lang/Object;I)[Ljava/lang/Object; // method@eda3
+504595-483c40: 0c01                                   |016a: move-result-object v1
+504596-483c42: 1f01 c589                              |016b: check-cast v1, [LX/0AVk; // type@89c5
+504597-483c46: 2200 d116                              |016d: new-instance v0, LX/02q3; // type@16d1
+504598-483c4a: 7020 7c36 1000                         |016f: invoke-direct {v0, v1}, LX/02q3;.<init>:([LX/0AVk;)V // method@367c
+504599-483c50: 2201 d416                              |0172: new-instance v1, LX/02q6; // type@16d4
+504600-483c54: 7030 7f36 7100                         |0174: invoke-direct {v1, v7, v0}, LX/02q6;.<init>:(LX/02g4;LX/02q3;)V // method@367f
+504601-483c5a: 1400 cfaa 5fb0                         |0177: const v0, #float -8.13697e-10 // #b05faacf
+504602-483c60: 7110 7826 0000                         |017a: invoke-static {v0}, LX/01od;.A00:(I)V // method@2678
+504603-483c66: 1101                                   |017d: return-object v1
+504604-483c68: 0d01                                   |017e: move-exception v1
+504605-483c6a: 1400 b487 e2ec                         |017f: const v0, #float -2.19086e+27 // #ece287b4
+504606-483c70: 7110 7826 0000                         |0182: invoke-static {v0}, LX/01od;.A00:(I)V // method@2678
+504607-483c76: 2701                                   |0185: throw v1
+504608-      catches       : 1
+504609-        0x0008 - 0x0177
+504610-          <any> -> 0x017e
+504611-      positions     :
+504612-      locals        :
+504613-
+504614-    #4              : (in LX/02Ug;)
+504615-      name          : 'A01'
+504616-      type          : '()V'
+504617-      access        : 0x0012 (PRIVATE FINAL)
+504618-      method_idx    : 12174
+504619-      code          -
+504620-      registers     : 5
+504621-      ins           : 1
+504622-      outs          : 4
+504623-      insns size    : 57 16-bit code units
+504624-483c84:                                        |[483c84] X.02Ug.A01:()V
+504625-483c94: 1a01 8232                              |0000: const-string v1, "IgGrootPlayer.maybeUpdateHttpDataSourceFactory" // string@3282
+504626-483c98: 1400 7f69 324a                         |0002: const v0, #float 2.9231e+06 // #4a32697f
+504627-483c9e: 7120 7926 0100                         |0005: invoke-static {v1, v0}, LX/01od;.A01:(Ljava/lang/String;I)V // method@2679
+504628-483ca4: 5441 7a29                              |0008: iget-object v1, v4, LX/02Ug;.A0w:LX/05wd; // field@297a
+504629-483ca8: 5410 c061                              |000a: iget-object v0, v1, LX/05wd;.A00:LX/06uA; // field@61c0
+504630-483cac: 3900 0600                              |000c: if-nez v0, 0012 // +0006
+504631-483cb0: 6e10 fe6c 0100                         |000e: invoke-virtual {v1}, LX/05wd;.A0E:()LX/06uA; // method@6cfe
+504632-483cb6: 0c00                                   |0011: move-result-object v0
+504633-483cb8: 5403 276c                              |0012: iget-object v3, v0, LX/06uA;.A0K:LX/03p8; // field@6c27
+504634-483cbc: 5402 286c                              |0014: iget-object v2, v0, LX/06uA;.A0M:Lcom/facebook/video/heroplayer/setting/HeroPlayerSetting; // field@6c28
+504635-483cc0: 5401 2a6c                              |0016: iget-object v1, v0, LX/06uA;.A0V:Ljava/util/concurrent/atomic/AtomicReference; // field@6c2a
+504636-483cc4: 5400 2b6c                              |0018: iget-object v0, v0, LX/06uA;.A0Y:Ljava/util/concurrent/atomic/AtomicReference; // field@6c2b
+504637-483cc8: 6e40 2f4b 2301                         |001a: invoke-virtual {v3, v2, v1, v0}, LX/03p8;.A02:(Lcom/facebook/video/heroplayer/setting/HeroPlayerSetting;Ljava/util/concurrent/atomic/AtomicReference;Ljava/util/concurrent/atomic/AtomicReference;)LX/03Vf; // method@4b2f
+504638-483cce: 0c01                                   |001d: move-result-object v1
+504639-483cd0: 3801 0c00                              |001e: if-eqz v1, 002a // +000c
+504640-483cd4: 1f01 e03c                              |0020: check-cast v1, LX/07du; // type@3ce0
+504641-483cd8: 5440 7629                              |0022: iget-object v0, v4, LX/02Ug;.A0s:Lcom/instagram/common/session/UserSession; // field@2976
+504642-483cdc: 5b10 766e                              |0024: iput-object v0, v1, LX/07du;.A00:LX/04BG; // field@6e76
+504643-483ce0: 6901 673b                              |0026: sput-object v1, LX/03Vf;.A01:LX/03Vf; // field@3b67
+504644-483ce4: 6901 663b                              |0028: sput-object v1, LX/03Vf;.A00:LX/03Vf; // field@3b66
+504645-483ce8: 1400 4c8a ad4f                         |002a: const v0, #float 5.82304e+09 // #4fad8a4c
+504646-483cee: 7110 7826 0000                         |002d: invoke-static {v0}, LX/01od;.A00:(I)V // method@2678
+504647-483cf4: 0e00                                   |0030: return-void
+504648-483cf6: 0d01                                   |0031: move-exception v1
+504649-483cf8: 1400 61cc eaf6                         |0032: const v0, #float -2.38114e+33 // #f6eacc61
+504650-483cfe: 7110 7826 0000                         |0035: invoke-static {v0}, LX/01od;.A00:(I)V // method@2678
+504651-483d04: 2701                                   |0038: throw v1
+504652-      catches       : 1
+504653-        0x0008 - 0x002a
+504654-          <any> -> 0x0031
+504655-      positions     :
+504656-      locals        :
+504657-
+504658-    #5              : (in LX/02Ug;)
+504659-      name          : 'A02'
+504660-      type          : '()V'
+504661-      access        : 0x0012 (PRIVATE FINAL)
+504662-      method_idx    : 12175
+504663-      code          -
+504664-      registers     : 13
+504665-      ins           : 1
+504666-      outs          : 10
+504667-      insns size    : 86 16-bit code units
+504668-483d14:                                        |[483d14] X.02Ug.A02:()V
+504669-483d24: 54c0 4f29                              |0000: iget-object v0, v12, LX/02Ug;.A0F:LX/08lb; // field@294f
+504670-483d28: 1204                                   |0002: const/4 v4, #int 0 // #0
+504671-483d2a: 3800 0b00                              |0003: if-eqz v0, 000e // +000b
+504672-483d2e: 6e10 4091 0000                         |0005: invoke-virtual {v0}, LX/08lb;.A04:()Z // method@9140
+504673-483d34: 0a01                                   |0008: move-result v1
+504674-483d36: 1210                                   |0009: const/4 v0, #int 1 // #1
+504675-483d38: 3301 0400                              |000a: if-ne v1, v0, 000e // +0004
+504676-483d3c: 5bc4 5629                              |000c: iput-object v4, v12, LX/02Ug;.A0M:LX/09Bd; // field@2956
+504677-483d40: 5bc4 4f29                              |000e: iput-object v4, v12, LX/02Ug;.A0F:LX/08lb; // field@294f
+504678-483d44: 2200 a544                              |0010: new-instance v0, LX/08lc; // type@44a5
+504679-483d48: 7010 2dec 0000                         |0012: invoke-direct {v0}, Ljava/lang/Object;.<init>:()V // method@ec2d
+504680-483d4e: 5bc0 4e29                              |0015: iput-object v0, v12, LX/02Ug;.A0E:LX/08lc; // field@294e
+504681-483d52: 5bc4 4529                              |0017: iput-object v4, v12, LX/02Ug;.A05:Landroid/net/Uri; // field@2945
+--
+551411-4a14a2: 0c04                                   |0191: move-result-object v4
+551412-4a14a4: 1b00 5b0d 0100                         |0192: const-string/jumbo v0, "sc_glFrameBufferRendererItmMinPeakNits" // string@00010d5b
+551413-4a14aa: 6e30 87ed 0304                         |0195: invoke-virtual {v3, v0, v4}, Ljava/util/AbstractMap;.put:(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object; // method@ed87
+551414-4a14b0: 1230                                   |0198: const/4 v0, #int 3 // #3
+551415-4a14b2: 7110 01ec 0000                         |0199: invoke-static {v0}, Ljava/lang/Integer;.valueOf:(I)Ljava/lang/Integer; // method@ec01
+551416-4a14b8: 0c04                                   |019c: move-result-object v4
+551417-4a14ba: 1b00 5d0d 0100                         |019d: const-string/jumbo v0, "sc_glFrameBufferRendererMaxBuffers" // string@00010d5d
+551418-4a14c0: 6e30 87ed 0304                         |01a0: invoke-virtual {v3, v0, v4}, Ljava/util/AbstractMap;.put:(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object; // method@ed87
+551419-4a14c6: 1604 0000                              |01a3: const-wide/16 v4, #int 0 // #0
+551420-4a14ca: 7120 0aec 5400                         |01a5: invoke-static {v4, v5}, Ljava/lang/Long;.valueOf:(J)Ljava/lang/Long; // method@ec0a
+551421-4a14d0: 0c04                                   |01a8: move-result-object v4
+551422-4a14d2: 1b00 620d 0100                         |01a9: const-string/jumbo v0, "sc_glFrameBufferRendererReleaseDelayMs" // string@00010d62
+551423-4a14d8: 6e30 87ed 0304                         |01ac: invoke-virtual {v3, v0, v4}, Ljava/util/AbstractMap;.put:(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object; // method@ed87
+551424-4a14de: 1b00 630d 0100                         |01af: const-string/jumbo v0, "sc_glFrameBufferRendererReusePool" // string@00010d63
+551425-4a14e4: 6e30 87ed 0302                         |01b2: invoke-virtual {v3, v0, v2}, Ljava/util/AbstractMap;.put:(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object; // method@ed87
+551426-4a14ea: 1b00 560d 0100                         |01b5: const-string/jumbo v0, "sc_glFrameBufferRendererBoundedFenceWait" // string@00010d56
+551427-4a14f0: 6e30 87ed 0301                         |01b8: invoke-virtual {v3, v0, v1}, Ljava/util/AbstractMap;.put:(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object; // method@ed87
+551428-4a14f6: 1250                                   |01bb: const/4 v0, #int 5 // #5
+551429-4a14f8: 7110 01ec 0000                         |01bc: invoke-static {v0}, Ljava/lang/Integer;.valueOf:(I)Ljava/lang/Integer; // method@ec01
+551430-4a14fe: 0c04                                   |01bf: move-result-object v4
+551431-4a1500: 1b00 650d 0100                         |01c0: const-string/jumbo v0, "sc_glFrameBufferRendererSurfaceInvalidThreshold" // string@00010d65
+551432-4a1506: 6e30 87ed 0304                         |01c3: invoke-virtual {v3, v0, v4}, Ljava/util/AbstractMap;.put:(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object; // method@ed87
+551433-4a150c: 1b00 570d 0100                         |01c6: const-string/jumbo v0, "sc_glFrameBufferRendererCacheShaders" // string@00010d57
+551434-4a1512: 6e30 87ed 0302                         |01c9: invoke-virtual {v3, v0, v2}, Ljava/util/AbstractMap;.put:(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object; // method@ed87
+551435-4a1518: 1b00 580d 0100                         |01cc: const-string/jumbo v0, "sc_glFrameBufferRendererCoalesceRender" // string@00010d58
+551436-4a151e: 6e30 87ed 0301                         |01cf: invoke-virtual {v3, v0, v1}, Ljava/util/AbstractMap;.put:(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object; // method@ed87
+551437-4a1524: 1b00 600d 0100                         |01d2: const-string/jumbo v0, "sc_glFrameBufferRendererNativeWindowPresent" // string@00010d60
+551438-4a152a: 6e30 87ed 0302                         |01d5: invoke-virtual {v3, v0, v2}, Ljava/util/AbstractMap;.put:(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object; // method@ed87
+551439-4a1530: 1b00 590d 0100                         |01d8: const-string/jumbo v0, "sc_glFrameBufferRendererCommitOnDraw" // string@00010d59
+551440-4a1536: 6e30 87ed 0302                         |01db: invoke-virtual {v3, v0, v2}, Ljava/util/AbstractMap;.put:(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object; // method@ed87
+551441-4a153c: 1b00 640d 0100                         |01de: const-string/jumbo v0, "sc_glFrameBufferRendererReuseTransaction" // string@00010d64
+551442-4a1542: 6e30 87ed 0302                         |01e1: invoke-virtual {v3, v0, v2}, Ljava/util/AbstractMap;.put:(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object; // method@ed87
+551443-4a1548: 1b00 610d 0100                         |01e4: const-string/jumbo v0, "sc_glFrameBufferRendererPrewarmPool" // string@00010d61
+551444-4a154e: 6e30 87ed 0302                         |01e7: invoke-virtual {v3, v0, v2}, Ljava/util/AbstractMap;.put:(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object; // method@ed87
+551445-4a1554: 1b00 5a0d 0100                         |01ea: const-string/jumbo v0, "sc_glFrameBufferRendererDetachForReuse" // string@00010d5a
+551446-4a155a: 6e30 87ed 0301                         |01ed: invoke-virtual {v3, v0, v1}, Ljava/util/AbstractMap;.put:(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object; // method@ed87
+551447-4a1560: 1b00 550d 0100                         |01f0: const-string/jumbo v0, "sc_glFrameBufferRendererAlwaysPreserveSurface" // string@00010d55
+551448-4a1566: 6e30 87ed 0302                         |01f3: invoke-virtual {v3, v0, v2}, Ljava/util/AbstractMap;.put:(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object; // method@ed87
+551449-4a156c: 1b00 5c0d 0100                         |01f6: const-string/jumbo v0, "sc_glFrameBufferRendererMatchPlaybackThreadPriority" // string@00010d5c
+551450-4a1572: 6e30 87ed 0302                         |01f9: invoke-virtual {v3, v0, v2}, Ljava/util/AbstractMap;.put:(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object; // method@ed87
+551451-4a1578: 1b00 4b0d 0100                         |01fc: const-string/jumbo v0, "sc_enableOpenGLDebugForGLSurfaceView" // string@00010d4b
+551452-4a157e: 6e30 87ed 0302                         |01ff: invoke-virtual {v3, v0, v2}, Ljava/util/AbstractMap;.put:(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object; // method@ed87
+551453-4a1584: 1b00 450d 0100                         |0202: const-string/jumbo v0, "sc_enableGLSurfaceViewDirtyRenderMode" // string@00010d45
+551454-4a158a: 6e30 87ed 0301                         |0205: invoke-virtual {v3, v0, v1}, Ljava/util/AbstractMap;.put:(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object; // method@ed87
+551455-4a1590: 5570 3f2d                              |0208: iget-boolean v0, v7, LX/02g4;.A0R:Z // field@2d3f
+551456-4a1594: 7110 9eeb 0000                         |020a: invoke-static {v0}, Ljava/lang/Boolean;.valueOf:(Z)Ljava/lang/Boolean; // method@eb9e
+551457-4a159a: 0c01                                   |020d: move-result-object v1
+551458-4a159c: 1b00 800d 0100                         |020e: const-string/jumbo v0, "sc_skipReparentForSameSurfaceControls" // string@00010d80
+551459-4a15a2: 6e30 87ed 0301                         |0211: invoke-virtual {v3, v0, v1}, Ljava/util/AbstractMap;.put:(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object; // method@ed87
+551460-4a15a8: 1b00 3f0d 0100                         |0214: const-string/jumbo v0, "sc_cropAfterSetBufferSize" // string@00010d3f
+551461-4a15ae: 6e30 87ed 0302                         |0217: invoke-virtual {v3, v0, v2}, Ljava/util/AbstractMap;.put:(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object; // method@ed87
+551462-4a15b4: 1b00 840d 0100                         |021a: const-string/jumbo v0, "sc_useLayoutParamsForReparent" // string@00010d84
+551463-4a15ba: 6e30 87ed 0302                         |021d: invoke-virtual {v3, v0, v2}, Ljava/util/AbstractMap;.put:(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object; // method@ed87
+551464-4a15c0: 1b00 720d 0100                         |0220: const-string/jumbo v0, "sc_recycleSurfaceView" // string@00010d72
+551465-4a15c6: 6e30 87ed 0302                         |0223: invoke-virtual {v3, v0, v2}, Ljava/util/AbstractMap;.put:(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object; // method@ed87
+551466-4a15cc: 5570 2d2d                              |0226: iget-boolean v0, v7, LX/02g4;.A09:Z // field@2d2d
+551467-4a15d0: 7110 9eeb 0000                         |0228: invoke-static {v0}, Ljava/lang/Boolean;.valueOf:(Z)Ljava/lang/Boolean; // method@eb9e
+551468-4a15d6: 0c01                                   |022b: move-result-object v1
+551469-4a15d8: 1b00 3e0d 0100                         |022c: const-string/jumbo v0, "sc_cleanGrootControlSurfaceViewListenerAggressively" // string@00010d3e
+551470-4a15de: 6e30 87ed 0301                         |022f: invoke-virtual {v3, v0, v1}, Ljava/util/AbstractMap;.put:(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object; // method@ed87
+551471:4a15e4: 5570 2b2d                              |0232: iget-boolean v0, v7, LX/02g4;.A07:Z // field@2d2b
+551472-4a15e8: 7110 9eeb 0000                         |0234: invoke-static {v0}, Ljava/lang/Boolean;.valueOf:(Z)Ljava/lang/Boolean; // method@eb9e
+551473-4a15ee: 0c01                                   |0237: move-result-object v1
+551474-4a15f0: 1b00 3c0d 0100                         |0238: const-string/jumbo v0, "sc_applyDesiredHdrSdrRatio" // string@00010d3c
+551475-4a15f6: 6e30 87ed 0301                         |023b: invoke-virtual {v3, v0, v1}, Ljava/util/AbstractMap;.put:(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object; // method@ed87
+551476-4a15fc: 1500 c03f                              |023e: const/high16 v0, #int 1069547520 // #3fc0
+551477-4a1600: 7110 eeeb 0000                         |0240: invoke-static {v0}, Ljava/lang/Float;.valueOf:(F)Ljava/lang/Float; // method@ebee
+551478-4a1606: 0c01                                   |0243: move-result-object v1
+551479-4a1608: 1b00 400d 0100                         |0244: const-string/jumbo v0, "sc_desiredHdrSdrRatio" // string@00010d40
+551480-4a160e: 6e30 87ed 0301                         |0247: invoke-virtual {v3, v0, v1}, Ljava/util/AbstractMap;.put:(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object; // method@ed87
+551481-4a1614: 5570 392d                              |024a: iget-boolean v0, v7, LX/02g4;.A0L:Z // field@2d39
+551482-4a1618: 7110 9eeb 0000                         |024c: invoke-static {v0}, Ljava/lang/Boolean;.valueOf:(Z)Ljava/lang/Boolean; // method@eb9e
+551483-4a161e: 0c01                                   |024f: move-result-object v1
+551484-4a1620: 1b00 730d 0100                         |0250: const-string/jumbo v0, "sc_releaseListenerOnReuseTextureView" // string@00010d73
+551485-4a1626: 6e30 87ed 0301                         |0253: invoke-virtual {v3, v0, v1}, Ljava/util/AbstractMap;.put:(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object; // method@ed87
+551486-4a162c: 1b00 880d 0100                         |0256: const-string/jumbo v0, "sc_use_opaque_pixel_format" // string@00010d88
+551487-4a1632: 6e30 87ed 0302                         |0259: invoke-virtual {v3, v0, v2}, Ljava/util/AbstractMap;.put:(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object; // method@ed87
+551488-4a1638: 5270 252d                              |025c: iget v0, v7, LX/02g4;.A01:I // field@2d25
+551489-4a163c: 7110 01ec 0000                         |025e: invoke-static {v0}, Ljava/lang/Integer;.valueOf:(I)Ljava/lang/Integer; // method@ec01
+551490-4a1642: 0c01                                   |0261: move-result-object v1
+551491-4a1644: 1b00 6d0d 0100                         |0262: const-string/jumbo v0, "sc_lifecycle_strategy" // string@00010d6d
+551492-4a164a: 6e30 87ed 0301                         |0265: invoke-virtual {v3, v0, v1}, Ljava/util/AbstractMap;.put:(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object; // method@ed87
+551493-4a1650: 1600 ffff                              |0268: const-wide/16 v0, #int -1 // #ffff
+551494-4a1654: 7120 0aec 1000                         |026a: invoke-static {v0, v1}, Ljava/lang/Long;.valueOf:(J)Ljava/lang/Long; // method@ec0a
+551495-4a165a: 0c01                                   |026d: move-result-object v1
+551496-4a165c: 1b00 520d 0100                         |026e: const-string/jumbo v0, "sc_enable_release_on_post_frame" // string@00010d52
+551497-4a1662: 6e30 87ed 0301                         |0271: invoke-virtual {v3, v0, v1}, Ljava/util/AbstractMap;.put:(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object; // method@ed87
+551498-4a1668: 5570 432d                              |0274: iget-boolean v0, v7, LX/02g4;.A0V:Z // field@2d43
+551499-4a166c: 7110 9eeb 0000                         |0276: invoke-static {v0}, Ljava/lang/Boolean;.valueOf:(Z)Ljava/lang/Boolean; // method@eb9e
+551500-4a1672: 0c01                                   |0279: move-result-object v1
+551501-4a1674: 1b00 890d 0100                         |027a: const-string/jumbo v0, "sc_viewTreeObserverLeakFix" // string@00010d89
+551502-4a167a: 6e30 87ed 0301                         |027d: invoke-virtual {v3, v0, v1}, Ljava/util/AbstractMap;.put:(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object; // method@ed87
+551503-4a1680: 5570 412d                              |0280: iget-boolean v0, v7, LX/02g4;.A0T:Z // field@2d41
+551504-4a1684: 7110 9eeb 0000                         |0282: invoke-static {v0}, Ljava/lang/Boolean;.valueOf:(Z)Ljava/lang/Boolean; // method@eb9e
+551505-4a168a: 0c01                                   |0285: move-result-object v1
+551506-4a168c: 1b00 870d 0100                         |0286: const-string/jumbo v0, "sc_use_instance_view_tree_observer" // string@00010d87
+551507-4a1692: 6e30 87ed 0301                         |0289: invoke-virtual {v3, v0, v1}, Ljava/util/AbstractMap;.put:(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object; // method@ed87
+551508-4a1698: 5570 332d                              |028c: iget-boolean v0, v7, LX/02g4;.A0F:Z // field@2d33
+551509-4a169c: 7110 9eeb 0000                         |028e: invoke-static {v0}, Ljava/lang/Boolean;.valueOf:(Z)Ljava/lang/Boolean; // method@eb9e
+551510-4a16a2: 0c01                                   |0291: move-result-object v1
+551511-4a16a4: 1b00 4f0d 0100                         |0292: const-string/jumbo v0, "sc_enableSurfaceViewTransparencyFix" // string@00010d4f
+551512-4a16aa: 6e30 87ed 0301                         |0295: invoke-virtual {v3, v0, v1}, Ljava/util/AbstractMap;.put:(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object; // method@ed87
+551513-4a16b0: 5570 322d                              |0298: iget-boolean v0, v7, LX/02g4;.A0E:Z // field@2d32
+551514-4a16b4: 7110 9eeb 0000                         |029a: invoke-static {v0}, Ljava/lang/Boolean;.valueOf:(Z)Ljava/lang/Boolean; // method@eb9e
+551515-4a16ba: 0c01                                   |029d: move-result-object v1
+551516-4a16bc: 1b00 4d0d 0100                         |029e: const-string/jumbo v0, "sc_enablePositionCentering" // string@00010d4d
+551517-4a16c2: 6e30 87ed 0301                         |02a1: invoke-virtual {v3, v0, v1}, Ljava/util/AbstractMap;.put:(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object; // method@ed87
+551518-4a16c8: 5570 312d                              |02a4: iget-boolean v0, v7, LX/02g4;.A0D:Z // field@2d31
+551519-4a16cc: 7110 9eeb 0000                         |02a6: invoke-static {v0}, Ljava/lang/Boolean;.valueOf:(Z)Ljava/lang/Boolean; // method@eb9e
+551520-4a16d2: 0c01                                   |02a9: move-result-object v1
+551521-4a16d4: 1b00 480d 0100                         |02aa: const-string/jumbo v0, "sc_enableInvalidSurfaceMmeLogging" // string@00010d48
+551522-4a16da: 6e30 87ed 0301                         |02ad: invoke-virtual {v3, v0, v1}, Ljava/util/AbstractMap;.put:(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object; // method@ed87
+551523-4a16e0: 1b00 770d 0100                         |02b0: const-string/jumbo v0, "sc_releaseSurfaceOnReuseDestroy" // string@00010d77
+551524-4a16e6: 6e30 87ed 0302                         |02b3: invoke-virtual {v3, v0, v2}, Ljava/util/AbstractMap;.put:(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object; // method@ed87
+551525-4a16ec: 1b00 810d 0100                         |02b6: const-string/jumbo v0, "sc_syncTextureSurfaceReleaseOnDestroy" // string@00010d81
+551526-4a16f2: 6e30 87ed 0302                         |02b9: invoke-virtual {v3, v0, v2}, Ljava/util/AbstractMap;.put:(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object; // method@ed87
+551527-4a16f8: 1b00 7b0d 0100                         |02bc: const-string/jumbo v0, "sc_resetSaveForReuseOnSurfaceViewDestroy" // string@00010d7b
+551528-4a16fe: 6e30 87ed 0302                         |02bf: invoke-virtual {v3, v0, v2}, Ljava/util/AbstractMap;.put:(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object; // method@ed87
+551529-4a1704: 1b00 6b0d 0100                         |02c2: const-string/jumbo v0, "sc_isHdrContent" // string@00010d6b
+551530-4a170a: 6e30 87ed 0302                         |02c5: invoke-virtual {v3, v0, v2}, Ljava/util/AbstractMap;.put:(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object; // method@ed87
+551531-4a1710: 5570 342d                              |02c8: iget-boolean v0, v7, LX/02g4;.A0G:Z // field@2d34
+551532-4a1714: 7110 9eeb 0000                         |02ca: invoke-static {v0}, Ljava/lang/Boolean;.valueOf:(Z)Ljava/lang/Boolean; // method@eb9e
+551533-4a171a: 0c01                                   |02cd: move-result-object v1
+551534-4a171c: 1b00 510d 0100                         |02ce: const-string/jumbo v0, "sc_enableViewTag" // string@00010d51
+551535-4a1722: 6e30 87ed 0301                         |02d1: invoke-virtual {v3, v0, v1}, Ljava/util/AbstractMap;.put:(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object; // method@ed87
+551536-4a1728: 1b00 470d 0100                         |02d4: const-string/jumbo v0, "sc_enableGLTextureView" // string@00010d47
+551537-4a172e: 6e30 87ed 0302                         |02d7: invoke-virtual {v3, v0, v2}, Ljava/util/AbstractMap;.put:(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object; // method@ed87
+551538-4a1734: 1b00 4c0d 0100                         |02da: const-string/jumbo v0, "sc_enablePlayerCallbackInBaseSurfaceView" // string@00010d4c
+551539-4a173a: 6e30 87ed 0302                         |02dd: invoke-virtual {v3, v0, v2}, Ljava/util/AbstractMap;.put:(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object; // method@ed87
+551540-4a1740: 1b00 4e0d 0100                         |02e0: const-string/jumbo v0, "sc_enableSurfaceControlPool" // string@00010d4e
+551541-4a1746: 6e30 87ed 0302                         |02e3: invoke-virtual {v3, v0, v2}, Ljava/util/AbstractMap;.put:(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object; // method@ed87
+551542-4a174c: 1b00 6e0d 0100                         |02e6: const-string/jumbo v0, "sc_nullSurfaceHolderOnRelease" // string@00010d6e
+551543-4a1752: 6e30 87ed 0302                         |02e9: invoke-virtual {v3, v0, v2}, Ljava/util/AbstractMap;.put:(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object; // method@ed87
+551544-4a1758: 1103                                   |02ec: return-object v3
+551545-4a175a: 1200                                   |02ed: const/4 v0, #int 0 // #0
+551546-4a175c: 2900 b9fd                              |02ee: goto/16 00a7 // -0247
+551547-      catches       : (none)
+551548-      positions     :
+551549-      locals        :
+551550-
+551551-  source_file_idx   : 0 ()
+551552-
+551553-Class #1975 header:
+551554-class_idx           : 5486
+551555-access_flags        : 17 (0x0011)
+551556-superclass_idx      : 34704
+551557-interfaces_off      : 1765032 (0x1aeea8)
+551558-source_file_idx     : 0
+551559-annotations_off     : 0 (0x000000)
+551560-class_data_off      : 7795078 (0x76f186)
+551561-static_fields_size  : 0
+551562-instance_fields_size: 3
+551563-direct_methods_size : 2
+551564-virtual_methods_size: 7
+551565-
+551566-Class #1975            -
+551567-  Class descriptor  : 'LX/02g5;'
+551568-  Access flags      : 0x0011 (PUBLIC FINAL)
+551569-  Superclass        : 'Ljava/lang/Object;'
+551570-  Interfaces        -
+551571-    #0              : 'LX/0AaD;'
+551572-    #1              : 'Landroid/os/Handler$Callback;'
+551573-    #2              : 'LX/0Akn;'
+551574-  Static fields     -
+551575-  Instance fields   -
+551576-    #0              : (in LX/02g5;)
+551577-      name          : 'A00'
+551578-      type          : 'Z'
+551579-      access        : 0x0001 (PUBLIC)
+551580-    #1              : (in LX/02g5;)
+551581-      name          : 'A01'
+551582-      type          : 'Landroid/os/Handler;'
+551583-      access        : 0x0011 (PUBLIC FINAL)
+551584-    #2              : (in LX/02g5;)
+551585-      name          : 'A02'
+551586-      type          : 'LX/0Akk;'
+551587-      access        : 0x0011 (PUBLIC FINAL)
+551588-  Direct methods    -
+551589-    #0              : (in LX/02g5;)
+551590-      name          : '<init>'
+551591-      type          : '(Landroid/os/Looper;LX/0Akk;)V'
+--
+567558-4aa53a: 5bc2 f52f                              |0047: iput-object v2, v12, LX/02q6;.A03:Landroid/view/SurfaceControl; // field@2ff5
+567559-4aa53e: 28eb                                   |0049: goto 0034 // -0015
+567560-4aa540: 7010 8136 0c00                         |004a: invoke-direct {v12}, LX/02q6;.A01:()Landroid/view/SurfaceControl; // method@3681
+567561-4aa546: 0c05                                   |004d: move-result-object v5
+567562-4aa548: 1400 613c ce72                         |004e: const v0, #float 8.16984e+30 // #72ce3c61
+567563-4aa54e: 7110 7826 0000                         |0051: invoke-static {v0}, LX/01od;.A00:(I)V // method@2678
+567564-4aa554: 3905 1100                              |0054: if-nez v5, 0065 // +0011
+567565-4aa558: 1400 c103 44f7                         |0056: const v0, #float -3.97565e+33 // #f74403c1
+567566-4aa55e: 7110 7826 0000                         |0059: invoke-static {v0}, LX/01od;.A00:(I)V // method@2678
+567567-4aa564: 1102                                   |005c: return-object v2
+567568-4aa566: 0d01                                   |005d: move-exception v1
+567569-4aa568: 1400 9573 0df4                         |005e: const v0, #float -4.48278e+31 // #f40d7395
+567570-4aa56e: 7110 7826 0000                         |0061: invoke-static {v0}, LX/01od;.A00:(I)V // method@2678
+567571-4aa574: 2701                                   |0064: throw v1
+567572-4aa576: 07e7                                   |0065: move-object v7, v14
+567573-4aa578: 7030 8236 dc0e                         |0066: invoke-direct {v12, v13, v14}, LX/02q6;.A02:(Landroid/content/Context;LX/02Vx;)LX/04oE; // method@3682
+567574-4aa57e: 0c00                                   |0069: move-result-object v0
+567575-4aa580: 5406 ac4e                              |006a: iget-object v6, v0, LX/04oE;.A00:Ljava/lang/Object; // field@4eac
+567576-4aa584: 1f06 ba7d                              |006c: check-cast v6, Landroid/view/SurfaceView; // type@7dba
+567577-4aa588: 5400 ad4e                              |006e: iget-object v0, v0, LX/04oE;.A01:Ljava/lang/Object; // field@4ead
+567578-4aa58c: 1f00 6d87                              |0070: check-cast v0, Ljava/lang/Boolean; // type@876d
+567579-4aa590: 6e10 9aeb 0000                         |0072: invoke-virtual {v0}, Ljava/lang/Boolean;.booleanValue:()Z // method@eb9a
+567580-4aa596: 0a01                                   |0075: move-result v1
+567581-4aa598: 54c0 f62f                              |0076: iget-object v0, v12, LX/02q6;.A04:Landroid/view/SurfaceView; // field@2ff6
+567582-4aa59c: 07f8                                   |0078: move-object v8, v15
+567583-4aa59e: 3800 2f00                              |0079: if-eqz v0, 00a8 // +002f
+567584-4aa5a2: 54c0 f22f                              |007b: iget-object v0, v12, LX/02q6;.A00:Landroid/view/Surface; // field@2ff2
+567585-4aa5a6: 3800 0500                              |007d: if-eqz v0, 0082 // +0005
+567586-4aa5aa: 6e10 54c4 0000                         |007f: invoke-virtual {v0}, Landroid/view/Surface;.release:()V // method@c454
+567587-4aa5b0: 5bc2 f22f                              |0082: iput-object v2, v12, LX/02q6;.A00:Landroid/view/Surface; // field@2ff2
+567588-4aa5b4: 6e10 6730 0f00                         |0084: invoke-virtual {v15}, LX/02Vx;.A0M:()V // method@3067
+567589-4aa5ba: 5bc2 f52f                              |0087: iput-object v2, v12, LX/02q6;.A03:Landroid/view/SurfaceControl; // field@2ff5
+567590-4aa5be: 5bc2 f22f                              |0089: iput-object v2, v12, LX/02q6;.A00:Landroid/view/Surface; // field@2ff2
+567591-4aa5c2: 5bc5 f32f                              |008b: iput-object v5, v12, LX/02q6;.A01:Landroid/view/SurfaceControl; // field@2ff3
+567592-4aa5c6: 5590 382d                              |008d: iget-boolean v0, v9, LX/02g4;.A0K:Z // field@2d38
+567593-4aa5ca: 3800 0f00                              |008f: if-eqz v0, 009e // +000f
+567594-4aa5ce: 54c2 f42f                              |0091: iget-object v2, v12, LX/02q6;.A02:LX/06EF; // field@2ff4
+567595-4aa5d2: 3802 0b00                              |0093: if-eqz v2, 009e // +000b
+567596-4aa5d6: 1301 1d00                              |0095: const/16 v1, #int 29 // #1d
+567597-4aa5da: 2200 273e                              |0097: new-instance v0, LX/07pU; // type@3e27
+567598-4aa5de: 7030 247e c001                         |0099: invoke-direct {v0, v12, v1}, LX/07pU;.<init>:(Ljava/lang/Object;I)V // method@7e24
+567599-4aa5e4: 5b20 5164                              |009c: iput-object v0, v2, LX/06EF;.A05:Lkotlin/jvm/functions/Function0; // field@6451
+567600-4aa5e8: 5590 342d                              |009e: iget-boolean v0, v9, LX/02g4;.A0G:Z // field@2d34
+567601-4aa5ec: 3800 4c00                              |00a0: if-eqz v0, 00ec // +004c
+567602-4aa5f0: 1a00 4af3                              |00a2: const-string v0, "groot_player_view" // string@f34a
+567603-4aa5f4: 6e20 1cc5 0600                         |00a4: invoke-virtual {v6, v0}, Landroid/view/View;.setTag:(Ljava/lang/Object;)V // method@c51c
+567604-4aa5fa: 2845                                   |00a7: goto 00ec // +0045
+567605-4aa5fc: 5bc6 f62f                              |00a8: iput-object v6, v12, LX/02q6;.A04:Landroid/view/SurfaceView; // field@2ff6
+567606-4aa600: 54ca f72f                              |00aa: iget-object v10, v12, LX/02q6;.A05:LX/0Zlj; // field@2ff7
+567607-4aa604: 2204 2432                              |00ac: new-instance v4, LX/06EF; // type@3224
+567608-4aa608: 7608 3770 0400                         |00ae: invoke-direct/range {v4, v5, v6, v7, v8, v9, v10, v11}, LX/06EF;.<init>:(Landroid/view/SurfaceControl;Landroid/view/SurfaceView;LX/02Vx;LX/02Vx;LX/02g4;LX/0Zlj;LX/0Akm;)V // method@7037
+567609-4aa60e: 54c0 f22f                              |00b1: iget-object v0, v12, LX/02q6;.A00:Landroid/view/Surface; // field@2ff2
+567610-4aa612: 5b40 5064                              |00b3: iput-object v0, v4, LX/06EF;.A00:Landroid/view/Surface; // field@6450
+567611-4aa616: 3801 0900                              |00b5: if-eqz v1, 00be // +0009
+567612-4aa61a: 6e10 5cc4 0600                         |00b7: invoke-virtual {v6}, Landroid/view/SurfaceView;.getHolder:()Landroid/view/SurfaceHolder; // method@c45c
+567613-4aa620: 0c00                                   |00ba: move-result-object v0
+567614-4aa622: 7220 5ac4 4000                         |00bb: invoke-interface {v0, v4}, Landroid/view/SurfaceHolder;.addCallback:(Landroid/view/SurfaceHolder$Callback;)V // method@c45a
+567615-4aa628: 6003 b693                              |00be: sget v3, Landroid/os/Build$VERSION;.SDK_INT:I // field@93b6
+567616-4aa62c: 1300 2300                              |00c0: const/16 v0, #int 35 // #23
+567617-4aa630: 3403 1a00                              |00c2: if-lt v3, v0, 00dc // +001a
+567618:4aa634: 5590 2b2d                              |00c4: iget-boolean v0, v9, LX/02g4;.A07:Z // field@2d2b
+567619-4aa638: 3800 1600                              |00c6: if-eqz v0, 00dc // +0016
+567620-4aa63c: 54c1 f62f                              |00c8: iget-object v1, v12, LX/02q6;.A04:Landroid/view/SurfaceView; // field@2ff6
+567621-4aa640: 3801 0700                              |00ca: if-eqz v1, 00d1 // +0007
+567622-4aa644: 1500 c03f                              |00cc: const/high16 v0, #int 1069547520 // #3fc0
+567623-4aa648: 6e20 5dc4 0100                         |00ce: invoke-virtual {v1, v0}, Landroid/view/SurfaceView;.setDesiredHdrHeadroom:(F)V // method@c45d
+567624-4aa64e: 2200 2b32                              |00d1: new-instance v0, LX/06EM; // type@322b
+567625-4aa652: 7020 3e70 9000                         |00d3: invoke-direct {v0, v9}, LX/06EM;.<init>:(LX/02g4;)V // method@703e
+567626-4aa658: 6e20 4070 5000                         |00d6: invoke-virtual {v0, v5}, LX/06EM;.A03:(Landroid/view/SurfaceControl;)V // method@7040
+567627-4aa65e: 6e20 3f70 5000                         |00d9: invoke-virtual {v0, v5}, LX/06EM;.A02:(Landroid/view/SurfaceControl;)V // method@703f
+567628-4aa664: 1300 2200                              |00dc: const/16 v0, #int 34 // #22
+567629-4aa668: 3403 0b00                              |00de: if-lt v3, v0, 00e9 // +000b
+567630-4aa66c: 54c1 f62f                              |00e0: iget-object v1, v12, LX/02q6;.A04:Landroid/view/SurfaceView; // field@2ff6
+567631-4aa670: 3801 0700                              |00e2: if-eqz v1, 00e9 // +0007
+567632-4aa674: 5290 252d                              |00e4: iget v0, v9, LX/02g4;.A01:I // field@2d25
+567633-4aa678: 6e20 5ec4 0100                         |00e6: invoke-virtual {v1, v0}, Landroid/view/SurfaceView;.setSurfaceLifecycle:(I)V // method@c45e
+567634-4aa67e: 5bc4 f42f                              |00e9: iput-object v4, v12, LX/02q6;.A02:LX/06EF; // field@2ff4
+567635-4aa682: 289c                                   |00eb: goto 0087 // -0064
+567636-4aa684: 1400 5297 ab37                         |00ec: const v0, #float 2.04553e-05 // #37ab9752
+567637-4aa68a: 7110 7826 0000                         |00ef: invoke-static {v0}, LX/01od;.A00:(I)V // method@2678
+567638-4aa690: 1106                                   |00f2: return-object v6
+567639-4aa692: 0d01                                   |00f3: move-exception v1
+567640-4aa694: 1400 95d4 ec25                         |00f4: const v0, #float 4.10835e-16 // #25ecd495
+567641-4aa69a: 7110 7826 0000                         |00f7: invoke-static {v0}, LX/01od;.A00:(I)V // method@2678
+567642-4aa6a0: 2701                                   |00fa: throw v1
+567643-      catches       : 4
+567644-        0x000a - 0x004a
+567645-          <any> -> 0x00f3
+567646-        0x004a - 0x004e
+567647-          <any> -> 0x005d
+567648-        0x004e - 0x0056
+567649-          <any> -> 0x00f3
+567650-        0x005d - 0x00ec
+567651-          <any> -> 0x00f3
+567652-      positions     :
+567653-      locals        :
+567654-
+567655-    #2              : (in LX/02q6;)
+567656-      name          : 'Bfy'
+567657-      type          : '()LX/02g4;'
+567658-      access        : 0x0011 (PUBLIC FINAL)
+567659-      method_idx    : 13957
+567660-      code          -
+567661-      registers     : 2
+567662-      ins           : 1
+567663-      outs          : 0
+567664-      insns size    : 3 16-bit code units
+567665-4aa6cc:                                        |[4aa6cc] X.02q6.Bfy:()LX/02g4;
+567666-4aa6dc: 5410 f82f                              |0000: iget-object v0, v1, LX/02q6;.A06:LX/02g4; // field@2ff8
+567667-4aa6e0: 1100                                   |0002: return-object v0
+567668-      catches       : (none)
+567669-      positions     :
+567670-      locals        :
+567671-
+567672-    #3              : (in LX/02q6;)
+567673-      name          : 'CB8'
+567674-      type          : '()Landroid/view/Surface;'
+567675-      access        : 0x0011 (PUBLIC FINAL)
+567676-      method_idx    : 13958
+567677-      code          -
+567678-      registers     : 2
+567679-      ins           : 1
+567680-      outs          : 0
+567681-      insns size    : 9 16-bit code units
+567682-4aa6e4:                                        |[4aa6e4] X.02q6.CB8:()Landroid/view/Surface;
+567683-4aa6f4: 5410 f42f                              |0000: iget-object v0, v1, LX/02q6;.A02:LX/06EF; // field@2ff4
+567684-4aa6f8: 3800 0500                              |0002: if-eqz v0, 0007 // +0005
+567685-4aa6fc: 5400 2b3f                              |0004: iget-object v0, v0, LX/03q0;.A00:Landroid/view/Surface; // field@3f2b
+567686-4aa700: 1100                                   |0006: return-object v0
+567687-4aa702: 1200                                   |0007: const/4 v0, #int 0 // #0
+567688-4aa704: 1100                                   |0008: return-object v0
+567689-      catches       : (none)
+567690-      positions     :
+567691-      locals        :
+567692-
+567693-    #4              : (in LX/02q6;)
+567694-      name          : 'CB9'
+567695-      type          : '()V'
+567696-      access        : 0x0011 (PUBLIC FINAL)
+567697-      method_idx    : 13959
+567698-      code          -
+567699-      registers     : 1
+567700-      ins           : 1
+567701-      outs          : 0
+567702-      insns size    : 1 16-bit code units
+567703-4aa708:                                        |[4aa708] X.02q6.CB9:()V
+567704-4aa718: 0e00                                   |0000: return-void
+567705-      catches       : (none)
+567706-      positions     :
+567707-      locals        :
+567708-
+567709-    #5              : (in LX/02q6;)
+567710-      name          : 'CrP'
+567711-      type          : '()LX/044B;'
+567712-      access        : 0x0011 (PUBLIC FINAL)
+567713-      method_idx    : 13960
+567714-      code          -
+567715-      registers     : 3
+567716-      ins           : 1
+567717-      outs          : 2
+567718-      insns size    : 8 16-bit code units
+567719-4aa71c:                                        |[4aa71c] X.02q6.CrP:()LX/044B;
+567720-4aa72c: 5421 f82f                              |0000: iget-object v1, v2, LX/02q6;.A06:LX/02g4; // field@2ff8
+567721-4aa730: 2200 2b21                              |0002: new-instance v0, LX/044B; // type@212b
+567722-4aa734: 7020 2650 1000                         |0004: invoke-direct {v0, v1}, LX/044B;.<init>:(LX/02g4;)V // method@5026
+567723-4aa73a: 1100                                   |0007: return-object v0
+567724-      catches       : (none)
+567725-      positions     :
+567726-      locals        :
+567727-
+567728-    #6              : (in LX/02q6;)
+567729-      name          : 'DR4'
+567730-      type          : '()LX/0ABc;'
+567731-      access        : 0x0011 (PUBLIC FINAL)
+567732-      method_idx    : 13961
+567733-      code          -
+567734-      registers     : 4
+567735-      ins           : 1
+567736-      outs          : 3
+567737-      insns size    : 19 16-bit code units
+567738-4aa73c:                                        |[4aa73c] X.02q6.DR4:()LX/0ABc;
+
+===== classes16 exact A07 field references =====
+
+===== classes17 exact A07 field references =====
+
+===== classes18 exact A07 field references =====
+
