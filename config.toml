@@ -24,8 +24,9 @@ uptodown-dlurl = "https://line.en.uptodown.com/android"
 
 # iQOO 12 Pro non-root build. Keep the official com.instagram.android package.
 # Piko 3.9.0 targets 439.0.0.37.89. Keep the Release 6 feature set unchanged;
-# Add settings + Unlock developer options are diagnostic-only additions so the
-# Instagram MetaConfig/QE flags can be inspected for HDR device eligibility.
+# Add settings + Unlock developer options expose MetaConfig/QE diagnostics.
+# Validate links handles the signature check for external link routing on the
+# re-signed APK, so instagram.com post/reel links do not fall back to Home.
 [Instagram-Piko]
 app-name = "Instagram"
 patches-source = "crimera/piko"
@@ -50,6 +51,7 @@ included-patches = """\
   'Unlock Plus benefits' \
   'Add settings' \
   'Unlock developer options' \
+  'Validate links' \
   """
 archive-dlurl = "https://archive.org/download/andrews-apks/apks/com.instagram.android"
 apkmirror-dlurl = "https://www.apkmirror.com/apk/instagram/instagram-instagram/"
