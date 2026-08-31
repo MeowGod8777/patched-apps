@@ -59,8 +59,7 @@ jobs:
 
           HIT=0
           for d in work/dex/classes*.dex; do
-            S="$(strings "$d")"
-            if printf '%s\n' "$S" | grep -qE 'LX/0B3D;|LX/BSw;|LX/Sb1;'; then
+            if grep -aEq 'LX/0B3D;|LX/BSw;|LX/Sb1;' "$d"; then
               HIT=1
               b="$(basename "$d" .dex)"
               echo "Helper descriptor hit in $d" | tee -a "$REPORT"
