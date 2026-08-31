@@ -1,5 +1,8 @@
 {
   "LINE-Andrew": {
-    "andrewliang25/morphe-patches": "patches-1.6.0.mpp"
+    "andrewliang25/morphe-patches": "patches-1.8.0.mpp"
+  },
+  "Threads-Chiggi": {
+    "durgesh0505/chiggi_morphe_patches": "patches-1.19.0.mpp"
   }
 }
