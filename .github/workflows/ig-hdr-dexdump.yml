@@ -29,7 +29,7 @@ jobs:
           mkdir -p work/dex
           gh release download 8 --pattern "$APK_NAME" --dir work
           echo "$APK_SHA256  work/$APK_NAME" | sha256sum -c -
-          unzip -j "work/$APK_NAME" 'classes.dex' -d work/dex
+          unzip -j "work/$APK_NAME" 'classes*.dex' -d work/dex
 
       - name: Find dexdump
         run: |
@@ -37,54 +37,56 @@ jobs:
           test -n "$DEXDUMP"
           echo "DEXDUMP=$DEXDUMP" >> "$GITHUB_ENV"
 
-      - name: Emit concise decoder report
+      - name: Locate and dump exact MobileConfig helpers
         shell: bash
         run: |
           mkdir -p research/generated work/dis
-          REPORT=research/generated/instagram_439_hdr_decoder_concise.txt
-          "$DEXDUMP" -d -f -h work/dex/classes.dex > work/dis/classes.txt
+          REPORT=research/generated/instagram_439_hdr_decoder_definition.txt
           : > "$REPORT"
           {
-            echo "Instagram 439 MobileConfig decoder concise report"
-            echo "================================================"
+            echo "Instagram 439 exact MobileConfig helper definitions"
+            echo "===================================================="
             echo "APK SHA256: $APK_SHA256"
             echo "Mapping anchor: 74463::20 = ig4a_groot_surface_optimization::enable_hdr_sdr_ratio"
             echo
           } >> "$REPORT"
 
-          slice_class() {
-            cls="$1"; label="$2"; span="$3"
-            line="$(grep -nF "Class descriptor  : '$cls'" work/dis/classes.txt | head -1 | cut -d: -f1 || true)"
-            {
-              echo "===== $label ====="
-              if [ -n "$line" ]; then
-                start=$((line>8?line-8:1)); end=$((line+span))
-                sed -n "${start},${end}p" work/dis/classes.txt
-              else
-                echo "NOT FOUND: $cls"
-              fi
-              echo
-            } >> "$REPORT"
-          }
-
-          slice_class 'LX/00Al;' 'X.00Al universal-ID decoder' 180
-          slice_class 'LX/04Kj;' 'X.04Kj ExperimentParameter wrapper' 220
+          for d in work/dex/classes*.dex; do
+            if grep -aFq 'LX/00Al;' "$d" || grep -aFq 'LX/00Aj;' "$d" || grep -aFq 'LX/003s;' "$d"; then
+              b="$(basename "$d" .dex)"
+              "$DEXDUMP" -d -f -h "$d" > "work/dis/$b.txt"
+              echo "DEX candidate: $b" >> "$REPORT"
+              for spec in 'LX/00Al;|X.00Al universal-ID decoder' 'LX/00Aj;|X.00Aj value decoder' 'LX/003s;|X.003s boolean decoder'; do
+                cls="${spec%%|*}"; label="${spec#*|}"
+                line="$(grep -nF "Class descriptor  : '$cls'" "work/dis/$b.txt" | head -1 | cut -d: -f1 || true)"
+                if [ -n "$line" ]; then
+                  start=$((line>8?line-8:1)); end=$((line+260))
+                  {
+                    echo
+                    echo "===== $label in $b ====="
+                    sed -n "${start},${end}p" "work/dis/$b.txt"
+                  } >> "$REPORT"
+                fi
+              done
+            fi
+          done
 
           {
-            echo "===== exact X.00Al.A00 callers ====="
-            grep -n -B 14 -A 28 -F 'LX/00Al;.A00:(J)I' work/dis/classes.txt || true
+            echo
+            echo "===== method references to X.00Al.A00(J)I across all dumped DEX ====="
+            grep -Hn -B 18 -A 40 -F 'LX/00Al;.A00:(J)I' work/dis/*.txt || true
           } >> "$REPORT"
 
           wc -l "$REPORT"
-          sed -n '1,260p' "$REPORT"
+          sed -n '1,360p' "$REPORT"
 
-      - name: Commit concise report
+      - name: Commit helper definition report
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add research/generated/instagram_439_hdr_decoder_concise.txt
+          git add research/generated/instagram_439_hdr_decoder_definition.txt
           if ! git diff --cached --quiet; then
-            git commit -m "Add concise Instagram 439 MobileConfig decoder report"
+            git commit -m "Add exact Instagram 439 MobileConfig helper definitions"
           fi
           git pull --rebase origin main
           git push origin HEAD:main
