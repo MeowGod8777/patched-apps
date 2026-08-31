@@ -13,7 +13,7 @@ permissions:
 jobs:
   probe:
     runs-on: ubuntu-latest
-    timeout-minutes: 15
+    timeout-minutes: 20
     env:
       APK_NAME: instagram-piko-v439.0.0.37.89-arm64-v8a.apk
       APK_SHA256: 4015b171ac59f3e7172134d194ec2dcf701f64c3339f127c19d7a04c13d529c8
@@ -26,7 +26,7 @@ jobs:
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          mkdir -p work/dex
+          mkdir -p work/dex work/dis research/generated
           gh release download 8 --pattern "$APK_NAME" --dir work
           echo "$APK_SHA256  work/$APK_NAME" | sha256sum -c -
           unzip -j "work/$APK_NAME" 'classes*.dex' -d work/dex
@@ -37,38 +37,101 @@ jobs:
           test -n "$DEXDUMP"
           echo "DEXDUMP=$DEXDUMP" >> "$GITHUB_ENV"
 
-      - name: Extract exact decoder methods
+      - name: Reverse 74463 table index and exact specifier
         shell: bash
         run: |
-          mkdir -p research/generated work/dis
-          REPORT=research/generated/instagram_439_hdr_decoder_methods.txt
+          REPORT=research/generated/instagram_439_hdr_specifier_trace.txt
           : > "$REPORT"
-          "$DEXDUMP" -d -f -h work/dex/classes2.dex > work/dis/classes2.txt
-          {
-            echo "Instagram 439 exact MobileConfig decoder methods"
-            echo "================================================"
-            echo "APK SHA256: $APK_SHA256"
-            echo "Mapping anchor: 74463::20 = ig4a_groot_surface_optimization::enable_hdr_sdr_ratio"
-            echo
-            echo "===== X.00Al.A00(J)I universal-ID decoder ====="
-            grep -n -B 18 -A 90 -F 'X.00Al.A00:(J)I' work/dis/classes2.txt || true
-            echo
-            echo "===== X.00Aj value decoders ====="
-            grep -n -B 18 -A 70 -E 'X\.00Aj\.(A04|A09|A0E):' work/dis/classes2.txt || true
-            echo
-            echo "===== X.003s.A04(J)Z boolean decoder ====="
-            grep -n -B 18 -A 70 -F 'X.003s.A04:(J)Z' work/dis/classes2.txt || true
-          } >> "$REPORT"
-          wc -l "$REPORT"
-          cat "$REPORT"
 
-      - name: Commit decoder methods report
+          # Exact R8 classes2.dex: X.00Al.<clinit> instructions begin at file offset 0x361b98.
+          # Its A01 table is the concatenation of payloads at code-unit offsets 0x00d2 and 0x27e6.
+          python3 - <<'PY' | tee "$REPORT"
+          from pathlib import Path
+          import struct
+
+          dex = Path('work/dex/classes2.dex').read_bytes()
+          insn_base = 0x361b98
+          payload_units = [0x00d2, 0x27e6]
+          arrays=[]
+          print('Instagram 439 exact HDR MobileConfig specifier trace')
+          print('===================================================')
+          print('target universalId=74463 paramId=20')
+          for u in payload_units:
+              off = insn_base + 2*u
+              ident, width = struct.unpack_from('<HH', dex, off)
+              size = struct.unpack_from('<I', dex, off+4)[0]
+              print(f'payload units=0x{u:x} file_off=0x{off:x} ident=0x{ident:04x} width={width} size={size}')
+              if ident != 0x0300 or width != 4:
+                  raise SystemExit('unexpected fill-array-data payload header')
+              vals=list(struct.unpack_from('<' + 'I'*size, dex, off+8))
+              arrays.extend(vals)
+          print(f'A01 concatenated size={len(arrays)}')
+          hits=[i for i,v in enumerate(arrays) if v==74463]
+          print('74463 indices in A01:', hits)
+          if len(hits)!=1:
+              raise SystemExit(f'expected unique 74463 hit, got {hits}')
+          idx=hits[0]
+          Path('work/target_index.txt').write_text(str(idx))
+          print(f'DECODE TARGET: effective_table=1 index={idx} paramId=20')
+          PY
+
+          TARGET_INDEX="$(cat work/target_index.txt)"
+
+          for d in work/dex/classes*.dex; do
+            b="$(basename "$d" .dex)"
+            "$DEXDUMP" -d -f -h "$d" > "work/dis/$b.txt"
+          done
+
+          TARGET_INDEX="$TARGET_INDEX" python3 - <<'PY' | tee -a "$REPORT"
+          from pathlib import Path
+          import os,re
+          idx=int(os.environ['TARGET_INDEX'])
+          target_param=20
+          # dexdump const-wide lines end with comments like // #00810b8b00010520
+          pat=re.compile(r'const-wide[^\n]*// #([0-9a-fA-F]{16})')
+          hits=[]
+          for p in sorted(Path('work/dis').glob('classes*.txt')):
+              lines=p.read_text(errors='ignore').splitlines()
+              for n,line in enumerate(lines,1):
+                  m=pat.search(line)
+                  if not m: continue
+                  v=int(m.group(1),16)
+                  raw_table=(v>>54)&0x3f
+                  eff_table=1 if raw_table<3 else raw_table
+                  index=(v>>32)&0xffff
+                  flag=((v>>62)&1)==1
+                  shifted=v>>16
+                  param=(shifted&0xffff) if flag else (shifted&0xfff)
+                  if eff_table==1 and index==idx and param==target_param:
+                      hits.append((p,n,v,raw_table,flag,line.strip()))
+          print(f'candidate const-wide count={len(hits)}')
+          for p,n,v,rt,flag,line in hits:
+              print(f'CANDIDATE {p}:{n} hex=0x{v:016x} raw_table={rt} wide_param_flag={int(flag)}')
+              print(line)
+          Path('work/candidates.txt').write_text('\n'.join(f'{p}|{n}|{v:016x}' for p,n,v,_,_,_ in hits))
+          PY
+
+          {
+            echo
+            echo '===== CANDIDATE CONSUMER CONTEXT ====='
+            while IFS='|' read -r f n hex; do
+              [ -n "$f" ] || continue
+              start=$((n>45?n-45:1)); end=$((n+100))
+              echo
+              echo "--- $f:$n specifier=0x$hex ---"
+              sed -n "${start},${end}p" "$f"
+            done < work/candidates.txt
+          } >> "$REPORT"
+
+          sed -n '1,500p' "$REPORT"
+
+      - name: Commit specifier trace
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add research/generated/instagram_439_hdr_decoder_methods.txt
+          git add research/generated/instagram_439_hdr_specifier_trace.txt
           if ! git diff --cached --quiet; then
-            git commit -m "Add exact Instagram 439 MobileConfig decoder methods"
+            git commit -m "Trace exact Instagram 439 Groot HDR specifier"
           fi
           git pull --rebase origin main
           git push origin HEAD:main
