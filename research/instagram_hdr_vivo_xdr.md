@@ -79,6 +79,19 @@ Relevant API/symbols include:
 
 This establishes a vivo framework-level XDR API path above the lower display driver layer.
 
+### `vivo-services.jar`: feature initialization
+
+`com.android.server.display.common.config.LcmFeature` initializes `mSupportAppHdr` by reading:
+
+```text
+feature   = vivo.hardware.display.xdr_video
+attribute = app_hdr
+```
+
+The value is obtained through `FtFeature.getFeatureAttribute(...)`. On this V2329A build, `/vendor/etc/vivo_config.ini` contains `app_hdr=true`, so the ROM-side App HDR feature gate is present/enabled.
+
+`VivoLcmBrightnessManager` copies `LcmFeature.mSupportXdrVideo` / `mSupportXdrPhoto` into its own static support flags and creates a `SurfaceControlHdrLayerInfoListener` when the XDR path is supported.
+
 ### `vivo-services.jar`: `AppHdrController`
 
 A concrete system-server implementation exists at:
@@ -100,23 +113,57 @@ Important symbols include:
 - `isSupportAppHdr()`
 - `isWhiteListPackage()` / `isWhiteListActivity()`
 
-`LcmFeature` initializes `mSupportAppHdr` from feature `vivo.hardware.display.xdr_video`, attribute `app_hdr`. This directly links the system-server App HDR controller to the `app_hdr=true` device feature.
+Verified call path:
 
-Current decompilation/xref evidence also shows:
-- `AppHdrController.initAppHdrBinder()` registers a binder with SurfaceFlinger using the `android.ui.ISurfaceComposer` interface.
-- `AppHdrController.onHdrInfoChanged(...)` posts HDR-layer information into controller logic and can call `setXdrEnabled(...)` / request XDR brightness refresh rate.
-- `setXdrEnabled(...)` transacts directly with SurfaceFlinger.
-- `isWhiteListPackage()` currently matches Youku-related package state and is used by the software `Sdr2HdrSwDisplayEnhanceController` path. Current evidence does **not** show Instagram being excluded from native HDR by this whitelist.
+```text
+SurfaceControlHdrLayerInfoListener
+  -> VivoLcmBrightnessManager.HdrListener.onHdrInfoChanged(...)
+  -> AppHdrController.onHdrInfoChanged(...)
+  -> AppHdrController.lambda$onHdrInfoChanged$0(...)
+  -> setXdrEnabled(...) / requestXdrBrightnessRefreshRate()
+  -> SurfaceFlinger transaction
+```
 
-This shifts the working hypothesis away from an obvious vivo package whitelist and toward the upstream trigger: Instagram must actually deliver/report an HDR layer or HDR-capable rendition before the vivo App HDR controller enters XDR.
+`AppHdrController.initAppHdrBinder()` also registers an App-HDR binder with SurfaceFlinger through the `android.ui.ISurfaceComposer` interface. `setXdrEnabled(...)` and `setVideoBrightenMultiple(...)` both transact directly with SurfaceFlinger.
 
-## Current working direction
+The internal binder can receive XDR config (sync-brightness and XDR-FPS booleans), HDR-video-stage changes, LCM nit changes, and then calls `updateAppHDRState(...)` as required.
 
-Next priority is to distinguish:
-1. Instagram on V2329A receives only an SDR rendition / reports SDR metadata; versus
-2. Instagram receives HDR but fails to expose an HDR layer to SurfaceFlinger.
+### Package whitelist finding
 
-If (1), target Meta device/capability eligibility and rendition selection in the patched APK.
-If (2), target Instagram Surface/headroom presentation and vivo App HDR interaction.
+`AppHdrController.isWhiteListPackage()` currently checks Youku-specific package state (`com.youku.phone`) and `isWhiteListActivity()` checks Youku/test activities. Those checks are referenced by `handlerAppHdrColorMode(...)`, which enters/exits `Sdr2HdrSwDisplayEnhanceController`.
+
+Therefore this whitelist belongs to the **software SDR -> HDR enhancement path**, not the generic native HDR-layer detection path above.
+
+**No evidence was found that `com.instagram.android` is blocked by a vivo native-HDR package whitelist.** This substantially lowers the probability of an OEM whitelist being the root cause.
+
+### DisplayManager service exposure
+
+`VivoDisplayManagerServiceImpl` exposes thin wrappers around the controller for:
+- `isSupportAppHdr()`
+- `setAppHdrStatus(int)`
+- `registerAppHdrCallBack(packageName, callback)`
+- `unregisterAppHdrCallBack(packageName, callback)`
+
+The service methods delegate directly to `AppHdrController`.
+
+## Current interpretation
+
+The vivo side is not showing an obvious `Instagram -> denied` policy. Instead, native XDR activation is driven by SurfaceFlinger HDR-layer information. That means a normal third-party app does **not** appear to need to be in a vivo package whitelist merely to present native HDR.
+
+This shifts the primary root-cause hypothesis upstream:
+
+1. Instagram on V2329A is selecting an SDR rendition / classifying the device as not eligible for HDR; or
+2. Instagram receives HDR media but creates a Surface/layer whose dataspace / HDR metadata / desired headroom is not recognized as HDR by SurfaceFlinger.
+
+The previous idea of forcing a vivo whitelist is therefore no longer the primary repair route.
+
+## Current repair direction
+
+Next high-information check is media/render-path comparison rather than more MetaConfig toggles:
+
+- determine the selected decoder input/output color transfer / dataspace for the same HDR Reel;
+- compare a device/session where Instagram actually enters HDR against V2329A;
+- if V2329A receives SDR, patch/spoof Meta device capability / HDR rendition eligibility;
+- if V2329A receives HDR but SurfaceFlinger sees no HDR layer, patch Instagram Surface/headroom presentation.
 
 Do not return to blind one-by-one MetaConfig flag testing unless new evidence points to a specific flag.
