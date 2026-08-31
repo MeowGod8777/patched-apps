@@ -157,6 +157,16 @@ This shifts the primary root-cause hypothesis upstream:
 
 The previous idea of forcing a vivo whitelist is therefore no longer the primary repair route.
 
+## Media-path probe #1: `media.metrics`
+
+A first runtime probe used `dumpsys media.metrics --all` while Instagram content was being tested. The returned matching records were only `audio/vorbis` codec/extractor entries owned by `media`, `android.uid.systemui`, and `jp.naver.line.android`.
+
+**No `com.instagram.android` video codec entry and no video color-transfer / HDR metadata entry were captured.**
+
+Therefore this probe is **inconclusive** and must not be interpreted as evidence that Instagram selected an SDR rendition. It indicates only that `media.metrics` did not expose the relevant Instagram video decode path in this session.
+
+Next probe should observe the active codec/render path directly (`media.codec` and/or controlled `logcat` around codec configuration) rather than reuse the same `media.metrics` query.
+
 ## Current repair direction
 
 Next high-information check is media/render-path comparison rather than more MetaConfig toggles:
