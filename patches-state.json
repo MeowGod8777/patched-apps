@@ -4,5 +4,8 @@
   },
   "Threads-Chiggi": {
     "durgesh0505/chiggi_morphe_patches": "patches-1.19.0.mpp"
+  },
+  "Instagram-Piko": {
+    "crimera/piko": "patches-3.9.0.mpp"
   }
 }
