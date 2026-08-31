@@ -17,7 +17,6 @@ jobs:
     env:
       APK_NAME: instagram-piko-v439.0.0.37.89-arm64-v8a.apk
       APK_SHA256: 4015b171ac59f3e7172134d194ec2dcf701f64c3339f127c19d7a04c13d529c8
-      SPECIFIER: 008106a20014205d
     steps:
       - uses: actions/checkout@v6
         with:
@@ -30,7 +29,7 @@ jobs:
           mkdir -p work/dex work/dis research/generated
           gh release download 8 --pattern "$APK_NAME" --dir work
           echo "$APK_SHA256  work/$APK_NAME" | sha256sum -c -
-          unzip -j "work/$APK_NAME" 'classes15.dex' -d work/dex
+          unzip -j "work/$APK_NAME" 'classes*.dex' -d work/dex
 
       - name: Find dexdump
         run: |
@@ -38,33 +37,40 @@ jobs:
           test -n "$DEXDUMP"
           echo "DEXDUMP=$DEXDUMP" >> "$GITHUB_ENV"
 
-      - name: Extract unique consumer context
+      - name: Trace X.02g4.A07 reads
         shell: bash
         run: |
-          REPORT=research/generated/instagram_439_hdr_consumer.txt
-          "$DEXDUMP" -d -f -h work/dex/classes15.dex > work/dis/classes15.txt
-          line="$(grep -nF "#$SPECIFIER" work/dis/classes15.txt | head -1 | cut -d: -f1)"
-          test -n "$line"
-          start=$((line>180?line-180:1)); end=$((line+220))
+          REPORT=research/generated/instagram_439_hdr_a07_trace.txt
+          : > "$REPORT"
           {
-            echo "Instagram 439 exact Groot HDR consumer"
-            echo "====================================="
-            echo "APK SHA256: $APK_SHA256"
-            echo "Config: 74463::20 ig4a_groot_surface_optimization::enable_hdr_sdr_ratio"
-            echo "Raw specifier: 0x$SPECIFIER"
-            echo "classes15 dexdump line: $line"
+            echo "Instagram 439 Groot HDR A07 trace"
+            echo "================================"
+            echo "Config 74463::20 sets X.02g4.A07=true on API >=35"
             echo
-            sed -n "${start},${end}p" work/dis/classes15.txt
-          } > "$REPORT"
-          cat "$REPORT"
+          } >> "$REPORT"
 
-      - name: Commit consumer report
+          for d in work/dex/classes*.dex; do
+            if grep -aFq 'LX/02g4;' "$d"; then
+              b="$(basename "$d" .dex)"
+              "$DEXDUMP" -d -f -h "$d" > "work/dis/$b.txt"
+              {
+                echo "===== $b exact A07 field references ====="
+                grep -n -B 60 -A 120 -F 'LX/02g4;.A07:Z' "work/dis/$b.txt" || true
+                echo
+              } >> "$REPORT"
+            fi
+          done
+
+          wc -l "$REPORT"
+          sed -n '1,900p' "$REPORT"
+
+      - name: Commit A07 trace
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add research/generated/instagram_439_hdr_consumer.txt
+          git add research/generated/instagram_439_hdr_a07_trace.txt
           if ! git diff --cached --quiet; then
-            git commit -m "Add exact Instagram 439 Groot HDR consumer"
+            git commit -m "Trace Instagram 439 Groot HDR surface gate"
           fi
           git pull --rebase origin main
           git push origin HEAD:main
