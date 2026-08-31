@@ -37,57 +37,47 @@ jobs:
           test -n "$DEXDUMP"
           echo "DEXDUMP=$DEXDUMP" >> "$GITHUB_ENV"
 
-      - name: Summarize X.02g4.A07 consumers
+      - name: Trace X.06EM HDR transaction helpers
         shell: bash
         run: |
-          REPORT=research/generated/instagram_439_hdr_a07_consumers.txt
+          REPORT=research/generated/instagram_439_hdr_transaction_trace.txt
           : > "$REPORT"
           {
-            echo "Instagram 439 Groot HDR A07 consumer summary"
-            echo "============================================"
-            echo "74463::20 true + API>=35 => X.02g4.A07=true"
+            echo "Instagram 439 Groot HDR transaction trace"
+            echo "========================================"
+            echo "Known path: 74463::20 -> X.02g4.A07 -> SurfaceView.setDesiredHdrHeadroom(1.5) -> X.06EM.A03/A02"
             echo
           } >> "$REPORT"
 
           for d in work/dex/classes*.dex; do
-            grep -aFq 'LX/02g4;' "$d" || continue
+            grep -aFq 'LX/06EM;' "$d" || continue
             b="$(basename "$d" .dex)"
             "$DEXDUMP" -d -f -h "$d" > "work/dis/$b.txt"
-            B="$b" python3 - <<'PY' >> "$REPORT"
-          from pathlib import Path
-          import os,re
-          b=os.environ['B']
-          p=Path('work/dis')/(b+'.txt')
-          lines=p.read_text(errors='ignore').splitlines()
-          refs=[i for i,l in enumerate(lines) if 'LX/02g4;.A07:Z' in l]
-          if not refs: raise SystemExit
-          print(f'===== {b}: A07 refs={len(refs)} =====')
-          for i in refs:
-              line=lines[i]
-              op='READ' if 'iget-boolean' in line else ('WRITE' if 'iput-boolean' in line else 'OTHER')
-              method='UNKNOWN'
-              for j in range(i,-1,-1):
-                  if re.search(r'\|\[[0-9a-f]+\] .*:\(', lines[j]):
-                      method=lines[j].split('|',1)[-1].strip()
-                      break
-              print(f'{op}: {line.strip()}')
-              print(f'  METHOD: {method}')
-              if op=='READ':
-                  for k in range(max(0,i-12), min(len(lines),i+28)):
-                      print('    '+lines[k])
-              print()
-          PY
+            line="$(grep -nF "Class descriptor  : 'LX/06EM;'" "work/dis/$b.txt" | head -1 | cut -d: -f1 || true)"
+            if [ -n "$line" ]; then
+              start=$((line>10?line-10:1)); end=$((line+520))
+              {
+                echo "===== X.06EM definition in $b ====="
+                sed -n "${start},${end}p" "work/dis/$b.txt"
+                echo
+              } >> "$REPORT"
+            fi
           done
+
+          {
+            echo "===== Surface HDR API references in candidate DEX ====="
+            grep -Hn -B 30 -A 60 -E 'setDesiredHdrSdrRatio|setDesiredHdrHeadroom|desiredHdrSdrRatio|desiredHdrHeadroom|HdrSdrRatio|HDR' work/dis/*.txt || true
+          } >> "$REPORT"
 
           cat "$REPORT"
 
-      - name: Commit A07 consumer summary
+      - name: Commit HDR transaction trace
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add research/generated/instagram_439_hdr_a07_consumers.txt
+          git add research/generated/instagram_439_hdr_transaction_trace.txt
           if ! git diff --cached --quiet; then
-            git commit -m "Summarize Instagram 439 Groot HDR A07 consumers"
+            git commit -m "Trace Instagram 439 desired HDR ratio transaction"
           fi
           git pull --rebase origin main
           git push origin HEAD:main
