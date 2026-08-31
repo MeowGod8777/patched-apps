@@ -37,52 +37,66 @@ jobs:
           test -n "$DEXDUMP"
           echo "DEXDUMP=$DEXDUMP" >> "$GITHUB_ENV"
 
-      - name: Trace exact Piko MobileConfig fingerprint
+      - name: Trace exact 439 MobileConfig decoder
         shell: bash
         run: |
           mkdir -p research/generated work/dis
-          REPORT=research/generated/instagram_439_hdr_fast_dex_report.txt
+          REPORT=research/generated/instagram_439_hdr_decoder_report.txt
           : > "$REPORT"
           {
-            echo "Instagram 439 exact HDR fast DEX probe"
-            echo "======================================"
+            echo "Instagram 439 exact MobileConfig decoder probe"
+            echo "=============================================="
             echo "APK: $APK_NAME"
             echo "SHA256: $APK_SHA256"
-            echo "Mapping anchor: 74463::20 = ig4a_groot_surface_optimization::enable_hdr_sdr_ratio"
-            echo "Piko fingerprint: ExperimentParameter + Failed to get config key with specifier:%d"
+            echo "Known mapping anchor: 74463::20 = ig4a_groot_surface_optimization::enable_hdr_sdr_ratio"
+            echo "Exact 439 parser class: X.04Kj"
+            echo "Exact 439 universal-ID decoder: X.00Al.A00(J)I"
             echo "Generated: $(date -u +%FT%TZ)"
             echo
           } >> "$REPORT"
 
-          HIT=0
-          for d in work/dex/classes*.dex; do
-            if grep -aFq 'Failed to get config key with specifier:%d' "$d"; then
-              HIT=1
-              b="$(basename "$d" .dex)"
-              echo "Fingerprint string hit in $d" | tee -a "$REPORT"
-              "$DEXDUMP" -d -f -h "$d" > "work/dis/$b.txt"
-              {
-                echo
-                echo "===== $b EXACT FINGERPRINT CONTEXT: FAILED CONFIG KEY ====="
-                grep -n -B 180 -A 220 -F 'Failed to get config key with specifier:%d' "work/dis/$b.txt" || true
-                echo
-                echo "===== $b EXACT FINGERPRINT CONTEXT: ExperimentParameter ====="
-                grep -n -B 180 -A 220 -F 'ExperimentParameter' "work/dis/$b.txt" || true
-              } >> "$REPORT"
-            fi
-          done
-          test "$HIT" -eq 1
+          "$DEXDUMP" -d -f -h work/dex/classes.dex > work/dis/classes.txt
 
-          echo "===== FINGERPRINT SUMMARY ====="
-          grep -nE 'Fingerprint string hit|ExperimentParameter|Failed to get config key|invoke-static|const-wide|Class descriptor|name[[:space:]]*:' "$REPORT" | head -n 2000 || true
+          extract_class() {
+            local cls="$1"
+            local label="$2"
+            local line
+            line="$(grep -nF "Class descriptor  : '$cls'" work/dis/classes.txt | head -1 | cut -d: -f1 || true)"
+            {
+              echo
+              echo "===== $label ($cls) ====="
+              if [ -n "$line" ]; then
+                local start=$(( line > 15 ? line - 15 : 1 ))
+                local end=$(( line + 700 ))
+                sed -n "${start},${end}p" work/dis/classes.txt
+              else
+                echo "CLASS NOT FOUND"
+              fi
+            } >> "$REPORT"
+          }
 
-      - name: Commit fast probe report
+          extract_class 'LX/00Al;' 'UNIVERSAL-ID DECODER'
+          extract_class 'LX/04Kj;' 'EXPERIMENT PARAMETER WRAPPER'
+
+          {
+            echo
+            echo "===== ALL CALLS TO X.00Al.A00(J)I IN classes.dex ====="
+            grep -n -B 40 -A 80 -F 'LX/00Al;.A00:(J)I' work/dis/classes.txt || true
+            echo
+            echo "===== LARGE CONST-WIDE VALUES NEAR MOBILECONFIG QUERIES ====="
+            grep -n -B 20 -A 50 -E 'const-wide|LX/00Al;.A00:\(J\)I|ExperimentParameter|Failed to get config key with specifier' work/dis/classes.txt | head -n 12000 || true
+          } >> "$REPORT"
+
+          echo "===== DECODER SUMMARY ====="
+          grep -nE "UNIVERSAL-ID DECODER|X\.00Al\.A00|ushr-long|shr-long|shl-long|and-long|long-to-int|const-wide|return" "$REPORT" | head -n 1600 || true
+
+      - name: Commit decoder report
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add research/generated/instagram_439_hdr_fast_dex_report.txt
+          git add research/generated/instagram_439_hdr_decoder_report.txt
           if ! git diff --cached --quiet; then
-            git commit -m "Trace exact Instagram 439 MobileConfig fingerprint"
+            git commit -m "Add exact Instagram 439 MobileConfig decoder report"
           fi
           git pull --rebase origin main
           git push origin HEAD:main
