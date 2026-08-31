@@ -1,0 +1,168 @@
+name: IG 439 HDR Gate Probe
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - .github/workflows/ig-hdr-decompile.yml
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  probe:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    env:
+      APK_NAME: instagram-piko-v439.0.0.37.89-arm64-v8a.apk
+      APK_SHA256: 4015b171ac59f3e7172134d194ec2dcf701f64c3339f127c19d7a04c13d529c8
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+
+      - name: Download exact Release 8 APK
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          mkdir -p work
+          gh release download 8 --pattern "$APK_NAME" --dir work
+          echo "$APK_SHA256  work/$APK_NAME" | sha256sum -c -
+
+      - name: Download JADX
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          JADX_URL="$(gh api repos/skylot/jadx/releases/latest --jq '.assets[] | select(.name | test("^jadx-[0-9].*\\.zip$")) | .browser_download_url' | head -1)"
+          test -n "$JADX_URL"
+          echo "JADX_URL=$JADX_URL"
+          curl -fL "$JADX_URL" -o work/jadx.zip
+          mkdir -p work/jadx-bin
+          unzip -q work/jadx.zip -d work/jadx-bin
+          work/jadx-bin/bin/jadx --version
+
+      - name: Decompile exact Instagram 439
+        run: |
+          mkdir -p work/jadx-out
+          work/jadx-bin/bin/jadx \
+            --no-res \
+            --show-bad-code \
+            --threads-count 4 \
+            -d work/jadx-out \
+            "work/$APK_NAME" || true
+          test -d work/jadx-out/sources
+
+      - name: Trace exact Groot HDR MobileConfig gate
+        shell: bash
+        run: |
+          mkdir -p research/generated
+          REPORT=research/generated/instagram_439_hdr_gate_report.txt
+          SRC=work/jadx-out/sources
+
+          {
+            echo "Instagram 439 HDR gate probe"
+            echo "============================"
+            echo "APK: $APK_NAME"
+            echo "SHA256: $APK_SHA256"
+            echo "Generated: $(date -u +%FT%TZ)"
+            echo
+            echo "Exact Piko 439 mapping anchor:"
+            echo "  universal/config id: 74463"
+            echo "  universal name: ig4a_groot_surface_optimization"
+            echo "  param id: 20"
+            echo "  param name: enable_hdr_sdr_ratio"
+            echo
+            echo "===== EXACT NAME HITS ====="
+            grep -RIn -C 12 -E 'ig4a_groot_surface_optimization|enable_hdr_sdr_ratio' "$SRC" 2>/dev/null || true
+            echo
+            echo "===== DIRECT HDR API / GROOT HITS ====="
+            grep -RIn -C 5 -E 'getHdrSdrRatio|setExtendedRangeBrightness|setDesiredHdrHeadroom|desiredHdr|HdrSdrRatio|HDR_SDR|hdr_sdr|IgGrootPlayer|grootplayer' "$SRC" 2>/dev/null | head -n 12000 || true
+          } > "$REPORT"
+
+          python3 - <<'PY'
+          from pathlib import Path
+          import re
+
+          src = Path('work/jadx-out/sources')
+          report = Path('research/generated/instagram_439_hdr_gate_report.txt')
+          needles = ('enable_hdr_sdr_ratio', 'ig4a_groot_surface_optimization')
+
+          hit_files = []
+          contexts = []
+          for p in src.rglob('*.java'):
+              try:
+                  text = p.read_text(errors='ignore')
+              except Exception:
+                  continue
+              if any(n in text for n in needles):
+                  hit_files.append((p, text))
+                  lines = text.splitlines()
+                  for i, line in enumerate(lines):
+                      if any(n in line for n in needles):
+                          lo=max(0,i-18); hi=min(len(lines),i+19)
+                          contexts.append('\n'.join(lines[lo:hi]))
+
+          # A MobileConfig specifier is a 64-bit long. Collect plausible long/hex
+          # literals only from the exact registry context, then count/search every
+          # occurrence across the exact 439 decompile.
+          joined='\n'.join(contexts)
+          literals=set(re.findall(r'(?<![\w])(?:0x[0-9a-fA-F]{8,16}|\d{10,19})L?(?![\w])', joined))
+          # Drop obvious timestamps/small non-spec values; preserve signed/unsigned-looking longs.
+          literals={x for x in literals if (x.lower().startswith('0x') or int(x) > 1_000_000_000)}
+
+          all_java=[]
+          for p in src.rglob('*.java'):
+              try:
+                  all_java.append((p, p.read_text(errors='ignore')))
+              except Exception:
+                  pass
+
+          with report.open('a', encoding='utf-8') as f:
+              f.write('\n===== EXACT REGISTRY HIT FILES =====\n')
+              for p,_ in hit_files:
+                  f.write(str(p)+'\n')
+              f.write('\n===== CANDIDATE 64-BIT SPECIFIERS FROM EXACT FLAG CONTEXT =====\n')
+              if not literals:
+                  f.write('NONE EXTRACTED\n')
+              for lit in sorted(literals):
+                  f.write(f'\n--- {lit} ---\n')
+                  needle=lit.lower().rstrip('l')
+                  count=0
+                  for p,text in all_java:
+                      for i,line in enumerate(text.splitlines(),1):
+                          normalized=line.lower().replace('l','')
+                          if needle in normalized:
+                              count += 1
+                              f.write(f'{p}:{i}:{line.strip()}\n')
+                  f.write(f'GLOBAL_OCCURRENCES={count}\n')
+
+              f.write('\n===== FILES COMBINING GROOT + HDR TERMS =====\n')
+              terms_hdr=('hdr','extendedrangebrightness','desiredhdr','colorspace','dataspace')
+              terms_groot=('groot','surfaceview','videoplayer')
+              scored=[]
+              for p,text in all_java:
+                  low=text.lower()
+                  if any(a in low for a in terms_hdr) and any(b in low for b in terms_groot):
+                      score=sum(low.count(a) for a in terms_hdr)+sum(low.count(b) for b in terms_groot)
+                      scored.append((score,p))
+              for score,p in sorted(scored, reverse=True)[:200]:
+                  f.write(f'{score}\t{p}\n')
+          PY
+
+          echo "===== REPORT HEAD ====="
+          sed -n '1,260p' "$REPORT"
+          echo "===== REPORT KEY SPECIFIERS ====="
+          grep -nE 'CANDIDATE|GLOBAL_OCCURRENCES|enable_hdr_sdr_ratio|ig4a_groot_surface_optimization' "$REPORT" | head -n 300 || true
+
+      - name: Commit exact 439 probe report
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add research/generated/instagram_439_hdr_gate_report.txt
+          if ! git diff --cached --quiet; then
+            git commit -m "Add exact Instagram 439 HDR gate probe report"
+            git push origin HEAD:main
+          fi
