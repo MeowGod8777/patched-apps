@@ -37,7 +37,7 @@ jobs:
           test -n "$DEXDUMP"
           echo "DEXDUMP=$DEXDUMP" >> "$GITHUB_ENV"
 
-      - name: Trace MobileConfig ID decoder and registry helpers
+      - name: Extract exact MobileConfig helper classes
         shell: bash
         run: |
           mkdir -p research/generated work/dis
@@ -49,11 +49,8 @@ jobs:
             echo "APK: $APK_NAME"
             echo "SHA256: $APK_SHA256"
             echo "Mapping anchor: 74463::20 = ig4a_groot_surface_optimization::enable_hdr_sdr_ratio"
-            echo "Piko exact runtime helpers: X.0B3D.A00(J)I, X.BSw, X.Sb1"
+            echo "Piko runtime helpers: X.0B3D.A00(J)I, X.BSw, X.Sb1"
             echo "Generated: $(date -u +%FT%TZ)"
-            echo
-            echo "NOTE: production DEX does not carry the mapping's human-readable HDR names;"
-            echo "the first probe established that names are external mapping metadata."
             echo
           } >> "$REPORT"
 
@@ -64,23 +61,28 @@ jobs:
               b="$(basename "$d" .dex)"
               echo "Helper descriptor hit in $d" | tee -a "$REPORT"
               "$DEXDUMP" -d -f -h "$d" > "work/dis/$b.txt"
-              {
-                echo
-                echo "===== $b : X.0B3D CLASS / A00(J)I ====="
-                grep -n -B 30 -A 220 -E "Class descriptor.*LX/0B3D;|name[[:space:]]*: 'A00'|LX/0B3D;.*A00" "work/dis/$b.txt" | head -n 2000 || true
-                echo
-                echo "===== $b : X.BSw ====="
-                grep -n -B 30 -A 180 -E "Class descriptor.*LX/BSw;|LX/BSw;" "work/dis/$b.txt" | head -n 2500 || true
-                echo
-                echo "===== $b : X.Sb1 ====="
-                grep -n -B 30 -A 180 -E "Class descriptor.*LX/Sb1;|LX/Sb1;" "work/dis/$b.txt" | head -n 2500 || true
-              } >> "$REPORT"
+              for cls in 'LX/0B3D;' 'LX/BSw;' 'LX/Sb1;'; do
+                line="$(grep -nF "Class descriptor  : '$cls'" "work/dis/$b.txt" | head -1 | cut -d: -f1 || true)"
+                {
+                  echo
+                  echo "===== $b EXACT CLASS $cls ====="
+                  if [ -n "$line" ]; then
+                    start=$(( line > 15 ? line - 15 : 1 ))
+                    end=$(( line + 500 ))
+                    sed -n "${start},${end}p" "work/dis/$b.txt"
+                  else
+                    echo "CLASS DESCRIPTOR NOT FOUND IN DEXDUMP TEXT"
+                    echo "Raw descriptor occurrences:"
+                    grep -nF "$cls" "work/dis/$b.txt" | head -50 || true
+                  fi
+                } >> "$REPORT"
+              done
             fi
           done
           test "$HIT" -eq 1
 
-          echo "===== KEY DECODER LINES ====="
-          grep -nE '0B3D|BSw|Sb1|shr-|ushr|and-|const-wide|return' "$REPORT" | head -n 1000 || true
+          echo "===== EXACT HELPER SUMMARY ====="
+          grep -nE "EXACT CLASS|Class descriptor|name[[:space:]]*: 'A00'|type[[:space:]]*: '\(J\)I'|ushr|shr-|and-|return" "$REPORT" | head -n 1200 || true
 
       - name: Commit fast probe report
         run: |
@@ -89,6 +91,6 @@ jobs:
           git pull --rebase origin main
           git add research/generated/instagram_439_hdr_fast_dex_report.txt
           if ! git diff --cached --quiet; then
-            git commit -m "Add Instagram 439 MobileConfig decoder report"
+            git commit -m "Refine Instagram 439 MobileConfig decoder report"
             git push origin HEAD:main
           fi
