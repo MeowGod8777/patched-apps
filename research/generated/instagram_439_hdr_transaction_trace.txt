@@ -1,0 +1,1447 @@
+Instagram 439 Groot HDR transaction trace
+========================================
+Known path: 74463::20 -> X.02g4.A07 -> SurfaceView.setDesiredHdrHeadroom(1.5) -> X.06EM.A03/A02
+
+===== X.06EM definition in classes17 =====
+interfaces_off      : 0 (0x000000)
+source_file_idx     : 0
+annotations_off     : 0 (0x000000)
+class_data_off      : 7337089 (0x6ff481)
+static_fields_size  : 0
+instance_fields_size: 3
+direct_methods_size : 2
+virtual_methods_size: 8
+
+Class #2510            -
+  Class descriptor  : 'LX/06EM;'
+  Access flags      : 0x0011 (PUBLIC FINAL)
+  Superclass        : 'Ljava/lang/Object;'
+  Interfaces        -
+  Static fields     -
+  Instance fields   -
+    #0              : (in LX/06EM;)
+      name          : 'A00'
+      type          : 'Z'
+      access        : 0x0001 (PUBLIC)
+    #1              : (in LX/06EM;)
+      name          : 'A01'
+      type          : 'Landroid/view/SurfaceControl$Transaction;'
+      access        : 0x0011 (PUBLIC FINAL)
+    #2              : (in LX/06EM;)
+      name          : 'A02'
+      type          : 'LX/02g4;'
+      access        : 0x0011 (PUBLIC FINAL)
+  Direct methods    -
+    #0              : (in LX/06EM;)
+      name          : '<init>'
+      type          : '(LX/02g4;)V'
+      access        : 0x10001 (PUBLIC CONSTRUCTOR)
+      method_idx    : 14257
+      code          -
+      registers     : 3
+      ins           : 2
+      outs          : 1
+      insns size    : 16 16-bit code units
+432f34:                                        |[432f34] X.06EM.<init>:(LX/02g4;)V
+432f44: 7010 dafb 0100                         |0000: invoke-direct {v1}, Ljava/lang/Object;.<init>:()V // method@fbda
+432f4a: 5b12 f437                              |0003: iput-object v2, v1, LX/06EM;.A02:LX/02g4; // field@37f4
+432f4e: 2200 d34f                              |0005: new-instance v0, Landroid/view/SurfaceControl$Transaction; // type@4fd3
+432f52: 7010 7fba 0000                         |0007: invoke-direct {v0}, Landroid/view/SurfaceControl$Transaction;.<init>:()V // method@ba7f
+432f58: 5b10 f337                              |000a: iput-object v0, v1, LX/06EM;.A01:Landroid/view/SurfaceControl$Transaction; // field@37f3
+432f5c: 1210                                   |000c: const/4 v0, #int 1 // #1
+432f5e: 5c10 f237                              |000d: iput-boolean v0, v1, LX/06EM;.A00:Z // field@37f2
+432f62: 0e00                                   |000f: return-void
+      catches       : (none)
+      positions     :
+      locals        :
+
+    #1              : (in LX/06EM;)
+      name          : 'A00'
+      type          : '(LX/06EM;Ljava/lang/Exception;)V'
+      access        : 0x0019 (PUBLIC STATIC FINAL)
+      method_idx    : 14258
+      code          -
+      registers     : 3
+      ins           : 2
+      outs          : 0
+      insns size    : 25 16-bit code units
+432f64:                                        |[432f64] X.06EM.A00:(LX/06EM;Ljava/lang/Exception;)V
+432f74: 2020 c659                              |0000: instance-of v0, v2, Ljava/lang/NullPointerException; // type@59c6
+432f78: 3900 1300                              |0002: if-nez v0, 0015 // +0013
+432f7c: 2020 b959                              |0004: instance-of v0, v2, Ljava/lang/IllegalStateException; // type@59b9
+432f80: 3800 0800                              |0006: if-eqz v0, 000e // +0008
+432f84: 5410 f437                              |0008: iget-object v0, v1, LX/06EM;.A02:LX/02g4; // field@37f4
+432f88: 5500 7514                              |000a: iget-boolean v0, v0, LX/02g4;.A0I:Z // field@1475
+432f8c: 3900 0900                              |000c: if-nez v0, 0015 // +0009
+432f90: 5410 f437                              |000e: iget-object v0, v1, LX/06EM;.A02:LX/02g4; // field@37f4
+432f94: 5500 7414                              |0010: iget-boolean v0, v0, LX/02g4;.A0H:Z // field@1474
+432f98: 3900 0300                              |0012: if-nez v0, 0015 // +0003
+432f9c: 2702                                   |0014: throw v2
+432f9e: 1200                                   |0015: const/4 v0, #int 0 // #0
+432fa0: 5c10 f237                              |0016: iput-boolean v0, v1, LX/06EM;.A00:Z // field@37f2
+432fa4: 0e00                                   |0018: return-void
+      catches       : (none)
+      positions     :
+      locals        :
+
+  Virtual methods   -
+    #0              : (in LX/06EM;)
+      name          : 'A01'
+      type          : '(Landroid/graphics/Rect;Landroid/view/SurfaceControl;)V'
+      access        : 0x0011 (PUBLIC FINAL)
+      method_idx    : 14259
+      code          -
+      registers     : 6
+      ins           : 3
+      outs          : 5
+      insns size    : 20 16-bit code units
+432fa8:                                        |[432fa8] X.06EM.A01:(Landroid/graphics/Rect;Landroid/view/SurfaceControl;)V
+432fb8: 1202                                   |0000: const/4 v2, #int 0 // #0
+432fba: 1201                                   |0001: const/4 v1, #int 0 // #0
+432fbc: 7110 052c 0500                         |0002: invoke-static {v5}, LX/04l9;.A0f:(Ljava/lang/Object;)V // method@2c05
+432fc2: 5430 f337                              |0005: iget-object v0, v3, LX/06EM;.A01:Landroid/view/SurfaceControl$Transaction; // field@37f3
+432fc6: 6e51 86ba 5042                         |0007: invoke-virtual {v0, v5, v2, v4, v1}, Landroid/view/SurfaceControl$Transaction;.setGeometry:(Landroid/view/SurfaceControl;Landroid/graphics/Rect;Landroid/graphics/Rect;I)Landroid/view/SurfaceControl$Transaction; // method@ba86
+432fcc: 0c00                                   |000a: move-result-object v0
+432fce: 7110 072c 0000                         |000b: invoke-static {v0}, LX/04l9;.A0h:(Ljava/lang/Object;)V // method@2c07
+432fd4: 0e00                                   |000e: return-void
+432fd6: 0d00                                   |000f: move-exception v0
+432fd8: 7120 b237 0300                         |0010: invoke-static {v3, v0}, LX/06EM;.A00:(LX/06EM;Ljava/lang/Exception;)V // method@37b2
+432fde: 0e00                                   |0013: return-void
+      catches       : 1
+        0x0005 - 0x000f
+          Ljava/lang/Exception; -> 0x000f
+      positions     :
+      locals        :
+
+    #1              : (in LX/06EM;)
+      name          : 'A02'
+      type          : '(Landroid/view/SurfaceControl;)V'
+      access        : 0x0011 (PUBLIC FINAL)
+      method_idx    : 14260
+      code          -
+      registers     : 4
+      ins           : 2
+      outs          : 2
+      insns size    : 38 16-bit code units
+432ff0:                                        |[432ff0] X.06EM.A02:(Landroid/view/SurfaceControl;)V
+433000: 1200                                   |0000: const/4 v0, #int 0 // #0
+433002: 7120 082c 0300                         |0001: invoke-static {v3, v0}, LX/04l9;.A0j:(Ljava/lang/Object;I)V // method@2c08
+433008: 5520 f237                              |0004: iget-boolean v0, v2, LX/06EM;.A00:Z // field@37f2
+43300c: 3800 1a00                              |0006: if-eqz v0, 0020 // +001a
+433010: 6e10 89ba 0300                         |0008: invoke-virtual {v3}, Landroid/view/SurfaceControl;.isValid:()Z // method@ba89
+433016: 0a00                                   |000b: move-result v0
+433018: 3800 1400                              |000c: if-eqz v0, 0020 // +0014
+43301c: 5420 f337                              |000e: iget-object v0, v2, LX/06EM;.A01:Landroid/view/SurfaceControl$Transaction; // field@37f3
+433020: 6e10 80ba 0000                         |0010: invoke-virtual {v0}, Landroid/view/SurfaceControl$Transaction;.apply:()V // method@ba80
+433026: 5420 f337                              |0013: iget-object v0, v2, LX/06EM;.A01:Landroid/view/SurfaceControl$Transaction; // field@37f3
+43302a: 6e10 81ba 0000                         |0015: invoke-virtual {v0}, Landroid/view/SurfaceControl$Transaction;.close:()V // method@ba81
+433030: 0e00                                   |0018: return-void
+433032: 0d01                                   |0019: move-exception v1
+433034: 5420 f337                              |001a: iget-object v0, v2, LX/06EM;.A01:Landroid/view/SurfaceControl$Transaction; // field@37f3
+433038: 6e10 81ba 0000                         |001c: invoke-virtual {v0}, Landroid/view/SurfaceControl$Transaction;.close:()V // method@ba81
+43303e: 2701                                   |001f: throw v1
+433040: 5420 f337                              |0020: iget-object v0, v2, LX/06EM;.A01:Landroid/view/SurfaceControl$Transaction; // field@37f3
+433044: 6e10 81ba 0000                         |0022: invoke-virtual {v0}, Landroid/view/SurfaceControl$Transaction;.close:()V // method@ba81
+43304a: 0e00                                   |0025: return-void
+      catches       : 1
+        0x000e - 0x0013
+          Ljava/lang/Exception; -> 0x0013
+          <any> -> 0x0019
+      positions     :
+      locals        :
+
+    #2              : (in LX/06EM;)
+      name          : 'A03'
+      type          : '(Landroid/view/SurfaceControl;)V'
+      access        : 0x0011 (PUBLIC FINAL)
+      method_idx    : 14261
+      code          -
+      registers     : 4
+      ins           : 2
+      outs          : 3
+      insns size    : 17 16-bit code units
+43305c:                                        |[43305c] X.06EM.A03:(Landroid/view/SurfaceControl;)V
+43306c: 1501 c03f                              |0000: const/high16 v1, #int 1069547520 // #3fc0
+433070: 5420 f337                              |0002: iget-object v0, v2, LX/06EM;.A01:Landroid/view/SurfaceControl$Transaction; // field@37f3
+433074: 6e30 84ba 3001                         |0004: invoke-virtual {v0, v3, v1}, Landroid/view/SurfaceControl$Transaction;.setDesiredHdrHeadroom:(Landroid/view/SurfaceControl;F)Landroid/view/SurfaceControl$Transaction; // method@ba84
+43307a: 0c00                                   |0007: move-result-object v0
+43307c: 7110 072c 0000                         |0008: invoke-static {v0}, LX/04l9;.A0h:(Ljava/lang/Object;)V // method@2c07
+433082: 0e00                                   |000b: return-void
+433084: 0d00                                   |000c: move-exception v0
+433086: 7120 b237 0200                         |000d: invoke-static {v2, v0}, LX/06EM;.A00:(LX/06EM;Ljava/lang/Exception;)V // method@37b2
+43308c: 0e00                                   |0010: return-void
+      catches       : 1
+        0x0002 - 0x000c
+          Ljava/lang/Exception; -> 0x000c
+      positions     :
+      locals        :
+
+    #3              : (in LX/06EM;)
+      name          : 'A04'
+      type          : '(Landroid/view/SurfaceControl;)V'
+      access        : 0x0011 (PUBLIC FINAL)
+      method_idx    : 14262
+      code          -
+      registers     : 6
+      ins           : 2
+      outs          : 5
+      insns size    : 23 16-bit code units
+4330a0:                                        |[4330a0] X.06EM.A04:(Landroid/view/SurfaceControl;)V
+4330b0: 1203                                   |0000: const/4 v3, #int 0 // #0
+4330b2: 7120 082c 3500                         |0001: invoke-static {v5, v3}, LX/04l9;.A0j:(Ljava/lang/Object;I)V // method@2c08
+4330b8: 6001 dc9b                              |0004: sget v1, Landroid/os/Build$VERSION;.SDK_INT:I // field@9bdc
+4330bc: 1300 1f00                              |0006: const/16 v0, #int 31 // #1f
+4330c0: 3401 0900                              |0008: if-lt v1, v0, 0011 // +0009
+4330c4: 5442 f337                              |000a: iget-object v2, v4, LX/06EM;.A01:Landroid/view/SurfaceControl$Transaction; // field@37f3
+4330c8: 1201                                   |000c: const/4 v1, #int 0 // #0
+4330ca: 1210                                   |000d: const/4 v0, #int 1 // #1
+4330cc: 6e53 85ba 5201                         |000e: invoke-virtual {v2, v5, v1, v0, v3}, Landroid/view/SurfaceControl$Transaction;.setFrameRate:(Landroid/view/SurfaceControl;FII)Landroid/view/SurfaceControl$Transaction; // method@ba85
+4330d2: 0e00                                   |0011: return-void
+4330d4: 0d00                                   |0012: move-exception v0
+4330d6: 7120 b237 0400                         |0013: invoke-static {v4, v0}, LX/06EM;.A00:(LX/06EM;Ljava/lang/Exception;)V // method@37b2
+4330dc: 0e00                                   |0016: return-void
+      catches       : 1
+        0x0004 - 0x0012
+          Ljava/lang/Exception; -> 0x0012
+      positions     :
+      locals        :
+
+    #4              : (in LX/06EM;)
+      name          : 'A05'
+      type          : '(Landroid/view/SurfaceControl;FF)V'
+      access        : 0x0011 (PUBLIC FINAL)
+      method_idx    : 14263
+      code          -
+      registers     : 5
+      ins           : 4
+      outs          : 4
+      insns size    : 26 16-bit code units
+4330f0:                                        |[4330f0] X.06EM.A05:(Landroid/view/SurfaceControl;FF)V
+433100: 1200                                   |0000: const/4 v0, #int 0 // #0
+433102: 7120 082c 0200                         |0001: invoke-static {v2, v0}, LX/04l9;.A0j:(Ljava/lang/Object;I)V // method@2c08
+433108: 5410 f337                              |0004: iget-object v0, v1, LX/06EM;.A01:Landroid/view/SurfaceControl$Transaction; // field@37f3
+43310c: 6e40 87ba 2043                         |0006: invoke-virtual {v0, v2, v3, v4}, Landroid/view/SurfaceControl$Transaction;.setPosition:(Landroid/view/SurfaceControl;FF)Landroid/view/SurfaceControl$Transaction; // method@ba87
+433112: 0c00                                   |0009: move-result-object v0
+433114: 3900 0a00                              |000a: if-nez v0, 0014 // +000a
+433118: 7100 f62b 0000                         |000c: invoke-static {}, LX/04l9;.A0M:()V // method@2bf6
+43311e: 7100 0100 0000                         |000f: invoke-static {}, LX/0002;.createAndThrow:()LX/0002; // method@0001
+433124: 0c00                                   |0012: move-result-object v0
+433126: 2700                                   |0013: throw v0
+433128: 0e00                                   |0014: return-void
+43312a: 0d00                                   |0015: move-exception v0
+43312c: 7120 b237 0100                         |0016: invoke-static {v1, v0}, LX/06EM;.A00:(LX/06EM;Ljava/lang/Exception;)V // method@37b2
+433132: 0e00                                   |0019: return-void
+      catches       : 1
+        0x0004 - 0x0015
+          Ljava/lang/Exception; -> 0x0015
+      positions     :
+      locals        :
+
+    #5              : (in LX/06EM;)
+      name          : 'A06'
+      type          : '(Landroid/view/SurfaceControl;II)V'
+      access        : 0x0011 (PUBLIC FINAL)
+      method_idx    : 14264
+      code          -
+      registers     : 5
+      ins           : 4
+      outs          : 4
+      insns size    : 26 16-bit code units
+433144:                                        |[433144] X.06EM.A06:(Landroid/view/SurfaceControl;II)V
+433154: 1200                                   |0000: const/4 v0, #int 0 // #0
+433156: 7120 082c 0200                         |0001: invoke-static {v2, v0}, LX/04l9;.A0j:(Ljava/lang/Object;I)V // method@2c08
+43315c: 5410 f337                              |0004: iget-object v0, v1, LX/06EM;.A01:Landroid/view/SurfaceControl$Transaction; // field@37f3
+433160: 6e40 83ba 2043                         |0006: invoke-virtual {v0, v2, v3, v4}, Landroid/view/SurfaceControl$Transaction;.setBufferSize:(Landroid/view/SurfaceControl;II)Landroid/view/SurfaceControl$Transaction; // method@ba83
+433166: 0c00                                   |0009: move-result-object v0
+433168: 3900 0a00                              |000a: if-nez v0, 0014 // +000a
+43316c: 7100 f62b 0000                         |000c: invoke-static {}, LX/04l9;.A0M:()V // method@2bf6
+433172: 7100 0100 0000                         |000f: invoke-static {}, LX/0002;.createAndThrow:()LX/0002; // method@0001
+433178: 0c00                                   |0012: move-result-object v0
+43317a: 2700                                   |0013: throw v0
+43317c: 0e00                                   |0014: return-void
+43317e: 0d00                                   |0015: move-exception v0
+433180: 7120 b237 0100                         |0016: invoke-static {v1, v0}, LX/06EM;.A00:(LX/06EM;Ljava/lang/Exception;)V // method@37b2
+433186: 0e00                                   |0019: return-void
+      catches       : 1
+        0x0004 - 0x0015
+          Ljava/lang/Exception; -> 0x0015
+      positions     :
+      locals        :
+
+    #6              : (in LX/06EM;)
+      name          : 'A07'
+      type          : '(Landroid/view/SurfaceControl;Landroid/view/SurfaceControl;)V'
+      access        : 0x0011 (PUBLIC FINAL)
+      method_idx    : 14265
+      code          -
+      registers     : 4
+      ins           : 3
+      outs          : 3
+      insns size    : 26 16-bit code units
+433198:                                        |[433198] X.06EM.A07:(Landroid/view/SurfaceControl;Landroid/view/SurfaceControl;)V
+4331a8: 1200                                   |0000: const/4 v0, #int 0 // #0
+4331aa: 7120 082c 0200                         |0001: invoke-static {v2, v0}, LX/04l9;.A0j:(Ljava/lang/Object;I)V // method@2c08
+4331b0: 5410 f337                              |0004: iget-object v0, v1, LX/06EM;.A01:Landroid/view/SurfaceControl$Transaction; // field@37f3
+4331b4: 6e30 82ba 2003                         |0006: invoke-virtual {v0, v2, v3}, Landroid/view/SurfaceControl$Transaction;.reparent:(Landroid/view/SurfaceControl;Landroid/view/SurfaceControl;)Landroid/view/SurfaceControl$Transaction; // method@ba82
+4331ba: 0c00                                   |0009: move-result-object v0
+4331bc: 3900 0a00                              |000a: if-nez v0, 0014 // +000a
+4331c0: 7100 f62b 0000                         |000c: invoke-static {}, LX/04l9;.A0M:()V // method@2bf6
+4331c6: 7100 0100 0000                         |000f: invoke-static {}, LX/0002;.createAndThrow:()LX/0002; // method@0001
+4331cc: 0c00                                   |0012: move-result-object v0
+4331ce: 2700                                   |0013: throw v0
+4331d0: 0e00                                   |0014: return-void
+4331d2: 0d00                                   |0015: move-exception v0
+4331d4: 7120 b237 0100                         |0016: invoke-static {v1, v0}, LX/06EM;.A00:(LX/06EM;Ljava/lang/Exception;)V // method@37b2
+4331da: 0e00                                   |0019: return-void
+      catches       : 1
+        0x0004 - 0x0015
+          Ljava/lang/Exception; -> 0x0015
+      positions     :
+      locals        :
+
+    #7              : (in LX/06EM;)
+      name          : 'A08'
+      type          : '(Landroid/view/SurfaceControl;Z)V'
+      access        : 0x0011 (PUBLIC FINAL)
+      method_idx    : 14266
+      code          -
+      registers     : 4
+      ins           : 3
+      outs          : 3
+      insns size    : 26 16-bit code units
+4331ec:                                        |[4331ec] X.06EM.A08:(Landroid/view/SurfaceControl;Z)V
+4331fc: 1200                                   |0000: const/4 v0, #int 0 // #0
+4331fe: 7120 082c 0200                         |0001: invoke-static {v2, v0}, LX/04l9;.A0j:(Ljava/lang/Object;I)V // method@2c08
+433204: 5410 f337                              |0004: iget-object v0, v1, LX/06EM;.A01:Landroid/view/SurfaceControl$Transaction; // field@37f3
+433208: 6e30 88ba 2003                         |0006: invoke-virtual {v0, v2, v3}, Landroid/view/SurfaceControl$Transaction;.setVisibility:(Landroid/view/SurfaceControl;Z)Landroid/view/SurfaceControl$Transaction; // method@ba88
+43320e: 0c00                                   |0009: move-result-object v0
+433210: 3900 0a00                              |000a: if-nez v0, 0014 // +000a
+433214: 7100 f62b 0000                         |000c: invoke-static {}, LX/04l9;.A0M:()V // method@2bf6
+43321a: 7100 0100 0000                         |000f: invoke-static {}, LX/0002;.createAndThrow:()LX/0002; // method@0001
+433220: 0c00                                   |0012: move-result-object v0
+433222: 2700                                   |0013: throw v0
+433224: 0e00                                   |0014: return-void
+433226: 0d00                                   |0015: move-exception v0
+433228: 7120 b237 0100                         |0016: invoke-static {v1, v0}, LX/06EM;.A00:(LX/06EM;Ljava/lang/Exception;)V // method@37b2
+43322e: 0e00                                   |0019: return-void
+      catches       : 1
+        0x0004 - 0x0015
+          Ljava/lang/Exception; -> 0x0015
+      positions     :
+      locals        :
+
+  source_file_idx   : 0 ()
+
+Class #2511 header:
+class_idx           : 6370
+access_flags        : 17 (0x0011)
+superclass_idx      : 22985
+interfaces_off      : 1824460 (0x1bd6cc)
+source_file_idx     : 0
+annotations_off     : 7712368 (0x75ae70)
+class_data_off      : 7337164 (0x6ff4cc)
+static_fields_size  : 0
+instance_fields_size: 3
+direct_methods_size : 1
+virtual_methods_size: 1
+
+Class #2511            -
+  Class descriptor  : 'LX/06EO;'
+  Access flags      : 0x0011 (PUBLIC FINAL)
+  Superclass        : 'Ljava/lang/Object;'
+  Interfaces        -
+    #0              : 'Ljava/lang/Runnable;'
+  Static fields     -
+  Instance fields   -
+    #0              : (in LX/06EO;)
+      name          : 'A00'
+      type          : 'I'
+      access        : 0x1011 (PUBLIC FINAL SYNTHETIC)
+    #1              : (in LX/06EO;)
+      name          : 'A01'
+      type          : 'I'
+      access        : 0x1011 (PUBLIC FINAL SYNTHETIC)
+    #2              : (in LX/06EO;)
+      name          : 'A02'
+      type          : 'LX/02Vx;'
+      access        : 0x1011 (PUBLIC FINAL SYNTHETIC)
+  Direct methods    -
+    #0              : (in LX/06EO;)
+      name          : '<init>'
+      type          : '(LX/02Vx;II)V'
+      access        : 0x10001 (PUBLIC CONSTRUCTOR)
+      method_idx    : 14267
+      code          -
+      registers     : 4
+      ins           : 4
+      outs          : 1
+      insns size    : 10 16-bit code units
+433240:                                        |[433240] X.06EO.<init>:(LX/02Vx;II)V
+433250: 5b01 f737                              |0000: iput-object v1, v0, LX/06EO;.A02:LX/02Vx; // field@37f7
+433254: 5902 f637                              |0002: iput v2, v0, LX/06EO;.A01:I // field@37f6
+433258: 5903 f537                              |0004: iput v3, v0, LX/06EO;.A00:I // field@37f5
+43325c: 7010 dafb 0000                         |0006: invoke-direct {v0}, Ljava/lang/Object;.<init>:()V // method@fbda
+433262: 0e00                                   |0009: return-void
+      catches       : (none)
+      positions     :
+      locals        :
+
+  Virtual methods   -
+    #0              : (in LX/06EO;)
+      name          : 'run'
+      type          : '()V'
+      access        : 0x0011 (PUBLIC FINAL)
+      method_idx    : 14268
+      code          -
+      registers     : 4
+      ins           : 1
+      outs          : 3
+      insns size    : 12 16-bit code units
+433264:                                        |[433264] X.06EO.run:()V
+433274: 5430 f737                              |0000: iget-object v0, v3, LX/06EO;.A02:LX/02Vx; // field@37f7
+433278: 5402 9013                              |0002: iget-object v2, v0, LX/02Vx;.A0D:LX/02Vh; // field@1390
+43327c: 5231 f637                              |0004: iget v1, v3, LX/06EO;.A01:I // field@37f6
+433280: 5230 f537                              |0006: iget v0, v3, LX/06EO;.A00:I // field@37f5
+433284: 7230 5d14 1200                         |0008: invoke-interface {v2, v1, v0}, LX/02Vh;.G71:(II)V // method@145d
+43328a: 0e00                                   |000b: return-void
+      catches       : (none)
+      positions     :
+      locals        :
+
+  source_file_idx   : 0 ()
+
+Class #2512 header:
+class_idx           : 6371
+access_flags        : 4113 (0x1011)
+superclass_idx      : 22985
+interfaces_off      : 1824460 (0x1bd6cc)
+source_file_idx     : 0
+annotations_off     : 0 (0x000000)
+class_data_off      : 7337194 (0x6ff4ea)
+static_fields_size  : 0
+instance_fields_size: 3
+direct_methods_size : 1
+virtual_methods_size: 1
+
+Class #2512            -
+  Class descriptor  : 'LX/06EP;'
+  Access flags      : 0x1011 (PUBLIC FINAL SYNTHETIC)
+  Superclass        : 'Ljava/lang/Object;'
+  Interfaces        -
+    #0              : 'Ljava/lang/Runnable;'
+  Static fields     -
+  Instance fields   -
+    #0              : (in LX/06EP;)
+      name          : 'A00'
+      type          : 'I'
+      access        : 0x1011 (PUBLIC FINAL SYNTHETIC)
+    #1              : (in LX/06EP;)
+      name          : 'A01'
+      type          : 'J'
+      access        : 0x1011 (PUBLIC FINAL SYNTHETIC)
+    #2              : (in LX/06EP;)
+      name          : 'A02'
+      type          : 'LX/00Sq;'
+      access        : 0x1011 (PUBLIC FINAL SYNTHETIC)
+  Direct methods    -
+    #0              : (in LX/06EP;)
+      name          : '<init>'
+      type          : '(LX/00Sq;IJ)V'
+      access        : 0x11001 (PUBLIC SYNTHETIC CONSTRUCTOR)
+      method_idx    : 14269
+      code          -
+      registers     : 5
+      ins           : 5
+      outs          : 1
+      insns size    : 10 16-bit code units
+43328c:                                        |[43328c] X.06EP.<init>:(LX/00Sq;IJ)V
+43329c: 7010 dafb 0000                         |0000: invoke-direct {v0}, Ljava/lang/Object;.<init>:()V // method@fbda
+4332a2: 5b01 fa37                              |0003: iput-object v1, v0, LX/06EP;.A02:LX/00Sq; // field@37fa
+4332a6: 5902 f837                              |0005: iput v2, v0, LX/06EP;.A00:I // field@37f8
+4332aa: 5a03 f937                              |0007: iput-wide v3, v0, LX/06EP;.A01:J // field@37f9
+4332ae: 0e00                                   |0009: return-void
+      catches       : (none)
+      positions     :
+      locals        :
+
+  Virtual methods   -
+    #0              : (in LX/06EP;)
+      name          : 'run'
+      type          : '()V'
+      access        : 0x0011 (PUBLIC FINAL)
+      method_idx    : 14270
+      code          -
+      registers     : 5
+      ins           : 1
+      outs          : 4
+      insns size    : 12 16-bit code units
+4332b0:                                        |[4332b0] X.06EP.run:()V
+4332c0: 5440 fa37                              |0000: iget-object v0, v4, LX/06EP;.A02:LX/00Sq; // field@37fa
+4332c4: 5243 f837                              |0002: iget v3, v4, LX/06EP;.A00:I // field@37f8
+4332c8: 5341 f937                              |0004: iget-wide v1, v4, LX/06EP;.A01:J // field@37f9
+4332cc: 5400 2102                              |0006: iget-object v0, v0, LX/00Sq;.A01:LX/0nZl; // field@0221
+4332d0: 7240 12b4 3021                         |0008: invoke-interface {v0, v3, v1, v2}, LX/0nZl;.onDroppedFrames:(IJ)V // method@b412
+4332d6: 0e00                                   |000b: return-void
+      catches       : (none)
+      positions     :
+      locals        :
+
+  source_file_idx   : 0 ()
+
+Class #2513 header:
+class_idx           : 21640
+access_flags        : 17 (0x0011)
+superclass_idx      : 4520
+interfaces_off      : 1804324 (0x1b8824)
+source_file_idx     : 0
+annotations_off     : 0 (0x000000)
+class_data_off      : 7337224 (0x6ff508)
+static_fields_size  : 1
+instance_fields_size: 0
+direct_methods_size : 2
+virtual_methods_size: 51
+
+Class #2513            -
+  Class descriptor  : 'Lcom/instagram/api/schemas/ImmutablePandoOriginalSoundConsumptionInfo;'
+  Access flags      : 0x0011 (PUBLIC FINAL)
+  Superclass        : 'LX/04Ig;'
+  Interfaces        -
+    #0              : 'Lcom/instagram/api/schemas/OriginalSoundConsumptionInfoIntf;'
+  Static fields     -
+    #0              : (in Lcom/instagram/api/schemas/ImmutablePandoOriginalSoundConsumptionInfo;)
+      name          : 'CREATOR'
+      type          : 'LX/08uG;'
+      access        : 0x0019 (PUBLIC STATIC FINAL)
+  Instance fields   -
+  Direct methods    -
+    #0              : (in Lcom/instagram/api/schemas/ImmutablePandoOriginalSoundConsumptionInfo;)
+      name          : '<clinit>'
+      type          : '()V'
+      access        : 0x10009 (PUBLIC STATIC CONSTRUCTOR)
+      method_idx    : 56160
+      code          -
+      registers     : 2
+      ins           : 0
+      outs          : 2
+      insns size    : 10 16-bit code units
+2d9980:                                        |[2d9980] com.instagram.api.schemas.ImmutablePandoOriginalSoundConsumptionInfo.<clinit>:()V
+2d9990: 1301 1600                              |0000: const/16 v1, #int 22 // #16
+2d9994: 2200 a835                              |0002: new-instance v0, LX/0Gaw; // type@35a8
+2d9998: 7020 f292 1000                         |0004: invoke-direct {v0, v1}, LX/0Gaw;.<init>:(I)V // method@92f2
+2d999e: 6900 6aa4                              |0007: sput-object v0, Lcom/instagram/api/schemas/ImmutablePandoOriginalSoundConsumptionInfo;.CREATOR:LX/08uG; // field@a46a
+2d99a2: 0e00                                   |0009: return-void
+      catches       : (none)
+      positions     :
+      locals        :
+
+
+===== Surface HDR API references in candidate DEX =====
+work/dis/classes15.txt-107702-39c32e: 1207                                   |0007: const/4 v7, #int 0 // #0
+work/dis/classes15.txt-107703-39c330: 3587 4100                              |0008: if-ge v7, v8, 0049 // +0041
+work/dis/classes15.txt-107704-39c334: 4401 0907                              |000a: aget v1, v9, v7
+work/dis/classes15.txt-107705-39c338: 54a0 a034                              |000c: iget-object v0, v10, LX/03A2;.A00:Landroid/util/SparseArray; // field@34a0
+work/dis/classes15.txt-107706-39c33c: 6e20 04c4 1000                         |000e: invoke-virtual {v0, v1}, Landroid/util/SparseArray;.get:(I)Ljava/lang/Object; // method@c404
+work/dis/classes15.txt-107707-39c342: 0c06                                   |0011: move-result-object v6
+work/dis/classes15.txt-107708-39c344: 1f06 2b18                              |0012: check-cast v6, LX/02zz; // type@182b
+work/dis/classes15.txt-107709-39c348: 3806 3200                              |0014: if-eqz v6, 0046 // +0032
+work/dis/classes15.txt-107710-39c34c: 6e10 d93a 0600                         |0016: invoke-virtual {v6}, LX/02zz;.A01:()Ljava/util/ArrayList; // method@3ad9
+work/dis/classes15.txt-107711-39c352: 0c00                                   |0019: move-result-object v0
+work/dis/classes15.txt-107712-39c354: 6e10 6eed 0000                         |001a: invoke-virtual {v0}, Ljava/util/AbstractCollection;.iterator:()Ljava/util/Iterator; // method@ed6e
+work/dis/classes15.txt-107713-39c35a: 0c05                                   |001d: move-result-object v5
+work/dis/classes15.txt-107714-39c35c: 7210 17ee 0500                         |001e: invoke-interface {v5}, Ljava/util/Iterator;.hasNext:()Z // method@ee17
+work/dis/classes15.txt-107715-39c362: 0a00                                   |0021: move-result v0
+work/dis/classes15.txt-107716-39c364: 3800 2400                              |0022: if-eqz v0, 0046 // +0024
+work/dis/classes15.txt-107717-39c368: 7210 18ee 0500                         |0024: invoke-interface {v5}, Ljava/util/Iterator;.next:()Ljava/lang/Object; // method@ee18
+work/dis/classes15.txt-107718-39c36e: 0c01                                   |0027: move-result-object v1
+work/dis/classes15.txt-107719-39c370: 1f01 9501                              |0028: check-cast v1, LX/00G0; // type@0195
+work/dis/classes15.txt-107720-39c374: 7120 d83a 1600                         |002a: invoke-static {v6, v1}, LX/02zz;.A00:(LX/02zz;LX/00G0;)LX/09UG; // method@3ad8
+work/dis/classes15.txt-107721-39c37a: 28f1                                   |002d: goto 001e // -000f
+work/dis/classes15.txt-107722-39c37c: 0d04                                   |002e: move-exception v4
+work/dis/classes15.txt-107723-39c37e: 5460 2534                              |002f: iget-object v0, v6, LX/02zz;.A05:LX/01qs; // field@3425
+work/dis/classes15.txt-107724-39c382: 5213 b005                              |0031: iget v3, v1, LX/00G0;.A04:I // field@05b0
+work/dis/classes15.txt-107725-39c386: 7120 1327 4000                         |0033: invoke-static {v0, v4}, LX/01qs;.A02:(LX/01qs;Ljava/lang/Throwable;)V // method@2713
+work/dis/classes15.txt-107726-39c38c: 5402 fe20                              |0036: iget-object v2, v0, LX/01qs;.A00:LX/01il; // field@20fe
+work/dis/classes15.txt-107727-39c390: 1a01 1810                              |0038: const-string v1, "BoosterInitializationWithException" // string@1018
+work/dis/classes15.txt-107728-39c394: 6e10 c3ec 0400                         |003a: invoke-virtual {v4}, Ljava/lang/Throwable;.getMessage:()Ljava/lang/String; // method@ecc3
+work/dis/classes15.txt-107729-39c39a: 0c00                                   |003d: move-result-object v0
+work/dis/classes15.txt-107730-39c39c: 7130 1227 0103                         |003e: invoke-static {v1, v0, v3}, LX/01qs;.A00:(Ljava/lang/String;Ljava/lang/String;I)Ljava/lang/String; // method@2712
+work/dis/classes15.txt-107731-39c3a2: 0c00                                   |0041: move-result-object v0
+work/dis/classes15.txt:107732:39c3a4: 7230 0821 0204                         |0042: invoke-interface {v2, v0, v4}, LX/01il;.HDR:(Ljava/lang/String;Ljava/lang/Throwable;)V // method@2108
+work/dis/classes15.txt-107733-39c3aa: 28d9                                   |0045: goto 001e // -0027
+work/dis/classes15.txt-107734-39c3ac: d807 0701                              |0046: add-int/lit8 v7, v7, #int 1 // #01
+work/dis/classes15.txt-107735-39c3b0: 28c0                                   |0048: goto 0008 // -0040
+work/dis/classes15.txt-107736-39c3b2: 0e00                                   |0049: return-void
+work/dis/classes15.txt-107737-      catches       : 1
+work/dis/classes15.txt-107738-        0x002a - 0x002e
+work/dis/classes15.txt-107739-          Ljava/lang/Exception; -> 0x002e
+work/dis/classes15.txt-107740-          Ljava/lang/Error; -> 0x002e
+work/dis/classes15.txt-107741-      positions     :
+work/dis/classes15.txt-107742-      locals        :
+work/dis/classes15.txt-107743-
+work/dis/classes15.txt-107744-  source_file_idx   : 0 ()
+work/dis/classes15.txt-107745-
+work/dis/classes15.txt-107746-Class #189 header:
+work/dis/classes15.txt-107747-class_idx           : 449
+work/dis/classes15.txt-107748-access_flags        : 17 (0x0011)
+work/dis/classes15.txt-107749-superclass_idx      : 34704
+work/dis/classes15.txt-107750-interfaces_off      : 1772952 (0x1b0d98)
+work/dis/classes15.txt-107751-source_file_idx     : 0
+work/dis/classes15.txt-107752-annotations_off     : 0 (0x000000)
+work/dis/classes15.txt-107753-class_data_off      : 7707295 (0x759a9f)
+work/dis/classes15.txt-107754-static_fields_size  : 0
+work/dis/classes15.txt-107755-instance_fields_size: 1
+work/dis/classes15.txt-107756-direct_methods_size : 1
+work/dis/classes15.txt-107757-virtual_methods_size: 2
+work/dis/classes15.txt-107758-
+work/dis/classes15.txt-107759-Class #189            -
+work/dis/classes15.txt-107760-  Class descriptor  : 'LX/00I0;'
+work/dis/classes15.txt-107761-  Access flags      : 0x0011 (PUBLIC FINAL)
+work/dis/classes15.txt-107762-  Superclass        : 'Ljava/lang/Object;'
+work/dis/classes15.txt-107763-  Interfaces        -
+work/dis/classes15.txt-107764-    #0              : 'LX/0Hjk;'
+work/dis/classes15.txt-107765-  Static fields     -
+work/dis/classes15.txt-107766-  Instance fields   -
+work/dis/classes15.txt-107767-    #0              : (in LX/00I0;)
+work/dis/classes15.txt-107768-      name          : 'A00'
+work/dis/classes15.txt-107769-      type          : 'Landroid/os/Handler;'
+work/dis/classes15.txt-107770-      access        : 0x0011 (PUBLIC FINAL)
+work/dis/classes15.txt-107771-  Direct methods    -
+work/dis/classes15.txt-107772-    #0              : (in LX/00I0;)
+work/dis/classes15.txt-107773-      name          : '<init>'
+work/dis/classes15.txt-107774-      type          : '(Landroid/os/Handler;)V'
+work/dis/classes15.txt-107775-      access        : 0x10001 (PUBLIC CONSTRUCTOR)
+work/dis/classes15.txt-107776-      method_idx    : 2762
+work/dis/classes15.txt-107777-      code          -
+work/dis/classes15.txt-107778-      registers     : 2
+work/dis/classes15.txt-107779-      ins           : 2
+work/dis/classes15.txt-107780-      outs          : 1
+work/dis/classes15.txt-107781-      insns size    : 6 16-bit code units
+work/dis/classes15.txt-107782-39c3c8:                                        |[39c3c8] X.00I0.<init>:(Landroid/os/Handler;)V
+work/dis/classes15.txt-107783-39c3d8: 7010 2dec 0000                         |0000: invoke-direct {v0}, Ljava/lang/Object;.<init>:()V // method@ec2d
+work/dis/classes15.txt-107784-39c3de: 5b01 4406                              |0003: iput-object v1, v0, LX/00I0;.A00:Landroid/os/Handler; // field@0644
+work/dis/classes15.txt-107785-39c3e2: 0e00                                   |0005: return-void
+work/dis/classes15.txt-107786-      catches       : (none)
+work/dis/classes15.txt-107787-      positions     :
+work/dis/classes15.txt-107788-      locals        :
+work/dis/classes15.txt-107789-
+work/dis/classes15.txt-107790-  Virtual methods   -
+work/dis/classes15.txt-107791-    #0              : (in LX/00I0;)
+work/dis/classes15.txt-107792-      name          : 'AQT'
+--
+work/dis/classes15.txt-551444-4a154e: 6e30 87ed 0302                         |01e7: invoke-virtual {v3, v0, v2}, Ljava/util/AbstractMap;.put:(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object; // method@ed87
+work/dis/classes15.txt-551445-4a1554: 1b00 5a0d 0100                         |01ea: const-string/jumbo v0, "sc_glFrameBufferRendererDetachForReuse" // string@00010d5a
+work/dis/classes15.txt-551446-4a155a: 6e30 87ed 0301                         |01ed: invoke-virtual {v3, v0, v1}, Ljava/util/AbstractMap;.put:(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object; // method@ed87
+work/dis/classes15.txt-551447-4a1560: 1b00 550d 0100                         |01f0: const-string/jumbo v0, "sc_glFrameBufferRendererAlwaysPreserveSurface" // string@00010d55
+work/dis/classes15.txt-551448-4a1566: 6e30 87ed 0302                         |01f3: invoke-virtual {v3, v0, v2}, Ljava/util/AbstractMap;.put:(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object; // method@ed87
+work/dis/classes15.txt-551449-4a156c: 1b00 5c0d 0100                         |01f6: const-string/jumbo v0, "sc_glFrameBufferRendererMatchPlaybackThreadPriority" // string@00010d5c
+work/dis/classes15.txt-551450-4a1572: 6e30 87ed 0302                         |01f9: invoke-virtual {v3, v0, v2}, Ljava/util/AbstractMap;.put:(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object; // method@ed87
+work/dis/classes15.txt-551451-4a1578: 1b00 4b0d 0100                         |01fc: const-string/jumbo v0, "sc_enableOpenGLDebugForGLSurfaceView" // string@00010d4b
+work/dis/classes15.txt-551452-4a157e: 6e30 87ed 0302                         |01ff: invoke-virtual {v3, v0, v2}, Ljava/util/AbstractMap;.put:(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object; // method@ed87
+work/dis/classes15.txt-551453-4a1584: 1b00 450d 0100                         |0202: const-string/jumbo v0, "sc_enableGLSurfaceViewDirtyRenderMode" // string@00010d45
+work/dis/classes15.txt-551454-4a158a: 6e30 87ed 0301                         |0205: invoke-virtual {v3, v0, v1}, Ljava/util/AbstractMap;.put:(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object; // method@ed87
+work/dis/classes15.txt-551455-4a1590: 5570 3f2d                              |0208: iget-boolean v0, v7, LX/02g4;.A0R:Z // field@2d3f
+work/dis/classes15.txt-551456-4a1594: 7110 9eeb 0000                         |020a: invoke-static {v0}, Ljava/lang/Boolean;.valueOf:(Z)Ljava/lang/Boolean; // method@eb9e
+work/dis/classes15.txt-551457-4a159a: 0c01                                   |020d: move-result-object v1
+work/dis/classes15.txt-551458-4a159c: 1b00 800d 0100                         |020e: const-string/jumbo v0, "sc_skipReparentForSameSurfaceControls" // string@00010d80
+work/dis/classes15.txt-551459-4a15a2: 6e30 87ed 0301                         |0211: invoke-virtual {v3, v0, v1}, Ljava/util/AbstractMap;.put:(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object; // method@ed87
+work/dis/classes15.txt-551460-4a15a8: 1b00 3f0d 0100                         |0214: const-string/jumbo v0, "sc_cropAfterSetBufferSize" // string@00010d3f
+work/dis/classes15.txt-551461-4a15ae: 6e30 87ed 0302                         |0217: invoke-virtual {v3, v0, v2}, Ljava/util/AbstractMap;.put:(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object; // method@ed87
+work/dis/classes15.txt-551462-4a15b4: 1b00 840d 0100                         |021a: const-string/jumbo v0, "sc_useLayoutParamsForReparent" // string@00010d84
+work/dis/classes15.txt-551463-4a15ba: 6e30 87ed 0302                         |021d: invoke-virtual {v3, v0, v2}, Ljava/util/AbstractMap;.put:(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object; // method@ed87
+work/dis/classes15.txt-551464-4a15c0: 1b00 720d 0100                         |0220: const-string/jumbo v0, "sc_recycleSurfaceView" // string@00010d72
+work/dis/classes15.txt-551465-4a15c6: 6e30 87ed 0302                         |0223: invoke-virtual {v3, v0, v2}, Ljava/util/AbstractMap;.put:(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object; // method@ed87
+work/dis/classes15.txt-551466-4a15cc: 5570 2d2d                              |0226: iget-boolean v0, v7, LX/02g4;.A09:Z // field@2d2d
+work/dis/classes15.txt-551467-4a15d0: 7110 9eeb 0000                         |0228: invoke-static {v0}, Ljava/lang/Boolean;.valueOf:(Z)Ljava/lang/Boolean; // method@eb9e
+work/dis/classes15.txt-551468-4a15d6: 0c01                                   |022b: move-result-object v1
+work/dis/classes15.txt-551469-4a15d8: 1b00 3e0d 0100                         |022c: const-string/jumbo v0, "sc_cleanGrootControlSurfaceViewListenerAggressively" // string@00010d3e
+work/dis/classes15.txt-551470-4a15de: 6e30 87ed 0301                         |022f: invoke-virtual {v3, v0, v1}, Ljava/util/AbstractMap;.put:(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object; // method@ed87
+work/dis/classes15.txt-551471-4a15e4: 5570 2b2d                              |0232: iget-boolean v0, v7, LX/02g4;.A07:Z // field@2d2b
+work/dis/classes15.txt-551472-4a15e8: 7110 9eeb 0000                         |0234: invoke-static {v0}, Ljava/lang/Boolean;.valueOf:(Z)Ljava/lang/Boolean; // method@eb9e
+work/dis/classes15.txt-551473-4a15ee: 0c01                                   |0237: move-result-object v1
+work/dis/classes15.txt:551474:4a15f0: 1b00 3c0d 0100                         |0238: const-string/jumbo v0, "sc_applyDesiredHdrSdrRatio" // string@00010d3c
+work/dis/classes15.txt-551475-4a15f6: 6e30 87ed 0301                         |023b: invoke-virtual {v3, v0, v1}, Ljava/util/AbstractMap;.put:(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object; // method@ed87
+work/dis/classes15.txt-551476-4a15fc: 1500 c03f                              |023e: const/high16 v0, #int 1069547520 // #3fc0
+work/dis/classes15.txt-551477-4a1600: 7110 eeeb 0000                         |0240: invoke-static {v0}, Ljava/lang/Float;.valueOf:(F)Ljava/lang/Float; // method@ebee
+work/dis/classes15.txt-551478-4a1606: 0c01                                   |0243: move-result-object v1
+work/dis/classes15.txt:551479:4a1608: 1b00 400d 0100                         |0244: const-string/jumbo v0, "sc_desiredHdrSdrRatio" // string@00010d40
+work/dis/classes15.txt-551480-4a160e: 6e30 87ed 0301                         |0247: invoke-virtual {v3, v0, v1}, Ljava/util/AbstractMap;.put:(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object; // method@ed87
+work/dis/classes15.txt-551481-4a1614: 5570 392d                              |024a: iget-boolean v0, v7, LX/02g4;.A0L:Z // field@2d39
+work/dis/classes15.txt-551482-4a1618: 7110 9eeb 0000                         |024c: invoke-static {v0}, Ljava/lang/Boolean;.valueOf:(Z)Ljava/lang/Boolean; // method@eb9e
+work/dis/classes15.txt-551483-4a161e: 0c01                                   |024f: move-result-object v1
+work/dis/classes15.txt-551484-4a1620: 1b00 730d 0100                         |0250: const-string/jumbo v0, "sc_releaseListenerOnReuseTextureView" // string@00010d73
+work/dis/classes15.txt-551485-4a1626: 6e30 87ed 0301                         |0253: invoke-virtual {v3, v0, v1}, Ljava/util/AbstractMap;.put:(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object; // method@ed87
+work/dis/classes15.txt-551486-4a162c: 1b00 880d 0100                         |0256: const-string/jumbo v0, "sc_use_opaque_pixel_format" // string@00010d88
+work/dis/classes15.txt-551487-4a1632: 6e30 87ed 0302                         |0259: invoke-virtual {v3, v0, v2}, Ljava/util/AbstractMap;.put:(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object; // method@ed87
+work/dis/classes15.txt-551488-4a1638: 5270 252d                              |025c: iget v0, v7, LX/02g4;.A01:I // field@2d25
+work/dis/classes15.txt-551489-4a163c: 7110 01ec 0000                         |025e: invoke-static {v0}, Ljava/lang/Integer;.valueOf:(I)Ljava/lang/Integer; // method@ec01
+work/dis/classes15.txt-551490-4a1642: 0c01                                   |0261: move-result-object v1
+work/dis/classes15.txt-551491-4a1644: 1b00 6d0d 0100                         |0262: const-string/jumbo v0, "sc_lifecycle_strategy" // string@00010d6d
+work/dis/classes15.txt-551492-4a164a: 6e30 87ed 0301                         |0265: invoke-virtual {v3, v0, v1}, Ljava/util/AbstractMap;.put:(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object; // method@ed87
+work/dis/classes15.txt-551493-4a1650: 1600 ffff                              |0268: const-wide/16 v0, #int -1 // #ffff
+work/dis/classes15.txt-551494-4a1654: 7120 0aec 1000                         |026a: invoke-static {v0, v1}, Ljava/lang/Long;.valueOf:(J)Ljava/lang/Long; // method@ec0a
+work/dis/classes15.txt-551495-4a165a: 0c01                                   |026d: move-result-object v1
+work/dis/classes15.txt-551496-4a165c: 1b00 520d 0100                         |026e: const-string/jumbo v0, "sc_enable_release_on_post_frame" // string@00010d52
+work/dis/classes15.txt-551497-4a1662: 6e30 87ed 0301                         |0271: invoke-virtual {v3, v0, v1}, Ljava/util/AbstractMap;.put:(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object; // method@ed87
+work/dis/classes15.txt-551498-4a1668: 5570 432d                              |0274: iget-boolean v0, v7, LX/02g4;.A0V:Z // field@2d43
+work/dis/classes15.txt-551499-4a166c: 7110 9eeb 0000                         |0276: invoke-static {v0}, Ljava/lang/Boolean;.valueOf:(Z)Ljava/lang/Boolean; // method@eb9e
+work/dis/classes15.txt-551500-4a1672: 0c01                                   |0279: move-result-object v1
+work/dis/classes15.txt-551501-4a1674: 1b00 890d 0100                         |027a: const-string/jumbo v0, "sc_viewTreeObserverLeakFix" // string@00010d89
+work/dis/classes15.txt-551502-4a167a: 6e30 87ed 0301                         |027d: invoke-virtual {v3, v0, v1}, Ljava/util/AbstractMap;.put:(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object; // method@ed87
+work/dis/classes15.txt-551503-4a1680: 5570 412d                              |0280: iget-boolean v0, v7, LX/02g4;.A0T:Z // field@2d41
+work/dis/classes15.txt-551504-4a1684: 7110 9eeb 0000                         |0282: invoke-static {v0}, Ljava/lang/Boolean;.valueOf:(Z)Ljava/lang/Boolean; // method@eb9e
+work/dis/classes15.txt-551505-4a168a: 0c01                                   |0285: move-result-object v1
+work/dis/classes15.txt-551506-4a168c: 1b00 870d 0100                         |0286: const-string/jumbo v0, "sc_use_instance_view_tree_observer" // string@00010d87
+work/dis/classes15.txt-551507-4a1692: 6e30 87ed 0301                         |0289: invoke-virtual {v3, v0, v1}, Ljava/util/AbstractMap;.put:(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object; // method@ed87
+work/dis/classes15.txt-551508-4a1698: 5570 332d                              |028c: iget-boolean v0, v7, LX/02g4;.A0F:Z // field@2d33
+work/dis/classes15.txt-551509-4a169c: 7110 9eeb 0000                         |028e: invoke-static {v0}, Ljava/lang/Boolean;.valueOf:(Z)Ljava/lang/Boolean; // method@eb9e
+work/dis/classes15.txt-551510-4a16a2: 0c01                                   |0291: move-result-object v1
+work/dis/classes15.txt-551511-4a16a4: 1b00 4f0d 0100                         |0292: const-string/jumbo v0, "sc_enableSurfaceViewTransparencyFix" // string@00010d4f
+work/dis/classes15.txt-551512-4a16aa: 6e30 87ed 0301                         |0295: invoke-virtual {v3, v0, v1}, Ljava/util/AbstractMap;.put:(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object; // method@ed87
+work/dis/classes15.txt-551513-4a16b0: 5570 322d                              |0298: iget-boolean v0, v7, LX/02g4;.A0E:Z // field@2d32
+work/dis/classes15.txt-551514-4a16b4: 7110 9eeb 0000                         |029a: invoke-static {v0}, Ljava/lang/Boolean;.valueOf:(Z)Ljava/lang/Boolean; // method@eb9e
+work/dis/classes15.txt-551515-4a16ba: 0c01                                   |029d: move-result-object v1
+work/dis/classes15.txt-551516-4a16bc: 1b00 4d0d 0100                         |029e: const-string/jumbo v0, "sc_enablePositionCentering" // string@00010d4d
+work/dis/classes15.txt-551517-4a16c2: 6e30 87ed 0301                         |02a1: invoke-virtual {v3, v0, v1}, Ljava/util/AbstractMap;.put:(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object; // method@ed87
+work/dis/classes15.txt-551518-4a16c8: 5570 312d                              |02a4: iget-boolean v0, v7, LX/02g4;.A0D:Z // field@2d31
+work/dis/classes15.txt-551519-4a16cc: 7110 9eeb 0000                         |02a6: invoke-static {v0}, Ljava/lang/Boolean;.valueOf:(Z)Ljava/lang/Boolean; // method@eb9e
+work/dis/classes15.txt-551520-4a16d2: 0c01                                   |02a9: move-result-object v1
+work/dis/classes15.txt-551521-4a16d4: 1b00 480d 0100                         |02aa: const-string/jumbo v0, "sc_enableInvalidSurfaceMmeLogging" // string@00010d48
+work/dis/classes15.txt-551522-4a16da: 6e30 87ed 0301                         |02ad: invoke-virtual {v3, v0, v1}, Ljava/util/AbstractMap;.put:(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object; // method@ed87
+work/dis/classes15.txt-551523-4a16e0: 1b00 770d 0100                         |02b0: const-string/jumbo v0, "sc_releaseSurfaceOnReuseDestroy" // string@00010d77
+work/dis/classes15.txt-551524-4a16e6: 6e30 87ed 0302                         |02b3: invoke-virtual {v3, v0, v2}, Ljava/util/AbstractMap;.put:(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object; // method@ed87
+work/dis/classes15.txt-551525-4a16ec: 1b00 810d 0100                         |02b6: const-string/jumbo v0, "sc_syncTextureSurfaceReleaseOnDestroy" // string@00010d81
+work/dis/classes15.txt-551526-4a16f2: 6e30 87ed 0302                         |02b9: invoke-virtual {v3, v0, v2}, Ljava/util/AbstractMap;.put:(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object; // method@ed87
+work/dis/classes15.txt-551527-4a16f8: 1b00 7b0d 0100                         |02bc: const-string/jumbo v0, "sc_resetSaveForReuseOnSurfaceViewDestroy" // string@00010d7b
+work/dis/classes15.txt-551528-4a16fe: 6e30 87ed 0302                         |02bf: invoke-virtual {v3, v0, v2}, Ljava/util/AbstractMap;.put:(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object; // method@ed87
+work/dis/classes15.txt-551529-4a1704: 1b00 6b0d 0100                         |02c2: const-string/jumbo v0, "sc_isHdrContent" // string@00010d6b
+work/dis/classes15.txt-551530-4a170a: 6e30 87ed 0302                         |02c5: invoke-virtual {v3, v0, v2}, Ljava/util/AbstractMap;.put:(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object; // method@ed87
+work/dis/classes15.txt-551531-4a1710: 5570 342d                              |02c8: iget-boolean v0, v7, LX/02g4;.A0G:Z // field@2d34
+work/dis/classes15.txt-551532-4a1714: 7110 9eeb 0000                         |02ca: invoke-static {v0}, Ljava/lang/Boolean;.valueOf:(Z)Ljava/lang/Boolean; // method@eb9e
+work/dis/classes15.txt-551533-4a171a: 0c01                                   |02cd: move-result-object v1
+work/dis/classes15.txt-551534-4a171c: 1b00 510d 0100                         |02ce: const-string/jumbo v0, "sc_enableViewTag" // string@00010d51
+work/dis/classes15.txt-551535-4a1722: 6e30 87ed 0301                         |02d1: invoke-virtual {v3, v0, v1}, Ljava/util/AbstractMap;.put:(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object; // method@ed87
+work/dis/classes15.txt-551536-4a1728: 1b00 470d 0100                         |02d4: const-string/jumbo v0, "sc_enableGLTextureView" // string@00010d47
+work/dis/classes15.txt-551537-4a172e: 6e30 87ed 0302                         |02d7: invoke-virtual {v3, v0, v2}, Ljava/util/AbstractMap;.put:(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object; // method@ed87
+work/dis/classes15.txt-551538-4a1734: 1b00 4c0d 0100                         |02da: const-string/jumbo v0, "sc_enablePlayerCallbackInBaseSurfaceView" // string@00010d4c
+work/dis/classes15.txt-551539-4a173a: 6e30 87ed 0302                         |02dd: invoke-virtual {v3, v0, v2}, Ljava/util/AbstractMap;.put:(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object; // method@ed87
+--
+work/dis/classes15.txt-567593-4aa5ca: 3800 0f00                              |008f: if-eqz v0, 009e // +000f
+work/dis/classes15.txt-567594-4aa5ce: 54c2 f42f                              |0091: iget-object v2, v12, LX/02q6;.A02:LX/06EF; // field@2ff4
+work/dis/classes15.txt-567595-4aa5d2: 3802 0b00                              |0093: if-eqz v2, 009e // +000b
+work/dis/classes15.txt-567596-4aa5d6: 1301 1d00                              |0095: const/16 v1, #int 29 // #1d
+work/dis/classes15.txt-567597-4aa5da: 2200 273e                              |0097: new-instance v0, LX/07pU; // type@3e27
+work/dis/classes15.txt-567598-4aa5de: 7030 247e c001                         |0099: invoke-direct {v0, v12, v1}, LX/07pU;.<init>:(Ljava/lang/Object;I)V // method@7e24
+work/dis/classes15.txt-567599-4aa5e4: 5b20 5164                              |009c: iput-object v0, v2, LX/06EF;.A05:Lkotlin/jvm/functions/Function0; // field@6451
+work/dis/classes15.txt-567600-4aa5e8: 5590 342d                              |009e: iget-boolean v0, v9, LX/02g4;.A0G:Z // field@2d34
+work/dis/classes15.txt-567601-4aa5ec: 3800 4c00                              |00a0: if-eqz v0, 00ec // +004c
+work/dis/classes15.txt-567602-4aa5f0: 1a00 4af3                              |00a2: const-string v0, "groot_player_view" // string@f34a
+work/dis/classes15.txt-567603-4aa5f4: 6e20 1cc5 0600                         |00a4: invoke-virtual {v6, v0}, Landroid/view/View;.setTag:(Ljava/lang/Object;)V // method@c51c
+work/dis/classes15.txt-567604-4aa5fa: 2845                                   |00a7: goto 00ec // +0045
+work/dis/classes15.txt-567605-4aa5fc: 5bc6 f62f                              |00a8: iput-object v6, v12, LX/02q6;.A04:Landroid/view/SurfaceView; // field@2ff6
+work/dis/classes15.txt-567606-4aa600: 54ca f72f                              |00aa: iget-object v10, v12, LX/02q6;.A05:LX/0Zlj; // field@2ff7
+work/dis/classes15.txt-567607-4aa604: 2204 2432                              |00ac: new-instance v4, LX/06EF; // type@3224
+work/dis/classes15.txt-567608-4aa608: 7608 3770 0400                         |00ae: invoke-direct/range {v4, v5, v6, v7, v8, v9, v10, v11}, LX/06EF;.<init>:(Landroid/view/SurfaceControl;Landroid/view/SurfaceView;LX/02Vx;LX/02Vx;LX/02g4;LX/0Zlj;LX/0Akm;)V // method@7037
+work/dis/classes15.txt-567609-4aa60e: 54c0 f22f                              |00b1: iget-object v0, v12, LX/02q6;.A00:Landroid/view/Surface; // field@2ff2
+work/dis/classes15.txt-567610-4aa612: 5b40 5064                              |00b3: iput-object v0, v4, LX/06EF;.A00:Landroid/view/Surface; // field@6450
+work/dis/classes15.txt-567611-4aa616: 3801 0900                              |00b5: if-eqz v1, 00be // +0009
+work/dis/classes15.txt-567612-4aa61a: 6e10 5cc4 0600                         |00b7: invoke-virtual {v6}, Landroid/view/SurfaceView;.getHolder:()Landroid/view/SurfaceHolder; // method@c45c
+work/dis/classes15.txt-567613-4aa620: 0c00                                   |00ba: move-result-object v0
+work/dis/classes15.txt-567614-4aa622: 7220 5ac4 4000                         |00bb: invoke-interface {v0, v4}, Landroid/view/SurfaceHolder;.addCallback:(Landroid/view/SurfaceHolder$Callback;)V // method@c45a
+work/dis/classes15.txt-567615-4aa628: 6003 b693                              |00be: sget v3, Landroid/os/Build$VERSION;.SDK_INT:I // field@93b6
+work/dis/classes15.txt-567616-4aa62c: 1300 2300                              |00c0: const/16 v0, #int 35 // #23
+work/dis/classes15.txt-567617-4aa630: 3403 1a00                              |00c2: if-lt v3, v0, 00dc // +001a
+work/dis/classes15.txt-567618-4aa634: 5590 2b2d                              |00c4: iget-boolean v0, v9, LX/02g4;.A07:Z // field@2d2b
+work/dis/classes15.txt-567619-4aa638: 3800 1600                              |00c6: if-eqz v0, 00dc // +0016
+work/dis/classes15.txt-567620-4aa63c: 54c1 f62f                              |00c8: iget-object v1, v12, LX/02q6;.A04:Landroid/view/SurfaceView; // field@2ff6
+work/dis/classes15.txt-567621-4aa640: 3801 0700                              |00ca: if-eqz v1, 00d1 // +0007
+work/dis/classes15.txt-567622-4aa644: 1500 c03f                              |00cc: const/high16 v0, #int 1069547520 // #3fc0
+work/dis/classes15.txt:567623:4aa648: 6e20 5dc4 0100                         |00ce: invoke-virtual {v1, v0}, Landroid/view/SurfaceView;.setDesiredHdrHeadroom:(F)V // method@c45d
+work/dis/classes15.txt-567624-4aa64e: 2200 2b32                              |00d1: new-instance v0, LX/06EM; // type@322b
+work/dis/classes15.txt-567625-4aa652: 7020 3e70 9000                         |00d3: invoke-direct {v0, v9}, LX/06EM;.<init>:(LX/02g4;)V // method@703e
+work/dis/classes15.txt-567626-4aa658: 6e20 4070 5000                         |00d6: invoke-virtual {v0, v5}, LX/06EM;.A03:(Landroid/view/SurfaceControl;)V // method@7040
+work/dis/classes15.txt-567627-4aa65e: 6e20 3f70 5000                         |00d9: invoke-virtual {v0, v5}, LX/06EM;.A02:(Landroid/view/SurfaceControl;)V // method@703f
+work/dis/classes15.txt-567628-4aa664: 1300 2200                              |00dc: const/16 v0, #int 34 // #22
+work/dis/classes15.txt-567629-4aa668: 3403 0b00                              |00de: if-lt v3, v0, 00e9 // +000b
+work/dis/classes15.txt-567630-4aa66c: 54c1 f62f                              |00e0: iget-object v1, v12, LX/02q6;.A04:Landroid/view/SurfaceView; // field@2ff6
+work/dis/classes15.txt-567631-4aa670: 3801 0700                              |00e2: if-eqz v1, 00e9 // +0007
+work/dis/classes15.txt-567632-4aa674: 5290 252d                              |00e4: iget v0, v9, LX/02g4;.A01:I // field@2d25
+work/dis/classes15.txt-567633-4aa678: 6e20 5ec4 0100                         |00e6: invoke-virtual {v1, v0}, Landroid/view/SurfaceView;.setSurfaceLifecycle:(I)V // method@c45e
+work/dis/classes15.txt-567634-4aa67e: 5bc4 f42f                              |00e9: iput-object v4, v12, LX/02q6;.A02:LX/06EF; // field@2ff4
+work/dis/classes15.txt-567635-4aa682: 289c                                   |00eb: goto 0087 // -0064
+work/dis/classes15.txt-567636-4aa684: 1400 5297 ab37                         |00ec: const v0, #float 2.04553e-05 // #37ab9752
+work/dis/classes15.txt-567637-4aa68a: 7110 7826 0000                         |00ef: invoke-static {v0}, LX/01od;.A00:(I)V // method@2678
+work/dis/classes15.txt-567638-4aa690: 1106                                   |00f2: return-object v6
+work/dis/classes15.txt-567639-4aa692: 0d01                                   |00f3: move-exception v1
+work/dis/classes15.txt-567640-4aa694: 1400 95d4 ec25                         |00f4: const v0, #float 4.10835e-16 // #25ecd495
+work/dis/classes15.txt-567641-4aa69a: 7110 7826 0000                         |00f7: invoke-static {v0}, LX/01od;.A00:(I)V // method@2678
+work/dis/classes15.txt-567642-4aa6a0: 2701                                   |00fa: throw v1
+work/dis/classes15.txt-567643-      catches       : 4
+work/dis/classes15.txt-567644-        0x000a - 0x004a
+work/dis/classes15.txt-567645-          <any> -> 0x00f3
+work/dis/classes15.txt-567646-        0x004a - 0x004e
+work/dis/classes15.txt-567647-          <any> -> 0x005d
+work/dis/classes15.txt-567648-        0x004e - 0x0056
+work/dis/classes15.txt-567649-          <any> -> 0x00f3
+work/dis/classes15.txt-567650-        0x005d - 0x00ec
+work/dis/classes15.txt-567651-          <any> -> 0x00f3
+work/dis/classes15.txt-567652-      positions     :
+work/dis/classes15.txt-567653-      locals        :
+work/dis/classes15.txt-567654-
+work/dis/classes15.txt-567655-    #2              : (in LX/02q6;)
+work/dis/classes15.txt-567656-      name          : 'Bfy'
+work/dis/classes15.txt-567657-      type          : '()LX/02g4;'
+work/dis/classes15.txt-567658-      access        : 0x0011 (PUBLIC FINAL)
+work/dis/classes15.txt-567659-      method_idx    : 13957
+work/dis/classes15.txt-567660-      code          -
+work/dis/classes15.txt-567661-      registers     : 2
+work/dis/classes15.txt-567662-      ins           : 1
+work/dis/classes15.txt-567663-      outs          : 0
+work/dis/classes15.txt-567664-      insns size    : 3 16-bit code units
+work/dis/classes15.txt-567665-4aa6cc:                                        |[4aa6cc] X.02q6.Bfy:()LX/02g4;
+work/dis/classes15.txt-567666-4aa6dc: 5410 f82f                              |0000: iget-object v0, v1, LX/02q6;.A06:LX/02g4; // field@2ff8
+work/dis/classes15.txt-567667-4aa6e0: 1100                                   |0002: return-object v0
+work/dis/classes15.txt-567668-      catches       : (none)
+work/dis/classes15.txt-567669-      positions     :
+work/dis/classes15.txt-567670-      locals        :
+work/dis/classes15.txt-567671-
+work/dis/classes15.txt-567672-    #3              : (in LX/02q6;)
+work/dis/classes15.txt-567673-      name          : 'CB8'
+work/dis/classes15.txt-567674-      type          : '()Landroid/view/Surface;'
+work/dis/classes15.txt-567675-      access        : 0x0011 (PUBLIC FINAL)
+work/dis/classes15.txt-567676-      method_idx    : 13958
+work/dis/classes15.txt-567677-      code          -
+work/dis/classes15.txt-567678-      registers     : 2
+work/dis/classes15.txt-567679-      ins           : 1
+work/dis/classes15.txt-567680-      outs          : 0
+work/dis/classes15.txt-567681-      insns size    : 9 16-bit code units
+work/dis/classes15.txt-567682-4aa6e4:                                        |[4aa6e4] X.02q6.CB8:()Landroid/view/Surface;
+work/dis/classes15.txt-567683-4aa6f4: 5410 f42f                              |0000: iget-object v0, v1, LX/02q6;.A02:LX/06EF; // field@2ff4
+--
+work/dis/classes15.txt-838486-      ins           : 4
+work/dis/classes15.txt-838487-      outs          : 5
+work/dis/classes15.txt-838488-      insns size    : 11 16-bit code units
+work/dis/classes15.txt-838489-544e64:                                        |[544e64] X.04AT.A06:(Ljava/lang/String;Ljava/lang/String;Ljava/lang/Throwable;I)V
+work/dis/classes15.txt-838490-544e74: 7110 a15a 0200                         |0000: invoke-static {v2}, LX/04l9;.A0g:(Ljava/lang/Object;)V // method@5aa1
+work/dis/classes15.txt-838491-544e7a: 7100 9750 0000                         |0003: invoke-static {}, LX/04AT;.A00:()LX/01il; // method@5097
+work/dis/classes15.txt-838492-544e80: 0c00                                   |0006: move-result-object v0
+work/dis/classes15.txt-838493-544e82: 7254 0721 1032                         |0007: invoke-interface {v0, v1, v2, v3, v4}, LX/01il;.HDQ:(Ljava/lang/String;Ljava/lang/String;Ljava/lang/Throwable;I)V // method@2107
+work/dis/classes15.txt-838494-544e88: 0e00                                   |000a: return-void
+work/dis/classes15.txt-838495-      catches       : (none)
+work/dis/classes15.txt-838496-      positions     :
+work/dis/classes15.txt-838497-      locals        :
+work/dis/classes15.txt-838498-
+work/dis/classes15.txt-838499-    #9              : (in LX/04AT;)
+work/dis/classes15.txt-838500-      name          : 'A07'
+work/dis/classes15.txt-838501-      type          : '(Ljava/lang/String;Ljava/lang/Throwable;)V'
+work/dis/classes15.txt-838502-      access        : 0x0019 (PUBLIC STATIC FINAL)
+work/dis/classes15.txt-838503-      method_idx    : 20638
+work/dis/classes15.txt-838504-      code          -
+work/dis/classes15.txt-838505-      registers     : 3
+work/dis/classes15.txt-838506-      ins           : 2
+work/dis/classes15.txt-838507-      outs          : 3
+work/dis/classes15.txt-838508-      insns size    : 16 16-bit code units
+work/dis/classes15.txt-838509-544e8c:                                        |[544e8c] X.04AT.A07:(Ljava/lang/String;Ljava/lang/Throwable;)V
+work/dis/classes15.txt-838510-544e9c: 1200                                   |0000: const/4 v0, #int 0 // #0
+work/dis/classes15.txt-838511-544e9e: 7120 a45a 0100                         |0001: invoke-static {v1, v0}, LX/04l9;.A0j:(Ljava/lang/Object;I)V // method@5aa4
+work/dis/classes15.txt-838512-544ea4: 6200 7f42                              |0004: sget-object v0, LX/04AT;.A00:LX/01il; // field@427f
+work/dis/classes15.txt-838513-544ea8: 3900 0600                              |0006: if-nez v0, 000c // +0006
+work/dis/classes15.txt-838514-544eac: 7100 9750 0000                         |0008: invoke-static {}, LX/04AT;.A00:()LX/01il; // method@5097
+work/dis/classes15.txt-838515-544eb2: 0c00                                   |000b: move-result-object v0
+work/dis/classes15.txt:838516:544eb4: 7230 0821 1002                         |000c: invoke-interface {v0, v1, v2}, LX/01il;.HDR:(Ljava/lang/String;Ljava/lang/Throwable;)V // method@2108
+work/dis/classes15.txt-838517-544eba: 0e00                                   |000f: return-void
+work/dis/classes15.txt-838518-      catches       : (none)
+work/dis/classes15.txt-838519-      positions     :
+work/dis/classes15.txt-838520-      locals        :
+work/dis/classes15.txt-838521-
+work/dis/classes15.txt-838522-  Virtual methods   -
+work/dis/classes15.txt-838523-    #0              : (in LX/04AT;)
+work/dis/classes15.txt-838524-      name          : 'GGw'
+work/dis/classes15.txt-838525-      type          : '()V'
+work/dis/classes15.txt-838526-      access        : 0x0011 (PUBLIC FINAL)
+work/dis/classes15.txt-838527-      method_idx    : 20639
+work/dis/classes15.txt-838528-      code          -
+work/dis/classes15.txt-838529-      registers     : 1
+work/dis/classes15.txt-838530-      ins           : 1
+work/dis/classes15.txt-838531-      outs          : 0
+work/dis/classes15.txt-838532-      insns size    : 1 16-bit code units
+work/dis/classes15.txt-838533-544ebc:                                        |[544ebc] X.04AT.GGw:()V
+work/dis/classes15.txt-838534-544ecc: 0e00                                   |0000: return-void
+work/dis/classes15.txt-838535-      catches       : (none)
+work/dis/classes15.txt-838536-      positions     :
+work/dis/classes15.txt-838537-      locals        :
+work/dis/classes15.txt-838538-
+work/dis/classes15.txt-838539-    #1              : (in LX/04AT;)
+work/dis/classes15.txt-838540-      name          : 'GPS'
+work/dis/classes15.txt-838541-      type          : '(Ljava/lang/Integer;Ljava/lang/String;Ljava/lang/String;)V'
+work/dis/classes15.txt-838542-      access        : 0x0011 (PUBLIC FINAL)
+work/dis/classes15.txt-838543-      method_idx    : 20640
+work/dis/classes15.txt-838544-      code          -
+work/dis/classes15.txt-838545-      registers     : 5
+work/dis/classes15.txt-838546-      ins           : 4
+work/dis/classes15.txt-838547-      outs          : 4
+work/dis/classes15.txt-838548-      insns size    : 17 16-bit code units
+work/dis/classes15.txt-838549-544ed0:                                        |[544ed0] X.04AT.GPS:(Ljava/lang/Integer;Ljava/lang/String;Ljava/lang/String;)V
+work/dis/classes15.txt-838550-544ee0: 7110 a05a 0200                         |0000: invoke-static {v2}, LX/04l9;.A0f:(Ljava/lang/Object;)V // method@5aa0
+work/dis/classes15.txt-838551-544ee6: 7110 a15a 0300                         |0003: invoke-static {v3}, LX/04l9;.A0g:(Ljava/lang/Object;)V // method@5aa1
+work/dis/classes15.txt-838552-544eec: 7110 985a 0400                         |0006: invoke-static {v4}, LX/04l9;.A0X:(Ljava/lang/Object;)V // method@5a98
+work/dis/classes15.txt-838553-544ef2: 7100 9750 0000                         |0009: invoke-static {}, LX/04AT;.A00:()LX/01il; // method@5097
+work/dis/classes15.txt-838554-544ef8: 0c00                                   |000c: move-result-object v0
+work/dis/classes15.txt-838555-544efa: 7240 0021 2043                         |000d: invoke-interface {v0, v2, v3, v4}, LX/01il;.GPS:(Ljava/lang/Integer;Ljava/lang/String;Ljava/lang/String;)V // method@2100
+work/dis/classes15.txt-838556-544f00: 0e00                                   |0010: return-void
+work/dis/classes15.txt-838557-      catches       : (none)
+work/dis/classes15.txt-838558-      positions     :
+work/dis/classes15.txt-838559-      locals        :
+work/dis/classes15.txt-838560-
+work/dis/classes15.txt-838561-    #2              : (in LX/04AT;)
+work/dis/classes15.txt-838562-      name          : 'GPT'
+work/dis/classes15.txt-838563-      type          : '(Ljava/lang/Integer;Ljava/lang/String;Ljava/lang/String;Ljava/lang/Throwable;)V'
+work/dis/classes15.txt-838564-      access        : 0x0011 (PUBLIC FINAL)
+work/dis/classes15.txt-838565-      method_idx    : 20641
+work/dis/classes15.txt-838566-      code          -
+work/dis/classes15.txt-838567-      registers     : 6
+work/dis/classes15.txt-838568-      ins           : 5
+work/dis/classes15.txt-838569-      outs          : 5
+work/dis/classes15.txt-838570-      insns size    : 14 16-bit code units
+work/dis/classes15.txt-838571-544f04:                                        |[544f04] X.04AT.GPT:(Ljava/lang/Integer;Ljava/lang/String;Ljava/lang/String;Ljava/lang/Throwable;)V
+work/dis/classes15.txt-838572-544f14: 7110 a05a 0200                         |0000: invoke-static {v2}, LX/04l9;.A0f:(Ljava/lang/Object;)V // method@5aa0
+work/dis/classes15.txt-838573-544f1a: 7110 985a 0400                         |0003: invoke-static {v4}, LX/04l9;.A0X:(Ljava/lang/Object;)V // method@5a98
+work/dis/classes15.txt-838574-544f20: 7100 9750 0000                         |0006: invoke-static {}, LX/04AT;.A00:()LX/01il; // method@5097
+work/dis/classes15.txt-838575-544f26: 0c00                                   |0009: move-result-object v0
+work/dis/classes15.txt-838576-544f28: 7255 0121 2043                         |000a: invoke-interface {v0, v2, v3, v4, v5}, LX/01il;.GPT:(Ljava/lang/Integer;Ljava/lang/String;Ljava/lang/String;Ljava/lang/Throwable;)V // method@2101
+--
+work/dis/classes15.txt-838682-544ffc: 7100 9750 0000                         |0006: invoke-static {}, LX/04AT;.A00:()LX/01il; // method@5097
+work/dis/classes15.txt-838683-545002: 0c00                                   |0009: move-result-object v0
+work/dis/classes15.txt-838684-545004: 7240 0621 2043                         |000a: invoke-interface {v0, v2, v3, v4}, LX/01il;.HDP:(Ljava/lang/String;Ljava/lang/String;Ljava/lang/Throwable;)V // method@2106
+work/dis/classes15.txt-838685-54500a: 0e00                                   |000d: return-void
+work/dis/classes15.txt-838686-      catches       : (none)
+work/dis/classes15.txt-838687-      positions     :
+work/dis/classes15.txt-838688-      locals        :
+work/dis/classes15.txt-838689-
+work/dis/classes15.txt-838690-    #8              : (in LX/04AT;)
+work/dis/classes15.txt-838691-      name          : 'HDQ'
+work/dis/classes15.txt-838692-      type          : '(Ljava/lang/String;Ljava/lang/String;Ljava/lang/Throwable;I)V'
+work/dis/classes15.txt-838693-      access        : 0x0011 (PUBLIC FINAL)
+work/dis/classes15.txt-838694-      method_idx    : 20647
+work/dis/classes15.txt-838695-      code          -
+work/dis/classes15.txt-838696-      registers     : 6
+work/dis/classes15.txt-838697-      ins           : 5
+work/dis/classes15.txt-838698-      outs          : 5
+work/dis/classes15.txt-838699-      insns size    : 14 16-bit code units
+work/dis/classes15.txt-838700-54500c:                                        |[54500c] X.04AT.HDQ:(Ljava/lang/String;Ljava/lang/String;Ljava/lang/Throwable;I)V
+work/dis/classes15.txt-838701-54501c: 7110 a05a 0200                         |0000: invoke-static {v2}, LX/04l9;.A0f:(Ljava/lang/Object;)V // method@5aa0
+work/dis/classes15.txt-838702-545022: 7110 a15a 0300                         |0003: invoke-static {v3}, LX/04l9;.A0g:(Ljava/lang/Object;)V // method@5aa1
+work/dis/classes15.txt-838703-545028: 7100 9750 0000                         |0006: invoke-static {}, LX/04AT;.A00:()LX/01il; // method@5097
+work/dis/classes15.txt-838704-54502e: 0c00                                   |0009: move-result-object v0
+work/dis/classes15.txt-838705-545030: 7255 0721 2043                         |000a: invoke-interface {v0, v2, v3, v4, v5}, LX/01il;.HDQ:(Ljava/lang/String;Ljava/lang/String;Ljava/lang/Throwable;I)V // method@2107
+work/dis/classes15.txt-838706-545036: 0e00                                   |000d: return-void
+work/dis/classes15.txt-838707-      catches       : (none)
+work/dis/classes15.txt-838708-      positions     :
+work/dis/classes15.txt-838709-      locals        :
+work/dis/classes15.txt-838710-
+work/dis/classes15.txt-838711-    #9              : (in LX/04AT;)
+work/dis/classes15.txt:838712:      name          : 'HDR'
+work/dis/classes15.txt-838713-      type          : '(Ljava/lang/String;Ljava/lang/Throwable;)V'
+work/dis/classes15.txt-838714-      access        : 0x0011 (PUBLIC FINAL)
+work/dis/classes15.txt-838715-      method_idx    : 20648
+work/dis/classes15.txt-838716-      code          -
+work/dis/classes15.txt-838717-      registers     : 4
+work/dis/classes15.txt-838718-      ins           : 3
+work/dis/classes15.txt-838719-      outs          : 3
+work/dis/classes15.txt-838720-      insns size    : 11 16-bit code units
+work/dis/classes15.txt:838721:545038:                                        |[545038] X.04AT.HDR:(Ljava/lang/String;Ljava/lang/Throwable;)V
+work/dis/classes15.txt-838722-545048: 7110 a05a 0200                         |0000: invoke-static {v2}, LX/04l9;.A0f:(Ljava/lang/Object;)V // method@5aa0
+work/dis/classes15.txt-838723-54504e: 7100 9750 0000                         |0003: invoke-static {}, LX/04AT;.A00:()LX/01il; // method@5097
+work/dis/classes15.txt-838724-545054: 0c00                                   |0006: move-result-object v0
+work/dis/classes15.txt:838725:545056: 7230 0821 2003                         |0007: invoke-interface {v0, v2, v3}, LX/01il;.HDR:(Ljava/lang/String;Ljava/lang/Throwable;)V // method@2108
+work/dis/classes15.txt-838726-54505c: 0e00                                   |000a: return-void
+work/dis/classes15.txt-838727-      catches       : (none)
+work/dis/classes15.txt-838728-      positions     :
+work/dis/classes15.txt-838729-      locals        :
+work/dis/classes15.txt-838730-
+work/dis/classes15.txt-838731-    #10              : (in LX/04AT;)
+work/dis/classes15.txt-838732-      name          : 'HDS'
+work/dis/classes15.txt-838733-      type          : '(Ljava/lang/String;Ljava/lang/Throwable;)V'
+work/dis/classes15.txt-838734-      access        : 0x0011 (PUBLIC FINAL)
+work/dis/classes15.txt-838735-      method_idx    : 20649
+work/dis/classes15.txt-838736-      code          -
+work/dis/classes15.txt-838737-      registers     : 4
+work/dis/classes15.txt-838738-      ins           : 3
+work/dis/classes15.txt-838739-      outs          : 3
+work/dis/classes15.txt-838740-      insns size    : 8 16-bit code units
+work/dis/classes15.txt-838741-545060:                                        |[545060] X.04AT.HDS:(Ljava/lang/String;Ljava/lang/Throwable;)V
+work/dis/classes15.txt-838742-545070: 7100 9750 0000                         |0000: invoke-static {}, LX/04AT;.A00:()LX/01il; // method@5097
+work/dis/classes15.txt-838743-545076: 0c00                                   |0003: move-result-object v0
+work/dis/classes15.txt-838744-545078: 7230 0921 2003                         |0004: invoke-interface {v0, v2, v3}, LX/01il;.HDS:(Ljava/lang/String;Ljava/lang/Throwable;)V // method@2109
+work/dis/classes15.txt-838745-54507e: 0e00                                   |0007: return-void
+work/dis/classes15.txt-838746-      catches       : (none)
+work/dis/classes15.txt-838747-      positions     :
+work/dis/classes15.txt-838748-      locals        :
+work/dis/classes15.txt-838749-
+work/dis/classes15.txt-838750-    #11              : (in LX/04AT;)
+work/dis/classes15.txt-838751-      name          : 'HDV'
+work/dis/classes15.txt-838752-      type          : '(Ljava/lang/String;Ljava/lang/String;)V'
+work/dis/classes15.txt-838753-      access        : 0x0011 (PUBLIC FINAL)
+work/dis/classes15.txt-838754-      method_idx    : 20650
+work/dis/classes15.txt-838755-      code          -
+work/dis/classes15.txt-838756-      registers     : 4
+work/dis/classes15.txt-838757-      ins           : 3
+work/dis/classes15.txt-838758-      outs          : 3
+work/dis/classes15.txt-838759-      insns size    : 11 16-bit code units
+work/dis/classes15.txt-838760-545080:                                        |[545080] X.04AT.HDV:(Ljava/lang/String;Ljava/lang/String;)V
+work/dis/classes15.txt-838761-545090: 7110 a15a 0300                         |0000: invoke-static {v3}, LX/04l9;.A0g:(Ljava/lang/Object;)V // method@5aa1
+work/dis/classes15.txt-838762-545096: 7100 9750 0000                         |0003: invoke-static {}, LX/04AT;.A00:()LX/01il; // method@5097
+work/dis/classes15.txt-838763-54509c: 0c00                                   |0006: move-result-object v0
+work/dis/classes15.txt-838764-54509e: 7230 0a21 2003                         |0007: invoke-interface {v0, v2, v3}, LX/01il;.HDV:(Ljava/lang/String;Ljava/lang/String;)V // method@210a
+work/dis/classes15.txt-838765-5450a4: 0e00                                   |000a: return-void
+work/dis/classes15.txt-838766-      catches       : (none)
+work/dis/classes15.txt-838767-      positions     :
+work/dis/classes15.txt-838768-      locals        :
+work/dis/classes15.txt-838769-
+work/dis/classes15.txt-838770-    #12              : (in LX/04AT;)
+work/dis/classes15.txt-838771-      name          : 'HDW'
+work/dis/classes15.txt-838772-      type          : '(Ljava/lang/String;Ljava/lang/Throwable;)V'
+work/dis/classes15.txt-838773-      access        : 0x0011 (PUBLIC FINAL)
+work/dis/classes15.txt-838774-      method_idx    : 20651
+work/dis/classes15.txt-838775-      code          -
+work/dis/classes15.txt-838776-      registers     : 4
+work/dis/classes15.txt-838777-      ins           : 3
+work/dis/classes15.txt-838778-      outs          : 3
+work/dis/classes15.txt-838779-      insns size    : 8 16-bit code units
+work/dis/classes15.txt-838780-5450a8:                                        |[5450a8] X.04AT.HDW:(Ljava/lang/String;Ljava/lang/Throwable;)V
+work/dis/classes15.txt-838781-5450b8: 7100 9750 0000                         |0000: invoke-static {}, LX/04AT;.A00:()LX/01il; // method@5097
+work/dis/classes15.txt-838782-5450be: 0c00                                   |0003: move-result-object v0
+work/dis/classes15.txt-838783-5450c0: 7230 0b21 2003                         |0004: invoke-interface {v0, v2, v3}, LX/01il;.HDW:(Ljava/lang/String;Ljava/lang/Throwable;)V // method@210b
+work/dis/classes15.txt-838784-5450c6: 0e00                                   |0007: return-void
+work/dis/classes15.txt-838785-      catches       : (none)
+--
+work/dis/classes15.txt-937175-576628: 0a01                                   |0128: move-result v1
+work/dis/classes15.txt-937176-57662a: 1400 41ae adb9                         |0129: const v0, #float -0.00033127 // #b9adae41
+work/dis/classes15.txt-937177-576630: 3201 3b00                              |012c: if-eq v1, v0, 0167 // +003b
+work/dis/classes15.txt-937178-576634: 1400 2b72 f045                         |012e: const v0, #float 7694.27 // #45f0722b
+work/dis/classes15.txt-937179-57663a: 3201 2100                              |0131: if-eq v1, v0, 0152 // +0021
+work/dis/classes15.txt-937180-57663e: 1400 2103 8a7f                         |0133: const v0, #float nan // #7f8a0321
+work/dis/classes15.txt-937181-576644: 3301 d9ff                              |0136: if-ne v1, v0, 010f // -0027
+work/dis/classes15.txt-937182-576648: 1b00 f012 0100                         |0138: const-string/jumbo v0, "stored_image_has_gain_map" // string@000112f0
+work/dis/classes15.txt-937183-57664e: 6e20 59ec 0400                         |013b: invoke-virtual {v4, v0}, Ljava/lang/String;.equals:(Ljava/lang/Object;)Z // method@ec59
+work/dis/classes15.txt-937184-576654: 0a00                                   |013e: move-result v0
+work/dis/classes15.txt-937185-576656: 3800 d0ff                              |013f: if-eqz v0, 010f // -0030
+work/dis/classes15.txt-937186-57665a: 2030 6d87                              |0141: instance-of v0, v3, Ljava/lang/Boolean; // type@876d
+work/dis/classes15.txt-937187-57665e: 3800 ccff                              |0143: if-eqz v0, 010f // -0034
+work/dis/classes15.txt-937188-576662: 1f03 6d87                              |0145: check-cast v3, Ljava/lang/Boolean; // type@876d
+work/dis/classes15.txt-937189-576666: 6e10 9aeb 0300                         |0147: invoke-virtual {v3}, Ljava/lang/Boolean;.booleanValue:()Z // method@eb9a
+work/dis/classes15.txt-937190-57666c: 0a01                                   |014a: move-result v1
+work/dis/classes15.txt-937191-57666e: 1b00 ef12 0100                         |014b: const-string/jumbo v0, "stored-image-has-gain-map" // string@000112ef
+work/dis/classes15.txt-937192-576674: 6e30 f8cb 0201                         |014e: invoke-virtual {v2, v0, v1}, Lcom/facebook/quicklog/MarkerEditor;.annotate:(Ljava/lang/String;Z)Lcom/facebook/quicklog/MarkerEditor; // method@cbf8
+work/dis/classes15.txt-937193-57667a: 28be                                   |0151: goto 010f // -0042
+work/dis/classes15.txt-937194-57667c: 1a00 4eec                              |0152: const-string v0, "fetched_image_has_gain_map" // string@ec4e
+work/dis/classes15.txt-937195-576680: 6e20 59ec 0400                         |0154: invoke-virtual {v4, v0}, Ljava/lang/String;.equals:(Ljava/lang/Object;)Z // method@ec59
+work/dis/classes15.txt-937196-576686: 0a00                                   |0157: move-result v0
+work/dis/classes15.txt-937197-576688: 3800 b7ff                              |0158: if-eqz v0, 010f // -0049
+work/dis/classes15.txt-937198-57668c: 2030 6d87                              |015a: instance-of v0, v3, Ljava/lang/Boolean; // type@876d
+work/dis/classes15.txt-937199-576690: 3800 b3ff                              |015c: if-eqz v0, 010f // -004d
+work/dis/classes15.txt-937200-576694: 1f03 6d87                              |015e: check-cast v3, Ljava/lang/Boolean; // type@876d
+work/dis/classes15.txt-937201-576698: 6e10 9aeb 0300                         |0160: invoke-virtual {v3}, Ljava/lang/Boolean;.booleanValue:()Z // method@eb9a
+work/dis/classes15.txt-937202-57669e: 0a01                                   |0163: move-result v1
+work/dis/classes15.txt-937203-5766a0: 1a00 4cec                              |0164: const-string v0, "fetched-image-has-gain-map" // string@ec4c
+work/dis/classes15.txt-937204-5766a4: 28e8                                   |0166: goto 014e // -0018
+work/dis/classes15.txt:937205:5766a6: 1a00 62f8                              |0167: const-string v0, "is_HDR" // string@f862
+work/dis/classes15.txt-937206-5766aa: 6e20 59ec 0400                         |0169: invoke-virtual {v4, v0}, Ljava/lang/String;.equals:(Ljava/lang/Object;)Z // method@ec59
+work/dis/classes15.txt-937207-5766b0: 0a00                                   |016c: move-result v0
+work/dis/classes15.txt-937208-5766b2: 3800 a2ff                              |016d: if-eqz v0, 010f // -005e
+work/dis/classes15.txt-937209-5766b6: 1a01 3ff7                              |016f: const-string v1, "is-hdr" // string@f73f
+work/dis/classes15.txt-937210-5766ba: 6e10 33ec 0300                         |0171: invoke-virtual {v3}, Ljava/lang/Object;.toString:()Ljava/lang/String; // method@ec33
+work/dis/classes15.txt-937211-5766c0: 0c00                                   |0174: move-result-object v0
+work/dis/classes15.txt-937212-5766c2: 6e30 f7cb 1200                         |0175: invoke-virtual {v2, v1, v0}, Lcom/facebook/quicklog/MarkerEditor;.annotate:(Ljava/lang/String;Ljava/lang/String;)Lcom/facebook/quicklog/MarkerEditor; // method@cbf7
+work/dis/classes15.txt-937213-5766c8: 2897                                   |0178: goto 010f // -0069
+work/dis/classes15.txt-937214-5766ca: 7110 82ec 0100                         |0179: invoke-static {v1}, Ljava/lang/String;.valueOf:(Ljava/lang/Object;)Ljava/lang/String; // method@ec82
+work/dis/classes15.txt-937215-5766d0: 0c01                                   |017c: move-result-object v1
+work/dis/classes15.txt-937216-5766d2: 2900 a5fe                              |017d: goto/16 0022 // -015b
+work/dis/classes15.txt-937217-5766d6: 5473 7305                              |017f: iget-object v3, v7, LX/00DW;.A09:Ljava/lang/Object; // field@0573
+work/dis/classes15.txt-937218-5766da: 2030 a212                              |0181: instance-of v0, v3, LX/02Nd; // type@12a2
+work/dis/classes15.txt-937219-5766de: 3800 0e00                              |0183: if-eqz v0, 0191 // +000e
+work/dis/classes15.txt-937220-5766e2: 3803 0c00                              |0185: if-eqz v3, 0191 // +000c
+work/dis/classes15.txt-937221-5766e6: 1b01 0f12 0100                         |0187: const-string/jumbo v1, "smartFetchStrategy" // string@0001120f
+work/dis/classes15.txt-937222-5766ec: 6e10 33ec 0300                         |018a: invoke-virtual {v3}, Ljava/lang/Object;.toString:()Ljava/lang/String; // method@ec33
+work/dis/classes15.txt-937223-5766f2: 0c00                                   |018d: move-result-object v0
+work/dis/classes15.txt-937224-5766f4: 6e30 f7cb 1200                         |018e: invoke-virtual {v2, v1, v0}, Lcom/facebook/quicklog/MarkerEditor;.annotate:(Ljava/lang/String;Ljava/lang/String;)Lcom/facebook/quicklog/MarkerEditor; // method@cbf7
+work/dis/classes15.txt-937225-5766fa: 5470 7405                              |0191: iget-object v0, v7, LX/00DW;.A0A:Ljava/lang/Object; // field@0574
+work/dis/classes15.txt-937226-5766fe: 3800 0c00                              |0193: if-eqz v0, 019f // +000c
+work/dis/classes15.txt-937227-576702: 1b01 1112 0100                         |0195: const-string/jumbo v1, "smartModResult" // string@00011211
+work/dis/classes15.txt-937228-576708: 6e10 33ec 0000                         |0198: invoke-virtual {v0}, Ljava/lang/Object;.toString:()Ljava/lang/String; // method@ec33
+work/dis/classes15.txt-937229-57670e: 0c00                                   |019b: move-result-object v0
+work/dis/classes15.txt-937230-576710: 6e30 f7cb 1200                         |019c: invoke-virtual {v2, v1, v0}, Lcom/facebook/quicklog/MarkerEditor;.annotate:(Ljava/lang/String;Ljava/lang/String;)Lcom/facebook/quicklog/MarkerEditor; // method@cbf7
+work/dis/classes15.txt-937231-576716: 6200 f226                              |019f: sget-object v0, LX/02Ne;.A02:LX/02Ne; // field@26f2
+work/dis/classes15.txt-937232-57671a: 1b01 1412 0100                         |01a1: const-string/jumbo v1, "smartSizingHint" // string@00011214
+work/dis/classes15.txt-937233-576720: 6e10 33ec 0000                         |01a4: invoke-virtual {v0}, Ljava/lang/Object;.toString:()Ljava/lang/String; // method@ec33
+work/dis/classes15.txt-937234-576726: 0c00                                   |01a7: move-result-object v0
+work/dis/classes15.txt-937235-576728: 6e30 f7cb 1200                         |01a8: invoke-virtual {v2, v1, v0}, Lcom/facebook/quicklog/MarkerEditor;.annotate:(Ljava/lang/String;Ljava/lang/String;)Lcom/facebook/quicklog/MarkerEditor; // method@cbf7
+work/dis/classes15.txt-937236-57672e: 1b00 1912 0100                         |01ab: const-string/jumbo v0, "smart_adaptive" // string@00011219
+work/dis/classes15.txt-937237-576734: 7120 e132 0700                         |01ae: invoke-static {v7, v0}, LX/02cG;.A00:(LX/00DW;Ljava/lang/String;)Ljava/lang/Object; // method@32e1
+work/dis/classes15.txt-937238-57673a: 0c00                                   |01b1: move-result-object v0
+work/dis/classes15.txt-937239-57673c: 3800 0c00                              |01b2: if-eqz v0, 01be // +000c
+work/dis/classes15.txt-937240-576740: 1b01 0d12 0100                         |01b4: const-string/jumbo v1, "smartAdaptive" // string@0001120d
+work/dis/classes15.txt-937241-576746: 6e10 33ec 0000                         |01b7: invoke-virtual {v0}, Ljava/lang/Object;.toString:()Ljava/lang/String; // method@ec33
+work/dis/classes15.txt-937242-57674c: 0c00                                   |01ba: move-result-object v0
+work/dis/classes15.txt-937243-57674e: 6e30 f7cb 1200                         |01bb: invoke-virtual {v2, v1, v0}, Lcom/facebook/quicklog/MarkerEditor;.annotate:(Ljava/lang/String;Ljava/lang/String;)Lcom/facebook/quicklog/MarkerEditor; // method@cbf7
+work/dis/classes15.txt-937244-576754: 1b00 1f12 0100                         |01be: const-string/jumbo v0, "smart_variation" // string@0001121f
+work/dis/classes15.txt-937245-57675a: 7120 e132 0700                         |01c1: invoke-static {v7, v0}, LX/02cG;.A00:(LX/00DW;Ljava/lang/String;)Ljava/lang/Object; // method@32e1
+work/dis/classes15.txt-937246-576760: 0c00                                   |01c4: move-result-object v0
+work/dis/classes15.txt-937247-576762: 3800 0c00                              |01c5: if-eqz v0, 01d1 // +000c
+work/dis/classes15.txt-937248-576766: 1b01 1712 0100                         |01c7: const-string/jumbo v1, "smartVariation" // string@00011217
+work/dis/classes15.txt-937249-57676c: 6e10 33ec 0000                         |01ca: invoke-virtual {v0}, Ljava/lang/Object;.toString:()Ljava/lang/String; // method@ec33
+work/dis/classes15.txt-937250-576772: 0c00                                   |01cd: move-result-object v0
+work/dis/classes15.txt-937251-576774: 6e30 f7cb 1200                         |01ce: invoke-virtual {v2, v1, v0}, Lcom/facebook/quicklog/MarkerEditor;.annotate:(Ljava/lang/String;Ljava/lang/String;)Lcom/facebook/quicklog/MarkerEditor; // method@cbf7
+work/dis/classes15.txt-937252-57677a: 1b00 1d12 0100                         |01d1: const-string/jumbo v0, "smart_query" // string@0001121d
+work/dis/classes15.txt-937253-576780: 7120 e132 0700                         |01d4: invoke-static {v7, v0}, LX/02cG;.A00:(LX/00DW;Ljava/lang/String;)Ljava/lang/Object; // method@32e1
+work/dis/classes15.txt-937254-576786: 0c00                                   |01d7: move-result-object v0
+work/dis/classes15.txt-937255-576788: 3800 0e00                              |01d8: if-eqz v0, 01e6 // +000e
+work/dis/classes15.txt-937256-57678c: 6e10 33ec 0000                         |01da: invoke-virtual {v0}, Ljava/lang/Object;.toString:()Ljava/lang/String; // method@ec33
+work/dis/classes15.txt-937257-576792: 0c01                                   |01dd: move-result-object v1
+work/dis/classes15.txt-937258-576794: 3801 0800                              |01de: if-eqz v1, 01e6 // +0008
+work/dis/classes15.txt-937259-576798: 1b00 1312 0100                         |01e0: const-string/jumbo v0, "smartQuery" // string@00011213
+work/dis/classes15.txt-937260-57679e: 6e30 f7cb 0201                         |01e3: invoke-virtual {v2, v0, v1}, Lcom/facebook/quicklog/MarkerEditor;.annotate:(Ljava/lang/String;Ljava/lang/String;)Lcom/facebook/quicklog/MarkerEditor; // method@cbf7
+work/dis/classes15.txt-937261-5767a4: 1b00 1a12 0100                         |01e6: const-string/jumbo v0, "smart_aiq" // string@0001121a
+work/dis/classes15.txt-937262-5767aa: 7120 e132 0700                         |01e9: invoke-static {v7, v0}, LX/02cG;.A00:(LX/00DW;Ljava/lang/String;)Ljava/lang/Object; // method@32e1
+work/dis/classes15.txt-937263-5767b0: 0c00                                   |01ec: move-result-object v0
+work/dis/classes15.txt-937264-5767b2: 3800 0e00                              |01ed: if-eqz v0, 01fb // +000e
+work/dis/classes15.txt-937265-5767b6: 6e10 33ec 0000                         |01ef: invoke-virtual {v0}, Ljava/lang/Object;.toString:()Ljava/lang/String; // method@ec33
+--
+work/dis/classes17.txt-567292-433026: 5420 f337                              |0013: iget-object v0, v2, LX/06EM;.A01:Landroid/view/SurfaceControl$Transaction; // field@37f3
+work/dis/classes17.txt-567293-43302a: 6e10 81ba 0000                         |0015: invoke-virtual {v0}, Landroid/view/SurfaceControl$Transaction;.close:()V // method@ba81
+work/dis/classes17.txt-567294-433030: 0e00                                   |0018: return-void
+work/dis/classes17.txt-567295-433032: 0d01                                   |0019: move-exception v1
+work/dis/classes17.txt-567296-433034: 5420 f337                              |001a: iget-object v0, v2, LX/06EM;.A01:Landroid/view/SurfaceControl$Transaction; // field@37f3
+work/dis/classes17.txt-567297-433038: 6e10 81ba 0000                         |001c: invoke-virtual {v0}, Landroid/view/SurfaceControl$Transaction;.close:()V // method@ba81
+work/dis/classes17.txt-567298-43303e: 2701                                   |001f: throw v1
+work/dis/classes17.txt-567299-433040: 5420 f337                              |0020: iget-object v0, v2, LX/06EM;.A01:Landroid/view/SurfaceControl$Transaction; // field@37f3
+work/dis/classes17.txt-567300-433044: 6e10 81ba 0000                         |0022: invoke-virtual {v0}, Landroid/view/SurfaceControl$Transaction;.close:()V // method@ba81
+work/dis/classes17.txt-567301-43304a: 0e00                                   |0025: return-void
+work/dis/classes17.txt-567302-      catches       : 1
+work/dis/classes17.txt-567303-        0x000e - 0x0013
+work/dis/classes17.txt-567304-          Ljava/lang/Exception; -> 0x0013
+work/dis/classes17.txt-567305-          <any> -> 0x0019
+work/dis/classes17.txt-567306-      positions     :
+work/dis/classes17.txt-567307-      locals        :
+work/dis/classes17.txt-567308-
+work/dis/classes17.txt-567309-    #2              : (in LX/06EM;)
+work/dis/classes17.txt-567310-      name          : 'A03'
+work/dis/classes17.txt-567311-      type          : '(Landroid/view/SurfaceControl;)V'
+work/dis/classes17.txt-567312-      access        : 0x0011 (PUBLIC FINAL)
+work/dis/classes17.txt-567313-      method_idx    : 14261
+work/dis/classes17.txt-567314-      code          -
+work/dis/classes17.txt-567315-      registers     : 4
+work/dis/classes17.txt-567316-      ins           : 2
+work/dis/classes17.txt-567317-      outs          : 3
+work/dis/classes17.txt-567318-      insns size    : 17 16-bit code units
+work/dis/classes17.txt-567319-43305c:                                        |[43305c] X.06EM.A03:(Landroid/view/SurfaceControl;)V
+work/dis/classes17.txt-567320-43306c: 1501 c03f                              |0000: const/high16 v1, #int 1069547520 // #3fc0
+work/dis/classes17.txt-567321-433070: 5420 f337                              |0002: iget-object v0, v2, LX/06EM;.A01:Landroid/view/SurfaceControl$Transaction; // field@37f3
+work/dis/classes17.txt:567322:433074: 6e30 84ba 3001                         |0004: invoke-virtual {v0, v3, v1}, Landroid/view/SurfaceControl$Transaction;.setDesiredHdrHeadroom:(Landroid/view/SurfaceControl;F)Landroid/view/SurfaceControl$Transaction; // method@ba84
+work/dis/classes17.txt-567323-43307a: 0c00                                   |0007: move-result-object v0
+work/dis/classes17.txt-567324-43307c: 7110 072c 0000                         |0008: invoke-static {v0}, LX/04l9;.A0h:(Ljava/lang/Object;)V // method@2c07
+work/dis/classes17.txt-567325-433082: 0e00                                   |000b: return-void
+work/dis/classes17.txt-567326-433084: 0d00                                   |000c: move-exception v0
+work/dis/classes17.txt-567327-433086: 7120 b237 0200                         |000d: invoke-static {v2, v0}, LX/06EM;.A00:(LX/06EM;Ljava/lang/Exception;)V // method@37b2
+work/dis/classes17.txt-567328-43308c: 0e00                                   |0010: return-void
+work/dis/classes17.txt-567329-      catches       : 1
+work/dis/classes17.txt-567330-        0x0002 - 0x000c
+work/dis/classes17.txt-567331-          Ljava/lang/Exception; -> 0x000c
+work/dis/classes17.txt-567332-      positions     :
+work/dis/classes17.txt-567333-      locals        :
+work/dis/classes17.txt-567334-
+work/dis/classes17.txt-567335-    #3              : (in LX/06EM;)
+work/dis/classes17.txt-567336-      name          : 'A04'
+work/dis/classes17.txt-567337-      type          : '(Landroid/view/SurfaceControl;)V'
+work/dis/classes17.txt-567338-      access        : 0x0011 (PUBLIC FINAL)
+work/dis/classes17.txt-567339-      method_idx    : 14262
+work/dis/classes17.txt-567340-      code          -
+work/dis/classes17.txt-567341-      registers     : 6
+work/dis/classes17.txt-567342-      ins           : 2
+work/dis/classes17.txt-567343-      outs          : 5
+work/dis/classes17.txt-567344-      insns size    : 23 16-bit code units
+work/dis/classes17.txt-567345-4330a0:                                        |[4330a0] X.06EM.A04:(Landroid/view/SurfaceControl;)V
+work/dis/classes17.txt-567346-4330b0: 1203                                   |0000: const/4 v3, #int 0 // #0
+work/dis/classes17.txt-567347-4330b2: 7120 082c 3500                         |0001: invoke-static {v5, v3}, LX/04l9;.A0j:(Ljava/lang/Object;I)V // method@2c08
+work/dis/classes17.txt-567348-4330b8: 6001 dc9b                              |0004: sget v1, Landroid/os/Build$VERSION;.SDK_INT:I // field@9bdc
+work/dis/classes17.txt-567349-4330bc: 1300 1f00                              |0006: const/16 v0, #int 31 // #1f
+work/dis/classes17.txt-567350-4330c0: 3401 0900                              |0008: if-lt v1, v0, 0011 // +0009
+work/dis/classes17.txt-567351-4330c4: 5442 f337                              |000a: iget-object v2, v4, LX/06EM;.A01:Landroid/view/SurfaceControl$Transaction; // field@37f3
+work/dis/classes17.txt-567352-4330c8: 1201                                   |000c: const/4 v1, #int 0 // #0
+work/dis/classes17.txt-567353-4330ca: 1210                                   |000d: const/4 v0, #int 1 // #1
+work/dis/classes17.txt-567354-4330cc: 6e53 85ba 5201                         |000e: invoke-virtual {v2, v5, v1, v0, v3}, Landroid/view/SurfaceControl$Transaction;.setFrameRate:(Landroid/view/SurfaceControl;FII)Landroid/view/SurfaceControl$Transaction; // method@ba85
+work/dis/classes17.txt-567355-4330d2: 0e00                                   |0011: return-void
+work/dis/classes17.txt-567356-4330d4: 0d00                                   |0012: move-exception v0
+work/dis/classes17.txt-567357-4330d6: 7120 b237 0400                         |0013: invoke-static {v4, v0}, LX/06EM;.A00:(LX/06EM;Ljava/lang/Exception;)V // method@37b2
+work/dis/classes17.txt-567358-4330dc: 0e00                                   |0016: return-void
+work/dis/classes17.txt-567359-      catches       : 1
+work/dis/classes17.txt-567360-        0x0004 - 0x0012
+work/dis/classes17.txt-567361-          Ljava/lang/Exception; -> 0x0012
+work/dis/classes17.txt-567362-      positions     :
+work/dis/classes17.txt-567363-      locals        :
+work/dis/classes17.txt-567364-
+work/dis/classes17.txt-567365-    #4              : (in LX/06EM;)
+work/dis/classes17.txt-567366-      name          : 'A05'
+work/dis/classes17.txt-567367-      type          : '(Landroid/view/SurfaceControl;FF)V'
+work/dis/classes17.txt-567368-      access        : 0x0011 (PUBLIC FINAL)
+work/dis/classes17.txt-567369-      method_idx    : 14263
+work/dis/classes17.txt-567370-      code          -
+work/dis/classes17.txt-567371-      registers     : 5
+work/dis/classes17.txt-567372-      ins           : 4
+work/dis/classes17.txt-567373-      outs          : 4
+work/dis/classes17.txt-567374-      insns size    : 26 16-bit code units
+work/dis/classes17.txt-567375-4330f0:                                        |[4330f0] X.06EM.A05:(Landroid/view/SurfaceControl;FF)V
+work/dis/classes17.txt-567376-433100: 1200                                   |0000: const/4 v0, #int 0 // #0
+work/dis/classes17.txt-567377-433102: 7120 082c 0200                         |0001: invoke-static {v2, v0}, LX/04l9;.A0j:(Ljava/lang/Object;I)V // method@2c08
+work/dis/classes17.txt-567378-433108: 5410 f337                              |0004: iget-object v0, v1, LX/06EM;.A01:Landroid/view/SurfaceControl$Transaction; // field@37f3
+work/dis/classes17.txt-567379-43310c: 6e40 87ba 2043                         |0006: invoke-virtual {v0, v2, v3, v4}, Landroid/view/SurfaceControl$Transaction;.setPosition:(Landroid/view/SurfaceControl;FF)Landroid/view/SurfaceControl$Transaction; // method@ba87
+work/dis/classes17.txt-567380-433112: 0c00                                   |0009: move-result-object v0
+work/dis/classes17.txt-567381-433114: 3900 0a00                              |000a: if-nez v0, 0014 // +000a
+work/dis/classes17.txt-567382-433118: 7100 f62b 0000                         |000c: invoke-static {}, LX/04l9;.A0M:()V // method@2bf6
+--
+work/dis/classes17.txt-913806-
+work/dis/classes17.txt-913807-    #3              : (in LX/09MU;)
+work/dis/classes17.txt-913808-      name          : 'A03'
+work/dis/classes17.txt-913809-      type          : '(Ljava/util/Set;)V'
+work/dis/classes17.txt-913810-      access        : 0x0011 (PUBLIC FINAL)
+work/dis/classes17.txt-913811-      method_idx    : 22899
+work/dis/classes17.txt-913812-      code          -
+work/dis/classes17.txt-913813-      registers     : 10
+work/dis/classes17.txt-913814-      ins           : 2
+work/dis/classes17.txt-913815-      outs          : 3
+work/dis/classes17.txt-913816-      insns size    : 73 16-bit code units
+work/dis/classes17.txt-913817-4df174:                                        |[4df174] X.09MU.A03:(Ljava/util/Set;)V
+work/dis/classes17.txt-913818-4df184: 1237                                   |0000: const/4 v7, #int 3 // #3
+work/dis/classes17.txt-913819-4df186: 1406 0500 9402                         |0001: const v6, #float 2.17467e-37 // #02940005
+work/dis/classes17.txt-913820-4df18c: 5485 074d                              |0004: iget-object v5, v8, LX/09MU;.A05:Lcom/facebook/quicklog/LightweightQuickPerformanceLogger; // field@4d07
+work/dis/classes17.txt-913821-4df190: 7220 48bf 6500                         |0006: invoke-interface {v5, v6}, Lcom/facebook/quicklog/LightweightQuickPerformanceLogger;.markerStart:(I)V // method@bf48
+work/dis/classes17.txt-913822-4df196: 7210 58fe 0900                         |0009: invoke-interface {v9}, Ljava/util/Set;.iterator:()Ljava/util/Iterator; // method@fe58
+work/dis/classes17.txt-913823-4df19c: 0c04                                   |000c: move-result-object v4
+work/dis/classes17.txt-913824-4df19e: 1213                                   |000d: const/4 v3, #int 1 // #1
+work/dis/classes17.txt-913825-4df1a0: 7210 f2fd 0400                         |000e: invoke-interface {v4}, Ljava/util/Iterator;.hasNext:()Z // method@fdf2
+work/dis/classes17.txt-913826-4df1a6: 0a00                                   |0011: move-result v0
+work/dis/classes17.txt-913827-4df1a8: 3800 1700                              |0012: if-eqz v0, 0029 // +0017
+work/dis/classes17.txt-913828-4df1ac: 7210 f3fd 0400                         |0014: invoke-interface {v4}, Ljava/util/Iterator;.next:()Ljava/lang/Object; // method@fdf3
+work/dis/classes17.txt-913829-4df1b2: 0c00                                   |0017: move-result-object v0
+work/dis/classes17.txt-913830-4df1b4: 1f00 d53e                              |0018: check-cast v0, LX/0Jrq; // type@3ed5
+work/dis/classes17.txt-913831-4df1b8: 7210 98a7 0000                         |001a: invoke-interface {v0}, LX/0Jrq;.HJr:()V // method@a798
+work/dis/classes17.txt-913832-4df1be: 280a                                   |001d: goto 0027 // +000a
+work/dis/classes17.txt-913833-4df1c0: 0d02                                   |001e: move-exception v2
+work/dis/classes17.txt-913834-4df1c2: 5481 054d                              |001f: iget-object v1, v8, LX/09MU;.A03:LX/01il; // field@4d05
+work/dis/classes17.txt-913835-4df1c6: 1a00 fd20                              |0021: const-string v0, "DiskTrimmableManager" // string@20fd
+work/dis/classes17.txt:913836:4df1ca: 7230 600c 0102                         |0023: invoke-interface {v1, v0, v2}, LX/01il;.HDR:(Ljava/lang/String;Ljava/lang/Throwable;)V // method@0c60
+work/dis/classes17.txt-913837-4df1d0: 28e8                                   |0026: goto 000e // -0018
+work/dis/classes17.txt-913838-4df1d2: 1203                                   |0027: const/4 v3, #int 0 // #0
+work/dis/classes17.txt-913839-4df1d4: 28e6                                   |0028: goto 000e // -001a
+work/dis/classes17.txt-913840-4df1d6: 3903 0300                              |0029: if-nez v3, 002c // +0003
+work/dis/classes17.txt-913841-4df1da: 1227                                   |002b: const/4 v7, #int 2 // #2
+work/dis/classes17.txt-913842-4df1dc: 7230 44bf 6507                         |002c: invoke-interface {v5, v6, v7}, Lcom/facebook/quicklog/LightweightQuickPerformanceLogger;.markerEnd:(IS)V // method@bf44
+work/dis/classes17.txt-913843-4df1e2: 5484 094d                              |002f: iget-object v4, v8, LX/09MU;.A07:Ljava/util/concurrent/atomic/AtomicLong; // field@4d09
+work/dis/classes17.txt-913844-4df1e6: 7100 49fc 0000                         |0031: invoke-static {}, Ljava/lang/System;.nanoTime:()J // method@fc49
+work/dis/classes17.txt-913845-4df1ec: 0b02                                   |0034: move-result-wide v2
+work/dis/classes17.txt-913846-4df1ee: 1700 4042 0f00                         |0035: const-wide/32 v0, #float 1.4013e-39 // #000f4240
+work/dis/classes17.txt-913847-4df1f4: be02                                   |0038: div-long/2addr v2, v0
+work/dis/classes17.txt-913848-4df1f6: 6e30 e5fe 2403                         |0039: invoke-virtual {v4, v2, v3}, Ljava/util/concurrent/atomic/AtomicLong;.set:(J)V // method@fee5
+work/dis/classes17.txt-913849-4df1fc: 0e00                                   |003c: return-void
+work/dis/classes17.txt-913850-4df1fe: 0d01                                   |003d: move-exception v1
+work/dis/classes17.txt-913851-4df200: 3903 0500                              |003e: if-nez v3, 0043 // +0005
+work/dis/classes17.txt-913852-4df204: 1227                                   |0040: const/4 v7, #int 2 // #2
+work/dis/classes17.txt-913853-4df206: 2802                                   |0041: goto 0043 // +0002
+work/dis/classes17.txt-913854-4df208: 0d01                                   |0042: move-exception v1
+work/dis/classes17.txt-913855-4df20a: 5480 074d                              |0043: iget-object v0, v8, LX/09MU;.A05:Lcom/facebook/quicklog/LightweightQuickPerformanceLogger; // field@4d07
+work/dis/classes17.txt-913856-4df20e: 7230 44bf 6007                         |0045: invoke-interface {v0, v6, v7}, Lcom/facebook/quicklog/LightweightQuickPerformanceLogger;.markerEnd:(IS)V // method@bf44
+work/dis/classes17.txt-913857-4df214: 2701                                   |0048: throw v1
+work/dis/classes17.txt-913858-      catches       : 4
+work/dis/classes17.txt-913859-        0x0004 - 0x000e
+work/dis/classes17.txt-913860-          <any> -> 0x0042
+work/dis/classes17.txt-913861-        0x000e - 0x001a
+work/dis/classes17.txt-913862-          <any> -> 0x003d
+work/dis/classes17.txt-913863-        0x001a - 0x001e
+work/dis/classes17.txt-913864-          Ljava/lang/Exception; -> 0x001e
+work/dis/classes17.txt-913865-          <any> -> 0x003d
+work/dis/classes17.txt-913866-        0x001f - 0x002c
+work/dis/classes17.txt-913867-          <any> -> 0x003d
+work/dis/classes17.txt-913868-      positions     :
+work/dis/classes17.txt-913869-      locals        :
+work/dis/classes17.txt-913870-
+work/dis/classes17.txt-913871-    #4              : (in LX/09MU;)
+work/dis/classes17.txt-913872-      name          : 'A04'
+work/dis/classes17.txt-913873-      type          : '(Ljava/util/Set;)V'
+work/dis/classes17.txt-913874-      access        : 0x0011 (PUBLIC FINAL)
+work/dis/classes17.txt-913875-      method_idx    : 22900
+work/dis/classes17.txt-913876-      code          -
+work/dis/classes17.txt-913877-      registers     : 10
+work/dis/classes17.txt-913878-      ins           : 2
+work/dis/classes17.txt-913879-      outs          : 3
+work/dis/classes17.txt-913880-      insns size    : 78 16-bit code units
+work/dis/classes17.txt-913881-4df244:                                        |[4df244] X.09MU.A04:(Ljava/util/Set;)V
+work/dis/classes17.txt-913882-4df254: 1237                                   |0000: const/4 v7, #int 3 // #3
+work/dis/classes17.txt-913883-4df256: 1406 0600 9402                         |0001: const v6, #float 2.17467e-37 // #02940006
+work/dis/classes17.txt-913884-4df25c: 5485 074d                              |0004: iget-object v5, v8, LX/09MU;.A05:Lcom/facebook/quicklog/LightweightQuickPerformanceLogger; // field@4d07
+work/dis/classes17.txt-913885-4df260: 7220 48bf 6500                         |0006: invoke-interface {v5, v6}, Lcom/facebook/quicklog/LightweightQuickPerformanceLogger;.markerStart:(I)V // method@bf48
+work/dis/classes17.txt-913886-4df266: 7210 58fe 0900                         |0009: invoke-interface {v9}, Ljava/util/Set;.iterator:()Ljava/util/Iterator; // method@fe58
+work/dis/classes17.txt-913887-4df26c: 0c04                                   |000c: move-result-object v4
+work/dis/classes17.txt-913888-4df26e: 1213                                   |000d: const/4 v3, #int 1 // #1
+work/dis/classes17.txt-913889-4df270: 7210 f2fd 0400                         |000e: invoke-interface {v4}, Ljava/util/Iterator;.hasNext:()Z // method@fdf2
+work/dis/classes17.txt-913890-4df276: 0a00                                   |0011: move-result v0
+work/dis/classes17.txt-913891-4df278: 3800 1700                              |0012: if-eqz v0, 0029 // +0017
+work/dis/classes17.txt-913892-4df27c: 7210 f3fd 0400                         |0014: invoke-interface {v4}, Ljava/util/Iterator;.next:()Ljava/lang/Object; // method@fdf3
+work/dis/classes17.txt-913893-4df282: 0c00                                   |0017: move-result-object v0
+work/dis/classes17.txt-913894-4df284: 1f00 d53e                              |0018: check-cast v0, LX/0Jrq; // type@3ed5
+work/dis/classes17.txt-913895-4df288: 7210 99a7 0000                         |001a: invoke-interface {v0}, LX/0Jrq;.HJs:()V // method@a799
+work/dis/classes17.txt-913896-4df28e: 280a                                   |001d: goto 0027 // +000a
+work/dis/classes17.txt-913897-4df290: 0d02                                   |001e: move-exception v2
+work/dis/classes17.txt-913898-4df292: 5481 054d                              |001f: iget-object v1, v8, LX/09MU;.A03:LX/01il; // field@4d05
+work/dis/classes17.txt-913899-4df296: 1a00 fd20                              |0021: const-string v0, "DiskTrimmableManager" // string@20fd
+work/dis/classes17.txt:913900:4df29a: 7230 600c 0102                         |0023: invoke-interface {v1, v0, v2}, LX/01il;.HDR:(Ljava/lang/String;Ljava/lang/Throwable;)V // method@0c60
+work/dis/classes17.txt-913901-4df2a0: 28e8                                   |0026: goto 000e // -0018
+work/dis/classes17.txt-913902-4df2a2: 1203                                   |0027: const/4 v3, #int 0 // #0
+work/dis/classes17.txt-913903-4df2a4: 28e6                                   |0028: goto 000e // -001a
+work/dis/classes17.txt-913904-4df2a6: 3903 0300                              |0029: if-nez v3, 002c // +0003
+work/dis/classes17.txt-913905-4df2aa: 1227                                   |002b: const/4 v7, #int 2 // #2
+work/dis/classes17.txt-913906-4df2ac: 7230 44bf 6507                         |002c: invoke-interface {v5, v6, v7}, Lcom/facebook/quicklog/LightweightQuickPerformanceLogger;.markerEnd:(IS)V // method@bf44
+work/dis/classes17.txt-913907-4df2b2: 7100 49fc 0000                         |002f: invoke-static {}, Ljava/lang/System;.nanoTime:()J // method@fc49
+work/dis/classes17.txt-913908-4df2b8: 0b02                                   |0032: move-result-wide v2
+work/dis/classes17.txt-913909-4df2ba: 1700 4042 0f00                         |0033: const-wide/32 v0, #float 1.4013e-39 // #000f4240
+work/dis/classes17.txt-913910-4df2c0: be02                                   |0036: div-long/2addr v2, v0
+work/dis/classes17.txt-913911-4df2c2: 5480 094d                              |0037: iget-object v0, v8, LX/09MU;.A07:Ljava/util/concurrent/atomic/AtomicLong; // field@4d09
+work/dis/classes17.txt-913912-4df2c6: 6e30 e5fe 2003                         |0039: invoke-virtual {v0, v2, v3}, Ljava/util/concurrent/atomic/AtomicLong;.set:(J)V // method@fee5
+work/dis/classes17.txt-913913-4df2cc: 5480 0a4d                              |003c: iget-object v0, v8, LX/09MU;.A08:Ljava/util/concurrent/atomic/AtomicLong; // field@4d0a
+work/dis/classes17.txt-913914-4df2d0: 6e30 e5fe 2003                         |003e: invoke-virtual {v0, v2, v3}, Ljava/util/concurrent/atomic/AtomicLong;.set:(J)V // method@fee5
+work/dis/classes17.txt-913915-4df2d6: 0e00                                   |0041: return-void
+work/dis/classes17.txt-913916-4df2d8: 0d01                                   |0042: move-exception v1
+work/dis/classes17.txt-913917-4df2da: 3903 0500                              |0043: if-nez v3, 0048 // +0005
+work/dis/classes17.txt-913918-4df2de: 1227                                   |0045: const/4 v7, #int 2 // #2
+work/dis/classes17.txt-913919-4df2e0: 2802                                   |0046: goto 0048 // +0002
+work/dis/classes17.txt-913920-4df2e2: 0d01                                   |0047: move-exception v1
+work/dis/classes17.txt-913921-4df2e4: 5480 074d                              |0048: iget-object v0, v8, LX/09MU;.A05:Lcom/facebook/quicklog/LightweightQuickPerformanceLogger; // field@4d07
+work/dis/classes17.txt-913922-4df2e8: 7230 44bf 6007                         |004a: invoke-interface {v0, v6, v7}, Lcom/facebook/quicklog/LightweightQuickPerformanceLogger;.markerEnd:(IS)V // method@bf44
+work/dis/classes17.txt-913923-4df2ee: 2701                                   |004d: throw v1
+work/dis/classes17.txt-913924-      catches       : 4
+work/dis/classes17.txt-913925-        0x0004 - 0x000e
+work/dis/classes17.txt-913926-          <any> -> 0x0047
+work/dis/classes17.txt-913927-        0x000e - 0x001a
+work/dis/classes17.txt-913928-          <any> -> 0x0042
+work/dis/classes17.txt-913929-        0x001a - 0x001e
+work/dis/classes17.txt-913930-          Ljava/lang/Exception; -> 0x001e
+work/dis/classes17.txt-913931-          <any> -> 0x0042
+work/dis/classes17.txt-913932-        0x001f - 0x002c
+work/dis/classes17.txt-913933-          <any> -> 0x0042
+work/dis/classes17.txt-913934-      positions     :
+work/dis/classes17.txt-913935-      locals        :
+work/dis/classes17.txt-913936-
+work/dis/classes17.txt-913937-    #5              : (in LX/09MU;)
+work/dis/classes17.txt-913938-      name          : 'A05'
+work/dis/classes17.txt-913939-      type          : '(J)Z'
+work/dis/classes17.txt-913940-      access        : 0x0001 (PUBLIC)
+work/dis/classes17.txt-913941-      method_idx    : 22901
+work/dis/classes17.txt-913942-      code          -
+work/dis/classes17.txt-913943-      registers     : 6
+work/dis/classes17.txt-913944-      ins           : 3
+work/dis/classes17.txt-913945-      outs          : 0
+work/dis/classes17.txt-913946-      insns size    : 11 16-bit code units
+work/dis/classes17.txt-913947-4df31c:                                        |[4df31c] X.09MU.A05:(J)Z
+work/dis/classes17.txt-913948-4df32c: 1701 0000 0019                         |0000: const-wide/32 v1, #float 6.61744e-24 // #19000000
+work/dis/classes17.txt-913949-4df332: 3100 0401                              |0003: cmp-long v0, v4, v1
+work/dis/classes17.txt-913950-4df336: 3b00 0400                              |0005: if-gez v0, 0009 // +0004
+work/dis/classes17.txt-913951-4df33a: 1210                                   |0007: const/4 v0, #int 1 // #1
+work/dis/classes17.txt-913952-4df33c: 0f00                                   |0008: return v0
+work/dis/classes17.txt-913953-4df33e: 1200                                   |0009: const/4 v0, #int 0 // #0
+work/dis/classes17.txt-913954-4df340: 0f00                                   |000a: return v0
+work/dis/classes17.txt-913955-      catches       : (none)
+work/dis/classes17.txt-913956-      positions     :
+work/dis/classes17.txt-913957-      locals        :
+work/dis/classes17.txt-913958-
+work/dis/classes17.txt-913959-    #6              : (in LX/09MU;)
+work/dis/classes17.txt-913960-      name          : 'A06'
+--
+work/dis/classes17.txt-1415827-5dfca0: 1300 6400                              |00b8: const/16 v0, #int 100 // #64
+work/dis/classes17.txt-1415828-5dfca4: 1229                                   |00ba: const/4 v9, #int 2 // #2
+work/dis/classes17.txt-1415829-5dfca6: 3701 0600                              |00bb: if-le v1, v0, 00c1 // +0006
+work/dis/classes17.txt-1415830-5dfcaa: 1309 6900                              |00bd: const/16 v9, #int 105 // #69
+work/dis/classes17.txt-1415831-5dfcae: 0451                                   |00bf: move-wide v1, v5
+work/dis/classes17.txt-1415832-5dfcb0: 280c                                   |00c0: goto 00cc // +000c
+work/dis/classes17.txt-1415833-5dfcb2: 54b1 064d                              |00c1: iget-object v1, v11, LX/09MU;.A04:LX/00Gs; // field@4d06
+work/dis/classes17.txt-1415834-5dfcb6: 6e10 f101 0100                         |00c3: invoke-virtual {v1}, LX/00Gs;.A08:()V // method@01f1
+work/dis/classes17.txt-1415835-5dfcbc: 6200 0000                              |00c6: sget-object v0, LX/000A;.A00:Ljava/lang/Integer; // field@0000
+work/dis/classes17.txt-1415836-5dfcc0: 6e20 f001 0100                         |00c8: invoke-virtual {v1, v0}, LX/00Gs;.A06:(Ljava/lang/Integer;)J // method@01f0
+work/dis/classes17.txt-1415837-5dfcc6: 0b01                                   |00cb: move-result-wide v1
+work/dis/classes17.txt-1415838-5dfcc8: 1a00 f2aa                              |00cc: const-string v0, "available_space_change" // string@aaf2
+work/dis/classes17.txt-1415839-5dfccc: 9c01 0114                              |00ce: sub-long v1, v1, v20
+work/dis/classes17.txt-1415840-5dfcd0: 7252 3fbf ac10                         |00d0: invoke-interface {v12, v10, v0, v1, v2}, Lcom/facebook/quicklog/LightweightQuickPerformanceLogger;.markerAnnotate:(ILjava/lang/String;J)V // method@bf3f
+work/dis/classes17.txt-1415841-5dfcd6: 7230 44bf ac09                         |00d3: invoke-interface {v12, v10, v9}, Lcom/facebook/quicklog/LightweightQuickPerformanceLogger;.markerEnd:(IS)V // method@bf44
+work/dis/classes17.txt-1415842-5dfcdc: d807 0701                              |00d6: add-int/lit8 v7, v7, #int 1 // #01
+work/dis/classes17.txt-1415843-5dfce0: 2900 56ff                              |00d8: goto/16 002e // -00aa
+work/dis/classes17.txt-1415844-5dfce4: 0d00                                   |00da: move-exception v0
+work/dis/classes17.txt-1415845-5dfce6: 1e0b                                   |00db: monitor-exit v11
+work/dis/classes17.txt-1415846-5dfce8: 2803                                   |00dc: goto 00df // +0003
+work/dis/classes17.txt-1415847-5dfcea: 0d00                                   |00dd: move-exception v0
+work/dis/classes17.txt-1415848-5dfcec: 1e02                                   |00de: monitor-exit v2
+work/dis/classes17.txt-1415849-5dfcee: 2700                                   |00df: throw v0
+work/dis/classes17.txt-1415850-5dfcf0: 0d01                                   |00e0: move-exception v1
+work/dis/classes17.txt-1415851-5dfcf2: 54b0 074d                              |00e1: iget-object v0, v11, LX/09MU;.A05:Lcom/facebook/quicklog/LightweightQuickPerformanceLogger; // field@4d07
+work/dis/classes17.txt-1415852-5dfcf6: 7230 44bf a009                         |00e3: invoke-interface {v0, v10, v9}, Lcom/facebook/quicklog/LightweightQuickPerformanceLogger;.markerEnd:(IS)V // method@bf44
+work/dis/classes17.txt-1415853-5dfcfc: 2701                                   |00e6: throw v1
+work/dis/classes17.txt-1415854-5dfcfe: 0d02                                   |00e7: move-exception v2
+work/dis/classes17.txt-1415855-5dfd00: 5481 1c69                              |00e8: iget-object v1, v8, LX/0DlO;.A07:LX/01il; // field@691c
+work/dis/classes17.txt-1415856-5dfd04: 1a00 f298                              |00ea: const-string v0, "StorageResourceMonitor onAvailableSpaceChanged" // string@98f2
+work/dis/classes17.txt:1415857:5dfd08: 7230 600c 0102                         |00ec: invoke-interface {v1, v0, v2}, LX/01il;.HDR:(Ljava/lang/String;Ljava/lang/Throwable;)V // method@0c60
+work/dis/classes17.txt-1415858-5dfd0e: 2900 3fff                              |00ef: goto/16 002e // -00c1
+work/dis/classes17.txt-1415859-5dfd12: 1a01 e2c6                              |00f1: const-string v1, "notify_updates_completed" // string@c6e2
+work/dis/classes17.txt-1415860-5dfd16: 1a00 5ad6                              |00f3: const-string v0, "success_count:" // string@d65a
+work/dis/classes17.txt-1415861-5dfd1a: 7120 a800 7000                         |00f5: invoke-static {v0, v7}, LX/002b;.A0S:(Ljava/lang/String;I)Ljava/lang/String; // method@00a8
+work/dis/classes17.txt-1415862-5dfd20: 0c00                                   |00f8: move-result-object v0
+work/dis/classes17.txt-1415863-5dfd22: 7240 47bf 3401                         |00f9: invoke-interface {v4, v3, v1, v0}, Lcom/facebook/quicklog/LightweightQuickPerformanceLogger;.markerPoint:(ILjava/lang/String;Ljava/lang/String;)V // method@bf47
+work/dis/classes17.txt-1415864-5dfd28: 0e00                                   |00fc: return-void
+work/dis/classes17.txt-1415865-5dfd2a: 0d00                                   |00fd: move-exception v0
+work/dis/classes17.txt-1415866-5dfd2c: 1e01                                   |00fe: monitor-exit v1
+work/dis/classes17.txt-1415867-5dfd2e: 2700                                   |00ff: throw v0
+work/dis/classes17.txt-1415868-      catches       : 17
+work/dis/classes17.txt-1415869-        0x000a - 0x0011
+work/dis/classes17.txt-1415870-          <any> -> 0x00fd
+work/dis/classes17.txt-1415871-        0x003d - 0x0043
+work/dis/classes17.txt-1415872-          Ljava/lang/Exception; -> 0x00e7
+work/dis/classes17.txt-1415873-        0x0043 - 0x0052
+work/dis/classes17.txt-1415874-          <any> -> 0x00e0
+work/dis/classes17.txt-1415875-        0x0052 - 0x005b
+work/dis/classes17.txt-1415876-          <any> -> 0x00dd
+work/dis/classes17.txt-1415877-        0x005b - 0x005d
+work/dis/classes17.txt-1415878-          <any> -> 0x00e0
+work/dis/classes17.txt-1415879-        0x005d - 0x0063
+work/dis/classes17.txt-1415880-          <any> -> 0x00da
+work/dis/classes17.txt-1415881-        0x0063 - 0x0067
+work/dis/classes17.txt-1415882-          <any> -> 0x00e0
+work/dis/classes17.txt-1415883-        0x0067 - 0x0071
+work/dis/classes17.txt-1415884-          <any> -> 0x00da
+work/dis/classes17.txt-1415885-        0x0071 - 0x0075
+work/dis/classes17.txt-1415886-          <any> -> 0x00e0
+work/dis/classes17.txt-1415887-        0x0075 - 0x0097
+work/dis/classes17.txt-1415888-          <any> -> 0x00da
+work/dis/classes17.txt-1415889-        0x0097 - 0x009a
+work/dis/classes17.txt-1415890-          <any> -> 0x00e0
+work/dis/classes17.txt-1415891-        0x009a - 0x00ad
+work/dis/classes17.txt-1415892-          <any> -> 0x00da
+work/dis/classes17.txt-1415893-        0x00ad - 0x00d3
+work/dis/classes17.txt-1415894-          <any> -> 0x00e0
+work/dis/classes17.txt-1415895-        0x00d3 - 0x00da
+work/dis/classes17.txt-1415896-          Ljava/lang/Exception; -> 0x00e7
+work/dis/classes17.txt-1415897-        0x00db - 0x00dd
+work/dis/classes17.txt-1415898-          <any> -> 0x00da
+work/dis/classes17.txt-1415899-        0x00de - 0x00e0
+work/dis/classes17.txt-1415900-          <any> -> 0x00e0
+work/dis/classes17.txt-1415901-        0x00e1 - 0x00e7
+work/dis/classes17.txt-1415902-          Ljava/lang/Exception; -> 0x00e7
+work/dis/classes17.txt-1415903-      positions     :
+work/dis/classes17.txt-1415904-      locals        :
+work/dis/classes17.txt-1415905-
+work/dis/classes17.txt-1415906-    #2              : (in LX/0DlO;)
+work/dis/classes17.txt-1415907-      name          : 'A02'
+work/dis/classes17.txt-1415908-      type          : '()Z'
+work/dis/classes17.txt-1415909-      access        : 0x0001 (PUBLIC)
+work/dis/classes17.txt-1415910-      method_idx    : 33620
+work/dis/classes17.txt-1415911-      code          -
+work/dis/classes17.txt-1415912-      registers     : 2
+work/dis/classes17.txt-1415913-      ins           : 1
+work/dis/classes17.txt-1415914-      outs          : 1
+work/dis/classes17.txt-1415915-      insns size    : 7 16-bit code units
+work/dis/classes17.txt-1415916-5dfdcc:                                        |[5dfdcc] X.0DlO.A02:()Z
+work/dis/classes17.txt-1415917-5dfddc: 5410 1869                              |0000: iget-object v0, v1, LX/0DlO;.A03:LX/00Gs; // field@6918
