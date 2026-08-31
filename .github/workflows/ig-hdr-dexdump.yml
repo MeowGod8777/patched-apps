@@ -37,56 +37,38 @@ jobs:
           test -n "$DEXDUMP"
           echo "DEXDUMP=$DEXDUMP" >> "$GITHUB_ENV"
 
-      - name: Locate and dump exact MobileConfig helpers
+      - name: Extract exact decoder methods
         shell: bash
         run: |
           mkdir -p research/generated work/dis
-          REPORT=research/generated/instagram_439_hdr_decoder_definition.txt
+          REPORT=research/generated/instagram_439_hdr_decoder_methods.txt
           : > "$REPORT"
+          "$DEXDUMP" -d -f -h work/dex/classes2.dex > work/dis/classes2.txt
           {
-            echo "Instagram 439 exact MobileConfig helper definitions"
-            echo "===================================================="
+            echo "Instagram 439 exact MobileConfig decoder methods"
+            echo "================================================"
             echo "APK SHA256: $APK_SHA256"
             echo "Mapping anchor: 74463::20 = ig4a_groot_surface_optimization::enable_hdr_sdr_ratio"
             echo
-          } >> "$REPORT"
-
-          for d in work/dex/classes*.dex; do
-            if grep -aFq 'LX/00Al;' "$d" || grep -aFq 'LX/00Aj;' "$d" || grep -aFq 'LX/003s;' "$d"; then
-              b="$(basename "$d" .dex)"
-              "$DEXDUMP" -d -f -h "$d" > "work/dis/$b.txt"
-              echo "DEX candidate: $b" >> "$REPORT"
-              for spec in 'LX/00Al;|X.00Al universal-ID decoder' 'LX/00Aj;|X.00Aj value decoder' 'LX/003s;|X.003s boolean decoder'; do
-                cls="${spec%%|*}"; label="${spec#*|}"
-                line="$(grep -nF "Class descriptor  : '$cls'" "work/dis/$b.txt" | head -1 | cut -d: -f1 || true)"
-                if [ -n "$line" ]; then
-                  start=$((line>8?line-8:1)); end=$((line+260))
-                  {
-                    echo
-                    echo "===== $label in $b ====="
-                    sed -n "${start},${end}p" "work/dis/$b.txt"
-                  } >> "$REPORT"
-                fi
-              done
-            fi
-          done
-
-          {
+            echo "===== X.00Al.A00(J)I universal-ID decoder ====="
+            grep -n -B 18 -A 90 -F 'X.00Al.A00:(J)I' work/dis/classes2.txt || true
             echo
-            echo "===== method references to X.00Al.A00(J)I across all dumped DEX ====="
-            grep -Hn -B 18 -A 40 -F 'LX/00Al;.A00:(J)I' work/dis/*.txt || true
+            echo "===== X.00Aj value decoders ====="
+            grep -n -B 18 -A 70 -E 'X\.00Aj\.(A04|A09|A0E):' work/dis/classes2.txt || true
+            echo
+            echo "===== X.003s.A04(J)Z boolean decoder ====="
+            grep -n -B 18 -A 70 -F 'X.003s.A04:(J)Z' work/dis/classes2.txt || true
           } >> "$REPORT"
-
           wc -l "$REPORT"
-          sed -n '1,360p' "$REPORT"
+          cat "$REPORT"
 
-      - name: Commit helper definition report
+      - name: Commit decoder methods report
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add research/generated/instagram_439_hdr_decoder_definition.txt
+          git add research/generated/instagram_439_hdr_decoder_methods.txt
           if ! git diff --cached --quiet; then
-            git commit -m "Add exact Instagram 439 MobileConfig helper definitions"
+            git commit -m "Add exact Instagram 439 MobileConfig decoder methods"
           fi
           git pull --rebase origin main
           git push origin HEAD:main
