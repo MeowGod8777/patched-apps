@@ -1,0 +1,1127 @@
+Instagram 439 exact MobileConfig helper definitions
+====================================================
+APK SHA256: 4015b171ac59f3e7172134d194ec2dcf701f64c3339f127c19d7a04c13d529c8
+Mapping anchor: 74463::20 = ig4a_groot_surface_optimization::enable_hdr_sdr_ratio
+
+DEX candidate: classes
+DEX candidate: classes13
+DEX candidate: classes15
+DEX candidate: classes16
+DEX candidate: classes17
+DEX candidate: classes2
+
+===== X.00Al universal-ID decoder in classes2 =====
+annotations_off     : 0 (0x000000)
+class_data_off      : 8612373 (0x836a15)
+static_fields_size  : 13
+instance_fields_size: 0
+direct_methods_size : 3
+virtual_methods_size: 0
+
+Class #360            -
+  Class descriptor  : 'LX/00Al;'
+  Access flags      : 0x0011 (PUBLIC FINAL)
+  Superclass        : 'Ljava/lang/Object;'
+  Interfaces        -
+  Static fields     -
+    #0              : (in LX/00Al;)
+      name          : 'A00'
+      type          : '[I'
+      access        : 0x0009 (PUBLIC STATIC)
+    #1              : (in LX/00Al;)
+      name          : 'A01'
+      type          : '[I'
+      access        : 0x0009 (PUBLIC STATIC)
+    #2              : (in LX/00Al;)
+      name          : 'A02'
+      type          : '[I'
+      access        : 0x0009 (PUBLIC STATIC)
+    #3              : (in LX/00Al;)
+      name          : 'A03'
+      type          : '[I'
+      access        : 0x0009 (PUBLIC STATIC)
+    #4              : (in LX/00Al;)
+      name          : 'A04'
+      type          : '[I'
+      access        : 0x0009 (PUBLIC STATIC)
+    #5              : (in LX/00Al;)
+      name          : 'A05'
+      type          : '[I'
+      access        : 0x0009 (PUBLIC STATIC)
+    #6              : (in LX/00Al;)
+      name          : 'A06'
+      type          : '[I'
+      access        : 0x0009 (PUBLIC STATIC)
+    #7              : (in LX/00Al;)
+      name          : 'A07'
+      type          : '[I'
+      access        : 0x0009 (PUBLIC STATIC)
+    #8              : (in LX/00Al;)
+      name          : 'A08'
+      type          : '[I'
+      access        : 0x0009 (PUBLIC STATIC)
+    #9              : (in LX/00Al;)
+      name          : 'A09'
+      type          : '[I'
+      access        : 0x0009 (PUBLIC STATIC)
+    #10              : (in LX/00Al;)
+      name          : 'A0A'
+      type          : '[I'
+      access        : 0x0009 (PUBLIC STATIC)
+    #11              : (in LX/00Al;)
+      name          : 'A0B'
+      type          : '[[I'
+      access        : 0x0019 (PUBLIC STATIC FINAL)
+    #12              : (in LX/00Al;)
+      name          : 'A0C'
+      type          : '[[I'
+      access        : 0x0019 (PUBLIC STATIC FINAL)
+  Instance fields   -
+  Direct methods    -
+    #0              : (in LX/00Al;)
+      name          : '<clinit>'
+      type          : '()V'
+      access        : 0x10009 (PUBLIC STATIC CONSTRUCTOR)
+      method_idx    : 1490
+      code          -
+      registers     : 19
+      ins           : 0
+      outs          : 5
+      insns size    : 11384 16-bit code units
+361b88:                                        |[361b88] X.00Al.<clinit>:()V
+361b98: 1200                                   |0000: const/4 v0, #int 0 // #0
+361b9a: 1c07 aa01                              |0001: const-class v7, LX/00Al; // type@01aa
+361b9e: 1d07                                   |0003: monitor-enter v7
+361ba0: 2308 925c                              |0004: new-array v8, v0, [I // type@5c92
+361ba4: 6908 6804                              |0006: sput-object v8, LX/00Al;.A00:[I // field@0468
+361ba8: 1e07                                   |0008: monitor-exit v7
+361baa: 1d07                                   |0009: monitor-enter v7
+361bac: 1226                                   |000a: const/4 v6, #int 2 // #2
+361bae: 1301 8813                              |000b: const/16 v1, #int 5000 // #1388
+361bb2: 2312 925c                              |000d: new-array v2, v1, [I // type@5c92
+361bb6: 2602 c300 0000                         |000f: fill-array-data v2, 000000d2 // +000000c3
+361bbc: 1301 4702                              |0012: const/16 v1, #int 583 // #247
+361bc0: 2311 925c                              |0014: new-array v1, v1, [I // type@5c92
+361bc4: 2601 d027 0000                         |0016: fill-array-data v1, 000027e6 // +000027d0
+361bca: 2420 505e 1200                         |0019: filled-new-array {v2, v1}, [[I // type@5e50
+361bd0: 0c05                                   |001c: move-result-object v5
+361bd2: 1203                                   |001d: const/4 v3, #int 0 // #0
+361bd4: 1202                                   |001e: const/4 v2, #int 0 // #0
+361bd6: 4601 0503                              |001f: aget-object v1, v5, v3
+361bda: 2111                                   |0021: array-length v1, v1
+361bdc: b012                                   |0022: add-int/2addr v2, v1
+361bde: d803 0301                              |0023: add-int/lit8 v3, v3, #int 1 // #01
+361be2: 3463 faff                              |0025: if-lt v3, v6, 001f // -0006
+361be6: 2329 925c                              |0027: new-array v9, v2, [I // type@5c92
+361bea: 1204                                   |0029: const/4 v4, #int 0 // #0
+361bec: 1203                                   |002a: const/4 v3, #int 0 // #0
+361bee: 4602 0504                              |002b: aget-object v2, v5, v4
+361bf2: 2121                                   |002d: array-length v1, v2
+361bf4: 7151 28e8 0239                         |002e: invoke-static {v2, v0, v9, v3, v1}, Ljava/lang/System;.arraycopy:(Ljava/lang/Object;ILjava/lang/Object;II)V // method@e828
+361bfa: 2121                                   |0031: array-length v1, v2
+361bfc: b013                                   |0032: add-int/2addr v3, v1
+361bfe: d804 0401                              |0033: add-int/lit8 v4, v4, #int 1 // #01
+361c02: 3464 f6ff                              |0035: if-lt v4, v6, 002b // -000a
+361c06: 6909 6904                              |0037: sput-object v9, LX/00Al;.A01:[I // field@0469
+361c0a: 1e07                                   |0039: monitor-exit v7
+361c0c: 1d07                                   |003a: monitor-enter v7
+361c0e: 230a 925c                              |003b: new-array v10, v0, [I // type@5c92
+361c12: 690a 6b04                              |003d: sput-object v10, LX/00Al;.A03:[I // field@046b
+361c16: 1e07                                   |003f: monitor-exit v7
+361c18: 1d07                                   |0040: monitor-enter v7
+361c1a: 230b 925c                              |0041: new-array v11, v0, [I // type@5c92
+361c1e: 690b 6c04                              |0043: sput-object v11, LX/00Al;.A04:[I // field@046c
+361c22: 1e07                                   |0045: monitor-exit v7
+361c24: 1d07                                   |0046: monitor-enter v7
+361c26: 230c 925c                              |0047: new-array v12, v0, [I // type@5c92
+361c2a: 690c 6d04                              |0049: sput-object v12, LX/00Al;.A05:[I // field@046d
+361c2e: 1e07                                   |004b: monitor-exit v7
+361c30: 1d07                                   |004c: monitor-enter v7
+361c32: 230d 925c                              |004d: new-array v13, v0, [I // type@5c92
+361c36: 690d 6e04                              |004f: sput-object v13, LX/00Al;.A06:[I // field@046e
+361c3a: 1e07                                   |0051: monitor-exit v7
+361c3c: 1d07                                   |0052: monitor-enter v7
+361c3e: 230e 925c                              |0053: new-array v14, v0, [I // type@5c92
+361c42: 690e 6f04                              |0055: sput-object v14, LX/00Al;.A07:[I // field@046f
+361c46: 1e07                                   |0057: monitor-exit v7
+361c48: 1d07                                   |0058: monitor-enter v7
+361c4a: 230f 925c                              |0059: new-array v15, v0, [I // type@5c92
+361c4e: 690f 7004                              |005b: sput-object v15, LX/00Al;.A08:[I // field@0470
+361c52: 1e07                                   |005d: monitor-exit v7
+361c54: 1d07                                   |005e: monitor-enter v7
+361c56: 2303 925c                              |005f: new-array v3, v0, [I // type@5c92
+361c5a: 6903 7104                              |0061: sput-object v3, LX/00Al;.A09:[I // field@0471
+361c5e: 1e07                                   |0063: monitor-exit v7
+361c60: 1d07                                   |0064: monitor-enter v7
+361c62: 2302 925c                              |0065: new-array v2, v0, [I // type@5c92
+361c66: 6902 7204                              |0067: sput-object v2, LX/00Al;.A0A:[I // field@0472
+361c6a: 1e07                                   |0069: monitor-exit v7
+361c6c: 1d07                                   |006a: monitor-enter v7
+361c6e: 2301 925c                              |006b: new-array v1, v0, [I // type@5c92
+361c72: 6901 6a04                              |006d: sput-object v1, LX/00Al;.A02:[I // field@046a
+361c76: 1e07                                   |006f: monitor-exit v7
+361c78: 0810 0300                              |0070: move-object/from16 v16, v3
+361c7c: 0811 0200                              |0072: move-object/from16 v17, v2
+361c80: 0812 0100                              |0074: move-object/from16 v18, v1
+361c84: 250b 505e 0800                         |0076: filled-new-array/range {v8, v9, v10, v11, v12, v13, v14, v15, v16, v17, v18}, [[I // type@5e50
+361c8a: 0c01                                   |0079: move-result-object v1
+361c8c: 6901 7304                              |007a: sput-object v1, LX/00Al;.A0B:[[I // field@0473
+361c90: 2301 925c                              |007c: new-array v1, v0, [I // type@5c92
+361c94: 2302 925c                              |007e: new-array v2, v0, [I // type@5c92
+361c98: 2303 925c                              |0080: new-array v3, v0, [I // type@5c92
+361c9c: 2304 925c                              |0082: new-array v4, v0, [I // type@5c92
+361ca0: 2305 925c                              |0084: new-array v5, v0, [I // type@5c92
+361ca4: 2306 925c                              |0086: new-array v6, v0, [I // type@5c92
+361ca8: 2307 925c                              |0088: new-array v7, v0, [I // type@5c92
+361cac: 2308 925c                              |008a: new-array v8, v0, [I // type@5c92
+361cb0: 2309 925c                              |008c: new-array v9, v0, [I // type@5c92
+361cb4: 230a 925c                              |008e: new-array v10, v0, [I // type@5c92
+361cb8: 230b 925c                              |0090: new-array v11, v0, [I // type@5c92
+361cbc: 250b 505e 0100                         |0092: filled-new-array/range {v1, v2, v3, v4, v5, v6, v7, v8, v9, v10, v11}, [[I // type@5e50
+361cc2: 0c00                                   |0095: move-result-object v0
+361cc4: 6900 7404                              |0096: sput-object v0, LX/00Al;.A0C:[[I // field@0474
+361cc8: 1200                                   |0098: const/4 v0, #int 0 // #0
+361cca: 6900 6804                              |0099: sput-object v0, LX/00Al;.A00:[I // field@0468
+361cce: 6900 6904                              |009b: sput-object v0, LX/00Al;.A01:[I // field@0469
+361cd2: 6900 6b04                              |009d: sput-object v0, LX/00Al;.A03:[I // field@046b
+361cd6: 6900 6c04                              |009f: sput-object v0, LX/00Al;.A04:[I // field@046c
+361cda: 6900 6d04                              |00a1: sput-object v0, LX/00Al;.A05:[I // field@046d
+361cde: 6900 6e04                              |00a3: sput-object v0, LX/00Al;.A06:[I // field@046e
+361ce2: 6900 6f04                              |00a5: sput-object v0, LX/00Al;.A07:[I // field@046f
+361ce6: 6900 7004                              |00a7: sput-object v0, LX/00Al;.A08:[I // field@0470
+361cea: 6900 7104                              |00a9: sput-object v0, LX/00Al;.A09:[I // field@0471
+361cee: 6900 7204                              |00ab: sput-object v0, LX/00Al;.A0A:[I // field@0472
+361cf2: 6900 6a04                              |00ad: sput-object v0, LX/00Al;.A02:[I // field@046a
+361cf6: 0e00                                   |00af: return-void
+361cf8: 0d00                                   |00b0: move-exception v0
+361cfa: 1e07                                   |00b1: monitor-exit v7
+361cfc: 2700                                   |00b2: throw v0
+361cfe: 0d00                                   |00b3: move-exception v0
+361d00: 1e07                                   |00b4: monitor-exit v7
+361d02: 2700                                   |00b5: throw v0
+361d04: 0d00                                   |00b6: move-exception v0
+361d06: 1e07                                   |00b7: monitor-exit v7
+361d08: 2700                                   |00b8: throw v0
+361d0a: 0d00                                   |00b9: move-exception v0
+361d0c: 1e07                                   |00ba: monitor-exit v7
+361d0e: 2700                                   |00bb: throw v0
+361d10: 0d00                                   |00bc: move-exception v0
+361d12: 1e07                                   |00bd: monitor-exit v7
+361d14: 2700                                   |00be: throw v0
+361d16: 0d00                                   |00bf: move-exception v0
+361d18: 1e07                                   |00c0: monitor-exit v7
+361d1a: 2700                                   |00c1: throw v0
+361d1c: 0d00                                   |00c2: move-exception v0
+361d1e: 1e07                                   |00c3: monitor-exit v7
+361d20: 2700                                   |00c4: throw v0
+361d22: 0d00                                   |00c5: move-exception v0
+361d24: 1e07                                   |00c6: monitor-exit v7
+361d26: 2700                                   |00c7: throw v0
+361d28: 0d00                                   |00c8: move-exception v0
+361d2a: 1e07                                   |00c9: monitor-exit v7
+361d2c: 2700                                   |00ca: throw v0
+361d2e: 0d00                                   |00cb: move-exception v0
+361d30: 1e07                                   |00cc: monitor-exit v7
+361d32: 2700                                   |00cd: throw v0
+361d34: 0d00                                   |00ce: move-exception v0
+361d36: 1e07                                   |00cf: monitor-exit v7
+361d38: 2700                                   |00d0: throw v0
+361d3a: 0000                                   |00d1: nop // spacer
+361d3c: 0003 0400 8813 0000 3b5b 0000 455b ... |00d2: array-data (10004 units)
+366b64: 0003 0400 4702 0000 5dcc 0100 69cc ... |27e6: array-data (1170 units)
+      catches       : 22
+        0x0004 - 0x0008
+          <any> -> 0x00ce
+        0x000b - 0x0039
+          <any> -> 0x00cb
+        0x003b - 0x003f
+          <any> -> 0x00c8
+        0x0041 - 0x0045
+          <any> -> 0x00c5
+        0x0047 - 0x004b
+          <any> -> 0x00c2
+        0x004d - 0x0051
+          <any> -> 0x00bf
+        0x0053 - 0x0057
+          <any> -> 0x00bc
+        0x0059 - 0x005d
+          <any> -> 0x00b9
+        0x005f - 0x0063
+          <any> -> 0x00b6
+        0x0065 - 0x0069
+          <any> -> 0x00b3
+        0x006b - 0x006f
+          <any> -> 0x00b0
+        0x00b1 - 0x00b2
+          <any> -> 0x00b0
+        0x00b4 - 0x00b5
+          <any> -> 0x00b3
+        0x00b7 - 0x00b8
+          <any> -> 0x00b6
+        0x00ba - 0x00bb
+          <any> -> 0x00b9
+        0x00bd - 0x00be
+          <any> -> 0x00bc
+        0x00c0 - 0x00c1
+          <any> -> 0x00bf
+        0x00c3 - 0x00c4
+          <any> -> 0x00c2
+        0x00c6 - 0x00c7
+          <any> -> 0x00c5
+        0x00c9 - 0x00ca
+          <any> -> 0x00c8
+        0x00cc - 0x00cd
+          <any> -> 0x00cb
+        0x00cf - 0x00d0
+          <any> -> 0x00ce
+      positions     :
+        0x0000 line=0
+        0x0001 line=1
+        0x0002 line=2
+        0x0003 line=3
+        0x0004 line=4
+
+===== X.00Aj value decoder in classes2 =====
+annotations_off     : 0 (0x000000)
+class_data_off      : 8612191 (0x83695f)
+static_fields_size  : 0
+instance_fields_size: 0
+direct_methods_size : 15
+virtual_methods_size: 0
+
+Class #357            -
+  Class descriptor  : 'LX/00Aj;'
+  Access flags      : 0x0401 (PUBLIC ABSTRACT)
+  Superclass        : 'Ljava/lang/Object;'
+  Interfaces        -
+  Static fields     -
+  Instance fields   -
+  Direct methods    -
+    #0              : (in LX/00Aj;)
+      name          : 'A00'
+      type          : '(I)D'
+      access        : 0x0009 (PUBLIC STATIC)
+      method_idx    : 1474
+      code          -
+      registers     : 2
+      ins           : 1
+      outs          : 0
+      insns size    : 1086 16-bit code units
+3e3c2c:                                        |[3e3c2c] X.00Aj.A00:(I)D
+3e3c3c: e100 0102                              |0000: shr-int/lit8 v0, v1, #int 2 // #02
+3e3c40: dd00 000f                              |0002: and-int/lit8 v0, v0, #int 15 // #0f
+3e3c44: 2b00 5e01 0000                         |0004: packed-switch v0, 00000162 // +0000015e
+3e3c4a: 1600 0000                              |0007: const-wide/16 v0, #int 0 // #0
+3e3c4e: 1000                                   |0009: return-wide v0
+3e3c50: 2c01 7c01 0000                         |000a: sparse-switch v1, 00000186 // +0000017c
+3e3c56: 28fa                                   |000d: goto 0007 // -0006
+3e3c58: 2c01 aa01 0000                         |000e: sparse-switch v1, 000001b8 // +000001aa
+3e3c5e: 28f6                                   |0011: goto 0007 // -000a
+3e3c60: 2c01 d001 0000                         |0012: sparse-switch v1, 000001e2 // +000001d0
+3e3c66: 28f2                                   |0015: goto 0007 // -000e
+3e3c68: 2c01 0202 0000                         |0016: sparse-switch v1, 00000218 // +00000202
+3e3c6e: 28ee                                   |0019: goto 0007 // -0012
+3e3c70: 2c01 2802 0000                         |001a: sparse-switch v1, 00000242 // +00000228
+3e3c76: 28ea                                   |001d: goto 0007 // -0016
+3e3c78: 2c01 5602 0000                         |001e: sparse-switch v1, 00000274 // +00000256
+3e3c7e: 28e6                                   |0021: goto 0007 // -001a
+3e3c80: 2c01 6c02 0000                         |0022: sparse-switch v1, 0000028e // +0000026c
+3e3c86: 28e2                                   |0025: goto 0007 // -001e
+3e3c88: 2c01 8e02 0000                         |0026: sparse-switch v1, 000002b4 // +0000028e
+3e3c8e: 28de                                   |0029: goto 0007 // -0022
+3e3c90: 2c01 b802 0000                         |002a: sparse-switch v1, 000002e2 // +000002b8
+3e3c96: 28da                                   |002d: goto 0007 // -0026
+3e3c98: 2c01 de02 0000                         |002e: sparse-switch v1, 0000030c // +000002de
+3e3c9e: 28d6                                   |0031: goto 0007 // -002a
+3e3ca0: 2c01 0c03 0000                         |0032: sparse-switch v1, 0000033e // +0000030c
+3e3ca6: 28d2                                   |0035: goto 0007 // -002e
+3e3ca8: 2c01 2e03 0000                         |0036: sparse-switch v1, 00000364 // +0000032e
+3e3cae: 28ce                                   |0039: goto 0007 // -0032
+3e3cb0: 2c01 5803 0000                         |003a: sparse-switch v1, 00000392 // +00000358
+3e3cb6: 28ca                                   |003d: goto 0007 // -0036
+3e3cb8: 2c01 8603 0000                         |003e: sparse-switch v1, 000003c4 // +00000386
+3e3cbe: 28c6                                   |0041: goto 0007 // -003a
+3e3cc0: 2c01 a803 0000                         |0042: sparse-switch v1, 000003ea // +000003a8
+3e3cc6: 28c2                                   |0045: goto 0007 // -003e
+3e3cc8: 2c01 d203 0000                         |0046: sparse-switch v1, 00000418 // +000003d2
+3e3cce: 28be                                   |0049: goto 0007 // -0042
+3e3cd0: 1800 0000 0000 0080 4640               |004a: const-wide v0, #double 45 // #4046800000000000
+3e3cda: 1000                                   |004f: return-wide v0
+3e3cdc: 1900 c03f                              |0050: const-wide/high16 v0, #long 4593671619917905920 // #3fc0
+3e3ce0: 1000                                   |0052: return-wide v0
+3e3ce2: 1800 6666 6666 6666 d63f               |0053: const-wide v0, #double 0.35 // #3fd6666666666666
+3e3cec: 1000                                   |0058: return-wide v0
+3e3cee: 1800 b81e 85eb 51b8 be3f               |0059: const-wide v0, #double 0.12 // #3fbeb851eb851eb8
+3e3cf8: 1000                                   |005e: return-wide v0
+3e3cfa: 1800 6666 6666 6666 0240               |005f: const-wide v0, #double 2.3 // #4002666666666666
+3e3d04: 1000                                   |0064: return-wide v0
+3e3d06: 1900 4c40                              |0065: const-wide/high16 v0, #long 4633078116657397760 // #404c
+3e3d0a: 1000                                   |0067: return-wide v0
+3e3d0c: 1800 0000 0000 0080 5640               |0068: const-wide v0, #double 90 // #4056800000000000
+3e3d16: 1000                                   |006d: return-wide v0
+3e3d18: 1800 9a99 9999 9999 d93f               |006e: const-wide v0, #double 0.4 // #3fd999999999999a
+3e3d22: 1000                                   |0073: return-wide v0
+3e3d24: 1800 9a99 9999 9999 f13f               |0074: const-wide v0, #double 1.1 // #3ff199999999999a
+3e3d2e: 1000                                   |0079: return-wide v0
+3e3d30: 1800 0000 0000 0070 a740               |007a: const-wide v0, #double 3000 // #40a7700000000000
+3e3d3a: 1000                                   |007f: return-wide v0
+3e3d3c: 1800 9a99 9999 9999 c93f               |0080: const-wide v0, #double 0.2 // #3fc999999999999a
+3e3d46: 1000                                   |0085: return-wide v0
+3e3d48: 1800 6666 6666 6666 ee3f               |0086: const-wide v0, #double 0.95 // #3fee666666666666
+3e3d52: 1000                                   |008b: return-wide v0
+3e3d54: 1800 713d 0ad7 a370 e53f               |008c: const-wide v0, #double 0.67 // #3fe570a3d70a3d71
+3e3d5e: 1000                                   |0091: return-wide v0
+3e3d60: 1900 1840                              |0092: const-wide/high16 v0, #long 4618441417868443648 // #4018
+3e3d64: 1000                                   |0094: return-wide v0
+3e3d66: 1900 2040                              |0095: const-wide/high16 v0, #long 4620693217682128896 // #4020
+3e3d6a: 1000                                   |0097: return-wide v0
+3e3d6c: 1900 2e40                              |0098: const-wide/high16 v0, #long 4624633867356078080 // #402e
+3e3d70: 1000                                   |009a: return-wide v0
+3e3d72: 1900 4940                              |009b: const-wide/high16 v0, #long 4632233691727265792 // #4049
+3e3d76: 1000                                   |009d: return-wide v0
+3e3d78: 1800 cdcc cccc cccc dc3f               |009e: const-wide v0, #double 0.45 // #3fdccccccccccccd
+3e3d82: 1000                                   |00a3: return-wide v0
+3e3d84: 1800 9a99 9999 9999 f53f               |00a4: const-wide v0, #double 1.35 // #3ff599999999999a
+3e3d8e: 1000                                   |00a9: return-wide v0
+3e3d90: 1800 3333 3333 3333 d33f               |00aa: const-wide v0, #double 0.3 // #3fd3333333333333
+3e3d9a: 1000                                   |00af: return-wide v0
+3e3d9c: 1900 1440                              |00b0: const-wide/high16 v0, #long 4617315517961601024 // #4014
+3e3da0: 1000                                   |00b2: return-wide v0
+3e3da2: 1800 0000 0000 00c0 6240               |00b3: const-wide v0, #double 150 // #4062c00000000000
+3e3dac: 1000                                   |00b8: return-wide v0
+3e3dae: 1900 f83f                              |00b9: const-wide/high16 v0, #long 4609434218613702656 // #3ff8
+3e3db2: 1000                                   |00bb: return-wide v0
+3e3db4: 1800 0000 0000 0080 4040               |00bc: const-wide v0, #double 33 // #4040800000000000
+3e3dbe: 1000                                   |00c1: return-wide v0
+3e3dc0: 1800 cdcc cccc cccc f03f               |00c2: const-wide v0, #double 1.05 // #3ff0cccccccccccd
+3e3dca: 1000                                   |00c7: return-wide v0
+3e3dcc: 1900 0040                              |00c8: const-wide/high16 v0, #long 4611686018427387904 // #4000
+3e3dd0: 1000                                   |00ca: return-wide v0
+3e3dd2: 1800 6666 6666 6666 e63f               |00cb: const-wide v0, #double 0.7 // #3fe6666666666666
+3e3ddc: 1000                                   |00d0: return-wide v0
+3e3dde: 1800 3333 3333 3333 f33f               |00d1: const-wide v0, #double 1.2 // #3ff3333333333333
+3e3de8: 1000                                   |00d6: return-wide v0
+3e3dea: 1800 0000 0000 005c 9c40               |00d7: const-wide v0, #double 1815 // #409c5c0000000000
+3e3df4: 1000                                   |00dc: return-wide v0
+3e3df6: 1800 0000 0000 0040 8f40               |00dd: const-wide v0, #double 1000 // #408f400000000000
+3e3e00: 1000                                   |00e2: return-wide v0
+3e3e02: 1800 3333 3333 3333 c33f               |00e3: const-wide v0, #double 0.15 // #3fc3333333333333
+3e3e0c: 1000                                   |00e8: return-wide v0
+3e3e0e: 1800 3333 3333 3333 e33f               |00e9: const-wide v0, #double 0.6 // #3fe3333333333333
+3e3e18: 1000                                   |00ee: return-wide v0
+3e3e1a: 1800 0000 0000 0040 7f40               |00ef: const-wide v0, #double 500 // #407f400000000000
+3e3e24: 1000                                   |00f4: return-wide v0
+3e3e26: 1800 0000 0000 0018 e540               |00f5: const-wide v0, #double 43200 // #40e5180000000000
+3e3e30: 1000                                   |00fa: return-wide v0
+3e3e32: 1800 0000 0000 0018 0541               |00fb: const-wide v0, #double 172800 // #4105180000000000
+3e3e3c: 1000                                   |0100: return-wide v0
+3e3e3e: 1900 e83f                              |0101: const-wide/high16 v0, #long 4604930618986332160 // #3fe8
+3e3e42: 1000                                   |0103: return-wide v0
+3e3e44: 1900 2440                              |0104: const-wide/high16 v0, #long 4621819117588971520 // #4024
+3e3e48: 1000                                   |0106: return-wide v0
+3e3e4a: 1900 5940                              |0107: const-wide/high16 v0, #long 4636737291354636288 // #4059
+3e3e4e: 1000                                   |0109: return-wide v0
+3e3e50: 1800 cdcc cccc cccc e43f               |010a: const-wide v0, #double 0.65 // #3fe4cccccccccccd
+3e3e5a: 1000                                   |010f: return-wide v0
+3e3e5c: 1800 1f85 eb51 b81e d53f               |0110: const-wide v0, #double 0.33 // #3fd51eb851eb851f
+3e3e66: 1000                                   |0115: return-wide v0
+3e3e68: 1800 9a99 9999 9999 e93f               |0116: const-wide v0, #double 0.8 // #3fe999999999999a
+3e3e72: 1000                                   |011b: return-wide v0
+3e3e74: 1900 4e40                              |011c: const-wide/high16 v0, #long 4633641066610819072 // #404e
+3e3e78: 1000                                   |011e: return-wide v0
+3e3e7a: 1800 0000 0000 0040 5a40               |011f: const-wide v0, #double 105 // #405a400000000000
+3e3e84: 1000                                   |0124: return-wide v0
+3e3e86: 1900 4640                              |0125: const-wide/high16 v0, #long 4631389266797133824 // #4046
+3e3e8a: 1000                                   |0127: return-wide v0
+3e3e8c: 1900 3440                              |0128: const-wide/high16 v0, #long 4626322717216342016 // #4034
+3e3e90: 1000                                   |012a: return-wide v0
+3e3e92: 1900 d03f                              |012b: const-wide/high16 v0, #long 4598175219545276416 // #3fd0
+3e3e96: 1000                                   |012d: return-wide v0
+3e3e98: 1900 f0bf                              |012e: const-wide/high16 v0, #long -4616189618054758400 // #bff0
+3e3e9c: 1000                                   |0130: return-wide v0
+3e3e9e: 1800 cdcc cccc cccc ec3f               |0131: const-wide v0, #double 0.9 // #3feccccccccccccd
+3e3ea8: 1000                                   |0136: return-wide v0
+3e3eaa: 1800 9a99 9999 9999 b93f               |0137: const-wide v0, #double 0.1 // #3fb999999999999a
+3e3eb4: 1000                                   |013c: return-wide v0
+3e3eb6: 1800 0000 0000 0075 2241               |013d: const-wide v0, #double 604800 // #4122750000000000
+3e3ec0: 1000                                   |0142: return-wide v0
+3e3ec2: 1900 5e40                              |0143: const-wide/high16 v0, #long 4638144666238189568 // #405e
+3e3ec6: 1000                                   |0145: return-wide v0
+3e3ec8: 1900 3e40                              |0146: const-wide/high16 v0, #long 4629137466983448576 // #403e
+3e3ecc: 1000                                   |0148: return-wide v0
+3e3ece: 1900 4440                              |0149: const-wide/high16 v0, #long 4630826316843712512 // #4044
+3e3ed2: 1000                                   |014b: return-wide v0
+3e3ed4: 1900 e03f                              |014c: const-wide/high16 v0, #long 4602678819172646912 // #3fe0
+3e3ed8: 1000                                   |014e: return-wide v0
+3e3eda: 1900 f03f                              |014f: const-wide/high16 v0, #long 4607182418800017408 // #3ff0
+3e3ede: 1000                                   |0151: return-wide v0
+3e3ee0: 1900 0840                              |0152: const-wide/high16 v0, #long 4613937818241073152 // #4008
+3e3ee4: 1000                                   |0154: return-wide v0
+3e3ee6: 1900 1040                              |0155: const-wide/high16 v0, #long 4616189618054758400 // #4010
+3e3eea: 1000                                   |0157: return-wide v0
+3e3eec: 1800 0456 0e2d b29d ef3f               |0158: const-wide v0, #double 0.988 // #3fef9db22d0e5604
+3e3ef6: 1000                                   |015d: return-wide v0
+3e3ef8: 1900 2840                              |015e: const-wide/high16 v0, #long 4622945017495814144 // #4028
+3e3efc: 1000                                   |0160: return-wide v0
+3e3efe: 0000                                   |0161: nop // spacer
+3e3f00: 0001 1000 0000 0000 0600 0000 0a00 ... |0162: packed-switch-data (36 units)
+3e3f48: 0002 0c00 0000 0200 4000 0200 c000 ... |0186: sparse-switch-data (50 units)
+3e3fac: 0002 0a00 0400 0200 8400 0200 c400 ... |01b8: sparse-switch-data (42 units)
+3e4000: 0002 0d00 0800 0200 c800 0200 4801 ... |01e2: sparse-switch-data (54 units)
+3e406c: 0002 0a00 0c00 0200 4c00 0200 8c00 ... |0218: sparse-switch-data (42 units)
+3e40c0: 0002 0c00 9000 0200 d000 0200 1001 ... |0242: sparse-switch-data (50 units)
+3e4124: 0002 0600 1400 0200 5400 0200 5401 ... |0274: sparse-switch-data (26 units)
+3e4158: 0002 0900 1800 0200 5800 0200 9800 ... |028e: sparse-switch-data (38 units)
+3e41a4: 0002 0b00 5c00 0200 dc00 0200 1c01 ... |02b4: sparse-switch-data (46 units)
+3e4200: 0002 0a00 2000 0200 6000 0200 2001 ... |02e2: sparse-switch-data (42 units)
+3e4254: 0002 0c00 6400 0200 e400 0200 2401 ... |030c: sparse-switch-data (50 units)
+3e42b8: 0002 0900 6800 0200 6801 0200 e801 ... |033e: sparse-switch-data (38 units)
+3e4304: 0002 0b00 6c00 0200 ec00 0200 2c01 ... |0364: sparse-switch-data (46 units)
+3e4360: 0002 0c00 3000 0200 b000 0200 f000 ... |0392: sparse-switch-data (50 units)
+3e43c4: 0002 0900 7400 0200 b400 0200 f400 ... |03c4: sparse-switch-data (38 units)
+3e4410: 0002 0b00 3800 0200 f800 0200 3801 ... |03ea: sparse-switch-data (46 units)
+3e446c: 0002 0900 3c00 0200 7c01 0200 fc01 ... |0418: sparse-switch-data (38 units)
+      catches       : (none)
+      positions     :
+        0x0000 line=0
+        0x0001 line=1
+        0x0002 line=2
+        0x0003 line=3
+        0x0004 line=4
+        0x0005 line=5
+        0x0006 line=6
+        0x0007 line=7
+        0x0008 line=8
+        0x0009 line=9
+        0x000a line=10
+        0x000b line=11
+        0x000c line=12
+        0x000d line=13
+        0x000e line=14
+        0x000f line=15
+        0x0010 line=16
+        0x0011 line=17
+        0x0012 line=18
+        0x0013 line=19
+        0x0014 line=20
+        0x0015 line=21
+        0x0016 line=22
+        0x0017 line=23
+        0x0018 line=24
+        0x0019 line=25
+        0x001a line=26
+        0x001b line=27
+        0x001c line=28
+        0x001d line=29
+        0x001e line=30
+        0x001f line=31
+        0x0020 line=32
+        0x0021 line=33
+        0x0022 line=34
+        0x0023 line=35
+        0x0024 line=36
+        0x0025 line=37
+        0x0026 line=38
+        0x0027 line=39
+        0x0028 line=40
+        0x0029 line=41
+        0x002a line=42
+        0x002b line=43
+        0x002c line=44
+        0x002d line=45
+        0x002e line=46
+        0x002f line=47
+        0x0030 line=48
+        0x0031 line=49
+        0x0032 line=50
+        0x0033 line=51
+        0x0034 line=52
+        0x0035 line=53
+        0x0036 line=54
+        0x0037 line=55
+        0x0038 line=56
+        0x0039 line=57
+        0x003a line=58
+        0x003b line=59
+        0x003c line=60
+        0x003d line=61
+        0x003e line=62
+        0x003f line=63
+        0x0040 line=64
+        0x0041 line=65
+        0x0042 line=66
+        0x0043 line=67
+
+===== X.003s boolean decoder in classes2 =====
+annotations_off     : 0 (0x000000)
+class_data_off      : 8601199 (0x833e6f)
+static_fields_size  : 0
+instance_fields_size: 0
+direct_methods_size : 5
+virtual_methods_size: 0
+
+Class #136            -
+  Class descriptor  : 'LX/003s;'
+  Access flags      : 0x0401 (PUBLIC ABSTRACT)
+  Superclass        : 'Ljava/lang/Object;'
+  Interfaces        -
+  Static fields     -
+  Instance fields   -
+  Direct methods    -
+    #0              : (in LX/003s;)
+      name          : 'A00'
+      type          : '(J)I'
+      access        : 0x0009 (PUBLIC STATIC)
+      method_idx    : 486
+      code          -
+      registers     : 7
+      ins           : 2
+      outs          : 0
+      insns size    : 34 16-bit code units
+3c8dd0:                                        |[3c8dd0] X.003s.A00:(J)I
+3c8de0: 1300 3e00                              |0000: const/16 v0, #int 62 // #3e
+3c8de4: a503 0500                              |0002: ushr-long v3, v5, v0
+3c8de8: 1601 0100                              |0004: const-wide/16 v1, #int 1 // #1
+3c8dec: c013                                   |0006: and-long/2addr v3, v1
+3c8dee: 3100 0301                              |0007: cmp-long v0, v3, v1
+3c8df2: 1201                                   |0009: const/4 v1, #int 0 // #0
+3c8df4: 3900 0300                              |000a: if-nez v0, 000d // +0003
+3c8df8: 1211                                   |000c: const/4 v1, #int 1 // #1
+3c8dfa: 1300 1000                              |000d: const/16 v0, #int 16 // #10
+3c8dfe: c505                                   |000f: ushr-long/2addr v5, v0
+3c8e00: 3801 0c00                              |0010: if-eqz v1, 001c // +000c
+3c8e04: 1800 ffff ffff 0000 0000               |0012: const-wide v0, #double 2.122e-314 // #00000000ffffffff
+3c8e0e: c005                                   |0017: and-long/2addr v5, v0
+3c8e10: 8450                                   |0018: long-to-int v0, v5
+3c8e12: d500 ff0f                              |0019: and-int/lit16 v0, v0, #int 4095 // #0fff
+3c8e16: 0f00                                   |001b: return v0
+3c8e18: 1700 ffff 0000                         |001c: const-wide/32 v0, #float 9.18341e-41 // #0000ffff
+3c8e1e: c005                                   |001f: and-long/2addr v5, v0
+3c8e20: 8450                                   |0020: long-to-int v0, v5
+3c8e22: 0f00                                   |0021: return v0
+      catches       : (none)
+      positions     :
+        0x0000 line=0
+        0x0001 line=1
+        0x0002 line=2
+        0x0003 line=3
+        0x0004 line=4
+        0x0005 line=5
+        0x0006 line=6
+        0x0007 line=7
+        0x0008 line=8
+        0x0009 line=9
+        0x000a line=10
+        0x000b line=11
+        0x000c line=12
+        0x000d line=13
+        0x000e line=14
+        0x000f line=15
+        0x0010 line=16
+        0x0011 line=17
+        0x0012 line=18
+        0x0013 line=19
+        0x0014 line=20
+        0x0015 line=21
+        0x0016 line=22
+        0x0017 line=23
+        0x0018 line=24
+        0x0019 line=25
+        0x001a line=26
+        0x001b line=27
+        0x001c line=28
+        0x001d line=29
+        0x001e line=30
+        0x001f line=31
+        0x0020 line=32
+        0x0021 line=33
+      locals        :
+        0x0000 - 0x0022 reg=5 (null) J
+
+    #1              : (in LX/003s;)
+      name          : 'A01'
+      type          : '(IIIIZZ)J'
+      access        : 0x0009 (PUBLIC STATIC)
+      method_idx    : 487
+      code          -
+      registers     : 17
+      ins           : 6
+      outs          : 0
+      insns size    : 48 16-bit code units
+3c8e24:                                        |[3c8e24] X.003s.A01:(IIIIZZ)J
+3c8e34: 81e0                                   |0000: int-to-long v0, v14
+3c8e36: 1302 3600                              |0001: const/16 v2, #int 54 // #36
+3c8e3a: c320                                   |0003: shl-long/2addr v0, v2
+3c8e3c: 1609 0000                              |0004: const-wide/16 v9, #int 0 // #0
+3c8e40: 380f 2700                              |0006: if-eqz v15, 002d // +0027
+3c8e44: 1907 0010                              |0008: const-wide/high16 v7, #long 1152921504606846976 // #1000
+3c8e48: 81b3                                   |000a: int-to-long v3, v11
+3c8e4a: 1302 3000                              |000b: const/16 v2, #int 48 // #30
+3c8e4e: c323                                   |000d: shl-long/2addr v3, v2
+3c8e50: 3810 1c00                              |000e: if-eqz v16, 002a // +001c
+3c8e54: 1605 0100                              |0010: const-wide/16 v5, #int 1 // #1
+3c8e58: 1302 3d00                              |0012: const/16 v2, #int 61 // #3d
+3c8e5c: c325                                   |0014: shl-long/2addr v5, v2
+3c8e5e: 1302 3e00                              |0015: const/16 v2, #int 62 // #3e
+3c8e62: c329                                   |0017: shl-long/2addr v9, v2
+3c8e64: c159                                   |0018: or-long/2addr v9, v5
+3c8e66: c179                                   |0019: or-long/2addr v9, v7
+3c8e68: c190                                   |001a: or-long/2addr v0, v9
+3c8e6a: c130                                   |001b: or-long/2addr v0, v3
+3c8e6c: 81c4                                   |001c: int-to-long v4, v12
+3c8e6e: 1802 ffff ffff 0000 0000               |001d: const-wide v2, #double 2.122e-314 // #00000000ffffffff
+3c8e78: c024                                   |0022: and-long/2addr v4, v2
+3c8e7a: 1302 1000                              |0023: const/16 v2, #int 16 // #10
+3c8e7e: c324                                   |0025: shl-long/2addr v4, v2
+3c8e80: c140                                   |0026: or-long/2addr v0, v4
+3c8e82: 81d2                                   |0027: int-to-long v2, v13
+3c8e84: c120                                   |0028: or-long/2addr v0, v2
+3c8e86: 1000                                   |0029: return-wide v0
+3c8e88: 1605 0000                              |002a: const-wide/16 v5, #int 0 // #0
+3c8e8c: 28e6                                   |002c: goto 0012 // -001a
+3c8e8e: 1607 0000                              |002d: const-wide/16 v7, #int 0 // #0
+3c8e92: 28db                                   |002f: goto 000a // -0025
+      catches       : (none)
+      positions     :
+        0x0000 line=0
+        0x0001 line=1
+        0x0002 line=2
+        0x0003 line=3
+        0x0004 line=4
+        0x0005 line=5
+        0x0006 line=6
+        0x0007 line=7
+        0x0008 line=8
+        0x0009 line=9
+        0x000a line=10
+        0x000b line=11
+        0x000c line=12
+        0x000d line=13
+        0x000e line=14
+        0x000f line=15
+        0x0010 line=16
+        0x0011 line=17
+        0x0012 line=18
+        0x0013 line=19
+        0x0014 line=20
+        0x0015 line=21
+        0x0016 line=22
+        0x0017 line=23
+        0x0018 line=24
+        0x0019 line=25
+        0x001a line=26
+        0x001b line=27
+        0x001c line=28
+        0x001d line=29
+        0x001e line=30
+        0x001f line=31
+        0x0020 line=32
+        0x0021 line=33
+        0x0022 line=34
+        0x0023 line=35
+        0x0024 line=36
+        0x0025 line=37
+        0x0026 line=38
+        0x0027 line=39
+        0x0028 line=40
+        0x0029 line=41
+        0x002a line=42
+        0x002b line=43
+        0x002c line=44
+        0x002d line=45
+        0x002e line=46
+        0x002f line=47
+      locals        :
+        0x0000 - 0x0030 reg=11 (null) I
+        0x0000 - 0x0030 reg=12 (null) I
+        0x0000 - 0x0030 reg=13 (null) I
+        0x0000 - 0x0030 reg=14 (null) I
+        0x0000 - 0x0030 reg=15 (null) Z
+        0x0000 - 0x0030 reg=16 (null) Z
+
+    #2              : (in LX/003s;)
+      name          : 'A02'
+      type          : '(JII)J'
+      access        : 0x0009 (PUBLIC STATIC)
+      method_idx    : 488
+      code          -
+      registers     : 13
+      ins           : 4
+      outs          : 6
+      insns size    : 32 16-bit code units
+3c8e94:                                        |[3c8e94] X.003s.A02:(JII)J
+3c8ea4: 1300 3000                              |0000: const/16 v0, #int 48 // #30
+3c8ea8: a500 0900                              |0002: ushr-long v0, v9, v0
+3c8eac: 1603 3f00                              |0004: const-wide/16 v3, #int 63 // #3f
+3c8eb0: c030                                   |0006: and-long/2addr v0, v3
+3c8eb2: 8405                                   |0007: long-to-int v5, v0
+3c8eb4: 7120 e601 a900                         |0008: invoke-static {v9, v10}, LX/003s;.A00:(J)I // method@01e6
+3c8eba: 0a02                                   |000b: move-result v2
+3c8ebc: 1300 3600                              |000c: const/16 v0, #int 54 // #36
+3c8ec0: a500 0900                              |000e: ushr-long v0, v9, v0
+3c8ec4: c030                                   |0010: and-long/2addr v0, v3
+3c8ec6: 8408                                   |0011: long-to-int v8, v0
+3c8ec8: 7120 ea01 a900                         |0012: invoke-static {v9, v10}, LX/003s;.A04:(J)Z // method@01ea
+3c8ece: 0a0a                                   |0015: move-result v10
+3c8ed0: 1209                                   |0016: const/4 v9, #int 0 // #0
+3c8ed2: e006 0b10                              |0017: shl-int/lit8 v6, v11, #int 16 // #10
+3c8ed6: b026                                   |0019: add-int/2addr v6, v2
+3c8ed8: 01c7                                   |001a: move v7, v12
+3c8eda: 7706 e701 0500                         |001b: invoke-static/range {v5, v6, v7, v8, v9, v10}, LX/003s;.A01:(IIIIZZ)J // method@01e7
+3c8ee0: 0b00                                   |001e: move-result-wide v0
+3c8ee2: 1000                                   |001f: return-wide v0
+      catches       : (none)
+      positions     :
+        0x0000 line=0
+        0x0001 line=1
+        0x0002 line=2
+        0x0003 line=3
+        0x0004 line=4
+        0x0005 line=5
+        0x0006 line=6
+        0x0007 line=7
+        0x0008 line=8
+        0x0009 line=9
+        0x000a line=10
+        0x000b line=11
+        0x000c line=12
+        0x000d line=13
+        0x000e line=14
+        0x000f line=15
+        0x0010 line=16
+        0x0011 line=17
+        0x0012 line=18
+        0x0013 line=19
+        0x0014 line=20
+        0x0015 line=21
+        0x0016 line=22
+        0x0017 line=23
+        0x0018 line=24
+        0x0019 line=25
+        0x001a line=26
+        0x001b line=27
+        0x001c line=28
+        0x001d line=29
+        0x001e line=30
+        0x001f line=31
+      locals        :
+        0x0000 - 0x0020 reg=9 (null) J
+        0x0000 - 0x0020 reg=11 (null) I
+        0x0000 - 0x0020 reg=12 (null) I
+
+    #3              : (in LX/003s;)
+      name          : 'A03'
+      type          : '([[JJ)J'
+      access        : 0x0009 (PUBLIC STATIC)
+      method_idx    : 489
+      code          -
+      registers     : 17
+      ins           : 3
+      outs          : 6
+      insns size    : 89 16-bit code units
+3c8ee4:                                        |[3c8ee4] X.003s.A03:([[JJ)J
+3c8ef4: 1309 3000                              |0000: const/16 v9, #int 48 // #30
+3c8ef8: a500 0f09                              |0002: ushr-long v0, v15, v9
+DEX candidate: classes21
+DEX candidate: classes4
+
+===== method references to X.00Al.A00(J)I across all dumped DEX =====
+work/dis/classes.txt-8758-08ce06: 0e00                                   |0009: return-void
+work/dis/classes.txt-8759-      catches       : (none)
+work/dis/classes.txt-8760-      positions     :
+work/dis/classes.txt-8761-      locals        :
+work/dis/classes.txt-8762-
+work/dis/classes.txt-8763-  Virtual methods   -
+work/dis/classes.txt-8764-    #0              : (in LX/04Kj;)
+work/dis/classes.txt-8765-      name          : 'A02'
+work/dis/classes.txt-8766-      type          : '()I'
+work/dis/classes.txt-8767-      access        : 0x0011 (PUBLIC FINAL)
+work/dis/classes.txt-8768-      method_idx    : 1611
+work/dis/classes.txt-8769-      code          -
+work/dis/classes.txt-8770-      registers     : 5
+work/dis/classes.txt-8771-      ins           : 1
+work/dis/classes.txt-8772-      outs          : 4
+work/dis/classes.txt-8773-      insns size    : 27 16-bit code units
+work/dis/classes.txt-8774-08ce08:                                        |[08ce08] X.04Kj.A02:()I
+work/dis/classes.txt-8775-08ce18: 5340 d702                              |0000: iget-wide v0, v4, LX/04Kj;.A00:J // field@02d7
+work/dis/classes.txt:8776:08ce1c: 7120 fc00 1000                         |0002: invoke-static {v0, v1}, LX/00Al;.A00:(J)I // method@00fc
+work/dis/classes.txt-8777-08ce22: 0a00                                   |0005: move-result v0
+work/dis/classes.txt-8778-08ce24: 0f00                                   |0006: return v0
+work/dis/classes.txt-8779-08ce26: 0d03                                   |0007: move-exception v3
+work/dis/classes.txt-8780-08ce28: 5340 d702                              |0008: iget-wide v0, v4, LX/04Kj;.A00:J // field@02d7
+work/dis/classes.txt-8781-08ce2c: 7120 7d21 1000                         |000a: invoke-static {v0, v1}, Ljava/lang/Long;.valueOf:(J)Ljava/lang/Long; // method@217d
+work/dis/classes.txt-8782-08ce32: 0c00                                   |000d: move-result-object v0
+work/dis/classes.txt-8783-08ce34: 2410 7c12 0000                         |000e: filled-new-array {v0}, [Ljava/lang/Object; // type@127c
+work/dis/classes.txt-8784-08ce3a: 0c02                                   |0011: move-result-object v2
+work/dis/classes.txt-8785-08ce3c: 1a01 a906                              |0012: const-string v1, "ExperimentParameter" // string@06a9
+work/dis/classes.txt-8786-08ce40: 1a00 3407                              |0014: const-string v0, "Failed to get config key with specifier:%d" // string@0734
+work/dis/classes.txt-8787-08ce44: 7140 2601 0123                         |0016: invoke-static {v1, v0, v3, v2}, LX/00Iv;.A0J:(Ljava/lang/String;Ljava/lang/String;Ljava/lang/Throwable;[Ljava/lang/Object;)V // method@0126
+work/dis/classes.txt-8788-08ce4a: 12f0                                   |0019: const/4 v0, #int -1 // #ff
+work/dis/classes.txt-8789-08ce4c: 0f00                                   |001a: return v0
+work/dis/classes.txt-8790-      catches       : 1
+work/dis/classes.txt-8791-        0x0000 - 0x0007
+work/dis/classes.txt-8792-          LX/004d; -> 0x0007
+work/dis/classes.txt-8793-      positions     :
+work/dis/classes.txt-8794-      locals        :
+work/dis/classes.txt-8795-
+work/dis/classes.txt-8796-    #1              : (in LX/04Kj;)
+work/dis/classes.txt-8797-      name          : 'A03'
+work/dis/classes.txt-8798-      type          : '()Ljava/lang/Object;'
+work/dis/classes.txt-8799-      access        : 0x0011 (PUBLIC FINAL)
+work/dis/classes.txt-8800-      method_idx    : 1612
+work/dis/classes.txt-8801-      code          -
+work/dis/classes.txt-8802-      registers     : 8
+work/dis/classes.txt-8803-      ins           : 1
+work/dis/classes.txt-8804-      outs          : 2
+work/dis/classes.txt-8805-      insns size    : 66 16-bit code units
+work/dis/classes.txt-8806-08ce5c:                                        |[08ce5c] X.04Kj.A03:()Ljava/lang/Object;
+work/dis/classes.txt-8807-08ce6c: 5371 d702                              |0000: iget-wide v1, v7, LX/04Kj;.A00:J // field@02d7
+work/dis/classes.txt-8808-08ce70: 1300 3000                              |0002: const/16 v0, #int 48 // #30
+work/dis/classes.txt-8809-08ce74: a505 0100                              |0004: ushr-long v5, v1, v0
+work/dis/classes.txt-8810-08ce78: 1603 3f00                              |0006: const-wide/16 v3, #int 63 // #3f
+work/dis/classes.txt-8811-08ce7c: c035                                   |0008: and-long/2addr v5, v3
+work/dis/classes.txt-8812-08ce7e: 8453                                   |0009: long-to-int v3, v5
+work/dis/classes.txt-8813-08ce80: 1210                                   |000a: const/4 v0, #int 1 // #1
+work/dis/classes.txt-8814-08ce82: 3203 2e00                              |000b: if-eq v3, v0, 0039 // +002e
+work/dis/classes.txt-8815-08ce86: 1220                                   |000d: const/4 v0, #int 2 // #2
+work/dis/classes.txt-8816-08ce88: 3203 2200                              |000e: if-eq v3, v0, 0030 // +0022
+--
+work/dis/classes15.txt-885523-55d94c: 7010 2dec 0000                         |0000: invoke-direct {v0}, Ljava/lang/Object;.<init>:()V // method@ec2d
+work/dis/classes15.txt-885524-55d952: 0e00                                   |0003: return-void
+work/dis/classes15.txt-885525-      catches       : (none)
+work/dis/classes15.txt-885526-      positions     :
+work/dis/classes15.txt-885527-      locals        :
+work/dis/classes15.txt-885528-
+work/dis/classes15.txt-885529-    #2              : (in LX/04Km;)
+work/dis/classes15.txt-885530-      name          : 'A00'
+work/dis/classes15.txt-885531-      type          : '(LX/00AU;)I'
+work/dis/classes15.txt-885532-      access        : 0x0019 (PUBLIC STATIC FINAL)
+work/dis/classes15.txt-885533-      method_idx    : 21582
+work/dis/classes15.txt-885534-      code          -
+work/dis/classes15.txt-885535-      registers     : 5
+work/dis/classes15.txt-885536-      ins           : 1
+work/dis/classes15.txt-885537-      outs          : 4
+work/dis/classes15.txt-885538-      insns size    : 27 16-bit code units
+work/dis/classes15.txt-885539-55d954:                                        |[55d954] X.04Km.A00:(LX/00AU;)I
+work/dis/classes15.txt-885540-55d964: 5340 d404                              |0000: iget-wide v0, v4, LX/00AU;.A00:J // field@04d4
+work/dis/classes15.txt:885541:55d968: 7120 2109 1000                         |0002: invoke-static {v0, v1}, LX/00Al;.A00:(J)I // method@0921
+work/dis/classes15.txt-885542-55d96e: 0a00                                   |0005: move-result v0
+work/dis/classes15.txt-885543-55d970: 0f00                                   |0006: return v0
+work/dis/classes15.txt-885544-55d972: 0d03                                   |0007: move-exception v3
+work/dis/classes15.txt-885545-55d974: 6202 6246                              |0008: sget-object v2, LX/04Km;.A0G:Ljava/lang/Class; // field@4662
+work/dis/classes15.txt-885546-55d978: 5340 d404                              |000a: iget-wide v0, v4, LX/00AU;.A00:J // field@04d4
+work/dis/classes15.txt-885547-55d97c: 7120 0aec 1000                         |000c: invoke-static {v0, v1}, Ljava/lang/Long;.valueOf:(J)Ljava/lang/Long; // method@ec0a
+work/dis/classes15.txt-885548-55d982: 0c00                                   |000f: move-result-object v0
+work/dis/classes15.txt-885549-55d984: 2410 2b8a 0000                         |0010: filled-new-array {v0}, [Ljava/lang/Object; // type@8a2b
+work/dis/classes15.txt-885550-55d98a: 0c01                                   |0013: move-result-object v1
+work/dis/classes15.txt-885551-55d98c: 1a00 e925                              |0014: const-string v0, "Failed to get config key with specifier:%d" // string@25e9
+work/dis/classes15.txt-885552-55d990: 7140 e30a 0213                         |0016: invoke-static {v2, v0, v3, v1}, LX/00Iv;.A07:(Ljava/lang/Class;Ljava/lang/String;Ljava/lang/Throwable;[Ljava/lang/Object;)V // method@0ae3
+work/dis/classes15.txt-885553-55d996: 12f0                                   |0019: const/4 v0, #int -1 // #ff
+work/dis/classes15.txt-885554-55d998: 0f00                                   |001a: return v0
+work/dis/classes15.txt-885555-      catches       : 1
+work/dis/classes15.txt-885556-        0x0000 - 0x0007
+work/dis/classes15.txt-885557-          LX/004d; -> 0x0007
+work/dis/classes15.txt-885558-      positions     :
+work/dis/classes15.txt-885559-      locals        :
+work/dis/classes15.txt-885560-
+work/dis/classes15.txt-885561-    #3              : (in LX/04Km;)
+work/dis/classes15.txt-885562-      name          : 'A01'
+work/dis/classes15.txt-885563-      type          : '(LX/00AU;)J'
+work/dis/classes15.txt-885564-      access        : 0x0019 (PUBLIC STATIC FINAL)
+work/dis/classes15.txt-885565-      method_idx    : 21583
+work/dis/classes15.txt-885566-      code          -
+work/dis/classes15.txt-885567-      registers     : 8
+work/dis/classes15.txt-885568-      ins           : 1
+work/dis/classes15.txt-885569-      outs          : 4
+work/dis/classes15.txt-885570-      insns size    : 93 16-bit code units
+work/dis/classes15.txt-885571-55d9a8:                                        |[55d9a8] X.04Km.A01:(LX/00AU;)J
+work/dis/classes15.txt-885572-55d9b8: 6206 5946                              |0000: sget-object v6, LX/04Km;.A07:LX/04Km; // field@4659
+work/dis/classes15.txt-885573-55d9bc: 7020 5554 7600                         |0002: invoke-direct {v6, v7}, LX/04Km;.A07:(LX/00AU;)V // method@5455
+work/dis/classes15.txt-885574-55d9c2: 7110 5354 0700                         |0005: invoke-static {v7}, LX/04Km;.A05:(LX/00AU;)Ljava/lang/String; // method@5453
+work/dis/classes15.txt-885575-55d9c8: 0c05                                   |0008: move-result-object v5
+work/dis/classes15.txt-885576-55d9ca: 6204 5b46                              |0009: sget-object v4, LX/04Km;.A09:Ljava/util/Map; // field@465b
+work/dis/classes15.txt-885577-55d9ce: 7220 50ee 5400                         |000b: invoke-interface {v4, v5}, Ljava/util/Map;.get:(Ljava/lang/Object;)Ljava/lang/Object; // method@ee50
+work/dis/classes15.txt-885578-55d9d4: 0c01                                   |000e: move-result-object v1
+work/dis/classes15.txt-885579-55d9d6: 3801 2000                              |000f: if-eqz v1, 002f // +0020
+work/dis/classes15.txt-885580-55d9da: 2010 8787                              |0011: instance-of v0, v1, Ljava/lang/Long; // type@8787
+work/dis/classes15.txt-885581-55d9de: 3900 4300                              |0013: if-nez v0, 0056 // +0043
+--
+work/dis/classes15.txt-1590489-  Static fields     -
+work/dis/classes15.txt-1590490-  Instance fields   -
+work/dis/classes15.txt-1590491-  Direct methods    -
+work/dis/classes15.txt-1590492-    #0              : (in LX/08l8;)
+work/dis/classes15.txt-1590493-      name          : 'A00'
+work/dis/classes15.txt-1590494-      type          : '(LX/04Kj;)Z'
+work/dis/classes15.txt-1590495-      access        : 0x0019 (PUBLIC STATIC FINAL)
+work/dis/classes15.txt-1590496-      method_idx    : 37156
+work/dis/classes15.txt-1590497-      code          -
+work/dis/classes15.txt-1590498-      registers     : 6
+work/dis/classes15.txt-1590499-      ins           : 1
+work/dis/classes15.txt-1590500-      outs          : 4
+work/dis/classes15.txt-1590501-      insns size    : 38 16-bit code units
+work/dis/classes15.txt-1590502-71d8c0:                                        |[71d8c0] X.08l8.A00:(LX/04Kj;)Z
+work/dis/classes15.txt-1590503-71d8d0: 1204                                   |0000: const/4 v4, #int 0 // #0
+work/dis/classes15.txt-1590504-71d8d2: 7120 a45a 4500                         |0001: invoke-static {v5, v4}, LX/04l9;.A0j:(Ljava/lang/Object;I)V // method@5aa4
+work/dis/classes15.txt-1590505-71d8d8: 5350 4946                              |0004: iget-wide v0, v5, LX/04Kj;.A00:J // field@4649
+work/dis/classes15.txt-1590506-71d8dc: 1212                                   |0006: const/4 v2, #int 1 // #1
+work/dis/classes15.txt:1590507:71d8de: 7120 2109 1000                         |0007: invoke-static {v0, v1}, LX/00Al;.A00:(J)I // method@0921
+work/dis/classes15.txt-1590508-71d8e4: 0a01                                   |000a: move-result v1
+work/dis/classes15.txt-1590509-71d8e6: 6200 777a                              |000b: sget-object v0, LX/08y5;.A00:[I // field@7a77
+work/dis/classes15.txt-1590510-71d8ea: 7120 9ced 1000                         |000d: invoke-static {v0, v1}, Ljava/util/Arrays;.binarySearch:([II)I // method@ed9c
+work/dis/classes15.txt-1590511-71d8f0: 0a00                                   |0010: move-result v0
+work/dis/classes15.txt-1590512-71d8f2: 3a00 0300                              |0011: if-ltz v0, 0014 // +0003
+work/dis/classes15.txt-1590513-71d8f6: 0f02                                   |0013: return v2
+work/dis/classes15.txt-1590514-71d8f8: 0f04                                   |0014: return v4
+work/dis/classes15.txt-1590515-71d8fa: 0d03                                   |0015: move-exception v3
+work/dis/classes15.txt-1590516-71d8fc: 7120 0aec 1000                         |0016: invoke-static {v0, v1}, Ljava/lang/Long;.valueOf:(J)Ljava/lang/Long; // method@ec0a
+work/dis/classes15.txt-1590517-71d902: 0c00                                   |0019: move-result-object v0
+work/dis/classes15.txt-1590518-71d904: 2410 2b8a 0000                         |001a: filled-new-array {v0}, [Ljava/lang/Object; // type@8a2b
+work/dis/classes15.txt-1590519-71d90a: 0c02                                   |001d: move-result-object v2
+work/dis/classes15.txt-1590520-71d90c: 1a01 49c1                              |001e: const-string v1, "OverlayConfigHelper" // string@c149
+work/dis/classes15.txt-1590521-71d910: 1a00 e925                              |0020: const-string v0, "Failed to get config key with specifier:%d" // string@25e9
+work/dis/classes15.txt-1590522-71d914: 7140 ec0a 0123                         |0022: invoke-static {v1, v0, v3, v2}, LX/00Iv;.A0J:(Ljava/lang/String;Ljava/lang/String;Ljava/lang/Throwable;[Ljava/lang/Object;)V // method@0aec
+work/dis/classes15.txt-1590523-71d91a: 0f04                                   |0025: return v4
+work/dis/classes15.txt-1590524-      catches       : 1
+work/dis/classes15.txt-1590525-        0x0007 - 0x000b
+work/dis/classes15.txt-1590526-          LX/004d; -> 0x0015
+work/dis/classes15.txt-1590527-      positions     :
+work/dis/classes15.txt-1590528-      locals        :
+work/dis/classes15.txt-1590529-
+work/dis/classes15.txt-1590530-  Virtual methods   -
+work/dis/classes15.txt-1590531-  source_file_idx   : 0 ()
+work/dis/classes15.txt-1590532-
+work/dis/classes15.txt-1590533-Class #6278 header:
+work/dis/classes15.txt-1590534-class_idx           : 17562
+work/dis/classes15.txt-1590535-access_flags        : 1025 (0x0401)
+work/dis/classes15.txt-1590536-superclass_idx      : 34704
+work/dis/classes15.txt-1590537-interfaces_off      : 0 (0x000000)
+work/dis/classes15.txt-1590538-source_file_idx     : 0
+work/dis/classes15.txt-1590539-annotations_off     : 0 (0x000000)
+work/dis/classes15.txt-1590540-class_data_off      : 8015049 (0x7a4cc9)
+work/dis/classes15.txt-1590541-static_fields_size  : 0
+work/dis/classes15.txt-1590542-instance_fields_size: 0
+work/dis/classes15.txt-1590543-direct_methods_size : 1
+work/dis/classes15.txt-1590544-virtual_methods_size: 0
+work/dis/classes15.txt-1590545-
+work/dis/classes15.txt-1590546-Class #6278            -
+work/dis/classes15.txt-1590547-  Class descriptor  : 'LX/08l9;'
+--
+work/dis/classes2.txt-1111470-50cf56: 1a00 e1f9                              |0009: const-string v0, "mobile_config_sampled_access" // string@f9e1
+work/dis/classes2.txt-1111471-50cf5a: 6e20 c233 0100                         |000b: invoke-virtual {v1, v0}, LX/02tU;.AKx:(Ljava/lang/String;)LX/00vv; // method@33c2
+work/dis/classes2.txt-1111472-50cf60: 0c02                                   |000e: move-result-object v2
+work/dis/classes2.txt-1111473-50cf62: 1700 50c3 0000                         |000f: const-wide/32 v0, #float 7.00649e-41 // #0000c350
+work/dis/classes2.txt-1111474-50cf68: 7120 77e7 1000                         |0012: invoke-static {v0, v1}, Ljava/lang/Long;.valueOf:(J)Ljava/lang/Long; // method@e777
+work/dis/classes2.txt-1111475-50cf6e: 0c01                                   |0015: move-result-object v1
+work/dis/classes2.txt-1111476-50cf70: 1a00 17ed                              |0016: const-string v0, "internal_sampling_rate" // string@ed17
+work/dis/classes2.txt-1111477-50cf74: 7230 d217 0201                         |0018: invoke-interface {v2, v0, v1}, LX/00vv;.ANR:(Ljava/lang/String;Ljava/lang/Long;)V // method@17d2
+work/dis/classes2.txt-1111478-50cf7a: 7110 e2e6 0600                         |001b: invoke-static {v6}, Ljava/lang/Boolean;.valueOf:(Z)Ljava/lang/Boolean; // method@e6e2
+work/dis/classes2.txt-1111479-50cf80: 0c01                                   |001e: move-result-object v1
+work/dis/classes2.txt-1111480-50cf82: 1a00 67ef                              |001f: const-string v0, "is_default_fallback" // string@ef67
+work/dis/classes2.txt-1111481-50cf86: 7230 cd17 0201                         |0021: invoke-interface {v2, v0, v1}, LX/00vv;.ALp:(Ljava/lang/String;Ljava/lang/Boolean;)V // method@17cd
+work/dis/classes2.txt-1111482-50cf8c: 7120 05e8 5400                         |0024: invoke-static {v4, v5}, Ljava/lang/String;.valueOf:(J)Ljava/lang/String; // method@e805
+work/dis/classes2.txt-1111483-50cf92: 0c01                                   |0027: move-result-object v1
+work/dis/classes2.txt-1111484-50cf94: 1b00 b402 0100                         |0028: const-string/jumbo v0, "param_specifier" // string@000102b4
+work/dis/classes2.txt-1111485-50cf9a: 7230 d717 0201                         |002b: invoke-interface {v2, v0, v1}, LX/00vv;.AOq:(Ljava/lang/String;Ljava/lang/String;)V // method@17d7
+work/dis/classes2.txt-1111486-50cfa0: 1a00 98c7                              |002e: const-string v0, "client_value" // string@c798
+work/dis/classes2.txt-1111487-50cfa4: 7230 d717 0203                         |0030: invoke-interface {v2, v0, v3}, LX/00vv;.AOq:(Ljava/lang/String;Ljava/lang/String;)V // method@17d7
+work/dis/classes2.txt:1111488:50cfaa: 7120 d405 5400                         |0033: invoke-static {v4, v5}, LX/00Al;.A00:(J)I // method@05d4
+work/dis/classes2.txt-1111489-50cfb0: 0a00                                   |0036: move-result v0
+work/dis/classes2.txt-1111490-50cfb2: 8100                                   |0037: int-to-long v0, v0
+work/dis/classes2.txt-1111491-50cfb4: 7120 77e7 1000                         |0038: invoke-static {v0, v1}, Ljava/lang/Long;.valueOf:(J)Ljava/lang/Long; // method@e777
+work/dis/classes2.txt-1111492-50cfba: 0c01                                   |003b: move-result-object v1
+work/dis/classes2.txt-1111493-50cfbc: 1a00 0fcf                              |003c: const-string v0, "config_id" // string@cf0f
+work/dis/classes2.txt-1111494-50cfc0: 7230 d217 0201                         |003e: invoke-interface {v2, v0, v1}, LX/00vv;.ANR:(Ljava/lang/String;Ljava/lang/Long;)V // method@17d2
+work/dis/classes2.txt-1111495-50cfc6: 1600 0200                              |0041: const-wide/16 v0, #int 2 // #2
+work/dis/classes2.txt-1111496-50cfca: 7120 77e7 1000                         |0043: invoke-static {v0, v1}, Ljava/lang/Long;.valueOf:(J)Ljava/lang/Long; // method@e777
+work/dis/classes2.txt-1111497-50cfd0: 0c01                                   |0046: move-result-object v1
+work/dis/classes2.txt-1111498-50cfd2: 1b00 b202 0100                         |0047: const-string/jumbo v0, "param_id" // string@000102b2
+work/dis/classes2.txt-1111499-50cfd8: 7230 d217 0201                         |004a: invoke-interface {v2, v0, v1}, LX/00vv;.ANR:(Ljava/lang/String;Ljava/lang/Long;)V // method@17d2
+work/dis/classes2.txt-1111500-50cfde: 7210 da17 0200                         |004d: invoke-interface {v2}, LX/00vv;.EQA:()V // method@17da
+work/dis/classes2.txt-1111501-50cfe4: 0e00                                   |0050: return-void
+work/dis/classes2.txt-1111502-50cfe6: 0d03                                   |0051: move-exception v3
+work/dis/classes2.txt-1111503-50cfe8: 7120 77e7 5400                         |0052: invoke-static {v4, v5}, Ljava/lang/Long;.valueOf:(J)Ljava/lang/Long; // method@e777
+work/dis/classes2.txt-1111504-50cfee: 0c00                                   |0055: move-result-object v0
+work/dis/classes2.txt-1111505-50cff0: 2410 2d5e 0000                         |0056: filled-new-array {v0}, [Ljava/lang/Object; // type@5e2d
+work/dis/classes2.txt-1111506-50cff6: 0c02                                   |0059: move-result-object v2
+work/dis/classes2.txt-1111507-50cff8: 1a01 39a4                              |005a: const-string v1, "QuickExperimentManagerFactoryImpl" // string@a439
+work/dis/classes2.txt-1111508-50cffc: 1a00 0930                              |005c: const-string v0, "Failed to get config key with specifier:%d" // string@3009
+work/dis/classes2.txt-1111509-50d000: 7140 e309 0123                         |005e: invoke-static {v1, v0, v3, v2}, LX/00Iv;.A0J:(Ljava/lang/String;Ljava/lang/String;Ljava/lang/Throwable;[Ljava/lang/Object;)V // method@09e3
+work/dis/classes2.txt-1111510-50d006: 0e00                                   |0061: return-void
+work/dis/classes2.txt-1111511-      catches       : 1
+work/dis/classes2.txt-1111512-        0x0000 - 0x0051
+work/dis/classes2.txt-1111513-          LX/004d; -> 0x0051
+work/dis/classes2.txt-1111514-      positions     :
+work/dis/classes2.txt-1111515-        0x0000 line=0
+work/dis/classes2.txt-1111516-        0x0001 line=1
+work/dis/classes2.txt-1111517-        0x0002 line=2
+work/dis/classes2.txt-1111518-        0x0003 line=3
+work/dis/classes2.txt-1111519-        0x0004 line=4
+work/dis/classes2.txt-1111520-        0x0005 line=5
+work/dis/classes2.txt-1111521-        0x0006 line=6
+work/dis/classes2.txt-1111522-        0x0007 line=7
+work/dis/classes2.txt-1111523-        0x0008 line=8
+work/dis/classes2.txt-1111524-        0x0009 line=9
+work/dis/classes2.txt-1111525-        0x000a line=10
+work/dis/classes2.txt-1111526-        0x000b line=11
+work/dis/classes2.txt-1111527-        0x000c line=12
+work/dis/classes2.txt-1111528-        0x000d line=13
+--
+work/dis/classes4.txt-31010-35e4ae: 1108                                   |02a9: return-object v8
+work/dis/classes4.txt-31011-35e4b0: 1f08 8f4b                              |02aa: check-cast v8, Ljava/util/Map$Entry; // type@4b8f
+work/dis/classes4.txt-31012-35e4b4: 7110 c00e 0800                         |02ac: invoke-static {v8}, LX/04l9;.A0f:(Ljava/lang/Object;)V // method@0ec0
+work/dis/classes4.txt-31013-35e4ba: 7210 e4bd 0800                         |02af: invoke-interface {v8}, Ljava/util/Map$Entry;.getKey:()Ljava/lang/Object; // method@bde4
+work/dis/classes4.txt-31014-35e4c0: 0c00                                   |02b2: move-result-object v0
+work/dis/classes4.txt-31015-35e4c2: 1f00 7a04                              |02b3: check-cast v0, LX/03fA; // type@047a
+work/dis/classes4.txt-31016-35e4c6: 6e10 e0ba 0000                         |02b5: invoke-virtual {v0}, Ljava/lang/Enum;.name:()Ljava/lang/String; // method@bae0
+work/dis/classes4.txt-31017-35e4cc: 0c02                                   |02b8: move-result-object v2
+work/dis/classes4.txt-31018-35e4ce: 1301 3d00                              |02b9: const/16 v1, #int 61 // #3d
+work/dis/classes4.txt-31019-35e4d2: 7210 e5bd 0800                         |02bb: invoke-interface {v8}, Ljava/util/Map$Entry;.getValue:()Ljava/lang/Object; // method@bde5
+work/dis/classes4.txt-31020-35e4d8: 0c00                                   |02be: move-result-object v0
+work/dis/classes4.txt-31021-35e4da: 1f00 ed4a                              |02bf: check-cast v0, Ljava/lang/String; // type@4aed
+work/dis/classes4.txt-31022-35e4de: 7130 a100 0201                         |02c1: invoke-static {v2, v0, v1}, LX/002b;.A0Z:(Ljava/lang/String;Ljava/lang/String;C)Ljava/lang/String; // method@00a1
+work/dis/classes4.txt-31023-35e4e4: 0c08                                   |02c4: move-result-object v8
+work/dis/classes4.txt-31024-35e4e6: 1108                                   |02c5: return-object v8
+work/dis/classes4.txt-31025-35e4e8: 1f08 e04a                              |02c6: check-cast v8, Ljava/lang/Number; // type@4ae0
+work/dis/classes4.txt-31026-35e4ec: 6e10 2dbb 0800                         |02c8: invoke-virtual {v8}, Ljava/lang/Number;.longValue:()J // method@bb2d
+work/dis/classes4.txt-31027-35e4f2: 0b00                                   |02cb: move-result-wide v0
+work/dis/classes4.txt:31028:35e4f4: 7120 3101 1000                         |02cc: invoke-static {v0, v1}, LX/00Al;.A00:(J)I // method@0131
+work/dis/classes4.txt-31029-35e4fa: 0a00                                   |02cf: move-result v0
+work/dis/classes4.txt-31030-35e4fc: 2802                                   |02d0: goto 02d2 // +0002
+work/dis/classes4.txt-31031-35e4fe: 12f0                                   |02d1: const/4 v0, #int -1 // #ff
+work/dis/classes4.txt-31032-35e500: 7110 00bb 0000                         |02d2: invoke-static {v0}, Ljava/lang/Integer;.valueOf:(I)Ljava/lang/Integer; // method@bb00
+work/dis/classes4.txt-31033-35e506: 0c08                                   |02d5: move-result-object v8
+work/dis/classes4.txt-31034-35e508: 1108                                   |02d6: return-object v8
+work/dis/classes4.txt-31035-35e50a: 1f08 6600                              |02d7: check-cast v8, LX/00AU; // type@0066
+work/dis/classes4.txt-31036-35e50e: 7110 c00e 0800                         |02d9: invoke-static {v8}, LX/04l9;.A0f:(Ljava/lang/Object;)V // method@0ec0
+work/dis/classes4.txt-31037-35e514: 7110 0a0e 0800                         |02dc: invoke-static {v8}, LX/04Km;.A0L:(LX/00AU;)Z // method@0e0a
+work/dis/classes4.txt-31038-35e51a: 0a00                                   |02df: move-result v0
+work/dis/classes4.txt-31039-35e51c: 7110 a2ba 0000                         |02e0: invoke-static {v0}, Ljava/lang/Boolean;.valueOf:(Z)Ljava/lang/Boolean; // method@baa2
+work/dis/classes4.txt-31040-35e522: 0c08                                   |02e3: move-result-object v8
+work/dis/classes4.txt-31041-35e524: 1108                                   |02e4: return-object v8
+work/dis/classes4.txt-31042-35e526: 1f08 6600                              |02e5: check-cast v8, LX/00AU; // type@0066
+work/dis/classes4.txt-31043-35e52a: 7110 c00e 0800                         |02e7: invoke-static {v8}, LX/04l9;.A0f:(Ljava/lang/Object;)V // method@0ec0
+work/dis/classes4.txt-31044-35e530: 7110 0a0e 0800                         |02ea: invoke-static {v8}, LX/04Km;.A0L:(LX/00AU;)Z // method@0e0a
+work/dis/classes4.txt-31045-35e536: 0a00                                   |02ed: move-result v0
+work/dis/classes4.txt-31046-35e538: 7110 a2ba 0000                         |02ee: invoke-static {v0}, Ljava/lang/Boolean;.valueOf:(Z)Ljava/lang/Boolean; // method@baa2
+work/dis/classes4.txt-31047-35e53e: 0c08                                   |02f1: move-result-object v8
+work/dis/classes4.txt-31048-35e540: 1108                                   |02f2: return-object v8
+work/dis/classes4.txt-31049-35e542: 1f08 6008                              |02f3: check-cast v8, LX/08Nw; // type@0860
+work/dis/classes4.txt-31050-35e546: 7110 c00e 0800                         |02f5: invoke-static {v8}, LX/04l9;.A0f:(Ljava/lang/Object;)V // method@0ec0
+work/dis/classes4.txt-31051-35e54c: 2202 ee4a                              |02f8: new-instance v2, Ljava/lang/StringBuilder; // type@4aee
+work/dis/classes4.txt-31052-35e550: 7010 9bbb 0200                         |02fa: invoke-direct {v2}, Ljava/lang/StringBuilder;.<init>:()V // method@bb9b
+work/dis/classes4.txt-31053-35e556: 1a00 28a8                              |02fd: const-string v0, "VideoHighlight(startTs=" // string@a828
+work/dis/classes4.txt-31054-35e55a: 6e20 a7bb 0200                         |02ff: invoke-virtual {v2, v0}, Ljava/lang/StringBuilder;.append:(Ljava/lang/String;)Ljava/lang/StringBuilder; // method@bba7
+work/dis/classes4.txt-31055-35e560: 5481 9907                              |0302: iget-object v1, v8, LX/08Nw;.A01:LX/0UsO; // field@0799
+work/dis/classes4.txt-31056-35e564: 1400 7cbb 7c4e                         |0304: const v0, #float 1.06004e+09 // #4e7cbb7c
+work/dis/classes4.txt-31057-35e56a: 7220 4a6f 0100                         |0307: invoke-interface {v1, v0}, LX/0UsO;.Cka:(I)Ljava/lang/Integer; // method@6f4a
+work/dis/classes4.txt-31058-35e570: 0c00                                   |030a: move-result-object v0
+work/dis/classes4.txt-31059-35e572: 6e20 a6bb 0200                         |030b: invoke-virtual {v2, v0}, Ljava/lang/StringBuilder;.append:(Ljava/lang/Object;)Ljava/lang/StringBuilder; // method@bba6
+work/dis/classes4.txt-31060-35e578: 1a00 b204                              |030e: const-string v0, ", endTs=" // string@04b2
+work/dis/classes4.txt-31061-35e57c: 6e20 a7bb 0200                         |0310: invoke-virtual {v2, v0}, Ljava/lang/StringBuilder;.append:(Ljava/lang/String;)Ljava/lang/StringBuilder; // method@bba7
+work/dis/classes4.txt-31062-35e582: 1400 6378 96b2                         |0313: const v0, #float -1.7517e-08 // #b2967863
+work/dis/classes4.txt-31063-35e588: 7220 4a6f 0100                         |0316: invoke-interface {v1, v0}, LX/0UsO;.Cka:(I)Ljava/lang/Integer; // method@6f4a
+work/dis/classes4.txt-31064-35e58e: 0c00                                   |0319: move-result-object v0
+work/dis/classes4.txt-31065-35e590: 6e20 a6bb 0200                         |031a: invoke-virtual {v2, v0}, Ljava/lang/StringBuilder;.append:(Ljava/lang/Object;)Ljava/lang/StringBuilder; // method@bba6
+work/dis/classes4.txt-31066-35e596: 1a00 5105                              |031d: const-string v0, ", highlightText=" // string@0551
+work/dis/classes4.txt-31067-35e59a: 6e20 a7bb 0200                         |031f: invoke-virtual {v2, v0}, Ljava/lang/StringBuilder;.append:(Ljava/lang/String;)Ljava/lang/StringBuilder; // method@bba7
+work/dis/classes4.txt-31068-35e5a0: 1400 d841 cb1e                         |0322: const v0, #float 2.15207e-20 // #1ecb41d8
