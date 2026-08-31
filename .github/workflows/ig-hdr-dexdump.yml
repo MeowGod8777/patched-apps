@@ -37,40 +37,57 @@ jobs:
           test -n "$DEXDUMP"
           echo "DEXDUMP=$DEXDUMP" >> "$GITHUB_ENV"
 
-      - name: Trace X.02g4.A07 reads
+      - name: Summarize X.02g4.A07 consumers
         shell: bash
         run: |
-          REPORT=research/generated/instagram_439_hdr_a07_trace.txt
+          REPORT=research/generated/instagram_439_hdr_a07_consumers.txt
           : > "$REPORT"
           {
-            echo "Instagram 439 Groot HDR A07 trace"
-            echo "================================"
-            echo "Config 74463::20 sets X.02g4.A07=true on API >=35"
+            echo "Instagram 439 Groot HDR A07 consumer summary"
+            echo "============================================"
+            echo "74463::20 true + API>=35 => X.02g4.A07=true"
             echo
           } >> "$REPORT"
 
           for d in work/dex/classes*.dex; do
-            if grep -aFq 'LX/02g4;' "$d"; then
-              b="$(basename "$d" .dex)"
-              "$DEXDUMP" -d -f -h "$d" > "work/dis/$b.txt"
-              {
-                echo "===== $b exact A07 field references ====="
-                grep -n -B 60 -A 120 -F 'LX/02g4;.A07:Z' "work/dis/$b.txt" || true
-                echo
-              } >> "$REPORT"
-            fi
+            grep -aFq 'LX/02g4;' "$d" || continue
+            b="$(basename "$d" .dex)"
+            "$DEXDUMP" -d -f -h "$d" > "work/dis/$b.txt"
+            B="$b" python3 - <<'PY' >> "$REPORT"
+          from pathlib import Path
+          import os,re
+          b=os.environ['B']
+          p=Path('work/dis')/(b+'.txt')
+          lines=p.read_text(errors='ignore').splitlines()
+          refs=[i for i,l in enumerate(lines) if 'LX/02g4;.A07:Z' in l]
+          if not refs: raise SystemExit
+          print(f'===== {b}: A07 refs={len(refs)} =====')
+          for i in refs:
+              line=lines[i]
+              op='READ' if 'iget-boolean' in line else ('WRITE' if 'iput-boolean' in line else 'OTHER')
+              method='UNKNOWN'
+              for j in range(i,-1,-1):
+                  if re.search(r'\|\[[0-9a-f]+\] .*:\(', lines[j]):
+                      method=lines[j].split('|',1)[-1].strip()
+                      break
+              print(f'{op}: {line.strip()}')
+              print(f'  METHOD: {method}')
+              if op=='READ':
+                  for k in range(max(0,i-12), min(len(lines),i+28)):
+                      print('    '+lines[k])
+              print()
+          PY
           done
 
-          wc -l "$REPORT"
-          sed -n '1,900p' "$REPORT"
+          cat "$REPORT"
 
-      - name: Commit A07 trace
+      - name: Commit A07 consumer summary
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add research/generated/instagram_439_hdr_a07_trace.txt
+          git add research/generated/instagram_439_hdr_a07_consumers.txt
           if ! git diff --cached --quiet; then
-            git commit -m "Trace Instagram 439 Groot HDR surface gate"
+            git commit -m "Summarize Instagram 439 Groot HDR A07 consumers"
           fi
           git pull --rebase origin main
           git push origin HEAD:main
