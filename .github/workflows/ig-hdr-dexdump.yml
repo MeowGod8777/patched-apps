@@ -1,0 +1,113 @@
+name: IG 439 HDR Fast DEX Probe
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - .github/workflows/ig-hdr-dexdump.yml
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  probe:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    env:
+      APK_NAME: instagram-piko-v439.0.0.37.89-arm64-v8a.apk
+      APK_SHA256: 4015b171ac59f3e7172134d194ec2dcf701f64c3339f127c19d7a04c13d529c8
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+
+      - name: Download exact Release 8 APK
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          mkdir -p work/dex
+          gh release download 8 --pattern "$APK_NAME" --dir work
+          echo "$APK_SHA256  work/$APK_NAME" | sha256sum -c -
+          unzip -j "work/$APK_NAME" 'classes*.dex' -d work/dex
+
+      - name: Find dexdump
+        run: |
+          DEXDUMP="$(find "$ANDROID_HOME/build-tools" -type f -name dexdump | sort -V | tail -1)"
+          if [ -z "$DEXDUMP" ]; then
+            echo "dexdump not found under ANDROID_HOME" >&2
+            exit 1
+          fi
+          echo "DEXDUMP=$DEXDUMP" >> "$GITHUB_ENV"
+          "$DEXDUMP" --help 2>&1 | head || true
+
+      - name: Disassemble only DEX files containing exact 439 HDR flag
+        shell: bash
+        run: |
+          mkdir -p research/generated work/dis
+          REPORT=research/generated/instagram_439_hdr_fast_dex_report.txt
+          : > "$REPORT"
+          {
+            echo "Instagram 439 exact HDR fast DEX probe"
+            echo "======================================"
+            echo "APK: $APK_NAME"
+            echo "SHA256: $APK_SHA256"
+            echo "Anchor: 74463::20 = ig4a_groot_surface_optimization::enable_hdr_sdr_ratio"
+            echo "Generated: $(date -u +%FT%TZ)"
+            echo
+          } >> "$REPORT"
+
+          HIT=0
+          for d in work/dex/classes*.dex; do
+            if strings "$d" | grep -qF 'enable_hdr_sdr_ratio'; then
+              HIT=1
+              b="$(basename "$d" .dex)"
+              echo "Exact string found in $d" | tee -a "$REPORT"
+              "$DEXDUMP" -d -f -h "$d" > "work/dis/$b.txt"
+              {
+                echo
+                echo "===== $b EXACT FLAG CONTEXT ====="
+                grep -n -B 80 -A 120 -F 'enable_hdr_sdr_ratio' "work/dis/$b.txt" || true
+                echo
+                echo "===== $b UNIVERSAL NAME CONTEXT ====="
+                grep -n -B 80 -A 120 -F 'ig4a_groot_surface_optimization' "work/dis/$b.txt" || true
+              } >> "$REPORT"
+            fi
+          done
+          [ "$HIT" -eq 1 ] || { echo "NO DEX CONTAINED EXACT FLAG STRING" >> "$REPORT"; exit 2; }
+
+          python3 - <<'PY'
+          from pathlib import Path
+          import re
+          report=Path('research/generated/instagram_439_hdr_fast_dex_report.txt')
+          out=report.read_text(errors='ignore')
+          # dexdump const-wide formats vary; collect large decimal and hex values from
+          # the exact flag context, then search the disassembly for reuse.
+          lits=set(re.findall(r'(?<![\w])(?:0x[0-9a-fA-F]{8,16}|\d{10,19})(?![\w])',out))
+          dis_files=list(Path('work/dis').glob('*.txt'))
+          with report.open('a') as f:
+              f.write('\n===== CANDIDATE LARGE LITERALS + GLOBAL DEXDUMP OCCURRENCES =====\n')
+              for lit in sorted(lits):
+                  total=0; hits=[]
+                  needle=lit.lower()
+                  for p in dis_files:
+                      for i,line in enumerate(p.read_text(errors='ignore').splitlines(),1):
+                          if needle in line.lower():
+                              total+=1; hits.append(f'{p}:{i}:{line.strip()}')
+                  f.write(f'\n--- {lit} GLOBAL_OCCURRENCES={total} ---\n')
+                  for h in hits[:500]: f.write(h+'\n')
+          PY
+
+          echo "===== KEY REPORT LINES ====="
+          grep -nE 'enable_hdr_sdr_ratio|ig4a_groot_surface_optimization|const-wide|GLOBAL_OCCURRENCES' "$REPORT" | head -n 500 || true
+
+      - name: Commit fast probe report
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git pull --rebase origin main
+          git add research/generated/instagram_439_hdr_fast_dex_report.txt
+          if ! git diff --cached --quiet; then
+            git commit -m "Add exact Instagram 439 HDR fast DEX report"
+            git push origin HEAD:main
+          fi
