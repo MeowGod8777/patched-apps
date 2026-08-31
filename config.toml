@@ -23,8 +23,8 @@ apkmirror-dlurl = "https://www.apkmirror.com/apk/line-corporation/line"
 uptodown-dlurl = "https://line.en.uptodown.com/android"
 
 # iQOO 12 Pro non-root build. Keep the official com.instagram.android package.
-# Piko 3.9.0 targets 439.0.0.37.89. Apply only ad removal (plus its required
-# dependencies) to minimize behavioural changes to calls, DMs and link handling.
+# Piko 3.9.0 targets 439.0.0.37.89. Use an explicit patch allow-list so only
+# the requested ad/UI/media/privacy features (plus required dependencies) apply.
 [Instagram-Piko]
 app-name = "Instagram"
 patches-source = "crimera/piko"
@@ -34,7 +34,20 @@ build-mode = "apk"
 version = "439.0.0.37.89"
 arch = "arm64-v8a"
 exclusive-patches = true
-included-patches = "'Disable ads'"
+included-patches = """\
+  'Disable ads' \
+  'Copy comment' \
+  'Improve image viewing' \
+  'Hide suggested content' \
+  'Limit feed to following profiles' \
+  'Disable screenshot detection' \
+  'View DMs anonymously' \
+  'View stories anonymously' \
+  'View live anonymously' \
+  'Save deleted messages' \
+  'Make ephemeral media permanent' \
+  'Unlock Plus benefits' \
+  """
 archive-dlurl = "https://archive.org/download/andrews-apks/apks/com.instagram.android"
 apkmirror-dlurl = "https://www.apkmirror.com/apk/instagram/instagram-instagram/"
 uptodown-dlurl = "https://instagram.en.uptodown.com/android"
