@@ -187,12 +187,22 @@ The same process also initialized `c2.android.aac.decoder` for audio. The video 
 
 This is useful but **not sufficient to classify SDR vs HDR**: AV1 can carry either SDR or HDR. The next probe must extract the visible Instagram layer's output dataspace / HDR metadata, or otherwise obtain AV1 decoder color aspects.
 
+## SurfaceFlinger layer probe
+
+`dumpsys SurfaceFlinger --list` while the Reel/modal UI was active exposed current Instagram layers including:
+
+```text
+com.instagram.android/com.instagram.modal.ModalActivity ... #34670
+com.instagram.android/com.instagram.modal.TransparentModalActivity ... #34671
+```
+
+Their parent window layers are `#33453` and `#33461` respectively. These IDs identify the active modal/window subtree, but `--list` does not expose dataspace/HDR metadata, so the next probe must inspect full layer state for these IDs rather than repeat a package-wide list.
+
 ## Current repair direction
 
 Next high-information check is the visible render layer rather than another broad codec query:
 
-- identify the current Instagram SurfaceFlinger layer;
-- inspect that layer for dataspace / HDR metadata / desired HDR-SDR ratio if exposed;
+- inspect layer IDs `#34670`, `#34671`, and their parent windows for dataspace / HDR metadata / desired HDR-SDR ratio if exposed;
 - if the visible layer is SDR, continue upstream toward Meta device capability / HDR rendition eligibility;
 - if the visible layer is HDR-coded but the display ratio remains 1, patch Instagram Surface/headroom presentation or investigate the vivo App-HDR callback state.
 
