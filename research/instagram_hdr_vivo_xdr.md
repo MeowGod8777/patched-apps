@@ -174,18 +174,26 @@ A controlled logcat capture after restarting target Instagram playback **did** c
 ```text
 MediaCodec: [c2.qti.av1.decoder] setting surface generation ...
 CCodec: Created component [c2.qti.av1.decoder]
+VideoPlayerImpl: IgBaseVideoPlayer Warning: AV1_INSTANTIATION AV1 decoding using HardwareDecoder;c2.qti.av1.decoder
 ```
 
-The same process also initialized `c2.android.aac.decoder` for audio. The video path is therefore confirmed to use the Qualcomm hardware AV1 decoder on this session/content.
+The explicit `VideoPlayerImpl` line is emitted by Instagram itself and confirms that this session/content is using the Qualcomm hardware AV1 decoder rather than merely observing an unrelated system codec.
 
-This is useful but **not sufficient to classify SDR vs HDR**: AV1 can carry either SDR or HDR. The next probe must extract AV1 decoder color aspects / output dataspace, especially transfer, primaries, matrix/range, HDR static metadata, or SurfaceFlinger layer dataspace.
+Two `c2.qti.av1.decoder` instances were created within the same short playback window. This is consistent with Reels keeping the current item and one or more adjacent items preloaded, so decoder-instance logs alone are not sufficient to identify the currently visible Reel. Surface/layer-level inspection is preferable for the next step.
+
+`CCodecConfig` also logged `BAD_INDEX` during optional parameter queries. There is no current evidence that these warnings are HDR-specific; they are treated as non-diagnostic unless tied to a concrete color/HDR parameter later.
+
+The same process also initialized `c2.android.aac.decoder` for audio. The video path is therefore confirmed to use Qualcomm hardware AV1 on this session/content.
+
+This is useful but **not sufficient to classify SDR vs HDR**: AV1 can carry either SDR or HDR. The next probe must extract the visible Instagram layer's output dataspace / HDR metadata, or otherwise obtain AV1 decoder color aspects.
 
 ## Current repair direction
 
-Next high-information check is the AV1 decoder/render metadata rather than more MetaConfig toggles:
+Next high-information check is the visible render layer rather than another broad codec query:
 
-- determine the selected decoder color transfer / dataspace for the active `c2.qti.av1.decoder` session;
-- if V2329A receives SDR, patch/spoof Meta device capability / HDR rendition eligibility;
-- if V2329A receives HDR but SurfaceFlinger sees no HDR layer, patch Instagram Surface/headroom presentation.
+- identify the current Instagram SurfaceFlinger layer;
+- inspect that layer for dataspace / HDR metadata / desired HDR-SDR ratio if exposed;
+- if the visible layer is SDR, continue upstream toward Meta device capability / HDR rendition eligibility;
+- if the visible layer is HDR-coded but the display ratio remains 1, patch Instagram Surface/headroom presentation or investigate the vivo App-HDR callback state.
 
 Do not return to blind one-by-one MetaConfig flag testing unless new evidence points to a specific flag.
