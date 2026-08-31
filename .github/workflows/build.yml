@@ -9,6 +9,14 @@ on:
 
   workflow_dispatch:
 
+  # For this fork, config changes are intentional build requests. Keep the
+  # trigger narrow so routine source/workflow edits do not publish releases.
+  push:
+    branches:
+      - main
+    paths:
+      - config.toml
+
 jobs:
   run:
     permissions: write-all
@@ -88,7 +96,7 @@ jobs:
             while IFS=$'\t' read -r t r; do echo "| \`${t}\` | ${r} |"; done <build-warnings.txt
           } >> "$GITHUB_STEP_SUMMARY"
           RUN_URL="$GITHUB_SERVER_URL/$GITHUB_REPOSITORY/actions/runs/$GITHUB_RUN_ID"
-          LIST=$(while IFS=$'\t' read -r t r; do echo "• ${t} — ${r}"; done <build-warnings.txt)
+          LIST=$(while IFS=$'\t' read -r t r; do echo "• ${t} — ${r}"; done <failed-builds.txt)
           bash "$RUNNER_TEMP/tg-notify.sh" "⚠️ *Some apps built with a warning* ([run]($RUN_URL))
           ${LIST}"
 
