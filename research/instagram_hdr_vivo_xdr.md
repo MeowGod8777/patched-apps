@@ -153,7 +153,7 @@ The vivo side is not showing an obvious `Instagram -> denied` policy. Instead, n
 This shifts the primary root-cause hypothesis upstream:
 
 1. Instagram on V2329A is selecting an SDR rendition / classifying the device as not eligible for HDR; or
-2. Instagram receives HDR media but creates a Surface/layer whose dataspace / HDR metadata / desired headroom is not recognized as HDR by SurfaceFlinger.
+2. Instagram receives HDR media but creates/composites into an SDR app surface so SurfaceFlinger never sees an HDR layer.
 
 The previous idea of forcing a vivo whitelist is therefore no longer the primary repair route.
 
@@ -181,29 +181,71 @@ The explicit `VideoPlayerImpl` line is emitted by Instagram itself and confirms 
 
 Two `c2.qti.av1.decoder` instances were created within the same short playback window. This is consistent with Reels keeping the current item and one or more adjacent items preloaded, so decoder-instance logs alone are not sufficient to identify the currently visible Reel. Surface/layer-level inspection is preferable for the next step.
 
-`CCodecConfig` also logged `BAD_INDEX` during optional parameter queries. There is no current evidence that these warnings are HDR-specific; they are treated as non-diagnostic unless tied to a concrete color/HDR parameter later.
-
-The same process also initialized `c2.android.aac.decoder` for audio. The video path is therefore confirmed to use Qualcomm hardware AV1 on this session/content.
-
-This is useful but **not sufficient to classify SDR vs HDR**: AV1 can carry either SDR or HDR. The next probe must extract the visible Instagram layer's output dataspace / HDR metadata, or otherwise obtain AV1 decoder color aspects.
-
-## SurfaceFlinger layer probe
-
-`dumpsys SurfaceFlinger --list` while the Reel/modal UI was active exposed current Instagram layers including:
+At decoder creation the same process also emitted:
 
 ```text
-com.instagram.android/com.instagram.modal.ModalActivity ... #34670
-com.instagram.android/com.instagram.modal.TransparentModalActivity ... #34671
+ColorUtils: expected specified color aspects (0:0:0:0)
 ```
 
-Their parent window layers are `#33453` and `#33461` respectively. These IDs identify the active modal/window subtree, but `--list` does not expose dataspace/HDR metadata, so the next probe must inspect full layer state for these IDs rather than repeat a package-wide list.
+This means the MediaCodec configuration visible to the framework did not carry explicit standard/range/transfer color aspects at that point. This is **supporting evidence**, not by itself proof that the AV1 bitstream is SDR, because a decoder may still learn color information from the bitstream later.
+
+`CCodecConfig` also logged `BAD_INDEX` during optional parameter queries. There is no current evidence that these warnings are HDR-specific; they are treated as non-diagnostic unless tied to a concrete color/HDR parameter later.
+
+## SurfaceFlinger full probe: current presentation is SDR
+
+A full `SurfaceFlinger` + display + Instagram log capture was taken at `2026-08-31 21:33:01` while the Instagram modal/Reel UI was active.
+
+Current Instagram output layers were:
+
+```text
+com.instagram.android/com.instagram.modal.ModalActivity ... #35005
+com.instagram.android/com.instagram.modal.TransparentModalActivity ... #35006
+```
+
+Both were full-screen HWC DEVICE layers and both were presented as:
+
+```text
+format=RGBA_8888_UBWC
+dataspace=V0_SRGB (142671872)
+whitePointNits=113.160103
+```
+
+The HWC dump agrees: the corresponding `VRI[ModalActivity]` and `VRI[TransparentModalActivity]` buffers use dataspace `0x08810000`, while the active display state reports:
+
+```text
+current mode: 7
+current render_intent: 0
+current dynamic_range: SDR
+```
+
+SurfaceFlinger itself also reports:
+
+```text
+colorMode=SRGB (7)
+dataspace=V0_SRGB (142671872)
+FramebufferSurface mDataspace=BT709 sRGB Full range
+```
+
+The physical display remains fully HDR-capable (`hdr10plus=true`, `hdr10=true`, `hlg=true`) but the **current Instagram presentation is unambiguously SDR at the SurfaceFlinger/HWC boundary**.
+
+This is a decisive narrowing result: the vivo XDR/AppHdr framework is not being asked to present an active HDR layer for this Instagram frame. The remaining ambiguity is upstream of SurfaceFlinger:
+
+1. Meta/Instagram selected an SDR AV1 rendition for V2329A; or
+2. Instagram decoded HDR-capable content but composited/tonemapped it into its SDR `RGBA_8888` app window before SurfaceFlinger.
+
+The current evidence does **not** yet distinguish those two cases, so it is too early to claim a server-side SDR rendition as proven.
+
+### Historical HDR-event caveat
+
+The same SurfaceFlinger dump contains earlier `HDR events` entries with `numHdrLayers(1)` and `desiredRatio(1.70)`, followed by `numHdrLayers(0)`. These are historical events rather than current layer state and are not package-attributed in the dump. They therefore must not be used as proof that the active Instagram Reel was HDR. The current HWC/SF state is SDR.
+
+Also note that `mOverrideDisplayInfo` can retain a previously observed high `hdrSdrRatio` value while the current physical/base display and SurfaceFlinger state are SDR; current diagnosis should therefore prioritize active SurfaceFlinger/HWC dynamic-range state over a stale override value.
 
 ## Current repair direction
 
-Next high-information check is the visible render layer rather than another broad codec query:
+The next repair work should move into Instagram/Piko rather than vivo display policy:
 
-- inspect layer IDs `#34670`, `#34671`, and their parent windows for dataspace / HDR metadata / desired HDR-SDR ratio if exposed;
-- if the visible layer is SDR, continue upstream toward Meta device capability / HDR rendition eligibility;
-- if the visible layer is HDR-coded but the display ratio remains 1, patch Instagram Surface/headroom presentation or investigate the vivo App-HDR callback state.
-
-Do not return to blind one-by-one MetaConfig flag testing unless new evidence points to a specific flag.
+- inspect Instagram's HDR/AV1 capability and rendition-selection code / MetaConfig gates that decide whether HDR playback is eligible on this device;
+- inspect the video renderer path for HDR color-aspect propagation, HDR-capable EGL/window colorspace, SurfaceTexture/compositor behavior, and `setDesiredHdrHeadroom`/equivalent presentation calls;
+- use Turbo only as a controlled positive reference if needed, ideally with the same Instagram/Piko build, to identify which branch differs when it actually enters HDR;
+- do not return to blind one-by-one MetaConfig toggles or vivo package-whitelist edits.
