@@ -1,0 +1,77 @@
+name: IG 439 HDR Selected Format Fast
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - .github/workflows/ig-hdr-selected-format-fast.yml
+permissions:
+  contents: write
+jobs:
+  trace:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    env:
+      BASE_APK: instagram-piko-v439.0.0.37.89-arm64-v8a.apk
+      BASE_SHA256: 4015b171ac59f3e7172134d194ec2dcf701f64c3339f127c19d7a04c13d529c8
+      REPORT: research/generated/instagram_439_selected_format_fast.txt
+    steps:
+      - uses: actions/checkout@v6
+      - name: Extract classes13 selected Format path
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          set -euo pipefail
+          mkdir -p work/smali research/generated
+          gh release download 8 --pattern "$BASE_APK" --dir work
+          echo "$BASE_SHA256  work/$BASE_APK" | sha256sum -c -
+          sudo apt-get update -qq
+          sudo apt-get install -y -qq smali
+          unzip -p "work/$BASE_APK" classes13.dex > work/classes13.dex
+          baksmali d work/classes13.dex -o work/smali
+          python3 - <<'PY'
+          from pathlib import Path
+          root=Path('work/smali')
+          out=Path('research/generated/instagram_439_selected_format_fast.txt')
+          chunks=[]
+          def owner_method(lines,i):
+            s=i
+            while s>=0 and not lines[s].startswith('.method'): s-=1
+            e=i
+            while e<len(lines) and not lines[e].startswith('.end method'): e+=1
+            return '\n'.join(lines[s:e+1])
+          for rel in ['X/080F.smali','X/00PV.smali']:
+            p=root/rel
+            chunks.append(f'===== {rel} exists={p.exists()} =====\n')
+            if not p.exists(): continue
+            lines=p.read_text(errors='ignore').splitlines()
+            seen=set()
+            for i,l in enumerate(lines):
+              if ('LX/080F;->A09:LX/03oR;' in l or 'LX/00PV;->A0f:LX/03oR;' in l or 'A0n(Landroid/media/MediaCrypto;LX/03oR;' in l) and ('iput-object' in l or 'iget-object' in l or 'invoke-virtual' in l or l.startswith('.method')):
+                m=owner_method(lines,i)
+                if m not in seen:
+                  seen.add(m); chunks.append(m+'\n\n')
+          # direct methods in any class13 class that call X.080F selected-format lifecycle methods
+          needles=['LX/080F;->A0K','LX/080F;->A0k','LX/080F;->A0q','LX/080F;->A0N','LX/080F;->GOc']
+          for p in root.rglob('*.smali'):
+            lines=p.read_text(errors='ignore').splitlines()
+            seen=set()
+            for i,l in enumerate(lines):
+              if any(n in l for n in needles):
+                m=owner_method(lines,i)
+                key=(str(p),m)
+                if key not in seen:
+                  seen.add(key); chunks.append(f'===== CALLER {p} =====\n{m}\n\n')
+          out.write_text(''.join(chunks))
+          print(out.stat().st_size)
+          if out.stat().st_size<1000: raise SystemExit('too small')
+          PY
+      - name: Commit
+        run: |
+          set -euo pipefail
+          git config user.name github-actions[bot]
+          git config user.email 41898282+github-actions[bot]@users.noreply.github.com
+          git add "$REPORT"
+          if git diff --cached --quiet; then exit 0; fi
+          git commit -m 'Add fast IG selected Format trace'
+          git push
