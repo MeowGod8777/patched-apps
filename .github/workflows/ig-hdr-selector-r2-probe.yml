@@ -1,0 +1,83 @@
+name: IG HDR Selector R2 Probe
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - .github/workflows/ig-hdr-selector-r2-probe.yml
+
+permissions:
+  contents: write
+
+jobs:
+  probe:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    env:
+      APK_NAME: instagram-piko-v439.0.0.37.89-arm64-v8a.apk
+      APK_SHA256: 4015b171ac59f3e7172134d194ec2dcf701f64c3339f127c19d7a04c13d529c8
+    steps:
+      - uses: actions/checkout@v6
+      - name: Download exact R8 and tools
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          set -euo pipefail
+          mkdir -p work/smali research/generated
+          gh release download 8 --pattern "$APK_NAME" --dir work
+          echo "$APK_SHA256  work/$APK_NAME" | sha256sum -c -
+          sudo apt-get update -qq
+          sudo apt-get install -y -qq smali
+          unzip -p "work/$APK_NAME" classes13.dex > work/classes13.dex
+          baksmali d work/classes13.dex -o work/smali
+      - name: Extract selector owners and HDR/profile consumers
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          from pathlib import Path
+          import re
+          root=Path('work/smali')
+          out=[]
+          targets=['X/00NW.smali','X/08ur.smali','X/08lb.smali','X/08xk.smali','X/08td.smali','X/08oh.smali']
+          for rel in targets:
+              p=root/rel
+              out.append('\n===== '+rel+' =====')
+              if p.exists(): out.append(p.read_text(errors='replace'))
+              else: out.append('NOT FOUND IN classes13')
+          # Find methods in classes13 that mention relevant profile/HDR/codec semantics.
+          pats=[
+              'video/av01','video/hevc','video/x-vnd.on2.vp9','hdr','HDR','10bit','10-bit',
+              'color-transfer','color-standard','profileLevels','CodecProfileLevel','MediaCodecInfo',
+              '4096','8192','Main10','all dash representation filtered out','representation_id',
+              'role_flag','bit_depth','bitDepth','codec_string','codecs'
+          ]
+          out.append('\n===== SEMANTIC HITS =====')
+          count=0
+          for p in root.rglob('*.smali'):
+              t=p.read_text(errors='replace')
+              if not any(x in t for x in pats): continue
+              lines=t.splitlines()
+              # emit whole methods containing a semantic hit, capped
+              starts=[i for i,l in enumerate(lines) if l.startswith('.method')]
+              for si,s in enumerate(starts):
+                  e=starts[si+1] if si+1<len(starts) else len(lines)
+                  body='\n'.join(lines[s:e])
+                  hit=[x for x in pats if x in body]
+                  if not hit: continue
+                  out.append(f'\n--- {p.relative_to(root)} :: {lines[s]} :: hits={hit} ---')
+                  out.append(body[:14000])
+                  count+=1
+                  if count>=120: break
+              if count>=120: break
+          Path('research/generated/instagram_439_hdr_selector_r2_probe.txt').write_text('\n'.join(out))
+          print('methods=',count,'bytes=',Path('research/generated/instagram_439_hdr_selector_r2_probe.txt').stat().st_size)
+          PY
+      - name: Commit report
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add research/generated/instagram_439_hdr_selector_r2_probe.txt
+          git commit -m 'Trace Instagram 439 HDR selector owners for R2' || true
+          git pull --rebase origin main
+          git push origin HEAD:main
