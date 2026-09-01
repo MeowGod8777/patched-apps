@@ -1,0 +1,98 @@
+name: IG 439 HDR Selected Format Trace
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - .github/workflows/ig-hdr-selected-format-trace.yml
+
+permissions:
+  contents: write
+
+jobs:
+  trace:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    env:
+      BASE_APK: instagram-piko-v439.0.0.37.89-arm64-v8a.apk
+      BASE_SHA256: 4015b171ac59f3e7172134d194ec2dcf701f64c3339f127c19d7a04c13d529c8
+      REPORT: research/generated/instagram_439_selected_format_trace.txt
+    steps:
+      - uses: actions/checkout@v6
+      - name: Prepare exact R8
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          set -euo pipefail
+          mkdir -p work/smali research/generated
+          gh release download 8 --pattern "$BASE_APK" --dir work
+          echo "$BASE_SHA256  work/$BASE_APK" | sha256sum -c -
+          sudo apt-get update -qq
+          sudo apt-get install -y -qq smali
+          cd work
+          unzip -Z1 "$BASE_APK" | grep -E '^classes[0-9]*\.dex$' | sort -V > dex.list
+          while read -r dex; do
+            unzip -p "$BASE_APK" "$dex" > "$dex"
+            mkdir -p "smali/${dex%.dex}"
+            baksmali d "$dex" -o "smali/${dex%.dex}"
+          done < dex.list
+      - name: Extract exact selected-format path
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          from pathlib import Path
+          root=Path('work/smali')
+          out=Path('research/generated/instagram_439_selected_format_trace.txt')
+          sections=[]
+          def method_at(lines, idx):
+            s=idx
+            while s>=0 and not lines[s].startswith('.method'): s-=1
+            e=idx
+            while e<len(lines) and not lines[e].startswith('.end method'): e+=1
+            return '\n'.join(lines[max(0,s):min(len(lines),e+1)])
+          targets=['X/080F.smali','X/00PV.smali','X/03Sg.smali','X/03oR.smali','X/0hkt.smali','X/00pG.smali']
+          for rel in targets:
+            hits=list(root.rglob(rel))
+            sections.append(f'\n===== {rel} count={len(hits)} =====\n')
+            for p in hits:
+              lines=p.read_text(errors='ignore').splitlines()
+              for i,l in enumerate(lines):
+                if any(k in l for k in [
+                  'LX/080F;->A09:LX/03oR;',
+                  'LX/00PV;->A0f:LX/03oR;',
+                  'A0n(Landroid/media/MediaCrypto;LX/03oR;',
+                  'LX/0hkt;->A07',
+                  'LX/00pG;-><init>',
+                  '[LX/03oR;',
+                ]):
+                  body=method_at(lines,i)
+                  marker=f'--- {p}:{i+1} ---\n'
+                  if marker+body+'\n' not in sections:
+                    sections.append(marker+body+'\n')
+          # All writes to selected/pending Format fields, with owning method.
+          for needle in ['->A09:LX/03oR;','->A0f:LX/03oR;']:
+            sections.append(f'\n===== WRITES {needle} =====\n')
+            seen=set()
+            for p in root.rglob('*.smali'):
+              lines=p.read_text(errors='ignore').splitlines()
+              for i,l in enumerate(lines):
+                if needle in l and 'iput-object' in l:
+                  body=method_at(lines,i)
+                  key=(str(p),body)
+                  if key in seen: continue
+                  seen.add(key)
+                  sections.append(f'--- {p}:{i+1} ---\n{body}\n')
+          out.write_text(''.join(sections))
+          print('bytes',out.stat().st_size)
+          if out.stat().st_size < 3000: raise SystemExit('report too small')
+          PY
+      - name: Commit report
+        run: |
+          set -euo pipefail
+          git config user.name github-actions[bot]
+          git config user.email 41898282+github-actions[bot]@users.noreply.github.com
+          git add "$REPORT"
+          if git diff --cached --quiet; then exit 0; fi
+          git commit -m 'Add IG selected Format trace'
+          git push
