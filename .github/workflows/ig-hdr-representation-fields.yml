@@ -1,0 +1,81 @@
+name: IG HDR Representation Fields
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - .github/workflows/ig-hdr-representation-fields.yml
+
+permissions:
+  contents: write
+
+jobs:
+  probe:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    env:
+      APK_NAME: instagram-piko-v439.0.0.37.89-arm64-v8a.apk
+      APK_SHA256: 4015b171ac59f3e7172134d194ec2dcf701f64c3339f127c19d7a04c13d529c8
+    steps:
+      - uses: actions/checkout@v6
+      - name: Extract representation classes
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          set -euo pipefail
+          mkdir -p work/dex research/generated
+          gh release download 8 --pattern "$APK_NAME" --dir work
+          echo "$APK_SHA256  work/$APK_NAME" | sha256sum -c -
+          sudo apt-get update -qq && sudo apt-get install -y -qq smali
+          unzip -j "work/$APK_NAME" 'classes*.dex' -d work/dex
+          rm -rf work/hits && mkdir -p work/hits
+          for d in work/dex/classes*.dex; do
+            if strings "$d" | grep -Eq 'LX/096x;|LX/03oR;'; then
+              b=$(basename "$d" .dex)
+              mkdir -p "work/hits/$b"
+              baksmali d "$d" -o "work/hits/$b"
+            fi
+          done
+          python3 - <<'PY'
+          from pathlib import Path
+          out=[]
+          roots=list(Path('work/hits').glob('classes*'))
+          targets=['X/096x.smali','X/03oR.smali']
+          for rel in targets:
+              out.append('===== '+rel+' FULL =====')
+              found=False
+              for r in roots:
+                  p=r/rel
+                  if p.exists():
+                      out.append(p.read_text(errors='replace'))
+                      found=True
+              if not found: out.append('NOT FOUND')
+              out.append('')
+          # Consumers that touch 096x.A03 or any 03oR field + codec/HDR/color semantics.
+          for r in roots:
+              for p in r.rglob('*.smali'):
+                  t=p.read_text(errors='replace')
+                  if 'LX/03oR;->' not in t and 'LX/096x;->A03:LX/03oR;' not in t: continue
+                  if not any(k in t.lower() for k in ['codec','video/','hdr','color','profile','bitrate','width','height','frame','03or;->a05']):
+                      continue
+                  ls=t.splitlines(); starts=[i for i,l in enumerate(ls) if l.startswith('.method')]
+                  for n,s in enumerate(starts):
+                      e=starts[n+1] if n+1<len(starts) else len(ls)
+                      body='\n'.join(ls[s:e])
+                      if 'LX/03oR;->' not in body and 'LX/096x;->A03:LX/03oR;' not in body: continue
+                      if not any(k in body.lower() for k in ['codec','video/','hdr','color','profile','bitrate','width','height','frame','03or;->a05']): continue
+                      out.append(f'===== consumer {p.relative_to(r)} :: {ls[s]} =====')
+                      out.append(body[:16000])
+                      out.append('')
+          Path('research/generated/instagram_439_hdr_representation_fields.txt').write_text('\n'.join(out))
+          print(Path('research/generated/instagram_439_hdr_representation_fields.txt').read_text()[:180000])
+          PY
+      - name: Commit
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add research/generated/instagram_439_hdr_representation_fields.txt
+          git commit -m 'Trace Instagram DASH representation metadata fields' || true
+          git pull --rebase origin main
+          git push origin HEAD:main
