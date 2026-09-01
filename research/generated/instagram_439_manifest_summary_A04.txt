@@ -1,0 +1,84 @@
+.method public static A04(LX/08ur;)Ljava/lang/String;
+    .registers 6
+
+    if-eqz p0, :cond_48
+
+    iget-object p0, p0, LX/08ur;->A01:Ljava/util/List;
+
+    if-eqz p0, :cond_48
+
+    invoke-interface {p0}, Ljava/util/List;->isEmpty()Z
+
+    move-result v0
+
+    if-nez v0, :cond_48
+
+    invoke-interface {p0}, Ljava/util/List;->size()I
+
+    move-result v4
+
+    new-array v3, v4, [I
+
+    const/4 v2, 0x0
+
+    const/4 v1, 0x0
+
+    :goto_14
+    if-ge v1, v4, :cond_25
+
+    invoke-interface {p0, v1}, Ljava/util/List;->get(I)Ljava/lang/Object;
+
+    move-result-object v0
+
+    check-cast v0, LX/096x;
+
+    iget-object v0, v0, LX/096x;->A03:LX/03oR;
+
+    iget v0, v0, LX/03oR;->A05:I
+
+    aput v0, v3, v1
+
+    add-int/lit8 v1, v1, 0x1
+
+    goto :goto_14
+
+    :cond_25
+    invoke-static {v3}, Ljava/util/Arrays;->sort([I)V
+
+    new-instance v1, Ljava/lang/StringBuilder;
+
+    invoke-direct {v1}, Ljava/lang/StringBuilder;-><init>()V
+
+    :goto_2d
+    add-int/lit8 v0, v4, -0x1
+
+    if-ge v2, v0, :cond_3e
+
+    aget v0, v3, v2
+
+    invoke-virtual {v1, v0}, Ljava/lang/StringBuilder;->append(I)Ljava/lang/StringBuilder;
+
+    const-string v0, ":"
+
+    invoke-virtual {v1, v0}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+
+    add-int/lit8 v2, v2, 0x1
+
+    goto :goto_2d
+
+    :cond_3e
+    aget v0, v3, v0
+
+    invoke-virtual {v1, v0}, Ljava/lang/StringBuilder;->append(I)Ljava/lang/StringBuilder;
+
+    invoke-virtual {v1}, Ljava/lang/Object;->toString()Ljava/lang/String;
+
+    move-result-object v0
+
+    return-object v0
+
+    :cond_48
+    const-string v0, ""
+
+    return-object v0
+.end method
