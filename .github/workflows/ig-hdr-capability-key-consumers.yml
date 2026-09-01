@@ -1,0 +1,129 @@
+name: IG 439 HDR Capability Key Consumers
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - .github/workflows/ig-hdr-capability-key-consumers.yml
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  probe:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    env:
+      APK_NAME: instagram-piko-v439.0.0.37.89-arm64-v8a.apk
+      APK_SHA256: 4015b171ac59f3e7172134d194ec2dcf701f64c3339f127c19d7a04c13d529c8
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+
+      - name: Download and disassemble exact R8
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          mkdir -p work/dex work/dis research/generated
+          gh release download 8 --pattern "$APK_NAME" --dir work
+          echo "$APK_SHA256  work/$APK_NAME" | sha256sum -c -
+          unzip -j "work/$APK_NAME" 'classes*.dex' -d work/dex
+          DEXDUMP="$(find "$ANDROID_HOME/build-tools" -type f -name dexdump | sort -V | tail -1)"
+          for d in work/dex/classes*.dex; do
+            b="$(basename "$d" .dex)"
+            "$DEXDUMP" -d -f -h "$d" > "work/dis/$b.txt"
+          done
+
+      - name: Extract exact A39 and A2u consumers
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          import re
+
+          targets = {
+              'LX/0hkS;.A39:LX/0fKx;': 'video_decoder_hdr_supported',
+              'LX/0hkS;.A2u:LX/0fKx;': 'video_av1_hardware_decoder_supported',
+              'LX/0hkS;.A2t:LX/0fKx;': 'video_av1_hardware_decoder_max_instances',
+          }
+          report = []
+          report += [
+              'Instagram 439 HDR capability-key consumers',
+              '============================================',
+              'Exact R8 SHA256: 4015b171ac59f3e7172134d194ec2dcf701f64c3339f127c19d7a04c13d529c8',
+              '',
+              'Field mapping from exact static initializer:',
+              '  X.0hkS.A39 = video_decoder_hdr_supported',
+              '  X.0hkS.A2u = video_av1_hardware_decoder_supported',
+              '  X.0hkS.A2t = video_av1_hardware_decoder_max_instances',
+              ''
+          ]
+
+          method_re = re.compile(r'\|\[[0-9a-f]+\]\s+([^\s]+\.[^:]+):')
+
+          def methods(lines):
+              starts=[]
+              for i,l in enumerate(lines):
+                  if method_re.search(l): starts.append(i)
+              for j,s in enumerate(starts):
+                  e=starts[j+1] if j+1<len(starts) else len(lines)
+                  yield s,e,lines[s:e]
+
+          def emit(path,s,e,body,label):
+              report.append(f'===== {label} :: {path.name}:{s+1}-{e} =====')
+              report.append(body[0] if body else '')
+              for line in body[1:]:
+                  if any(t in line for t in (
+                      'LX/0hkS;', 'LX/0hTo;', 'LX/0fKx;', 'SharedPreferences',
+                      'const-string', 'const/', 'invoke-', 'move-result', 'if-',
+                      'iget-', 'sget-', 'iput-', 'sput-', 'check-cast',
+                      'return-', 'new-instance', 'filled-new-array'
+                  )):
+                      report.append(line.rstrip())
+              report.append('')
+
+          counts={v:0 for v in targets.values()}
+          for p in sorted(Path('work/dis').glob('classes*.txt')):
+              lines=p.read_text(errors='replace').splitlines()
+              for s,e,b in methods(lines):
+                  joined='\n'.join(b)
+                  for field,label in targets.items():
+                      if field in joined:
+                          # Exclude the huge X.0hkS static initializer itself: it only defines the mapping.
+                          head=b[0] if b else ''
+                          if 'X.0hkS.<clinit>' in head:
+                              continue
+                          emit(p,s,e,b,label)
+                          counts[label]+=1
+
+          report.append('===== consumer counts excluding X.0hkS.<clinit> =====')
+          for k,v in counts.items(): report.append(f'{k}: {v}')
+          report.append('')
+
+          # Also locate direct reads by literal preference key names, excluding collector/serializer writers.
+          literal_targets = ('video_decoder_hdr_supported','video_av1_hardware_decoder_supported')
+          report.append('===== methods containing raw preference-key literals =====')
+          for p in sorted(Path('work/dis').glob('classes*.txt')):
+              lines=p.read_text(errors='replace').splitlines()
+              for s,e,b in methods(lines):
+                  joined='\n'.join(b)
+                  if any(f'"{x}"' in joined for x in literal_targets):
+                      head=b[0] if b else ''
+                      emit(p,s,e,b,'raw-key literal method')
+
+          out=Path('research/generated/instagram_439_hdr_capability_key_consumers.txt')
+          out.write_text('\n'.join(report)+'\n')
+          print(out.read_text()[:180000])
+          PY
+
+      - name: Commit report
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add research/generated/instagram_439_hdr_capability_key_consumers.txt
+          if ! git diff --cached --quiet; then
+            git commit -m "Trace Instagram 439 HDR capability key consumers"
+          fi
+          git pull --rebase origin main
+          git push origin HEAD:main
