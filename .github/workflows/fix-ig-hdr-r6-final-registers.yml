@@ -36,14 +36,14 @@ jobs:
               out.append(l)
           if patched!=2: raise SystemExit(f'A0f return paths={patched}')
           lines[s:e+1]=out
-'''
+          '''
           new='''          directive=next(i for i in range(s+1,min(s+12,e)) if lines[i].strip().startswith(('.registers','.locals')))
           lines[directive+1:directive+1]=[
             '',
             '    invoke-static/range {p1 .. p1}, LX/00PV;->hdrCandidateR6(LX/03oR;)V',
             ''
           ]
-'''
+          '''
           if s.count(old)!=1: raise SystemExit(f'A0f patch block count={s.count(old)}')
           s=s.replace(old,new)
 
@@ -65,7 +65,7 @@ jobs:
             '    return-void',
             '.end method',
             '',
-'''
+          '''
           s=s[:start]+replacement+s[end:]
 
           s=s.replace('renderer candidates with support code (IG_HDR_R6_CAND)', 'renderer candidate formats (IG_HDR_R6_CAND)')
@@ -73,7 +73,6 @@ jobs:
           PY
 
           git diff --check
-          git diff -- .github/workflows/build-ig-hdr-test-r6-final.yml
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
           git add .github/workflows/build-ig-hdr-test-r6-final.yml
