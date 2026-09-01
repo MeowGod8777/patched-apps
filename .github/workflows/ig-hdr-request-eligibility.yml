@@ -1,0 +1,73 @@
+name: IG 439 HDR Request Eligibility
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - .github/workflows/ig-hdr-request-eligibility.yml
+
+permissions:
+  contents: write
+
+jobs:
+  probe:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    env:
+      APK_NAME: instagram-piko-v439.0.0.37.89-arm64-v8a.apk
+      APK_SHA256: 4015b171ac59f3e7172134d194ec2dcf701f64c3339f127c19d7a04c13d529c8
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+      - name: Download exact R8 and dexdump
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          set -euo pipefail
+          mkdir -p work/dex work/dis research/generated
+          gh release download 8 --pattern "$APK_NAME" --dir work
+          echo "$APK_SHA256  work/$APK_NAME" | sha256sum -c -
+          unzip -j "work/$APK_NAME" 'classes*.dex' -d work/dex
+          DEXDUMP="$(find "$ANDROID_HOME/build-tools" -type f -name dexdump | sort -V | tail -1)"
+          for d in work/dex/classes*.dex; do
+            b="$(basename "$d" .dex)"
+            "$DEXDUMP" -d -f -h "$d" > "work/dis/$b.txt"
+          done
+      - name: Extract request and eligibility anchors
+        run: |
+          set -euo pipefail
+          REPORT=research/generated/instagram_439_hdr_request_eligibility.txt
+          REGEX='is_hdr_source|video_decoder_hdr_supported|key_video_decoder_hdr_supported|hdr.*support|support.*hdr|hdr.*capab|capab.*hdr|hdr10|hdr10plus|video_dash_manifest|device_capabil|supported_codecs|codec_capabil|playback.*capab|reels.*hdr|clips.*hdr|dash.*hdr|hdr.*dash|mixed_codec_manifest|device_static_attributes'
+          {
+            echo 'Instagram 439 HDR request / eligibility trace'
+            echo '============================================'
+            echo
+            echo '===== matching string inventory ====='
+            for d in work/dex/classes*.dex; do
+              strings "$d" | grep -Eai "$REGEX" || true
+            done | sort -u
+            echo
+            echo '===== dexdump owner contexts ====='
+            grep -aHn -B 70 -A 110 -Ei "$REGEX" work/dis/*.txt || true
+          } > "$REPORT"
+          # keep report reviewable; retain all unique anchors plus bounded contexts
+          python3 - <<'PY'
+          from pathlib import Path
+          p=Path('research/generated/instagram_439_hdr_request_eligibility.txt')
+          s=p.read_text(errors='replace')
+          # hard cap only if absurdly large; beginning contains string inventory and earliest contexts
+          if len(s)>1800000:
+              p.write_text(s[:1800000]+'\n\n[TRUNCATED BY PROBE AT 1.8MB]\n')
+          PY
+          sed -n '1,2200p' "$REPORT"
+      - name: Commit report
+        run: |
+          set -euo pipefail
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add research/generated/instagram_439_hdr_request_eligibility.txt
+          if ! git diff --cached --quiet; then git commit -m 'Trace Instagram 439 HDR request eligibility'; fi
+          git pull --rebase origin main
+          git push origin HEAD:main
