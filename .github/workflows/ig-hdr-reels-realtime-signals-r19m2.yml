@@ -1,0 +1,125 @@
+name: IG 439 HDR Reels Realtime Signals R19m2
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - .github/workflows/ig-hdr-reels-realtime-signals-r19m2.yml
+
+permissions:
+  contents: write
+
+jobs:
+  trace:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    env:
+      APK_NAME: instagram-piko-v439.0.0.37.89-arm64-v8a.apk
+      APK_SHA256: 4015b171ac59f3e7172134d194ec2dcf701f64c3339f127c19d7a04c13d529c8
+    steps:
+      - uses: actions/checkout@v6
+        with: {fetch-depth: 0}
+      - uses: actions/setup-java@v5
+        with: {distribution: zulu, java-version: '21'}
+      - name: Fetch exact APK and disassemble realtime-signal dexes
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          set -euo pipefail
+          mkdir -p work/apk work/smali research/generated
+          gh release download 8 --pattern "$APK_NAME" --dir work
+          echo "$APK_SHA256  work/$APK_NAME" | sha256sum -c -
+          gh release download 3.0.10 --repo baksmali/smali --pattern 'baksmali-3.0.10-fat.jar' --dir work
+          unzip -q "work/$APK_NAME" 'classes*.dex' -d work/apk
+          python3 - <<'PY'
+          from pathlib import Path
+          import subprocess
+          terms=['LX/0Iwp;','LX/0Ciw;','LX/08Rs;','ClipsDiscoverApiUtil_setRealtimeSignals','client_view_state_media_list']
+          hit=[]; rows=[]
+          for p in sorted(Path('work/apk').glob('classes*.dex')):
+              s=subprocess.run(['strings','-a',str(p)],capture_output=True,text=True,errors='replace').stdout
+              hs=[x for x in terms if x in s]
+              if hs:
+                  hit.append(p.name); rows.append(f'{p.name}: '+', '.join(hs))
+          Path('work/hitdex.txt').write_text('\n'.join(hit)+'\n')
+          Path('research/generated/instagram_439_hdr_reels_realtime_signal_dex_hits_r19m2.txt').write_text('\n'.join(rows)+'\n')
+          print('\n'.join(rows)); print('HITDEX',hit)
+          PY
+          while read d; do
+            [ -n "$d" ] || continue
+            java -jar work/baksmali-3.0.10-fat.jar d "work/apk/$d" -o "work/smali/${d%.dex}" >/dev/null &
+          done < work/hitdex.txt
+          wait
+      - name: Resolve dynamic synchronous signal keys
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          from pathlib import Path
+          import re
+          R=Path('work/smali'); OUT=Path('research/generated/instagram_439_hdr_reels_realtime_signals_r19m2.txt')
+          cr=re.compile(r'^\.class\s+.*\s+(L[^;]+;)$')
+          sr=re.compile(r'^\s*const-string(?:/jumbo)?\s+[^,]+,\s+"(.*)"')
+          inv=re.compile(r'(L[^;]+;)->([^\s(]+)\(([^)]*)\)(\S+)')
+          methods=[]; classes={}
+          for p in R.rglob('*.smali'):
+              ls=p.read_text(errors='replace').splitlines(); cls='?'
+              for x in ls[:50]:
+                  m=cr.match(x)
+                  if m: cls=m.group(1); break
+              classes[cls]=(p,ls)
+              i=0
+              while i<len(ls):
+                  if not ls[i].startswith('.method'): i+=1; continue
+                  s=i; sig=ls[i]; i+=1
+                  while i<len(ls) and not ls[i].startswith('.end method'): i+=1
+                  methods.append((cls,sig,p,ls[s:min(i+1,len(ls))])); i+=1
+          O=['Instagram 439 HDR Reels realtime synchronous signals R19m2','========================================================','']
+          # Full exact A05 body.
+          for cls,sig,p,b in methods:
+              if cls=='LX/04tC;' and ' A05(' in sig:
+                  O += [f'===== EXACT A05 {sig}',f'FILE={p}']+b+['']
+                  callees=[]
+                  for l in b:
+                      if 'invoke-' in l:
+                          m=inv.search(l)
+                          if m: callees.append(m.groups())
+                  O += ['A05_CALLEES='+repr(callees),'']
+          # Full data carrier classes.
+          for t in ['LX/0Iwp;','LX/0Ciw;','LX/08Rs;']:
+              O += [f'===== FULL CLASS {t} =====']
+              if t in classes:
+                  p,ls=classes[t]; O += [f'FILE={p}']+ls
+              else: O += ['NOT_FOUND']
+              O += ['']
+          # All methods directly referencing these carriers and map serialization APIs.
+          O += ['===== PRODUCER / CONSUMER METHODS =====','']
+          carriers=['LX/0Iwp;','LX/0Ciw;','LX/08Rs;']
+          for cls,sig,p,b in methods:
+              text='\n'.join(b); low=text.lower()
+              ch=[c for c in carriers if c in text]
+              if not ch: continue
+              strings=[m.group(1) for l in b if (m:=sr.match(l))]
+              high=[s for s in strings if any(w in s.lower() for w in ('hdr','codec','av1','hevc','quality','resolution','bandwidth','network','device','performance','media','video','playback','screen','battery','wifi','cell','signal','realtime','view_state'))]
+              invokes=[]
+              for l in b:
+                  if 'invoke-' in l:
+                      m=inv.search(l)
+                      if m: invokes.append(m.groups())
+              mapish=any(x in text for x in ['Ljava/util/Map;','Ljava/util/HashMap;','Ljava/util/LinkedHashMap;','entrySet()','put('])
+              if mapish or high or 'LX/04tC;->A05' in text:
+                  O += [f'--- {cls} {sig}',f'FILE={p}',f'CARRIERS={ch}',f'HIGH_STRINGS={high}',f'INVOKES={invokes}']+b+['']
+          OUT.write_text('\n'.join(O),encoding='utf-8')
+          print('\n'.join(O[:9000])); print('bytes',OUT.stat().st_size)
+          PY
+      - name: Commit R19m2 reports
+        run: |
+          set -euo pipefail
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add research/generated/instagram_439_hdr_reels_realtime_signal_dex_hits_r19m2.txt research/generated/instagram_439_hdr_reels_realtime_signals_r19m2.txt
+          if ! git diff --cached --quiet; then
+            git commit -m 'Add Reels realtime signal map trace R19m2'
+            git pull --rebase origin main
+            git push origin HEAD:main
+          fi
