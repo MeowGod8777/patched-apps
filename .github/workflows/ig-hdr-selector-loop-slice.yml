@@ -15,7 +15,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v6
-      - name: Slice selector loop from existing report
+      - name: Slice representation filtering block
         run: |
           python3 - <<'PY'
           from pathlib import Path
@@ -23,18 +23,18 @@ jobs:
           ms=src.index('.method public final CYd(LX/00kX;)LX/00lx;')
           me=src.index('.end method', ms)
           m=src[ms:me]
-          s=m.index(':cond_2ce')
-          marker='\n    :cond_34d\n'
+          s=m.index('\n    :cond_34d\n')
+          marker='\n    :cond_437\n'
           e=m.index(marker, s)
           chunk=m[s:e+len(marker)]
-          Path('research/generated/instagram_439_hdr_selector_loop_slice.txt').write_text(chunk+'\n')
+          Path('research/generated/instagram_439_hdr_selector_filter_slice.txt').write_text(chunk+'\n')
           print(chunk)
           PY
       - name: Commit
         run: |
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
-          git add research/generated/instagram_439_hdr_selector_loop_slice.txt
-          git commit -m 'Slice Instagram DASH selector loop' || true
+          git add research/generated/instagram_439_hdr_selector_filter_slice.txt
+          git commit -m 'Slice Instagram representation filtering block' || true
           git pull --rebase origin main
           git push origin HEAD:main
