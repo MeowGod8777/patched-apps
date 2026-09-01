@@ -1,0 +1,78 @@
+name: IG 439 HDR Reels Common Params R19g
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - .github/workflows/ig-hdr-reels-common-params-r19g.yml
+
+permissions:
+  contents: write
+
+jobs:
+  trace:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    env:
+      APK_NAME: instagram-piko-v439.0.0.37.89-arm64-v8a.apk
+      APK_SHA256: 4015b171ac59f3e7172134d194ec2dcf701f64c3339f127c19d7a04c13d529c8
+    steps:
+      - uses: actions/checkout@v6
+        with: {fetch-depth: 0}
+      - uses: actions/setup-java@v5
+        with:
+          distribution: zulu
+          java-version: '21'
+      - name: Fetch exact APK and focused smali
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          set -euo pipefail
+          mkdir -p work/apk work/smali research/generated
+          gh release download 8 --pattern "$APK_NAME" --dir work
+          echo "$APK_SHA256  work/$APK_NAME" | sha256sum -c -
+          gh release download 3.0.10 --repo baksmali/smali --pattern 'baksmali-3.0.10-fat.jar' --dir work
+          unzip -q "work/$APK_NAME" 'classes*.dex' -d work/apk
+          : > work/hitdex.txt
+          for d in work/apk/classes*.dex; do
+            if strings -a "$d" | grep -Eq 'LX/03Mf|LX/03Lk|feed/reels_media_stream/'; then basename "$d" >> work/hitdex.txt; fi
+          done
+          grep -qx 'classes15.dex' work/hitdex.txt || echo classes15.dex >> work/hitdex.txt
+          sort -u work/hitdex.txt -o work/hitdex.txt
+          while read d; do
+            [ -n "$d" ] || continue
+            n="${d%.dex}"
+            java -jar work/baksmali-3.0.10-fat.jar d "work/apk/$d" -o "work/smali/$n" >/dev/null &
+          done < work/hitdex.txt
+          wait
+
+      - name: Extract common param producers
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          from pathlib import Path
+          import re
+          root=Path('work/smali'); O=['Instagram 439 HDR Reels common params R19g','========================================','']
+          for name in ('03Mf.smali','03Lk.smali','03Hy.smali'):
+            hits=list(root.rglob(name))
+            for p in hits:
+              text=p.read_text(errors='replace')
+              O += [f'===== FULL CLASS {name} FILE={p} =====',text,'']
+              strings=re.findall(r'const-string(?:/jumbo)?\s+[^,]+,\s+"([^"]*)"',text)
+              O += [f'===== LITERAL STRINGS {name} =====',repr(strings),'']
+          Path('research/generated/instagram_439_hdr_reels_common_params_r19g.txt').write_text('\n'.join(O),encoding='utf-8')
+          print('\n'.join(O)[:200000])
+          PY
+
+      - name: Commit R19g report
+        run: |
+          set -euo pipefail
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add research/generated/instagram_439_hdr_reels_common_params_r19g.txt
+          if ! git diff --cached --quiet; then
+            git commit -m 'Add Reels media-stream common params R19g'
+            git pull --rebase origin main
+            git push origin HEAD:main
+          fi
