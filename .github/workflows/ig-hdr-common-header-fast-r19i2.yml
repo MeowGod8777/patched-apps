@@ -1,0 +1,103 @@
+name: IG 439 HDR Common Header Fast R19i2
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - .github/workflows/ig-hdr-common-header-fast-r19i2.yml
+
+permissions:
+  contents: write
+
+jobs:
+  trace:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    env:
+      APK_NAME: instagram-piko-v439.0.0.37.89-arm64-v8a.apk
+      APK_SHA256: 4015b171ac59f3e7172134d194ec2dcf701f64c3339f127c19d7a04c13d529c8
+    steps:
+      - uses: actions/checkout@v6
+        with: {fetch-depth: 0}
+      - uses: actions/setup-java@v5
+        with:
+          distribution: zulu
+          java-version: '21'
+      - name: Fetch exact APK and disassemble classes2 only
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          set -euo pipefail
+          mkdir -p work/smali research/generated
+          gh release download 8 --pattern "$APK_NAME" --dir work
+          echo "$APK_SHA256  work/$APK_NAME" | sha256sum -c -
+          gh release download 3.0.10 --repo baksmali/smali --pattern 'baksmali-3.0.10-fat.jar' --dir work
+          unzip -p "work/$APK_NAME" classes2.dex > work/classes2.dex
+          java -jar work/baksmali-3.0.10-fat.jar d work/classes2.dex -o work/smali/classes2 >/dev/null
+      - name: Extract exact common request header path
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          from pathlib import Path
+          import re
+          R=Path('work/smali/classes2')
+          OUT=Path('research/generated/instagram_439_hdr_common_header_fast_r19i2.txt')
+          cr=re.compile(r'^\.class\s+.*\s+(L[^;]+;)$')
+          sr=re.compile(r'^\s*const-string(?:/jumbo)?\s+([^,]+),\s+"(.*)"')
+          methods=[]
+          for p in R.rglob('*.smali'):
+              ls=p.read_text(errors='replace').splitlines(); cls='?'
+              for x in ls[:50]:
+                  m=cr.match(x)
+                  if m: cls=m.group(1); break
+              i=0
+              while i<len(ls):
+                  if not ls[i].startswith('.method'): i+=1; continue
+                  s=i; sig=ls[i]; i+=1
+                  while i<len(ls) and not ls[i].startswith('.end method'): i+=1
+                  e=min(i,len(ls)-1); methods.append((cls,sig,p,ls[s:e+1])); i+=1
+          O=['Instagram 439 common request headers R19i2','========================================','']
+          targets=[]
+          for cls,sig,p,b in methods:
+              if cls=='LX/02qb;' and ' A01(' in sig: targets.append((cls,sig,p,b))
+              if cls=='LX/02pu;' and ' A0K(' in sig: targets.append((cls,sig,p,b))
+          for cls,sig,p,b in targets:
+              O += [f'===== {cls} {sig} =====',f'FILE={p}']+b+['']
+          O += ['===== 02qb.A01 AMu HEADER WRITES =====','']
+          for cls,sig,p,b in targets:
+              if cls!='LX/02qb;': continue
+              for i,l in enumerate(b):
+                  if 'LX/03u7;->AMu(' in l:
+                      consts=[]
+                      for j in range(max(0,i-25),min(len(b),i+6)):
+                          m=sr.match(b[j])
+                          if m: consts.append((j,m.group(1),m.group(2)))
+                      O += [f'AMu_INDEX={i}',f'NEARBY_CONST={consts}']+[f'{j:04d}: {b[j]}' for j in range(max(0,i-25),min(len(b),i+6))]+['']
+          O += ['===== ALL HIGH-VALUE 02qb STRINGS =====','']
+          for cls,sig,p,b in targets:
+              if cls!='LX/02qb;': continue
+              for i,l in enumerate(b):
+                  m=sr.match(l)
+                  if m and any(k in m.group(2).lower() for k in ('x-','device','capab','hdr','codec','video','media','quality','bandwidth','network','connection','screen','display','model','family','accept','hint','user-agent')):
+                      O.append(f'{i}: {m.group(2)}')
+          O += ['','===== 02qb.A01 EXACT CALLERS IN classes2 =====','']
+          needle='LX/02qb;->A01('
+          for cls,sig,p,b in methods:
+              for i,l in enumerate(b):
+                  if needle in l:
+                      O += [f'{cls} {sig}',f'FILE={p}',f'INDEX={i}']+[f'{j:04d}: {b[j]}' for j in range(max(0,i-35),min(len(b),i+20))]+['']
+          OUT.write_text('\n'.join(O),encoding='utf-8')
+          print('\n'.join(O[:8000])); print('bytes',OUT.stat().st_size)
+          PY
+      - name: Commit R19i2 report
+        run: |
+          set -euo pipefail
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add research/generated/instagram_439_hdr_common_header_fast_r19i2.txt
+          if ! git diff --cached --quiet; then
+            git commit -m 'Add fast common request header trace R19i2'
+            git pull --rebase origin main
+            git push origin HEAD:main
+          fi
