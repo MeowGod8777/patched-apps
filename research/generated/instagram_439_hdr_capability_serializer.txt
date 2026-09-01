@@ -1,0 +1,1011 @@
+Instagram 439 HDR capability serializer trace
+============================================
+
+HIT line=1708497
+class=LX/0Uiy;
+method=run()V
+method_idx=28219
+code_header=637ec4:                                        |[637ec4] X.0Uiy.run:()V
+--- METHOD CONTEXT ---
+Class #10394 header:
+class_idx           : 12254
+access_flags        : 17 (0x0011)
+superclass_idx      : 19170
+interfaces_off      : 1704472 (0x1a0218)
+source_file_idx     : 0
+annotations_off     : 0 (0x000000)
+class_data_off      : 8079243 (0x7b478b)
+static_fields_size  : 0
+instance_fields_size: 2
+direct_methods_size : 4
+virtual_methods_size: 1
+
+Class #10394            -
+  Class descriptor  : 'LX/0Uiy;'
+  Access flags      : 0x0011 (PUBLIC FINAL)
+  Superclass        : 'Ljava/lang/Object;'
+  Interfaces        -
+    #0              : 'Ljava/lang/Runnable;'
+  Static fields     -
+  Instance fields   -
+    #0              : (in LX/0Uiy;)
+      name          : 'A00'
+      type          : 'Ljava/lang/Object;'
+      access        : 0x0001 (PUBLIC)
+    #1              : (in LX/0Uiy;)
+      name          : 'A01'
+      type          : 'LX/03Tz;'
+      access        : 0x1011 (PUBLIC FINAL SYNTHETIC)
+  Direct methods    -
+    #0              : (in LX/0Uiy;)
+      name          : '<init>'
+      type          : '()V'
+      access        : 0x10001 (PUBLIC CONSTRUCTOR)
+      method_idx    : 28215
+      code          -
+      registers     : 1
+      ins           : 1
+      outs          : 1
+      insns size    : 4 16-bit code units
+49f36c:                                        |[49f36c] X.0Uiy.<init>:()V
+49f37c: 7010 2fbb 0000                         |0000: invoke-direct {v0}, Ljava/lang/Object;.<init>:()V // method@bb2f
+49f382: 0e00                                   |0003: return-void
+      catches       : (none)
+      positions     :
+        0x0000 line=268435456
+        0x0001 line=268435457
+        0x0002 line=268435458
+        0x0003 line=268435459
+      locals        :
+        0x0000 - 0x0004 reg=0 this LX/0Uiy;
+
+    #1              : (in LX/0Uiy;)
+      name          : '<init>'
+      type          : '(LX/03Tz;)V'
+      access        : 0x10001 (PUBLIC CONSTRUCTOR)
+      method_idx    : 28216
+      code          -
+      registers     : 2
+      ins           : 2
+      outs          : 1
+      insns size    : 6 16-bit code units
+4a701c:                                        |[4a701c] X.0Uiy.<init>:(LX/03Tz;)V
+4a702c: 5b01 6886                              |0000: iput-object v1, v0, LX/0Uiy;.A01:LX/03Tz; // field@8668
+4a7030: 7010 2fbb 0000                         |0002: invoke-direct {v0}, Ljava/lang/Object;.<init>:()V // method@bb2f
+4a7036: 0e00                                   |0005: return-void
+      catches       : (none)
+      positions     :
+      locals        :
+
+    #2              : (in LX/0Uiy;)
+      name          : 'A00'
+      type          : '([Ljava/lang/Object;I)Ljava/lang/Long;'
+      access        : 0x0009 (PUBLIC STATIC)
+      method_idx    : 28217
+      code          -
+      registers     : 4
+      ins           : 2
+      outs          : 2
+      insns size    : 18 16-bit code units
+706f2c:                                        |[706f2c] X.0Uiy.A00:([Ljava/lang/Object;I)Ljava/lang/Long;
+706f3c: 1201                                   |0000: const/4 v1, #int 0 // #0
+706f3e: 4600 0203                              |0001: aget-object v0, v2, v3
+706f42: 1f00 e04a                              |0003: check-cast v0, Ljava/lang/Number; // type@4ae0
+706f46: 3800 0c00                              |0005: if-eqz v0, 0011 // +000c
+706f4a: 6e10 2cbb 0000                         |0007: invoke-virtual {v0}, Ljava/lang/Number;.intValue:()I // method@bb2c
+706f50: 0a00                                   |000a: move-result v0
+706f52: 8100                                   |000b: int-to-long v0, v0
+706f54: 7120 0dbb 1000                         |000c: invoke-static {v0, v1}, Ljava/lang/Long;.valueOf:(J)Ljava/lang/Long; // method@bb0d
+706f5a: 0c00                                   |000f: move-result-object v0
+706f5c: 1100                                   |0010: return-object v0
+706f5e: 1101                                   |0011: return-object v1
+      catches       : (none)
+      positions     :
+      locals        :
+
+    #3              : (in LX/0Uiy;)
+      name          : 'A01'
+      type          : '(I[Ljava/lang/Object;)Ljava/lang/String;'
+      access        : 0x0009 (PUBLIC STATIC)
+      method_idx    : 28218
+      code          -
+      registers     : 4
+      ins           : 2
+      outs          : 1
+      insns size    : 11 16-bit code units
+712b68:                                        |[712b68] X.0Uiy.A01:(I[Ljava/lang/Object;)Ljava/lang/String;
+712b78: 1201                                   |0000: const/4 v1, #int 0 // #0
+712b7a: 4600 0302                              |0001: aget-object v0, v3, v2
+712b7e: 3800 0700                              |0003: if-eqz v0, 000a // +0007
+712b82: 6e10 36bb 0000                         |0005: invoke-virtual {v0}, Ljava/lang/Object;.toString:()Ljava/lang/String; // method@bb36
+712b88: 0c00                                   |0008: move-result-object v0
+712b8a: 1100                                   |0009: return-object v0
+712b8c: 1101                                   |000a: return-object v1
+      catches       : (none)
+      positions     :
+      locals        :
+
+  Virtual methods   -
+    #0              : (in LX/0Uiy;)
+      name          : 'run'
+      type          : '()V'
+      access        : 0x0011 (PUBLIC FINAL)
+      method_idx    : 28219
+      code          -
+      registers     : 7
+      ins           : 1
+      outs          : 3
+      insns size    : 2396 16-bit code units
+637ec4:                                        |[637ec4] X.0Uiy.run:()V
+637ed4: 5464 6786                              |0000: iget-object v4, v6, LX/0Uiy;.A00:Ljava/lang/Object; // field@8667
+637ed8: 1f04 474f                              |0002: check-cast v4, [Ljava/lang/Object; // type@4f47
+637edc: 5463 6886                              |0004: iget-object v3, v6, LX/0Uiy;.A01:LX/03Tz; // field@8668
+637ee0: 7110 5f00 0300                         |0006: invoke-static {v3}, LX/0020;.A1Z:(LX/00vy;)Z // method@005f
+637ee6: 0a00                                   |0009: move-result v0
+637ee8: 3800 5109                              |000a: if-eqz v0, 095b // +0951
+637eec: 3804 4f09                              |000c: if-eqz v4, 095b // +094f
+637ef0: 1200                                   |000e: const/4 v0, #int 0 // #0
+637ef2: 4601 0400                              |000f: aget-object v1, v4, v0
+637ef6: 1f01 d84a                              |0011: check-cast v1, Ljava/lang/Long; // type@4ad8
+637efa: 1a00 4acf                              |0013: const-string v0, "key_ram_total_kb" // string@cf4a
+637efe: 6e30 8202 0301                         |0015: invoke-virtual {v3, v0, v1}, LX/00vy;.A0p:(Ljava/lang/String;Ljava/lang/Long;)V // method@0282
+637f04: 1212                                   |0018: const/4 v2, #int 1 // #1
+637f06: 4600 0402                              |0019: aget-object v0, v4, v2
+637f0a: 1f00 e04a                              |001b: check-cast v0, Ljava/lang/Number; // type@4ae0
+637f0e: 1205                                   |001d: const/4 v5, #int 0 // #0
+637f10: 7110 6400 0000                         |001e: invoke-static {v0}, LX/0021;.A06:(Ljava/lang/Number;)Ljava/lang/Long; // method@0064
+637f16: 0c01                                   |0021: move-result-object v1
+637f18: 1a00 34cf                              |0022: const-string v0, "key_cpu_num_cores" // string@cf34
+637f1c: 6e30 8202 0301                         |0024: invoke-virtual {v3, v0, v1}, LX/00vy;.A0p:(Ljava/lang/String;Ljava/lang/Long;)V // method@0282
+637f22: 1220                                   |0027: const/4 v0, #int 2 // #2
+637f24: 7120 396e 0400                         |0028: invoke-static {v4, v0}, LX/0Uiy;.A00:([Ljava/lang/Object;I)Ljava/lang/Long; // method@6e39
+637f2a: 0c01                                   |002b: move-result-object v1
+637f2c: 1a00 33cf                              |002c: const-string v0, "key_cpu_max_frequency_mhz" // string@cf33
+637f30: 6e30 8202 0301                         |002e: invoke-virtual {v3, v0, v1}, LX/00vy;.A0p:(Ljava/lang/String;Ljava/lang/Long;)V // method@0282
+637f36: 1230                                   |0031: const/4 v0, #int 3 // #3
+637f38: 7120 3a6e 4000                         |0032: invoke-static {v0, v4}, LX/0Uiy;.A01:(I[Ljava/lang/Object;)Ljava/lang/String; // method@6e3a
+637f3e: 0c01                                   |0035: move-result-object v1
+637f40: 1a00 38cf                              |0036: const-string v0, "key_display_size_pixels" // string@cf38
+637f44: 6e30 8302 0301                         |0038: invoke-virtual {v3, v0, v1}, LX/00vy;.A0q:(Ljava/lang/String;Ljava/lang/String;)V // method@0283
+637f4a: 1240                                   |003b: const/4 v0, #int 4 // #4
+637f4c: 4600 0400                              |003c: aget-object v0, v4, v0
+637f50: 1f00 e04a                              |003e: check-cast v0, Ljava/lang/Number; // type@4ae0
+637f54: 7110 6300 0000                         |0040: invoke-static {v0}, LX/0021;.A04:(Ljava/lang/Number;)Ljava/lang/Double; // method@0063
+637f5a: 0c01                                   |0043: move-result-object v1
+637f5c: 1a00 37cf                              |0044: const-string v0, "key_display_max_refresh_rate_fps" // string@cf37
+637f60: 6e30 8102 0301                         |0046: invoke-virtual {v3, v0, v1}, LX/00vy;.A0o:(Ljava/lang/String;Ljava/lang/Double;)V // method@0281
+637f66: 1250                                   |0049: const/4 v0, #int 5 // #5
+637f68: 4601 0400                              |004a: aget-object v1, v4, v0
+637f6c: 1f01 be4a                              |004c: check-cast v1, Ljava/lang/Boolean; // type@4abe
+637f70: 1a00 36cf                              |004e: const-string v0, "key_display_hdr_supported" // string@cf36
+637f74: 6e30 8002 0301                         |0050: invoke-virtual {v3, v0, v1}, LX/00vy;.A0n:(Ljava/lang/String;Ljava/lang/Boolean;)V // method@0280
+637f7a: 1260                                   |0053: const/4 v0, #int 6 // #6
+637f7c: 4601 0400                              |0054: aget-object v1, v4, v0
+637f80: 1f01 be4a                              |0056: check-cast v1, Ljava/lang/Boolean; // type@4abe
+637f84: 1a00 39cf                              |0058: const-string v0, "key_display_wide_colour_gamut_supported" // string@cf39
+637f88: 6e30 8002 0301                         |005a: invoke-virtual {v3, v0, v1}, LX/00vy;.A0n:(Ljava/lang/String;Ljava/lang/Boolean;)V // method@0280
+637f8e: 1270                                   |005d: const/4 v0, #int 7 // #7
+637f90: 4601 0400                              |005e: aget-object v1, v4, v0
+637f94: 1f01 be4a                              |0060: check-cast v1, Ljava/lang/Boolean; // type@4abe
+637f98: 1a00 b0ce                              |0062: const-string v0, "key_camera_back_facing_present" // string@ceb0
+637f9c: 6e30 8002 0301                         |0064: invoke-virtual {v3, v0, v1}, LX/00vy;.A0n:(Ljava/lang/String;Ljava/lang/Boolean;)V // method@0280
+637fa2: 1300 0800                              |0067: const/16 v0, #int 8 // #8
+637fa6: 4601 0400                              |0069: aget-object v1, v4, v0
+637faa: 1f01 be4a                              |006b: check-cast v1, Ljava/lang/Boolean; // type@4abe
+637fae: 1a00 f7ce                              |006d: const-string v0, "key_camera_front_facing_present" // string@cef7
+637fb2: 6e30 8002 0301                         |006f: invoke-virtual {v3, v0, v1}, LX/00vy;.A0n:(Ljava/lang/String;Ljava/lang/Boolean;)V // method@0280
+637fb8: 1300 0900                              |0072: const/16 v0, #int 9 // #9
+637fbc: 4601 0400                              |0074: aget-object v1, v4, v0
+637fc0: 1f01 be4a                              |0076: check-cast v1, Ljava/lang/Boolean; // type@4abe
+637fc4: 1a00 a1ce                              |0078: const-string v0, "key_camera_autofocus_supported" // string@cea1
+637fc8: 6e30 8002 0301                         |007a: invoke-virtual {v3, v0, v1}, LX/00vy;.A0n:(Ljava/lang/String;Ljava/lang/Boolean;)V // method@0280
+637fce: 1300 0a00                              |007d: const/16 v0, #int 10 // #a
+637fd2: 4601 0400                              |007f: aget-object v1, v4, v0
+637fd6: 1f01 be4a                              |0081: check-cast v1, Ljava/lang/Boolean; // type@4abe
+637fda: 1a00 31cf                              |0083: const-string v0, "key_camera_motion_tracking_supported" // string@cf31
+637fde: 6e30 8002 0301                         |0085: invoke-virtual {v3, v0, v1}, LX/00vy;.A0n:(Ljava/lang/String;Ljava/lang/Boolean;)V // method@0280
+637fe4: 1300 0b00                              |0088: const/16 v0, #int 11 // #b
+637fe8: 4601 0400                              |008a: aget-object v1, v4, v0
+637fec: 1f01 be4a                              |008c: check-cast v1, Ljava/lang/Boolean; // type@4abe
+637ff0: 1a00 e8ce                              |008e: const-string v0, "key_camera_flash_supported" // string@cee8
+637ff4: 6e30 8002 0301                         |0090: invoke-virtual {v3, v0, v1}, LX/00vy;.A0n:(Ljava/lang/String;Ljava/lang/Boolean;)V // method@0280
+637ffa: 1300 0c00                              |0093: const/16 v0, #int 12 // #c
+637ffe: 4601 0400                              |0095: aget-object v1, v4, v0
+638002: 1f01 be4a                              |0097: check-cast v1, Ljava/lang/Boolean; // type@4abe
+638006: 1a00 2ecf                              |0099: const-string v0, "key_camera_is_full_hardware_level" // string@cf2e
+63800a: 6e30 8002 0301                         |009b: invoke-virtual {v3, v0, v1}, LX/00vy;.A0n:(Ljava/lang/String;Ljava/lang/Boolean;)V // method@0280
+638010: 1300 0d00                              |009e: const/16 v0, #int 13 // #d
+638014: 4601 0400                              |00a0: aget-object v1, v4, v0
+638018: 1f01 be4a                              |00a2: check-cast v1, Ljava/lang/Boolean; // type@4abe
+63801c: 1a00 e7ce                              |00a4: const-string v0, "key_camera_concurrent_capture_supported" // string@cee7
+638020: 6e30 8002 0301                         |00a6: invoke-virtual {v3, v0, v1}, LX/00vy;.A0n:(Ljava/lang/String;Ljava/lang/Boolean;)V // method@0280
+638026: 1300 0e00                              |00a9: const/16 v0, #int 14 // #e
+63802a: 4601 0400                              |00ab: aget-object v1, v4, v0
+63802e: 1f01 be4a                              |00ad: check-cast v1, Ljava/lang/Boolean; // type@4abe
+638032: 1a00 2fcf                              |00af: const-string v0, "key_camera_manual_post_processing_supported" // string@cf2f
+638036: 6e30 8002 0301                         |00b1: invoke-virtual {v3, v0, v1}, LX/00vy;.A0n:(Ljava/lang/String;Ljava/lang/Boolean;)V // method@0280
+63803c: 1300 0f00                              |00b4: const/16 v0, #int 15 // #f
+638040: 4601 0400                              |00b6: aget-object v1, v4, v0
+638044: 1f01 be4a                              |00b8: check-cast v1, Ljava/lang/Boolean; // type@4abe
+638048: 1a00 30cf                              |00ba: const-string v0, "key_camera_manual_sensor_supported" // string@cf30
+63804c: 6e30 8002 0301                         |00bc: invoke-virtual {v3, v0, v1}, LX/00vy;.A0n:(Ljava/lang/String;Ljava/lang/Boolean;)V // method@0280
+638052: 1300 1000                              |00bf: const/16 v0, #int 16 // #10
+638056: 4601 0400                              |00c1: aget-object v1, v4, v0
+63805a: 1f01 be4a                              |00c3: check-cast v1, Ljava/lang/Boolean; // type@4abe
+63805e: 1a00 32cf                              |00c5: const-string v0, "key_camera_raw_image_capture_supported" // string@cf32
+638062: 6e30 8002 0301                         |00c7: invoke-virtual {v3, v0, v1}, LX/00vy;.A0n:(Ljava/lang/String;Ljava/lang/Boolean;)V // method@0280
+638068: 1300 1100                              |00ca: const/16 v0, #int 17 // #11
+63806c: 4601 0400                              |00cc: aget-object v1, v4, v0
+638070: 1f01 be4a                              |00ce: check-cast v1, Ljava/lang/Boolean; // type@4abe
+638074: 1a00 9dce                              |00d0: const-string v0, "key_audio_is_low_latency" // string@ce9d
+638078: 6e30 8002 0301                         |00d2: invoke-virtual {v3, v0, v1}, LX/00vy;.A0n:(Ljava/lang/String;Ljava/lang/Boolean;)V // method@0280
+63807e: 1300 1200                              |00d5: const/16 v0, #int 18 // #12
+638082: 4601 0400                              |00d7: aget-object v1, v4, v0
+638086: 1f01 be4a                              |00d9: check-cast v1, Ljava/lang/Boolean; // type@4abe
+63808a: 1a00 9ece                              |00db: const-string v0, "key_audio_is_pro_level" // string@ce9e
+63808e: 6e30 8002 0301                         |00dd: invoke-virtual {v3, v0, v1}, LX/00vy;.A0n:(Ljava/lang/String;Ljava/lang/Boolean;)V // method@0280
+638094: 1300 1300                              |00e0: const/16 v0, #int 19 // #13
+638098: 4601 0400                              |00e2: aget-object v1, v4, v0
+63809c: 1f01 be4a                              |00e4: check-cast v1, Ljava/lang/Boolean; // type@4abe
+6380a0: 1a00 a0ce                              |00e6: const-string v0, "key_audio_midi_api_supported" // string@cea0
+6380a4: 6e30 8002 0301                         |00e8: invoke-virtual {v3, v0, v1}, LX/00vy;.A0n:(Ljava/lang/String;Ljava/lang/Boolean;)V // method@0280
+6380aa: 1300 1400                              |00eb: const/16 v0, #int 20 // #14
+6380ae: 4601 0400                              |00ed: aget-object v1, v4, v0
+6380b2: 1f01 be4a                              |00ef: check-cast v1, Ljava/lang/Boolean; // type@4abe
+6380b6: 1a00 9fce                              |00f1: const-string v0, "key_audio_microphone_present" // string@ce9f
+6380ba: 6e30 8002 0301                         |00f3: invoke-virtual {v3, v0, v1}, LX/00vy;.A0n:(Ljava/lang/String;Ljava/lang/Boolean;)V // method@0280
+6380c0: 1300 1500                              |00f6: const/16 v0, #int 21 // #15
+6380c4: 7120 3a6e 4000                         |00f8: invoke-static {v0, v4}, LX/0Uiy;.A01:(I[Ljava/lang/Object;)Ljava/lang/String; // method@6e3a
+6380ca: 0c01                                   |00fb: move-result-object v1
+6380cc: 1a00 3dcf                              |00fc: const-string v0, "key_opengles_deqp_test_date" // string@cf3d
+6380d0: 6e30 8302 0301                         |00fe: invoke-virtual {v3, v0, v1}, LX/00vy;.A0q:(Ljava/lang/String;Ljava/lang/String;)V // method@0283
+6380d6: 1300 1600                              |0101: const/16 v0, #int 22 // #16
+6380da: 4601 0400                              |0103: aget-object v1, v4, v0
+6380de: 1f01 be4a                              |0105: check-cast v1, Ljava/lang/Boolean; // type@4abe
+6380e2: 1a00 3ccf                              |0107: const-string v0, "key_opengles_android_extension_pack_supported" // string@cf3c
+6380e6: 6e30 8002 0301                         |0109: invoke-virtual {v3, v0, v1}, LX/00vy;.A0n:(Ljava/lang/String;Ljava/lang/Boolean;)V // method@0280
+6380ec: 1300 1700                              |010c: const/16 v0, #int 23 // #17
+6380f0: 7120 3a6e 4000                         |010e: invoke-static {v0, v4}, LX/0Uiy;.A01:(I[Ljava/lang/Object;)Ljava/lang/String; // method@6e3a
+6380f6: 0c01                                   |0111: move-result-object v1
+6380f8: 1a00 6ecf                              |0112: const-string v0, "key_vulkan_deqp_test_date" // string@cf6e
+6380fc: 6e30 8302 0301                         |0114: invoke-virtual {v3, v0, v1}, LX/00vy;.A0q:(Ljava/lang/String;Ljava/lang/String;)V // method@0283
+638102: 1300 1800                              |0117: const/16 v0, #int 24 // #18
+638106: 4601 0400                              |0119: aget-object v1, v4, v0
+63810a: 1f01 be4a                              |011b: check-cast v1, Ljava/lang/Boolean; // type@4abe
+63810e: 1a00 6fcf                              |011d: const-string v0, "key_vulkan_hardware_compute_supported" // string@cf6f
+638112: 6e30 8002 0301                         |011f: invoke-virtual {v3, v0, v1}, LX/00vy;.A0n:(Ljava/lang/String;Ljava/lang/Boolean;)V // method@0280
+638118: 1300 1900                              |0122: const/16 v0, #int 25 // #19
+63811c: 7120 396e 0400                         |0124: invoke-static {v4, v0}, LX/0Uiy;.A00:([Ljava/lang/Object;I)Ljava/lang/Long; // method@6e39
+638122: 0c01                                   |0127: move-result-object v1
+638124: 1a00 70cf                              |0128: const-string v0, "key_vulkan_hardware_level" // string@cf70
+638128: 6e30 8202 0301                         |012a: invoke-virtual {v3, v0, v1}, LX/00vy;.A0p:(Ljava/lang/String;Ljava/lang/Long;)V // method@0282
+63812e: 1300 1a00                              |012d: const/16 v0, #int 26 // #1a
+638132: 7120 3a6e 4000                         |012f: invoke-static {v0, v4}, LX/0Uiy;.A01:(I[Ljava/lang/Object;)Ljava/lang/String; // method@6e3a
+638138: 0c01                                   |0132: move-result-object v1
+63813a: 1a00 71cf                              |0133: const-string v0, "key_vulkan_hardware_version" // string@cf71
+63813e: 6e30 8302 0301                         |0135: invoke-virtual {v3, v0, v1}, LX/00vy;.A0q:(Ljava/lang/String;Ljava/lang/String;)V // method@0283
+638144: 1300 1b00                              |0138: const/16 v0, #int 27 // #1b
+638148: 7120 3a6e 4000                         |013a: invoke-static {v0, v4}, LX/0Uiy;.A01:(I[Ljava/lang/Object;)Ljava/lang/String; // method@6e3a
+63814e: 0c01                                   |013d: move-result-object v1
+638150: 1a00 47cf                              |013e: const-string v0, "key_opengles_renderer" // string@cf47
+638154: 6e30 8302 0301                         |0140: invoke-virtual {v3, v0, v1}, LX/00vy;.A0q:(Ljava/lang/String;Ljava/lang/String;)V // method@0283
+63815a: 1300 1c00                              |0143: const/16 v0, #int 28 // #1c
+63815e: 7120 3a6e 4000                         |0145: invoke-static {v0, v4}, LX/0Uiy;.A01:(I[Ljava/lang/Object;)Ljava/lang/String; // method@6e3a
+638164: 0c01                                   |0148: move-result-object v1
+638166: 1a00 48cf                              |0149: const-string v0, "key_opengles_vendor" // string@cf48
+63816a: 6e30 8302 0301                         |014b: invoke-virtual {v3, v0, v1}, LX/00vy;.A0q:(Ljava/lang/String;Ljava/lang/String;)V // method@0283
+638170: 1300 1d00                              |014e: const/16 v0, #int 29 // #1d
+638174: 7120 3a6e 4000                         |0150: invoke-static {v0, v4}, LX/0Uiy;.A01:(I[Ljava/lang/Object;)Ljava/lang/String; // method@6e3a
+63817a: 0c01                                   |0153: move-result-object v1
+63817c: 1a00 49cf                              |0154: const-string v0, "key_opengles_version" // string@cf49
+638180: 6e30 8302 0301                         |0156: invoke-virtual {v3, v0, v1}, LX/00vy;.A0q:(Ljava/lang/String;Ljava/lang/String;)V // method@0283
+638186: 1300 1e00                              |0159: const/16 v0, #int 30 // #1e
+63818a: 7120 396e 0400                         |015b: invoke-static {v4, v0}, LX/0Uiy;.A00:([Ljava/lang/Object;I)Ljava/lang/Long; // method@6e39
+638190: 0c01                                   |015e: move-result-object v1
+638192: 1a00 43cf                              |015f: const-string v0, "key_opengles_max_texture_size_pixels" // string@cf43
+638196: 6e30 8202 0301                         |0161: invoke-virtual {v3, v0, v1}, LX/00vy;.A0p:(Ljava/lang/String;Ljava/lang/Long;)V // method@0282
+63819c: 1300 1f00                              |0164: const/16 v0, #int 31 // #1f
+6381a0: 7120 396e 0400                         |0166: invoke-static {v4, v0}, LX/0Uiy;.A00:([Ljava/lang/Object;I)Ljava/lang/Long; // method@6e39
+6381a6: 0c01                                   |0169: move-result-object v1
+6381a8: 1a00 41cf                              |016a: const-string v0, "key_opengles_max_image_texture_units" // string@cf41
+6381ac: 6e30 8202 0301                         |016c: invoke-virtual {v3, v0, v1}, LX/00vy;.A0p:(Ljava/lang/String;Ljava/lang/Long;)V // method@0282
+6381b2: 1300 2000                              |016f: const/16 v0, #int 32 // #20
+6381b6: 7120 396e 0400                         |0171: invoke-static {v4, v0}, LX/0Uiy;.A00:([Ljava/lang/Object;I)Ljava/lang/Long; // method@6e39
+6381bc: 0c01                                   |0174: move-result-object v1
+6381be: 1a00 44cf                              |0175: const-string v0, "key_opengles_max_vertex_texture_image_units" // string@cf44
+6381c2: 6e30 8202 0301                         |0177: invoke-virtual {v3, v0, v1}, LX/00vy;.A0p:(Ljava/lang/String;Ljava/lang/Long;)V // method@0282
+6381c8: 1300 2100                              |017a: const/16 v0, #int 33 // #21
+6381cc: 7120 396e 0400                         |017c: invoke-static {v4, v0}, LX/0Uiy;.A00:([Ljava/lang/Object;I)Ljava/lang/Long; // method@6e39
+6381d2: 0c01                                   |017f: move-result-object v1
+6381d4: 1a00 3ecf                              |0180: const-string v0, "key_opengles_max_combined_texture_image_units" // string@cf3e
+6381d8: 6e30 8202 0301                         |0182: invoke-virtual {v3, v0, v1}, LX/00vy;.A0p:(Ljava/lang/String;Ljava/lang/Long;)V // method@0282
+6381de: 1300 2200                              |0185: const/16 v0, #int 34 // #22
+6381e2: 7120 396e 0400                         |0187: invoke-static {v4, v0}, LX/0Uiy;.A00:([Ljava/lang/Object;I)Ljava/lang/Long; // method@6e39
+6381e8: 0c01                                   |018a: move-result-object v1
+6381ea: 1a00 40cf                              |018b: const-string v0, "key_opengles_max_geometry_texture_image_units" // string@cf40
+6381ee: 6e30 8202 0301                         |018d: invoke-virtual {v3, v0, v1}, LX/00vy;.A0p:(Ljava/lang/String;Ljava/lang/Long;)V // method@0282
+6381f4: 1300 2300                              |0190: const/16 v0, #int 35 // #23
+6381f8: 7120 396e 0400                         |0192: invoke-static {v4, v0}, LX/0Uiy;.A00:([Ljava/lang/Object;I)Ljava/lang/Long; // method@6e39
+6381fe: 0c01                                   |0195: move-result-object v1
+638200: 1a00 3fcf                              |0196: const-string v0, "key_opengles_max_cube_map_texture_size" // string@cf3f
+638204: 6e30 8202 0301                         |0198: invoke-virtual {v3, v0, v1}, LX/00vy;.A0p:(Ljava/lang/String;Ljava/lang/Long;)V // method@0282
+63820a: 1300 2400                              |019b: const/16 v0, #int 36 // #24
+63820e: 7120 396e 0400                         |019d: invoke-static {v4, v0}, LX/0Uiy;.A00:([Ljava/lang/Object;I)Ljava/lang/Long; // method@6e39
+638214: 0c01                                   |01a0: move-result-object v1
+638216: 1a00 42cf                              |01a1: const-string v0, "key_opengles_max_renderbuffer_size" // string@cf42
+63821a: 6e30 8202 0301                         |01a3: invoke-virtual {v3, v0, v1}, LX/00vy;.A0p:(Ljava/lang/String;Ljava/lang/Long;)V // method@0282
+638220: 1300 2500                              |01a6: const/16 v0, #int 37 // #25
+638224: 7120 396e 0400                         |01a8: invoke-static {v4, v0}, LX/0Uiy;.A00:([Ljava/lang/Object;I)Ljava/lang/Long; // method@6e39
+63822a: 0c01                                   |01ab: move-result-object v1
+63822c: 1a00 46cf                              |01ac: const-string v0, "key_opengles_max_viewport_width" // string@cf46
+638230: 6e30 8202 0301                         |01ae: invoke-virtual {v3, v0, v1}, LX/00vy;.A0p:(Ljava/lang/String;Ljava/lang/Long;)V // method@0282
+638236: 1300 2600                              |01b1: const/16 v0, #int 38 // #26
+63823a: 7120 396e 0400                         |01b3: invoke-static {v4, v0}, LX/0Uiy;.A00:([Ljava/lang/Object;I)Ljava/lang/Long; // method@6e39
+638240: 0c01                                   |01b6: move-result-object v1
+638242: 1a00 45cf                              |01b7: const-string v0, "key_opengles_max_viewport_height" // string@cf45
+638246: 6e30 8202 0301                         |01b9: invoke-virtual {v3, v0, v1}, LX/00vy;.A0p:(Ljava/lang/String;Ljava/lang/Long;)V // method@0282
+63824c: 1300 2700                              |01bc: const/16 v0, #int 39 // #27
+638250: 4601 0400                              |01be: aget-object v1, v4, v0
+638254: 1f01 be4a                              |01c0: check-cast v1, Ljava/lang/Boolean; // type@4abe
+638258: 1a00 59cf                              |01c2: const-string v0, "key_video_avc_software_decoder_supported" // string@cf59
+63825c: 6e30 8002 0301                         |01c4: invoke-virtual {v3, v0, v1}, LX/00vy;.A0n:(Ljava/lang/String;Ljava/lang/Boolean;)V // method@0280
+638262: 1300 2800                              |01c7: const/16 v0, #int 40 // #28
+638266: 7120 396e 0400                         |01c9: invoke-static {v4, v0}, LX/0Uiy;.A00:([Ljava/lang/Object;I)Ljava/lang/Long; // method@6e39
+63826c: 0c01                                   |01cc: move-result-object v1
+63826e: 1a00 58cf                              |01cd: const-string v0, "key_video_avc_software_decoder_max_instances" // string@cf58
+638272: 6e30 8202 0301                         |01cf: invoke-virtual {v3, v0, v1}, LX/00vy;.A0p:(Ljava/lang/String;Ljava/lang/Long;)V // method@0282
+638278: 1300 2900                              |01d2: const/16 v0, #int 41 // #29
+63827c: 4601 0400                              |01d4: aget-object v1, v4, v0
+638280: 1f01 be4a                              |01d6: check-cast v1, Ljava/lang/Boolean; // type@4abe
+638284: 1a00 55cf                              |01d8: const-string v0, "key_video_avc_hardware_decoder_supported" // string@cf55
+638288: 6e30 8002 0301                         |01da: invoke-virtual {v3, v0, v1}, LX/00vy;.A0n:(Ljava/lang/String;Ljava/lang/Boolean;)V // method@0280
+63828e: 1300 2a00                              |01dd: const/16 v0, #int 42 // #2a
+638292: 7120 396e 0400                         |01df: invoke-static {v4, v0}, LX/0Uiy;.A00:([Ljava/lang/Object;I)Ljava/lang/Long; // method@6e39
+638298: 0c01                                   |01e2: move-result-object v1
+63829a: 1a00 54cf                              |01e3: const-string v0, "key_video_avc_hardware_decoder_max_instances" // string@cf54
+63829e: 6e30 8202 0301                         |01e5: invoke-virtual {v3, v0, v1}, LX/00vy;.A0p:(Ljava/lang/String;Ljava/lang/Long;)V // method@0282
+6382a4: 1300 2b00                              |01e8: const/16 v0, #int 43 // #2b
+6382a8: 4601 0400                              |01ea: aget-object v1, v4, v0
+6382ac: 1f01 be4a                              |01ec: check-cast v1, Ljava/lang/Boolean; // type@4abe
+6382b0: 1a00 5bcf                              |01ee: const-string v0, "key_video_avc_software_encoder_supported" // string@cf5b
+6382b4: 6e30 8002 0301                         |01f0: invoke-virtual {v3, v0, v1}, LX/00vy;.A0n:(Ljava/lang/String;Ljava/lang/Boolean;)V // method@0280
+6382ba: 1300 2c00                              |01f3: const/16 v0, #int 44 // #2c
+6382be: 7120 396e 0400                         |01f5: invoke-static {v4, v0}, LX/0Uiy;.A00:([Ljava/lang/Object;I)Ljava/lang/Long; // method@6e39
+6382c4: 0c01                                   |01f8: move-result-object v1
+6382c6: 1a00 5acf                              |01f9: const-string v0, "key_video_avc_software_encoder_max_instances" // string@cf5a
+6382ca: 6e30 8202 0301                         |01fb: invoke-virtual {v3, v0, v1}, LX/00vy;.A0p:(Ljava/lang/String;Ljava/lang/Long;)V // method@0282
+6382d0: 1300 2d00                              |01fe: const/16 v0, #int 45 // #2d
+6382d4: 4601 0400                              |0200: aget-object v1, v4, v0
+6382d8: 1f01 be4a                              |0202: check-cast v1, Ljava/lang/Boolean; // type@4abe
+6382dc: 1a00 57cf                              |0204: const-string v0, "key_video_avc_hardware_encoder_supported" // string@cf57
+6382e0: 6e30 8002 0301                         |0206: invoke-virtual {v3, v0, v1}, LX/00vy;.A0n:(Ljava/lang/String;Ljava/lang/Boolean;)V // method@0280
+6382e6: 1300 2e00                              |0209: const/16 v0, #int 46 // #2e
+6382ea: 7120 396e 0400                         |020b: invoke-static {v4, v0}, LX/0Uiy;.A00:([Ljava/lang/Object;I)Ljava/lang/Long; // method@6e39
+6382f0: 0c01                                   |020e: move-result-object v1
+6382f2: 1a00 56cf                              |020f: const-string v0, "key_video_avc_hardware_encoder_max_instances" // string@cf56
+6382f6: 6e30 8202 0301                         |0211: invoke-virtual {v3, v0, v1}, LX/00vy;.A0p:(Ljava/lang/String;Ljava/lang/Long;)V // method@0282
+6382fc: 1300 2f00                              |0214: const/16 v0, #int 47 // #2f
+638300: 4601 0400                              |0216: aget-object v1, v4, v0
+638304: 1f01 be4a                              |0218: check-cast v1, Ljava/lang/Boolean; // type@4abe
+638308: 1a00 63cf                              |021a: const-string v0, "key_video_hevc_software_decoder_supported" // string@cf63
+63830c: 6e30 8002 0301                         |021c: invoke-virtual {v3, v0, v1}, LX/00vy;.A0n:(Ljava/lang/String;Ljava/lang/Boolean;)V // method@0280
+638312: 1300 3000                              |021f: const/16 v0, #int 48 // #30
+638316: 7120 396e 0400                         |0221: invoke-static {v4, v0}, LX/0Uiy;.A00:([Ljava/lang/Object;I)Ljava/lang/Long; // method@6e39
+63831c: 0c01                                   |0224: move-result-object v1
+63831e: 1a00 62cf                              |0225: const-string v0, "key_video_hevc_software_decoder_max_instances" // string@cf62
+638322: 6e30 8202 0301                         |0227: invoke-virtual {v3, v0, v1}, LX/00vy;.A0p:(Ljava/lang/String;Ljava/lang/Long;)V // method@0282
+638328: 1300 3100                              |022a: const/16 v0, #int 49 // #31
+63832c: 4601 0400                              |022c: aget-object v1, v4, v0
+638330: 1f01 be4a                              |022e: check-cast v1, Ljava/lang/Boolean; // type@4abe
+638334: 1a00 5fcf                              |0230: const-string v0, "key_video_hevc_hardware_decoder_supported" // string@cf5f
+638338: 6e30 8002 0301                         |0232: invoke-virtual {v3, v0, v1}, LX/00vy;.A0n:(Ljava/lang/String;Ljava/lang/Boolean;)V // method@0280
+63833e: 1300 3200                              |0235: const/16 v0, #int 50 // #32
+638342: 7120 396e 0400                         |0237: invoke-static {v4, v0}, LX/0Uiy;.A00:([Ljava/lang/Object;I)Ljava/lang/Long; // method@6e39
+638348: 0c01                                   |023a: move-result-object v1
+63834a: 1a00 5ecf                              |023b: const-string v0, "key_video_hevc_hardware_decoder_max_instances" // string@cf5e
+63834e: 6e30 8202 0301                         |023d: invoke-virtual {v3, v0, v1}, LX/00vy;.A0p:(Ljava/lang/String;Ljava/lang/Long;)V // method@0282
+638354: 1300 3300                              |0240: const/16 v0, #int 51 // #33
+638358: 4601 0400                              |0242: aget-object v1, v4, v0
+63835c: 1f01 be4a                              |0244: check-cast v1, Ljava/lang/Boolean; // type@4abe
+638360: 1a00 65cf                              |0246: const-string v0, "key_video_hevc_software_encoder_supported" // string@cf65
+638364: 6e30 8002 0301                         |0248: invoke-virtual {v3, v0, v1}, LX/00vy;.A0n:(Ljava/lang/String;Ljava/lang/Boolean;)V // method@0280
+63836a: 1300 3400                              |024b: const/16 v0, #int 52 // #34
+63836e: 7120 396e 0400                         |024d: invoke-static {v4, v0}, LX/0Uiy;.A00:([Ljava/lang/Object;I)Ljava/lang/Long; // method@6e39
+638374: 0c01                                   |0250: move-result-object v1
+638376: 1a00 64cf                              |0251: const-string v0, "key_video_hevc_software_encoder_max_instances" // string@cf64
+63837a: 6e30 8202 0301                         |0253: invoke-virtual {v3, v0, v1}, LX/00vy;.A0p:(Ljava/lang/String;Ljava/lang/Long;)V // method@0282
+638380: 1300 3500                              |0256: const/16 v0, #int 53 // #35
+638384: 4601 0400                              |0258: aget-object v1, v4, v0
+638388: 1f01 be4a                              |025a: check-cast v1, Ljava/lang/Boolean; // type@4abe
+63838c: 1a00 61cf                              |025c: const-string v0, "key_video_hevc_hardware_encoder_supported" // string@cf61
+638390: 6e30 8002 0301                         |025e: invoke-virtual {v3, v0, v1}, LX/00vy;.A0n:(Ljava/lang/String;Ljava/lang/Boolean;)V // method@0280
+638396: 1300 3600                              |0261: const/16 v0, #int 54 // #36
+63839a: 7120 396e 0400                         |0263: invoke-static {v4, v0}, LX/0Uiy;.A00:([Ljava/lang/Object;I)Ljava/lang/Long; // method@6e39
+6383a0: 0c01                                   |0266: move-result-object v1
+6383a2: 1a00 60cf                              |0267: const-string v0, "key_video_hevc_hardware_encoder_max_instances" // string@cf60
+6383a6: 6e30 8202 0301                         |0269: invoke-virtual {v3, v0, v1}, LX/00vy;.A0p:(Ljava/lang/String;Ljava/lang/Long;)V // method@0282
+6383ac: 1300 3700                              |026c: const/16 v0, #int 55 // #37
+6383b0: 4601 0400                              |026e: aget-object v1, v4, v0
+6383b4: 1f01 be4a                              |0270: check-cast v1, Ljava/lang/Boolean; // type@4abe
+6383b8: 1a00 51cf                              |0272: const-string v0, "key_video_av1_software_decoder_supported" // string@cf51
+6383bc: 6e30 8002 0301                         |0274: invoke-virtual {v3, v0, v1}, LX/00vy;.A0n:(Ljava/lang/String;Ljava/lang/Boolean;)V // method@0280
+6383c2: 1300 3800                              |0277: const/16 v0, #int 56 // #38
+6383c6: 7120 396e 0400                         |0279: invoke-static {v4, v0}, LX/0Uiy;.A00:([Ljava/lang/Object;I)Ljava/lang/Long; // method@6e39
+6383cc: 0c01                                   |027c: move-result-object v1
+6383ce: 1a00 50cf                              |027d: const-string v0, "key_video_av1_software_decoder_max_instances" // string@cf50
+6383d2: 6e30 8202 0301                         |027f: invoke-virtual {v3, v0, v1}, LX/00vy;.A0p:(Ljava/lang/String;Ljava/lang/Long;)V // method@0282
+6383d8: 1300 3900                              |0282: const/16 v0, #int 57 // #39
+6383dc: 4601 0400                              |0284: aget-object v1, v4, v0
+6383e0: 1f01 be4a                              |0286: check-cast v1, Ljava/lang/Boolean; // type@4abe
+6383e4: 1a00 4dcf                              |0288: const-string v0, "key_video_av1_hardware_decoder_supported" // string@cf4d
+6383e8: 6e30 8002 0301                         |028a: invoke-virtual {v3, v0, v1}, LX/00vy;.A0n:(Ljava/lang/String;Ljava/lang/Boolean;)V // method@0280
+6383ee: 1300 3a00                              |028d: const/16 v0, #int 58 // #3a
+6383f2: 7120 396e 0400                         |028f: invoke-static {v4, v0}, LX/0Uiy;.A00:([Ljava/lang/Object;I)Ljava/lang/Long; // method@6e39
+6383f8: 0c01                                   |0292: move-result-object v1
+6383fa: 1a00 4ccf                              |0293: const-string v0, "key_video_av1_hardware_decoder_max_instances" // string@cf4c
+6383fe: 6e30 8202 0301                         |0295: invoke-virtual {v3, v0, v1}, LX/00vy;.A0p:(Ljava/lang/String;Ljava/lang/Long;)V // method@0282
+638404: 1300 3b00                              |0298: const/16 v0, #int 59 // #3b
+638408: 4601 0400                              |029a: aget-object v1, v4, v0
+63840c: 1f01 be4a                              |029c: check-cast v1, Ljava/lang/Boolean; // type@4abe
+638410: 1a00 53cf                              |029e: const-string v0, "key_video_av1_software_encoder_supported" // string@cf53
+638414: 6e30 8002 0301                         |02a0: invoke-virtual {v3, v0, v1}, LX/00vy;.A0n:(Ljava/lang/String;Ljava/lang/Boolean;)V // method@0280
+63841a: 1300 3c00                              |02a3: const/16 v0, #int 60 // #3c
+63841e: 7120 396e 0400                         |02a5: invoke-static {v4, v0}, LX/0Uiy;.A00:([Ljava/lang/Object;I)Ljava/lang/Long; // method@6e39
+638424: 0c01                                   |02a8: move-result-object v1
+638426: 1a00 52cf                              |02a9: const-string v0, "key_video_av1_software_encoder_max_instances" // string@cf52
+63842a: 6e30 8202 0301                         |02ab: invoke-virtual {v3, v0, v1}, LX/00vy;.A0p:(Ljava/lang/String;Ljava/lang/Long;)V // method@0282
+638430: 1300 3d00                              |02ae: const/16 v0, #int 61 // #3d
+638434: 4601 0400                              |02b0: aget-object v1, v4, v0
+638438: 1f01 be4a                              |02b2: check-cast v1, Ljava/lang/Boolean; // type@4abe
+63843c: 1a00 4fcf                              |02b4: const-string v0, "key_video_av1_hardware_encoder_supported" // string@cf4f
+638440: 6e30 8002 0301                         |02b6: invoke-virtual {v3, v0, v1}, LX/00vy;.A0n:(Ljava/lang/String;Ljava/lang/Boolean;)V // method@0280
+638446: 1300 3e00                              |02b9: const/16 v0, #int 62 // #3e
+63844a: 7120 396e 0400                         |02bb: invoke-static {v4, v0}, LX/0Uiy;.A00:([Ljava/lang/Object;I)Ljava/lang/Long; // method@6e39
+638450: 0c01                                   |02be: move-result-object v1
+638452: 1a00 4ecf                              |02bf: const-string v0, "key_video_av1_hardware_encoder_max_instances" // string@cf4e
+638456: 6e30 8202 0301                         |02c1: invoke-virtual {v3, v0, v1}, LX/00vy;.A0p:(Ljava/lang/String;Ljava/lang/Long;)V // method@0282
+63845c: 1300 3f00                              |02c4: const/16 v0, #int 63 // #3f
+638460: 4601 0400                              |02c6: aget-object v1, v4, v0
+638464: 1f01 be4a                              |02c8: check-cast v1, Ljava/lang/Boolean; // type@4abe
+638468: 1a00 6bcf                              |02ca: const-string v0, "key_video_vp9_software_decoder_supported" // string@cf6b
+63846c: 6e30 8002 0301                         |02cc: invoke-virtual {v3, v0, v1}, LX/00vy;.A0n:(Ljava/lang/String;Ljava/lang/Boolean;)V // method@0280
+638472: 1300 4000                              |02cf: const/16 v0, #int 64 // #40
+638476: 7120 396e 0400                         |02d1: invoke-static {v4, v0}, LX/0Uiy;.A00:([Ljava/lang/Object;I)Ljava/lang/Long; // method@6e39
+63847c: 0c01                                   |02d4: move-result-object v1
+63847e: 1a00 6acf                              |02d5: const-string v0, "key_video_vp9_software_decoder_max_instances" // string@cf6a
+638482: 6e30 8202 0301                         |02d7: invoke-virtual {v3, v0, v1}, LX/00vy;.A0p:(Ljava/lang/String;Ljava/lang/Long;)V // method@0282
+638488: 1300 4100                              |02da: const/16 v0, #int 65 // #41
+63848c: 4601 0400                              |02dc: aget-object v1, v4, v0
+638490: 1f01 be4a                              |02de: check-cast v1, Ljava/lang/Boolean; // type@4abe
+638494: 1a00 67cf                              |02e0: const-string v0, "key_video_vp9_hardware_decoder_supported" // string@cf67
+638498: 6e30 8002 0301                         |02e2: invoke-virtual {v3, v0, v1}, LX/00vy;.A0n:(Ljava/lang/String;Ljava/lang/Boolean;)V // method@0280
+63849e: 1300 4200                              |02e5: const/16 v0, #int 66 // #42
+6384a2: 7120 396e 0400                         |02e7: invoke-static {v4, v0}, LX/0Uiy;.A00:([Ljava/lang/Object;I)Ljava/lang/Long; // method@6e39
+6384a8: 0c01                                   |02ea: move-result-object v1
+6384aa: 1a00 66cf                              |02eb: const-string v0, "key_video_vp9_hardware_decoder_max_instances" // string@cf66
+6384ae: 6e30 8202 0301                         |02ed: invoke-virtual {v3, v0, v1}, LX/00vy;.A0p:(Ljava/lang/String;Ljava/lang/Long;)V // method@0282
+6384b4: 1300 4300                              |02f0: const/16 v0, #int 67 // #43
+6384b8: 4601 0400                              |02f2: aget-object v1, v4, v0
+6384bc: 1f01 be4a                              |02f4: check-cast v1, Ljava/lang/Boolean; // type@4abe
+6384c0: 1a00 6dcf                              |02f6: const-string v0, "key_video_vp9_software_encoder_supported" // string@cf6d
+6384c4: 6e30 8002 0301                         |02f8: invoke-virtual {v3, v0, v1}, LX/00vy;.A0n:(Ljava/lang/String;Ljava/lang/Boolean;)V // method@0280
+6384ca: 1300 4400                              |02fb: const/16 v0, #int 68 // #44
+6384ce: 7120 396e 0400                         |02fd: invoke-static {v4, v0}, LX/0Uiy;.A00:([Ljava/lang/Object;I)Ljava/lang/Long; // method@6e39
+6384d4: 0c01                                   |0300: move-result-object v1
+6384d6: 1a00 6ccf                              |0301: const-string v0, "key_video_vp9_software_encoder_max_instances" // string@cf6c
+6384da: 6e30 8202 0301                         |0303: invoke-virtual {v3, v0, v1}, LX/00vy;.A0p:(Ljava/lang/String;Ljava/lang/Long;)V // method@0282
+6384e0: 1300 4500                              |0306: const/16 v0, #int 69 // #45
+6384e4: 4601 0400                              |0308: aget-object v1, v4, v0
+6384e8: 1f01 be4a                              |030a: check-cast v1, Ljava/lang/Boolean; // type@4abe
+6384ec: 1a00 69cf                              |030c: const-string v0, "key_video_vp9_hardware_encoder_supported" // string@cf69
+6384f0: 6e30 8002 0301                         |030e: invoke-virtual {v3, v0, v1}, LX/00vy;.A0n:(Ljava/lang/String;Ljava/lang/Boolean;)V // method@0280
+6384f6: 1300 4600                              |0311: const/16 v0, #int 70 // #46
+6384fa: 7120 396e 0400                         |0313: invoke-static {v4, v0}, LX/0Uiy;.A00:([Ljava/lang/Object;I)Ljava/lang/Long; // method@6e39
+638500: 0c01                                   |0316: move-result-object v1
+638502: 1a00 68cf                              |0317: const-string v0, "key_video_vp9_hardware_encoder_max_instances" // string@cf68
+638506: 6e30 8202 0301                         |0319: invoke-virtual {v3, v0, v1}, LX/00vy;.A0p:(Ljava/lang/String;Ljava/lang/Long;)V // method@0282
+63850c: 1300 4700                              |031c: const/16 v0, #int 71 // #47
+638510: 4601 0400                              |031e: aget-object v1, v4, v0
+638514: 1f01 be4a                              |0320: check-cast v1, Ljava/lang/Boolean; // type@4abe
+638518: 1a00 5ccf                              |0322: const-string v0, "key_video_decoder_hdr_supported" // string@cf5c
+63851c: 6e30 8002 0301                         |0324: invoke-virtual {v3, v0, v1}, LX/00vy;.A0n:(Ljava/lang/String;Ljava/lang/Boolean;)V // method@0280
+638522: 1300 4800                              |0327: const/16 v0, #int 72 // #48
+638526: 4601 0400                              |0329: aget-object v1, v4, v0
+63852a: 1f01 be4a                              |032b: check-cast v1, Ljava/lang/Boolean; // type@4abe
+63852e: 1a00 5dcf                              |032d: const-string v0, "key_video_encoder_hdr_supported" // string@cf5d
+638532: 6e30 8002 0301                         |032f: invoke-virtual {v3, v0, v1}, LX/00vy;.A0n:(Ljava/lang/String;Ljava/lang/Boolean;)V // method@0280
+638538: 1300 4900                              |0332: const/16 v0, #int 73 // #49
+63853c: 7120 3a6e 4000                         |0334: invoke-static {v0, v4}, LX/0Uiy;.A01:(I[Ljava/lang/Object;)Ljava/lang/String; // method@6e3a
+638542: 0c01                                   |0337: move-result-object v1
+638544: 1a00 d9ce                              |0338: const-string v0, "key_camera_back_sensor_pixel_resolution" // string@ced9
+638548: 6e30 8302 0301                         |033a: invoke-virtual {v3, v0, v1}, LX/00vy;.A0q:(Ljava/lang/String;Ljava/lang/String;)V // method@0283
+63854e: 1300 4a00                              |033d: const/16 v0, #int 74 // #4a
+638552: 7120 3a6e 4000                         |033f: invoke-static {v0, v4}, LX/0Uiy;.A01:(I[Ljava/lang/Object;)Ljava/lang/String; // method@6e3a
+638558: 0c01                                   |0342: move-result-object v1
+63855a: 1a00 20cf                              |0343: const-string v0, "key_camera_front_sensor_pixel_resolution" // string@cf20
+63855e: 6e30 8302 0301                         |0345: invoke-virtual {v3, v0, v1}, LX/00vy;.A0q:(Ljava/lang/String;Ljava/lang/String;)V // method@0283
+638564: 1300 4b00                              |0348: const/16 v0, #int 75 // #4b
+638568: 7120 3a6e 4000                         |034a: invoke-static {v0, v4}, LX/0Uiy;.A01:(I[Ljava/lang/Object;)Ljava/lang/String; // method@6e3a
+63856e: 0c01                                   |034d: move-result-object v1
+638570: 1a00 d8ce                              |034e: const-string v0, "key_camera_back_sensor_physical_size_mm" // string@ced8
+638574: 6e30 8302 0301                         |0350: invoke-virtual {v3, v0, v1}, LX/00vy;.A0q:(Ljava/lang/String;Ljava/lang/String;)V // method@0283
+63857a: 1300 4c00                              |0353: const/16 v0, #int 76 // #4c
+63857e: 7120 3a6e 4000                         |0355: invoke-static {v0, v4}, LX/0Uiy;.A01:(I[Ljava/lang/Object;)Ljava/lang/String; // method@6e3a
+638584: 0c01                                   |0358: move-result-object v1
+638586: 1a00 1fcf                              |0359: const-string v0, "key_camera_front_sensor_physical_size_mm" // string@cf1f
+63858a: 6e30 8302 0301                         |035b: invoke-virtual {v3, v0, v1}, LX/00vy;.A0q:(Ljava/lang/String;Ljava/lang/String;)V // method@0283
+638590: 1300 4d00                              |035e: const/16 v0, #int 77 // #4d
+638594: 7120 3a6e 4000                         |0360: invoke-static {v0, v4}, LX/0Uiy;.A01:(I[Ljava/lang/Object;)Ljava/lang/String; // method@6e3a
+63859a: 0c01                                   |0363: move-result-object v1
+63859c: 1a00 06cf                              |0364: const-string v0, "key_camera_front_jpeg_photo_max_pixel_resolution" // string@cf06
+6385a0: 6e30 8302 0301                         |0366: invoke-virtual {v3, v0, v1}, LX/00vy;.A0q:(Ljava/lang/String;Ljava/lang/String;)V // method@0283
+6385a6: 1300 4e00                              |0369: const/16 v0, #int 78 // #4e
+6385aa: 7120 3a6e 4000                         |036b: invoke-static {v0, v4}, LX/0Uiy;.A01:(I[Ljava/lang/Object;)Ljava/lang/String; // method@6e3a
+6385b0: 0c01                                   |036e: move-result-object v1
+6385b2: 1a00 bfce                              |036f: const-string v0, "key_camera_back_jpeg_photo_max_pixel_resolution" // string@cebf
+6385b6: 6e30 8302 0301                         |0371: invoke-virtual {v3, v0, v1}, LX/00vy;.A0q:(Ljava/lang/String;Ljava/lang/String;)V // method@0283
+6385bc: 1300 4f00                              |0374: const/16 v0, #int 79 // #4f
+6385c0: 7120 3a6e 4000                         |0376: invoke-static {v0, v4}, LX/0Uiy;.A01:(I[Ljava/lang/Object;)Ljava/lang/String; // method@6e3a
+6385c6: 0c01                                   |0379: move-result-object v1
+6385c8: 1a00 1acf                              |037a: const-string v0, "key_camera_front_raw_photo_max_pixel_resolution" // string@cf1a
+6385cc: 6e30 8302 0301                         |037c: invoke-virtual {v3, v0, v1}, LX/00vy;.A0q:(Ljava/lang/String;Ljava/lang/String;)V // method@0283
+6385d2: 1300 5000                              |037f: const/16 v0, #int 80 // #50
+6385d6: 7120 3a6e 4000                         |0381: invoke-static {v0, v4}, LX/0Uiy;.A01:(I[Ljava/lang/Object;)Ljava/lang/String; // method@6e3a
+6385dc: 0c01                                   |0384: move-result-object v1
+6385de: 1a00 d3ce                              |0385: const-string v0, "key_camera_back_raw_photo_max_pixel_resolution" // string@ced3
+6385e2: 6e30 8302 0301                         |0387: invoke-virtual {v3, v0, v1}, LX/00vy;.A0q:(Ljava/lang/String;Ljava/lang/String;)V // method@0283
+6385e8: 1300 5100                              |038a: const/16 v0, #int 81 // #51
+6385ec: 7120 3a6e 4000                         |038c: invoke-static {v0, v4}, LX/0Uiy;.A01:(I[Ljava/lang/Object;)Ljava/lang/String; // method@6e3a
+6385f2: 0c01                                   |038f: move-result-object v1
+6385f4: 1a00 18cf                              |0390: const-string v0, "key_camera_front_raw10_photo_max_pixel_resolution" // string@cf18
+6385f8: 6e30 8302 0301                         |0392: invoke-virtual {v3, v0, v1}, LX/00vy;.A0q:(Ljava/lang/String;Ljava/lang/String;)V // method@0283
+6385fe: 1300 5200                              |0395: const/16 v0, #int 82 // #52
+638602: 7120 3a6e 4000                         |0397: invoke-static {v0, v4}, LX/0Uiy;.A01:(I[Ljava/lang/Object;)Ljava/lang/String; // method@6e3a
+638608: 0c01                                   |039a: move-result-object v1
+63860a: 1a00 d1ce                              |039b: const-string v0, "key_camera_back_raw10_photo_max_pixel_resolution" // string@ced1
+63860e: 6e30 8302 0301                         |039d: invoke-virtual {v3, v0, v1}, LX/00vy;.A0q:(Ljava/lang/String;Ljava/lang/String;)V // method@0283
+638614: 1300 5300                              |03a0: const/16 v0, #int 83 // #53
+638618: 7120 3a6e 4000                         |03a2: invoke-static {v0, v4}, LX/0Uiy;.A01:(I[Ljava/lang/Object;)Ljava/lang/String; // method@6e3a
+63861e: 0c01                                   |03a5: move-result-object v1
+638620: 1a00 19cf                              |03a6: const-string v0, "key_camera_front_raw12_photo_max_pixel_resolution" // string@cf19
+638624: 6e30 8302 0301                         |03a8: invoke-virtual {v3, v0, v1}, LX/00vy;.A0q:(Ljava/lang/String;Ljava/lang/String;)V // method@0283
+63862a: 1300 5400                              |03ab: const/16 v0, #int 84 // #54
+63862e: 7120 3a6e 4000                         |03ad: invoke-static {v0, v4}, LX/0Uiy;.A01:(I[Ljava/lang/Object;)Ljava/lang/String; // method@6e3a
+638634: 0c01                                   |03b0: move-result-object v1
+638636: 1a00 d2ce                              |03b1: const-string v0, "key_camera_back_raw12_photo_max_pixel_resolution" // string@ced2
+63863a: 6e30 8302 0301                         |03b3: invoke-virtual {v3, v0, v1}, LX/00vy;.A0q:(Ljava/lang/String;Ljava/lang/String;)V // method@0283
+638640: 1300 5500                              |03b6: const/16 v0, #int 85 // #55
+638644: 7120 3a6e 4000                         |03b8: invoke-static {v0, v4}, LX/0Uiy;.A01:(I[Ljava/lang/Object;)Ljava/lang/String; // method@6e3a
+63864a: 0c01                                   |03bb: move-result-object v1
+63864c: 1a00 01cf                              |03bc: const-string v0, "key_camera_front_heic_photo_max_pixel_resolution" // string@cf01
+638650: 6e30 8302 0301                         |03be: invoke-virtual {v3, v0, v1}, LX/00vy;.A0q:(Ljava/lang/String;Ljava/lang/String;)V // method@0283
+638656: 1300 5600                              |03c1: const/16 v0, #int 86 // #56
+63865a: 7120 3a6e 4000                         |03c3: invoke-static {v0, v4}, LX/0Uiy;.A01:(I[Ljava/lang/Object;)Ljava/lang/String; // method@6e3a
+638660: 0c01                                   |03c6: move-result-object v1
+638662: 1a00 bace                              |03c7: const-string v0, "key_camera_back_heic_photo_max_pixel_resolution" // string@ceba
+638666: 6e30 8302 0301                         |03c9: invoke-virtual {v3, v0, v1}, LX/00vy;.A0q:(Ljava/lang/String;Ljava/lang/String;)V // method@0283
+63866c: 1300 5700                              |03cc: const/16 v0, #int 87 // #57
+638670: 7120 3a6e 4000                         |03ce: invoke-static {v0, v4}, LX/0Uiy;.A01:(I[Ljava/lang/Object;)Ljava/lang/String; // method@6e3a
+638676: 0c01                                   |03d1: move-result-object v1
+638678: 1a00 23cf                              |03d2: const-string v0, "key_camera_front_ultra_hdr_photo_max_pixel_resolution" // string@cf23
+63867c: 6e30 8302 0301                         |03d4: invoke-virtual {v3, v0, v1}, LX/00vy;.A0q:(Ljava/lang/String;Ljava/lang/String;)V // method@0283
+638682: 1300 5800                              |03d7: const/16 v0, #int 88 // #58
+638686: 7120 3a6e 4000                         |03d9: invoke-static {v0, v4}, LX/0Uiy;.A01:(I[Ljava/lang/Object;)Ljava/lang/String; // method@6e3a
+63868c: 0c01                                   |03dc: move-result-object v1
+63868e: 1a00 dcce                              |03dd: const-string v0, "key_camera_back_ultra_hdr_photo_max_pixel_resolution" // string@cedc
+638692: 6e30 8302 0301                         |03df: invoke-virtual {v3, v0, v1}, LX/00vy;.A0q:(Ljava/lang/String;Ljava/lang/String;)V // method@0283
+638698: 1300 5900                              |03e2: const/16 v0, #int 89 // #59
+63869c: 7120 3a6e 4000                         |03e4: invoke-static {v0, v4}, LX/0Uiy;.A01:(I[Ljava/lang/Object;)Ljava/lang/String; // method@6e3a
+6386a2: 0c01                                   |03e7: move-result-object v1
+6386a4: 1a00 17cf                              |03e8: const-string v0, "key_camera_front_preview_stream_max_pixel_resolution" // string@cf17
+6386a8: 6e30 8302 0301                         |03ea: invoke-virtual {v3, v0, v1}, LX/00vy;.A0q:(Ljava/lang/String;Ljava/lang/String;)V // method@0283
+6386ae: 1300 5a00                              |03ed: const/16 v0, #int 90 // #5a
+6386b2: 7120 3a6e 4000                         |03ef: invoke-static {v0, v4}, LX/0Uiy;.A01:(I[Ljava/lang/Object;)Ljava/lang/String; // method@6e3a
+6386b8: 0c01                                   |03f2: move-result-object v1
+6386ba: 1a00 d0ce                              |03f3: const-string v0, "key_camera_back_preview_stream_max_pixel_resolution" // string@ced0
+6386be: 6e30 8302 0301                         |03f5: invoke-virtual {v3, v0, v1}, LX/00vy;.A0q:(Ljava/lang/String;Ljava/lang/String;)V // method@0283
+6386c4: 1300 5b00                              |03f8: const/16 v0, #int 91 // #5b
+6386c8: 7120 3a6e 4000                         |03fa: invoke-static {v0, v4}, LX/0Uiy;.A01:(I[Ljava/lang/Object;)Ljava/lang/String; // method@6e3a
+6386ce: 0c01                                   |03fd: move-result-object v1
+6386d0: 1a00 27cf                              |03fe: const-string v0, "key_camera_front_video_stream_max_pixel_resolution" // string@cf27
+6386d4: 6e30 8302 0301                         |0400: invoke-virtual {v3, v0, v1}, LX/00vy;.A0q:(Ljava/lang/String;Ljava/lang/String;)V // method@0283
+6386da: 1300 5c00                              |0403: const/16 v0, #int 92 // #5c
+6386de: 7120 3a6e 4000                         |0405: invoke-static {v0, v4}, LX/0Uiy;.A01:(I[Ljava/lang/Object;)Ljava/lang/String; // method@6e3a
+6386e4: 0c01                                   |0408: move-result-object v1
+6386e6: 1a00 e0ce                              |0409: const-string v0, "key_camera_back_video_stream_max_pixel_resolution" // string@cee0
+6386ea: 6e30 8302 0301                         |040b: invoke-virtual {v3, v0, v1}, LX/00vy;.A0q:(Ljava/lang/String;Ljava/lang/String;)V // method@0283
+6386f0: 1300 5d00                              |040e: const/16 v0, #int 93 // #5d
+6386f4: 7120 3a6e 4000                         |0410: invoke-static {v0, v4}, LX/0Uiy;.A01:(I[Ljava/lang/Object;)Ljava/lang/String; // method@6e3a
+6386fa: 0c01                                   |0413: move-result-object v1
+6386fc: 1a00 f1ce                              |0414: const-string v0, "key_camera_front_cpu_stream_max_pixel_resolution" // string@cef1
+638700: 6e30 8302 0301                         |0416: invoke-virtual {v3, v0, v1}, LX/00vy;.A0q:(Ljava/lang/String;Ljava/lang/String;)V // method@0283
+638706: 1300 5e00                              |0419: const/16 v0, #int 94 // #5e
+63870a: 7120 3a6e 4000                         |041b: invoke-static {v0, v4}, LX/0Uiy;.A01:(I[Ljava/lang/Object;)Ljava/lang/String; // method@6e3a
+638710: 0c01                                   |041e: move-result-object v1
+638712: 1a00 aace                              |041f: const-string v0, "key_camera_back_cpu_stream_max_pixel_resolution" // string@ceaa
+638716: 6e30 8302 0301                         |0421: invoke-virtual {v3, v0, v1}, LX/00vy;.A0q:(Ljava/lang/String;Ljava/lang/String;)V // method@0283
+63871c: 1300 5f00                              |0424: const/16 v0, #int 95 // #5f
+638720: 4601 0400                              |0426: aget-object v1, v4, v0
+638724: 1f01 be4a                              |0428: check-cast v1, Ljava/lang/Boolean; // type@4abe
+638728: 1a00 04cf                              |042a: const-string v0, "key_camera_front_hlg_hdr_video_supported" // string@cf04
+63872c: 6e30 8002 0301                         |042c: invoke-virtual {v3, v0, v1}, LX/00vy;.A0n:(Ljava/lang/String;Ljava/lang/Boolean;)V // method@0280
+638732: 1300 6000                              |042f: const/16 v0, #int 96 // #60
+638736: 4601 0400                              |0431: aget-object v1, v4, v0
+63873a: 1f01 be4a                              |0433: check-cast v1, Ljava/lang/Boolean; // type@4abe
+63873e: 1a00 bdce                              |0435: const-string v0, "key_camera_back_hlg_hdr_video_supported" // string@cebd
+638742: 6e30 8002 0301                         |0437: invoke-virtual {v3, v0, v1}, LX/00vy;.A0n:(Ljava/lang/String;Ljava/lang/Boolean;)V // method@0280
+638748: 1300 6100                              |043a: const/16 v0, #int 97 // #61
+63874c: 4601 0400                              |043c: aget-object v1, v4, v0
+638750: 1f01 be4a                              |043e: check-cast v1, Ljava/lang/Boolean; // type@4abe
+638754: 1a00 ebce                              |0440: const-string v0, "key_camera_front_burst_capture_supported" // string@ceeb
+638758: 6e30 8002 0301                         |0442: invoke-virtual {v3, v0, v1}, LX/00vy;.A0n:(Ljava/lang/String;Ljava/lang/Boolean;)V // method@0280
+63875e: 1300 6200                              |0445: const/16 v0, #int 98 // #62
+638762: 4601 0400                              |0447: aget-object v1, v4, v0
+638766: 1f01 be4a                              |0449: check-cast v1, Ljava/lang/Boolean; // type@4abe
+63876a: 1a00 a4ce                              |044b: const-string v0, "key_camera_back_burst_capture_supported" // string@cea4
+63876e: 6e30 8002 0301                         |044d: invoke-virtual {v3, v0, v1}, LX/00vy;.A0n:(Ljava/lang/String;Ljava/lang/Boolean;)V // method@0280
+638774: 1300 6300                              |0450: const/16 v0, #int 99 // #63
+638778: 4601 0400                              |0452: aget-object v1, v4, v0
+63877c: 1f01 be4a                              |0454: check-cast v1, Ljava/lang/Boolean; // type@4abe
+638780: 1a00 24cf                              |0456: const-string v0, "key_camera_front_ultra_high_resolution_sensor_supported" // string@cf24
+638784: 6e30 8002 0301                         |0458: invoke-virtual {v3, v0, v1}, LX/00vy;.A0n:(Ljava/lang/String;Ljava/lang/Boolean;)V // method@0280
+63878a: 1300 6400                              |045b: const/16 v0, #int 100 // #64
+63878e: 4601 0400                              |045d: aget-object v1, v4, v0
+638792: 1f01 be4a                              |045f: check-cast v1, Ljava/lang/Boolean; // type@4abe
+638796: 1a00 ddce                              |0461: const-string v0, "key_camera_back_ultra_high_resolution_sensor_supported" // string@cedd
+63879a: 6e30 8002 0301                         |0463: invoke-virtual {v3, v0, v1}, LX/00vy;.A0n:(Ljava/lang/String;Ljava/lang/Boolean;)V // method@0280
+6387a0: 1300 6500                              |0466: const/16 v0, #int 101 // #65
+6387a4: 4601 0400                              |0468: aget-object v1, v4, v0
+6387a8: 1f01 be4a                              |046a: check-cast v1, Ljava/lang/Boolean; // type@4abe
+6387ac: 1a00 07cf                              |046c: const-string v0, "key_camera_front_logical_multi_camera_supported" // string@cf07
+6387b0: 6e30 8002 0301                         |046e: invoke-virtual {v3, v0, v1}, LX/00vy;.A0n:(Ljava/lang/String;Ljava/lang/Boolean;)V // method@0280
+6387b6: 1300 6600                              |0471: const/16 v0, #int 102 // #66
+6387ba: 4601 0400                              |0473: aget-object v1, v4, v0
+6387be: 1f01 be4a                              |0475: check-cast v1, Ljava/lang/Boolean; // type@4abe
+6387c2: 1a00 c0ce                              |0477: const-string v0, "key_camera_back_logical_multi_camera_supported" // string@cec0
+6387c6: 6e30 8002 0301                         |0479: invoke-virtual {v3, v0, v1}, LX/00vy;.A0n:(Ljava/lang/String;Ljava/lang/Boolean;)V // method@0280
+6387cc: 1300 6700                              |047c: const/16 v0, #int 103 // #67
+6387d0: 4601 0400                              |047e: aget-object v1, v4, v0
+6387d4: 1f01 be4a                              |0480: check-cast v1, Ljava/lang/Boolean; // type@4abe
+6387d8: 1a00 2ccf                              |0482: const-string v0, "key_camera_front_zsl_private_reprocessing_supported" // string@cf2c
+6387dc: 6e30 8002 0301                         |0484: invoke-virtual {v3, v0, v1}, LX/00vy;.A0n:(Ljava/lang/String;Ljava/lang/Boolean;)V // method@0280
+6387e2: 1300 6800                              |0487: const/16 v0, #int 104 // #68
+6387e6: 4601 0400                              |0489: aget-object v1, v4, v0
+6387ea: 1f01 be4a                              |048b: check-cast v1, Ljava/lang/Boolean; // type@4abe
+6387ee: 1a00 e5ce                              |048d: const-string v0, "key_camera_back_zsl_private_reprocessing_supported" // string@cee5
+6387f2: 6e30 8002 0301                         |048f: invoke-virtual {v3, v0, v1}, LX/00vy;.A0n:(Ljava/lang/String;Ljava/lang/Boolean;)V // method@0280
+6387f8: 1300 6900                              |0492: const/16 v0, #int 105 // #69
+6387fc: 4601 0400                              |0494: aget-object v1, v4, v0
+638800: 1f01 be4a                              |0496: check-cast v1, Ljava/lang/Boolean; // type@4abe
+638804: 1a00 2dcf                              |0498: const-string v0, "key_camera_front_zsl_yuv_reprocessing_supported" // string@cf2d
+638808: 6e30 8002 0301                         |049a: invoke-virtual {v3, v0, v1}, LX/00vy;.A0n:(Ljava/lang/String;Ljava/lang/Boolean;)V // method@0280
+63880e: 1300 6a00                              |049d: const/16 v0, #int 106 // #6a
+638812: 4601 0400                              |049f: aget-object v1, v4, v0
+638816: 1f01 be4a                              |04a1: check-cast v1, Ljava/lang/Boolean; // type@4abe
+63881a: 1a00 e6ce                              |04a3: const-string v0, "key_camera_back_zsl_yuv_reprocessing_supported" // string@cee6
+63881e: 6e30 8002 0301                         |04a5: invoke-virtual {v3, v0, v1}, LX/00vy;.A0n:(Ljava/lang/String;Ljava/lang/Boolean;)V // method@0280
+638824: 1300 6b00                              |04a8: const/16 v0, #int 107 // #6b
+638828: 4601 0400                              |04aa: aget-object v1, v4, v0
+63882c: 1f01 be4a                              |04ac: check-cast v1, Ljava/lang/Boolean; // type@4abe
+638830: 1a00 1dcf                              |04ae: const-string v0, "key_camera_front_remosaic_reprocessing_supported" // string@cf1d
+638834: 6e30 8002 0301                         |04b0: invoke-virtual {v3, v0, v1}, LX/00vy;.A0n:(Ljava/lang/String;Ljava/lang/Boolean;)V // method@0280
+63883a: 1300 6c00                              |04b3: const/16 v0, #int 108 // #6c
+63883e: 4601 0400                              |04b5: aget-object v1, v4, v0
+638842: 1f01 be4a                              |04b7: check-cast v1, Ljava/lang/Boolean; // type@4abe
+638846: 1a00 d6ce                              |04b9: const-string v0, "key_camera_back_remosaic_reprocessing_supported" // string@ced6
+63884a: 6e30 8002 0301                         |04bb: invoke-virtual {v3, v0, v1}, LX/00vy;.A0n:(Ljava/lang/String;Ljava/lang/Boolean;)V // method@0280
+638850: 1300 6d00                              |04be: const/16 v0, #int 109 // #6d
+638854: 4601 0400                              |04c0: aget-object v1, v4, v0
+638858: 1f01 be4a                              |04c2: check-cast v1, Ljava/lang/Boolean; // type@4abe
+63885c: 1a00 f2ce                              |04c4: const-string v0, "key_camera_front_depth_output_supported" // string@cef2
+638860: 6e30 8002 0301                         |04c6: invoke-virtual {v3, v0, v1}, LX/00vy;.A0n:(Ljava/lang/String;Ljava/lang/Boolean;)V // method@0280
+638866: 1300 6e00                              |04c9: const/16 v0, #int 110 // #6e
+63886a: 4601 0400                              |04cb: aget-object v1, v4, v0
+63886e: 1f01 be4a                              |04cd: check-cast v1, Ljava/lang/Boolean; // type@4abe
+638872: 1a00 abce                              |04cf: const-string v0, "key_camera_back_depth_output_supported" // string@ceab
+638876: 6e30 8002 0301                         |04d1: invoke-virtual {v3, v0, v1}, LX/00vy;.A0n:(Ljava/lang/String;Ljava/lang/Boolean;)V // method@0280
+63887c: 1300 6f00                              |04d4: const/16 v0, #int 111 // #6f
+638880: 4601 0400                              |04d6: aget-object v1, v4, v0
+638884: 1f01 be4a                              |04d8: check-cast v1, Ljava/lang/Boolean; // type@4abe
+638888: 1a00 1bcf                              |04da: const-string v0, "key_camera_front_read_sensor_settings_supported" // string@cf1b
+63888c: 6e30 8002 0301                         |04dc: invoke-virtual {v3, v0, v1}, LX/00vy;.A0n:(Ljava/lang/String;Ljava/lang/Boolean;)V // method@0280
+638892: 1300 7000                              |04df: const/16 v0, #int 112 // #70
+638896: 4601 0400                              |04e1: aget-object v1, v4, v0
+63889a: 1f01 be4a                              |04e3: check-cast v1, Ljava/lang/Boolean; // type@4abe
+63889e: 1a00 d4ce                              |04e5: const-string v0, "key_camera_back_read_sensor_settings_supported" // string@ced4
+6388a2: 6e30 8002 0301                         |04e7: invoke-virtual {v3, v0, v1}, LX/00vy;.A0n:(Ljava/lang/String;Ljava/lang/Boolean;)V // method@0280
+6388a8: 1300 7100                              |04ea: const/16 v0, #int 113 // #71
+6388ac: 4601 0400                              |04ec: aget-object v1, v4, v0
+6388b0: 1f01 be4a                              |04ee: check-cast v1, Ljava/lang/Boolean; // type@4abe
+6388b4: 1a00 1ecf                              |04f0: const-string v0, "key_camera_front_secure_image_data_supported" // string@cf1e
+6388b8: 6e30 8002 0301                         |04f2: invoke-virtual {v3, v0, v1}, LX/00vy;.A0n:(Ljava/lang/String;Ljava/lang/Boolean;)V // method@0280
+6388be: 1300 7200                              |04f5: const/16 v0, #int 114 // #72
+6388c2: 4601 0400                              |04f7: aget-object v1, v4, v0
+6388c6: 1f01 be4a                              |04f9: check-cast v1, Ljava/lang/Boolean; // type@4abe
+6388ca: 1a00 d7ce                              |04fb: const-string v0, "key_camera_back_secure_image_data_supported" // string@ced7
+6388ce: 6e30 8002 0301                         |04fd: invoke-virtual {v3, v0, v1}, LX/00vy;.A0n:(Ljava/lang/String;Ljava/lang/Boolean;)V // method@0280
+6388d4: 1300 7300                              |0500: const/16 v0, #int 115 // #73
+6388d8: 4601 0400                              |0502: aget-object v1, v4, v0
+6388dc: 1f01 be4a                              |0504: check-cast v1, Ljava/lang/Boolean; // type@4abe
+6388e0: 1a00 22cf                              |0506: const-string v0, "key_camera_front_stream_use_case_supported" // string@cf22
+6388e4: 6e30 8002 0301                         |0508: invoke-virtual {v3, v0, v1}, LX/00vy;.A0n:(Ljava/lang/String;Ljava/lang/Boolean;)V // method@0280
+6388ea: 1300 7400                              |050b: const/16 v0, #int 116 // #74
+6388ee: 4601 0400                              |050d: aget-object v1, v4, v0
+6388f2: 1f01 be4a                              |050f: check-cast v1, Ljava/lang/Boolean; // type@4abe
+6388f6: 1a00 dbce                              |0511: const-string v0, "key_camera_back_stream_use_case_supported" // string@cedb
+6388fa: 6e30 8002 0301                         |0513: invoke-virtual {v3, v0, v1}, LX/00vy;.A0n:(Ljava/lang/String;Ljava/lang/Boolean;)V // method@0280
+638900: 1300 7500                              |0516: const/16 v0, #int 117 // #75
+638904: 4601 0400                              |0518: aget-object v1, v4, v0
+638908: 1f01 be4a                              |051a: check-cast v1, Ljava/lang/Boolean; // type@4abe
+63890c: 1a00 efce                              |051c: const-string v0, "key_camera_front_constrained_high_speed_video_supported" // string@ceef
+638910: 6e30 8002 0301                         |051e: invoke-virtual {v3, v0, v1}, LX/00vy;.A0n:(Ljava/lang/String;Ljava/lang/Boolean;)V // method@0280
+638916: 1300 7600                              |0521: const/16 v0, #int 118 // #76
+63891a: 4601 0400                              |0523: aget-object v1, v4, v0
+63891e: 1f01 be4a                              |0525: check-cast v1, Ljava/lang/Boolean; // type@4abe
+638922: 1a00 a8ce                              |0527: const-string v0, "key_camera_back_constrained_high_speed_video_supported" // string@cea8
+638926: 6e30 8002 0301                         |0529: invoke-virtual {v3, v0, v1}, LX/00vy;.A0n:(Ljava/lang/String;Ljava/lang/Boolean;)V // method@0280
+63892c: 1300 7700                              |052c: const/16 v0, #int 119 // #77
+638930: 7120 3a6e 4000                         |052e: invoke-static {v0, v4}, LX/0Uiy;.A01:(I[Ljava/lang/Object;)Ljava/lang/String; // method@6e3a
+638936: 0c01                                   |0531: move-result-object v1
+638938: 1a00 edce                              |0532: const-string v0, "key_camera_front_constrained_high_speed_video_max_pixel_resolution" // string@ceed
+63893c: 6e30 8302 0301                         |0534: invoke-virtual {v3, v0, v1}, LX/00vy;.A0q:(Ljava/lang/String;Ljava/lang/String;)V // method@0283
+638942: 1300 7800                              |0537: const/16 v0, #int 120 // #78
+638946: 7120 3a6e 4000                         |0539: invoke-static {v0, v4}, LX/0Uiy;.A01:(I[Ljava/lang/Object;)Ljava/lang/String; // method@6e3a
+63894c: 0c01                                   |053c: move-result-object v1
+63894e: 1a00 a6ce                              |053d: const-string v0, "key_camera_back_constrained_high_speed_video_max_pixel_resolution" // string@cea6
+638952: 6e30 8302 0301                         |053f: invoke-virtual {v3, v0, v1}, LX/00vy;.A0q:(Ljava/lang/String;Ljava/lang/String;)V // method@0283
+638958: 1300 7900                              |0542: const/16 v0, #int 121 // #79
+63895c: 4600 0400                              |0544: aget-object v0, v4, v0
+638960: 1f00 e04a                              |0546: check-cast v0, Ljava/lang/Number; // type@4ae0
+638964: 7110 6300 0000                         |0548: invoke-static {v0}, LX/0021;.A04:(Ljava/lang/Number;)Ljava/lang/Double; // method@0063
+63896a: 0c01                                   |054b: move-result-object v1
+63896c: 1a00 ecce                              |054c: const-string v0, "key_camera_front_constrained_high_speed_video_max_fps" // string@ceec
+638970: 6e30 8102 0301                         |054e: invoke-virtual {v3, v0, v1}, LX/00vy;.A0o:(Ljava/lang/String;Ljava/lang/Double;)V // method@0281
+638976: 1300 7a00                              |0551: const/16 v0, #int 122 // #7a
+63897a: 4600 0400                              |0553: aget-object v0, v4, v0
+63897e: 1f00 e04a                              |0555: check-cast v0, Ljava/lang/Number; // type@4ae0
+638982: 7110 6300 0000                         |0557: invoke-static {v0}, LX/0021;.A04:(Ljava/lang/Number;)Ljava/lang/Double; // method@0063
+638988: 0c01                                   |055a: move-result-object v1
+63898a: 1a00 a5ce                              |055b: const-string v0, "key_camera_back_constrained_high_speed_video_max_fps" // string@cea5
+63898e: 6e30 8102 0301                         |055d: invoke-virtual {v3, v0, v1}, LX/00vy;.A0o:(Ljava/lang/String;Ljava/lang/Double;)V // method@0281
+638994: 1300 7b00                              |0560: const/16 v0, #int 123 // #7b
+638998: 4601 0400                              |0562: aget-object v1, v4, v0
+63899c: 1f01 d84a                              |0564: check-cast v1, Ljava/lang/Long; // type@4ad8
+6389a0: 1a00 eece                              |0566: const-string v0, "key_camera_front_constrained_high_speed_video_max_throughput_pps" // string@ceee
+6389a4: 6e30 8202 0301                         |0568: invoke-virtual {v3, v0, v1}, LX/00vy;.A0p:(Ljava/lang/String;Ljava/lang/Long;)V // method@0282
+6389aa: 1300 7c00                              |056b: const/16 v0, #int 124 // #7c
+6389ae: 4601 0400                              |056d: aget-object v1, v4, v0
+6389b2: 1f01 d84a                              |056f: check-cast v1, Ljava/lang/Long; // type@4ad8
+6389b6: 1a00 a7ce                              |0571: const-string v0, "key_camera_back_constrained_high_speed_video_max_throughput_pps" // string@cea7
+6389ba: 6e30 8202 0301                         |0573: invoke-virtual {v3, v0, v1}, LX/00vy;.A0p:(Ljava/lang/String;Ljava/lang/Long;)V // method@0282
+6389c0: 1300 7d00                              |0576: const/16 v0, #int 125 // #7d
+6389c4: 4600 0400                              |0578: aget-object v0, v4, v0
+6389c8: 1f00 e04a                              |057a: check-cast v0, Ljava/lang/Number; // type@4ae0
+6389cc: 7110 6300 0000                         |057c: invoke-static {v0}, LX/0021;.A04:(Ljava/lang/Number;)Ljava/lang/Double; // method@0063
+6389d2: 0c01                                   |057f: move-result-object v1
+6389d4: 1a00 0acf                              |0580: const-string v0, "key_camera_front_max_fps" // string@cf0a
+6389d8: 6e30 8102 0301                         |0582: invoke-virtual {v3, v0, v1}, LX/00vy;.A0o:(Ljava/lang/String;Ljava/lang/Double;)V // method@0281
+6389de: 1300 7e00                              |0585: const/16 v0, #int 126 // #7e
+6389e2: 4600 0400                              |0587: aget-object v0, v4, v0
+6389e6: 1f00 e04a                              |0589: check-cast v0, Ljava/lang/Number; // type@4ae0
+6389ea: 7110 6300 0000                         |058b: invoke-static {v0}, LX/0021;.A04:(Ljava/lang/Number;)Ljava/lang/Double; // method@0063
+6389f0: 0c01                                   |058e: move-result-object v1
+6389f2: 1a00 c3ce                              |058f: const-string v0, "key_camera_back_max_fps" // string@cec3
+6389f6: 6e30 8102 0301                         |0591: invoke-virtual {v3, v0, v1}, LX/00vy;.A0o:(Ljava/lang/String;Ljava/lang/Double;)V // method@0281
+6389fc: 1300 7f00                              |0594: const/16 v0, #int 127 // #7f
+638a00: 4601 0400                              |0596: aget-object v1, v4, v0
+638a04: 1f01 d84a                              |0598: check-cast v1, Ljava/lang/Long; // type@4ad8
+638a08: 1a00 0fcf                              |059a: const-string v0, "key_camera_front_max_throughput_pps" // string@cf0f
+638a0c: 6e30 8202 0301                         |059c: invoke-virtual {v3, v0, v1}, LX/00vy;.A0p:(Ljava/lang/String;Ljava/lang/Long;)V // method@0282
+638a12: 1300 8000                              |059f: const/16 v0, #int 128 // #80
+638a16: 4601 0400                              |05a1: aget-object v1, v4, v0
+638a1a: 1f01 d84a                              |05a3: check-cast v1, Ljava/lang/Long; // type@4ad8
+638a1e: 1a00 c8ce                              |05a5: const-string v0, "key_camera_back_max_throughput_pps" // string@cec8
+638a22: 6e30 8202 0301                         |05a7: invoke-virtual {v3, v0, v1}, LX/00vy;.A0p:(Ljava/lang/String;Ljava/lang/Long;)V // method@0282
+638a28: 1300 8100                              |05aa: const/16 v0, #int 129 // #81
+638a2c: 4601 0400                              |05ac: aget-object v1, v4, v0
+638a30: 1f01 be4a                              |05ae: check-cast v1, Ljava/lang/Boolean; // type@4abe
+638a34: 1a00 16cf                              |05b0: const-string v0, "key_camera_front_preview_stabilization_supported" // string@cf16
+638a38: 6e30 8002 0301                         |05b2: invoke-virtual {v3, v0, v1}, LX/00vy;.A0n:(Ljava/lang/String;Ljava/lang/Boolean;)V // method@0280
+638a3e: 1300 8200                              |05b5: const/16 v0, #int 130 // #82
+638a42: 4601 0400                              |05b7: aget-object v1, v4, v0
+638a46: 1f01 be4a                              |05b9: check-cast v1, Ljava/lang/Boolean; // type@4abe
+638a4a: 1a00 cfce                              |05bb: const-string v0, "key_camera_back_preview_stabilization_supported" // string@cecf
+638a4e: 6e30 8002 0301                         |05bd: invoke-virtual {v3, v0, v1}, LX/00vy;.A0n:(Ljava/lang/String;Ljava/lang/Boolean;)V // method@0280
+638a54: 1300 8300                              |05c0: const/16 v0, #int 131 // #83
+638a58: 4601 0400                              |05c2: aget-object v1, v4, v0
+638a5c: 1f01 be4a                              |05c4: check-cast v1, Ljava/lang/Boolean; // type@4abe
+638a60: 1a00 14cf                              |05c6: const-string v0, "key_camera_front_optical_stabilization_supported" // string@cf14
+638a64: 6e30 8002 0301                         |05c8: invoke-virtual {v3, v0, v1}, LX/00vy;.A0n:(Ljava/lang/String;Ljava/lang/Boolean;)V // method@0280
+638a6a: 1300 8400                              |05cb: const/16 v0, #int 132 // #84
+638a6e: 4601 0400                              |05cd: aget-object v1, v4, v0
+638a72: 1f01 be4a                              |05cf: check-cast v1, Ljava/lang/Boolean; // type@4abe
+638a76: 1a00 cdce                              |05d1: const-string v0, "key_camera_back_optical_stabilization_supported" // string@cecd
+638a7a: 6e30 8002 0301                         |05d3: invoke-virtual {v3, v0, v1}, LX/00vy;.A0n:(Ljava/lang/String;Ljava/lang/Boolean;)V // method@0280
+638a80: 1300 8500                              |05d6: const/16 v0, #int 133 // #85
+638a84: 4601 0400                              |05d8: aget-object v1, v4, v0
+638a88: 1f01 be4a                              |05da: check-cast v1, Ljava/lang/Boolean; // type@4abe
+638a8c: 1a00 1ccf                              |05dc: const-string v0, "key_camera_front_realtime_timestamp_supported" // string@cf1c
+638a90: 6e30 8002 0301                         |05de: invoke-virtual {v3, v0, v1}, LX/00vy;.A0n:(Ljava/lang/String;Ljava/lang/Boolean;)V // method@0280
+638a96: 1300 8600                              |05e1: const/16 v0, #int 134 // #86
+638a9a: 4601 0400                              |05e3: aget-object v1, v4, v0
+638a9e: 1f01 be4a                              |05e5: check-cast v1, Ljava/lang/Boolean; // type@4abe
+638aa2: 1a00 d5ce                              |05e7: const-string v0, "key_camera_back_realtime_timestamp_supported" // string@ced5
+638aa6: 6e30 8002 0301                         |05e9: invoke-virtual {v3, v0, v1}, LX/00vy;.A0n:(Ljava/lang/String;Ljava/lang/Boolean;)V // method@0280
+638aac: 1300 8700                              |05ec: const/16 v0, #int 135 // #87
+638ab0: 4601 0400                              |05ee: aget-object v1, v4, v0
+638ab4: 1f01 be4a                              |05f0: check-cast v1, Ljava/lang/Boolean; // type@4abe
+638ab8: 1a00 02cf                              |05f2: const-string v0, "key_camera_front_high_quality_noise_reduction_supported" // string@cf02
+638abc: 6e30 8002 0301                         |05f4: invoke-virtual {v3, v0, v1}, LX/00vy;.A0n:(Ljava/lang/String;Ljava/lang/Boolean;)V // method@0280
+638ac2: 1300 8800                              |05f7: const/16 v0, #int 136 // #88
+638ac6: 4601 0400                              |05f9: aget-object v1, v4, v0
+638aca: 1f01 be4a                              |05fb: check-cast v1, Ljava/lang/Boolean; // type@4abe
+638ace: 1a00 bbce                              |05fd: const-string v0, "key_camera_back_high_quality_noise_reduction_supported" // string@cebb
+638ad2: 6e30 8002 0301                         |05ff: invoke-virtual {v3, v0, v1}, LX/00vy;.A0n:(Ljava/lang/String;Ljava/lang/Boolean;)V // method@0280
+638ad8: 1300 8900                              |0602: const/16 v0, #int 137 // #89
+638adc: 4601 0400                              |0604: aget-object v1, v4, v0
+638ae0: 1f01 be4a                              |0606: check-cast v1, Ljava/lang/Boolean; // type@4abe
+638ae4: 1a00 2bcf                              |0608: const-string v0, "key_camera_front_zsl_noise_reduction_supported" // string@cf2b
+638ae8: 6e30 8002 0301                         |060a: invoke-virtual {v3, v0, v1}, LX/00vy;.A0n:(Ljava/lang/String;Ljava/lang/Boolean;)V // method@0280
+638aee: 1300 8a00                              |060d: const/16 v0, #int 138 // #8a
+638af2: 4601 0400                              |060f: aget-object v1, v4, v0
+638af6: 1f01 be4a                              |0611: check-cast v1, Ljava/lang/Boolean; // type@4abe
+638afa: 1a00 e4ce                              |0613: const-string v0, "key_camera_back_zsl_noise_reduction_supported" // string@cee4
+638afe: 6e30 8002 0301                         |0615: invoke-virtual {v3, v0, v1}, LX/00vy;.A0n:(Ljava/lang/String;Ljava/lang/Boolean;)V // method@0280
+638b04: 1300 8b00                              |0618: const/16 v0, #int 139 // #8b
+638b08: 4601 0400                              |061a: aget-object v1, v4, v0
+638b0c: 1f01 be4a                              |061c: check-cast v1, Ljava/lang/Boolean; // type@4abe
+638b10: 1a00 13cf                              |061e: const-string v0, "key_camera_front_minimal_noise_reduction_supported" // string@cf13
+638b14: 6e30 8002 0301                         |0620: invoke-virtual {v3, v0, v1}, LX/00vy;.A0n:(Ljava/lang/String;Ljava/lang/Boolean;)V // method@0280
+638b1a: 1300 8c00                              |0623: const/16 v0, #int 140 // #8c
+638b1e: 4601 0400                              |0625: aget-object v1, v4, v0
+638b22: 1f01 be4a                              |0627: check-cast v1, Ljava/lang/Boolean; // type@4abe
+638b26: 1a00 ccce                              |0629: const-string v0, "key_camera_back_minimal_noise_reduction_supported" // string@cecc
+638b2a: 6e30 8002 0301                         |062b: invoke-virtual {v3, v0, v1}, LX/00vy;.A0n:(Ljava/lang/String;Ljava/lang/Boolean;)V // method@0280
+638b30: 1300 8d00                              |062e: const/16 v0, #int 141 // #8d
+638b34: 4601 0400                              |0630: aget-object v1, v4, v0
+638b38: 1f01 be4a                              |0632: check-cast v1, Ljava/lang/Boolean; // type@4abe
+638b3c: 1a00 f8ce                              |0634: const-string v0, "key_camera_front_fast_noise_reduction_supported" // string@cef8
+638b40: 6e30 8002 0301                         |0636: invoke-virtual {v3, v0, v1}, LX/00vy;.A0n:(Ljava/lang/String;Ljava/lang/Boolean;)V // method@0280
+638b46: 1300 8e00                              |0639: const/16 v0, #int 142 // #8e
+638b4a: 4601 0400                              |063b: aget-object v1, v4, v0
+638b4e: 1f01 be4a                              |063d: check-cast v1, Ljava/lang/Boolean; // type@4abe
+638b52: 1a00 b1ce                              |063f: const-string v0, "key_camera_back_fast_noise_reduction_supported" // string@ceb1
+638b56: 6e30 8002 0301                         |0641: invoke-virtual {v3, v0, v1}, LX/00vy;.A0n:(Ljava/lang/String;Ljava/lang/Boolean;)V // method@0280
+638b5c: 1300 8f00                              |0644: const/16 v0, #int 143 // #8f
+638b60: 4601 0400                              |0646: aget-object v1, v4, v0
+638b64: 1f01 be4a                              |0648: check-cast v1, Ljava/lang/Boolean; // type@4abe
+638b68: 1a00 03cf                              |064a: const-string v0, "key_camera_front_high_quality_tonemap_mode_supported" // string@cf03
+638b6c: 6e30 8002 0301                         |064c: invoke-virtual {v3, v0, v1}, LX/00vy;.A0n:(Ljava/lang/String;Ljava/lang/Boolean;)V // method@0280
+638b72: 1300 9000                              |064f: const/16 v0, #int 144 // #90
+638b76: 4601 0400                              |0651: aget-object v1, v4, v0
+638b7a: 1f01 be4a                              |0653: check-cast v1, Ljava/lang/Boolean; // type@4abe
+638b7e: 1a00 bcce                              |0655: const-string v0, "key_camera_back_high_quality_tonemap_mode_supported" // string@cebc
+638b82: 6e30 8002 0301                         |0657: invoke-virtual {v3, v0, v1}, LX/00vy;.A0n:(Ljava/lang/String;Ljava/lang/Boolean;)V // method@0280
+638b88: 1300 9100                              |065a: const/16 v0, #int 145 // #91
+638b8c: 4601 0400                              |065c: aget-object v1, v4, v0
+638b90: 1f01 be4a                              |065e: check-cast v1, Ljava/lang/Boolean; // type@4abe
+638b94: 1a00 f9ce                              |0660: const-string v0, "key_camera_front_fast_tonemap_mode_supported" // string@cef9
+638b98: 6e30 8002 0301                         |0662: invoke-virtual {v3, v0, v1}, LX/00vy;.A0n:(Ljava/lang/String;Ljava/lang/Boolean;)V // method@0280
+638b9e: 1300 9200                              |0665: const/16 v0, #int 146 // #92
+638ba2: 4601 0400                              |0667: aget-object v1, v4, v0
+638ba6: 1f01 be4a                              |0669: check-cast v1, Ljava/lang/Boolean; // type@4abe
+638baa: 1a00 b2ce                              |066b: const-string v0, "key_camera_back_fast_tonemap_mode_supported" // string@ceb2
+638bae: 6e30 8002 0301                         |066d: invoke-virtual {v3, v0, v1}, LX/00vy;.A0n:(Ljava/lang/String;Ljava/lang/Boolean;)V // method@0280
+638bb4: 1300 9300                              |0670: const/16 v0, #int 147 // #93
+638bb8: 4601 0400                              |0672: aget-object v1, v4, v0
+638bbc: 1f01 be4a                              |0674: check-cast v1, Ljava/lang/Boolean; // type@4abe
+638bc0: 1a00 f0ce                              |0676: const-string v0, "key_camera_front_contrast_curve_tonemap_mode_supported" // string@cef0
+638bc4: 6e30 8002 0301                         |0678: invoke-virtual {v3, v0, v1}, LX/00vy;.A0n:(Ljava/lang/String;Ljava/lang/Boolean;)V // method@0280
+638bca: 1300 9400                              |067b: const/16 v0, #int 148 // #94
+638bce: 4601 0400                              |067d: aget-object v1, v4, v0
+638bd2: 1f01 be4a                              |067f: check-cast v1, Ljava/lang/Boolean; // type@4abe
+638bd6: 1a00 a9ce                              |0681: const-string v0, "key_camera_back_contrast_curve_tonemap_mode_supported" // string@cea9
+638bda: 6e30 8002 0301                         |0683: invoke-virtual {v3, v0, v1}, LX/00vy;.A0n:(Ljava/lang/String;Ljava/lang/Boolean;)V // method@0280
+638be0: 1300 9500                              |0686: const/16 v0, #int 149 // #95
+638be4: 4601 0400                              |0688: aget-object v1, v4, v0
+638be8: 1f01 be4a                              |068a: check-cast v1, Ljava/lang/Boolean; // type@4abe
+638bec: 1a00 00cf                              |068c: const-string v0, "key_camera_front_gamma_value_tonemap_mode_supported" // string@cf00
+638bf0: 6e30 8002 0301                         |068e: invoke-virtual {v3, v0, v1}, LX/00vy;.A0n:(Ljava/lang/String;Ljava/lang/Boolean;)V // method@0280
+638bf6: 1300 9600                              |0691: const/16 v0, #int 150 // #96
+638bfa: 4601 0400                              |0693: aget-object v1, v4, v0
+638bfe: 1f01 be4a                              |0695: check-cast v1, Ljava/lang/Boolean; // type@4abe
+638c02: 1a00 b9ce                              |0697: const-string v0, "key_camera_back_gamma_value_tonemap_mode_supported" // string@ceb9
+638c06: 6e30 8002 0301                         |0699: invoke-virtual {v3, v0, v1}, LX/00vy;.A0n:(Ljava/lang/String;Ljava/lang/Boolean;)V // method@0280
+638c0c: 1300 9700                              |069c: const/16 v0, #int 151 // #97
+638c10: 4601 0400                              |069e: aget-object v1, v4, v0
+638c14: 1f01 be4a                              |06a0: check-cast v1, Ljava/lang/Boolean; // type@4abe
+638c18: 1a00 15cf                              |06a2: const-string v0, "key_camera_front_preset_curve_tonemap_mode_supported" // string@cf15
+638c1c: 6e30 8002 0301                         |06a4: invoke-virtual {v3, v0, v1}, LX/00vy;.A0n:(Ljava/lang/String;Ljava/lang/Boolean;)V // method@0280
+638c22: 1300 9800                              |06a7: const/16 v0, #int 152 // #98
+638c26: 4601 0400                              |06a9: aget-object v1, v4, v0
+638c2a: 1f01 be4a                              |06ab: check-cast v1, Ljava/lang/Boolean; // type@4abe
+638c2e: 1a00 cece                              |06ad: const-string v0, "key_camera_back_preset_curve_tonemap_mode_supported" // string@cece
+638c32: 6e30 8002 0301                         |06af: invoke-virtual {v3, v0, v1}, LX/00vy;.A0n:(Ljava/lang/String;Ljava/lang/Boolean;)V // method@0280
+638c38: 1300 9900                              |06b2: const/16 v0, #int 153 // #99
+638c3c: 4601 0400                              |06b4: aget-object v1, v4, v0
+638c40: 1f01 be4a                              |06b6: check-cast v1, Ljava/lang/Boolean; // type@4abe
+638c44: 1a00 f6ce                              |06b8: const-string v0, "key_camera_front_face_detection_mode_simple_supported" // string@cef6
+638c48: 6e30 8002 0301                         |06ba: invoke-virtual {v3, v0, v1}, LX/00vy;.A0n:(Ljava/lang/String;Ljava/lang/Boolean;)V // method@0280
+638c4e: 1300 9a00                              |06bd: const/16 v0, #int 154 // #9a
+638c52: 4601 0400                              |06bf: aget-object v1, v4, v0
+638c56: 1f01 be4a                              |06c1: check-cast v1, Ljava/lang/Boolean; // type@4abe
+638c5a: 1a00 afce                              |06c3: const-string v0, "key_camera_back_face_detection_mode_simple_supported" // string@ceaf
+638c5e: 6e30 8002 0301                         |06c5: invoke-virtual {v3, v0, v1}, LX/00vy;.A0n:(Ljava/lang/String;Ljava/lang/Boolean;)V // method@0280
+638c64: 1300 9b00                              |06c8: const/16 v0, #int 155 // #9b
+638c68: 4601 0400                              |06ca: aget-object v1, v4, v0
+638c6c: 1f01 be4a                              |06cc: check-cast v1, Ljava/lang/Boolean; // type@4abe
+638c70: 1a00 f5ce                              |06ce: const-string v0, "key_camera_front_face_detection_mode_full_supported" // string@cef5
+638c74: 6e30 8002 0301                         |06d0: invoke-virtual {v3, v0, v1}, LX/00vy;.A0n:(Ljava/lang/String;Ljava/lang/Boolean;)V // method@0280
+638c7a: 1300 9c00                              |06d3: const/16 v0, #int 156 // #9c
+638c7e: 4601 0400                              |06d5: aget-object v1, v4, v0
+638c82: 1f01 be4a                              |06d7: check-cast v1, Ljava/lang/Boolean; // type@4abe
+638c86: 1a00 aece                              |06d9: const-string v0, "key_camera_back_face_detection_mode_full_supported" // string@ceae
+638c8a: 6e30 8002 0301                         |06db: invoke-virtual {v3, v0, v1}, LX/00vy;.A0n:(Ljava/lang/String;Ljava/lang/Boolean;)V // method@0280
+638c90: 1300 9d00                              |06de: const/16 v0, #int 157 // #9d
+638c94: 7120 396e 0400                         |06e0: invoke-static {v4, v0}, LX/0Uiy;.A00:([Ljava/lang/Object;I)Ljava/lang/Long; // method@6e39
+638c9a: 0c01                                   |06e3: move-result-object v1
+638c9c: 1a00 f4ce                              |06e4: const-string v0, "key_camera_front_face_detection_max_face_count" // string@cef4
+638ca0: 6e30 8202 0301                         |06e6: invoke-virtual {v3, v0, v1}, LX/00vy;.A0p:(Ljava/lang/String;Ljava/lang/Long;)V // method@0282
+638ca6: 1300 9e00                              |06e9: const/16 v0, #int 158 // #9e
+638caa: 7120 396e 0400                         |06eb: invoke-static {v4, v0}, LX/0Uiy;.A00:([Ljava/lang/Object;I)Ljava/lang/Long; // method@6e39
+638cb0: 0c01                                   |06ee: move-result-object v1
+638cb2: 1a00 adce                              |06ef: const-string v0, "key_camera_back_face_detection_max_face_count" // string@cead
+638cb6: 6e30 8202 0301                         |06f1: invoke-virtual {v3, v0, v1}, LX/00vy;.A0p:(Ljava/lang/String;Ljava/lang/Long;)V // method@0282
+638cbc: 1300 9f00                              |06f4: const/16 v0, #int 159 // #9f
+638cc0: 4601 0400                              |06f6: aget-object v1, v4, v0
+638cc4: 1f01 be4a                              |06f8: check-cast v1, Ljava/lang/Boolean; // type@4abe
+638cc8: 1a00 2acf                              |06fa: const-string v0, "key_camera_front_zoom_supported" // string@cf2a
+638ccc: 6e30 8002 0301                         |06fc: invoke-virtual {v3, v0, v1}, LX/00vy;.A0n:(Ljava/lang/String;Ljava/lang/Boolean;)V // method@0280
+638cd2: 1300 a000                              |06ff: const/16 v0, #int 160 // #a0
+638cd6: 4601 0400                              |0701: aget-object v1, v4, v0
+638cda: 1f01 be4a                              |0703: check-cast v1, Ljava/lang/Boolean; // type@4abe
+638cde: 1a00 e3ce                              |0705: const-string v0, "key_camera_back_zoom_supported" // string@cee3
+638ce2: 6e30 8002 0301                         |0707: invoke-virtual {v3, v0, v1}, LX/00vy;.A0n:(Ljava/lang/String;Ljava/lang/Boolean;)V // method@0280
+638ce8: 1300 a100                              |070a: const/16 v0, #int 161 // #a1
+638cec: 4601 0400                              |070c: aget-object v1, v4, v0
+638cf0: 1f01 be4a                              |070e: check-cast v1, Ljava/lang/Boolean; // type@4abe
+638cf4: 1a00 21cf                              |0710: const-string v0, "key_camera_front_smooth_zoom_support" // string@cf21
+638cf8: 6e30 8002 0301                         |0712: invoke-virtual {v3, v0, v1}, LX/00vy;.A0n:(Ljava/lang/String;Ljava/lang/Boolean;)V // method@0280
+638cfe: 1300 a200                              |0715: const/16 v0, #int 162 // #a2
+638d02: 4601 0400                              |0717: aget-object v1, v4, v0
+638d06: 1f01 be4a                              |0719: check-cast v1, Ljava/lang/Boolean; // type@4abe
+638d0a: 1a00 dace                              |071b: const-string v0, "key_camera_back_smooth_zoom_support" // string@ceda
+638d0e: 6e30 8002 0301                         |071d: invoke-virtual {v3, v0, v1}, LX/00vy;.A0n:(Ljava/lang/String;Ljava/lang/Boolean;)V // method@0280
+638d14: 1300 a300                              |0720: const/16 v0, #int 163 // #a3
+638d18: 4600 0400                              |0722: aget-object v0, v4, v0
+638d1c: 1f00 e04a                              |0724: check-cast v0, Ljava/lang/Number; // type@4ae0
+638d20: 7110 6300 0000                         |0726: invoke-static {v0}, LX/0021;.A04:(Ljava/lang/Number;)Ljava/lang/Double; // method@0063
+638d26: 0c01                                   |0729: move-result-object v1
+638d28: 1a00 29cf                              |072a: const-string v0, "key_camera_front_zoom_min_ratio" // string@cf29
+638d2c: 6e30 8102 0301                         |072c: invoke-virtual {v3, v0, v1}, LX/00vy;.A0o:(Ljava/lang/String;Ljava/lang/Double;)V // method@0281
+638d32: 1300 a400                              |072f: const/16 v0, #int 164 // #a4
+638d36: 4600 0400                              |0731: aget-object v0, v4, v0
+638d3a: 1f00 e04a                              |0733: check-cast v0, Ljava/lang/Number; // type@4ae0
+638d3e: 7110 6300 0000                         |0735: invoke-static {v0}, LX/0021;.A04:(Ljava/lang/Number;)Ljava/lang/Double; // method@0063
+638d44: 0c01                                   |0738: move-result-object v1
+638d46: 1a00 e2ce                              |0739: const-string v0, "key_camera_back_zoom_min_ratio" // string@cee2
+638d4a: 6e30 8102 0301                         |073b: invoke-virtual {v3, v0, v1}, LX/00vy;.A0o:(Ljava/lang/String;Ljava/lang/Double;)V // method@0281
+638d50: 1300 a500                              |073e: const/16 v0, #int 165 // #a5
+638d54: 4600 0400                              |0740: aget-object v0, v4, v0
+638d58: 1f00 e04a                              |0742: check-cast v0, Ljava/lang/Number; // type@4ae0
+638d5c: 7110 6300 0000                         |0744: invoke-static {v0}, LX/0021;.A04:(Ljava/lang/Number;)Ljava/lang/Double; // method@0063
+638d62: 0c01                                   |0747: move-result-object v1
+638d64: 1a00 28cf                              |0748: const-string v0, "key_camera_front_zoom_max_ratio" // string@cf28
+638d68: 6e30 8102 0301                         |074a: invoke-virtual {v3, v0, v1}, LX/00vy;.A0o:(Ljava/lang/String;Ljava/lang/Double;)V // method@0281
+638d6e: 1300 a600                              |074d: const/16 v0, #int 166 // #a6
+638d72: 4600 0400                              |074f: aget-object v0, v4, v0
+638d76: 1f00 e04a                              |0751: check-cast v0, Ljava/lang/Number; // type@4ae0
+638d7a: 7110 6300 0000                         |0753: invoke-static {v0}, LX/0021;.A04:(Ljava/lang/Number;)Ljava/lang/Double; // method@0063
+638d80: 0c01                                   |0756: move-result-object v1
+638d82: 1a00 e1ce                              |0757: const-string v0, "key_camera_back_zoom_max_ratio" // string@cee1
+638d86: 6e30 8102 0301                         |0759: invoke-virtual {v3, v0, v1}, LX/00vy;.A0o:(Ljava/lang/String;Ljava/lang/Double;)V // method@0281
+638d8c: 1300 a700                              |075c: const/16 v0, #int 167 // #a7
+638d90: 4601 0400                              |075e: aget-object v1, v4, v0
+638d94: 1f01 be4a                              |0760: check-cast v1, Ljava/lang/Boolean; // type@4abe
+638d98: 1a00 05cf                              |0762: const-string v0, "key_camera_front_iso_sensitivity_control_supported" // string@cf05
+638d9c: 6e30 8002 0301                         |0764: invoke-virtual {v3, v0, v1}, LX/00vy;.A0n:(Ljava/lang/String;Ljava/lang/Boolean;)V // method@0280
+638da2: 1300 a800                              |0767: const/16 v0, #int 168 // #a8
+638da6: 4601 0400                              |0769: aget-object v1, v4, v0
+
+--- REFERENCES TO LX/0Uiy;.run: IN classes4 ---
