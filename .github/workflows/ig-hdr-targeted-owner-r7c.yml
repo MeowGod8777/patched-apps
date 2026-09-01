@@ -1,0 +1,60 @@
+name: IG 439 HDR Targeted Owner R7c
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - .github/workflows/ig-hdr-targeted-owner-r7c.yml
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  trace:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    env:
+      APK_NAME: instagram-piko-v439.0.0.37.89-arm64-v8a.apk
+      APK_SHA256: 4015b171ac59f3e7172134d194ec2dcf701f64c3339f127c19d7a04c13d529c8
+    steps:
+      - uses: actions/checkout@v6
+        with: {fetch-depth: 0}
+      - name: Dexdump exact APK
+        env: {GH_TOKEN: '${{ secrets.GITHUB_TOKEN }}'}
+        run: |
+          set -euo pipefail
+          mkdir -p work/dex work/dis research/generated
+          gh release download 8 --pattern "$APK_NAME" --dir work
+          echo "$APK_SHA256  work/$APK_NAME" | sha256sum -c -
+          unzip -j "work/$APK_NAME" 'classes*.dex' -d work/dex
+          DEXDUMP="$(find "$ANDROID_HOME/build-tools" -type f -name dexdump | sort -V | tail -1)"
+          for d in work/dex/classes*.dex; do "$DEXDUMP" -d -f -h "$d" > "work/dis/$(basename "$d" .dex).txt"; done
+      - name: Targeted grep only
+        run: |
+          set -euo pipefail
+          O=research/generated/instagram_439_hdr_targeted_owner_r7c.txt
+          : > "$O"
+          for p in \
+            '"display_hdr_supported"' \
+            '"supported_display_hdr_types"' \
+            '"hdr_supported_types"' \
+            '"is_av1_hdr_supported"' \
+            '"is_hevc_hdr_supported"' \
+            '"key_display_hdr_supported"' \
+            '"key_video_decoder_hdr_supported"' \
+            '"video_decoder_hdr_supported"' \
+            'LX/0hkS;.A2Z:'; do
+            printf '\n===== %s =====\n' "$p" >> "$O"
+            grep -aHn -B 70 -A 100 -F "$p" work/dis/*.txt >> "$O" || true
+          done
+          wc -c "$O"
+      - name: Commit
+        run: |
+          set -euo pipefail
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add research/generated/instagram_439_hdr_targeted_owner_r7c.txt
+          if ! git diff --cached --quiet; then git commit -m 'Add targeted Instagram 439 HDR owner trace'; fi
+          git pull --rebase origin main
+          git push origin HEAD:main
