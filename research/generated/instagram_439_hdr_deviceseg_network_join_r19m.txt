@@ -1,0 +1,6675 @@
+Instagram 439 HDR device segmentation -> network join R19m
+======================================================
+
+seed_methods=34
+network_joins=21
+
+===== SAME-METHOD JOIN LX/0HLB; .method public final A0o(LX/01iy;)LX/03Wk; =====
+FILE=work/smali/classes4/X/0HLB.smali
+DEV=['LX/0hld;']
+NET=['A0F(']
+.method public final A0o(LX/01iy;)LX/03Wk;
+    .registers 53
+
+    move-object/from16 v2, p1
+
+    invoke-static {v2}, LX/0248;->A1Y(LX/01iy;)Z
+
+    move-result v6
+
+    :try_start_6
+    new-array v1, v6, [Ljava/lang/Object;
+
+    const/16 v0, 0x37c
+
+    invoke-static {v2, v1, v0}, LX/0345;->A0k(LX/01iy;[Ljava/lang/Object;I)Ljava/lang/Object;
+
+    move-result-object v23
+
+    move-object/from16 v0, v23
+
+    check-cast v0, LX/0010;
+
+    move-object/from16 v23, v0
+    :try_end_14
+    .catchall {:try_start_6 .. :try_end_14} :catchall_1d7
+
+    invoke-virtual {v2}, LX/01iy;->A0H()V
+
+    const/high16 v1, 0x40c00000    # 6.0f
+
+    iget-object v8, v2, LX/01iy;->A0B:LX/03SA;
+
+    iget-object v0, v8, LX/03SA;->A0B:Landroid/content/Context;
+
+    invoke-static {v0, v1}, LX/000H;->A00(Landroid/content/Context;F)F
+
+    move-result v0
+
+    float-to-int v1, v0
+
+    invoke-static {}, LX/0288;->A0B()J
+
+    move-result-wide v13
+
+    move-object/from16 v10, p0
+
+    iget v0, v10, LX/0HLB;->A01:I
+
+    add-int/2addr v0, v1
+
+    invoke-static {v0}, LX/01kP;->A05(I)J
+
+    move-result-wide v11
+
+    iget v0, v10, LX/0HLB;->A00:I
+
+    add-int/2addr v1, v0
+
+    invoke-static {v1}, LX/01kP;->A05(I)J
+
+    move-result-wide v4
+
+    iget-boolean v0, v10, LX/0HLB;->A06:Z
+
+    move/from16 v22, v0
+
+    if-eqz v0, :cond_17b
+
+    const/16 v0, 0x342
+
+    new-instance v2, LX/0BRb;
+
+    invoke-direct {v2, v10, v0}, LX/0BRb;-><init>(Ljava/lang/Object;I)V
+
+    const/4 v1, 0x4
+
+    new-instance v21, LX/0FcT;
+
+    move-object/from16 v0, v21
+
+    invoke-direct {v0, v2, v1}, LX/0FcT;-><init>(Lkotlin/jvm/functions/Function0;I)V
+
+    :goto_4b
+    sget-object v9, LX/03iH;->A02:LX/01kF;
+
+    invoke-static {}, LX/0237;->A0f()Ljava/lang/Float;
+
+    move-result-object v3
+
+    const/16 v20, 0x0
+
+    move-object/from16 v2, v20
+
+    invoke-static {v9, v2, v3, v2, v2}, LX/01kS;->A0J(LX/03iH;LX/03iN;Ljava/lang/Float;Ljava/lang/Float;Ljava/lang/Float;)LX/03iH;
+
+    move-result-object v27
+
+    invoke-static {v6}, Ljava/lang/Boolean;->valueOf(Z)Ljava/lang/Boolean;
+
+    move-result-object v38
+
+    invoke-static {v11, v12}, LX/0112;->A0X(J)LX/03iN;
+
+    move-result-object v33
+
+    invoke-static {v4, v5}, LX/0112;->A0X(J)LX/03iN;
+
+    move-result-object v34
+
+    invoke-static {v13, v14}, LX/0112;->A0X(J)LX/03iN;
+
+    move-result-object v35
+
+    invoke-static {}, LX/0112;->A0F()J
+
+    move-result-wide v18
+
+    iget-object v0, v8, LX/03SA;->A03:LX/01cF;
+
+    iget-object v1, v0, LX/01cF;->A01:LX/07ac;
+
+    iget-boolean v0, v1, LX/07ac;->A0M:Z
+
+    move/from16 v28, v0
+
+    iget-object v0, v1, LX/07ac;->A06:LX/01hP;
+
+    move-object/from16 v26, v0
+
+    iget-boolean v0, v1, LX/07ac;->A0Y:Z
+
+    move/from16 v25, v0
+
+    new-instance v7, LX/0BOC;
+
+    invoke-direct {v7, v8}, LX/0BOC;-><init>(LX/03SA;)V
+
+    iget-object v0, v10, LX/0HLB;->A02:Ljava/util/List;
+
+    invoke-interface {v0}, Ljava/util/List;->iterator()Ljava/util/Iterator;
+
+    move-result-object v17
+
+    const/4 v0, 0x0
+
+    :goto_89
+    invoke-interface/range {v17 .. v17}, Ljava/util/Iterator;->hasNext()Z
+
+    move-result v1
+
+    const/4 v5, 0x1
+
+    if-eqz v1, :cond_184
+
+    invoke-interface/range {v17 .. v17}, Ljava/util/Iterator;->next()Ljava/lang/Object;
+
+    move-result-object v4
+
+    check-cast v4, LX/0LUw;
+
+    instance-of v1, v4, LX/0JOC;
+
+    if-eqz v1, :cond_156
+
+    add-int/lit8 v16, v0, 0x1
+
+    check-cast v4, LX/0JOC;
+
+    iget-object v3, v4, LX/0JOC;->A05:Ljava/lang/String;
+
+    iget-object v1, v10, LX/0HLB;->A05:LX/0nvI;
+
+    if-eqz v1, :cond_153
+
+    const/16 v11, 0xa
+
+    new-instance v2, LX/0maN;
+
+    invoke-direct {v2, v3, v1, v0, v11}, LX/0maN;-><init>(Ljava/lang/String;LX/0nvI;II)V
+
+    :goto_ab
+    iget-boolean v0, v10, LX/0HLB;->A07:Z
+
+    const-string v14, ""
+
+    iget-object v1, v4, LX/0JOC;->A07:Ljava/lang/String;
+
+    if-eqz v0, :cond_100
+
+    iget-object v12, v4, LX/0JOC;->A06:Ljava/lang/String;
+
+    iget-object v0, v4, LX/0JOC;->A01:Ljava/lang/CharSequence;
+
+    if-nez v0, :cond_ca
+
+    iget-object v0, v4, LX/0JOC;->A04:Ljava/lang/String;
+
+    if-nez v0, :cond_ca
+
+    const v13, 0x7f1101cb
+
+    iget v11, v4, LX/0JOC;->A00:I
+
+    invoke-static {v11}, LX/0237;->A1Z(I)[Ljava/lang/Object;
+
+    move-result-object v0
+
+    invoke-static {v7, v0, v13, v11}, LX/01kO;->A0R(LX/0mwk;[Ljava/lang/Object;II)Ljava/lang/String;
+
+    move-result-object v0
+
+    :cond_ca
+    iget-object v11, v4, LX/0JOC;->A03:Ljava/lang/String;
+
+    if-nez v11, :cond_cf
+
+    move-object v11, v14
+
+    :cond_cf
+    iget-object v15, v10, LX/0HLB;->A04:LX/0nvI;
+
+    invoke-static {}, LX/0248;->A07()J
+
+    move-result-wide v13
+
+    invoke-static {v9, v13, v14}, LX/0348;->A06(LX/03iH;J)LX/03iH;
+
+    move-result-object v13
+
+    invoke-static {v6, v5, v1, v12, v0}, LX/0229;->A0s(IILjava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;)V
+
+    invoke-static {v3}, LX/04l9;->A0Z(Ljava/lang/Object;)V
+
+    invoke-static {v15}, LX/04l9;->A0a(Ljava/lang/Object;)V
+
+    new-instance v4, LX/0HLD;
+
+    invoke-direct {v4}, LX/03iE;-><init>()V
+
+    iput-object v1, v4, LX/0HLD;->A05:Ljava/lang/String;
+
+    iput-object v12, v4, LX/0HLD;->A04:Ljava/lang/String;
+
+    iput-object v0, v4, LX/0HLD;->A01:Ljava/lang/CharSequence;
+
+    iput-object v11, v4, LX/0HLD;->A02:Ljava/lang/String;
+
+    iput-object v3, v4, LX/0HLD;->A03:Ljava/lang/String;
+
+    iput-object v15, v4, LX/0HLD;->A07:LX/0nvI;
+
+    iput-object v2, v4, LX/0HLD;->A06:Lkotlin/jvm/functions/Function0;
+
+    iput-object v13, v4, LX/0HLD;->A00:LX/03iH;
+
+    const/4 v0, 0x0
+
+    sput v0, Lredex/$StoreFenceHelper;->DUMMY_VOLATILE:I
+
+    :goto_fa
+    invoke-virtual {v7, v4, v3, v6}, LX/0BOC;->A00(LX/03Wk;Ljava/lang/Object;Z)V
+
+    move/from16 v0, v16
+
+    goto :goto_89
+
+    :cond_100
+    iget-object v13, v4, LX/0JOC;->A06:Ljava/lang/String;
+
+    iget-object v0, v4, LX/0JOC;->A01:Ljava/lang/CharSequence;
+
+    if-nez v0, :cond_117
+
+    iget-object v0, v4, LX/0JOC;->A04:Ljava/lang/String;
+
+    if-nez v0, :cond_117
+
+    const v12, 0x7f1101cb
+
+    iget v11, v4, LX/0JOC;->A00:I
+
+    invoke-static {v11}, LX/0237;->A1Z(I)[Ljava/lang/Object;
+
+    move-result-object v0
+
+    invoke-static {v7, v0, v12, v11}, LX/01kO;->A0R(LX/0mwk;[Ljava/lang/Object;II)Ljava/lang/String;
+
+    move-result-object v0
+
+    :cond_117
+    iget-object v12, v4, LX/0JOC;->A03:Ljava/lang/String;
+
+    if-nez v12, :cond_11c
+
+    move-object v12, v14
+
+    :cond_11c
+    iget-object v11, v4, LX/0JOC;->A02:Ljava/lang/String;
+
+    if-nez v11, :cond_121
+
+    move-object v11, v14
+
+    :cond_121
+    iget-object v4, v10, LX/0HLB;->A04:LX/0nvI;
+
+    move-object/from16 v24, v4
+
+    invoke-static {}, LX/0248;->A07()J
+
+    move-result-wide v14
+
+    invoke-static {v9, v14, v15}, LX/0348;->A06(LX/03iH;J)LX/03iH;
+
+    move-result-object v14
+
+    invoke-static {v6, v5, v1, v13, v0}, LX/0229;->A0s(IILjava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;)V
+
+    invoke-static {v3}, LX/04l9;->A0a(Ljava/lang/Object;)V
+
+    invoke-static/range {v24 .. v24}, LX/04l9;->A0b(Ljava/lang/Object;)V
+
+    new-instance v4, LX/0HM7;
+
+    invoke-direct {v4}, LX/03iE;-><init>()V
+
+    iput-object v1, v4, LX/0HM7;->A06:Ljava/lang/String;
+
+    iput-object v13, v4, LX/0HM7;->A05:Ljava/lang/String;
+
+    iput-object v0, v4, LX/0HM7;->A01:Ljava/lang/CharSequence;
+
+    iput-object v12, v4, LX/0HM7;->A03:Ljava/lang/String;
+
+    iput-object v11, v4, LX/0HM7;->A02:Ljava/lang/String;
+
+    iput-object v3, v4, LX/0HM7;->A04:Ljava/lang/String;
+
+    move-object/from16 v0, v24
+
+    iput-object v0, v4, LX/0HM7;->A08:LX/0nvI;
+
+    iput-object v2, v4, LX/0HM7;->A07:Lkotlin/jvm/functions/Function0;
+
+    iput-object v14, v4, LX/0HM7;->A00:LX/03iH;
+
+    const/4 v0, 0x0
+
+    sput v0, Lredex/$StoreFenceHelper;->DUMMY_VOLATILE:I
+
+    goto :goto_fa
+
+    :cond_153
+    const/4 v2, 0x0
+
+    goto/16 :goto_ab
+
+    :cond_156
+    instance-of v1, v4, LX/0JOB;
+
+    if-eqz v1, :cond_17f
+
+    const-string v2, "ghost_"
+
+    check-cast v4, LX/0JOB;
+
+    iget v1, v4, LX/0JOB;->A00:I
+
+    invoke-static {v2, v1}, LX/002b;->A0S(Ljava/lang/String;I)Ljava/lang/String;
+
+    move-result-object v3
+
+    invoke-static {}, LX/0248;->A07()J
+
+    move-result-wide v1
+
+    invoke-static {v9, v1, v2}, LX/0348;->A06(LX/03iH;J)LX/03iH;
+
+    move-result-object v1
+
+    new-instance v2, LX/0HQr;
+
+    invoke-direct {v2}, LX/03iE;-><init>()V
+
+    iput-object v1, v2, LX/0HQr;->A00:LX/03iH;
+
+    const/4 v1, 0x0
+
+    sput v1, Lredex/$StoreFenceHelper;->DUMMY_VOLATILE:I
+
+    invoke-virtual {v7, v2, v3, v6}, LX/0BOC;->A00(LX/03Wk;Ljava/lang/Object;Z)V
+
+    goto/16 :goto_89
+
+    :cond_17b
+    const/16 v21, 0x0
+
+    goto/16 :goto_4b
+
+    :cond_17f
+    invoke-static {}, LX/002L;->A0Q()Lkotlin/NoWhenBranchMatchedException;
+
+    move-result-object v0
+
+    throw v0
+
+    :cond_184
+    if-eqz v22, :cond_195
+
+    new-instance v1, LX/0HQu;
+
+    invoke-direct {v1}, LX/03iE;-><init>()V
+
+    iput-object v9, v1, LX/0HQu;->A00:LX/03iH;
+
+    const/4 v0, 0x0
+
+    sput v0, Lredex/$StoreFenceHelper;->DUMMY_VOLATILE:I
+
+    const-string v0, "pagination_spinner"
+
+    invoke-virtual {v7, v1, v0, v5}, LX/0BOC;->A00(LX/03Wk;Ljava/lang/Object;Z)V
+
+    :cond_195
+    move-wide/from16 v0, v18
+
+    invoke-static {v8, v5, v0, v1}, LX/0248;->A03(LX/03SA;IJ)I
+
+    move-result v3
+
+    move-object/from16 v2, v26
+
+    move/from16 v1, v28
+
+    move/from16 v0, v25
+
+    invoke-static {v8, v2, v3, v1, v0}, LX/07Yo;->A01(LX/03SA;LX/01hP;IZZ)LX/0M77;
+
+    move-result-object v29
+
+    iget-object v0, v7, LX/0BOC;->A01:LX/07YJ;
+
+    new-instance v22, LX/07Yq;
+
+    move-object/from16 v24, v20
+
+    move-object/from16 v25, v20
+
+    move-object/from16 v26, v20
+
+    move-object/from16 v28, v20
+
+    move-object/from16 v30, v0
+
+    move-object/from16 v31, v20
+
+    move-object/from16 v32, v21
+
+    move-object/from16 v36, v20
+
+    move-object/from16 v37, v20
+
+    move-object/from16 v39, v20
+
+    move-object/from16 v40, v20
+
+    move-object/from16 v41, v20
+
+    move-object/from16 v42, v20
+
+    move-object/from16 v43, v20
+
+    move-object/from16 v44, v20
+
+    move-object/from16 v45, v20
+
+    move-object/from16 v46, v20
+
+    move-object/from16 v47, v20
+
+    move/from16 v48, v5
+
+    move/from16 v49, v5
+
+    move/from16 v50, v6
+
+    invoke-direct/range {v22 .. v50}, LX/07Yq;-><init>(LX/0Ckr;LX/03Tg;LX/0Hwk;LX/03Ti;LX/03iH;LX/0Gvl;LX/0EeL;LX/07YJ;LX/06eE;LX/0FcT;LX/03iN;LX/03iN;LX/03iN;LX/03iN;LX/03iN;Ljava/lang/Boolean;Ljava/lang/Boolean;Ljava/lang/Boolean;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/util/List;Lkotlin/jvm/functions/Function0;Lkotlin/jvm/functions/Function0;LX/02qU;LX/02qU;ZZZ)V
+
+    return-object v22
+
+    :catchall_1d7
+    move-exception v0
+
+    invoke-virtual {v2}, LX/01iy;->A0H()V
+
+    throw v0
+.end method
+
+===== CALLEE JOIN LX/0237; .method public static A0f()Ljava/lang/Float; =====
+CALLED_BY_DEVICESEG=('LX/0HLB;', 'A0o', 'LX/01iy;', 'LX/03Wk;')
+FILE=work/smali/classes4/X/0237.smali
+NET=['A0F(']
+.method public static A0f()Ljava/lang/Float;
+    .registers 1
+
+    const/high16 v0, 0x3f800000    # 1.0f
+
+    invoke-static {v0}, Ljava/lang/Float;->valueOf(F)Ljava/lang/Float;
+
+    move-result-object v0
+
+    return-object v0
+.end method
+
+===== SAME-METHOD JOIN LX/0HLD; .method public final A0o(LX/01iy;)LX/03Wk; =====
+FILE=work/smali/classes4/X/0HLD.smali
+DEV=['LX/0hld;']
+NET=['A0F(']
+.method public final A0o(LX/01iy;)LX/03Wk;
+    .registers 37
+
+    const/16 v34, 0x0
+
+    invoke-static/range {p1 .. p1}, LX/0222;->A0E(LX/01iy;)LX/03SA;
+
+    move-result-object v10
+
+    iget-object v6, v10, LX/03SA;->A0B:Landroid/content/Context;
+
+    invoke-static {v6}, LX/0112;->A02(Landroid/content/Context;)F
+
+    move-result v3
+
+    const/high16 v0, 0x41400000    # 12.0f
+
+    mul-float/2addr v3, v0
+
+    invoke-static {}, LX/03bS;->A00()LX/03bT;
+
+    move-result-object v1
+
+    sget-object v0, LX/03bU;->A01:LX/03bU;
+
+    invoke-virtual {v1, v0}, LX/03bT;->A02(LX/03bU;)V
+
+    invoke-static {v1, v3}, LX/0222;->A1S(LX/03bT;F)V
+
+    new-instance v9, LX/03bS;
+
+    invoke-direct {v9, v1}, LX/03bS;-><init>(LX/03bT;)V
+
+    new-instance v2, LX/0C1P;
+
+    invoke-direct {v2}, Landroid/view/ViewOutlineProvider;-><init>()V
+
+    iput v3, v2, LX/0C1P;->A00:F
+
+    sput v34, Lredex/$StoreFenceHelper;->DUMMY_VOLATILE:I
+
+    const v0, 0x7f060053
+
+    invoke-virtual {v6, v0}, Landroid/content/Context;->getColor(I)I
+
+    move-result v12
+
+    move-object/from16 v5, p0
+
+    iget-object v4, v5, LX/0HLD;->A06:Lkotlin/jvm/functions/Function0;
+
+    if-eqz v4, :cond_162
+
+    iget-object v3, v5, LX/0HLD;->A00:LX/03iH;
+
+    sget-object v1, LX/03iH;->A02:LX/01kF;
+
+    const/16 v0, 0xe6
+
+    invoke-static {v4, v0}, LX/0222;->A17(Ljava/lang/Object;I)LX/0C6C;
+
+    move-result-object v0
+
+    invoke-static {v1, v0}, LX/013e;->A03(LX/03iH;Lkotlin/jvm/functions/Function1;)LX/03iH;
+
+    move-result-object v0
+
+    invoke-virtual {v3, v0}, LX/03iH;->A00(LX/03iH;)LX/03iH;
+
+    move-result-object v8
+
+    :goto_48
+    invoke-static {}, LX/000H;->A0U()Ljava/util/ArrayList;
+
+    move-result-object v7
+
+    sget-object v4, LX/03iH;->A02:LX/01kF;
+
+    invoke-static {}, LX/000H;->A0U()Ljava/util/ArrayList;
+
+    move-result-object v3
+
+    invoke-static {v10}, LX/0VJO;->A0F(LX/03SA;)LX/0VIS;
+
+    move-result-object v11
+
+    iget-object v0, v5, LX/0HLD;->A02:Ljava/lang/String;
+
+    invoke-virtual {v11, v0}, LX/0VIS;->A0L(Ljava/lang/String;)V
+
+    invoke-virtual {v11, v9}, LX/0VIS;->A0I(LX/03bS;)V
+
+    const-string v0, "series_catalogue_card"
+
+    invoke-virtual {v11, v0}, LX/0VIS;->A0K(Ljava/lang/Object;)V
+
+    invoke-static {v4}, LX/01kH;->A01(LX/03iH;)LX/03iH;
+
+    move-result-object v1
+
+    const/high16 v0, 0x3f400000    # 0.75f
+
+    invoke-static {v1, v0}, LX/01kS;->A05(LX/03iH;F)LX/03iH;
+
+    move-result-object v0
+
+    invoke-static {v2, v0}, LX/01kJ;->A04(Landroid/view/ViewOutlineProvider;LX/03iH;)LX/03iH;
+
+    move-result-object v1
+
+    const/4 v0, 0x1
+
+    invoke-static {v1, v0}, LX/01kJ;->A0X(LX/03iH;Z)LX/03iH;
+
+    move-result-object v10
+
+    const-wide v0, 0x3fe3333340000000L    # 0.6000000238418579
+
+    invoke-static {v0, v1}, Ljava/lang/Double;->doubleToRawLongBits(D)J
+
+    move-result-wide v1
+
+    invoke-static {}, LX/0288;->A0B()J
+
+    move-result-wide v14
+
+    invoke-static {v14, v15}, LX/0112;->A0X(J)LX/03iN;
+
+    move-result-object v9
+
+    const/4 v0, 0x0
+
+    invoke-static {v10, v9, v12, v1, v2}, LX/01kS;->A0A(LX/03iH;LX/03iN;IJ)LX/03iH;
+
+    move-result-object v2
+
+    const v1, 0x7f040793
+
+    invoke-static {v6, v1}, LX/002L;->A01(Landroid/content/Context;I)I
+
+    move-result v1
+
+    invoke-static {v2, v1}, LX/01kJ;->A0D(LX/03iH;I)LX/03iH;
+
+    move-result-object v2
+
+    const/4 v10, 0x2
+
+    new-instance v1, LX/0may;
+
+    invoke-direct {v1, v5, v10}, LX/0may;-><init>(Ljava/lang/Object;I)V
+
+    invoke-static {v2, v1}, LX/01kJ;->A0N(LX/03iH;Lkotlin/jvm/functions/Function1;)LX/03iH;
+
+    move-result-object v9
+
+    const/4 v2, 0x5
+
+    new-instance v1, LX/0G6s;
+
+    invoke-direct {v1, v5, v2}, LX/0G6s;-><init>(Ljava/lang/Object;I)V
+
+    invoke-static {v9, v1}, LX/01kJ;->A0Q(LX/03iH;Lkotlin/jvm/functions/Function1;)LX/03iH;
+
+    move-result-object v1
+
+    invoke-static {v11, v1}, LX/07dS;->A00(LX/03Wj;LX/03iH;)V
+
+    invoke-static {v11, v3}, LX/0293;->A1I(LX/0VIS;Ljava/util/AbstractCollection;)V
+
+    iget-object v2, v5, LX/0HLD;->A04:Ljava/lang/String;
+
+    sget-object v22, LX/01n7;->A03:LX/01n7;
+
+    invoke-static {v6}, LX/03ys;->A04(Landroid/content/Context;)I
+
+    move-result v12
+
+    sget-object v17, Landroid/text/TextUtils$TruncateAt;->END:Landroid/text/TextUtils$TruncateAt;
+
+    invoke-static {}, LX/0293;->A0d()LX/03iN;
+
+    move-result-object v9
+
+    invoke-static {v14, v15}, LX/0112;->A0X(J)LX/03iN;
+
+    move-result-object v1
+
+    invoke-static {v4, v9, v1}, LX/01kH;->A0Y(LX/03iH;LX/03iN;LX/03iN;)LX/03iH;
+
+    move-result-object v11
+
+    const/4 v9, 0x3
+
+    new-instance v1, LX/0may;
+
+    invoke-direct {v1, v5, v9}, LX/0may;-><init>(Ljava/lang/Object;I)V
+
+    invoke-static {v11, v1}, LX/01kJ;->A0N(LX/03iH;Lkotlin/jvm/functions/Function1;)LX/03iH;
+
+    move-result-object v19
+
+    invoke-static {v12}, Ljava/lang/Integer;->valueOf(I)Ljava/lang/Integer;
+
+    move-result-object v29
+
+    invoke-static {v10}, Ljava/lang/Integer;->valueOf(I)Ljava/lang/Integer;
+
+    move-result-object v30
+
+    const v1, 0x800003
+
+    invoke-static {v1}, Ljava/lang/Integer;->valueOf(I)Ljava/lang/Integer;
+
+    move-result-object v33
+
+    sget-object v21, LX/01n9;->A0H:LX/08dj;
+
+    new-instance v1, LX/01n9;
+
+    move-object/from16 v20, v0
+
+    move-object/from16 v23, v0
+
+    move-object/from16 v24, v0
+
+    move-object/from16 v25, v0
+
+    move-object/from16 v26, v0
+
+    move-object/from16 v27, v2
+
+    move-object/from16 v28, v0
+
+    move-object/from16 v31, v0
+
+    move-object/from16 v32, v0
+
+    move-object/from16 v18, v0
+
+    move-object/from16 v16, v1
+
+    invoke-direct/range {v16 .. v33}, LX/01n9;-><init>(Landroid/text/TextUtils$TruncateAt;Landroid/text/method/MovementMethod;LX/03iH;LX/03iN;LX/08dj;LX/01n7;LX/01s3;Ljava/lang/Boolean;Ljava/lang/Boolean;Ljava/lang/Boolean;Ljava/lang/CharSequence;Ljava/lang/Float;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;)V
+
+    invoke-virtual {v3, v1}, Ljava/util/AbstractCollection;->add(Ljava/lang/Object;)Z
+
+    iget-object v2, v5, LX/0HLD;->A01:Ljava/lang/CharSequence;
+
+    sget-object v16, LX/01n7;->A04:LX/01n7;
+
+    invoke-static {v6}, LX/03ys;->A07(Landroid/content/Context;)I
+
+    move-result v1
+
+    invoke-static {v1}, Ljava/lang/Integer;->valueOf(I)Ljava/lang/Integer;
+
+    move-result-object v23
+
+    invoke-static {}, LX/0288;->A0C()J
+
+    move-result-wide v12
+
+    invoke-static {}, LX/0248;->A09()J
+
+    move-result-wide v10
+
+    invoke-static {v12, v13}, LX/0112;->A0X(J)LX/03iN;
+
+    move-result-object v9
+
+    invoke-static {v14, v15}, LX/0112;->A0X(J)LX/03iN;
+
+    move-result-object v6
+
+    invoke-static {v10, v11}, LX/0112;->A0X(J)LX/03iN;
+
+    move-result-object v1
+
+    invoke-static {v4, v0, v9, v6, v1}, LX/01kH;->A0r(LX/03iH;LX/03iN;LX/03iN;LX/03iN;LX/03iN;)LX/03iH;
+
+    move-result-object v9
+
+    const/4 v6, 0x4
+
+    new-instance v1, LX/0may;
+
+    invoke-direct {v1, v5, v6}, LX/0may;-><init>(Ljava/lang/Object;I)V
+
+    invoke-static {v9, v1}, LX/01kJ;->A0N(LX/03iH;Lkotlin/jvm/functions/Function1;)LX/03iH;
+
+    move-result-object v13
+
+    new-instance v1, LX/01n9;
+
+    move-object v10, v1
+
+    move-object v11, v0
+
+    move-object v12, v0
+
+    move-object v14, v0
+
+    move-object/from16 v15, v21
+
+    move-object/from16 v17, v0
+
+    move-object/from16 v19, v0
+
+    move-object/from16 v21, v2
+
+    move-object/from16 v22, v0
+
+    move-object/from16 v27, v33
+
+    invoke-direct/range {v10 .. v27}, LX/01n9;-><init>(Landroid/text/TextUtils$TruncateAt;Landroid/text/method/MovementMethod;LX/03iH;LX/03iN;LX/08dj;LX/01n7;LX/01s3;Ljava/lang/Boolean;Ljava/lang/Boolean;Ljava/lang/Boolean;Ljava/lang/CharSequence;Ljava/lang/Float;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;)V
+
+    invoke-virtual {v3, v1}, Ljava/util/AbstractCollection;->add(Ljava/lang/Object;)Z
+
+    new-instance v1, LX/01kV;
+
+    move-object/from16 v27, v1
+
+    move-object/from16 v28, v4
+
+    move-object/from16 v29, v0
+
+    move-object/from16 v30, v0
+
+    move-object/from16 v33, v3
+
+    invoke-direct/range {v27 .. v34}, LX/01kV;-><init>(LX/03iH;LX/03iN;LX/01kR;LX/01kR;LX/07iQ;Ljava/util/List;Z)V
+
+    invoke-virtual {v7, v1}, Ljava/util/AbstractCollection;->add(Ljava/lang/Object;)Z
+
+    new-instance v27, LX/01kV;
+
+    move-object/from16 v28, v8
+
+    move-object/from16 v33, v7
+
+    invoke-direct/range {v27 .. v34}, LX/01kV;-><init>(LX/03iH;LX/03iN;LX/01kR;LX/01kR;LX/07iQ;Ljava/util/List;Z)V
+
+    return-object v27
+
+    :cond_162
+    iget-object v8, v5, LX/0HLD;->A00:LX/03iH;
+
+    goto/16 :goto_48
+.end method
+
+===== SAME-METHOD JOIN LX/0UVB; .method public final A0N(Landroidx/recyclerview/widget/RecyclerView;I)V =====
+FILE=work/smali/classes12/X/0UVB.smali
+DEV=['LX/0hkS;']
+NET=['A0F(']
+.method public final A0N(Landroidx/recyclerview/widget/RecyclerView;I)V
+    .registers 14
+
+    const v0, 0x4c7fd2ad    # 6.7062452E7f
+
+    invoke-static {v0}, LX/01IU;->A03(I)I
+
+    move-result v3
+
+    const/4 v4, 0x0
+
+    invoke-static {p1, v4}, LX/04l9;->A0j(Ljava/lang/Object;I)V
+
+    iget-object v2, p0, LX/0UVB;->A02:LX/0dOy;
+
+    iget-object v1, v2, LX/0dOy;->A09:LX/0gRk;
+
+    iget-boolean v0, v1, LX/0gRk;->A05:Z
+
+    if-eqz v0, :cond_1a
+
+    const v0, 0x3396b8b2
+
+    :goto_16
+    invoke-static {v0, v3}, LX/01IU;->A0A(II)V
+
+    return-void
+
+    :cond_1a
+    const/4 v7, 0x1
+
+    if-eqz p2, :cond_8d
+
+    if-ne p2, v7, :cond_40
+
+    iput-boolean v4, v2, LX/0dOy;->A0C:Z
+
+    iget v0, v1, LX/0gRk;->A00:I
+
+    const/4 v6, 0x1
+
+    add-int/lit8 v0, v0, 0x1
+
+    invoke-virtual {v1, v0}, LX/0gRk;->A02(I)I
+
+    move-result v5
+
+    const/4 v0, -0x1
+
+    if-eq v5, v0, :cond_8b
+
+    iget-object v7, v1, LX/0gRk;->A01:LX/03Th;
+
+    invoke-static {v7, v4}, LX/04l9;->A0j(Ljava/lang/Object;I)V
+
+    instance-of v0, v7, Landroidx/recyclerview/widget/LinearLayoutManager;
+
+    if-eqz v0, :cond_44
+
+    check-cast v7, Landroidx/recyclerview/widget/LinearLayoutManager;
+
+    invoke-virtual {v7}, Landroidx/recyclerview/widget/LinearLayoutManager;->findLastCompletelyVisibleItemPosition()I
+
+    move-result v2
+
+    :goto_3c
+    if-gt v5, v2, :cond_8b
+
+    :goto_3e
+    iput-boolean v6, p0, LX/0UVB;->A01:Z
+
+    :cond_40
+    :goto_40
+    const v0, 0x42f93e1d
+
+    goto :goto_16
+
+    :cond_44
+    instance-of v0, v7, Lcom/instagram/common/ui/widget/recyclerview/flow/FlowingGridLayoutManager;
+
+    if-eqz v0, :cond_7d
+
+    check-cast v7, Lcom/instagram/common/ui/widget/recyclerview/flow/FlowingGridLayoutManager;
+
+    invoke-virtual {v7}, LX/03Th;->A0W()I
+
+    move-result v0
+
+    if-eqz v0, :cond_7b
+
+    iget-object v8, v7, Lcom/instagram/common/ui/widget/recyclerview/flow/FlowingGridLayoutManager;->A08:Ljava/util/List;
+
+    invoke-interface {v8}, Ljava/util/List;->isEmpty()Z
+
+    move-result v0
+
+    if-nez v0, :cond_7b
+
+    invoke-interface {v8}, Ljava/util/List;->size()I
+
+    move-result v0
+
+    add-int/lit8 v0, v0, -0x1
+
+    if-ltz v0, :cond_7b
+
+    :goto_60
+    add-int/lit8 v4, v0, -0x1
+
+    invoke-static {v8, v0}, LX/0137;->A0H(Ljava/util/List;I)I
+
+    move-result v2
+
+    iget-object v0, v7, Lcom/instagram/common/ui/widget/recyclerview/flow/FlowingGridLayoutManager;->A07:LX/0Fhj;
+
+    invoke-virtual {v0, v2}, LX/0Fhj;->A00(I)Landroid/graphics/Rect;
+
+    move-result-object v1
+
+    if-eqz v1, :cond_77
+
+    iget-object v0, v7, Lcom/instagram/common/ui/widget/recyclerview/flow/FlowingGridLayoutManager;->A06:Landroid/graphics/Rect;
+
+    invoke-virtual {v0, v1}, Landroid/graphics/Rect;->contains(Landroid/graphics/Rect;)Z
+
+    move-result v0
+
+    if-eqz v0, :cond_77
+
+    goto :goto_3c
+
+    :cond_77
+    if-ltz v4, :cond_7b
+
+    move v0, v4
+
+    goto :goto_60
+
+    :cond_7b
+    const/4 v2, -0x1
+
+    goto :goto_3c
+
+    :cond_7d
+    instance-of v0, v7, Landroidx/recyclerview/widget/StaggeredGridLayoutManager;
+
+    if-eqz v0, :cond_19e
+
+    check-cast v7, Landroidx/recyclerview/widget/StaggeredGridLayoutManager;
+
+    const/4 v0, 0x0
+
+    invoke-virtual {v7, v0}, Landroidx/recyclerview/widget/StaggeredGridLayoutManager;->findLastCompletelyVisibleItemPositions([I)[I
+
+    move-result-object v0
+
+    aget v2, v0, v4
+
+    goto :goto_3c
+
+    :cond_8b
+    const/4 v6, 0x0
+
+    goto :goto_3e
+
+    :cond_8d
+    iget v0, p0, LX/0UVB;->A00:I
+
+    if-gtz v0, :cond_92
+
+    const/4 v7, 0x0
+
+    :cond_92
+    iget-boolean v0, v2, LX/0dOy;->A0C:Z
+
+    if-nez v0, :cond_19a
+
+    const v0, 0x2c0bc
+
+    invoke-static {v0}, LX/04oL;->A01(I)Ljava/lang/Object;
+
+    move-result-object v6
+
+    check-cast v6, LX/01Uf;
+
+    iget-object v5, v2, LX/0dOy;->A0A:LX/01SH;
+
+    invoke-virtual {p1}, Landroid/view/View;->getContext()Landroid/content/Context;
+
+    move-result-object v1
+
+    const-class v0, Landroid/app/Activity;
+
+    invoke-static {v1, v0}, LX/00CL;->A00(Landroid/content/Context;Ljava/lang/Class;)Ljava/lang/Object;
+
+    move-result-object v0
+
+    if-eqz v0, :cond_1a3
+
+    check-cast v0, Landroid/app/Activity;
+
+    invoke-static {v0}, LX/004C;->A06(Landroid/app/Activity;)LX/004C;
+
+    move-result-object v0
+
+    invoke-virtual {v0}, LX/004C;->A0Z()I
+
+    move-result v0
+
+    invoke-virtual {v6, v5, v0, v4}, LX/01Uf;->A0B(LX/0Ukc;II)I
+
+    iget v0, p0, LX/0UVB;->A00:I
+
+    invoke-static {v0}, Ljava/lang/Math;->abs(I)I
+
+    move-result v0
+
+    int-to-float v1, v0
+
+    iget v0, v2, LX/0dOy;->A03:F
+
+    cmpl-float v0, v1, v0
+
+    if-lez v0, :cond_e1
+
+    iget-boolean v0, p0, LX/0UVB;->A01:Z
+
+    if-eqz v0, :cond_e1
+
+    if-eqz v7, :cond_e1
+
+    iget-object v5, v2, LX/0dOy;->A08:LX/0hks;
+
+    iget-object v1, v5, LX/0hks;->A07:LX/0dOy;
+
+    if-eqz v1, :cond_d6
+
+    const/4 v0, 0x1
+
+    iput-boolean v0, v1, LX/0dOy;->A0C:Z
+
+    :cond_d6
+    const/4 v0, 0x1
+
+    invoke-static {v5, v0}, LX/0hks;->A03(LX/0hks;Z)Z
+
+    move-result v0
+
+    :goto_db
+    iput-boolean v0, v2, LX/0dOy;->A0C:Z
+
+    :cond_dd
+    :goto_dd
+    iput v4, p0, LX/0UVB;->A00:I
+
+    goto/16 :goto_40
+
+    :cond_e1
+    iget v0, v2, LX/0dOy;->A02:F
+
+    cmpl-float v0, v1, v0
+
+    if-lez v0, :cond_f5
+
+    iget-object v0, v2, LX/0dOy;->A08:LX/0hks;
+
+    if-eqz v7, :cond_f0
+
+    invoke-static {v0, v4}, LX/0hks;->A03(LX/0hks;Z)Z
+
+    move-result v0
+
+    goto :goto_db
+
+    :cond_f0
+    invoke-virtual {v0}, LX/0hks;->A08()Z
+
+    move-result v0
+
+    goto :goto_db
+
+    :cond_f5
+    iget-object v1, v2, LX/0dOy;->A04:LX/03Th;
+
+    if-eqz v1, :cond_dd
+
+    invoke-static {v1}, LX/04l9;->A0f(Ljava/lang/Object;)V
+
+    iget v10, v1, LX/03Th;->A00:I
+
+    invoke-virtual {v1}, LX/03Th;->getPaddingBottom()I
+
+    move-result v0
+
+    sub-int/2addr v10, v0
+
+    invoke-virtual {v1}, LX/03Th;->getPaddingTop()I
+
+    move-result v0
+
+    sub-int/2addr v10, v0
+
+    iget-object v7, v2, LX/0dOy;->A09:LX/0gRk;
+
+    iget v6, v7, LX/0gRk;->A00:I
+
+    invoke-virtual {v7, v6}, LX/0gRk;->A03(I)I
+
+    move-result v8
+
+    add-int/lit8 v9, v6, 0x1
+
+    invoke-virtual {v7, v9}, LX/0gRk;->A03(I)I
+
+    move-result v1
+
+    add-int/lit8 v0, v6, -0x1
+
+    invoke-virtual {v7, v0}, LX/0gRk;->A03(I)I
+
+    move-result v0
+
+    const/4 v5, 0x1
+
+    iput-boolean v5, v2, LX/0dOy;->A0C:Z
+
+    if-le v1, v8, :cond_127
+
+    iget-object v0, v2, LX/0dOy;->A08:LX/0hks;
+
+    invoke-static {v0, v4}, LX/0hks;->A03(LX/0hks;Z)Z
+
+    goto :goto_dd
+
+    :cond_127
+    if-lt v0, v8, :cond_12f
+
+    iget-object v0, v2, LX/0dOy;->A08:LX/0hks;
+
+    invoke-virtual {v0}, LX/0hks;->A08()Z
+
+    goto :goto_dd
+
+    :cond_12f
+    int-to-float v1, v1
+
+    const v0, 0x3e4ccccc    # 0.19999999f
+
+    int-to-float v8, v10
+
+    mul-float/2addr v0, v8
+
+    cmpl-float v0, v1, v0
+
+    if-lez v0, :cond_173
+
+    iget-object v1, v2, LX/0dOy;->A09:LX/0gRk;
+
+    iget v0, v1, LX/0gRk;->A00:I
+
+    invoke-virtual {v1, v0}, LX/0gRk;->A02(I)I
+
+    move-result v1
+
+    iget-object v0, v2, LX/0dOy;->A04:LX/03Th;
+
+    invoke-static {v0}, LX/01pQ;->A01(LX/03Th;)I
+
+    move-result v0
+
+    if-ge v1, v0, :cond_173
+
+    invoke-virtual {v7, v9}, LX/0gRk;->A02(I)I
+
+    move-result v7
+
+    const/4 v0, -0x1
+
+    if-eq v7, v0, :cond_dd
+
+    iget-object v1, v2, LX/0dOy;->A08:LX/0hks;
+
+    const v0, 0x3f4ccccd    # 0.8f
+
+    mul-float/2addr v8, v0
+
+    float-to-int v6, v8
+
+    iget-object v5, v1, LX/0hks;->A03:LX/03Th;
+
+    if-eqz v5, :cond_dd
+
+    const/high16 v2, 0x40b00000    # 5.5f
+
+    iget-object v0, v1, LX/0hks;->A02:Landroid/content/Context;
+
+    new-instance v1, LX/044h;
+
+    invoke-direct {v1, v0}, LX/0EyT;-><init>(Landroid/content/Context;)V
+
+    const/high16 v0, -0x40800000    # -1.0f
+
+    iput v0, v1, LX/044h;->A00:F
+
+    iput v7, v1, LX/0Dmw;->A00:I
+
+    iput v6, v1, LX/044h;->A01:I
+
+    iput v2, v1, LX/044h;->A00:F
+
+    invoke-virtual {v5, v1}, LX/03Th;->A0v(LX/0Dmw;)V
+
+    goto/16 :goto_dd
+
+    :cond_173
+    iget-object v1, v2, LX/0dOy;->A09:LX/0gRk;
+
+    iget v0, v1, LX/0gRk;->A00:I
+
+    if-lez v0, :cond_19a
+
+    invoke-virtual {v1, v0}, LX/0gRk;->A02(I)I
+
+    move-result v1
+
+    iget-object v0, v2, LX/0dOy;->A04:LX/03Th;
+
+    invoke-static {v0}, LX/01pQ;->A01(LX/03Th;)I
+
+    move-result v0
+
+    if-le v1, v0, :cond_19a
+
+    iget-object v2, v2, LX/0dOy;->A08:LX/0hks;
+
+    invoke-virtual {v7, v6}, LX/0gRk;->A02(I)I
+
+    move-result v1
+
+    iget-object v0, v2, LX/0hks;->A03:LX/03Th;
+
+    if-eqz v0, :cond_dd
+
+    iget-object v0, v2, LX/0hks;->A08:LX/0gRk;
+
+    if-eqz v0, :cond_dd
+
+    const/high16 v0, 0x40b00000    # 5.5f
+
+    invoke-static {v2, v0, v1, v5}, LX/0hks;->A02(LX/0hks;FIZ)V
+
+    goto/16 :goto_dd
+
+    :cond_19a
+    iput-boolean v4, v2, LX/0dOy;->A0C:Z
+
+    goto/16 :goto_dd
+
+    :cond_19e
+    invoke-static {v7}, LX/01pQ;->A04(LX/03Th;)Ljava/lang/IllegalArgumentException;
+
+    move-result-object v1
+
+    throw v1
+
+    :cond_1a3
+    invoke-static {}, LX/000H;->A0E()Ljava/lang/IllegalStateException;
+
+    move-result-object v1
+
+    const v0, -0x6fad4f1f
+
+    invoke-static {v0, v3}, LX/01IU;->A0A(II)V
+
+    throw v1
+.end method
+
+===== CALLEE JOIN LX/0hks; .method public static final A03(LX/0hks;Z)Z =====
+CALLED_BY_DEVICESEG=('LX/0UVB;', 'A0N', 'Landroidx/recyclerview/widget/RecyclerView;I', 'V')
+FILE=work/smali/classes12/X/0hks.smali
+NET=['A0F(']
+.method public static final A03(LX/0hks;Z)Z
+    .registers 11
+
+    iget-object v3, p0, LX/0hks;->A08:LX/0gRk;
+
+    if-eqz v3, :cond_ec
+
+    iget v0, v3, LX/0gRk;->A00:I
+
+    add-int/lit8 v1, v0, 0x1
+
+    iget-object v0, v3, LX/0gRk;->A03:LX/0nWC;
+
+    invoke-interface {v0}, LX/0nWC;->BIz()Ljava/util/List;
+
+    move-result-object v0
+
+    invoke-interface {v0}, Ljava/util/List;->size()I
+
+    move-result v0
+
+    if-ge v1, v0, :cond_ec
+
+    const/4 v5, 0x1
+
+    iget v0, v3, LX/0gRk;->A00:I
+
+    invoke-virtual {v3, v0}, LX/0gRk;->A02(I)I
+
+    iget v0, v3, LX/0gRk;->A00:I
+
+    add-int/lit8 v0, v0, 0x1
+
+    invoke-virtual {v3, v0}, LX/0gRk;->A02(I)I
+
+    move-result v4
+
+    iget v0, v3, LX/0gRk;->A00:I
+
+    add-int/lit8 v0, v0, 0x1
+
+    invoke-virtual {v3, v0}, LX/0gRk;->A02(I)I
+
+    move-result v2
+
+    iget-object v8, v3, LX/0gRk;->A01:LX/03Th;
+
+    invoke-static {v8}, LX/01pQ;->A02(LX/03Th;)I
+
+    move-result v7
+
+    if-le v2, v7, :cond_49
+
+    sub-int v1, v2, v7
+
+    const/4 v0, 0x2
+
+    if-gt v1, v0, :cond_85
+
+    iget-object v0, v3, LX/0gRk;->A03:LX/0nWC;
+
+    invoke-interface {v0}, LX/0nWC;->C3h()Ljava/util/Set;
+
+    move-result-object v1
+
+    iget v0, v3, LX/0gRk;->A00:I
+
+    invoke-static {v0}, Ljava/lang/Integer;->valueOf(I)Ljava/lang/Integer;
+
+    move-result-object v0
+
+    invoke-interface {v1, v0}, Ljava/util/Set;->contains(Ljava/lang/Object;)Z
+
+    move-result v0
+
+    if-nez v0, :cond_85
+
+    :cond_49
+    :goto_49
+    iget v0, v3, LX/0gRk;->A00:I
+
+    add-int/lit8 v0, v0, 0x1
+
+    iput v0, v3, LX/0gRk;->A00:I
+
+    const/4 v2, 0x1
+
+    add-int/lit8 v1, v0, 0x1
+
+    iget-object v0, v3, LX/0gRk;->A03:LX/0nWC;
+
+    invoke-interface {v0}, LX/0nWC;->BIz()Ljava/util/List;
+
+    move-result-object v0
+
+    invoke-interface {v0}, Ljava/util/List;->size()I
+
+    move-result v0
+
+    if-lt v1, v0, :cond_5f
+
+    const/4 v2, 0x0
+
+    :cond_5f
+    xor-int/lit8 v0, v2, 0x1
+
+    iput-boolean v0, v3, LX/0gRk;->A05:Z
+
+    iget-object v1, p0, LX/0hks;->A0A:Ljava/lang/String;
+
+    const/16 v0, 0x122
+
+    invoke-static {v0}, LX/0000;->A00(I)Ljava/lang/String;
+
+    move-result-object v0
+
+    invoke-static {v1, v0}, LX/04l9;->areEqual(Ljava/lang/Object;Ljava/lang/Object;)Z
+
+    move-result v0
+
+    if-nez v0, :cond_7f
+
+    const/16 v0, 0x9f3
+
+    invoke-static {v0}, LX/0000;->A00(I)Ljava/lang/String;
+
+    move-result-object v0
+
+    invoke-static {v1, v0}, LX/04l9;->areEqual(Ljava/lang/Object;Ljava/lang/Object;)Z
+
+    move-result v1
+
+    const/high16 v0, 0x40b00000    # 5.5f
+
+    if-eqz v1, :cond_81
+
+    :cond_7f
+    const/high16 v0, 0x41040000    # 8.25f
+
+    :cond_81
+    invoke-static {p0, v0, v4, v5}, LX/0hks;->A02(LX/0hks;FIZ)V
+
+    :cond_84
+    return v5
+
+    :cond_85
+    invoke-static {v8}, LX/04l9;->A0f(Ljava/lang/Object;)V
+
+    iget v6, v8, LX/03Th;->A00:I
+
+    invoke-virtual {v8}, LX/03Th;->getPaddingBottom()I
+
+    move-result v0
+
+    sub-int/2addr v6, v0
+
+    invoke-virtual {v8}, LX/03Th;->getPaddingTop()I
+
+    move-result v0
+
+    sub-int/2addr v6, v0
+
+    const/4 v0, 0x0
+
+    invoke-static {v3, v7, v2, v0}, LX/0gRk;->A00(LX/0gRk;IIZ)I
+
+    move-result v2
+
+    add-int/lit8 v0, v7, 0x1
+
+    invoke-static {v3, v7, v0, v5}, LX/0gRk;->A00(LX/0gRk;IIZ)I
+
+    move-result v1
+
+    const/4 v0, -0x1
+
+    if-eq v2, v0, :cond_ae
+
+    sub-int/2addr v2, v1
+
+    int-to-float v2, v2
+
+    int-to-float v1, v6
+
+    const v0, 0x3d4ccccd    # 0.05f
+
+    mul-float/2addr v1, v0
+
+    cmpg-float v0, v2, v1
+
+    if-gez v0, :cond_ae
+
+    goto :goto_49
+
+    :cond_ae
+    if-nez p1, :cond_49
+
+    iget-object v3, p0, LX/0hks;->A03:LX/03Th;
+
+    if-eqz v3, :cond_84
+
+    iget-object v1, p0, LX/0hks;->A0A:Ljava/lang/String;
+
+    const/16 v0, 0x122
+
+    invoke-static {v0}, LX/0000;->A00(I)Ljava/lang/String;
+
+    move-result-object v0
+
+    invoke-static {v1, v0}, LX/04l9;->areEqual(Ljava/lang/Object;Ljava/lang/Object;)Z
+
+    move-result v0
+
+    iget-object v1, p0, LX/0hks;->A02:Landroid/content/Context;
+
+    if-eqz v0, :cond_d9
+
+    iget v0, p0, LX/0hks;->A01:I
+
+    invoke-static {v1}, LX/04l9;->A0f(Ljava/lang/Object;)V
+
+    new-instance v2, LX/0IDy;
+
+    invoke-direct {v2, v1}, LX/0EyT;-><init>(Landroid/content/Context;)V
+
+    iput v0, v2, LX/0IDy;->A00:I
+
+    const/4 v0, 0x0
+
+    sput v0, Lredex/$StoreFenceHelper;->DUMMY_VOLATILE:I
+
+    :goto_d3
+    iput v4, v2, LX/0Dmw;->A00:I
+
+    invoke-virtual {v3, v2}, LX/03Th;->A0v(LX/0Dmw;)V
+
+    return v5
+
+    :cond_d9
+    new-instance v2, LX/0FBX;
+
+    invoke-direct {v2, v1}, LX/0EyT;-><init>(Landroid/content/Context;)V
+
+    iput-boolean v5, v2, LX/0FBX;->A03:Z
+
+    const/4 v0, 0x0
+
+    sput v0, Lredex/$StoreFenceHelper;->DUMMY_VOLATILE:I
+
+    iget v1, p0, LX/0hks;->A00:I
+
+    iget v0, p0, LX/0hks;->A01:I
+
+    iput v1, v2, LX/0FBX;->A00:I
+
+    iput v0, v2, LX/0FBX;->A02:I
+
+    goto :goto_d3
+
+    :cond_ec
+    const/4 v5, 0x0
+
+    return v5
+.end method
+
+===== CALLEE JOIN LX/0hks; .method public static final A03(LX/0hks;Z)Z =====
+CALLED_BY_DEVICESEG=('LX/0UVB;', 'A0N', 'Landroidx/recyclerview/widget/RecyclerView;I', 'V')
+FILE=work/smali/classes12/X/0hks.smali
+NET=['A0F(']
+.method public static final A03(LX/0hks;Z)Z
+    .registers 11
+
+    iget-object v3, p0, LX/0hks;->A08:LX/0gRk;
+
+    if-eqz v3, :cond_ec
+
+    iget v0, v3, LX/0gRk;->A00:I
+
+    add-int/lit8 v1, v0, 0x1
+
+    iget-object v0, v3, LX/0gRk;->A03:LX/0nWC;
+
+    invoke-interface {v0}, LX/0nWC;->BIz()Ljava/util/List;
+
+    move-result-object v0
+
+    invoke-interface {v0}, Ljava/util/List;->size()I
+
+    move-result v0
+
+    if-ge v1, v0, :cond_ec
+
+    const/4 v5, 0x1
+
+    iget v0, v3, LX/0gRk;->A00:I
+
+    invoke-virtual {v3, v0}, LX/0gRk;->A02(I)I
+
+    iget v0, v3, LX/0gRk;->A00:I
+
+    add-int/lit8 v0, v0, 0x1
+
+    invoke-virtual {v3, v0}, LX/0gRk;->A02(I)I
+
+    move-result v4
+
+    iget v0, v3, LX/0gRk;->A00:I
+
+    add-int/lit8 v0, v0, 0x1
+
+    invoke-virtual {v3, v0}, LX/0gRk;->A02(I)I
+
+    move-result v2
+
+    iget-object v8, v3, LX/0gRk;->A01:LX/03Th;
+
+    invoke-static {v8}, LX/01pQ;->A02(LX/03Th;)I
+
+    move-result v7
+
+    if-le v2, v7, :cond_49
+
+    sub-int v1, v2, v7
+
+    const/4 v0, 0x2
+
+    if-gt v1, v0, :cond_85
+
+    iget-object v0, v3, LX/0gRk;->A03:LX/0nWC;
+
+    invoke-interface {v0}, LX/0nWC;->C3h()Ljava/util/Set;
+
+    move-result-object v1
+
+    iget v0, v3, LX/0gRk;->A00:I
+
+    invoke-static {v0}, Ljava/lang/Integer;->valueOf(I)Ljava/lang/Integer;
+
+    move-result-object v0
+
+    invoke-interface {v1, v0}, Ljava/util/Set;->contains(Ljava/lang/Object;)Z
+
+    move-result v0
+
+    if-nez v0, :cond_85
+
+    :cond_49
+    :goto_49
+    iget v0, v3, LX/0gRk;->A00:I
+
+    add-int/lit8 v0, v0, 0x1
+
+    iput v0, v3, LX/0gRk;->A00:I
+
+    const/4 v2, 0x1
+
+    add-int/lit8 v1, v0, 0x1
+
+    iget-object v0, v3, LX/0gRk;->A03:LX/0nWC;
+
+    invoke-interface {v0}, LX/0nWC;->BIz()Ljava/util/List;
+
+    move-result-object v0
+
+    invoke-interface {v0}, Ljava/util/List;->size()I
+
+    move-result v0
+
+    if-lt v1, v0, :cond_5f
+
+    const/4 v2, 0x0
+
+    :cond_5f
+    xor-int/lit8 v0, v2, 0x1
+
+    iput-boolean v0, v3, LX/0gRk;->A05:Z
+
+    iget-object v1, p0, LX/0hks;->A0A:Ljava/lang/String;
+
+    const/16 v0, 0x122
+
+    invoke-static {v0}, LX/0000;->A00(I)Ljava/lang/String;
+
+    move-result-object v0
+
+    invoke-static {v1, v0}, LX/04l9;->areEqual(Ljava/lang/Object;Ljava/lang/Object;)Z
+
+    move-result v0
+
+    if-nez v0, :cond_7f
+
+    const/16 v0, 0x9f3
+
+    invoke-static {v0}, LX/0000;->A00(I)Ljava/lang/String;
+
+    move-result-object v0
+
+    invoke-static {v1, v0}, LX/04l9;->areEqual(Ljava/lang/Object;Ljava/lang/Object;)Z
+
+    move-result v1
+
+    const/high16 v0, 0x40b00000    # 5.5f
+
+    if-eqz v1, :cond_81
+
+    :cond_7f
+    const/high16 v0, 0x41040000    # 8.25f
+
+    :cond_81
+    invoke-static {p0, v0, v4, v5}, LX/0hks;->A02(LX/0hks;FIZ)V
+
+    :cond_84
+    return v5
+
+    :cond_85
+    invoke-static {v8}, LX/04l9;->A0f(Ljava/lang/Object;)V
+
+    iget v6, v8, LX/03Th;->A00:I
+
+    invoke-virtual {v8}, LX/03Th;->getPaddingBottom()I
+
+    move-result v0
+
+    sub-int/2addr v6, v0
+
+    invoke-virtual {v8}, LX/03Th;->getPaddingTop()I
+
+    move-result v0
+
+    sub-int/2addr v6, v0
+
+    const/4 v0, 0x0
+
+    invoke-static {v3, v7, v2, v0}, LX/0gRk;->A00(LX/0gRk;IIZ)I
+
+    move-result v2
+
+    add-int/lit8 v0, v7, 0x1
+
+    invoke-static {v3, v7, v0, v5}, LX/0gRk;->A00(LX/0gRk;IIZ)I
+
+    move-result v1
+
+    const/4 v0, -0x1
+
+    if-eq v2, v0, :cond_ae
+
+    sub-int/2addr v2, v1
+
+    int-to-float v2, v2
+
+    int-to-float v1, v6
+
+    const v0, 0x3d4ccccd    # 0.05f
+
+    mul-float/2addr v1, v0
+
+    cmpg-float v0, v2, v1
+
+    if-gez v0, :cond_ae
+
+    goto :goto_49
+
+    :cond_ae
+    if-nez p1, :cond_49
+
+    iget-object v3, p0, LX/0hks;->A03:LX/03Th;
+
+    if-eqz v3, :cond_84
+
+    iget-object v1, p0, LX/0hks;->A0A:Ljava/lang/String;
+
+    const/16 v0, 0x122
+
+    invoke-static {v0}, LX/0000;->A00(I)Ljava/lang/String;
+
+    move-result-object v0
+
+    invoke-static {v1, v0}, LX/04l9;->areEqual(Ljava/lang/Object;Ljava/lang/Object;)Z
+
+    move-result v0
+
+    iget-object v1, p0, LX/0hks;->A02:Landroid/content/Context;
+
+    if-eqz v0, :cond_d9
+
+    iget v0, p0, LX/0hks;->A01:I
+
+    invoke-static {v1}, LX/04l9;->A0f(Ljava/lang/Object;)V
+
+    new-instance v2, LX/0IDy;
+
+    invoke-direct {v2, v1}, LX/0EyT;-><init>(Landroid/content/Context;)V
+
+    iput v0, v2, LX/0IDy;->A00:I
+
+    const/4 v0, 0x0
+
+    sput v0, Lredex/$StoreFenceHelper;->DUMMY_VOLATILE:I
+
+    :goto_d3
+    iput v4, v2, LX/0Dmw;->A00:I
+
+    invoke-virtual {v3, v2}, LX/03Th;->A0v(LX/0Dmw;)V
+
+    return v5
+
+    :cond_d9
+    new-instance v2, LX/0FBX;
+
+    invoke-direct {v2, v1}, LX/0EyT;-><init>(Landroid/content/Context;)V
+
+    iput-boolean v5, v2, LX/0FBX;->A03:Z
+
+    const/4 v0, 0x0
+
+    sput v0, Lredex/$StoreFenceHelper;->DUMMY_VOLATILE:I
+
+    iget v1, p0, LX/0hks;->A00:I
+
+    iget v0, p0, LX/0hks;->A01:I
+
+    iput v1, v2, LX/0FBX;->A00:I
+
+    iput v0, v2, LX/0FBX;->A02:I
+
+    goto :goto_d3
+
+    :cond_ec
+    const/4 v5, 0x0
+
+    return v5
+.end method
+
+===== CALLEE JOIN LX/0hks; .method public static final A03(LX/0hks;Z)Z =====
+CALLED_BY_DEVICESEG=('LX/0UVB;', 'A0N', 'Landroidx/recyclerview/widget/RecyclerView;I', 'V')
+FILE=work/smali/classes12/X/0hks.smali
+NET=['A0F(']
+.method public static final A03(LX/0hks;Z)Z
+    .registers 11
+
+    iget-object v3, p0, LX/0hks;->A08:LX/0gRk;
+
+    if-eqz v3, :cond_ec
+
+    iget v0, v3, LX/0gRk;->A00:I
+
+    add-int/lit8 v1, v0, 0x1
+
+    iget-object v0, v3, LX/0gRk;->A03:LX/0nWC;
+
+    invoke-interface {v0}, LX/0nWC;->BIz()Ljava/util/List;
+
+    move-result-object v0
+
+    invoke-interface {v0}, Ljava/util/List;->size()I
+
+    move-result v0
+
+    if-ge v1, v0, :cond_ec
+
+    const/4 v5, 0x1
+
+    iget v0, v3, LX/0gRk;->A00:I
+
+    invoke-virtual {v3, v0}, LX/0gRk;->A02(I)I
+
+    iget v0, v3, LX/0gRk;->A00:I
+
+    add-int/lit8 v0, v0, 0x1
+
+    invoke-virtual {v3, v0}, LX/0gRk;->A02(I)I
+
+    move-result v4
+
+    iget v0, v3, LX/0gRk;->A00:I
+
+    add-int/lit8 v0, v0, 0x1
+
+    invoke-virtual {v3, v0}, LX/0gRk;->A02(I)I
+
+    move-result v2
+
+    iget-object v8, v3, LX/0gRk;->A01:LX/03Th;
+
+    invoke-static {v8}, LX/01pQ;->A02(LX/03Th;)I
+
+    move-result v7
+
+    if-le v2, v7, :cond_49
+
+    sub-int v1, v2, v7
+
+    const/4 v0, 0x2
+
+    if-gt v1, v0, :cond_85
+
+    iget-object v0, v3, LX/0gRk;->A03:LX/0nWC;
+
+    invoke-interface {v0}, LX/0nWC;->C3h()Ljava/util/Set;
+
+    move-result-object v1
+
+    iget v0, v3, LX/0gRk;->A00:I
+
+    invoke-static {v0}, Ljava/lang/Integer;->valueOf(I)Ljava/lang/Integer;
+
+    move-result-object v0
+
+    invoke-interface {v1, v0}, Ljava/util/Set;->contains(Ljava/lang/Object;)Z
+
+    move-result v0
+
+    if-nez v0, :cond_85
+
+    :cond_49
+    :goto_49
+    iget v0, v3, LX/0gRk;->A00:I
+
+    add-int/lit8 v0, v0, 0x1
+
+    iput v0, v3, LX/0gRk;->A00:I
+
+    const/4 v2, 0x1
+
+    add-int/lit8 v1, v0, 0x1
+
+    iget-object v0, v3, LX/0gRk;->A03:LX/0nWC;
+
+    invoke-interface {v0}, LX/0nWC;->BIz()Ljava/util/List;
+
+    move-result-object v0
+
+    invoke-interface {v0}, Ljava/util/List;->size()I
+
+    move-result v0
+
+    if-lt v1, v0, :cond_5f
+
+    const/4 v2, 0x0
+
+    :cond_5f
+    xor-int/lit8 v0, v2, 0x1
+
+    iput-boolean v0, v3, LX/0gRk;->A05:Z
+
+    iget-object v1, p0, LX/0hks;->A0A:Ljava/lang/String;
+
+    const/16 v0, 0x122
+
+    invoke-static {v0}, LX/0000;->A00(I)Ljava/lang/String;
+
+    move-result-object v0
+
+    invoke-static {v1, v0}, LX/04l9;->areEqual(Ljava/lang/Object;Ljava/lang/Object;)Z
+
+    move-result v0
+
+    if-nez v0, :cond_7f
+
+    const/16 v0, 0x9f3
+
+    invoke-static {v0}, LX/0000;->A00(I)Ljava/lang/String;
+
+    move-result-object v0
+
+    invoke-static {v1, v0}, LX/04l9;->areEqual(Ljava/lang/Object;Ljava/lang/Object;)Z
+
+    move-result v1
+
+    const/high16 v0, 0x40b00000    # 5.5f
+
+    if-eqz v1, :cond_81
+
+    :cond_7f
+    const/high16 v0, 0x41040000    # 8.25f
+
+    :cond_81
+    invoke-static {p0, v0, v4, v5}, LX/0hks;->A02(LX/0hks;FIZ)V
+
+    :cond_84
+    return v5
+
+    :cond_85
+    invoke-static {v8}, LX/04l9;->A0f(Ljava/lang/Object;)V
+
+    iget v6, v8, LX/03Th;->A00:I
+
+    invoke-virtual {v8}, LX/03Th;->getPaddingBottom()I
+
+    move-result v0
+
+    sub-int/2addr v6, v0
+
+    invoke-virtual {v8}, LX/03Th;->getPaddingTop()I
+
+    move-result v0
+
+    sub-int/2addr v6, v0
+
+    const/4 v0, 0x0
+
+    invoke-static {v3, v7, v2, v0}, LX/0gRk;->A00(LX/0gRk;IIZ)I
+
+    move-result v2
+
+    add-int/lit8 v0, v7, 0x1
+
+    invoke-static {v3, v7, v0, v5}, LX/0gRk;->A00(LX/0gRk;IIZ)I
+
+    move-result v1
+
+    const/4 v0, -0x1
+
+    if-eq v2, v0, :cond_ae
+
+    sub-int/2addr v2, v1
+
+    int-to-float v2, v2
+
+    int-to-float v1, v6
+
+    const v0, 0x3d4ccccd    # 0.05f
+
+    mul-float/2addr v1, v0
+
+    cmpg-float v0, v2, v1
+
+    if-gez v0, :cond_ae
+
+    goto :goto_49
+
+    :cond_ae
+    if-nez p1, :cond_49
+
+    iget-object v3, p0, LX/0hks;->A03:LX/03Th;
+
+    if-eqz v3, :cond_84
+
+    iget-object v1, p0, LX/0hks;->A0A:Ljava/lang/String;
+
+    const/16 v0, 0x122
+
+    invoke-static {v0}, LX/0000;->A00(I)Ljava/lang/String;
+
+    move-result-object v0
+
+    invoke-static {v1, v0}, LX/04l9;->areEqual(Ljava/lang/Object;Ljava/lang/Object;)Z
+
+    move-result v0
+
+    iget-object v1, p0, LX/0hks;->A02:Landroid/content/Context;
+
+    if-eqz v0, :cond_d9
+
+    iget v0, p0, LX/0hks;->A01:I
+
+    invoke-static {v1}, LX/04l9;->A0f(Ljava/lang/Object;)V
+
+    new-instance v2, LX/0IDy;
+
+    invoke-direct {v2, v1}, LX/0EyT;-><init>(Landroid/content/Context;)V
+
+    iput v0, v2, LX/0IDy;->A00:I
+
+    const/4 v0, 0x0
+
+    sput v0, Lredex/$StoreFenceHelper;->DUMMY_VOLATILE:I
+
+    :goto_d3
+    iput v4, v2, LX/0Dmw;->A00:I
+
+    invoke-virtual {v3, v2}, LX/03Th;->A0v(LX/0Dmw;)V
+
+    return v5
+
+    :cond_d9
+    new-instance v2, LX/0FBX;
+
+    invoke-direct {v2, v1}, LX/0EyT;-><init>(Landroid/content/Context;)V
+
+    iput-boolean v5, v2, LX/0FBX;->A03:Z
+
+    const/4 v0, 0x0
+
+    sput v0, Lredex/$StoreFenceHelper;->DUMMY_VOLATILE:I
+
+    iget v1, p0, LX/0hks;->A00:I
+
+    iget v0, p0, LX/0hks;->A01:I
+
+    iput v1, v2, LX/0FBX;->A00:I
+
+    iput v0, v2, LX/0FBX;->A02:I
+
+    goto :goto_d3
+
+    :cond_ec
+    const/4 v5, 0x0
+
+    return v5
+.end method
+
+===== CALLEE JOIN LX/0hks; .method public static final A03(LX/0hks;Z)Z =====
+CALLED_BY_DEVICESEG=('LX/0UUh;', 'A02', 'II', 'Z')
+FILE=work/smali/classes12/X/0hks.smali
+NET=['A0F(']
+.method public static final A03(LX/0hks;Z)Z
+    .registers 11
+
+    iget-object v3, p0, LX/0hks;->A08:LX/0gRk;
+
+    if-eqz v3, :cond_ec
+
+    iget v0, v3, LX/0gRk;->A00:I
+
+    add-int/lit8 v1, v0, 0x1
+
+    iget-object v0, v3, LX/0gRk;->A03:LX/0nWC;
+
+    invoke-interface {v0}, LX/0nWC;->BIz()Ljava/util/List;
+
+    move-result-object v0
+
+    invoke-interface {v0}, Ljava/util/List;->size()I
+
+    move-result v0
+
+    if-ge v1, v0, :cond_ec
+
+    const/4 v5, 0x1
+
+    iget v0, v3, LX/0gRk;->A00:I
+
+    invoke-virtual {v3, v0}, LX/0gRk;->A02(I)I
+
+    iget v0, v3, LX/0gRk;->A00:I
+
+    add-int/lit8 v0, v0, 0x1
+
+    invoke-virtual {v3, v0}, LX/0gRk;->A02(I)I
+
+    move-result v4
+
+    iget v0, v3, LX/0gRk;->A00:I
+
+    add-int/lit8 v0, v0, 0x1
+
+    invoke-virtual {v3, v0}, LX/0gRk;->A02(I)I
+
+    move-result v2
+
+    iget-object v8, v3, LX/0gRk;->A01:LX/03Th;
+
+    invoke-static {v8}, LX/01pQ;->A02(LX/03Th;)I
+
+    move-result v7
+
+    if-le v2, v7, :cond_49
+
+    sub-int v1, v2, v7
+
+    const/4 v0, 0x2
+
+    if-gt v1, v0, :cond_85
+
+    iget-object v0, v3, LX/0gRk;->A03:LX/0nWC;
+
+    invoke-interface {v0}, LX/0nWC;->C3h()Ljava/util/Set;
+
+    move-result-object v1
+
+    iget v0, v3, LX/0gRk;->A00:I
+
+    invoke-static {v0}, Ljava/lang/Integer;->valueOf(I)Ljava/lang/Integer;
+
+    move-result-object v0
+
+    invoke-interface {v1, v0}, Ljava/util/Set;->contains(Ljava/lang/Object;)Z
+
+    move-result v0
+
+    if-nez v0, :cond_85
+
+    :cond_49
+    :goto_49
+    iget v0, v3, LX/0gRk;->A00:I
+
+    add-int/lit8 v0, v0, 0x1
+
+    iput v0, v3, LX/0gRk;->A00:I
+
+    const/4 v2, 0x1
+
+    add-int/lit8 v1, v0, 0x1
+
+    iget-object v0, v3, LX/0gRk;->A03:LX/0nWC;
+
+    invoke-interface {v0}, LX/0nWC;->BIz()Ljava/util/List;
+
+    move-result-object v0
+
+    invoke-interface {v0}, Ljava/util/List;->size()I
+
+    move-result v0
+
+    if-lt v1, v0, :cond_5f
+
+    const/4 v2, 0x0
+
+    :cond_5f
+    xor-int/lit8 v0, v2, 0x1
+
+    iput-boolean v0, v3, LX/0gRk;->A05:Z
+
+    iget-object v1, p0, LX/0hks;->A0A:Ljava/lang/String;
+
+    const/16 v0, 0x122
+
+    invoke-static {v0}, LX/0000;->A00(I)Ljava/lang/String;
+
+    move-result-object v0
+
+    invoke-static {v1, v0}, LX/04l9;->areEqual(Ljava/lang/Object;Ljava/lang/Object;)Z
+
+    move-result v0
+
+    if-nez v0, :cond_7f
+
+    const/16 v0, 0x9f3
+
+    invoke-static {v0}, LX/0000;->A00(I)Ljava/lang/String;
+
+    move-result-object v0
+
+    invoke-static {v1, v0}, LX/04l9;->areEqual(Ljava/lang/Object;Ljava/lang/Object;)Z
+
+    move-result v1
+
+    const/high16 v0, 0x40b00000    # 5.5f
+
+    if-eqz v1, :cond_81
+
+    :cond_7f
+    const/high16 v0, 0x41040000    # 8.25f
+
+    :cond_81
+    invoke-static {p0, v0, v4, v5}, LX/0hks;->A02(LX/0hks;FIZ)V
+
+    :cond_84
+    return v5
+
+    :cond_85
+    invoke-static {v8}, LX/04l9;->A0f(Ljava/lang/Object;)V
+
+    iget v6, v8, LX/03Th;->A00:I
+
+    invoke-virtual {v8}, LX/03Th;->getPaddingBottom()I
+
+    move-result v0
+
+    sub-int/2addr v6, v0
+
+    invoke-virtual {v8}, LX/03Th;->getPaddingTop()I
+
+    move-result v0
+
+    sub-int/2addr v6, v0
+
+    const/4 v0, 0x0
+
+    invoke-static {v3, v7, v2, v0}, LX/0gRk;->A00(LX/0gRk;IIZ)I
+
+    move-result v2
+
+    add-int/lit8 v0, v7, 0x1
+
+    invoke-static {v3, v7, v0, v5}, LX/0gRk;->A00(LX/0gRk;IIZ)I
+
+    move-result v1
+
+    const/4 v0, -0x1
+
+    if-eq v2, v0, :cond_ae
+
+    sub-int/2addr v2, v1
+
+    int-to-float v2, v2
+
+    int-to-float v1, v6
+
+    const v0, 0x3d4ccccd    # 0.05f
+
+    mul-float/2addr v1, v0
+
+    cmpg-float v0, v2, v1
+
+    if-gez v0, :cond_ae
+
+    goto :goto_49
+
+    :cond_ae
+    if-nez p1, :cond_49
+
+    iget-object v3, p0, LX/0hks;->A03:LX/03Th;
+
+    if-eqz v3, :cond_84
+
+    iget-object v1, p0, LX/0hks;->A0A:Ljava/lang/String;
+
+    const/16 v0, 0x122
+
+    invoke-static {v0}, LX/0000;->A00(I)Ljava/lang/String;
+
+    move-result-object v0
+
+    invoke-static {v1, v0}, LX/04l9;->areEqual(Ljava/lang/Object;Ljava/lang/Object;)Z
+
+    move-result v0
+
+    iget-object v1, p0, LX/0hks;->A02:Landroid/content/Context;
+
+    if-eqz v0, :cond_d9
+
+    iget v0, p0, LX/0hks;->A01:I
+
+    invoke-static {v1}, LX/04l9;->A0f(Ljava/lang/Object;)V
+
+    new-instance v2, LX/0IDy;
+
+    invoke-direct {v2, v1}, LX/0EyT;-><init>(Landroid/content/Context;)V
+
+    iput v0, v2, LX/0IDy;->A00:I
+
+    const/4 v0, 0x0
+
+    sput v0, Lredex/$StoreFenceHelper;->DUMMY_VOLATILE:I
+
+    :goto_d3
+    iput v4, v2, LX/0Dmw;->A00:I
+
+    invoke-virtual {v3, v2}, LX/03Th;->A0v(LX/0Dmw;)V
+
+    return v5
+
+    :cond_d9
+    new-instance v2, LX/0FBX;
+
+    invoke-direct {v2, v1}, LX/0EyT;-><init>(Landroid/content/Context;)V
+
+    iput-boolean v5, v2, LX/0FBX;->A03:Z
+
+    const/4 v0, 0x0
+
+    sput v0, Lredex/$StoreFenceHelper;->DUMMY_VOLATILE:I
+
+    iget v1, p0, LX/0hks;->A00:I
+
+    iget v0, p0, LX/0hks;->A01:I
+
+    iput v1, v2, LX/0FBX;->A00:I
+
+    iput v0, v2, LX/0FBX;->A02:I
+
+    goto :goto_d3
+
+    :cond_ec
+    const/4 v5, 0x0
+
+    return v5
+.end method
+
+===== CALLEE JOIN LX/0hks; .method public static final A03(LX/0hks;Z)Z =====
+CALLED_BY_DEVICESEG=('LX/0UUh;', 'A02', 'II', 'Z')
+FILE=work/smali/classes12/X/0hks.smali
+NET=['A0F(']
+.method public static final A03(LX/0hks;Z)Z
+    .registers 11
+
+    iget-object v3, p0, LX/0hks;->A08:LX/0gRk;
+
+    if-eqz v3, :cond_ec
+
+    iget v0, v3, LX/0gRk;->A00:I
+
+    add-int/lit8 v1, v0, 0x1
+
+    iget-object v0, v3, LX/0gRk;->A03:LX/0nWC;
+
+    invoke-interface {v0}, LX/0nWC;->BIz()Ljava/util/List;
+
+    move-result-object v0
+
+    invoke-interface {v0}, Ljava/util/List;->size()I
+
+    move-result v0
+
+    if-ge v1, v0, :cond_ec
+
+    const/4 v5, 0x1
+
+    iget v0, v3, LX/0gRk;->A00:I
+
+    invoke-virtual {v3, v0}, LX/0gRk;->A02(I)I
+
+    iget v0, v3, LX/0gRk;->A00:I
+
+    add-int/lit8 v0, v0, 0x1
+
+    invoke-virtual {v3, v0}, LX/0gRk;->A02(I)I
+
+    move-result v4
+
+    iget v0, v3, LX/0gRk;->A00:I
+
+    add-int/lit8 v0, v0, 0x1
+
+    invoke-virtual {v3, v0}, LX/0gRk;->A02(I)I
+
+    move-result v2
+
+    iget-object v8, v3, LX/0gRk;->A01:LX/03Th;
+
+    invoke-static {v8}, LX/01pQ;->A02(LX/03Th;)I
+
+    move-result v7
+
+    if-le v2, v7, :cond_49
+
+    sub-int v1, v2, v7
+
+    const/4 v0, 0x2
+
+    if-gt v1, v0, :cond_85
+
+    iget-object v0, v3, LX/0gRk;->A03:LX/0nWC;
+
+    invoke-interface {v0}, LX/0nWC;->C3h()Ljava/util/Set;
+
+    move-result-object v1
+
+    iget v0, v3, LX/0gRk;->A00:I
+
+    invoke-static {v0}, Ljava/lang/Integer;->valueOf(I)Ljava/lang/Integer;
+
+    move-result-object v0
+
+    invoke-interface {v1, v0}, Ljava/util/Set;->contains(Ljava/lang/Object;)Z
+
+    move-result v0
+
+    if-nez v0, :cond_85
+
+    :cond_49
+    :goto_49
+    iget v0, v3, LX/0gRk;->A00:I
+
+    add-int/lit8 v0, v0, 0x1
+
+    iput v0, v3, LX/0gRk;->A00:I
+
+    const/4 v2, 0x1
+
+    add-int/lit8 v1, v0, 0x1
+
+    iget-object v0, v3, LX/0gRk;->A03:LX/0nWC;
+
+    invoke-interface {v0}, LX/0nWC;->BIz()Ljava/util/List;
+
+    move-result-object v0
+
+    invoke-interface {v0}, Ljava/util/List;->size()I
+
+    move-result v0
+
+    if-lt v1, v0, :cond_5f
+
+    const/4 v2, 0x0
+
+    :cond_5f
+    xor-int/lit8 v0, v2, 0x1
+
+    iput-boolean v0, v3, LX/0gRk;->A05:Z
+
+    iget-object v1, p0, LX/0hks;->A0A:Ljava/lang/String;
+
+    const/16 v0, 0x122
+
+    invoke-static {v0}, LX/0000;->A00(I)Ljava/lang/String;
+
+    move-result-object v0
+
+    invoke-static {v1, v0}, LX/04l9;->areEqual(Ljava/lang/Object;Ljava/lang/Object;)Z
+
+    move-result v0
+
+    if-nez v0, :cond_7f
+
+    const/16 v0, 0x9f3
+
+    invoke-static {v0}, LX/0000;->A00(I)Ljava/lang/String;
+
+    move-result-object v0
+
+    invoke-static {v1, v0}, LX/04l9;->areEqual(Ljava/lang/Object;Ljava/lang/Object;)Z
+
+    move-result v1
+
+    const/high16 v0, 0x40b00000    # 5.5f
+
+    if-eqz v1, :cond_81
+
+    :cond_7f
+    const/high16 v0, 0x41040000    # 8.25f
+
+    :cond_81
+    invoke-static {p0, v0, v4, v5}, LX/0hks;->A02(LX/0hks;FIZ)V
+
+    :cond_84
+    return v5
+
+    :cond_85
+    invoke-static {v8}, LX/04l9;->A0f(Ljava/lang/Object;)V
+
+    iget v6, v8, LX/03Th;->A00:I
+
+    invoke-virtual {v8}, LX/03Th;->getPaddingBottom()I
+
+    move-result v0
+
+    sub-int/2addr v6, v0
+
+    invoke-virtual {v8}, LX/03Th;->getPaddingTop()I
+
+    move-result v0
+
+    sub-int/2addr v6, v0
+
+    const/4 v0, 0x0
+
+    invoke-static {v3, v7, v2, v0}, LX/0gRk;->A00(LX/0gRk;IIZ)I
+
+    move-result v2
+
+    add-int/lit8 v0, v7, 0x1
+
+    invoke-static {v3, v7, v0, v5}, LX/0gRk;->A00(LX/0gRk;IIZ)I
+
+    move-result v1
+
+    const/4 v0, -0x1
+
+    if-eq v2, v0, :cond_ae
+
+    sub-int/2addr v2, v1
+
+    int-to-float v2, v2
+
+    int-to-float v1, v6
+
+    const v0, 0x3d4ccccd    # 0.05f
+
+    mul-float/2addr v1, v0
+
+    cmpg-float v0, v2, v1
+
+    if-gez v0, :cond_ae
+
+    goto :goto_49
+
+    :cond_ae
+    if-nez p1, :cond_49
+
+    iget-object v3, p0, LX/0hks;->A03:LX/03Th;
+
+    if-eqz v3, :cond_84
+
+    iget-object v1, p0, LX/0hks;->A0A:Ljava/lang/String;
+
+    const/16 v0, 0x122
+
+    invoke-static {v0}, LX/0000;->A00(I)Ljava/lang/String;
+
+    move-result-object v0
+
+    invoke-static {v1, v0}, LX/04l9;->areEqual(Ljava/lang/Object;Ljava/lang/Object;)Z
+
+    move-result v0
+
+    iget-object v1, p0, LX/0hks;->A02:Landroid/content/Context;
+
+    if-eqz v0, :cond_d9
+
+    iget v0, p0, LX/0hks;->A01:I
+
+    invoke-static {v1}, LX/04l9;->A0f(Ljava/lang/Object;)V
+
+    new-instance v2, LX/0IDy;
+
+    invoke-direct {v2, v1}, LX/0EyT;-><init>(Landroid/content/Context;)V
+
+    iput v0, v2, LX/0IDy;->A00:I
+
+    const/4 v0, 0x0
+
+    sput v0, Lredex/$StoreFenceHelper;->DUMMY_VOLATILE:I
+
+    :goto_d3
+    iput v4, v2, LX/0Dmw;->A00:I
+
+    invoke-virtual {v3, v2}, LX/03Th;->A0v(LX/0Dmw;)V
+
+    return v5
+
+    :cond_d9
+    new-instance v2, LX/0FBX;
+
+    invoke-direct {v2, v1}, LX/0EyT;-><init>(Landroid/content/Context;)V
+
+    iput-boolean v5, v2, LX/0FBX;->A03:Z
+
+    const/4 v0, 0x0
+
+    sput v0, Lredex/$StoreFenceHelper;->DUMMY_VOLATILE:I
+
+    iget v1, p0, LX/0hks;->A00:I
+
+    iget v0, p0, LX/0hks;->A01:I
+
+    iput v1, v2, LX/0FBX;->A00:I
+
+    iput v0, v2, LX/0FBX;->A02:I
+
+    goto :goto_d3
+
+    :cond_ec
+    const/4 v5, 0x0
+
+    return v5
+.end method
+
+===== CALLER JOIN LX/0UVB; .method public final A0N(Landroidx/recyclerview/widget/RecyclerView;I)V =====
+CALLS_DEVICESEG=('LX/0hks;', 'A02', 'LX/0hks;FIZ', 'V')
+FILE=work/smali/classes12/X/0UVB.smali
+NET=['A0F(']
+.method public final A0N(Landroidx/recyclerview/widget/RecyclerView;I)V
+    .registers 14
+
+    const v0, 0x4c7fd2ad    # 6.7062452E7f
+
+    invoke-static {v0}, LX/01IU;->A03(I)I
+
+    move-result v3
+
+    const/4 v4, 0x0
+
+    invoke-static {p1, v4}, LX/04l9;->A0j(Ljava/lang/Object;I)V
+
+    iget-object v2, p0, LX/0UVB;->A02:LX/0dOy;
+
+    iget-object v1, v2, LX/0dOy;->A09:LX/0gRk;
+
+    iget-boolean v0, v1, LX/0gRk;->A05:Z
+
+    if-eqz v0, :cond_1a
+
+    const v0, 0x3396b8b2
+
+    :goto_16
+    invoke-static {v0, v3}, LX/01IU;->A0A(II)V
+
+    return-void
+
+    :cond_1a
+    const/4 v7, 0x1
+
+    if-eqz p2, :cond_8d
+
+    if-ne p2, v7, :cond_40
+
+    iput-boolean v4, v2, LX/0dOy;->A0C:Z
+
+    iget v0, v1, LX/0gRk;->A00:I
+
+    const/4 v6, 0x1
+
+    add-int/lit8 v0, v0, 0x1
+
+    invoke-virtual {v1, v0}, LX/0gRk;->A02(I)I
+
+    move-result v5
+
+    const/4 v0, -0x1
+
+    if-eq v5, v0, :cond_8b
+
+    iget-object v7, v1, LX/0gRk;->A01:LX/03Th;
+
+    invoke-static {v7, v4}, LX/04l9;->A0j(Ljava/lang/Object;I)V
+
+    instance-of v0, v7, Landroidx/recyclerview/widget/LinearLayoutManager;
+
+    if-eqz v0, :cond_44
+
+    check-cast v7, Landroidx/recyclerview/widget/LinearLayoutManager;
+
+    invoke-virtual {v7}, Landroidx/recyclerview/widget/LinearLayoutManager;->findLastCompletelyVisibleItemPosition()I
+
+    move-result v2
+
+    :goto_3c
+    if-gt v5, v2, :cond_8b
+
+    :goto_3e
+    iput-boolean v6, p0, LX/0UVB;->A01:Z
+
+    :cond_40
+    :goto_40
+    const v0, 0x42f93e1d
+
+    goto :goto_16
+
+    :cond_44
+    instance-of v0, v7, Lcom/instagram/common/ui/widget/recyclerview/flow/FlowingGridLayoutManager;
+
+    if-eqz v0, :cond_7d
+
+    check-cast v7, Lcom/instagram/common/ui/widget/recyclerview/flow/FlowingGridLayoutManager;
+
+    invoke-virtual {v7}, LX/03Th;->A0W()I
+
+    move-result v0
+
+    if-eqz v0, :cond_7b
+
+    iget-object v8, v7, Lcom/instagram/common/ui/widget/recyclerview/flow/FlowingGridLayoutManager;->A08:Ljava/util/List;
+
+    invoke-interface {v8}, Ljava/util/List;->isEmpty()Z
+
+    move-result v0
+
+    if-nez v0, :cond_7b
+
+    invoke-interface {v8}, Ljava/util/List;->size()I
+
+    move-result v0
+
+    add-int/lit8 v0, v0, -0x1
+
+    if-ltz v0, :cond_7b
+
+    :goto_60
+    add-int/lit8 v4, v0, -0x1
+
+    invoke-static {v8, v0}, LX/0137;->A0H(Ljava/util/List;I)I
+
+    move-result v2
+
+    iget-object v0, v7, Lcom/instagram/common/ui/widget/recyclerview/flow/FlowingGridLayoutManager;->A07:LX/0Fhj;
+
+    invoke-virtual {v0, v2}, LX/0Fhj;->A00(I)Landroid/graphics/Rect;
+
+    move-result-object v1
+
+    if-eqz v1, :cond_77
+
+    iget-object v0, v7, Lcom/instagram/common/ui/widget/recyclerview/flow/FlowingGridLayoutManager;->A06:Landroid/graphics/Rect;
+
+    invoke-virtual {v0, v1}, Landroid/graphics/Rect;->contains(Landroid/graphics/Rect;)Z
+
+    move-result v0
+
+    if-eqz v0, :cond_77
+
+    goto :goto_3c
+
+    :cond_77
+    if-ltz v4, :cond_7b
+
+    move v0, v4
+
+    goto :goto_60
+
+    :cond_7b
+    const/4 v2, -0x1
+
+    goto :goto_3c
+
+    :cond_7d
+    instance-of v0, v7, Landroidx/recyclerview/widget/StaggeredGridLayoutManager;
+
+    if-eqz v0, :cond_19e
+
+    check-cast v7, Landroidx/recyclerview/widget/StaggeredGridLayoutManager;
+
+    const/4 v0, 0x0
+
+    invoke-virtual {v7, v0}, Landroidx/recyclerview/widget/StaggeredGridLayoutManager;->findLastCompletelyVisibleItemPositions([I)[I
+
+    move-result-object v0
+
+    aget v2, v0, v4
+
+    goto :goto_3c
+
+    :cond_8b
+    const/4 v6, 0x0
+
+    goto :goto_3e
+
+    :cond_8d
+    iget v0, p0, LX/0UVB;->A00:I
+
+    if-gtz v0, :cond_92
+
+    const/4 v7, 0x0
+
+    :cond_92
+    iget-boolean v0, v2, LX/0dOy;->A0C:Z
+
+    if-nez v0, :cond_19a
+
+    const v0, 0x2c0bc
+
+    invoke-static {v0}, LX/04oL;->A01(I)Ljava/lang/Object;
+
+    move-result-object v6
+
+    check-cast v6, LX/01Uf;
+
+    iget-object v5, v2, LX/0dOy;->A0A:LX/01SH;
+
+    invoke-virtual {p1}, Landroid/view/View;->getContext()Landroid/content/Context;
+
+    move-result-object v1
+
+    const-class v0, Landroid/app/Activity;
+
+    invoke-static {v1, v0}, LX/00CL;->A00(Landroid/content/Context;Ljava/lang/Class;)Ljava/lang/Object;
+
+    move-result-object v0
+
+    if-eqz v0, :cond_1a3
+
+    check-cast v0, Landroid/app/Activity;
+
+    invoke-static {v0}, LX/004C;->A06(Landroid/app/Activity;)LX/004C;
+
+    move-result-object v0
+
+    invoke-virtual {v0}, LX/004C;->A0Z()I
+
+    move-result v0
+
+    invoke-virtual {v6, v5, v0, v4}, LX/01Uf;->A0B(LX/0Ukc;II)I
+
+    iget v0, p0, LX/0UVB;->A00:I
+
+    invoke-static {v0}, Ljava/lang/Math;->abs(I)I
+
+    move-result v0
+
+    int-to-float v1, v0
+
+    iget v0, v2, LX/0dOy;->A03:F
+
+    cmpl-float v0, v1, v0
+
+    if-lez v0, :cond_e1
+
+    iget-boolean v0, p0, LX/0UVB;->A01:Z
+
+    if-eqz v0, :cond_e1
+
+    if-eqz v7, :cond_e1
+
+    iget-object v5, v2, LX/0dOy;->A08:LX/0hks;
+
+    iget-object v1, v5, LX/0hks;->A07:LX/0dOy;
+
+    if-eqz v1, :cond_d6
+
+    const/4 v0, 0x1
+
+    iput-boolean v0, v1, LX/0dOy;->A0C:Z
+
+    :cond_d6
+    const/4 v0, 0x1
+
+    invoke-static {v5, v0}, LX/0hks;->A03(LX/0hks;Z)Z
+
+    move-result v0
+
+    :goto_db
+    iput-boolean v0, v2, LX/0dOy;->A0C:Z
+
+    :cond_dd
+    :goto_dd
+    iput v4, p0, LX/0UVB;->A00:I
+
+    goto/16 :goto_40
+
+    :cond_e1
+    iget v0, v2, LX/0dOy;->A02:F
+
+    cmpl-float v0, v1, v0
+
+    if-lez v0, :cond_f5
+
+    iget-object v0, v2, LX/0dOy;->A08:LX/0hks;
+
+    if-eqz v7, :cond_f0
+
+    invoke-static {v0, v4}, LX/0hks;->A03(LX/0hks;Z)Z
+
+    move-result v0
+
+    goto :goto_db
+
+    :cond_f0
+    invoke-virtual {v0}, LX/0hks;->A08()Z
+
+    move-result v0
+
+    goto :goto_db
+
+    :cond_f5
+    iget-object v1, v2, LX/0dOy;->A04:LX/03Th;
+
+    if-eqz v1, :cond_dd
+
+    invoke-static {v1}, LX/04l9;->A0f(Ljava/lang/Object;)V
+
+    iget v10, v1, LX/03Th;->A00:I
+
+    invoke-virtual {v1}, LX/03Th;->getPaddingBottom()I
+
+    move-result v0
+
+    sub-int/2addr v10, v0
+
+    invoke-virtual {v1}, LX/03Th;->getPaddingTop()I
+
+    move-result v0
+
+    sub-int/2addr v10, v0
+
+    iget-object v7, v2, LX/0dOy;->A09:LX/0gRk;
+
+    iget v6, v7, LX/0gRk;->A00:I
+
+    invoke-virtual {v7, v6}, LX/0gRk;->A03(I)I
+
+    move-result v8
+
+    add-int/lit8 v9, v6, 0x1
+
+    invoke-virtual {v7, v9}, LX/0gRk;->A03(I)I
+
+    move-result v1
+
+    add-int/lit8 v0, v6, -0x1
+
+    invoke-virtual {v7, v0}, LX/0gRk;->A03(I)I
+
+    move-result v0
+
+    const/4 v5, 0x1
+
+    iput-boolean v5, v2, LX/0dOy;->A0C:Z
+
+    if-le v1, v8, :cond_127
+
+    iget-object v0, v2, LX/0dOy;->A08:LX/0hks;
+
+    invoke-static {v0, v4}, LX/0hks;->A03(LX/0hks;Z)Z
+
+    goto :goto_dd
+
+    :cond_127
+    if-lt v0, v8, :cond_12f
+
+    iget-object v0, v2, LX/0dOy;->A08:LX/0hks;
+
+    invoke-virtual {v0}, LX/0hks;->A08()Z
+
+    goto :goto_dd
+
+    :cond_12f
+    int-to-float v1, v1
+
+    const v0, 0x3e4ccccc    # 0.19999999f
+
+    int-to-float v8, v10
+
+    mul-float/2addr v0, v8
+
+    cmpl-float v0, v1, v0
+
+    if-lez v0, :cond_173
+
+    iget-object v1, v2, LX/0dOy;->A09:LX/0gRk;
+
+    iget v0, v1, LX/0gRk;->A00:I
+
+    invoke-virtual {v1, v0}, LX/0gRk;->A02(I)I
+
+    move-result v1
+
+    iget-object v0, v2, LX/0dOy;->A04:LX/03Th;
+
+    invoke-static {v0}, LX/01pQ;->A01(LX/03Th;)I
+
+    move-result v0
+
+    if-ge v1, v0, :cond_173
+
+    invoke-virtual {v7, v9}, LX/0gRk;->A02(I)I
+
+    move-result v7
+
+    const/4 v0, -0x1
+
+    if-eq v7, v0, :cond_dd
+
+    iget-object v1, v2, LX/0dOy;->A08:LX/0hks;
+
+    const v0, 0x3f4ccccd    # 0.8f
+
+    mul-float/2addr v8, v0
+
+    float-to-int v6, v8
+
+    iget-object v5, v1, LX/0hks;->A03:LX/03Th;
+
+    if-eqz v5, :cond_dd
+
+    const/high16 v2, 0x40b00000    # 5.5f
+
+    iget-object v0, v1, LX/0hks;->A02:Landroid/content/Context;
+
+    new-instance v1, LX/044h;
+
+    invoke-direct {v1, v0}, LX/0EyT;-><init>(Landroid/content/Context;)V
+
+    const/high16 v0, -0x40800000    # -1.0f
+
+    iput v0, v1, LX/044h;->A00:F
+
+    iput v7, v1, LX/0Dmw;->A00:I
+
+    iput v6, v1, LX/044h;->A01:I
+
+    iput v2, v1, LX/044h;->A00:F
+
+    invoke-virtual {v5, v1}, LX/03Th;->A0v(LX/0Dmw;)V
+
+    goto/16 :goto_dd
+
+    :cond_173
+    iget-object v1, v2, LX/0dOy;->A09:LX/0gRk;
+
+    iget v0, v1, LX/0gRk;->A00:I
+
+    if-lez v0, :cond_19a
+
+    invoke-virtual {v1, v0}, LX/0gRk;->A02(I)I
+
+    move-result v1
+
+    iget-object v0, v2, LX/0dOy;->A04:LX/03Th;
+
+    invoke-static {v0}, LX/01pQ;->A01(LX/03Th;)I
+
+    move-result v0
+
+    if-le v1, v0, :cond_19a
+
+    iget-object v2, v2, LX/0dOy;->A08:LX/0hks;
+
+    invoke-virtual {v7, v6}, LX/0gRk;->A02(I)I
+
+    move-result v1
+
+    iget-object v0, v2, LX/0hks;->A03:LX/03Th;
+
+    if-eqz v0, :cond_dd
+
+    iget-object v0, v2, LX/0hks;->A08:LX/0gRk;
+
+    if-eqz v0, :cond_dd
+
+    const/high16 v0, 0x40b00000    # 5.5f
+
+    invoke-static {v2, v0, v1, v5}, LX/0hks;->A02(LX/0hks;FIZ)V
+
+    goto/16 :goto_dd
+
+    :cond_19a
+    iput-boolean v4, v2, LX/0dOy;->A0C:Z
+
+    goto/16 :goto_dd
+
+    :cond_19e
+    invoke-static {v7}, LX/01pQ;->A04(LX/03Th;)Ljava/lang/IllegalArgumentException;
+
+    move-result-object v1
+
+    throw v1
+
+    :cond_1a3
+    invoke-static {}, LX/000H;->A0E()Ljava/lang/IllegalStateException;
+
+    move-result-object v1
+
+    const v0, -0x6fad4f1f
+
+    invoke-static {v0, v3}, LX/01IU;->A0A(II)V
+
+    throw v1
+.end method
+
+===== CALLER JOIN LX/0hks; .method public static final A03(LX/0hks;Z)Z =====
+CALLS_DEVICESEG=('LX/0hks;', 'A02', 'LX/0hks;FIZ', 'V')
+FILE=work/smali/classes12/X/0hks.smali
+NET=['A0F(']
+.method public static final A03(LX/0hks;Z)Z
+    .registers 11
+
+    iget-object v3, p0, LX/0hks;->A08:LX/0gRk;
+
+    if-eqz v3, :cond_ec
+
+    iget v0, v3, LX/0gRk;->A00:I
+
+    add-int/lit8 v1, v0, 0x1
+
+    iget-object v0, v3, LX/0gRk;->A03:LX/0nWC;
+
+    invoke-interface {v0}, LX/0nWC;->BIz()Ljava/util/List;
+
+    move-result-object v0
+
+    invoke-interface {v0}, Ljava/util/List;->size()I
+
+    move-result v0
+
+    if-ge v1, v0, :cond_ec
+
+    const/4 v5, 0x1
+
+    iget v0, v3, LX/0gRk;->A00:I
+
+    invoke-virtual {v3, v0}, LX/0gRk;->A02(I)I
+
+    iget v0, v3, LX/0gRk;->A00:I
+
+    add-int/lit8 v0, v0, 0x1
+
+    invoke-virtual {v3, v0}, LX/0gRk;->A02(I)I
+
+    move-result v4
+
+    iget v0, v3, LX/0gRk;->A00:I
+
+    add-int/lit8 v0, v0, 0x1
+
+    invoke-virtual {v3, v0}, LX/0gRk;->A02(I)I
+
+    move-result v2
+
+    iget-object v8, v3, LX/0gRk;->A01:LX/03Th;
+
+    invoke-static {v8}, LX/01pQ;->A02(LX/03Th;)I
+
+    move-result v7
+
+    if-le v2, v7, :cond_49
+
+    sub-int v1, v2, v7
+
+    const/4 v0, 0x2
+
+    if-gt v1, v0, :cond_85
+
+    iget-object v0, v3, LX/0gRk;->A03:LX/0nWC;
+
+    invoke-interface {v0}, LX/0nWC;->C3h()Ljava/util/Set;
+
+    move-result-object v1
+
+    iget v0, v3, LX/0gRk;->A00:I
+
+    invoke-static {v0}, Ljava/lang/Integer;->valueOf(I)Ljava/lang/Integer;
+
+    move-result-object v0
+
+    invoke-interface {v1, v0}, Ljava/util/Set;->contains(Ljava/lang/Object;)Z
+
+    move-result v0
+
+    if-nez v0, :cond_85
+
+    :cond_49
+    :goto_49
+    iget v0, v3, LX/0gRk;->A00:I
+
+    add-int/lit8 v0, v0, 0x1
+
+    iput v0, v3, LX/0gRk;->A00:I
+
+    const/4 v2, 0x1
+
+    add-int/lit8 v1, v0, 0x1
+
+    iget-object v0, v3, LX/0gRk;->A03:LX/0nWC;
+
+    invoke-interface {v0}, LX/0nWC;->BIz()Ljava/util/List;
+
+    move-result-object v0
+
+    invoke-interface {v0}, Ljava/util/List;->size()I
+
+    move-result v0
+
+    if-lt v1, v0, :cond_5f
+
+    const/4 v2, 0x0
+
+    :cond_5f
+    xor-int/lit8 v0, v2, 0x1
+
+    iput-boolean v0, v3, LX/0gRk;->A05:Z
+
+    iget-object v1, p0, LX/0hks;->A0A:Ljava/lang/String;
+
+    const/16 v0, 0x122
+
+    invoke-static {v0}, LX/0000;->A00(I)Ljava/lang/String;
+
+    move-result-object v0
+
+    invoke-static {v1, v0}, LX/04l9;->areEqual(Ljava/lang/Object;Ljava/lang/Object;)Z
+
+    move-result v0
+
+    if-nez v0, :cond_7f
+
+    const/16 v0, 0x9f3
+
+    invoke-static {v0}, LX/0000;->A00(I)Ljava/lang/String;
+
+    move-result-object v0
+
+    invoke-static {v1, v0}, LX/04l9;->areEqual(Ljava/lang/Object;Ljava/lang/Object;)Z
+
+    move-result v1
+
+    const/high16 v0, 0x40b00000    # 5.5f
+
+    if-eqz v1, :cond_81
+
+    :cond_7f
+    const/high16 v0, 0x41040000    # 8.25f
+
+    :cond_81
+    invoke-static {p0, v0, v4, v5}, LX/0hks;->A02(LX/0hks;FIZ)V
+
+    :cond_84
+    return v5
+
+    :cond_85
+    invoke-static {v8}, LX/04l9;->A0f(Ljava/lang/Object;)V
+
+    iget v6, v8, LX/03Th;->A00:I
+
+    invoke-virtual {v8}, LX/03Th;->getPaddingBottom()I
+
+    move-result v0
+
+    sub-int/2addr v6, v0
+
+    invoke-virtual {v8}, LX/03Th;->getPaddingTop()I
+
+    move-result v0
+
+    sub-int/2addr v6, v0
+
+    const/4 v0, 0x0
+
+    invoke-static {v3, v7, v2, v0}, LX/0gRk;->A00(LX/0gRk;IIZ)I
+
+    move-result v2
+
+    add-int/lit8 v0, v7, 0x1
+
+    invoke-static {v3, v7, v0, v5}, LX/0gRk;->A00(LX/0gRk;IIZ)I
+
+    move-result v1
+
+    const/4 v0, -0x1
+
+    if-eq v2, v0, :cond_ae
+
+    sub-int/2addr v2, v1
+
+    int-to-float v2, v2
+
+    int-to-float v1, v6
+
+    const v0, 0x3d4ccccd    # 0.05f
+
+    mul-float/2addr v1, v0
+
+    cmpg-float v0, v2, v1
+
+    if-gez v0, :cond_ae
+
+    goto :goto_49
+
+    :cond_ae
+    if-nez p1, :cond_49
+
+    iget-object v3, p0, LX/0hks;->A03:LX/03Th;
+
+    if-eqz v3, :cond_84
+
+    iget-object v1, p0, LX/0hks;->A0A:Ljava/lang/String;
+
+    const/16 v0, 0x122
+
+    invoke-static {v0}, LX/0000;->A00(I)Ljava/lang/String;
+
+    move-result-object v0
+
+    invoke-static {v1, v0}, LX/04l9;->areEqual(Ljava/lang/Object;Ljava/lang/Object;)Z
+
+    move-result v0
+
+    iget-object v1, p0, LX/0hks;->A02:Landroid/content/Context;
+
+    if-eqz v0, :cond_d9
+
+    iget v0, p0, LX/0hks;->A01:I
+
+    invoke-static {v1}, LX/04l9;->A0f(Ljava/lang/Object;)V
+
+    new-instance v2, LX/0IDy;
+
+    invoke-direct {v2, v1}, LX/0EyT;-><init>(Landroid/content/Context;)V
+
+    iput v0, v2, LX/0IDy;->A00:I
+
+    const/4 v0, 0x0
+
+    sput v0, Lredex/$StoreFenceHelper;->DUMMY_VOLATILE:I
+
+    :goto_d3
+    iput v4, v2, LX/0Dmw;->A00:I
+
+    invoke-virtual {v3, v2}, LX/03Th;->A0v(LX/0Dmw;)V
+
+    return v5
+
+    :cond_d9
+    new-instance v2, LX/0FBX;
+
+    invoke-direct {v2, v1}, LX/0EyT;-><init>(Landroid/content/Context;)V
+
+    iput-boolean v5, v2, LX/0FBX;->A03:Z
+
+    const/4 v0, 0x0
+
+    sput v0, Lredex/$StoreFenceHelper;->DUMMY_VOLATILE:I
+
+    iget v1, p0, LX/0hks;->A00:I
+
+    iget v0, p0, LX/0hks;->A01:I
+
+    iput v1, v2, LX/0FBX;->A00:I
+
+    iput v0, v2, LX/0FBX;->A02:I
+
+    goto :goto_d3
+
+    :cond_ec
+    const/4 v5, 0x0
+
+    return v5
+.end method
+
+===== SAME-METHOD JOIN LX/0hks; .method public static final A03(LX/0hks;Z)Z =====
+FILE=work/smali/classes12/X/0hks.smali
+DEV=['LX/0hkS;']
+NET=['A0F(']
+.method public static final A03(LX/0hks;Z)Z
+    .registers 11
+
+    iget-object v3, p0, LX/0hks;->A08:LX/0gRk;
+
+    if-eqz v3, :cond_ec
+
+    iget v0, v3, LX/0gRk;->A00:I
+
+    add-int/lit8 v1, v0, 0x1
+
+    iget-object v0, v3, LX/0gRk;->A03:LX/0nWC;
+
+    invoke-interface {v0}, LX/0nWC;->BIz()Ljava/util/List;
+
+    move-result-object v0
+
+    invoke-interface {v0}, Ljava/util/List;->size()I
+
+    move-result v0
+
+    if-ge v1, v0, :cond_ec
+
+    const/4 v5, 0x1
+
+    iget v0, v3, LX/0gRk;->A00:I
+
+    invoke-virtual {v3, v0}, LX/0gRk;->A02(I)I
+
+    iget v0, v3, LX/0gRk;->A00:I
+
+    add-int/lit8 v0, v0, 0x1
+
+    invoke-virtual {v3, v0}, LX/0gRk;->A02(I)I
+
+    move-result v4
+
+    iget v0, v3, LX/0gRk;->A00:I
+
+    add-int/lit8 v0, v0, 0x1
+
+    invoke-virtual {v3, v0}, LX/0gRk;->A02(I)I
+
+    move-result v2
+
+    iget-object v8, v3, LX/0gRk;->A01:LX/03Th;
+
+    invoke-static {v8}, LX/01pQ;->A02(LX/03Th;)I
+
+    move-result v7
+
+    if-le v2, v7, :cond_49
+
+    sub-int v1, v2, v7
+
+    const/4 v0, 0x2
+
+    if-gt v1, v0, :cond_85
+
+    iget-object v0, v3, LX/0gRk;->A03:LX/0nWC;
+
+    invoke-interface {v0}, LX/0nWC;->C3h()Ljava/util/Set;
+
+    move-result-object v1
+
+    iget v0, v3, LX/0gRk;->A00:I
+
+    invoke-static {v0}, Ljava/lang/Integer;->valueOf(I)Ljava/lang/Integer;
+
+    move-result-object v0
+
+    invoke-interface {v1, v0}, Ljava/util/Set;->contains(Ljava/lang/Object;)Z
+
+    move-result v0
+
+    if-nez v0, :cond_85
+
+    :cond_49
+    :goto_49
+    iget v0, v3, LX/0gRk;->A00:I
+
+    add-int/lit8 v0, v0, 0x1
+
+    iput v0, v3, LX/0gRk;->A00:I
+
+    const/4 v2, 0x1
+
+    add-int/lit8 v1, v0, 0x1
+
+    iget-object v0, v3, LX/0gRk;->A03:LX/0nWC;
+
+    invoke-interface {v0}, LX/0nWC;->BIz()Ljava/util/List;
+
+    move-result-object v0
+
+    invoke-interface {v0}, Ljava/util/List;->size()I
+
+    move-result v0
+
+    if-lt v1, v0, :cond_5f
+
+    const/4 v2, 0x0
+
+    :cond_5f
+    xor-int/lit8 v0, v2, 0x1
+
+    iput-boolean v0, v3, LX/0gRk;->A05:Z
+
+    iget-object v1, p0, LX/0hks;->A0A:Ljava/lang/String;
+
+    const/16 v0, 0x122
+
+    invoke-static {v0}, LX/0000;->A00(I)Ljava/lang/String;
+
+    move-result-object v0
+
+    invoke-static {v1, v0}, LX/04l9;->areEqual(Ljava/lang/Object;Ljava/lang/Object;)Z
+
+    move-result v0
+
+    if-nez v0, :cond_7f
+
+    const/16 v0, 0x9f3
+
+    invoke-static {v0}, LX/0000;->A00(I)Ljava/lang/String;
+
+    move-result-object v0
+
+    invoke-static {v1, v0}, LX/04l9;->areEqual(Ljava/lang/Object;Ljava/lang/Object;)Z
+
+    move-result v1
+
+    const/high16 v0, 0x40b00000    # 5.5f
+
+    if-eqz v1, :cond_81
+
+    :cond_7f
+    const/high16 v0, 0x41040000    # 8.25f
+
+    :cond_81
+    invoke-static {p0, v0, v4, v5}, LX/0hks;->A02(LX/0hks;FIZ)V
+
+    :cond_84
+    return v5
+
+    :cond_85
+    invoke-static {v8}, LX/04l9;->A0f(Ljava/lang/Object;)V
+
+    iget v6, v8, LX/03Th;->A00:I
+
+    invoke-virtual {v8}, LX/03Th;->getPaddingBottom()I
+
+    move-result v0
+
+    sub-int/2addr v6, v0
+
+    invoke-virtual {v8}, LX/03Th;->getPaddingTop()I
+
+    move-result v0
+
+    sub-int/2addr v6, v0
+
+    const/4 v0, 0x0
+
+    invoke-static {v3, v7, v2, v0}, LX/0gRk;->A00(LX/0gRk;IIZ)I
+
+    move-result v2
+
+    add-int/lit8 v0, v7, 0x1
+
+    invoke-static {v3, v7, v0, v5}, LX/0gRk;->A00(LX/0gRk;IIZ)I
+
+    move-result v1
+
+    const/4 v0, -0x1
+
+    if-eq v2, v0, :cond_ae
+
+    sub-int/2addr v2, v1
+
+    int-to-float v2, v2
+
+    int-to-float v1, v6
+
+    const v0, 0x3d4ccccd    # 0.05f
+
+    mul-float/2addr v1, v0
+
+    cmpg-float v0, v2, v1
+
+    if-gez v0, :cond_ae
+
+    goto :goto_49
+
+    :cond_ae
+    if-nez p1, :cond_49
+
+    iget-object v3, p0, LX/0hks;->A03:LX/03Th;
+
+    if-eqz v3, :cond_84
+
+    iget-object v1, p0, LX/0hks;->A0A:Ljava/lang/String;
+
+    const/16 v0, 0x122
+
+    invoke-static {v0}, LX/0000;->A00(I)Ljava/lang/String;
+
+    move-result-object v0
+
+    invoke-static {v1, v0}, LX/04l9;->areEqual(Ljava/lang/Object;Ljava/lang/Object;)Z
+
+    move-result v0
+
+    iget-object v1, p0, LX/0hks;->A02:Landroid/content/Context;
+
+    if-eqz v0, :cond_d9
+
+    iget v0, p0, LX/0hks;->A01:I
+
+    invoke-static {v1}, LX/04l9;->A0f(Ljava/lang/Object;)V
+
+    new-instance v2, LX/0IDy;
+
+    invoke-direct {v2, v1}, LX/0EyT;-><init>(Landroid/content/Context;)V
+
+    iput v0, v2, LX/0IDy;->A00:I
+
+    const/4 v0, 0x0
+
+    sput v0, Lredex/$StoreFenceHelper;->DUMMY_VOLATILE:I
+
+    :goto_d3
+    iput v4, v2, LX/0Dmw;->A00:I
+
+    invoke-virtual {v3, v2}, LX/03Th;->A0v(LX/0Dmw;)V
+
+    return v5
+
+    :cond_d9
+    new-instance v2, LX/0FBX;
+
+    invoke-direct {v2, v1}, LX/0EyT;-><init>(Landroid/content/Context;)V
+
+    iput-boolean v5, v2, LX/0FBX;->A03:Z
+
+    const/4 v0, 0x0
+
+    sput v0, Lredex/$StoreFenceHelper;->DUMMY_VOLATILE:I
+
+    iget v1, p0, LX/0hks;->A00:I
+
+    iget v0, p0, LX/0hks;->A01:I
+
+    iput v1, v2, LX/0FBX;->A00:I
+
+    iput v0, v2, LX/0FBX;->A02:I
+
+    goto :goto_d3
+
+    :cond_ec
+    const/4 v5, 0x0
+
+    return v5
+.end method
+
+===== CALLER JOIN LX/0UVB; .method public final A0N(Landroidx/recyclerview/widget/RecyclerView;I)V =====
+CALLS_DEVICESEG=('LX/0hks;', 'A03', 'LX/0hks;Z', 'Z')
+FILE=work/smali/classes12/X/0UVB.smali
+NET=['A0F(']
+.method public final A0N(Landroidx/recyclerview/widget/RecyclerView;I)V
+    .registers 14
+
+    const v0, 0x4c7fd2ad    # 6.7062452E7f
+
+    invoke-static {v0}, LX/01IU;->A03(I)I
+
+    move-result v3
+
+    const/4 v4, 0x0
+
+    invoke-static {p1, v4}, LX/04l9;->A0j(Ljava/lang/Object;I)V
+
+    iget-object v2, p0, LX/0UVB;->A02:LX/0dOy;
+
+    iget-object v1, v2, LX/0dOy;->A09:LX/0gRk;
+
+    iget-boolean v0, v1, LX/0gRk;->A05:Z
+
+    if-eqz v0, :cond_1a
+
+    const v0, 0x3396b8b2
+
+    :goto_16
+    invoke-static {v0, v3}, LX/01IU;->A0A(II)V
+
+    return-void
+
+    :cond_1a
+    const/4 v7, 0x1
+
+    if-eqz p2, :cond_8d
+
+    if-ne p2, v7, :cond_40
+
+    iput-boolean v4, v2, LX/0dOy;->A0C:Z
+
+    iget v0, v1, LX/0gRk;->A00:I
+
+    const/4 v6, 0x1
+
+    add-int/lit8 v0, v0, 0x1
+
+    invoke-virtual {v1, v0}, LX/0gRk;->A02(I)I
+
+    move-result v5
+
+    const/4 v0, -0x1
+
+    if-eq v5, v0, :cond_8b
+
+    iget-object v7, v1, LX/0gRk;->A01:LX/03Th;
+
+    invoke-static {v7, v4}, LX/04l9;->A0j(Ljava/lang/Object;I)V
+
+    instance-of v0, v7, Landroidx/recyclerview/widget/LinearLayoutManager;
+
+    if-eqz v0, :cond_44
+
+    check-cast v7, Landroidx/recyclerview/widget/LinearLayoutManager;
+
+    invoke-virtual {v7}, Landroidx/recyclerview/widget/LinearLayoutManager;->findLastCompletelyVisibleItemPosition()I
+
+    move-result v2
+
+    :goto_3c
+    if-gt v5, v2, :cond_8b
+
+    :goto_3e
+    iput-boolean v6, p0, LX/0UVB;->A01:Z
+
+    :cond_40
+    :goto_40
+    const v0, 0x42f93e1d
+
+    goto :goto_16
+
+    :cond_44
+    instance-of v0, v7, Lcom/instagram/common/ui/widget/recyclerview/flow/FlowingGridLayoutManager;
+
+    if-eqz v0, :cond_7d
+
+    check-cast v7, Lcom/instagram/common/ui/widget/recyclerview/flow/FlowingGridLayoutManager;
+
+    invoke-virtual {v7}, LX/03Th;->A0W()I
+
+    move-result v0
+
+    if-eqz v0, :cond_7b
+
+    iget-object v8, v7, Lcom/instagram/common/ui/widget/recyclerview/flow/FlowingGridLayoutManager;->A08:Ljava/util/List;
+
+    invoke-interface {v8}, Ljava/util/List;->isEmpty()Z
+
+    move-result v0
+
+    if-nez v0, :cond_7b
+
+    invoke-interface {v8}, Ljava/util/List;->size()I
+
+    move-result v0
+
+    add-int/lit8 v0, v0, -0x1
+
+    if-ltz v0, :cond_7b
+
+    :goto_60
+    add-int/lit8 v4, v0, -0x1
+
+    invoke-static {v8, v0}, LX/0137;->A0H(Ljava/util/List;I)I
+
+    move-result v2
+
+    iget-object v0, v7, Lcom/instagram/common/ui/widget/recyclerview/flow/FlowingGridLayoutManager;->A07:LX/0Fhj;
+
+    invoke-virtual {v0, v2}, LX/0Fhj;->A00(I)Landroid/graphics/Rect;
+
+    move-result-object v1
+
+    if-eqz v1, :cond_77
+
+    iget-object v0, v7, Lcom/instagram/common/ui/widget/recyclerview/flow/FlowingGridLayoutManager;->A06:Landroid/graphics/Rect;
+
+    invoke-virtual {v0, v1}, Landroid/graphics/Rect;->contains(Landroid/graphics/Rect;)Z
+
+    move-result v0
+
+    if-eqz v0, :cond_77
+
+    goto :goto_3c
+
+    :cond_77
+    if-ltz v4, :cond_7b
+
+    move v0, v4
+
+    goto :goto_60
+
+    :cond_7b
+    const/4 v2, -0x1
+
+    goto :goto_3c
+
+    :cond_7d
+    instance-of v0, v7, Landroidx/recyclerview/widget/StaggeredGridLayoutManager;
+
+    if-eqz v0, :cond_19e
+
+    check-cast v7, Landroidx/recyclerview/widget/StaggeredGridLayoutManager;
+
+    const/4 v0, 0x0
+
+    invoke-virtual {v7, v0}, Landroidx/recyclerview/widget/StaggeredGridLayoutManager;->findLastCompletelyVisibleItemPositions([I)[I
+
+    move-result-object v0
+
+    aget v2, v0, v4
+
+    goto :goto_3c
+
+    :cond_8b
+    const/4 v6, 0x0
+
+    goto :goto_3e
+
+    :cond_8d
+    iget v0, p0, LX/0UVB;->A00:I
+
+    if-gtz v0, :cond_92
+
+    const/4 v7, 0x0
+
+    :cond_92
+    iget-boolean v0, v2, LX/0dOy;->A0C:Z
+
+    if-nez v0, :cond_19a
+
+    const v0, 0x2c0bc
+
+    invoke-static {v0}, LX/04oL;->A01(I)Ljava/lang/Object;
+
+    move-result-object v6
+
+    check-cast v6, LX/01Uf;
+
+    iget-object v5, v2, LX/0dOy;->A0A:LX/01SH;
+
+    invoke-virtual {p1}, Landroid/view/View;->getContext()Landroid/content/Context;
+
+    move-result-object v1
+
+    const-class v0, Landroid/app/Activity;
+
+    invoke-static {v1, v0}, LX/00CL;->A00(Landroid/content/Context;Ljava/lang/Class;)Ljava/lang/Object;
+
+    move-result-object v0
+
+    if-eqz v0, :cond_1a3
+
+    check-cast v0, Landroid/app/Activity;
+
+    invoke-static {v0}, LX/004C;->A06(Landroid/app/Activity;)LX/004C;
+
+    move-result-object v0
+
+    invoke-virtual {v0}, LX/004C;->A0Z()I
+
+    move-result v0
+
+    invoke-virtual {v6, v5, v0, v4}, LX/01Uf;->A0B(LX/0Ukc;II)I
+
+    iget v0, p0, LX/0UVB;->A00:I
+
+    invoke-static {v0}, Ljava/lang/Math;->abs(I)I
+
+    move-result v0
+
+    int-to-float v1, v0
+
+    iget v0, v2, LX/0dOy;->A03:F
+
+    cmpl-float v0, v1, v0
+
+    if-lez v0, :cond_e1
+
+    iget-boolean v0, p0, LX/0UVB;->A01:Z
+
+    if-eqz v0, :cond_e1
+
+    if-eqz v7, :cond_e1
+
+    iget-object v5, v2, LX/0dOy;->A08:LX/0hks;
+
+    iget-object v1, v5, LX/0hks;->A07:LX/0dOy;
+
+    if-eqz v1, :cond_d6
+
+    const/4 v0, 0x1
+
+    iput-boolean v0, v1, LX/0dOy;->A0C:Z
+
+    :cond_d6
+    const/4 v0, 0x1
+
+    invoke-static {v5, v0}, LX/0hks;->A03(LX/0hks;Z)Z
+
+    move-result v0
+
+    :goto_db
+    iput-boolean v0, v2, LX/0dOy;->A0C:Z
+
+    :cond_dd
+    :goto_dd
+    iput v4, p0, LX/0UVB;->A00:I
+
+    goto/16 :goto_40
+
+    :cond_e1
+    iget v0, v2, LX/0dOy;->A02:F
+
+    cmpl-float v0, v1, v0
+
+    if-lez v0, :cond_f5
+
+    iget-object v0, v2, LX/0dOy;->A08:LX/0hks;
+
+    if-eqz v7, :cond_f0
+
+    invoke-static {v0, v4}, LX/0hks;->A03(LX/0hks;Z)Z
+
+    move-result v0
+
+    goto :goto_db
+
+    :cond_f0
+    invoke-virtual {v0}, LX/0hks;->A08()Z
+
+    move-result v0
+
+    goto :goto_db
+
+    :cond_f5
+    iget-object v1, v2, LX/0dOy;->A04:LX/03Th;
+
+    if-eqz v1, :cond_dd
+
+    invoke-static {v1}, LX/04l9;->A0f(Ljava/lang/Object;)V
+
+    iget v10, v1, LX/03Th;->A00:I
+
+    invoke-virtual {v1}, LX/03Th;->getPaddingBottom()I
+
+    move-result v0
+
+    sub-int/2addr v10, v0
+
+    invoke-virtual {v1}, LX/03Th;->getPaddingTop()I
+
+    move-result v0
+
+    sub-int/2addr v10, v0
+
+    iget-object v7, v2, LX/0dOy;->A09:LX/0gRk;
+
+    iget v6, v7, LX/0gRk;->A00:I
+
+    invoke-virtual {v7, v6}, LX/0gRk;->A03(I)I
+
+    move-result v8
+
+    add-int/lit8 v9, v6, 0x1
+
+    invoke-virtual {v7, v9}, LX/0gRk;->A03(I)I
+
+    move-result v1
+
+    add-int/lit8 v0, v6, -0x1
+
+    invoke-virtual {v7, v0}, LX/0gRk;->A03(I)I
+
+    move-result v0
+
+    const/4 v5, 0x1
+
+    iput-boolean v5, v2, LX/0dOy;->A0C:Z
+
+    if-le v1, v8, :cond_127
+
+    iget-object v0, v2, LX/0dOy;->A08:LX/0hks;
+
+    invoke-static {v0, v4}, LX/0hks;->A03(LX/0hks;Z)Z
+
+    goto :goto_dd
+
+    :cond_127
+    if-lt v0, v8, :cond_12f
+
+    iget-object v0, v2, LX/0dOy;->A08:LX/0hks;
+
+    invoke-virtual {v0}, LX/0hks;->A08()Z
+
+    goto :goto_dd
+
+    :cond_12f
+    int-to-float v1, v1
+
+    const v0, 0x3e4ccccc    # 0.19999999f
+
+    int-to-float v8, v10
+
+    mul-float/2addr v0, v8
+
+    cmpl-float v0, v1, v0
+
+    if-lez v0, :cond_173
+
+    iget-object v1, v2, LX/0dOy;->A09:LX/0gRk;
+
+    iget v0, v1, LX/0gRk;->A00:I
+
+    invoke-virtual {v1, v0}, LX/0gRk;->A02(I)I
+
+    move-result v1
+
+    iget-object v0, v2, LX/0dOy;->A04:LX/03Th;
+
+    invoke-static {v0}, LX/01pQ;->A01(LX/03Th;)I
+
+    move-result v0
+
+    if-ge v1, v0, :cond_173
+
+    invoke-virtual {v7, v9}, LX/0gRk;->A02(I)I
+
+    move-result v7
+
+    const/4 v0, -0x1
+
+    if-eq v7, v0, :cond_dd
+
+    iget-object v1, v2, LX/0dOy;->A08:LX/0hks;
+
+    const v0, 0x3f4ccccd    # 0.8f
+
+    mul-float/2addr v8, v0
+
+    float-to-int v6, v8
+
+    iget-object v5, v1, LX/0hks;->A03:LX/03Th;
+
+    if-eqz v5, :cond_dd
+
+    const/high16 v2, 0x40b00000    # 5.5f
+
+    iget-object v0, v1, LX/0hks;->A02:Landroid/content/Context;
+
+    new-instance v1, LX/044h;
+
+    invoke-direct {v1, v0}, LX/0EyT;-><init>(Landroid/content/Context;)V
+
+    const/high16 v0, -0x40800000    # -1.0f
+
+    iput v0, v1, LX/044h;->A00:F
+
+    iput v7, v1, LX/0Dmw;->A00:I
+
+    iput v6, v1, LX/044h;->A01:I
+
+    iput v2, v1, LX/044h;->A00:F
+
+    invoke-virtual {v5, v1}, LX/03Th;->A0v(LX/0Dmw;)V
+
+    goto/16 :goto_dd
+
+    :cond_173
+    iget-object v1, v2, LX/0dOy;->A09:LX/0gRk;
+
+    iget v0, v1, LX/0gRk;->A00:I
+
+    if-lez v0, :cond_19a
+
+    invoke-virtual {v1, v0}, LX/0gRk;->A02(I)I
+
+    move-result v1
+
+    iget-object v0, v2, LX/0dOy;->A04:LX/03Th;
+
+    invoke-static {v0}, LX/01pQ;->A01(LX/03Th;)I
+
+    move-result v0
+
+    if-le v1, v0, :cond_19a
+
+    iget-object v2, v2, LX/0dOy;->A08:LX/0hks;
+
+    invoke-virtual {v7, v6}, LX/0gRk;->A02(I)I
+
+    move-result v1
+
+    iget-object v0, v2, LX/0hks;->A03:LX/03Th;
+
+    if-eqz v0, :cond_dd
+
+    iget-object v0, v2, LX/0hks;->A08:LX/0gRk;
+
+    if-eqz v0, :cond_dd
+
+    const/high16 v0, 0x40b00000    # 5.5f
+
+    invoke-static {v2, v0, v1, v5}, LX/0hks;->A02(LX/0hks;FIZ)V
+
+    goto/16 :goto_dd
+
+    :cond_19a
+    iput-boolean v4, v2, LX/0dOy;->A0C:Z
+
+    goto/16 :goto_dd
+
+    :cond_19e
+    invoke-static {v7}, LX/01pQ;->A04(LX/03Th;)Ljava/lang/IllegalArgumentException;
+
+    move-result-object v1
+
+    throw v1
+
+    :cond_1a3
+    invoke-static {}, LX/000H;->A0E()Ljava/lang/IllegalStateException;
+
+    move-result-object v1
+
+    const v0, -0x6fad4f1f
+
+    invoke-static {v0, v3}, LX/01IU;->A0A(II)V
+
+    throw v1
+.end method
+
+===== CALLER JOIN LX/0UVB; .method public final A0N(Landroidx/recyclerview/widget/RecyclerView;I)V =====
+CALLS_DEVICESEG=('LX/0hks;', 'A03', 'LX/0hks;Z', 'Z')
+FILE=work/smali/classes12/X/0UVB.smali
+NET=['A0F(']
+.method public final A0N(Landroidx/recyclerview/widget/RecyclerView;I)V
+    .registers 14
+
+    const v0, 0x4c7fd2ad    # 6.7062452E7f
+
+    invoke-static {v0}, LX/01IU;->A03(I)I
+
+    move-result v3
+
+    const/4 v4, 0x0
+
+    invoke-static {p1, v4}, LX/04l9;->A0j(Ljava/lang/Object;I)V
+
+    iget-object v2, p0, LX/0UVB;->A02:LX/0dOy;
+
+    iget-object v1, v2, LX/0dOy;->A09:LX/0gRk;
+
+    iget-boolean v0, v1, LX/0gRk;->A05:Z
+
+    if-eqz v0, :cond_1a
+
+    const v0, 0x3396b8b2
+
+    :goto_16
+    invoke-static {v0, v3}, LX/01IU;->A0A(II)V
+
+    return-void
+
+    :cond_1a
+    const/4 v7, 0x1
+
+    if-eqz p2, :cond_8d
+
+    if-ne p2, v7, :cond_40
+
+    iput-boolean v4, v2, LX/0dOy;->A0C:Z
+
+    iget v0, v1, LX/0gRk;->A00:I
+
+    const/4 v6, 0x1
+
+    add-int/lit8 v0, v0, 0x1
+
+    invoke-virtual {v1, v0}, LX/0gRk;->A02(I)I
+
+    move-result v5
+
+    const/4 v0, -0x1
+
+    if-eq v5, v0, :cond_8b
+
+    iget-object v7, v1, LX/0gRk;->A01:LX/03Th;
+
+    invoke-static {v7, v4}, LX/04l9;->A0j(Ljava/lang/Object;I)V
+
+    instance-of v0, v7, Landroidx/recyclerview/widget/LinearLayoutManager;
+
+    if-eqz v0, :cond_44
+
+    check-cast v7, Landroidx/recyclerview/widget/LinearLayoutManager;
+
+    invoke-virtual {v7}, Landroidx/recyclerview/widget/LinearLayoutManager;->findLastCompletelyVisibleItemPosition()I
+
+    move-result v2
+
+    :goto_3c
+    if-gt v5, v2, :cond_8b
+
+    :goto_3e
+    iput-boolean v6, p0, LX/0UVB;->A01:Z
+
+    :cond_40
+    :goto_40
+    const v0, 0x42f93e1d
+
+    goto :goto_16
+
+    :cond_44
+    instance-of v0, v7, Lcom/instagram/common/ui/widget/recyclerview/flow/FlowingGridLayoutManager;
+
+    if-eqz v0, :cond_7d
+
+    check-cast v7, Lcom/instagram/common/ui/widget/recyclerview/flow/FlowingGridLayoutManager;
+
+    invoke-virtual {v7}, LX/03Th;->A0W()I
+
+    move-result v0
+
+    if-eqz v0, :cond_7b
+
+    iget-object v8, v7, Lcom/instagram/common/ui/widget/recyclerview/flow/FlowingGridLayoutManager;->A08:Ljava/util/List;
+
+    invoke-interface {v8}, Ljava/util/List;->isEmpty()Z
+
+    move-result v0
+
+    if-nez v0, :cond_7b
+
+    invoke-interface {v8}, Ljava/util/List;->size()I
+
+    move-result v0
+
+    add-int/lit8 v0, v0, -0x1
+
+    if-ltz v0, :cond_7b
+
+    :goto_60
+    add-int/lit8 v4, v0, -0x1
+
+    invoke-static {v8, v0}, LX/0137;->A0H(Ljava/util/List;I)I
+
+    move-result v2
+
+    iget-object v0, v7, Lcom/instagram/common/ui/widget/recyclerview/flow/FlowingGridLayoutManager;->A07:LX/0Fhj;
+
+    invoke-virtual {v0, v2}, LX/0Fhj;->A00(I)Landroid/graphics/Rect;
+
+    move-result-object v1
+
+    if-eqz v1, :cond_77
+
+    iget-object v0, v7, Lcom/instagram/common/ui/widget/recyclerview/flow/FlowingGridLayoutManager;->A06:Landroid/graphics/Rect;
+
+    invoke-virtual {v0, v1}, Landroid/graphics/Rect;->contains(Landroid/graphics/Rect;)Z
+
+    move-result v0
+
+    if-eqz v0, :cond_77
+
+    goto :goto_3c
+
+    :cond_77
+    if-ltz v4, :cond_7b
+
+    move v0, v4
+
+    goto :goto_60
+
+    :cond_7b
+    const/4 v2, -0x1
+
+    goto :goto_3c
+
+    :cond_7d
+    instance-of v0, v7, Landroidx/recyclerview/widget/StaggeredGridLayoutManager;
+
+    if-eqz v0, :cond_19e
+
+    check-cast v7, Landroidx/recyclerview/widget/StaggeredGridLayoutManager;
+
+    const/4 v0, 0x0
+
+    invoke-virtual {v7, v0}, Landroidx/recyclerview/widget/StaggeredGridLayoutManager;->findLastCompletelyVisibleItemPositions([I)[I
+
+    move-result-object v0
+
+    aget v2, v0, v4
+
+    goto :goto_3c
+
+    :cond_8b
+    const/4 v6, 0x0
+
+    goto :goto_3e
+
+    :cond_8d
+    iget v0, p0, LX/0UVB;->A00:I
+
+    if-gtz v0, :cond_92
+
+    const/4 v7, 0x0
+
+    :cond_92
+    iget-boolean v0, v2, LX/0dOy;->A0C:Z
+
+    if-nez v0, :cond_19a
+
+    const v0, 0x2c0bc
+
+    invoke-static {v0}, LX/04oL;->A01(I)Ljava/lang/Object;
+
+    move-result-object v6
+
+    check-cast v6, LX/01Uf;
+
+    iget-object v5, v2, LX/0dOy;->A0A:LX/01SH;
+
+    invoke-virtual {p1}, Landroid/view/View;->getContext()Landroid/content/Context;
+
+    move-result-object v1
+
+    const-class v0, Landroid/app/Activity;
+
+    invoke-static {v1, v0}, LX/00CL;->A00(Landroid/content/Context;Ljava/lang/Class;)Ljava/lang/Object;
+
+    move-result-object v0
+
+    if-eqz v0, :cond_1a3
+
+    check-cast v0, Landroid/app/Activity;
+
+    invoke-static {v0}, LX/004C;->A06(Landroid/app/Activity;)LX/004C;
+
+    move-result-object v0
+
+    invoke-virtual {v0}, LX/004C;->A0Z()I
+
+    move-result v0
+
+    invoke-virtual {v6, v5, v0, v4}, LX/01Uf;->A0B(LX/0Ukc;II)I
+
+    iget v0, p0, LX/0UVB;->A00:I
+
+    invoke-static {v0}, Ljava/lang/Math;->abs(I)I
+
+    move-result v0
+
+    int-to-float v1, v0
+
+    iget v0, v2, LX/0dOy;->A03:F
+
+    cmpl-float v0, v1, v0
+
+    if-lez v0, :cond_e1
+
+    iget-boolean v0, p0, LX/0UVB;->A01:Z
+
+    if-eqz v0, :cond_e1
+
+    if-eqz v7, :cond_e1
+
+    iget-object v5, v2, LX/0dOy;->A08:LX/0hks;
+
+    iget-object v1, v5, LX/0hks;->A07:LX/0dOy;
+
+    if-eqz v1, :cond_d6
+
+    const/4 v0, 0x1
+
+    iput-boolean v0, v1, LX/0dOy;->A0C:Z
+
+    :cond_d6
+    const/4 v0, 0x1
+
+    invoke-static {v5, v0}, LX/0hks;->A03(LX/0hks;Z)Z
+
+    move-result v0
+
+    :goto_db
+    iput-boolean v0, v2, LX/0dOy;->A0C:Z
+
+    :cond_dd
+    :goto_dd
+    iput v4, p0, LX/0UVB;->A00:I
+
+    goto/16 :goto_40
+
+    :cond_e1
+    iget v0, v2, LX/0dOy;->A02:F
+
+    cmpl-float v0, v1, v0
+
+    if-lez v0, :cond_f5
+
+    iget-object v0, v2, LX/0dOy;->A08:LX/0hks;
+
+    if-eqz v7, :cond_f0
+
+    invoke-static {v0, v4}, LX/0hks;->A03(LX/0hks;Z)Z
+
+    move-result v0
+
+    goto :goto_db
+
+    :cond_f0
+    invoke-virtual {v0}, LX/0hks;->A08()Z
+
+    move-result v0
+
+    goto :goto_db
+
+    :cond_f5
+    iget-object v1, v2, LX/0dOy;->A04:LX/03Th;
+
+    if-eqz v1, :cond_dd
+
+    invoke-static {v1}, LX/04l9;->A0f(Ljava/lang/Object;)V
+
+    iget v10, v1, LX/03Th;->A00:I
+
+    invoke-virtual {v1}, LX/03Th;->getPaddingBottom()I
+
+    move-result v0
+
+    sub-int/2addr v10, v0
+
+    invoke-virtual {v1}, LX/03Th;->getPaddingTop()I
+
+    move-result v0
+
+    sub-int/2addr v10, v0
+
+    iget-object v7, v2, LX/0dOy;->A09:LX/0gRk;
+
+    iget v6, v7, LX/0gRk;->A00:I
+
+    invoke-virtual {v7, v6}, LX/0gRk;->A03(I)I
+
+    move-result v8
+
+    add-int/lit8 v9, v6, 0x1
+
+    invoke-virtual {v7, v9}, LX/0gRk;->A03(I)I
+
+    move-result v1
+
+    add-int/lit8 v0, v6, -0x1
+
+    invoke-virtual {v7, v0}, LX/0gRk;->A03(I)I
+
+    move-result v0
+
+    const/4 v5, 0x1
+
+    iput-boolean v5, v2, LX/0dOy;->A0C:Z
+
+    if-le v1, v8, :cond_127
+
+    iget-object v0, v2, LX/0dOy;->A08:LX/0hks;
+
+    invoke-static {v0, v4}, LX/0hks;->A03(LX/0hks;Z)Z
+
+    goto :goto_dd
+
+    :cond_127
+    if-lt v0, v8, :cond_12f
+
+    iget-object v0, v2, LX/0dOy;->A08:LX/0hks;
+
+    invoke-virtual {v0}, LX/0hks;->A08()Z
+
+    goto :goto_dd
+
+    :cond_12f
+    int-to-float v1, v1
+
+    const v0, 0x3e4ccccc    # 0.19999999f
+
+    int-to-float v8, v10
+
+    mul-float/2addr v0, v8
+
+    cmpl-float v0, v1, v0
+
+    if-lez v0, :cond_173
+
+    iget-object v1, v2, LX/0dOy;->A09:LX/0gRk;
+
+    iget v0, v1, LX/0gRk;->A00:I
+
+    invoke-virtual {v1, v0}, LX/0gRk;->A02(I)I
+
+    move-result v1
+
+    iget-object v0, v2, LX/0dOy;->A04:LX/03Th;
+
+    invoke-static {v0}, LX/01pQ;->A01(LX/03Th;)I
+
+    move-result v0
+
+    if-ge v1, v0, :cond_173
+
+    invoke-virtual {v7, v9}, LX/0gRk;->A02(I)I
+
+    move-result v7
+
+    const/4 v0, -0x1
+
+    if-eq v7, v0, :cond_dd
+
+    iget-object v1, v2, LX/0dOy;->A08:LX/0hks;
+
+    const v0, 0x3f4ccccd    # 0.8f
+
+    mul-float/2addr v8, v0
+
+    float-to-int v6, v8
+
+    iget-object v5, v1, LX/0hks;->A03:LX/03Th;
+
+    if-eqz v5, :cond_dd
+
+    const/high16 v2, 0x40b00000    # 5.5f
+
+    iget-object v0, v1, LX/0hks;->A02:Landroid/content/Context;
+
+    new-instance v1, LX/044h;
+
+    invoke-direct {v1, v0}, LX/0EyT;-><init>(Landroid/content/Context;)V
+
+    const/high16 v0, -0x40800000    # -1.0f
+
+    iput v0, v1, LX/044h;->A00:F
+
+    iput v7, v1, LX/0Dmw;->A00:I
+
+    iput v6, v1, LX/044h;->A01:I
+
+    iput v2, v1, LX/044h;->A00:F
+
+    invoke-virtual {v5, v1}, LX/03Th;->A0v(LX/0Dmw;)V
+
+    goto/16 :goto_dd
+
+    :cond_173
+    iget-object v1, v2, LX/0dOy;->A09:LX/0gRk;
+
+    iget v0, v1, LX/0gRk;->A00:I
+
+    if-lez v0, :cond_19a
+
+    invoke-virtual {v1, v0}, LX/0gRk;->A02(I)I
+
+    move-result v1
+
+    iget-object v0, v2, LX/0dOy;->A04:LX/03Th;
+
+    invoke-static {v0}, LX/01pQ;->A01(LX/03Th;)I
+
+    move-result v0
+
+    if-le v1, v0, :cond_19a
+
+    iget-object v2, v2, LX/0dOy;->A08:LX/0hks;
+
+    invoke-virtual {v7, v6}, LX/0gRk;->A02(I)I
+
+    move-result v1
+
+    iget-object v0, v2, LX/0hks;->A03:LX/03Th;
+
+    if-eqz v0, :cond_dd
+
+    iget-object v0, v2, LX/0hks;->A08:LX/0gRk;
+
+    if-eqz v0, :cond_dd
+
+    const/high16 v0, 0x40b00000    # 5.5f
+
+    invoke-static {v2, v0, v1, v5}, LX/0hks;->A02(LX/0hks;FIZ)V
+
+    goto/16 :goto_dd
+
+    :cond_19a
+    iput-boolean v4, v2, LX/0dOy;->A0C:Z
+
+    goto/16 :goto_dd
+
+    :cond_19e
+    invoke-static {v7}, LX/01pQ;->A04(LX/03Th;)Ljava/lang/IllegalArgumentException;
+
+    move-result-object v1
+
+    throw v1
+
+    :cond_1a3
+    invoke-static {}, LX/000H;->A0E()Ljava/lang/IllegalStateException;
+
+    move-result-object v1
+
+    const v0, -0x6fad4f1f
+
+    invoke-static {v0, v3}, LX/01IU;->A0A(II)V
+
+    throw v1
+.end method
+
+===== CALLER JOIN LX/0UVB; .method public final A0N(Landroidx/recyclerview/widget/RecyclerView;I)V =====
+CALLS_DEVICESEG=('LX/0hks;', 'A03', 'LX/0hks;Z', 'Z')
+FILE=work/smali/classes12/X/0UVB.smali
+NET=['A0F(']
+.method public final A0N(Landroidx/recyclerview/widget/RecyclerView;I)V
+    .registers 14
+
+    const v0, 0x4c7fd2ad    # 6.7062452E7f
+
+    invoke-static {v0}, LX/01IU;->A03(I)I
+
+    move-result v3
+
+    const/4 v4, 0x0
+
+    invoke-static {p1, v4}, LX/04l9;->A0j(Ljava/lang/Object;I)V
+
+    iget-object v2, p0, LX/0UVB;->A02:LX/0dOy;
+
+    iget-object v1, v2, LX/0dOy;->A09:LX/0gRk;
+
+    iget-boolean v0, v1, LX/0gRk;->A05:Z
+
+    if-eqz v0, :cond_1a
+
+    const v0, 0x3396b8b2
+
+    :goto_16
+    invoke-static {v0, v3}, LX/01IU;->A0A(II)V
+
+    return-void
+
+    :cond_1a
+    const/4 v7, 0x1
+
+    if-eqz p2, :cond_8d
+
+    if-ne p2, v7, :cond_40
+
+    iput-boolean v4, v2, LX/0dOy;->A0C:Z
+
+    iget v0, v1, LX/0gRk;->A00:I
+
+    const/4 v6, 0x1
+
+    add-int/lit8 v0, v0, 0x1
+
+    invoke-virtual {v1, v0}, LX/0gRk;->A02(I)I
+
+    move-result v5
+
+    const/4 v0, -0x1
+
+    if-eq v5, v0, :cond_8b
+
+    iget-object v7, v1, LX/0gRk;->A01:LX/03Th;
+
+    invoke-static {v7, v4}, LX/04l9;->A0j(Ljava/lang/Object;I)V
+
+    instance-of v0, v7, Landroidx/recyclerview/widget/LinearLayoutManager;
+
+    if-eqz v0, :cond_44
+
+    check-cast v7, Landroidx/recyclerview/widget/LinearLayoutManager;
+
+    invoke-virtual {v7}, Landroidx/recyclerview/widget/LinearLayoutManager;->findLastCompletelyVisibleItemPosition()I
+
+    move-result v2
+
+    :goto_3c
+    if-gt v5, v2, :cond_8b
+
+    :goto_3e
+    iput-boolean v6, p0, LX/0UVB;->A01:Z
+
+    :cond_40
+    :goto_40
+    const v0, 0x42f93e1d
+
+    goto :goto_16
+
+    :cond_44
+    instance-of v0, v7, Lcom/instagram/common/ui/widget/recyclerview/flow/FlowingGridLayoutManager;
+
+    if-eqz v0, :cond_7d
+
+    check-cast v7, Lcom/instagram/common/ui/widget/recyclerview/flow/FlowingGridLayoutManager;
+
+    invoke-virtual {v7}, LX/03Th;->A0W()I
+
+    move-result v0
+
+    if-eqz v0, :cond_7b
+
+    iget-object v8, v7, Lcom/instagram/common/ui/widget/recyclerview/flow/FlowingGridLayoutManager;->A08:Ljava/util/List;
+
+    invoke-interface {v8}, Ljava/util/List;->isEmpty()Z
+
+    move-result v0
+
+    if-nez v0, :cond_7b
+
+    invoke-interface {v8}, Ljava/util/List;->size()I
+
+    move-result v0
+
+    add-int/lit8 v0, v0, -0x1
+
+    if-ltz v0, :cond_7b
+
+    :goto_60
+    add-int/lit8 v4, v0, -0x1
+
+    invoke-static {v8, v0}, LX/0137;->A0H(Ljava/util/List;I)I
+
+    move-result v2
+
+    iget-object v0, v7, Lcom/instagram/common/ui/widget/recyclerview/flow/FlowingGridLayoutManager;->A07:LX/0Fhj;
+
+    invoke-virtual {v0, v2}, LX/0Fhj;->A00(I)Landroid/graphics/Rect;
+
+    move-result-object v1
+
+    if-eqz v1, :cond_77
+
+    iget-object v0, v7, Lcom/instagram/common/ui/widget/recyclerview/flow/FlowingGridLayoutManager;->A06:Landroid/graphics/Rect;
+
+    invoke-virtual {v0, v1}, Landroid/graphics/Rect;->contains(Landroid/graphics/Rect;)Z
+
+    move-result v0
+
+    if-eqz v0, :cond_77
+
+    goto :goto_3c
+
+    :cond_77
+    if-ltz v4, :cond_7b
+
+    move v0, v4
+
+    goto :goto_60
+
+    :cond_7b
+    const/4 v2, -0x1
+
+    goto :goto_3c
+
+    :cond_7d
+    instance-of v0, v7, Landroidx/recyclerview/widget/StaggeredGridLayoutManager;
+
+    if-eqz v0, :cond_19e
+
+    check-cast v7, Landroidx/recyclerview/widget/StaggeredGridLayoutManager;
+
+    const/4 v0, 0x0
+
+    invoke-virtual {v7, v0}, Landroidx/recyclerview/widget/StaggeredGridLayoutManager;->findLastCompletelyVisibleItemPositions([I)[I
+
+    move-result-object v0
+
+    aget v2, v0, v4
+
+    goto :goto_3c
+
+    :cond_8b
+    const/4 v6, 0x0
+
+    goto :goto_3e
+
+    :cond_8d
+    iget v0, p0, LX/0UVB;->A00:I
+
+    if-gtz v0, :cond_92
+
+    const/4 v7, 0x0
+
+    :cond_92
+    iget-boolean v0, v2, LX/0dOy;->A0C:Z
+
+    if-nez v0, :cond_19a
+
+    const v0, 0x2c0bc
+
+    invoke-static {v0}, LX/04oL;->A01(I)Ljava/lang/Object;
+
+    move-result-object v6
+
+    check-cast v6, LX/01Uf;
+
+    iget-object v5, v2, LX/0dOy;->A0A:LX/01SH;
+
+    invoke-virtual {p1}, Landroid/view/View;->getContext()Landroid/content/Context;
+
+    move-result-object v1
+
+    const-class v0, Landroid/app/Activity;
+
+    invoke-static {v1, v0}, LX/00CL;->A00(Landroid/content/Context;Ljava/lang/Class;)Ljava/lang/Object;
+
+    move-result-object v0
+
+    if-eqz v0, :cond_1a3
+
+    check-cast v0, Landroid/app/Activity;
+
+    invoke-static {v0}, LX/004C;->A06(Landroid/app/Activity;)LX/004C;
+
+    move-result-object v0
+
+    invoke-virtual {v0}, LX/004C;->A0Z()I
+
+    move-result v0
+
+    invoke-virtual {v6, v5, v0, v4}, LX/01Uf;->A0B(LX/0Ukc;II)I
+
+    iget v0, p0, LX/0UVB;->A00:I
+
+    invoke-static {v0}, Ljava/lang/Math;->abs(I)I
+
+    move-result v0
+
+    int-to-float v1, v0
+
+    iget v0, v2, LX/0dOy;->A03:F
+
+    cmpl-float v0, v1, v0
+
+    if-lez v0, :cond_e1
+
+    iget-boolean v0, p0, LX/0UVB;->A01:Z
+
+    if-eqz v0, :cond_e1
+
+    if-eqz v7, :cond_e1
+
+    iget-object v5, v2, LX/0dOy;->A08:LX/0hks;
+
+    iget-object v1, v5, LX/0hks;->A07:LX/0dOy;
+
+    if-eqz v1, :cond_d6
+
+    const/4 v0, 0x1
+
+    iput-boolean v0, v1, LX/0dOy;->A0C:Z
+
+    :cond_d6
+    const/4 v0, 0x1
+
+    invoke-static {v5, v0}, LX/0hks;->A03(LX/0hks;Z)Z
+
+    move-result v0
+
+    :goto_db
+    iput-boolean v0, v2, LX/0dOy;->A0C:Z
+
+    :cond_dd
+    :goto_dd
+    iput v4, p0, LX/0UVB;->A00:I
+
+    goto/16 :goto_40
+
+    :cond_e1
+    iget v0, v2, LX/0dOy;->A02:F
+
+    cmpl-float v0, v1, v0
+
+    if-lez v0, :cond_f5
+
+    iget-object v0, v2, LX/0dOy;->A08:LX/0hks;
+
+    if-eqz v7, :cond_f0
+
+    invoke-static {v0, v4}, LX/0hks;->A03(LX/0hks;Z)Z
+
+    move-result v0
+
+    goto :goto_db
+
+    :cond_f0
+    invoke-virtual {v0}, LX/0hks;->A08()Z
+
+    move-result v0
+
+    goto :goto_db
+
+    :cond_f5
+    iget-object v1, v2, LX/0dOy;->A04:LX/03Th;
+
+    if-eqz v1, :cond_dd
+
+    invoke-static {v1}, LX/04l9;->A0f(Ljava/lang/Object;)V
+
+    iget v10, v1, LX/03Th;->A00:I
+
+    invoke-virtual {v1}, LX/03Th;->getPaddingBottom()I
+
+    move-result v0
+
+    sub-int/2addr v10, v0
+
+    invoke-virtual {v1}, LX/03Th;->getPaddingTop()I
+
+    move-result v0
+
+    sub-int/2addr v10, v0
+
+    iget-object v7, v2, LX/0dOy;->A09:LX/0gRk;
+
+    iget v6, v7, LX/0gRk;->A00:I
+
+    invoke-virtual {v7, v6}, LX/0gRk;->A03(I)I
+
+    move-result v8
+
+    add-int/lit8 v9, v6, 0x1
+
+    invoke-virtual {v7, v9}, LX/0gRk;->A03(I)I
+
+    move-result v1
+
+    add-int/lit8 v0, v6, -0x1
+
+    invoke-virtual {v7, v0}, LX/0gRk;->A03(I)I
+
+    move-result v0
+
+    const/4 v5, 0x1
+
+    iput-boolean v5, v2, LX/0dOy;->A0C:Z
+
+    if-le v1, v8, :cond_127
+
+    iget-object v0, v2, LX/0dOy;->A08:LX/0hks;
+
+    invoke-static {v0, v4}, LX/0hks;->A03(LX/0hks;Z)Z
+
+    goto :goto_dd
+
+    :cond_127
+    if-lt v0, v8, :cond_12f
+
+    iget-object v0, v2, LX/0dOy;->A08:LX/0hks;
+
+    invoke-virtual {v0}, LX/0hks;->A08()Z
+
+    goto :goto_dd
+
+    :cond_12f
+    int-to-float v1, v1
+
+    const v0, 0x3e4ccccc    # 0.19999999f
+
+    int-to-float v8, v10
+
+    mul-float/2addr v0, v8
+
+    cmpl-float v0, v1, v0
+
+    if-lez v0, :cond_173
+
+    iget-object v1, v2, LX/0dOy;->A09:LX/0gRk;
+
+    iget v0, v1, LX/0gRk;->A00:I
+
+    invoke-virtual {v1, v0}, LX/0gRk;->A02(I)I
+
+    move-result v1
+
+    iget-object v0, v2, LX/0dOy;->A04:LX/03Th;
+
+    invoke-static {v0}, LX/01pQ;->A01(LX/03Th;)I
+
+    move-result v0
+
+    if-ge v1, v0, :cond_173
+
+    invoke-virtual {v7, v9}, LX/0gRk;->A02(I)I
+
+    move-result v7
+
+    const/4 v0, -0x1
+
+    if-eq v7, v0, :cond_dd
+
+    iget-object v1, v2, LX/0dOy;->A08:LX/0hks;
+
+    const v0, 0x3f4ccccd    # 0.8f
+
+    mul-float/2addr v8, v0
+
+    float-to-int v6, v8
+
+    iget-object v5, v1, LX/0hks;->A03:LX/03Th;
+
+    if-eqz v5, :cond_dd
+
+    const/high16 v2, 0x40b00000    # 5.5f
+
+    iget-object v0, v1, LX/0hks;->A02:Landroid/content/Context;
+
+    new-instance v1, LX/044h;
+
+    invoke-direct {v1, v0}, LX/0EyT;-><init>(Landroid/content/Context;)V
+
+    const/high16 v0, -0x40800000    # -1.0f
+
+    iput v0, v1, LX/044h;->A00:F
+
+    iput v7, v1, LX/0Dmw;->A00:I
+
+    iput v6, v1, LX/044h;->A01:I
+
+    iput v2, v1, LX/044h;->A00:F
+
+    invoke-virtual {v5, v1}, LX/03Th;->A0v(LX/0Dmw;)V
+
+    goto/16 :goto_dd
+
+    :cond_173
+    iget-object v1, v2, LX/0dOy;->A09:LX/0gRk;
+
+    iget v0, v1, LX/0gRk;->A00:I
+
+    if-lez v0, :cond_19a
+
+    invoke-virtual {v1, v0}, LX/0gRk;->A02(I)I
+
+    move-result v1
+
+    iget-object v0, v2, LX/0dOy;->A04:LX/03Th;
+
+    invoke-static {v0}, LX/01pQ;->A01(LX/03Th;)I
+
+    move-result v0
+
+    if-le v1, v0, :cond_19a
+
+    iget-object v2, v2, LX/0dOy;->A08:LX/0hks;
+
+    invoke-virtual {v7, v6}, LX/0gRk;->A02(I)I
+
+    move-result v1
+
+    iget-object v0, v2, LX/0hks;->A03:LX/03Th;
+
+    if-eqz v0, :cond_dd
+
+    iget-object v0, v2, LX/0hks;->A08:LX/0gRk;
+
+    if-eqz v0, :cond_dd
+
+    const/high16 v0, 0x40b00000    # 5.5f
+
+    invoke-static {v2, v0, v1, v5}, LX/0hks;->A02(LX/0hks;FIZ)V
+
+    goto/16 :goto_dd
+
+    :cond_19a
+    iput-boolean v4, v2, LX/0dOy;->A0C:Z
+
+    goto/16 :goto_dd
+
+    :cond_19e
+    invoke-static {v7}, LX/01pQ;->A04(LX/03Th;)Ljava/lang/IllegalArgumentException;
+
+    move-result-object v1
+
+    throw v1
+
+    :cond_1a3
+    invoke-static {}, LX/000H;->A0E()Ljava/lang/IllegalStateException;
+
+    move-result-object v1
+
+    const v0, -0x6fad4f1f
+
+    invoke-static {v0, v3}, LX/01IU;->A0A(II)V
+
+    throw v1
+.end method
+
+===== CALLEE JOIN LX/0gRk; .method public static final A00(LX/0gRk;IIZ)I =====
+CALLED_BY_DEVICESEG=('LX/0hks;', 'A03', 'LX/0hks;Z', 'Z')
+FILE=work/smali/classes12/X/0gRk.smali
+NET=['A0F(']
+.method public static final A00(LX/0gRk;IIZ)I
+    .registers 12
+
+    iget-object v6, p0, LX/0gRk;->A01:LX/03Th;
+
+    invoke-static {v6}, LX/04l9;->A0f(Ljava/lang/Object;)V
+
+    invoke-virtual {v6}, LX/03Th;->getPaddingTop()I
+
+    move-result v5
+
+    iget v4, v6, LX/03Th;->A00:I
+
+    invoke-virtual {v6}, LX/03Th;->getPaddingBottom()I
+
+    move-result v0
+
+    sub-int/2addr v4, v0
+
+    const/4 v7, 0x0
+
+    :goto_11
+    if-ge p1, p2, :cond_52
+
+    iget-object v2, p0, LX/0gRk;->A01:LX/03Th;
+
+    invoke-static {v2}, LX/01pQ;->A01(LX/03Th;)I
+
+    move-result v0
+
+    if-lt p1, v0, :cond_51
+
+    sub-int v1, p1, v0
+
+    invoke-virtual {v2}, LX/03Th;->A0V()I
+
+    move-result v0
+
+    if-gt v1, v0, :cond_51
+
+    invoke-virtual {v2, v1}, LX/03Th;->A0Z(I)Landroid/view/View;
+
+    move-result-object v1
+
+    if-eqz v1, :cond_51
+
+    invoke-static {v1, v6}, LX/01iC;->A00(Landroid/view/View;LX/03Th;)I
+
+    move-result v3
+
+    invoke-virtual {v1}, Landroid/view/View;->getLayoutParams()Landroid/view/ViewGroup$LayoutParams;
+
+    move-result-object v2
+
+    const/4 v0, 0x1
+
+    invoke-static {v0}, LX/0BQ3;->A00(I)Ljava/lang/String;
+
+    move-result-object v0
+
+    invoke-static {v2, v0}, LX/04l9;->A0o(Ljava/lang/Object;Ljava/lang/String;)V
+
+    check-cast v2, Landroid/view/ViewGroup$MarginLayoutParams;
+
+    invoke-virtual {v6, v1}, LX/03Th;->A0X(Landroid/view/View;)I
+
+    move-result v1
+
+    iget v0, v2, Landroid/view/ViewGroup$MarginLayoutParams;->bottomMargin:I
+
+    add-int/2addr v1, v0
+
+    if-eqz p3, :cond_4c
+
+    invoke-static {v3, v5}, Ljava/lang/Math;->max(II)I
+
+    move-result v3
+
+    invoke-static {v1, v4}, Ljava/lang/Math;->min(II)I
+
+    move-result v1
+
+    :cond_4c
+    sub-int/2addr v1, v3
+
+    add-int/2addr v7, v1
+
+    add-int/lit8 p1, p1, 0x1
+
+    goto :goto_11
+
+    :cond_51
+    const/4 v7, -0x1
+
+    :cond_52
+    return v7
+.end method
+
+===== CALLEE JOIN LX/0gRk; .method public static final A00(LX/0gRk;IIZ)I =====
+CALLED_BY_DEVICESEG=('LX/0hks;', 'A03', 'LX/0hks;Z', 'Z')
+FILE=work/smali/classes12/X/0gRk.smali
+NET=['A0F(']
+.method public static final A00(LX/0gRk;IIZ)I
+    .registers 12
+
+    iget-object v6, p0, LX/0gRk;->A01:LX/03Th;
+
+    invoke-static {v6}, LX/04l9;->A0f(Ljava/lang/Object;)V
+
+    invoke-virtual {v6}, LX/03Th;->getPaddingTop()I
+
+    move-result v5
+
+    iget v4, v6, LX/03Th;->A00:I
+
+    invoke-virtual {v6}, LX/03Th;->getPaddingBottom()I
+
+    move-result v0
+
+    sub-int/2addr v4, v0
+
+    const/4 v7, 0x0
+
+    :goto_11
+    if-ge p1, p2, :cond_52
+
+    iget-object v2, p0, LX/0gRk;->A01:LX/03Th;
+
+    invoke-static {v2}, LX/01pQ;->A01(LX/03Th;)I
+
+    move-result v0
+
+    if-lt p1, v0, :cond_51
+
+    sub-int v1, p1, v0
+
+    invoke-virtual {v2}, LX/03Th;->A0V()I
+
+    move-result v0
+
+    if-gt v1, v0, :cond_51
+
+    invoke-virtual {v2, v1}, LX/03Th;->A0Z(I)Landroid/view/View;
+
+    move-result-object v1
+
+    if-eqz v1, :cond_51
+
+    invoke-static {v1, v6}, LX/01iC;->A00(Landroid/view/View;LX/03Th;)I
+
+    move-result v3
+
+    invoke-virtual {v1}, Landroid/view/View;->getLayoutParams()Landroid/view/ViewGroup$LayoutParams;
+
+    move-result-object v2
+
+    const/4 v0, 0x1
+
+    invoke-static {v0}, LX/0BQ3;->A00(I)Ljava/lang/String;
+
+    move-result-object v0
+
+    invoke-static {v2, v0}, LX/04l9;->A0o(Ljava/lang/Object;Ljava/lang/String;)V
+
+    check-cast v2, Landroid/view/ViewGroup$MarginLayoutParams;
+
+    invoke-virtual {v6, v1}, LX/03Th;->A0X(Landroid/view/View;)I
+
+    move-result v1
+
+    iget v0, v2, Landroid/view/ViewGroup$MarginLayoutParams;->bottomMargin:I
+
+    add-int/2addr v1, v0
+
+    if-eqz p3, :cond_4c
+
+    invoke-static {v3, v5}, Ljava/lang/Math;->max(II)I
+
+    move-result v3
+
+    invoke-static {v1, v4}, Ljava/lang/Math;->min(II)I
+
+    move-result v1
+
+    :cond_4c
+    sub-int/2addr v1, v3
+
+    add-int/2addr v7, v1
+
+    add-int/lit8 p1, p1, 0x1
+
+    goto :goto_11
+
+    :cond_51
+    const/4 v7, -0x1
+
+    :cond_52
+    return v7
+.end method
+
+===== SAME-METHOD JOIN LX/0hks; .method public final A06(LX/0nWC;LX/01SH;LX/0C8T;)V =====
+FILE=work/smali/classes12/X/0hks.smali
+DEV=['LX/0hkS;']
+NET=['A0F(']
+.method public final A06(LX/0nWC;LX/01SH;LX/0C8T;)V
+    .registers 10
+
+    invoke-static {p2}, LX/04l9;->A0f(Ljava/lang/Object;)V
+
+    iget-object v4, p2, LX/01SH;->A03:Landroidx/recyclerview/widget/RecyclerView;
+
+    iget-object v0, v4, Landroidx/recyclerview/widget/RecyclerView;->A0H:LX/03Th;
+
+    iput-object v0, p0, LX/0hks;->A03:LX/03Th;
+
+    iget-object v5, p0, LX/0hks;->A04:LX/00PQ;
+
+    invoke-static {v5}, LX/04l9;->A0Y(Ljava/lang/Object;)V
+
+    new-instance v3, LX/0gRk;
+
+    invoke-direct {v3}, Ljava/lang/Object;-><init>()V
+
+    iput-object p1, v3, LX/0gRk;->A03:LX/0nWC;
+
+    iput-object v4, v3, LX/0gRk;->A02:Landroidx/recyclerview/widget/RecyclerView;
+
+    iget-object v0, v4, Landroidx/recyclerview/widget/RecyclerView;->A0H:LX/03Th;
+
+    if-eqz v0, :cond_ce
+
+    iput-object v0, v3, LX/0gRk;->A01:LX/03Th;
+
+    new-instance v0, Ljava/util/HashMap;
+
+    invoke-direct {v0}, Ljava/util/HashMap;-><init>()V
+
+    iput-object v0, v3, LX/0gRk;->A04:Ljava/util/HashMap;
+
+    invoke-virtual {v4}, Landroid/view/View;->getViewTreeObserver()Landroid/view/ViewTreeObserver;
+
+    move-result-object v2
+
+    const/4 v1, 0x2
+
+    new-instance v0, LX/0fjj;
+
+    invoke-direct {v0, v1, p0, v3, v5}, LX/0fjj;-><init>(ILjava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;)V
+
+    invoke-virtual {v2, v0}, Landroid/view/ViewTreeObserver;->addOnGlobalLayoutListener(Landroid/view/ViewTreeObserver$OnGlobalLayoutListener;)V
+
+    const/4 v0, 0x0
+
+    sput v0, Lredex/$StoreFenceHelper;->DUMMY_VOLATILE:I
+
+    iget-object v5, p0, LX/0hks;->A09:LX/0fBr;
+
+    invoke-virtual {p2}, LX/01SH;->getContext()Landroid/content/Context;
+
+    move-result-object v1
+
+    new-instance v2, LX/0dOy;
+
+    invoke-direct {v2}, Ljava/lang/Object;-><init>()V
+
+    iput-object p0, v2, LX/0dOy;->A08:LX/0hks;
+
+    iput-object v3, v2, LX/0dOy;->A09:LX/0gRk;
+
+    iput-object p2, v2, LX/0dOy;->A0A:LX/01SH;
+
+    iget-object v0, v4, Landroidx/recyclerview/widget/RecyclerView;->A0H:LX/03Th;
+
+    iput-object v0, v2, LX/0dOy;->A04:LX/03Th;
+
+    const/16 v0, 0xc8
+
+    invoke-static {v1, v0}, LX/03ds;->A07(Landroid/content/Context;I)F
+
+    move-result v0
+
+    iput v0, v2, LX/0dOy;->A00:F
+
+    const/16 v0, 0x8ca
+
+    invoke-static {v1, v0}, LX/03ds;->A07(Landroid/content/Context;I)F
+
+    move-result v0
+
+    iput v0, v2, LX/0dOy;->A01:F
+
+    const/16 v0, 0xfa
+
+    invoke-static {v1, v0}, LX/03ds;->A07(Landroid/content/Context;I)F
+
+    move-result v0
+
+    iput v0, v2, LX/0dOy;->A02:F
+
+    const/16 v0, 0x32
+
+    invoke-static {v1, v0}, LX/03ds;->A07(Landroid/content/Context;I)F
+
+    move-result v0
+
+    iput v0, v2, LX/0dOy;->A03:F
+
+    const/4 v1, 0x3
+
+    new-instance v0, LX/0D7j;
+
+    invoke-direct {v0, v2, v1}, LX/0D7j;-><init>(Ljava/lang/Object;I)V
+
+    iput-object v0, v2, LX/0dOy;->A06:LX/0Hwk;
+
+    new-instance v1, LX/0UUh;
+
+    invoke-direct {v1, v2}, LX/0UUh;-><init>(LX/0dOy;)V
+
+    iput-object v1, v2, LX/0dOy;->A05:LX/0Ea9;
+
+    new-instance v0, LX/0UVB;
+
+    invoke-direct {v0, v2}, LX/0UVB;-><init>(LX/0dOy;)V
+
+    iput-object v0, v2, LX/0dOy;->A07:LX/03Ti;
+
+    const/4 v0, 0x0
+
+    sput v0, Lredex/$StoreFenceHelper;->DUMMY_VOLATILE:I
+
+    invoke-static {v1}, LX/04l9;->A0f(Ljava/lang/Object;)V
+
+    iget-object v0, p2, LX/01SH;->A04:Ljava/util/List;
+
+    invoke-interface {v0, v1}, Ljava/util/List;->add(Ljava/lang/Object;)Z
+
+    iget-object v1, v4, Landroidx/recyclerview/widget/RecyclerView;->A0I:LX/0Ea9;
+
+    if-eqz v1, :cond_9a
+
+    iget-object v0, p2, LX/01SH;->A02:LX/0Ea9;
+
+    if-eq v1, v0, :cond_9a
+
+    const-string v0, "RecyclerView should not have fling listeners set directly!"
+
+    new-instance v1, Ljava/lang/IllegalStateException;
+
+    invoke-direct {v1, v0}, Ljava/lang/IllegalStateException;-><init>(Ljava/lang/String;)V
+
+    throw v1
+
+    :cond_9a
+    iget-object v0, p2, LX/01SH;->A02:LX/0Ea9;
+
+    iput-object v0, v4, Landroidx/recyclerview/widget/RecyclerView;->A0I:LX/0Ea9;
+
+    iget-object v0, v2, LX/0dOy;->A07:LX/03Ti;
+
+    invoke-virtual {v4, v0}, Landroidx/recyclerview/widget/RecyclerView;->A1H(LX/03Ti;)V
+
+    iget-object v0, v2, LX/0dOy;->A06:LX/0Hwk;
+
+    invoke-virtual {v4, v0}, Landroidx/recyclerview/widget/RecyclerView;->A1F(LX/0Hwk;)V
+
+    if-eqz v5, :cond_ac
+
+    iput-object v2, v5, LX/0fBr;->A00:LX/0dOy;
+
+    :cond_ac
+    iput-object v2, p0, LX/0hks;->A07:LX/0dOy;
+
+    iput-object v3, p0, LX/0hks;->A08:LX/0gRk;
+
+    if-eqz p3, :cond_c0
+
+    invoke-interface {p3}, LX/0C8T;->getValue()Ljava/lang/Object;
+
+    move-result-object v0
+
+    check-cast v0, LX/06Ay;
+
+    if-eqz v0, :cond_c0
+
+    iput-object p0, v0, LX/06Ay;->A01:LX/0hks;
+
+    iget-object v0, v0, LX/06Ay;->A0E:LX/06HA;
+
+    iput-object p0, v0, LX/06HA;->A02:LX/0hks;
+
+    :cond_c0
+    iget-object v0, p0, LX/0hks;->A06:Lcom/instagram/common/session/UserSession;
+
+    invoke-static {v0}, LX/03KA;->A00(LX/04BG;)LX/03KA;
+
+    move-result-object v2
+
+    const-class v1, LX/09j5;
+
+    iget-object v0, p0, LX/0hks;->A05:LX/03Uz;
+
+    invoke-virtual {v2, v0, v1}, LX/03KA;->A02(LX/03Uz;Ljava/lang/Class;)V
+
+    return-void
+
+    :cond_ce
+    invoke-static {}, LX/000H;->A0E()Ljava/lang/IllegalStateException;
+
+    move-result-object v1
+
+    throw v1
+.end method
+
+===== SAME-METHOD JOIN LX/0hks; .method public final A07(LX/01SH;LX/0C8T;)V =====
+FILE=work/smali/classes12/X/0hks.smali
+DEV=['LX/0hkS;']
+NET=['A0F(']
+.method public final A07(LX/01SH;LX/0C8T;)V
+    .registers 9
+
+    invoke-static {p1}, LX/04l9;->A0f(Ljava/lang/Object;)V
+
+    const/4 v5, 0x0
+
+    if-eqz p2, :cond_14
+
+    invoke-interface {p2}, LX/0C8T;->getValue()Ljava/lang/Object;
+
+    move-result-object v0
+
+    check-cast v0, LX/06Ay;
+
+    if-eqz v0, :cond_14
+
+    iput-object v5, v0, LX/06Ay;->A01:LX/0hks;
+
+    iget-object v0, v0, LX/06Ay;->A0E:LX/06HA;
+
+    iput-object v5, v0, LX/06HA;->A02:LX/0hks;
+
+    :cond_14
+    iget-object v4, p0, LX/0hks;->A07:LX/0dOy;
+
+    if-eqz v4, :cond_50
+
+    iget-object v3, p0, LX/0hks;->A09:LX/0fBr;
+
+    iget-object v2, p1, LX/01SH;->A03:Landroidx/recyclerview/widget/RecyclerView;
+
+    iget-object v1, v4, LX/0dOy;->A05:LX/0Ea9;
+
+    invoke-static {v1}, LX/04l9;->A0f(Ljava/lang/Object;)V
+
+    iget-object v0, p1, LX/01SH;->A04:Ljava/util/List;
+
+    invoke-interface {v0, v1}, Ljava/util/List;->remove(Ljava/lang/Object;)Z
+
+    invoke-interface {v0}, Ljava/util/List;->isEmpty()Z
+
+    move-result v0
+
+    if-eqz v0, :cond_2e
+
+    iput-object v5, v2, Landroidx/recyclerview/widget/RecyclerView;->A0I:LX/0Ea9;
+
+    :cond_2e
+    iget-object v0, v4, LX/0dOy;->A07:LX/03Ti;
+
+    invoke-virtual {v2, v0}, Landroidx/recyclerview/widget/RecyclerView;->A1I(LX/03Ti;)V
+
+    iget-object v0, v4, LX/0dOy;->A06:LX/0Hwk;
+
+    invoke-virtual {v2, v0}, Landroidx/recyclerview/widget/RecyclerView;->A1G(LX/0Hwk;)V
+
+    if-eqz v3, :cond_3c
+
+    iput-object v5, v3, LX/0fBr;->A00:LX/0dOy;
+
+    :cond_3c
+    iput-object v5, p0, LX/0hks;->A07:LX/0dOy;
+
+    iput-object v5, p0, LX/0hks;->A03:LX/03Th;
+
+    iput-object v5, p0, LX/0hks;->A08:LX/0gRk;
+
+    iget-object v0, p0, LX/0hks;->A06:Lcom/instagram/common/session/UserSession;
+
+    invoke-static {v0}, LX/03KA;->A00(LX/04BG;)LX/03KA;
+
+    move-result-object v2
+
+    const-class v1, LX/09j5;
+
+    iget-object v0, p0, LX/0hks;->A05:LX/03Uz;
+
+    invoke-virtual {v2, v0, v1}, LX/03KA;->A03(LX/03Uz;Ljava/lang/Class;)V
+
+    return-void
+
+    :cond_50
+    invoke-static {}, LX/000H;->A0E()Ljava/lang/IllegalStateException;
+
+    move-result-object v0
+
+    throw v0
+.end method
+
+===== CALLER JOIN LX/0UVB; .method public final A0N(Landroidx/recyclerview/widget/RecyclerView;I)V =====
+CALLS_DEVICESEG=('LX/0hks;', 'A08', '', 'Z')
+FILE=work/smali/classes12/X/0UVB.smali
+NET=['A0F(']
+.method public final A0N(Landroidx/recyclerview/widget/RecyclerView;I)V
+    .registers 14
+
+    const v0, 0x4c7fd2ad    # 6.7062452E7f
+
+    invoke-static {v0}, LX/01IU;->A03(I)I
+
+    move-result v3
+
+    const/4 v4, 0x0
+
+    invoke-static {p1, v4}, LX/04l9;->A0j(Ljava/lang/Object;I)V
+
+    iget-object v2, p0, LX/0UVB;->A02:LX/0dOy;
+
+    iget-object v1, v2, LX/0dOy;->A09:LX/0gRk;
+
+    iget-boolean v0, v1, LX/0gRk;->A05:Z
+
+    if-eqz v0, :cond_1a
+
+    const v0, 0x3396b8b2
+
+    :goto_16
+    invoke-static {v0, v3}, LX/01IU;->A0A(II)V
+
+    return-void
+
+    :cond_1a
+    const/4 v7, 0x1
+
+    if-eqz p2, :cond_8d
+
+    if-ne p2, v7, :cond_40
+
+    iput-boolean v4, v2, LX/0dOy;->A0C:Z
+
+    iget v0, v1, LX/0gRk;->A00:I
+
+    const/4 v6, 0x1
+
+    add-int/lit8 v0, v0, 0x1
+
+    invoke-virtual {v1, v0}, LX/0gRk;->A02(I)I
+
+    move-result v5
+
+    const/4 v0, -0x1
+
+    if-eq v5, v0, :cond_8b
+
+    iget-object v7, v1, LX/0gRk;->A01:LX/03Th;
+
+    invoke-static {v7, v4}, LX/04l9;->A0j(Ljava/lang/Object;I)V
+
+    instance-of v0, v7, Landroidx/recyclerview/widget/LinearLayoutManager;
+
+    if-eqz v0, :cond_44
+
+    check-cast v7, Landroidx/recyclerview/widget/LinearLayoutManager;
+
+    invoke-virtual {v7}, Landroidx/recyclerview/widget/LinearLayoutManager;->findLastCompletelyVisibleItemPosition()I
+
+    move-result v2
+
+    :goto_3c
+    if-gt v5, v2, :cond_8b
+
+    :goto_3e
+    iput-boolean v6, p0, LX/0UVB;->A01:Z
+
+    :cond_40
+    :goto_40
+    const v0, 0x42f93e1d
+
+    goto :goto_16
+
+    :cond_44
+    instance-of v0, v7, Lcom/instagram/common/ui/widget/recyclerview/flow/FlowingGridLayoutManager;
+
+    if-eqz v0, :cond_7d
+
+    check-cast v7, Lcom/instagram/common/ui/widget/recyclerview/flow/FlowingGridLayoutManager;
+
+    invoke-virtual {v7}, LX/03Th;->A0W()I
+
+    move-result v0
+
+    if-eqz v0, :cond_7b
+
+    iget-object v8, v7, Lcom/instagram/common/ui/widget/recyclerview/flow/FlowingGridLayoutManager;->A08:Ljava/util/List;
+
+    invoke-interface {v8}, Ljava/util/List;->isEmpty()Z
+
+    move-result v0
+
+    if-nez v0, :cond_7b
+
+    invoke-interface {v8}, Ljava/util/List;->size()I
+
+    move-result v0
+
+    add-int/lit8 v0, v0, -0x1
+
+    if-ltz v0, :cond_7b
+
+    :goto_60
+    add-int/lit8 v4, v0, -0x1
+
+    invoke-static {v8, v0}, LX/0137;->A0H(Ljava/util/List;I)I
+
+    move-result v2
+
+    iget-object v0, v7, Lcom/instagram/common/ui/widget/recyclerview/flow/FlowingGridLayoutManager;->A07:LX/0Fhj;
+
+    invoke-virtual {v0, v2}, LX/0Fhj;->A00(I)Landroid/graphics/Rect;
+
+    move-result-object v1
+
+    if-eqz v1, :cond_77
+
+    iget-object v0, v7, Lcom/instagram/common/ui/widget/recyclerview/flow/FlowingGridLayoutManager;->A06:Landroid/graphics/Rect;
+
+    invoke-virtual {v0, v1}, Landroid/graphics/Rect;->contains(Landroid/graphics/Rect;)Z
+
+    move-result v0
+
+    if-eqz v0, :cond_77
+
+    goto :goto_3c
+
+    :cond_77
+    if-ltz v4, :cond_7b
+
+    move v0, v4
+
+    goto :goto_60
+
+    :cond_7b
+    const/4 v2, -0x1
+
+    goto :goto_3c
+
+    :cond_7d
+    instance-of v0, v7, Landroidx/recyclerview/widget/StaggeredGridLayoutManager;
+
+    if-eqz v0, :cond_19e
+
+    check-cast v7, Landroidx/recyclerview/widget/StaggeredGridLayoutManager;
+
+    const/4 v0, 0x0
+
+    invoke-virtual {v7, v0}, Landroidx/recyclerview/widget/StaggeredGridLayoutManager;->findLastCompletelyVisibleItemPositions([I)[I
+
+    move-result-object v0
+
+    aget v2, v0, v4
+
+    goto :goto_3c
+
+    :cond_8b
+    const/4 v6, 0x0
+
+    goto :goto_3e
+
+    :cond_8d
+    iget v0, p0, LX/0UVB;->A00:I
+
+    if-gtz v0, :cond_92
+
+    const/4 v7, 0x0
+
+    :cond_92
+    iget-boolean v0, v2, LX/0dOy;->A0C:Z
+
+    if-nez v0, :cond_19a
+
+    const v0, 0x2c0bc
+
+    invoke-static {v0}, LX/04oL;->A01(I)Ljava/lang/Object;
+
+    move-result-object v6
+
+    check-cast v6, LX/01Uf;
+
+    iget-object v5, v2, LX/0dOy;->A0A:LX/01SH;
+
+    invoke-virtual {p1}, Landroid/view/View;->getContext()Landroid/content/Context;
+
+    move-result-object v1
+
+    const-class v0, Landroid/app/Activity;
+
+    invoke-static {v1, v0}, LX/00CL;->A00(Landroid/content/Context;Ljava/lang/Class;)Ljava/lang/Object;
+
+    move-result-object v0
+
+    if-eqz v0, :cond_1a3
+
+    check-cast v0, Landroid/app/Activity;
+
+    invoke-static {v0}, LX/004C;->A06(Landroid/app/Activity;)LX/004C;
+
+    move-result-object v0
+
+    invoke-virtual {v0}, LX/004C;->A0Z()I
+
+    move-result v0
+
+    invoke-virtual {v6, v5, v0, v4}, LX/01Uf;->A0B(LX/0Ukc;II)I
+
+    iget v0, p0, LX/0UVB;->A00:I
+
+    invoke-static {v0}, Ljava/lang/Math;->abs(I)I
+
+    move-result v0
+
+    int-to-float v1, v0
+
+    iget v0, v2, LX/0dOy;->A03:F
+
+    cmpl-float v0, v1, v0
+
+    if-lez v0, :cond_e1
+
+    iget-boolean v0, p0, LX/0UVB;->A01:Z
+
+    if-eqz v0, :cond_e1
+
+    if-eqz v7, :cond_e1
+
+    iget-object v5, v2, LX/0dOy;->A08:LX/0hks;
+
+    iget-object v1, v5, LX/0hks;->A07:LX/0dOy;
+
+    if-eqz v1, :cond_d6
+
+    const/4 v0, 0x1
+
+    iput-boolean v0, v1, LX/0dOy;->A0C:Z
+
+    :cond_d6
+    const/4 v0, 0x1
+
+    invoke-static {v5, v0}, LX/0hks;->A03(LX/0hks;Z)Z
+
+    move-result v0
+
+    :goto_db
+    iput-boolean v0, v2, LX/0dOy;->A0C:Z
+
+    :cond_dd
+    :goto_dd
+    iput v4, p0, LX/0UVB;->A00:I
+
+    goto/16 :goto_40
+
+    :cond_e1
+    iget v0, v2, LX/0dOy;->A02:F
+
+    cmpl-float v0, v1, v0
+
+    if-lez v0, :cond_f5
+
+    iget-object v0, v2, LX/0dOy;->A08:LX/0hks;
+
+    if-eqz v7, :cond_f0
+
+    invoke-static {v0, v4}, LX/0hks;->A03(LX/0hks;Z)Z
+
+    move-result v0
+
+    goto :goto_db
+
+    :cond_f0
+    invoke-virtual {v0}, LX/0hks;->A08()Z
+
+    move-result v0
+
+    goto :goto_db
+
+    :cond_f5
+    iget-object v1, v2, LX/0dOy;->A04:LX/03Th;
+
+    if-eqz v1, :cond_dd
+
+    invoke-static {v1}, LX/04l9;->A0f(Ljava/lang/Object;)V
+
+    iget v10, v1, LX/03Th;->A00:I
+
+    invoke-virtual {v1}, LX/03Th;->getPaddingBottom()I
+
+    move-result v0
+
+    sub-int/2addr v10, v0
+
+    invoke-virtual {v1}, LX/03Th;->getPaddingTop()I
+
+    move-result v0
+
+    sub-int/2addr v10, v0
+
+    iget-object v7, v2, LX/0dOy;->A09:LX/0gRk;
+
+    iget v6, v7, LX/0gRk;->A00:I
+
+    invoke-virtual {v7, v6}, LX/0gRk;->A03(I)I
+
+    move-result v8
+
+    add-int/lit8 v9, v6, 0x1
+
+    invoke-virtual {v7, v9}, LX/0gRk;->A03(I)I
+
+    move-result v1
+
+    add-int/lit8 v0, v6, -0x1
+
+    invoke-virtual {v7, v0}, LX/0gRk;->A03(I)I
+
+    move-result v0
+
+    const/4 v5, 0x1
+
+    iput-boolean v5, v2, LX/0dOy;->A0C:Z
+
+    if-le v1, v8, :cond_127
+
+    iget-object v0, v2, LX/0dOy;->A08:LX/0hks;
+
+    invoke-static {v0, v4}, LX/0hks;->A03(LX/0hks;Z)Z
+
+    goto :goto_dd
+
+    :cond_127
+    if-lt v0, v8, :cond_12f
+
+    iget-object v0, v2, LX/0dOy;->A08:LX/0hks;
+
+    invoke-virtual {v0}, LX/0hks;->A08()Z
+
+    goto :goto_dd
+
+    :cond_12f
+    int-to-float v1, v1
+
+    const v0, 0x3e4ccccc    # 0.19999999f
+
+    int-to-float v8, v10
+
+    mul-float/2addr v0, v8
+
+    cmpl-float v0, v1, v0
+
+    if-lez v0, :cond_173
+
+    iget-object v1, v2, LX/0dOy;->A09:LX/0gRk;
+
+    iget v0, v1, LX/0gRk;->A00:I
+
+    invoke-virtual {v1, v0}, LX/0gRk;->A02(I)I
+
+    move-result v1
+
+    iget-object v0, v2, LX/0dOy;->A04:LX/03Th;
+
+    invoke-static {v0}, LX/01pQ;->A01(LX/03Th;)I
+
+    move-result v0
+
+    if-ge v1, v0, :cond_173
+
+    invoke-virtual {v7, v9}, LX/0gRk;->A02(I)I
+
+    move-result v7
+
+    const/4 v0, -0x1
+
+    if-eq v7, v0, :cond_dd
+
+    iget-object v1, v2, LX/0dOy;->A08:LX/0hks;
+
+    const v0, 0x3f4ccccd    # 0.8f
+
+    mul-float/2addr v8, v0
+
+    float-to-int v6, v8
+
+    iget-object v5, v1, LX/0hks;->A03:LX/03Th;
+
+    if-eqz v5, :cond_dd
+
+    const/high16 v2, 0x40b00000    # 5.5f
+
+    iget-object v0, v1, LX/0hks;->A02:Landroid/content/Context;
+
+    new-instance v1, LX/044h;
+
+    invoke-direct {v1, v0}, LX/0EyT;-><init>(Landroid/content/Context;)V
+
+    const/high16 v0, -0x40800000    # -1.0f
+
+    iput v0, v1, LX/044h;->A00:F
+
+    iput v7, v1, LX/0Dmw;->A00:I
+
+    iput v6, v1, LX/044h;->A01:I
+
+    iput v2, v1, LX/044h;->A00:F
+
+    invoke-virtual {v5, v1}, LX/03Th;->A0v(LX/0Dmw;)V
+
+    goto/16 :goto_dd
+
+    :cond_173
+    iget-object v1, v2, LX/0dOy;->A09:LX/0gRk;
+
+    iget v0, v1, LX/0gRk;->A00:I
+
+    if-lez v0, :cond_19a
+
+    invoke-virtual {v1, v0}, LX/0gRk;->A02(I)I
+
+    move-result v1
+
+    iget-object v0, v2, LX/0dOy;->A04:LX/03Th;
+
+    invoke-static {v0}, LX/01pQ;->A01(LX/03Th;)I
+
+    move-result v0
+
+    if-le v1, v0, :cond_19a
+
+    iget-object v2, v2, LX/0dOy;->A08:LX/0hks;
+
+    invoke-virtual {v7, v6}, LX/0gRk;->A02(I)I
+
+    move-result v1
+
+    iget-object v0, v2, LX/0hks;->A03:LX/03Th;
+
+    if-eqz v0, :cond_dd
+
+    iget-object v0, v2, LX/0hks;->A08:LX/0gRk;
+
+    if-eqz v0, :cond_dd
+
+    const/high16 v0, 0x40b00000    # 5.5f
+
+    invoke-static {v2, v0, v1, v5}, LX/0hks;->A02(LX/0hks;FIZ)V
+
+    goto/16 :goto_dd
+
+    :cond_19a
+    iput-boolean v4, v2, LX/0dOy;->A0C:Z
+
+    goto/16 :goto_dd
+
+    :cond_19e
+    invoke-static {v7}, LX/01pQ;->A04(LX/03Th;)Ljava/lang/IllegalArgumentException;
+
+    move-result-object v1
+
+    throw v1
+
+    :cond_1a3
+    invoke-static {}, LX/000H;->A0E()Ljava/lang/IllegalStateException;
+
+    move-result-object v1
+
+    const v0, -0x6fad4f1f
+
+    invoke-static {v0, v3}, LX/01IU;->A0A(II)V
+
+    throw v1
+.end method
+
+===== CALLER JOIN LX/0UVB; .method public final A0N(Landroidx/recyclerview/widget/RecyclerView;I)V =====
+CALLS_DEVICESEG=('LX/0hks;', 'A08', '', 'Z')
+FILE=work/smali/classes12/X/0UVB.smali
+NET=['A0F(']
+.method public final A0N(Landroidx/recyclerview/widget/RecyclerView;I)V
+    .registers 14
+
+    const v0, 0x4c7fd2ad    # 6.7062452E7f
+
+    invoke-static {v0}, LX/01IU;->A03(I)I
+
+    move-result v3
+
+    const/4 v4, 0x0
+
+    invoke-static {p1, v4}, LX/04l9;->A0j(Ljava/lang/Object;I)V
+
+    iget-object v2, p0, LX/0UVB;->A02:LX/0dOy;
+
+    iget-object v1, v2, LX/0dOy;->A09:LX/0gRk;
+
+    iget-boolean v0, v1, LX/0gRk;->A05:Z
+
+    if-eqz v0, :cond_1a
+
+    const v0, 0x3396b8b2
+
+    :goto_16
+    invoke-static {v0, v3}, LX/01IU;->A0A(II)V
+
+    return-void
+
+    :cond_1a
+    const/4 v7, 0x1
+
+    if-eqz p2, :cond_8d
+
+    if-ne p2, v7, :cond_40
+
+    iput-boolean v4, v2, LX/0dOy;->A0C:Z
+
+    iget v0, v1, LX/0gRk;->A00:I
+
+    const/4 v6, 0x1
+
+    add-int/lit8 v0, v0, 0x1
+
+    invoke-virtual {v1, v0}, LX/0gRk;->A02(I)I
+
+    move-result v5
+
+    const/4 v0, -0x1
+
+    if-eq v5, v0, :cond_8b
+
+    iget-object v7, v1, LX/0gRk;->A01:LX/03Th;
+
+    invoke-static {v7, v4}, LX/04l9;->A0j(Ljava/lang/Object;I)V
+
+    instance-of v0, v7, Landroidx/recyclerview/widget/LinearLayoutManager;
+
+    if-eqz v0, :cond_44
+
+    check-cast v7, Landroidx/recyclerview/widget/LinearLayoutManager;
+
+    invoke-virtual {v7}, Landroidx/recyclerview/widget/LinearLayoutManager;->findLastCompletelyVisibleItemPosition()I
+
+    move-result v2
+
+    :goto_3c
+    if-gt v5, v2, :cond_8b
+
+    :goto_3e
+    iput-boolean v6, p0, LX/0UVB;->A01:Z
+
+    :cond_40
+    :goto_40
+    const v0, 0x42f93e1d
+
+    goto :goto_16
+
+    :cond_44
+    instance-of v0, v7, Lcom/instagram/common/ui/widget/recyclerview/flow/FlowingGridLayoutManager;
+
+    if-eqz v0, :cond_7d
+
+    check-cast v7, Lcom/instagram/common/ui/widget/recyclerview/flow/FlowingGridLayoutManager;
+
+    invoke-virtual {v7}, LX/03Th;->A0W()I
+
+    move-result v0
+
+    if-eqz v0, :cond_7b
+
+    iget-object v8, v7, Lcom/instagram/common/ui/widget/recyclerview/flow/FlowingGridLayoutManager;->A08:Ljava/util/List;
+
+    invoke-interface {v8}, Ljava/util/List;->isEmpty()Z
+
+    move-result v0
+
+    if-nez v0, :cond_7b
+
+    invoke-interface {v8}, Ljava/util/List;->size()I
+
+    move-result v0
+
+    add-int/lit8 v0, v0, -0x1
+
+    if-ltz v0, :cond_7b
+
+    :goto_60
+    add-int/lit8 v4, v0, -0x1
+
+    invoke-static {v8, v0}, LX/0137;->A0H(Ljava/util/List;I)I
+
+    move-result v2
+
+    iget-object v0, v7, Lcom/instagram/common/ui/widget/recyclerview/flow/FlowingGridLayoutManager;->A07:LX/0Fhj;
+
+    invoke-virtual {v0, v2}, LX/0Fhj;->A00(I)Landroid/graphics/Rect;
+
+    move-result-object v1
+
+    if-eqz v1, :cond_77
+
+    iget-object v0, v7, Lcom/instagram/common/ui/widget/recyclerview/flow/FlowingGridLayoutManager;->A06:Landroid/graphics/Rect;
+
+    invoke-virtual {v0, v1}, Landroid/graphics/Rect;->contains(Landroid/graphics/Rect;)Z
+
+    move-result v0
+
+    if-eqz v0, :cond_77
+
+    goto :goto_3c
+
+    :cond_77
+    if-ltz v4, :cond_7b
+
+    move v0, v4
+
+    goto :goto_60
+
+    :cond_7b
+    const/4 v2, -0x1
+
+    goto :goto_3c
+
+    :cond_7d
+    instance-of v0, v7, Landroidx/recyclerview/widget/StaggeredGridLayoutManager;
+
+    if-eqz v0, :cond_19e
+
+    check-cast v7, Landroidx/recyclerview/widget/StaggeredGridLayoutManager;
+
+    const/4 v0, 0x0
+
+    invoke-virtual {v7, v0}, Landroidx/recyclerview/widget/StaggeredGridLayoutManager;->findLastCompletelyVisibleItemPositions([I)[I
+
+    move-result-object v0
+
+    aget v2, v0, v4
+
+    goto :goto_3c
+
+    :cond_8b
+    const/4 v6, 0x0
+
+    goto :goto_3e
+
+    :cond_8d
+    iget v0, p0, LX/0UVB;->A00:I
+
+    if-gtz v0, :cond_92
+
+    const/4 v7, 0x0
+
+    :cond_92
+    iget-boolean v0, v2, LX/0dOy;->A0C:Z
+
+    if-nez v0, :cond_19a
+
+    const v0, 0x2c0bc
+
+    invoke-static {v0}, LX/04oL;->A01(I)Ljava/lang/Object;
+
+    move-result-object v6
+
+    check-cast v6, LX/01Uf;
+
+    iget-object v5, v2, LX/0dOy;->A0A:LX/01SH;
+
+    invoke-virtual {p1}, Landroid/view/View;->getContext()Landroid/content/Context;
+
+    move-result-object v1
+
+    const-class v0, Landroid/app/Activity;
+
+    invoke-static {v1, v0}, LX/00CL;->A00(Landroid/content/Context;Ljava/lang/Class;)Ljava/lang/Object;
+
+    move-result-object v0
+
+    if-eqz v0, :cond_1a3
+
+    check-cast v0, Landroid/app/Activity;
+
+    invoke-static {v0}, LX/004C;->A06(Landroid/app/Activity;)LX/004C;
+
+    move-result-object v0
+
+    invoke-virtual {v0}, LX/004C;->A0Z()I
+
+    move-result v0
+
+    invoke-virtual {v6, v5, v0, v4}, LX/01Uf;->A0B(LX/0Ukc;II)I
+
+    iget v0, p0, LX/0UVB;->A00:I
+
+    invoke-static {v0}, Ljava/lang/Math;->abs(I)I
+
+    move-result v0
+
+    int-to-float v1, v0
+
+    iget v0, v2, LX/0dOy;->A03:F
+
+    cmpl-float v0, v1, v0
+
+    if-lez v0, :cond_e1
+
+    iget-boolean v0, p0, LX/0UVB;->A01:Z
+
+    if-eqz v0, :cond_e1
+
+    if-eqz v7, :cond_e1
+
+    iget-object v5, v2, LX/0dOy;->A08:LX/0hks;
+
+    iget-object v1, v5, LX/0hks;->A07:LX/0dOy;
+
+    if-eqz v1, :cond_d6
+
+    const/4 v0, 0x1
+
+    iput-boolean v0, v1, LX/0dOy;->A0C:Z
+
+    :cond_d6
+    const/4 v0, 0x1
+
+    invoke-static {v5, v0}, LX/0hks;->A03(LX/0hks;Z)Z
+
+    move-result v0
+
+    :goto_db
+    iput-boolean v0, v2, LX/0dOy;->A0C:Z
+
+    :cond_dd
+    :goto_dd
+    iput v4, p0, LX/0UVB;->A00:I
+
+    goto/16 :goto_40
+
+    :cond_e1
+    iget v0, v2, LX/0dOy;->A02:F
+
+    cmpl-float v0, v1, v0
+
+    if-lez v0, :cond_f5
+
+    iget-object v0, v2, LX/0dOy;->A08:LX/0hks;
+
+    if-eqz v7, :cond_f0
+
+    invoke-static {v0, v4}, LX/0hks;->A03(LX/0hks;Z)Z
+
+    move-result v0
+
+    goto :goto_db
+
+    :cond_f0
+    invoke-virtual {v0}, LX/0hks;->A08()Z
+
+    move-result v0
+
+    goto :goto_db
+
+    :cond_f5
+    iget-object v1, v2, LX/0dOy;->A04:LX/03Th;
+
+    if-eqz v1, :cond_dd
+
+    invoke-static {v1}, LX/04l9;->A0f(Ljava/lang/Object;)V
+
+    iget v10, v1, LX/03Th;->A00:I
+
+    invoke-virtual {v1}, LX/03Th;->getPaddingBottom()I
+
+    move-result v0
+
+    sub-int/2addr v10, v0
+
+    invoke-virtual {v1}, LX/03Th;->getPaddingTop()I
+
+    move-result v0
+
+    sub-int/2addr v10, v0
+
+    iget-object v7, v2, LX/0dOy;->A09:LX/0gRk;
+
+    iget v6, v7, LX/0gRk;->A00:I
+
+    invoke-virtual {v7, v6}, LX/0gRk;->A03(I)I
+
+    move-result v8
+
+    add-int/lit8 v9, v6, 0x1
+
+    invoke-virtual {v7, v9}, LX/0gRk;->A03(I)I
+
+    move-result v1
+
+    add-int/lit8 v0, v6, -0x1
+
+    invoke-virtual {v7, v0}, LX/0gRk;->A03(I)I
+
+    move-result v0
+
+    const/4 v5, 0x1
+
+    iput-boolean v5, v2, LX/0dOy;->A0C:Z
+
+    if-le v1, v8, :cond_127
+
+    iget-object v0, v2, LX/0dOy;->A08:LX/0hks;
+
+    invoke-static {v0, v4}, LX/0hks;->A03(LX/0hks;Z)Z
+
+    goto :goto_dd
+
+    :cond_127
+    if-lt v0, v8, :cond_12f
+
+    iget-object v0, v2, LX/0dOy;->A08:LX/0hks;
+
+    invoke-virtual {v0}, LX/0hks;->A08()Z
+
+    goto :goto_dd
+
+    :cond_12f
+    int-to-float v1, v1
+
+    const v0, 0x3e4ccccc    # 0.19999999f
+
+    int-to-float v8, v10
+
+    mul-float/2addr v0, v8
+
+    cmpl-float v0, v1, v0
+
+    if-lez v0, :cond_173
+
+    iget-object v1, v2, LX/0dOy;->A09:LX/0gRk;
+
+    iget v0, v1, LX/0gRk;->A00:I
+
+    invoke-virtual {v1, v0}, LX/0gRk;->A02(I)I
+
+    move-result v1
+
+    iget-object v0, v2, LX/0dOy;->A04:LX/03Th;
+
+    invoke-static {v0}, LX/01pQ;->A01(LX/03Th;)I
+
+    move-result v0
+
+    if-ge v1, v0, :cond_173
+
+    invoke-virtual {v7, v9}, LX/0gRk;->A02(I)I
+
+    move-result v7
+
+    const/4 v0, -0x1
+
+    if-eq v7, v0, :cond_dd
+
+    iget-object v1, v2, LX/0dOy;->A08:LX/0hks;
+
+    const v0, 0x3f4ccccd    # 0.8f
+
+    mul-float/2addr v8, v0
+
+    float-to-int v6, v8
+
+    iget-object v5, v1, LX/0hks;->A03:LX/03Th;
+
+    if-eqz v5, :cond_dd
+
+    const/high16 v2, 0x40b00000    # 5.5f
+
+    iget-object v0, v1, LX/0hks;->A02:Landroid/content/Context;
+
+    new-instance v1, LX/044h;
+
+    invoke-direct {v1, v0}, LX/0EyT;-><init>(Landroid/content/Context;)V
+
+    const/high16 v0, -0x40800000    # -1.0f
+
+    iput v0, v1, LX/044h;->A00:F
+
+    iput v7, v1, LX/0Dmw;->A00:I
+
+    iput v6, v1, LX/044h;->A01:I
+
+    iput v2, v1, LX/044h;->A00:F
+
+    invoke-virtual {v5, v1}, LX/03Th;->A0v(LX/0Dmw;)V
+
+    goto/16 :goto_dd
+
+    :cond_173
+    iget-object v1, v2, LX/0dOy;->A09:LX/0gRk;
+
+    iget v0, v1, LX/0gRk;->A00:I
+
+    if-lez v0, :cond_19a
+
+    invoke-virtual {v1, v0}, LX/0gRk;->A02(I)I
+
+    move-result v1
+
+    iget-object v0, v2, LX/0dOy;->A04:LX/03Th;
+
+    invoke-static {v0}, LX/01pQ;->A01(LX/03Th;)I
+
+    move-result v0
+
+    if-le v1, v0, :cond_19a
+
+    iget-object v2, v2, LX/0dOy;->A08:LX/0hks;
+
+    invoke-virtual {v7, v6}, LX/0gRk;->A02(I)I
+
+    move-result v1
+
+    iget-object v0, v2, LX/0hks;->A03:LX/03Th;
+
+    if-eqz v0, :cond_dd
+
+    iget-object v0, v2, LX/0hks;->A08:LX/0gRk;
+
+    if-eqz v0, :cond_dd
+
+    const/high16 v0, 0x40b00000    # 5.5f
+
+    invoke-static {v2, v0, v1, v5}, LX/0hks;->A02(LX/0hks;FIZ)V
+
+    goto/16 :goto_dd
+
+    :cond_19a
+    iput-boolean v4, v2, LX/0dOy;->A0C:Z
+
+    goto/16 :goto_dd
+
+    :cond_19e
+    invoke-static {v7}, LX/01pQ;->A04(LX/03Th;)Ljava/lang/IllegalArgumentException;
+
+    move-result-object v1
+
+    throw v1
+
+    :cond_1a3
+    invoke-static {}, LX/000H;->A0E()Ljava/lang/IllegalStateException;
+
+    move-result-object v1
+
+    const v0, -0x6fad4f1f
+
+    invoke-static {v0, v3}, LX/01IU;->A0A(II)V
+
+    throw v1
+.end method
+
+===== DEVICESEG SEED INVENTORY =====
+LX/0Qgy; .method public final handleMessage(Landroid/os/Message;)Z FILE=work/smali/classes4/X/0Qgy.smali DEV=['LX/0hkS;'] STRINGS=['downloadManagerId', 'download', 'bytes_so_far', 'total_size', 'taskId', 'written', 'total', 'chunk', '', 'ReactNativeBlobUtilProgress']
+LX/0HLB; .method public final A0o(LX/01iy;)LX/03Wk; FILE=work/smali/classes4/X/0HLB.smali DEV=['LX/0hld;'] STRINGS=['', 'ghost_', 'pagination_spinner']
+LX/0HLD; .method public final A0o(LX/01iy;)LX/03Wk; FILE=work/smali/classes4/X/0HLD.smali DEV=['LX/0hld;'] STRINGS=['series_catalogue_card']
+LX/0mJp; .method public constructor <init>(LX/0hkS;LX/0Uiy;[LX/0fKx;)V FILE=work/smali/classes12/X/0mJp.smali DEV=['LX/0hkS;'] STRINGS=[]
+LX/0mJp; .method public final run()V FILE=work/smali/classes12/X/0mJp.smali DEV=['LX/0hkS;'] STRINGS=[]
+LX/0hqj; .method public static constructor <clinit>()V FILE=work/smali/classes12/X/0hqj.smali DEV=['LX/0hqj;'] STRINGS=[]
+LX/0hqj; .method public static A00(Landroid/content/Context;Landroid/content/SharedPreferences;LX/0fKx;)F FILE=work/smali/classes12/X/0hqj.smali DEV=['LX/0hqj;'] STRINGS=[]
+LX/0hqj; .method public static A02(Landroid/content/Context;Landroid/content/SharedPreferences;LX/0fKx;)J FILE=work/smali/classes12/X/0hqj.smali DEV=['LX/0hqj;'] STRINGS=[]
+LX/0hqj; .method public static A03(Landroid/hardware/camera2/params/StreamConfigurationMap;)J FILE=work/smali/classes12/X/0hqj.smali DEV=['LX/0hqj;'] STRINGS=[]
+LX/0hqj; .method public static A04(Landroid/content/Context;Landroid/content/SharedPreferences;LX/0fKx;)LX/0dkb; FILE=work/smali/classes12/X/0hqj.smali DEV=['com.facebook.devicesegmentation', 'LX/0hqj;'] STRINGS=['com.facebook.devicesegmentation.NOT_STORED', 'width', 'height', 'width', 'height']
+LX/0hqj; .method public static A05(Landroid/content/Context;Landroid/content/SharedPreferences;LX/0fKx;)LX/037o; FILE=work/smali/classes12/X/0hqj.smali DEV=['com.facebook.devicesegmentation', 'LX/0hqj;'] STRINGS=['com.facebook.devicesegmentation.NOT_STORED']
+LX/0hqj; .method public static A06(Landroid/hardware/camera2/params/StreamConfigurationMap;I)LX/037o; FILE=work/smali/classes12/X/0hqj.smali DEV=['LX/0hqj;'] STRINGS=[]
+LX/0hqj; .method public static A08(Landroid/content/Context;Landroid/content/SharedPreferences;)V FILE=work/smali/classes12/X/0hqj.smali DEV=['LX/0hqj;'] STRINGS=['camera']
+LX/0hqj; .method public static A09(Landroid/content/Context;Landroid/content/SharedPreferences;Landroid/hardware/camera2/CameraCharacteristics;Z)V FILE=work/smali/classes12/X/0hqj.smali DEV=['LX/0hkS;', 'LX/0hqj;'] STRINGS=['camera_back_hlg_hdr_video_supported', 'camera_back_burst_capture_supported', 'camera_back_ultra_high_resolution_sensor_supported', 'camera_back_logical_multi_camera_supported', 'camera_back_zsl_private_reprocessing_supported', 'camera_back_zsl_yuv_reprocessing_supported', 'camera_back_remosaic_reprocessing_supported', 'camera_back_depth_output_supported', 'camera_back_read_sensor_settings_supported', 'camera_back_secure_image_data_supported', 'camera_back_stream_use_case_supported', 'camera_back_sensor_resolution', 'camera_back_sensor_physical_size_mm', 'camera_back_jpeg_photo_max_pixel_resolution', 'camera_back_raw_photo_max_pixel_resolution', 'camera_back_raw10_photo_max_pixel_resolution', 'camera_back_raw12_photo_max_pixel_resolution', 'camera_back_heic_photo_max_pixel_resolution', 'camera_back_ultra_hdr_photo_max_pixel_resolution', 'camera_back_preview_stream_max_pixel_resolution', 'camera_back_video_stream_max_pixel_resolution', 'camera_back_cpu_stream_max_pixel_resolution', 'camera_back_constrained_high_speed_video_max_pixel_resolution', 'camera_back_constrained_high_speed_video_max_fps', 'camera_back_constrained_high_speed_video_max_throughput_pps', 'camera_back_max_fps', 'camera_back_max_throughput_pps', 'camera_back_preview_stabilization_supported', 'camera_back_optical_stabilization_supported', 'camera_back_realtime_timestamp_supported']
+LX/0hqj; .method public static A0A(Landroid/content/SharedPreferences$Editor;Landroid/hardware/camera2/CameraCharacteristics$Key;Landroid/hardware/camera2/CameraCharacteristics;Ljava/lang/String;I)V FILE=work/smali/classes12/X/0hqj.smali DEV=['LX/0hqj;'] STRINGS=[]
+LX/0hqj; .method public static A0B(Landroid/content/SharedPreferences$Editor;Landroid/hardware/camera2/params/StreamConfigurationMap;Ljava/lang/String;I)V FILE=work/smali/classes12/X/0hqj.smali DEV=['LX/0hqj;'] STRINGS=[]
+LX/0UVB; .method public final A0N(Landroidx/recyclerview/widget/RecyclerView;I)V FILE=work/smali/classes12/X/0UVB.smali DEV=['LX/0hkS;'] STRINGS=[]
+LX/0ece; .method public static final A00(Landroid/content/Context;Lcom/instagram/common/session/UserSession;)V FILE=work/smali/classes12/X/0ece.smali DEV=['LX/0hkS;'] STRINGS=['ig_device_static_attributes', 'One-Device-Classifier-Handler-Thread']
+LX/0hld; .method public static A01(Landroid/content/SharedPreferences;LX/0fKx;)Ljava/lang/String; FILE=work/smali/classes12/X/0hld.smali DEV=['com.facebook.devicesegmentation', 'LX/0hld;'] STRINGS=['com.facebook.devicesegmentation.GET_FAILED']
+LX/0hld; .method public static A02(Landroid/content/pm/PackageManager;)Ljava/lang/String; FILE=work/smali/classes12/X/0hld.smali DEV=['LX/0hld;'] STRINGS=['', 'android.software.opengles.deqp.level']
+LX/0hld; .method public static A03(Landroid/content/pm/PackageManager;)Ljava/lang/String; FILE=work/smali/classes12/X/0hld.smali DEV=['LX/0hld;'] STRINGS=['', 'android.software.vulkan.deqp.level']
+LX/0UUh; .method public final A02(II)Z FILE=work/smali/classes12/X/0UUh.smali DEV=['LX/0hkS;'] STRINGS=[]
+LX/0hks; .method public static final A00(Landroid/content/Context;LX/00PQ;Lcom/instagram/common/session/UserSession;LX/0fBr;Ljava/lang/String;Z)LX/0hks; FILE=work/smali/classes12/X/0hks.smali DEV=['LX/0hkS;'] STRINGS=[]
+LX/0hks; .method public static final A01(LX/0hks;)V FILE=work/smali/classes12/X/0hks.smali DEV=['LX/0hkS;'] STRINGS=[]
+LX/0hks; .method public static final A02(LX/0hks;FIZ)V FILE=work/smali/classes12/X/0hks.smali DEV=['LX/0hkS;'] STRINGS=[]
+LX/0hks; .method public static final A03(LX/0hks;Z)Z FILE=work/smali/classes12/X/0hks.smali DEV=['LX/0hkS;'] STRINGS=[]
+LX/0hks; .method public final A04()I FILE=work/smali/classes12/X/0hks.smali DEV=['LX/0hkS;'] STRINGS=[]
+LX/0hks; .method public final A05()I FILE=work/smali/classes12/X/0hks.smali DEV=['LX/0hkS;'] STRINGS=[]
+LX/0hks; .method public final A06(LX/0nWC;LX/01SH;LX/0C8T;)V FILE=work/smali/classes12/X/0hks.smali DEV=['LX/0hkS;'] STRINGS=['RecyclerView should not have fling listeners set directly!']
+LX/0hks; .method public final A07(LX/01SH;LX/0C8T;)V FILE=work/smali/classes12/X/0hks.smali DEV=['LX/0hkS;'] STRINGS=[]
+LX/0hks; .method public final A08()Z FILE=work/smali/classes12/X/0hks.smali DEV=['LX/0hkS;'] STRINGS=[]
+LX/0hkS; .method public static constructor <clinit>()V FILE=work/smali/classes12/X/0hkS.smali DEV=['LX/0hkS;'] STRINGS=['ram_total_kb', 'cpu_num_cores', 'cpu_max_frequency_mhz', 'display_size_pixels', 'display_max_refresh_rate_fps', 'display_hdr_supported', 'display_wide_colour_gamut_supported', 'camera_back_facing_present', 'camera_front_facing_present', 'camera_autofocus_supported', 'camera_motion_tracking_supported', 'camera_flash_supported', 'camera_is_full_hardware_level', 'camera_concurrent_capture_supported', 'camera_manual_post_processing_supported', 'camera_manual_sensor_supported', 'camera_raw_image_capture_supported', 'audio_is_low_latency', 'audio_is_pro_level', 'audio_midi_api_supported', 'audio_microphone_present', 'opengles_deqp_test_date', 'opengles_android_extension_pack_supported', 'vulkan_deqp_test_date', 'vulkan_hardware_compute_supported', 'vulkan_hardware_level', 'vulkan_hardware_version', 'opengles_renderer', 'opengles_vendor', 'opengles_version']
+LX/0hkS; .method public static A01(Landroid/content/Context;Landroid/content/SharedPreferences;Landroid/content/pm/PackageManager;I)Ljava/lang/Object; FILE=work/smali/classes12/X/0hkS.smali DEV=['LX/0hld;', 'LX/0hkS;', 'LX/0hqj;'] STRINGS=['Invalid key: ', 'activity', 'cpu_max_frequency_mhz', '/sys/devices/system/cpu/cpu', '/cpufreq/cpuinfo_max_freq', '/proc/cpuinfo', 'cpu MHz', 'android.hardware.camera.autofocus', 'android.hardware.camera.ar', 'android.hardware.camera.flash', 'android.hardware.camera.capability.manual_post_processing', 'android.hardware.camera.capability.manual_sensor', 'android.hardware.camera.capability.raw', 'android.hardware.audio.low_latency', 'android.hardware.audio.pro', 'android.software.midi', 'android.hardware.opengles.aep', '']
+LX/0hkS; .method public static A02(LX/0hkS;)V FILE=work/smali/classes12/X/0hkS.smali DEV=['com.facebook.devicesegmentation', 'LX/0hkS;'] STRINGS=['com.facebook.devicesegmentation', 'Attempting to initialize the SharedPreferences on the wrong thread']
