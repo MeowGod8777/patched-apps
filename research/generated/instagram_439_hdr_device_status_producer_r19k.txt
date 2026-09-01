@@ -1,0 +1,2999 @@
+Instagram 439 device_status producer R19k
+=====================================
+
+===== SEED LX/06Kl; .method public final run()V FILE=work/smali/classes15/X/06Kl.smali =====
+.method public final run()V
+    .registers 7
+
+    const-string v3, "DeviceStatusExtractor"
+
+    iget-object v2, p0, LX/06Kl;->A00:LX/04BG;
+
+    :try_start_4
+    sget-boolean v0, LX/06Nk;->A02:Z
+
+    invoke-static {v2}, LX/07sY;->A00(LX/04BG;)LX/02tZ;
+
+    move-result-object v1
+
+    new-instance v0, Lorg/json/JSONObject;
+
+    invoke-direct {v0, v1}, Lorg/json/JSONObject;-><init>(Ljava/util/Map;)V
+
+    invoke-static {v0}, LX/000H;->A0L(Ljava/lang/Object;)Ljava/lang/String;
+
+    move-result-object v0
+
+    sput-object v0, LX/06Nk;->A01:Ljava/lang/String;
+
+    sget-object v0, LX/04i9;->A00:LX/04i9;
+
+    goto :goto_1e
+    :try_end_18
+    .catchall {:try_start_4 .. :try_end_18} :catchall_18
+
+    :catchall_18
+    move-exception v1
+
+    new-instance v0, LX/02pD;
+
+    invoke-direct {v0, v1}, LX/02pD;-><init>(Ljava/lang/Throwable;)V
+
+    :goto_1e
+    invoke-static {v0}, LX/01ui;->A00(Ljava/lang/Object;)Ljava/lang/Throwable;
+
+    move-result-object v1
+
+    if-eqz v1, :cond_29
+
+    const-string v0, "err in device status"
+
+    invoke-static {v3, v0, v1}, LX/00Iv;->A0F(Ljava/lang/String;Ljava/lang/String;Ljava/lang/Throwable;)V
+
+    :cond_29
+    invoke-static {v2}, LX/02qP;->A01(LX/04BG;)LX/00AT;
+
+    move-result-object v2
+
+    const-wide v0, 0x82061e00080eb5L
+
+    invoke-static {v2, v0, v1}, LX/000H;->A08(Ljava/lang/Object;J)J
+
+    move-result-wide v3
+
+    invoke-static {}, LX/02vl;->A00()LX/02vl;
+
+    move-result-object v5
+
+    const v0, 0x39e30764
+
+    new-instance v2, LX/01rp;
+
+    invoke-direct {v2, p0, v0}, LX/01rp;-><init>(Ljava/lang/Runnable;I)V
+
+    sget-object v0, Ljava/util/concurrent/TimeUnit;->SECONDS:Ljava/util/concurrent/TimeUnit;
+
+    invoke-virtual {v0, v3, v4}, Ljava/util/concurrent/TimeUnit;->toMillis(J)J
+
+    move-result-wide v0
+
+    invoke-virtual {v5, v2, v0, v1}, LX/02vl;->A01(LX/04oD;J)V
+
+    return-void
+.end method
+
+===== DIRECT CALLEE LX/07sY;->A00 .method public static final A00(LX/04BG;)LX/02tZ; FILE=work/smali/classes13/X/07sY.smali =====
+.method public static final A00(LX/04BG;)LX/02tZ;
+    .registers 10
+
+    new-instance v3, LX/02tZ;
+
+    invoke-direct {v3}, LX/02tZ;-><init>()V
+
+    invoke-static {}, Ljava/lang/System;->nanoTime()J
+
+    move-result-wide v4
+
+    sget-wide v7, LX/03gp;->A00:J
+
+    sub-long/2addr v4, v7
+
+    sget-object v0, LX/0GjW;->A01:LX/0C8T;
+
+    invoke-interface {v0}, LX/0C8T;->getValue()Ljava/lang/Object;
+
+    move-result-object v1
+
+    const-string v0, "hw_av1_dec"
+
+    invoke-virtual {v3, v0, v1}, LX/02tZ;->put(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;
+
+    sget-object v0, LX/0GjW;->A04:LX/0C8T;
+
+    invoke-interface {v0}, LX/0C8T;->getValue()Ljava/lang/Object;
+
+    move-result-object v1
+
+    const-string v0, "hw_vp9_dec"
+
+    invoke-virtual {v3, v0, v1}, LX/02tZ;->put(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;
+
+    sget-object v0, LX/0GjW;->A02:LX/0C8T;
+
+    invoke-interface {v0}, LX/0C8T;->getValue()Ljava/lang/Object;
+
+    move-result-object v1
+
+    const-string v0, "hw_avc_dec"
+
+    invoke-virtual {v3, v0, v1}, LX/02tZ;->put(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;
+
+    sget-object v0, LX/0GjW;->A05:LX/0C8T;
+
+    invoke-interface {v0}, LX/0C8T;->getValue()Ljava/lang/Object;
+
+    move-result-object v1
+
+    const-string v0, "10bit_hw_av1_dec"
+
+    invoke-virtual {v3, v0, v1}, LX/02tZ;->put(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;
+
+    sget-object v0, LX/0GjW;->A07:LX/0C8T;
+
+    invoke-interface {v0}, LX/0C8T;->getValue()Ljava/lang/Object;
+
+    move-result-object v1
+
+    const-string v0, "10bit_hw_vp9_dec"
+
+    invoke-virtual {v3, v0, v1}, LX/02tZ;->put(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;
+
+    invoke-static {v4, v5}, LX/03nu;->A00(J)J
+
+    move-result-wide v0
+
+    invoke-static {v0, v1}, LX/02zP;->A0C(J)Ljava/lang/String;
+
+    invoke-static {}, Ljava/lang/System;->nanoTime()J
+
+    move-result-wide v4
+
+    sub-long/2addr v4, v7
+
+    sget-object v0, LX/01Zz;->A00:LX/0C8T;
+
+    invoke-interface {v0}, LX/0C8T;->getValue()Ljava/lang/Object;
+
+    move-result-object v1
+
+    const-string/jumbo v0, "is_hlg_supported"
+
+    invoke-virtual {v3, v0, v1}, LX/02tZ;->put(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;
+
+    invoke-static {v4, v5}, LX/03nu;->A00(J)J
+
+    move-result-wide v0
+
+    invoke-static {v0, v1}, LX/02zP;->A0C(J)Ljava/lang/String;
+
+    invoke-static {}, Ljava/lang/System;->nanoTime()J
+
+    move-result-wide v4
+
+    sub-long/2addr v4, v7
+
+    sget-object v0, LX/07js;->A01:LX/0C8T;
+
+    invoke-interface {v0}, LX/0C8T;->getValue()Ljava/lang/Object;
+
+    move-result-object v1
+
+    const-string v0, "chip_vendor"
+
+    invoke-virtual {v3, v0, v1}, LX/02tZ;->put(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;
+
+    sget-object v0, LX/07js;->A00:LX/0C8T;
+
+    invoke-interface {v0}, LX/0C8T;->getValue()Ljava/lang/Object;
+
+    move-result-object v1
+
+    const-string v0, "chip_name"
+
+    invoke-virtual {v3, v0, v1}, LX/02tZ;->put(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;
+
+    invoke-static {v4, v5}, LX/03nu;->A00(J)J
+
+    move-result-wide v0
+
+    invoke-static {v0, v1}, LX/02zP;->A0C(J)Ljava/lang/String;
+
+    invoke-static {}, Ljava/lang/System;->nanoTime()J
+
+    move-result-wide v4
+
+    sub-long/2addr v4, v7
+
+    sget-object v0, LX/07js;->A02:LX/0C8T;
+
+    invoke-interface {v0}, LX/0C8T;->getValue()Ljava/lang/Object;
+
+    move-result-object v0
+
+    invoke-static {v0}, LX/000H;->A03(Ljava/lang/Object;)I
+
+    move-result v0
+
+    invoke-static {v0}, Ljava/lang/Integer;->valueOf(I)Ljava/lang/Integer;
+
+    move-result-object v1
+
+    const-string v0, "core_count"
+
+    invoke-virtual {v3, v0, v1}, LX/02tZ;->put(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;
+
+    sget-object v0, LX/07js;->A04:LX/0C8T;
+
+    invoke-interface {v0}, LX/0C8T;->getValue()Ljava/lang/Object;
+
+    move-result-object v0
+
+    check-cast v0, Ljava/lang/Number;
+
+    invoke-virtual {v0}, Ljava/lang/Number;->floatValue()F
+
+    move-result v0
+
+    invoke-static {v0}, Ljava/lang/Float;->valueOf(F)Ljava/lang/Float;
+
+    move-result-object v1
+
+    const-string/jumbo v0, "max_ghz_sum"
+
+    invoke-virtual {v3, v0, v1}, LX/02tZ;->put(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;
+
+    sget-object v0, LX/07js;->A05:LX/0C8T;
+
+    invoke-interface {v0}, LX/0C8T;->getValue()Ljava/lang/Object;
+
+    move-result-object v0
+
+    check-cast v0, Ljava/lang/Number;
+
+    invoke-virtual {v0}, Ljava/lang/Number;->floatValue()F
+
+    move-result v0
+
+    invoke-static {v0}, Ljava/lang/Float;->valueOf(F)Ljava/lang/Float;
+
+    move-result-object v1
+
+    const-string/jumbo v0, "min_ghz_sum"
+
+    invoke-virtual {v3, v0, v1}, LX/02tZ;->put(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;
+
+    invoke-static {v4, v5}, LX/03nu;->A00(J)J
+
+    move-result-wide v0
+
+    invoke-static {v0, v1}, LX/02zP;->A0C(J)Ljava/lang/String;
+
+    invoke-static {}, Ljava/lang/System;->nanoTime()J
+
+    move-result-wide v5
+
+    sub-long/2addr v5, v7
+
+    sget v1, Landroid/os/Build$VERSION;->SDK_INT:I
+
+    const/16 v0, 0x1d
+
+    if-lt v1, v0, :cond_12b
+
+    invoke-static {p0}, LX/02qP;->A01(LX/04BG;)LX/00AT;
+
+    move-result-object v2
+
+    const-wide v0, 0x81061e000a1d7eL
+
+    invoke-static {v2, v0, v1}, LX/000H;->A0l(Ljava/lang/Object;J)Z
+
+    move-result v0
+
+    if-eqz v0, :cond_12b
+
+    :try_start_e9
+    sget-object v1, LX/00dD;->A02:LX/02lg;
+
+    monitor-enter v1
+    :try_end_ec
+    .catch Ljava/lang/Exception; {:try_start_e9 .. :try_end_ec} :catch_12e
+
+    :try_start_ec
+    invoke-virtual {v1}, LX/02lg;->A06()Ljava/lang/Object;
+
+    move-result-object v2
+
+    check-cast v2, LX/00eL;
+    :try_end_f2
+    .catchall {:try_start_ec .. :try_end_f2} :catchall_128
+
+    :try_start_f2
+    monitor-exit v1
+
+    if-nez v2, :cond_f8
+
+    sget-object v0, LX/02tQ;->A00:LX/02tQ;
+
+    goto :goto_14c
+
+    :cond_f8
+    new-instance v4, LX/02tZ;
+
+    invoke-direct {v4}, LX/02tZ;-><init>()V
+
+    const-string/jumbo v1, "thermal_state"
+
+    iget v0, v2, LX/00eL;->A00:I
+
+    invoke-static {v0}, Ljava/lang/Integer;->valueOf(I)Ljava/lang/Integer;
+
+    move-result-object v0
+
+    invoke-virtual {v4, v1, v0}, LX/02tZ;->put(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;
+
+    iget-object v2, v2, LX/00eL;->A01:Ljava/lang/Float;
+
+    if-eqz v2, :cond_123
+
+    invoke-virtual {v2}, Ljava/lang/Number;->floatValue()F
+
+    move-result v1
+
+    invoke-static {v1}, Ljava/lang/Float;->isNaN(F)Z
+
+    move-result v0
+
+    if-nez v0, :cond_123
+
+    invoke-static {v1}, Ljava/lang/Float;->isInfinite(F)Z
+
+    move-result v0
+
+    if-nez v0, :cond_123
+
+    const-string/jumbo v0, "thermal_headroom_10"
+
+    invoke-virtual {v4, v0, v2}, LX/02tZ;->put(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;
+
+    :cond_123
+    invoke-virtual {v4}, LX/02tZ;->A06()LX/02tZ;
+
+    move-result-object v0
+
+    goto :goto_14c
+
+    :catchall_128
+    move-exception v0
+
+    monitor-exit v1
+
+    throw v0
+    :try_end_12b
+    .catch Ljava/lang/Exception; {:try_start_f2 .. :try_end_12b} :catch_12e
+
+    :cond_12b
+    sget-object v0, LX/02tQ;->A00:LX/02tQ;
+
+    goto :goto_14c
+
+    :catch_12e
+    move-exception v2
+
+    const-string/jumbo v1, "thermal status error"
+
+    const-string v0, "DeviceStatusExtractor"
+
+    invoke-static {v0, v2, v1}, LX/00Iv;->A0O(Ljava/lang/String;Ljava/lang/Throwable;Ljava/lang/String;)V
+
+    invoke-virtual {v2}, Ljava/lang/Throwable;->getMessage()Ljava/lang/String;
+
+    move-result-object v1
+
+    if-nez v1, :cond_141
+
+    invoke-virtual {v2}, Ljava/lang/Object;->toString()Ljava/lang/String;
+
+    move-result-object v1
+
+    :cond_141
+    const-string/jumbo v0, "thermal_error"
+
+    invoke-static {v0, v1}, LX/000H;->A0Z(Ljava/lang/Object;Ljava/lang/Object;)LX/04oE;
+
+    move-result-object v0
+
+    invoke-static {v0}, LX/02pQ;->A03(LX/04oE;)Ljava/util/Map;
+
+    move-result-object v0
+
+    :goto_14c
+    invoke-virtual {v3, v0}, LX/02tZ;->putAll(Ljava/util/Map;)V
+
+    invoke-static {v5, v6}, LX/03nu;->A00(J)J
+
+    move-result-wide v0
+
+    invoke-static {v0, v1}, LX/02zP;->A0C(J)Ljava/lang/String;
+
+    invoke-virtual {v3}, LX/02tZ;->A06()LX/02tZ;
+
+    move-result-object v0
+
+    return-object v0
+.end method
+
+===== DIRECT CALLEE LX/000H;->A0L .method public static A0L(Ljava/lang/Object;)Ljava/lang/String; FILE=work/smali/classes13/X/000H.smali =====
+.method public static A0L(Ljava/lang/Object;)Ljava/lang/String;
+    .registers 1
+    .annotation build Ldalvik/annotation/optimization/NeverInline;
+    .end annotation
+
+    invoke-virtual {p0}, Ljava/lang/Object;->toString()Ljava/lang/String;
+
+    move-result-object p0
+
+    invoke-static {p0}, LX/04l9;->A0R(Ljava/lang/Object;)V
+
+    return-object p0
+.end method
+
+===== DIRECT CALLEE LX/02pD;-><init> .method public constructor <init>(Ljava/lang/Throwable;)V FILE=work/smali/classes13/X/02pD.smali =====
+.method public constructor <init>(Ljava/lang/Throwable;)V
+    .registers 2
+
+    invoke-direct {p0}, Ljava/lang/Object;-><init>()V
+
+    iput-object p1, p0, LX/02pD;->A00:Ljava/lang/Throwable;
+
+    return-void
+.end method
+
+===== DIRECT CALLEE LX/01ui;->A00 .method public static final A00(Ljava/lang/Object;)Ljava/lang/Throwable; FILE=work/smali/classes2/X/01ui.smali =====
+.method public static final A00(Ljava/lang/Object;)Ljava/lang/Throwable;
+    .registers 2
+
+    .line 0
+    instance-of v0, p0, LX/02pD;
+
+    .line 1
+    .line 2
+    if-eqz v0, :cond_9
+
+    .line 3
+    .line 4
+    check-cast p0, LX/02pD;
+
+    .line 5
+    .line 6
+    iget-object v0, p0, LX/02pD;->A00:Ljava/lang/Throwable;
+
+    .line 7
+    .line 8
+    return-object v0
+
+    .line 9
+    :cond_9
+    const/4 v0, 0x0
+
+    .line 10
+    return-object v0
+.end method
+
+===== DIRECT CALLEE LX/00Iv;->A0F .method public static A0F(Ljava/lang/String;Ljava/lang/String;Ljava/lang/Throwable;)V FILE=work/smali/classes2/X/00Iv.smali =====
+.method public static A0F(Ljava/lang/String;Ljava/lang/String;Ljava/lang/Throwable;)V
+    .registers 5
+
+    .line 0
+    sget-object v1, LX/00Iv;->A01:LX/00ol;
+
+    .line 1
+    .line 2
+    const/4 v0, 0x6
+
+    .line 3
+    invoke-interface {v1, v0}, LX/00ol;->EE3(I)Z
+
+    .line 4
+    .line 5
+    .line 6
+    move-result v0
+
+    .line 7
+    if-eqz v0, :cond_e
+
+    .line 8
+    .line 9
+    sget-object v0, LX/00Iv;->A01:LX/00ol;
+
+    .line 10
+    .line 11
+    invoke-interface {v0, p0, p1, p2}, LX/00ol;->B6x(Ljava/lang/String;Ljava/lang/String;Ljava/lang/Throwable;)V
+
+    .line 12
+    .line 13
+    .line 14
+    :cond_e
+    return-void
+.end method
+
+===== DIRECT CALLEE LX/02qP;->A01 .method public static final A01(LX/04BG;)LX/00AT; FILE=work/smali/classes13/X/02qP.smali =====
+.method public static final A01(LX/04BG;)LX/00AT;
+    .registers 4
+
+    sget-object v0, LX/02qP;->A00:LX/02qP;
+
+    invoke-direct {v0, p0}, LX/02qP;->A03(LX/04BG;)LX/02aS;
+
+    move-result-object v2
+
+    if-eqz v2, :cond_1f
+
+    if-eqz p0, :cond_1f
+
+    const/16 v0, 0x41
+
+    new-instance v1, LX/07lH;
+
+    invoke-direct {v1, v2, v0}, LX/07lH;-><init>(Ljava/lang/Object;I)V
+
+    const-class v0, LX/00AT;
+
+    invoke-virtual {p0, v0, v1}, LX/04BG;->getScopedLazy(Ljava/lang/Class;Lkotlin/jvm/functions/Function0;)LX/0C8T;
+
+    move-result-object v0
+
+    invoke-interface {v0}, LX/0C8T;->getValue()Ljava/lang/Object;
+
+    move-result-object v0
+
+    check-cast v0, LX/00AT;
+
+    if-nez v0, :cond_27
+
+    :cond_1f
+    sget-object v0, LX/02qP;->A02:LX/0C8T;
+
+    invoke-interface {v0}, LX/0C8T;->getValue()Ljava/lang/Object;
+
+    move-result-object v0
+
+    check-cast v0, LX/00AT;
+
+    :cond_27
+    return-object v0
+.end method
+
+===== DIRECT CALLEE LX/000H;->A08 .method public static A08(Ljava/lang/Object;J)J FILE=work/smali/classes13/X/000H.smali =====
+.method public static A08(Ljava/lang/Object;J)J
+    .registers 3
+    .annotation build Ldalvik/annotation/optimization/NeverInline;
+    .end annotation
+
+    check-cast p0, Lcom/facebook/mobileconfig/factory/MobileConfigUnsafeContext;
+
+    invoke-interface {p0, p1, p2}, Lcom/facebook/mobileconfig/factory/MobileConfigUnsafeContext;->CUf(J)J
+
+    move-result-wide p0
+
+    return-wide p0
+.end method
+
+===== DIRECT CALLEE LX/02vl;->A00 .method public static declared-synchronized A00()LX/02vl; FILE=work/smali/classes2/X/02vl.smali =====
+.method public static declared-synchronized A00()LX/02vl;
+    .registers 4
+
+    .line 0
+    const-class v3, LX/02vl;
+
+    .line 1
+    .line 2
+    monitor-enter v3
+
+    .line 3
+    :try_start_3
+    sget-object v0, LX/02vl;->A01:LX/02vl;
+
+    .line 4
+    .line 5
+    if-nez v0, :cond_36
+
+    .line 6
+    .line 7
+    const-string v2, "IgSchedulerExecutor.ScheduledTasksLooper"
+
+    .line 8
+    .line 9
+    const/16 v1, 0x9
+
+    .line 10
+    .line 11
+    new-instance v0, Landroid/os/HandlerThread;
+
+    .line 12
+    .line 13
+    invoke-direct {v0, v2, v1}, Landroid/os/HandlerThread;-><init>(Ljava/lang/String;I)V
+
+    .line 14
+    .line 15
+    .line 16
+    invoke-static {v0}, LX/03o1;->A00(Landroid/os/HandlerThread;)V
+
+    .line 17
+    .line 18
+    .line 19
+    invoke-virtual {v0}, Ljava/lang/Thread;->start()V
+
+    .line 20
+    .line 21
+    .line 22
+    invoke-virtual {v0}, Landroid/os/HandlerThread;->getLooper()Landroid/os/Looper;
+
+    .line 23
+    .line 24
+    .line 25
+    move-result-object v2
+
+    .line 26
+    if-eqz v2, :cond_2e
+
+    .line 27
+    .line 28
+    new-instance v0, LX/02vy;
+
+    .line 29
+    .line 30
+    invoke-direct {v0}, Ljava/lang/Object;-><init>()V
+
+    .line 31
+    .line 32
+    .line 33
+    new-instance v1, Landroid/os/Handler;
+
+    .line 34
+    .line 35
+    invoke-direct {v1, v2, v0}, Landroid/os/Handler;-><init>(Landroid/os/Looper;Landroid/os/Handler$Callback;)V
+
+    .line 36
+    .line 37
+    .line 38
+    new-instance v0, LX/02vl;
+
+    .line 39
+    .line 40
+    invoke-direct {v0, v1}, LX/02vl;-><init>(Landroid/os/Handler;)V
+
+    .line 41
+    .line 42
+    .line 43
+    sput-object v0, LX/02vl;->A01:LX/02vl;
+
+    .line 44
+    .line 45
+    goto :goto_36
+
+    .line 46
+    :cond_2e
+    invoke-static {v2}, LX/04oM;->A08(Ljava/lang/Object;)V
+
+    .line 47
+    .line 48
+    .line 49
+    invoke-static {}, LX/0002;->createAndThrow()LX/0002;
+
+    .line 50
+    .line 51
+    .line 52
+    move-result-object v0
+
+    .line 53
+    throw v0
+    :try_end_36
+    .catchall {:try_start_3 .. :try_end_36} :catchall_38
+
+    .line 54
+    :cond_36
+    :goto_36
+    monitor-exit v3
+
+    .line 55
+    return-object v0
+
+    .line 56
+    :catchall_38
+    move-exception v0
+
+    .line 57
+    :try_start_39
+    monitor-exit v3
+    :try_end_3a
+    .catchall {:try_start_39 .. :try_end_3a} :catchall_38
+
+    .line 58
+    throw v0
+.end method
+
+===== DIRECT CALLEE LX/01rp;-><init> .method public constructor <init>(Ljava/lang/Runnable;I)V FILE=work/smali/classes2/X/01rp.smali =====
+.method public constructor <init>(Ljava/lang/Runnable;I)V
+    .registers 5
+
+    .line 0
+    iput-object p1, p0, LX/01rp;->A00:Ljava/lang/Runnable;
+
+    .line 1
+    .line 2
+    const/4 v1, 0x3
+
+    .line 3
+    const/4 v0, 0x0
+
+    .line 4
+    invoke-direct {p0, p2, v1, v0, v0}, LX/04oD;-><init>(IIZZ)V
+
+    .line 5
+    .line 6
+    .line 7
+    return-void
+.end method
+
+===== DIRECT CALLEE LX/02vl;->A01 .method public final A01(LX/04oD;J)V FILE=work/smali/classes2/X/02vl.smali =====
+.method public final A01(LX/04oD;J)V
+    .registers 8
+
+    .line 0
+    iget-object v3, p0, LX/02vl;->A00:Landroid/os/Handler;
+
+    .line 1
+    .line 2
+    const/4 v0, 0x0
+
+    .line 3
+    invoke-static {p1, v0}, LX/04l9;->A0j(Ljava/lang/Object;I)V
+
+    .line 4
+    .line 5
+    .line 6
+    new-instance v2, LX/01ly;
+
+    .line 7
+    .line 8
+    invoke-direct {v2, p1}, LX/01ly;-><init>(LX/04oD;)V
+
+    .line 9
+    .line 10
+    .line 11
+    invoke-static {}, Landroid/os/SystemClock;->uptimeMillis()J
+
+    .line 12
+    .line 13
+    .line 14
+    move-result-wide v0
+
+    .line 15
+    add-long/2addr v0, p2
+
+    .line 16
+    invoke-virtual {v3, v2, p1, v0, v1}, Landroid/os/Handler;->postAtTime(Ljava/lang/Runnable;Ljava/lang/Object;J)Z
+
+    .line 17
+    .line 18
+    .line 19
+    return-void
+.end method
+
+===== FULL 07sY.smali FILE=work/smali/classes13/X/07sY.smali =====
+.class public abstract LX/07sY;
+.super Ljava/lang/Object;
+.source ""
+
+
+# direct methods
+.method public static final A00(LX/04BG;)LX/02tZ;
+    .registers 10
+
+    new-instance v3, LX/02tZ;
+
+    invoke-direct {v3}, LX/02tZ;-><init>()V
+
+    invoke-static {}, Ljava/lang/System;->nanoTime()J
+
+    move-result-wide v4
+
+    sget-wide v7, LX/03gp;->A00:J
+
+    sub-long/2addr v4, v7
+
+    sget-object v0, LX/0GjW;->A01:LX/0C8T;
+
+    invoke-interface {v0}, LX/0C8T;->getValue()Ljava/lang/Object;
+
+    move-result-object v1
+
+    const-string v0, "hw_av1_dec"
+
+    invoke-virtual {v3, v0, v1}, LX/02tZ;->put(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;
+
+    sget-object v0, LX/0GjW;->A04:LX/0C8T;
+
+    invoke-interface {v0}, LX/0C8T;->getValue()Ljava/lang/Object;
+
+    move-result-object v1
+
+    const-string v0, "hw_vp9_dec"
+
+    invoke-virtual {v3, v0, v1}, LX/02tZ;->put(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;
+
+    sget-object v0, LX/0GjW;->A02:LX/0C8T;
+
+    invoke-interface {v0}, LX/0C8T;->getValue()Ljava/lang/Object;
+
+    move-result-object v1
+
+    const-string v0, "hw_avc_dec"
+
+    invoke-virtual {v3, v0, v1}, LX/02tZ;->put(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;
+
+    sget-object v0, LX/0GjW;->A05:LX/0C8T;
+
+    invoke-interface {v0}, LX/0C8T;->getValue()Ljava/lang/Object;
+
+    move-result-object v1
+
+    const-string v0, "10bit_hw_av1_dec"
+
+    invoke-virtual {v3, v0, v1}, LX/02tZ;->put(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;
+
+    sget-object v0, LX/0GjW;->A07:LX/0C8T;
+
+    invoke-interface {v0}, LX/0C8T;->getValue()Ljava/lang/Object;
+
+    move-result-object v1
+
+    const-string v0, "10bit_hw_vp9_dec"
+
+    invoke-virtual {v3, v0, v1}, LX/02tZ;->put(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;
+
+    invoke-static {v4, v5}, LX/03nu;->A00(J)J
+
+    move-result-wide v0
+
+    invoke-static {v0, v1}, LX/02zP;->A0C(J)Ljava/lang/String;
+
+    invoke-static {}, Ljava/lang/System;->nanoTime()J
+
+    move-result-wide v4
+
+    sub-long/2addr v4, v7
+
+    sget-object v0, LX/01Zz;->A00:LX/0C8T;
+
+    invoke-interface {v0}, LX/0C8T;->getValue()Ljava/lang/Object;
+
+    move-result-object v1
+
+    const-string/jumbo v0, "is_hlg_supported"
+
+    invoke-virtual {v3, v0, v1}, LX/02tZ;->put(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;
+
+    invoke-static {v4, v5}, LX/03nu;->A00(J)J
+
+    move-result-wide v0
+
+    invoke-static {v0, v1}, LX/02zP;->A0C(J)Ljava/lang/String;
+
+    invoke-static {}, Ljava/lang/System;->nanoTime()J
+
+    move-result-wide v4
+
+    sub-long/2addr v4, v7
+
+    sget-object v0, LX/07js;->A01:LX/0C8T;
+
+    invoke-interface {v0}, LX/0C8T;->getValue()Ljava/lang/Object;
+
+    move-result-object v1
+
+    const-string v0, "chip_vendor"
+
+    invoke-virtual {v3, v0, v1}, LX/02tZ;->put(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;
+
+    sget-object v0, LX/07js;->A00:LX/0C8T;
+
+    invoke-interface {v0}, LX/0C8T;->getValue()Ljava/lang/Object;
+
+    move-result-object v1
+
+    const-string v0, "chip_name"
+
+    invoke-virtual {v3, v0, v1}, LX/02tZ;->put(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;
+
+    invoke-static {v4, v5}, LX/03nu;->A00(J)J
+
+    move-result-wide v0
+
+    invoke-static {v0, v1}, LX/02zP;->A0C(J)Ljava/lang/String;
+
+    invoke-static {}, Ljava/lang/System;->nanoTime()J
+
+    move-result-wide v4
+
+    sub-long/2addr v4, v7
+
+    sget-object v0, LX/07js;->A02:LX/0C8T;
+
+    invoke-interface {v0}, LX/0C8T;->getValue()Ljava/lang/Object;
+
+    move-result-object v0
+
+    invoke-static {v0}, LX/000H;->A03(Ljava/lang/Object;)I
+
+    move-result v0
+
+    invoke-static {v0}, Ljava/lang/Integer;->valueOf(I)Ljava/lang/Integer;
+
+    move-result-object v1
+
+    const-string v0, "core_count"
+
+    invoke-virtual {v3, v0, v1}, LX/02tZ;->put(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;
+
+    sget-object v0, LX/07js;->A04:LX/0C8T;
+
+    invoke-interface {v0}, LX/0C8T;->getValue()Ljava/lang/Object;
+
+    move-result-object v0
+
+    check-cast v0, Ljava/lang/Number;
+
+    invoke-virtual {v0}, Ljava/lang/Number;->floatValue()F
+
+    move-result v0
+
+    invoke-static {v0}, Ljava/lang/Float;->valueOf(F)Ljava/lang/Float;
+
+    move-result-object v1
+
+    const-string/jumbo v0, "max_ghz_sum"
+
+    invoke-virtual {v3, v0, v1}, LX/02tZ;->put(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;
+
+    sget-object v0, LX/07js;->A05:LX/0C8T;
+
+    invoke-interface {v0}, LX/0C8T;->getValue()Ljava/lang/Object;
+
+    move-result-object v0
+
+    check-cast v0, Ljava/lang/Number;
+
+    invoke-virtual {v0}, Ljava/lang/Number;->floatValue()F
+
+    move-result v0
+
+    invoke-static {v0}, Ljava/lang/Float;->valueOf(F)Ljava/lang/Float;
+
+    move-result-object v1
+
+    const-string/jumbo v0, "min_ghz_sum"
+
+    invoke-virtual {v3, v0, v1}, LX/02tZ;->put(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;
+
+    invoke-static {v4, v5}, LX/03nu;->A00(J)J
+
+    move-result-wide v0
+
+    invoke-static {v0, v1}, LX/02zP;->A0C(J)Ljava/lang/String;
+
+    invoke-static {}, Ljava/lang/System;->nanoTime()J
+
+    move-result-wide v5
+
+    sub-long/2addr v5, v7
+
+    sget v1, Landroid/os/Build$VERSION;->SDK_INT:I
+
+    const/16 v0, 0x1d
+
+    if-lt v1, v0, :cond_12b
+
+    invoke-static {p0}, LX/02qP;->A01(LX/04BG;)LX/00AT;
+
+    move-result-object v2
+
+    const-wide v0, 0x81061e000a1d7eL
+
+    invoke-static {v2, v0, v1}, LX/000H;->A0l(Ljava/lang/Object;J)Z
+
+    move-result v0
+
+    if-eqz v0, :cond_12b
+
+    :try_start_e9
+    sget-object v1, LX/00dD;->A02:LX/02lg;
+
+    monitor-enter v1
+    :try_end_ec
+    .catch Ljava/lang/Exception; {:try_start_e9 .. :try_end_ec} :catch_12e
+
+    :try_start_ec
+    invoke-virtual {v1}, LX/02lg;->A06()Ljava/lang/Object;
+
+    move-result-object v2
+
+    check-cast v2, LX/00eL;
+    :try_end_f2
+    .catchall {:try_start_ec .. :try_end_f2} :catchall_128
+
+    :try_start_f2
+    monitor-exit v1
+
+    if-nez v2, :cond_f8
+
+    sget-object v0, LX/02tQ;->A00:LX/02tQ;
+
+    goto :goto_14c
+
+    :cond_f8
+    new-instance v4, LX/02tZ;
+
+    invoke-direct {v4}, LX/02tZ;-><init>()V
+
+    const-string/jumbo v1, "thermal_state"
+
+    iget v0, v2, LX/00eL;->A00:I
+
+    invoke-static {v0}, Ljava/lang/Integer;->valueOf(I)Ljava/lang/Integer;
+
+    move-result-object v0
+
+    invoke-virtual {v4, v1, v0}, LX/02tZ;->put(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;
+
+    iget-object v2, v2, LX/00eL;->A01:Ljava/lang/Float;
+
+    if-eqz v2, :cond_123
+
+    invoke-virtual {v2}, Ljava/lang/Number;->floatValue()F
+
+    move-result v1
+
+    invoke-static {v1}, Ljava/lang/Float;->isNaN(F)Z
+
+    move-result v0
+
+    if-nez v0, :cond_123
+
+    invoke-static {v1}, Ljava/lang/Float;->isInfinite(F)Z
+
+    move-result v0
+
+    if-nez v0, :cond_123
+
+    const-string/jumbo v0, "thermal_headroom_10"
+
+    invoke-virtual {v4, v0, v2}, LX/02tZ;->put(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;
+
+    :cond_123
+    invoke-virtual {v4}, LX/02tZ;->A06()LX/02tZ;
+
+    move-result-object v0
+
+    goto :goto_14c
+
+    :catchall_128
+    move-exception v0
+
+    monitor-exit v1
+
+    throw v0
+    :try_end_12b
+    .catch Ljava/lang/Exception; {:try_start_f2 .. :try_end_12b} :catch_12e
+
+    :cond_12b
+    sget-object v0, LX/02tQ;->A00:LX/02tQ;
+
+    goto :goto_14c
+
+    :catch_12e
+    move-exception v2
+
+    const-string/jumbo v1, "thermal status error"
+
+    const-string v0, "DeviceStatusExtractor"
+
+    invoke-static {v0, v2, v1}, LX/00Iv;->A0O(Ljava/lang/String;Ljava/lang/Throwable;Ljava/lang/String;)V
+
+    invoke-virtual {v2}, Ljava/lang/Throwable;->getMessage()Ljava/lang/String;
+
+    move-result-object v1
+
+    if-nez v1, :cond_141
+
+    invoke-virtual {v2}, Ljava/lang/Object;->toString()Ljava/lang/String;
+
+    move-result-object v1
+
+    :cond_141
+    const-string/jumbo v0, "thermal_error"
+
+    invoke-static {v0, v1}, LX/000H;->A0Z(Ljava/lang/Object;Ljava/lang/Object;)LX/04oE;
+
+    move-result-object v0
+
+    invoke-static {v0}, LX/02pQ;->A03(LX/04oE;)Ljava/util/Map;
+
+    move-result-object v0
+
+    :goto_14c
+    invoke-virtual {v3, v0}, LX/02tZ;->putAll(Ljava/util/Map;)V
+
+    invoke-static {v5, v6}, LX/03nu;->A00(J)J
+
+    move-result-wide v0
+
+    invoke-static {v0, v1}, LX/02zP;->A0C(J)Ljava/lang/String;
+
+    invoke-virtual {v3}, LX/02tZ;->A06()LX/02tZ;
+
+    move-result-object v0
+
+    return-object v0
+.end method
+
+
+===== FULL 02tZ.smali FILE=work/smali/classes13/X/02tZ.smali =====
+.class public final LX/02tZ;
+.super Ljava/lang/Object;
+.source ""
+
+# interfaces
+.implements Ljava/util/Map;
+.implements Ljava/io/Serializable;
+.implements LX/09wg;
+
+
+# annotations
+.annotation system Ldalvik/annotation/Signature;
+    value = {
+        "<K:",
+        "Ljava/lang/Object;",
+        "V:",
+        "Ljava/lang/Object;",
+        ">",
+        "Ljava/lang/Object;",
+        "Ljava/util/Map<",
+        "TK;TV;>;",
+        "Ljava/io/Serializable;",
+        "LX/09wg;"
+    }
+.end annotation
+
+
+# static fields
+.field public static final A0D:LX/02tZ;
+
+
+# instance fields
+.field public A00:I
+
+.field public A01:I
+
+.field public A02:I
+
+.field public A03:I
+
+.field public A04:I
+
+.field public A05:LX/03jl;
+
+.field public A06:LX/02Em;
+
+.field public A07:LX/03rW;
+
+.field public A08:Z
+
+.field public A09:[I
+
+.field public A0A:[I
+
+.field public A0B:[Ljava/lang/Object;
+
+.field public A0C:[Ljava/lang/Object;
+
+
+# direct methods
+.method public static constructor <clinit>()V
+    .registers 2
+
+    const/4 v0, 0x0
+
+    new-instance v1, LX/02tZ;
+
+    invoke-direct {v1, v0}, LX/02tZ;-><init>(I)V
+
+    const/4 v0, 0x1
+
+    iput-boolean v0, v1, LX/02tZ;->A08:Z
+
+    sput-object v1, LX/02tZ;->A0D:LX/02tZ;
+
+    return-void
+.end method
+
+.method public constructor <init>()V
+    .registers 2
+
+    const/16 v0, 0x8
+
+    invoke-direct {p0, v0}, LX/02tZ;-><init>(I)V
+
+    return-void
+.end method
+
+.method public constructor <init>(I)V
+    .registers 9
+
+    .line 268435456
+    if-ltz p1, :cond_2d
+
+    .line 268435457
+    .line 268435458
+    new-array v6, p1, [Ljava/lang/Object;
+
+    .line 268435459
+    .line 268435460
+    new-array v5, p1, [I
+
+    .line 268435461
+    .line 268435462
+    const/4 v0, 0x1
+
+    .line 268435463
+    if-ge p1, v0, :cond_a
+
+    .line 268435464
+    .line 268435465
+    const/4 p1, 0x1
+
+    .line 268435466
+    :cond_a
+    mul-int/lit8 v0, p1, 0x3
+
+    .line 268435467
+    .line 268435468
+    invoke-static {v0}, Ljava/lang/Integer;->highestOneBit(I)I
+
+    .line 268435469
+    .line 268435470
+    .line 268435471
+    move-result v4
+
+    .line 268435472
+    new-array v3, v4, [I
+
+    .line 268435473
+    .line 268435474
+    const/4 v2, 0x0
+
+    .line 268435475
+    const/4 v1, 0x2
+
+    .line 268435476
+    const/4 v0, 0x0
+
+    .line 268435477
+    invoke-direct {p0}, Ljava/lang/Object;-><init>()V
+
+    .line 268435478
+    .line 268435479
+    .line 268435480
+    iput-object v6, p0, LX/02tZ;->A0B:[Ljava/lang/Object;
+
+    .line 268435481
+    .line 268435482
+    iput-object v2, p0, LX/02tZ;->A0C:[Ljava/lang/Object;
+
+    .line 268435483
+    .line 268435484
+    iput-object v5, p0, LX/02tZ;->A0A:[I
+
+    .line 268435485
+    .line 268435486
+    iput-object v3, p0, LX/02tZ;->A09:[I
+
+    .line 268435487
+    .line 268435488
+    iput v1, p0, LX/02tZ;->A02:I
+
+    .line 268435489
+    .line 268435490
+    iput v0, p0, LX/02tZ;->A01:I
+
+    .line 268435491
+    .line 268435492
+    invoke-static {v4}, Ljava/lang/Integer;->numberOfLeadingZeros(I)I
+
+    .line 268435493
+    .line 268435494
+    .line 268435495
+    move-result v0
+
+    .line 268435496
+    add-int/lit8 v0, v0, 0x1
+
+    .line 268435497
+    .line 268435498
+    iput v0, p0, LX/02tZ;->A00:I
+
+    .line 268435499
+    .line 268435500
+    return-void
+
+    .line 268435501
+    :cond_2d
+    const-string v1, "capacity must be non-negative."
+
+    .line 268435502
+    .line 268435503
+    new-instance v0, Ljava/lang/IllegalArgumentException;
+
+    .line 268435504
+    .line 268435505
+    invoke-direct {v0, v1}, Ljava/lang/IllegalArgumentException;-><init>(Ljava/lang/String;)V
+
+    .line 268435506
+    .line 268435507
+    .line 268435508
+    throw v0
+.end method
+
+.method public static final A00(Ljava/lang/Object;LX/02tZ;)I
+    .registers 7
+
+    if-eqz p0, :cond_35
+
+    invoke-virtual {p0}, Ljava/lang/Object;->hashCode()I
+
+    move-result v4
+
+    :goto_6
+    const v0, -0x61c88647
+
+    mul-int/2addr v4, v0
+
+    iget v0, p1, LX/02tZ;->A00:I
+
+    ushr-int/2addr v4, v0
+
+    iget v3, p1, LX/02tZ;->A02:I
+
+    :goto_f
+    iget-object v0, p1, LX/02tZ;->A09:[I
+
+    aget v1, v0, v4
+
+    const/4 v2, -0x1
+
+    if-eqz v1, :cond_37
+
+    if-lez v1, :cond_25
+
+    iget-object v0, p1, LX/02tZ;->A0B:[Ljava/lang/Object;
+
+    add-int/lit8 v1, v1, -0x1
+
+    aget-object v0, v0, v1
+
+    invoke-static {v0, p0}, LX/04l9;->areEqual(Ljava/lang/Object;Ljava/lang/Object;)Z
+
+    move-result v0
+
+    if-eqz v0, :cond_25
+
+    return v1
+
+    :cond_25
+    add-int/lit8 v3, v3, -0x1
+
+    if-ltz v3, :cond_37
+
+    add-int/lit8 v0, v4, -0x1
+
+    if-nez v4, :cond_33
+
+    iget-object v0, p1, LX/02tZ;->A09:[I
+
+    array-length v0, v0
+
+    add-int/lit8 v4, v0, -0x1
+
+    goto :goto_f
+
+    :cond_33
+    move v4, v0
+
+    goto :goto_f
+
+    :cond_35
+    const/4 v4, 0x0
+
+    goto :goto_6
+
+    :cond_37
+    return v2
+.end method
+
+.method private final A01(I)V
+    .registers 8
+
+    iget-object v5, p0, LX/02tZ;->A0B:[Ljava/lang/Object;
+
+    array-length v4, v5
+
+    iget v3, p0, LX/02tZ;->A01:I
+
+    sub-int v2, v4, v3
+
+    invoke-virtual {p0}, LX/02tZ;->size()I
+
+    move-result v0
+
+    sub-int v1, v3, v0
+
+    if-ge v2, p1, :cond_1b
+
+    add-int/2addr v2, v1
+
+    if-lt v2, p1, :cond_1b
+
+    div-int/lit8 v0, v4, 0x4
+
+    if-lt v1, v0, :cond_1b
+
+    const/4 v0, 0x1
+
+    invoke-direct {p0, v0}, LX/02tZ;->A04(Z)V
+
+    :cond_1a
+    return-void
+
+    :cond_1b
+    add-int/2addr v3, p1
+
+    if-ltz v3, :cond_6c
+
+    if-le v3, v4, :cond_1a
+
+    shr-int/lit8 v0, v4, 0x1
+
+    add-int/2addr v4, v0
+
+    sub-int v0, v4, v3
+
+    if-gez v0, :cond_28
+
+    move v4, v3
+
+    :cond_28
+    const v1, 0x7ffffff7
+
+    sub-int v0, v4, v1
+
+    if-lez v0, :cond_6a
+
+    if-le v3, v1, :cond_34
+
+    const v1, 0x7fffffff
+
+    :cond_34
+    :goto_34
+    invoke-static {v5, v1}, Ljava/util/Arrays;->copyOf([Ljava/lang/Object;I)[Ljava/lang/Object;
+
+    move-result-object v0
+
+    invoke-static {v0}, LX/04l9;->A0R(Ljava/lang/Object;)V
+
+    iput-object v0, p0, LX/02tZ;->A0B:[Ljava/lang/Object;
+
+    iget-object v0, p0, LX/02tZ;->A0C:[Ljava/lang/Object;
+
+    if-eqz v0, :cond_68
+
+    invoke-static {v0, v1}, Ljava/util/Arrays;->copyOf([Ljava/lang/Object;I)[Ljava/lang/Object;
+
+    move-result-object v0
+
+    invoke-static {v0}, LX/04l9;->A0R(Ljava/lang/Object;)V
+
+    :goto_48
+    iput-object v0, p0, LX/02tZ;->A0C:[Ljava/lang/Object;
+
+    iget-object v0, p0, LX/02tZ;->A0A:[I
+
+    invoke-static {v0, v1}, Ljava/util/Arrays;->copyOf([II)[I
+
+    move-result-object v0
+
+    invoke-static {v0}, LX/04l9;->A0R(Ljava/lang/Object;)V
+
+    iput-object v0, p0, LX/02tZ;->A0A:[I
+
+    const/4 v0, 0x1
+
+    if-ge v1, v0, :cond_59
+
+    const/4 v1, 0x1
+
+    :cond_59
+    mul-int/lit8 v0, v1, 0x3
+
+    invoke-static {v0}, Ljava/lang/Integer;->highestOneBit(I)I
+
+    move-result v1
+
+    iget-object v0, p0, LX/02tZ;->A09:[I
+
+    array-length v0, v0
+
+    if-le v1, v0, :cond_1a
+
+    invoke-direct {p0, v1}, LX/02tZ;->A02(I)V
+
+    return-void
+
+    :cond_68
+    const/4 v0, 0x0
+
+    goto :goto_48
+
+    :cond_6a
+    move v1, v4
+
+    goto :goto_34
+
+    :cond_6c
+    new-instance v0, Ljava/lang/OutOfMemoryError;
+
+    invoke-direct {v0}, Ljava/lang/OutOfMemoryError;-><init>()V
+
+    throw v0
+.end method
+
+.method private final A02(I)V
+    .registers 9
+
+    iget v0, p0, LX/02tZ;->A03:I
+
+    add-int/lit8 v0, v0, 0x1
+
+    iput v0, p0, LX/02tZ;->A03:I
+
+    iget v1, p0, LX/02tZ;->A01:I
+
+    invoke-virtual {p0}, LX/02tZ;->size()I
+
+    move-result v0
+
+    const/4 v6, 0x0
+
+    if-le v1, v0, :cond_12
+
+    invoke-direct {p0, v6}, LX/02tZ;->A04(Z)V
+
+    :cond_12
+    new-array v0, p1, [I
+
+    iput-object v0, p0, LX/02tZ;->A09:[I
+
+    invoke-static {p1}, Ljava/lang/Integer;->numberOfLeadingZeros(I)I
+
+    move-result v0
+
+    add-int/lit8 v0, v0, 0x1
+
+    iput v0, p0, LX/02tZ;->A00:I
+
+    :goto_1e
+    iget v0, p0, LX/02tZ;->A01:I
+
+    if-ge v6, v0, :cond_5f
+
+    add-int/lit8 v5, v6, 0x1
+
+    iget-object v0, p0, LX/02tZ;->A0B:[Ljava/lang/Object;
+
+    aget-object v0, v0, v6
+
+    if-eqz v0, :cond_5d
+
+    invoke-virtual {v0}, Ljava/lang/Object;->hashCode()I
+
+    move-result v4
+
+    :goto_2e
+    const v0, -0x61c88647
+
+    mul-int/2addr v4, v0
+
+    iget v0, p0, LX/02tZ;->A00:I
+
+    ushr-int/2addr v4, v0
+
+    iget v3, p0, LX/02tZ;->A02:I
+
+    :goto_37
+    iget-object v2, p0, LX/02tZ;->A09:[I
+
+    aget v0, v2, v4
+
+    const/4 v1, 0x1
+
+    if-nez v0, :cond_48
+
+    add-int/lit8 v0, v6, 0x1
+
+    aput v0, v2, v4
+
+    iget-object v0, p0, LX/02tZ;->A0A:[I
+
+    aput v4, v0, v6
+
+    move v6, v5
+
+    goto :goto_1e
+
+    :cond_48
+    add-int/lit8 v3, v3, -0x1
+
+    if-gez v3, :cond_54
+
+    const-string v1, "This cannot happen with fixed magic multiplier and grow-only hash array. Have object hashCodes changed?"
+
+    new-instance v0, Ljava/lang/IllegalStateException;
+
+    invoke-direct {v0, v1}, Ljava/lang/IllegalStateException;-><init>(Ljava/lang/String;)V
+
+    throw v0
+
+    :cond_54
+    add-int/lit8 v0, v4, -0x1
+
+    if-nez v4, :cond_5b
+
+    array-length v4, v2
+
+    sub-int/2addr v4, v1
+
+    goto :goto_37
+
+    :cond_5b
+    move v4, v0
+
+    goto :goto_37
+
+    :cond_5d
+    const/4 v4, 0x0
+
+    goto :goto_2e
+
+    :cond_5f
+    return-void
+.end method
+
+.method public static final A03(LX/02tZ;I)V
+    .registers 13
+
+    iget-object v0, p0, LX/02tZ;->A0B:[Ljava/lang/Object;
+
+    const/4 v5, 0x0
+
+    invoke-static {v0, v5}, LX/04l9;->A0j(Ljava/lang/Object;I)V
+
+    const/4 v1, 0x0
+
+    aput-object v1, v0, p1
+
+    iget-object v0, p0, LX/02tZ;->A0C:[Ljava/lang/Object;
+
+    if-eqz v0, :cond_f
+
+    aput-object v1, v0, p1
+
+    :cond_f
+    iget-object v0, p0, LX/02tZ;->A0A:[I
+
+    aget v10, v0, p1
+
+    iget v0, p0, LX/02tZ;->A02:I
+
+    mul-int/lit8 v4, v0, 0x2
+
+    iget-object v8, p0, LX/02tZ;->A09:[I
+
+    array-length v7, v8
+
+    div-int/lit8 v0, v7, 0x2
+
+    if-le v4, v0, :cond_1f
+
+    move v4, v0
+
+    :cond_1f
+    const/4 v6, 0x0
+
+    move v9, v10
+
+    :cond_21
+    add-int/lit8 v1, v10, -0x1
+
+    move v0, v10
+
+    move v10, v1
+
+    if-nez v0, :cond_29
+
+    add-int/lit8 v10, v7, -0x1
+
+    :cond_29
+    add-int/lit8 v6, v6, 0x1
+
+    iget v0, p0, LX/02tZ;->A02:I
+
+    if-gt v6, v0, :cond_7b
+
+    aget v3, v8, v10
+
+    if-eqz v3, :cond_7b
+
+    const/4 v2, -0x1
+
+    if-gez v3, :cond_54
+
+    aput v2, v8, v9
+
+    :goto_38
+    move v9, v10
+
+    const/4 v6, 0x0
+
+    :cond_3a
+    add-int/lit8 v4, v4, -0x1
+
+    if-gez v4, :cond_21
+
+    aput v2, v8, v9
+
+    :goto_40
+    iget-object v1, p0, LX/02tZ;->A0A:[I
+
+    const/4 v0, -0x1
+
+    aput v0, v1, p1
+
+    invoke-virtual {p0}, LX/02tZ;->size()I
+
+    move-result v0
+
+    add-int/lit8 v0, v0, -0x1
+
+    iput v0, p0, LX/02tZ;->A04:I
+
+    iget v0, p0, LX/02tZ;->A03:I
+
+    add-int/lit8 v0, v0, 0x1
+
+    iput v0, p0, LX/02tZ;->A03:I
+
+    return-void
+
+    :cond_54
+    iget-object v1, p0, LX/02tZ;->A0B:[Ljava/lang/Object;
+
+    add-int/lit8 v0, v3, -0x1
+
+    aget-object v0, v1, v0
+
+    if-eqz v0, :cond_79
+
+    invoke-virtual {v0}, Ljava/lang/Object;->hashCode()I
+
+    move-result v1
+
+    :goto_60
+    const v0, -0x61c88647
+
+    mul-int/2addr v1, v0
+
+    iget v0, p0, LX/02tZ;->A00:I
+
+    ushr-int/2addr v1, v0
+
+    sub-int/2addr v1, v10
+
+    iget-object v8, p0, LX/02tZ;->A09:[I
+
+    array-length v7, v8
+
+    add-int/lit8 v0, v7, -0x1
+
+    and-int/2addr v1, v0
+
+    if-lt v1, v6, :cond_3a
+
+    aput v3, v8, v9
+
+    iget-object v1, p0, LX/02tZ;->A0A:[I
+
+    add-int/lit8 v0, v3, -0x1
+
+    aput v9, v1, v0
+
+    goto :goto_38
+
+    :cond_79
+    const/4 v1, 0x0
+
+    goto :goto_60
+
+    :cond_7b
+    aput v5, v8, v9
+
+    goto :goto_40
+.end method
+
+.method private final A04(Z)V
+    .registers 9
+
+    iget-object v6, p0, LX/02tZ;->A0C:[Ljava/lang/Object;
+
+    const/4 v5, 0x0
+
+    const/4 v4, 0x0
+
+    :goto_4
+    iget v1, p0, LX/02tZ;->A01:I
+
+    if-ge v5, v1, :cond_29
+
+    iget-object v3, p0, LX/02tZ;->A0A:[I
+
+    aget v2, v3, v5
+
+    if-ltz v2, :cond_26
+
+    iget-object v1, p0, LX/02tZ;->A0B:[Ljava/lang/Object;
+
+    aget-object v0, v1, v5
+
+    aput-object v0, v1, v4
+
+    if-eqz v6, :cond_1a
+
+    aget-object v0, v6, v5
+
+    aput-object v0, v6, v4
+
+    :cond_1a
+    if-eqz p1, :cond_24
+
+    aput v2, v3, v4
+
+    iget-object v1, p0, LX/02tZ;->A09:[I
+
+    add-int/lit8 v0, v4, 0x1
+
+    aput v0, v1, v2
+
+    :cond_24
+    add-int/lit8 v4, v4, 0x1
+
+    :cond_26
+    add-int/lit8 v5, v5, 0x1
+
+    goto :goto_4
+
+    :cond_29
+    iget-object v0, p0, LX/02tZ;->A0B:[Ljava/lang/Object;
+
+    invoke-static {v0, v4, v1}, LX/08sL;->A01([Ljava/lang/Object;II)V
+
+    if-eqz v6, :cond_35
+
+    iget v0, p0, LX/02tZ;->A01:I
+
+    invoke-static {v6, v4, v0}, LX/08sL;->A01([Ljava/lang/Object;II)V
+
+    :cond_35
+    iput v4, p0, LX/02tZ;->A01:I
+
+    return-void
+.end method
+
+
+# virtual methods
+.method public final A05(Ljava/lang/Object;)I
+    .registers 10
+
+    iget-boolean v0, p0, LX/02tZ;->A08:Z
+
+    if-eqz v0, :cond_7
+
+    invoke-virtual {p0}, LX/02tZ;->A07()V
+
+    :cond_7
+    :goto_7
+    if-eqz p1, :cond_59
+
+    invoke-virtual {p1}, Ljava/lang/Object;->hashCode()I
+
+    move-result v5
+
+    :goto_d
+    const v0, -0x61c88647
+
+    mul-int/2addr v5, v0
+
+    iget v0, p0, LX/02tZ;->A00:I
+
+    ushr-int/2addr v5, v0
+
+    iget v0, p0, LX/02tZ;->A02:I
+
+    mul-int/lit8 v7, v0, 0x2
+
+    iget-object v0, p0, LX/02tZ;->A09:[I
+
+    array-length v0, v0
+
+    div-int/lit8 v0, v0, 0x2
+
+    if-le v7, v0, :cond_20
+
+    move v7, v0
+
+    :cond_20
+    const/4 v1, 0x0
+
+    :goto_21
+    iget-object v6, p0, LX/02tZ;->A09:[I
+
+    aget v3, v6, v5
+
+    const/4 v4, 0x1
+
+    if-gtz v3, :cond_33
+
+    iget v3, p0, LX/02tZ;->A01:I
+
+    iget-object v2, p0, LX/02tZ;->A0B:[Ljava/lang/Object;
+
+    array-length v0, v2
+
+    if-lt v3, v0, :cond_5b
+
+    invoke-direct {p0, v4}, LX/02tZ;->A01(I)V
+
+    goto :goto_7
+
+    :cond_33
+    iget-object v2, p0, LX/02tZ;->A0B:[Ljava/lang/Object;
+
+    add-int/lit8 v0, v3, -0x1
+
+    aget-object v0, v2, v0
+
+    invoke-static {v0, p1}, LX/04l9;->areEqual(Ljava/lang/Object;Ljava/lang/Object;)Z
+
+    move-result v0
+
+    if-eqz v0, :cond_41
+
+    neg-int v0, v3
+
+    return v0
+
+    :cond_41
+    add-int/lit8 v1, v1, 0x1
+
+    if-le v1, v7, :cond_4e
+
+    iget-object v0, p0, LX/02tZ;->A09:[I
+
+    array-length v0, v0
+
+    mul-int/lit8 v0, v0, 0x2
+
+    invoke-direct {p0, v0}, LX/02tZ;->A02(I)V
+
+    goto :goto_7
+
+    :cond_4e
+    add-int/lit8 v0, v5, -0x1
+
+    if-nez v5, :cond_57
+
+    iget-object v0, p0, LX/02tZ;->A09:[I
+
+    array-length v5, v0
+
+    sub-int/2addr v5, v4
+
+    goto :goto_21
+
+    :cond_57
+    move v5, v0
+
+    goto :goto_21
+
+    :cond_59
+    const/4 v5, 0x0
+
+    goto :goto_d
+
+    :cond_5b
+    add-int/lit8 v0, v3, 0x1
+
+    iput v0, p0, LX/02tZ;->A01:I
+
+    aput-object p1, v2, v3
+
+    iget-object v0, p0, LX/02tZ;->A0A:[I
+
+    aput v5, v0, v3
+
+    add-int/lit8 v0, v3, 0x1
+
+    aput v0, v6, v5
+
+    invoke-virtual {p0}, LX/02tZ;->size()I
+
+    move-result v0
+
+    add-int/lit8 v0, v0, 0x1
+
+    iput v0, p0, LX/02tZ;->A04:I
+
+    iget v0, p0, LX/02tZ;->A03:I
+
+    add-int/lit8 v0, v0, 0x1
+
+    iput v0, p0, LX/02tZ;->A03:I
+
+    iget v0, p0, LX/02tZ;->A02:I
+
+    if-le v1, v0, :cond_7d
+
+    iput v1, p0, LX/02tZ;->A02:I
+
+    :cond_7d
+    return v3
+.end method
+
+.method public final A06()LX/02tZ;
+    .registers 2
+    .annotation build Ldalvik/annotation/optimization/NeverInline;
+    .end annotation
+
+    iget-boolean v0, p0, LX/02tZ;->A08:Z
+
+    if-eqz v0, :cond_7
+
+    invoke-virtual {p0}, LX/02tZ;->A07()V
+
+    :cond_7
+    const/4 v0, 0x1
+
+    iput-boolean v0, p0, LX/02tZ;->A08:Z
+
+    invoke-virtual {p0}, LX/02tZ;->size()I
+
+    move-result v0
+
+    if-lez v0, :cond_11
+
+    return-object p0
+
+    :cond_11
+    sget-object v0, LX/02tZ;->A0D:LX/02tZ;
+
+    return-object v0
+.end method
+
+.method public final A07()V
+    .registers 2
+    .annotation build Ldalvik/annotation/optimization/NeverInline;
+    .end annotation
+
+    iget-boolean v0, p0, LX/02tZ;->A08:Z
+
+    if-nez v0, :cond_5
+
+    return-void
+
+    :cond_5
+    new-instance v0, Ljava/lang/UnsupportedOperationException;
+
+    invoke-direct {v0}, Ljava/lang/UnsupportedOperationException;-><init>()V
+
+    throw v0
+.end method
+
+.method public final A08(Ljava/util/Map$Entry;)Z
+    .registers 5
+
+    const/4 v2, 0x0
+
+    invoke-static {p1, v2}, LX/04l9;->A0j(Ljava/lang/Object;I)V
+
+    invoke-interface {p1}, Ljava/util/Map$Entry;->getKey()Ljava/lang/Object;
+
+    move-result-object v0
+
+    invoke-static {v0, p0}, LX/02tZ;->A00(Ljava/lang/Object;LX/02tZ;)I
+
+    move-result v1
+
+    if-ltz v1, :cond_1d
+
+    iget-object v0, p0, LX/02tZ;->A0C:[Ljava/lang/Object;
+
+    invoke-static {v0}, LX/04l9;->A0h(Ljava/lang/Object;)V
+
+    aget-object v1, v0, v1
+
+    invoke-interface {p1}, Ljava/util/Map$Entry;->getValue()Ljava/lang/Object;
+
+    move-result-object v0
+
+    invoke-static {v1, v0}, LX/04l9;->areEqual(Ljava/lang/Object;Ljava/lang/Object;)Z
+
+    move-result v2
+
+    :cond_1d
+    return v2
+.end method
+
+.method public final clear()V
+    .registers 8
+
+    invoke-virtual {p0}, LX/02tZ;->A07()V
+
+    iget v6, p0, LX/02tZ;->A01:I
+
+    add-int/lit8 v5, v6, -0x1
+
+    const/4 v4, 0x0
+
+    if-ltz v5, :cond_1d
+
+    const/4 v3, 0x0
+
+    :goto_b
+    iget-object v2, p0, LX/02tZ;->A0A:[I
+
+    aget v1, v2, v3
+
+    if-ltz v1, :cond_18
+
+    iget-object v0, p0, LX/02tZ;->A09:[I
+
+    aput v4, v0, v1
+
+    const/4 v0, -0x1
+
+    aput v0, v2, v3
+
+    :cond_18
+    if-eq v3, v5, :cond_1d
+
+    add-int/lit8 v3, v3, 0x1
+
+    goto :goto_b
+
+    :cond_1d
+    iget-object v0, p0, LX/02tZ;->A0B:[Ljava/lang/Object;
+
+    invoke-static {v0, v4, v6}, LX/08sL;->A01([Ljava/lang/Object;II)V
+
+    iget-object v1, p0, LX/02tZ;->A0C:[Ljava/lang/Object;
+
+    if-eqz v1, :cond_2b
+
+    iget v0, p0, LX/02tZ;->A01:I
+
+    invoke-static {v1, v4, v0}, LX/08sL;->A01([Ljava/lang/Object;II)V
+
+    :cond_2b
+    iput v4, p0, LX/02tZ;->A04:I
+
+    iput v4, p0, LX/02tZ;->A01:I
+
+    iget v0, p0, LX/02tZ;->A03:I
+
+    add-int/lit8 v0, v0, 0x1
+
+    iput v0, p0, LX/02tZ;->A03:I
+
+    return-void
+.end method
+
+.method public final containsKey(Ljava/lang/Object;)Z
+    .registers 3
+
+    invoke-static {p1, p0}, LX/02tZ;->A00(Ljava/lang/Object;LX/02tZ;)I
+
+    move-result v0
+
+    if-ltz v0, :cond_8
+
+    const/4 v0, 0x1
+
+    return v0
+
+    :cond_8
+    const/4 v0, 0x0
+
+    return v0
+.end method
+
+.method public final containsValue(Ljava/lang/Object;)Z
+    .registers 4
+
+    iget v1, p0, LX/02tZ;->A01:I
+
+    :cond_2
+    add-int/lit8 v1, v1, -0x1
+
+    if-ltz v1, :cond_1b
+
+    iget-object v0, p0, LX/02tZ;->A0A:[I
+
+    aget v0, v0, v1
+
+    if-ltz v0, :cond_2
+
+    iget-object v0, p0, LX/02tZ;->A0C:[Ljava/lang/Object;
+
+    invoke-static {v0}, LX/04l9;->A0h(Ljava/lang/Object;)V
+
+    aget-object v0, v0, v1
+
+    invoke-static {v0, p1}, LX/04l9;->areEqual(Ljava/lang/Object;Ljava/lang/Object;)Z
+
+    move-result v0
+
+    if-eqz v0, :cond_2
+
+    const/4 v0, 0x1
+
+    return v0
+
+    :cond_1b
+    const/4 v0, 0x0
+
+    return v0
+.end method
+
+.method public final bridge entrySet()Ljava/util/Set;
+    .registers 2
+
+    iget-object v0, p0, LX/02tZ;->A05:LX/03jl;
+
+    if-nez v0, :cond_b
+
+    new-instance v0, LX/03jl;
+
+    invoke-direct {v0, p0}, LX/03jl;-><init>(LX/02tZ;)V
+
+    iput-object v0, p0, LX/02tZ;->A05:LX/03jl;
+
+    :cond_b
+    return-object v0
+.end method
+
+.method public final equals(Ljava/lang/Object;)Z
+    .registers 4
+
+    if-eq p1, p0, :cond_33
+
+    instance-of v0, p1, Ljava/util/Map;
+
+    if-eqz v0, :cond_31
+
+    check-cast p1, Ljava/util/Map;
+
+    invoke-virtual {p0}, LX/02tZ;->size()I
+
+    move-result v1
+
+    invoke-interface {p1}, Ljava/util/Map;->size()I
+
+    move-result v0
+
+    if-ne v1, v0, :cond_31
+
+    invoke-interface {p1}, Ljava/util/Map;->entrySet()Ljava/util/Set;
+
+    move-result-object v0
+
+    invoke-static {v0}, LX/04l9;->A0f(Ljava/lang/Object;)V
+
+    invoke-interface {v0}, Ljava/util/Set;->iterator()Ljava/util/Iterator;
+
+    move-result-object v1
+
+    :cond_1d
+    invoke-interface {v1}, Ljava/util/Iterator;->hasNext()Z
+
+    move-result v0
+
+    if-eqz v0, :cond_33
+
+    invoke-interface {v1}, Ljava/util/Iterator;->next()Ljava/lang/Object;
+
+    move-result-object v0
+
+    if-eqz v0, :cond_31
+
+    :try_start_29
+    check-cast v0, Ljava/util/Map$Entry;
+
+    invoke-virtual {p0, v0}, LX/02tZ;->A08(Ljava/util/Map$Entry;)Z
+
+    move-result v0
+
+    if-nez v0, :cond_1d
+    :try_end_31
+    .catch Ljava/lang/ClassCastException; {:try_start_29 .. :try_end_31} :catch_31
+
+    :catch_31
+    :cond_31
+    const/4 v0, 0x0
+
+    return v0
+
+    :cond_33
+    const/4 v0, 0x1
+
+    return v0
+.end method
+
+.method public final get(Ljava/lang/Object;)Ljava/lang/Object;
+    .registers 4
+    .annotation build Ldalvik/annotation/optimization/NeverInline;
+    .end annotation
+
+    invoke-static {p1, p0}, LX/02tZ;->A00(Ljava/lang/Object;LX/02tZ;)I
+
+    move-result v1
+
+    if-gez v1, :cond_8
+
+    const/4 v0, 0x0
+
+    return-object v0
+
+    :cond_8
+    iget-object v0, p0, LX/02tZ;->A0C:[Ljava/lang/Object;
+
+    if-nez v0, :cond_14
+
+    invoke-static {}, LX/04l9;->A0M()V
+
+    invoke-static {}, LX/0002;->createAndThrow()LX/0002;
+
+    move-result-object v0
+
+    throw v0
+
+    :cond_14
+    aget-object v0, v0, v1
+
+    return-object v0
+.end method
+
+.method public final hashCode()I
+    .registers 7
+
+    new-instance v5, LX/03jm;
+
+    invoke-direct {v5, p0}, LX/0DfN;-><init>(LX/02tZ;)V
+
+    const/4 v4, 0x0
+
+    :goto_6
+    invoke-virtual {v5}, LX/0DfN;->hasNext()Z
+
+    move-result v0
+
+    if-eqz v0, :cond_42
+
+    iget v2, v5, LX/0DfN;->A01:I
+
+    iget-object v1, v5, LX/0DfN;->A03:LX/02tZ;
+
+    iget v0, v1, LX/02tZ;->A01:I
+
+    if-ge v2, v0, :cond_3c
+
+    add-int/lit8 v0, v2, 0x1
+
+    iput v0, v5, LX/0DfN;->A01:I
+
+    iput v2, v5, LX/0DfN;->A02:I
+
+    iget-object v0, v1, LX/02tZ;->A0B:[Ljava/lang/Object;
+
+    aget-object v0, v0, v2
+
+    const/4 v3, 0x0
+
+    if-eqz v0, :cond_3a
+
+    invoke-virtual {v0}, Ljava/lang/Object;->hashCode()I
+
+    move-result v2
+
+    :goto_25
+    iget-object v1, v1, LX/02tZ;->A0C:[Ljava/lang/Object;
+
+    invoke-static {v1}, LX/04l9;->A0h(Ljava/lang/Object;)V
+
+    iget v0, v5, LX/0DfN;->A02:I
+
+    aget-object v0, v1, v0
+
+    if-eqz v0, :cond_34
+
+    invoke-virtual {v0}, Ljava/lang/Object;->hashCode()I
+
+    move-result v3
+
+    :cond_34
+    xor-int/2addr v2, v3
+
+    invoke-virtual {v5}, LX/0DfN;->A01()V
+
+    add-int/2addr v4, v2
+
+    goto :goto_6
+
+    :cond_3a
+    const/4 v2, 0x0
+
+    goto :goto_25
+
+    :cond_3c
+    new-instance v0, Ljava/util/NoSuchElementException;
+
+    invoke-direct {v0}, Ljava/util/NoSuchElementException;-><init>()V
+
+    throw v0
+
+    :cond_42
+    return v4
+.end method
+
+.method public final isEmpty()Z
+    .registers 2
+
+    invoke-virtual {p0}, LX/02tZ;->size()I
+
+    move-result v0
+
+    if-nez v0, :cond_8
+
+    const/4 v0, 0x1
+
+    return v0
+
+    :cond_8
+    const/4 v0, 0x0
+
+    return v0
+.end method
+
+.method public final bridge keySet()Ljava/util/Set;
+    .registers 2
+
+    iget-object v0, p0, LX/02tZ;->A06:LX/02Em;
+
+    if-nez v0, :cond_b
+
+    new-instance v0, LX/02Em;
+
+    invoke-direct {v0, p0}, LX/02Em;-><init>(LX/02tZ;)V
+
+    iput-object v0, p0, LX/02tZ;->A06:LX/02Em;
+
+    :cond_b
+    return-object v0
+.end method
+
+.method public final put(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;
+    .registers 6
+
+    iget-boolean v0, p0, LX/02tZ;->A08:Z
+
+    if-eqz v0, :cond_7
+
+    invoke-virtual {p0}, LX/02tZ;->A07()V
+
+    :cond_7
+    invoke-virtual {p0, p1}, LX/02tZ;->A05(Ljava/lang/Object;)I
+
+    move-result v1
+
+    iget-object v2, p0, LX/02tZ;->A0C:[Ljava/lang/Object;
+
+    if-nez v2, :cond_16
+
+    iget-object v0, p0, LX/02tZ;->A0B:[Ljava/lang/Object;
+
+    array-length v0, v0
+
+    new-array v2, v0, [Ljava/lang/Object;
+
+    iput-object v2, p0, LX/02tZ;->A0C:[Ljava/lang/Object;
+
+    :cond_16
+    if-gez v1, :cond_20
+
+    neg-int v0, v1
+
+    add-int/lit8 v1, v0, -0x1
+
+    aget-object v0, v2, v1
+
+    aput-object p2, v2, v1
+
+    return-object v0
+
+    :cond_20
+    aput-object p2, v2, v1
+
+    const/4 v0, 0x0
+
+    return-object v0
+.end method
+
+.method public final putAll(Ljava/util/Map;)V
+    .registers 8
+
+    const/4 v0, 0x0
+
+    invoke-static {p1, v0}, LX/04l9;->A0j(Ljava/lang/Object;I)V
+
+    iget-boolean v0, p0, LX/02tZ;->A08:Z
+
+    if-eqz v0, :cond_b
+
+    invoke-virtual {p0}, LX/02tZ;->A07()V
+
+    :cond_b
+    invoke-interface {p1}, Ljava/util/Map;->entrySet()Ljava/util/Set;
+
+    move-result-object v1
+
+    invoke-interface {v1}, Ljava/util/Set;->isEmpty()Z
+
+    move-result v0
+
+    if-nez v0, :cond_5e
+
+    invoke-interface {v1}, Ljava/util/Set;->size()I
+
+    move-result v0
+
+    invoke-direct {p0, v0}, LX/02tZ;->A01(I)V
+
+    invoke-interface {v1}, Ljava/util/Set;->iterator()Ljava/util/Iterator;
+
+    move-result-object v5
+
+    :cond_20
+    :goto_20
+    invoke-interface {v5}, Ljava/util/Iterator;->hasNext()Z
+
+    move-result v0
+
+    if-eqz v0, :cond_5e
+
+    invoke-interface {v5}, Ljava/util/Iterator;->next()Ljava/lang/Object;
+
+    move-result-object v4
+
+    check-cast v4, Ljava/util/Map$Entry;
+
+    invoke-interface {v4}, Ljava/util/Map$Entry;->getKey()Ljava/lang/Object;
+
+    move-result-object v0
+
+    invoke-virtual {p0, v0}, LX/02tZ;->A05(Ljava/lang/Object;)I
+
+    move-result v1
+
+    iget-object v3, p0, LX/02tZ;->A0C:[Ljava/lang/Object;
+
+    if-nez v3, :cond_3f
+
+    iget-object v0, p0, LX/02tZ;->A0B:[Ljava/lang/Object;
+
+    array-length v0, v0
+
+    new-array v3, v0, [Ljava/lang/Object;
+
+    iput-object v3, p0, LX/02tZ;->A0C:[Ljava/lang/Object;
+
+    :cond_3f
+    const/4 v0, 0x1
+
+    if-ltz v1, :cond_49
+
+    invoke-interface {v4}, Ljava/util/Map$Entry;->getValue()Ljava/lang/Object;
+
+    move-result-object v0
+
+    aput-object v0, v3, v1
+
+    goto :goto_20
+
+    :cond_49
+    neg-int v2, v1
+
+    sub-int/2addr v2, v0
+
+    aget-object v1, v3, v2
+
+    invoke-interface {v4}, Ljava/util/Map$Entry;->getValue()Ljava/lang/Object;
+
+    move-result-object v0
+
+    invoke-static {v0, v1}, LX/04l9;->areEqual(Ljava/lang/Object;Ljava/lang/Object;)Z
+
+    move-result v0
+
+    if-nez v0, :cond_20
+
+    invoke-interface {v4}, Ljava/util/Map$Entry;->getValue()Ljava/lang/Object;
+
+    move-result-object v0
+
+    aput-object v0, v3, v2
+
+    goto :goto_20
+
+    :cond_5e
+    return-void
+.end method
+
+.method public final remove(Ljava/lang/Object;)Ljava/lang/Object;
+    .registers 4
+
+    invoke-virtual {p0}, LX/02tZ;->A07()V
+
+    invoke-static {p1, p0}, LX/02tZ;->A00(Ljava/lang/Object;LX/02tZ;)I
+
+    move-result v1
+
+    if-gez v1, :cond_b
+
+    const/4 v0, 0x0
+
+    return-object v0
+
+    :cond_b
+    iget-object v0, p0, LX/02tZ;->A0C:[Ljava/lang/Object;
+
+    invoke-static {v0}, LX/04l9;->A0h(Ljava/lang/Object;)V
+
+    aget-object v0, v0, v1
+
+    invoke-static {p0, v1}, LX/02tZ;->A03(LX/02tZ;I)V
+
+    return-object v0
+.end method
+
+.method public final bridge size()I
+    .registers 2
+
+    iget v0, p0, LX/02tZ;->A04:I
+
+    return v0
+.end method
+
+.method public final toString()Ljava/lang/String;
+    .registers 8
+
+    invoke-virtual {p0}, LX/02tZ;->size()I
+
+    move-result v0
+
+    mul-int/lit8 v0, v0, 0x3
+
+    add-int/lit8 v0, v0, 0x2
+
+    new-instance v4, Ljava/lang/StringBuilder;
+
+    invoke-direct {v4, v0}, Ljava/lang/StringBuilder;-><init>(I)V
+
+    const-string/jumbo v0, "{"
+
+    invoke-virtual {v4, v0}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+
+    new-instance v5, LX/03jm;
+
+    invoke-direct {v5, p0}, LX/0DfN;-><init>(LX/02tZ;)V
+
+    const/4 v6, 0x0
+
+    :goto_19
+    invoke-virtual {v5}, LX/0DfN;->hasNext()Z
+
+    move-result v0
+
+    if-eqz v0, :cond_6a
+
+    if-lez v6, :cond_26
+
+    const-string v0, ", "
+
+    invoke-virtual {v4, v0}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+
+    :cond_26
+    iget v1, v5, LX/0DfN;->A01:I
+
+    iget-object v3, v5, LX/0DfN;->A03:LX/02tZ;
+
+    iget v0, v3, LX/02tZ;->A01:I
+
+    if-ge v1, v0, :cond_64
+
+    add-int/lit8 v0, v1, 0x1
+
+    iput v0, v5, LX/0DfN;->A01:I
+
+    iput v1, v5, LX/0DfN;->A02:I
+
+    iget-object v0, v3, LX/02tZ;->A0B:[Ljava/lang/Object;
+
+    aget-object v1, v0, v1
+
+    const/16 v0, 0x737
+
+    invoke-static {v0}, LX/0000;->A00(I)Ljava/lang/String;
+
+    move-result-object v2
+
+    if-ne v1, v3, :cond_60
+
+    invoke-virtual {v4, v2}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+
+    :goto_43
+    const/16 v0, 0x3d
+
+    invoke-virtual {v4, v0}, Ljava/lang/StringBuilder;->append(C)Ljava/lang/StringBuilder;
+
+    iget-object v1, v3, LX/02tZ;->A0C:[Ljava/lang/Object;
+
+    invoke-static {v1}, LX/04l9;->A0h(Ljava/lang/Object;)V
+
+    iget v0, v5, LX/0DfN;->A02:I
+
+    aget-object v0, v1, v0
+
+    if-ne v0, v3, :cond_5c
+
+    invoke-virtual {v4, v2}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+
+    :goto_56
+    invoke-virtual {v5}, LX/0DfN;->A01()V
+
+    add-int/lit8 v6, v6, 0x1
+
+    goto :goto_19
+
+    :cond_5c
+    invoke-virtual {v4, v0}, Ljava/lang/StringBuilder;->append(Ljava/lang/Object;)Ljava/lang/StringBuilder;
+
+    goto :goto_56
+
+    :cond_60
+    invoke-virtual {v4, v1}, Ljava/lang/StringBuilder;->append(Ljava/lang/Object;)Ljava/lang/StringBuilder;
+
+    goto :goto_43
+
+    :cond_64
+    new-instance v0, Ljava/util/NoSuchElementException;
+
+    invoke-direct {v0}, Ljava/util/NoSuchElementException;-><init>()V
+
+    throw v0
+
+    :cond_6a
+    const-string/jumbo v0, "}"
+
+    invoke-virtual {v4, v0}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+
+    invoke-virtual {v4}, Ljava/lang/Object;->toString()Ljava/lang/String;
+
+    move-result-object v0
+
+    return-object v0
+.end method
+
+.method public final bridge values()Ljava/util/Collection;
+    .registers 2
+
+    iget-object v0, p0, LX/02tZ;->A07:LX/03rW;
+
+    if-nez v0, :cond_b
+
+    new-instance v0, LX/03rW;
+
+    invoke-direct {v0, p0}, LX/03rW;-><init>(LX/02tZ;)V
+
+    iput-object v0, p0, LX/02tZ;->A07:LX/03rW;
+
+    :cond_b
+    return-object v0
+.end method
+
+
+===== FULL 06Nk.smali FILE=work/smali/classes15/X/06Nk.smali =====
+.class public final LX/06Nk;
+.super Ljava/lang/Object;
+.source ""
+
+
+# static fields
+.field public static final A00:LX/06Nk;
+
+.field public static volatile A01:Ljava/lang/String;
+
+.field public static volatile A02:Z
+
+
+# direct methods
+.method public static constructor <clinit>()V
+    .registers 1
+
+    new-instance v0, LX/06Nk;
+
+    invoke-direct {v0}, Ljava/lang/Object;-><init>()V
+
+    sput-object v0, LX/06Nk;->A00:LX/06Nk;
+
+    new-instance v0, Lorg/json/JSONObject;
+
+    invoke-direct {v0}, Lorg/json/JSONObject;-><init>()V
+
+    invoke-static {v0}, LX/000H;->A0L(Ljava/lang/Object;)Ljava/lang/String;
+
+    move-result-object v0
+
+    sput-object v0, LX/06Nk;->A01:Ljava/lang/String;
+
+    return-void
+.end method
+
+.method public constructor <init>()V
+    .registers 1
+
+    invoke-direct {p0}, Ljava/lang/Object;-><init>()V
+
+    return-void
+.end method
+
+
+===== STATUS WRITER LX/06Nk; .method public static constructor <clinit>()V FILE=work/smali/classes15/X/06Nk.smali =====
+.method public static constructor <clinit>()V
+    .registers 1
+
+    new-instance v0, LX/06Nk;
+
+    invoke-direct {v0}, Ljava/lang/Object;-><init>()V
+
+    sput-object v0, LX/06Nk;->A00:LX/06Nk;
+
+    new-instance v0, Lorg/json/JSONObject;
+
+    invoke-direct {v0}, Lorg/json/JSONObject;-><init>()V
+
+    invoke-static {v0}, LX/000H;->A0L(Ljava/lang/Object;)Ljava/lang/String;
+
+    move-result-object v0
+
+    sput-object v0, LX/06Nk;->A01:Ljava/lang/String;
+
+    return-void
+.end method
+
+===== STATUS WRITER LX/06Kl; .method public final run()V FILE=work/smali/classes15/X/06Kl.smali =====
+.method public final run()V
+    .registers 7
+
+    const-string v3, "DeviceStatusExtractor"
+
+    iget-object v2, p0, LX/06Kl;->A00:LX/04BG;
+
+    :try_start_4
+    sget-boolean v0, LX/06Nk;->A02:Z
+
+    invoke-static {v2}, LX/07sY;->A00(LX/04BG;)LX/02tZ;
+
+    move-result-object v1
+
+    new-instance v0, Lorg/json/JSONObject;
+
+    invoke-direct {v0, v1}, Lorg/json/JSONObject;-><init>(Ljava/util/Map;)V
+
+    invoke-static {v0}, LX/000H;->A0L(Ljava/lang/Object;)Ljava/lang/String;
+
+    move-result-object v0
+
+    sput-object v0, LX/06Nk;->A01:Ljava/lang/String;
+
+    sget-object v0, LX/04i9;->A00:LX/04i9;
+
+    goto :goto_1e
+    :try_end_18
+    .catchall {:try_start_4 .. :try_end_18} :catchall_18
+
+    :catchall_18
+    move-exception v1
+
+    new-instance v0, LX/02pD;
+
+    invoke-direct {v0, v1}, LX/02pD;-><init>(Ljava/lang/Throwable;)V
+
+    :goto_1e
+    invoke-static {v0}, LX/01ui;->A00(Ljava/lang/Object;)Ljava/lang/Throwable;
+
+    move-result-object v1
+
+    if-eqz v1, :cond_29
+
+    const-string v0, "err in device status"
+
+    invoke-static {v3, v0, v1}, LX/00Iv;->A0F(Ljava/lang/String;Ljava/lang/String;Ljava/lang/Throwable;)V
+
+    :cond_29
+    invoke-static {v2}, LX/02qP;->A01(LX/04BG;)LX/00AT;
+
+    move-result-object v2
+
+    const-wide v0, 0x82061e00080eb5L
+
+    invoke-static {v2, v0, v1}, LX/000H;->A08(Ljava/lang/Object;J)J
+
+    move-result-wide v3
+
+    invoke-static {}, LX/02vl;->A00()LX/02vl;
+
+    move-result-object v5
+
+    const v0, 0x39e30764
+
+    new-instance v2, LX/01rp;
+
+    invoke-direct {v2, p0, v0}, LX/01rp;-><init>(Ljava/lang/Runnable;I)V
+
+    sget-object v0, Ljava/util/concurrent/TimeUnit;->SECONDS:Ljava/util/concurrent/TimeUnit;
+
+    invoke-virtual {v0, v3, v4}, Ljava/util/concurrent/TimeUnit;->toMillis(J)J
+
+    move-result-wide v0
+
+    invoke-virtual {v5, v2, v0, v1}, LX/02vl;->A01(LX/04oD;J)V
+
+    return-void
+.end method
