@@ -54,12 +54,10 @@ jobs:
 
           out=['Instagram 439 X.09z5.A0S filterPeriod trace','===========================================',f'A0S_LINES={len(block)}','']
 
-          # Header / register layout / first parser setup.
           out.append('===== A0S HEAD =====')
           out.extend(block[:220])
           out.append('')
 
-          # Exact windows around every filterPeriod diagnostic string.
           pats=('Before filterPeriod()','filterPeriod() for','Finish filterPeriod()','Skip filterPeriod(')
           hitidx=[]
           for i,l in enumerate(block):
@@ -71,7 +69,6 @@ jobs:
             for j in range(a,z): out.append(f'{j:05d}: {block[j]}')
             out.append('')
 
-          # All 08tc/08td construction/writes and nearby context within A0S.
           meta=[i for i,l in enumerate(block) if 'LX/08tc;' in l or 'LX/08td;' in l]
           out.append(f'METADATA_HITS={len(meta)}')
           for n,i in enumerate(meta,1):
@@ -80,7 +77,6 @@ jobs:
             for j in range(a,z): out.append(f'{j:05d}: {block[j]}')
             out.append('')
 
-          # Invocation index for the method; useful for identifying actual filter helper.
           inv_re=re.compile(r'invoke-[^\s]+\s+\{[^}]*\},\s+(LX/[^;]+;)->([^\s(]+)\(([^)]*)\)(\S+)')
           inv=[]
           for i,l in enumerate(block):
@@ -90,14 +86,11 @@ jobs:
           for i,sig in inv: out.append(f'{i:05d}|{sig}|{block[i]}')
           out.append('')
 
-          # Literal string index.
           out.append('===== STRING INDEX =====')
           for i,l in enumerate(block):
             if 'const-string' in l: out.append(f'{i:05d}|{l.strip()}')
           out.append('')
 
-          # Extract full bodies of direct X.* callees invoked within ±240 lines of filter strings,
-          # if those callees live in classes17 and are reasonably sized.
           sigs=[]
           for center in hitidx:
             for i,sig in inv:
@@ -128,7 +121,6 @@ jobs:
 
           path=Path('research/generated/instagram_439_hdr_r5_filterperiod_window.txt')
           text='\n'.join(out)+'\n'
-          # Keep connector-readable. If verbose metadata windows exceed 100 KB, retain critical filter windows/indexes only.
           if len(text.encode())>100000:
             slim=['Instagram 439 X.09z5.A0S filterPeriod trace SLIM','================================================',f'A0S_LINES={len(block)}',f'FILTER_STRING_HITS={hitidx}','']
             for n,i in enumerate(hitidx,1):
@@ -138,7 +130,7 @@ jobs:
               slim.append('')
             slim.append('===== INVOCATION INDEX NEAR FILTER =====')
             for i,sig in inv:
-              if any(abs(i,c)<=300 for c in hitidx): slim.append(f'{i:05d}|{sig}|{block[i]}')
+              if any(abs(i-c)<=300 for c in hitidx): slim.append(f'{i:05d}|{sig}|{block[i]}')
             slim.append('===== METADATA INDEX =====')
             for i in meta: slim.append(f'{i:05d}|{block[i]}')
             text='\n'.join(slim)+'\n'
