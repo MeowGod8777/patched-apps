@@ -1,0 +1,1545 @@
+Instagram 439 AV1/DASH fallback runtime branch owners
+==================================================
+
+##### all dash representation filtered out :: owner_count=1 #####
+===== classes13.txt:179481-180042 :: X.00NW.CYd =====
+--- hit offset=444, context=374..554 ---
+436a5c: 3801 ceff                              |0300: if-eqz v1, 02ce // -0032
+436a60: 7210 acfd 0700                         |0302: invoke-interface {v7}, Ljava/util/Iterator;.next:()Ljava/lang/Object; // method@fdac
+436a66: 0c01                                   |0305: move-result-object v1
+436a68: 6e20 e7fc 1500                         |0306: invoke-virtual {v5, v1}, Ljava/util/AbstractCollection;.add:(Ljava/lang/Object;)Z // method@fce7
+436a6e: 28f3                                   |0309: goto 02fc // -000d
+436a70: 2205 8b06                              |030a: new-instance v5, LX/00dQ; // type@068b
+436a74: 7010 7314 0500                         |030c: invoke-direct {v5}, LX/00dQ;.<init>:()V // method@1473
+436a7a: 6206 25c0                              |030f: sget-object v6, Landroid/net/Uri;.EMPTY:Landroid/net/Uri; // field@c025
+436a7e: 5b56 8a12                              |0311: iput-object v6, v5, LX/00dQ;.A01:Landroid/net/Uri; // field@128a
+436a82: 1a01 4826                              |0313: const-string v1, "DashMediaSource" // string@2648
+436a86: 5b51 9312                              |0315: iput-object v1, v5, LX/00dQ;.A0A:Ljava/lang/String; // field@1293
+436a8a: 5b52 9412                              |0317: iput-object v2, v5, LX/00dQ;.A0B:Ljava/lang/String; // field@1294
+436a8e: 6e10 7514 0500                         |0319: invoke-virtual {v5}, LX/00dQ;.A00:()LX/00dO; // method@1475
+436a94: 0c05                                   |031c: move-result-object v5
+436a96: 1627 ffff                              |031d: const-wide/16 v39, #int -1 // #ffff
+436a9a: 2201 8b06                              |031f: new-instance v1, LX/00dQ; // type@068b
+436a9e: 7020 7414 5100                         |0321: invoke-direct {v1, v5}, LX/00dQ;.<init>:(LX/00dO;)V // method@1474
+436aa4: 5b12 9412                              |0324: iput-object v2, v1, LX/00dQ;.A0B:Ljava/lang/String; // field@1294
+436aa8: 5452 7112                              |0326: iget-object v2, v5, LX/00dO;.A03:LX/00dX; // field@1271
+436aac: 3902 0400                              |0328: if-nez v2, 032c // +0004
+436ab0: 5b16 8a12                              |032a: iput-object v6, v1, LX/00dQ;.A01:Landroid/net/Uri; // field@128a
+436ab4: 6e10 7514 0100                         |032c: invoke-virtual {v1}, LX/00dQ;.A00:()LX/00dO; // method@1475
+436aba: 0c1a                                   |032f: move-result-object v26
+436abc: 220d 0608                              |0330: new-instance v13, LX/00lR; // type@0806
+436ac0: 0819 0d00                              |0332: move-object/from16 v25, v13
+436ac4: 081b 3500                              |0334: move-object/from16 v27, v53
+436ac8: 081c 1400                              |0336: move-object/from16 v28, v20
+436acc: 081f 3500                              |0338: move-object/from16 v31, v53
+436ad0: 0820 1300                              |033a: move-object/from16 v32, v19
+436ad4: 0821 3500                              |033c: move-object/from16 v33, v53
+436ad8: 0822 2900                              |033e: move-object/from16 v34, v41
+436adc: 0823 1700                              |0340: move-object/from16 v35, v23
+436ae0: 0824 1100                              |0342: move-object/from16 v36, v17
+436ae4: 0825 1800                              |0344: move-object/from16 v37, v24
+436ae8: 0826 0400                              |0346: move-object/from16 v38, v4
+436aec: 7610 4918 1900                         |0348: invoke-direct/range {v25, v26, v27, v28, v29, v30, v31, v32, v33, v34, v35, v36, v37, v38, v39, v40}, LX/00lR;.<init>:(LX/00dO;LX/073y;LX/00lO;LX/09fZ;LX/09of;LX/0nIC;LX/00lC;LX/06vo;LX/00ND;LX/00lI;LX/00lH;LX/09dY;LX/08rn;J)V // method@1849
+436af2: 2900 60ff                              |034b: goto/16 02ab // -00a0
+436af6: 2209 0474                              |034d: new-instance v9, Ljava/util/ArrayList; // type@7404
+436afa: 7010 1afd 0900                         |034f: invoke-direct {v9}, Ljava/util/ArrayList;.<init>:()V // method@fd1a
+436b00: 2207 0474                              |0352: new-instance v7, Ljava/util/ArrayList; // type@7404
+436b04: 7010 1afd 0700                         |0354: invoke-direct {v7}, Ljava/util/ArrayList;.<init>:()V // method@fd1a
+436b0a: 6e10 ebfc 0900                         |0357: invoke-virtual {v9}, Ljava/util/AbstractCollection;.isEmpty:()Z // method@fceb
+436b10: 0a01                                   |035a: move-result v1
+436b12: 3901 0300                              |035b: if-nez v1, 035e // +0003
+436b16: 0796                                   |035d: move-object v6, v9
+436b18: 6e10 ebfc 0700                         |035e: invoke-virtual {v7}, Ljava/util/AbstractCollection;.isEmpty:()Z // method@fceb
+436b1e: 0a01                                   |0361: move-result v1
+436b20: 3901 0300                              |0362: if-nez v1, 0365 // +0003
+436b24: 0775                                   |0364: move-object v5, v7
+436b26: 6e10 ebfc 0600                         |0365: invoke-virtual {v6}, Ljava/util/AbstractCollection;.isEmpty:()Z // method@fceb
+436b2c: 6e10 ebfc 0600                         |0368: invoke-virtual {v6}, Ljava/util/AbstractCollection;.isEmpty:()Z // method@fceb
+436b32: 0a01                                   |036b: move-result v1
+436b34: 3801 0300                              |036c: if-eqz v1, 036f // +0003
+436b38: 1206                                   |036e: const/4 v6, #int 0 // #0
+436b3a: 6e10 ebfc 0500                         |036f: invoke-virtual {v5}, Ljava/util/AbstractCollection;.isEmpty:()Z // method@fceb
+436b40: 0a01                                   |0372: move-result v1
+436b42: 3801 0300                              |0373: if-eqz v1, 0376 // +0003
+436b46: 1205                                   |0375: const/4 v5, #int 0 // #0
+436b48: 3906 c100                              |0376: if-nez v6, 0437 // +00c1
+436b4c: 3905 bf00                              |0378: if-nez v5, 0437 // +00bf
+436b50: 120f                                   |037a: const/4 v15, #int 0 // #0
+436b52: 523b 68a5                              |037b: iget v11, v3, LX/08xk;.A09:I // field@a568
+436b56: 6237 0700                              |037d: sget-object v55, LX/000A;.A01:Ljava/lang/Integer; // field@0007
+436b5a: 7401 79fb 3700                         |037f: invoke-virtual/range {v55}, Ljava/lang/Number;.intValue:()I // method@fb79
+436b60: 0a01                                   |0382: move-result v1
+436b62: 3801 b100                              |0383: if-eqz v1, 0434 // +00b1
+436b66: 121a                                   |0385: const/4 v10, #int 1 // #1
+436b68: 32ab 1c00                              |0386: if-eq v11, v10, 03a2 // +001c
+436b6c: 3910 a500                              |0388: if-nez v16, 042d // +00a5
+436b70: 380f 1800                              |038a: if-eqz v15, 03a2 // +0018
+436b74: 1a09 2ade                              |038c: const-string v9, "all dash representation filtered out" // string@de2a
+436b78: 6201 4f24                              |038e: sget-object v1, LX/01Ak;.A04:LX/01Ak; // field@244f
+436b7c: 1a07 16bc                              |0390: const-string v7, "MANIFEST" // string@bc16
+436b80: 6e10 17fb 0100                         |0392: invoke-virtual {v1}, Ljava/lang/Enum;.name:()Ljava/lang/String; // method@fb17
+436b86: 0c06                                   |0395: move-result-object v6
+436b88: 2205 da07                              |0396: new-instance v5, LX/00kW; // type@07da
+436b8c: 0801 3800                              |0398: move-object/from16 v1, v56
+436b90: 7059 0d18 1567                         |039a: invoke-direct {v5, v1, v7, v6, v9}, LX/00kW;.<init>:(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)V // method@180d
+436b96: 0801 3900                              |039d: move-object/from16 v1, v57
+436b9a: 6e20 13d1 5100                         |039f: invoke-virtual {v1, v5}, Lcom/facebook/video/heroplayer/service/ServiceEventCallbackImpl;.callback:(LX/03p5;)V // method@d113
+436ba0: 32ba 0700                              |03a2: if-eq v10, v11, 03a9 // +0007
+436ba4: 3910 0500                              |03a4: if-nez v16, 03a9 // +0005
+436ba8: 1206                                   |03a6: const/4 v6, #int 0 // #0
+436baa: 380f 0300                              |03a7: if-eqz v15, 03aa // +0003
+436bae: 1216                                   |03a9: const/4 v6, #int 1 // #1
+436bb0: 54c1 d8a0                              |03aa: iget-object v1, v12, LX/08lb;.A06:Landroid/net/Uri; // field@a0d8
+436bb4: 3901 0600                              |03ac: if-nez v1, 03b2 // +0006
+436bb8: 54c1 e5a0                              |03ae: iget-object v1, v12, LX/08lb;.A0O:Ljava/util/List; // field@a0e5
+436bbc: 3801 0d00                              |03b0: if-eqz v1, 03bd // +000d
+436bc0: 1305 0a00                              |03b2: const/16 v5, #int 10 // #a
+436bc4: 2201 f03d                              |03b4: new-instance v1, LX/07nX; // type@3df0
+436bc8: 7030 508f e105                         |03b6: invoke-direct {v1, v14, v5}, LX/07nX;.<init>:(Ljava/lang/Object;I)V // method@8f50
+436bce: 7040 fa0c d013                         |03b9: invoke-direct {v0, v13, v3, v1}, LX/00NW;.A00:(LX/0Cmz;LX/08xk;Lcom/google/common/base/Supplier;)LX/0Cmz; // method@0cfa
+436bd4: 0c0d                                   |03bc: move-result-object v13
+436bd6: 3906 6800                              |03bd: if-nez v6, 0425 // +0068
+436bda: 3802 6600                              |03bf: if-eqz v2, 0425 // +0066
+436bde: 5420 33a4                              |03c1: iget-object v0, v2, LX/08ur;.A01:Ljava/util/List; // field@a433
+436be2: 3800 6200                              |03c3: if-eqz v0, 0425 // +0062
+436be6: 7210 defd 0000                         |03c5: invoke-interface {v0}, Ljava/util/List;.size:()I // method@fdde
+436bec: 0a3b                                   |03c8: move-result v59
+436bee: 5420 32a4                              |03c9: iget-object v0, v2, LX/08ur;.A00:Ljava/util/List; // field@a432
+436bf2: 3800 5f00                              |03cb: if-eqz v0, 042a // +005f
+436bf6: 7210 defd 0000                         |03cd: invoke-interface {v0}, Ljava/util/List;.size:()I // method@fdde
+436bfc: 0a3c                                   |03d0: move-result v60
+436bfe: 5540 daa2                              |03d1: iget-boolean v0, v4, LX/08rn;.A0V:Z // field@a2da
+436c02: 3800 4700                              |03d3: if-eqz v0, 041a // +0047
+436c06: 534b cba2                              |03d5: iget-wide v11, v4, LX/08rn;.A0C:J // field@a2cb
+436c0a: 5349 c7a2                              |03d7: iget-wide v9, v4, LX/08rn;.A08:J // field@a2c7
+436c0e: 5345 c5a2                              |03d9: iget-wide v5, v4, LX/08rn;.A06:J // field@a2c5
+436c12: 5340 c8a2                              |03db: iget-wide v0, v4, LX/08rn;.A09:J // field@a2c8
+436c16: 1347 0100                              |03dd: const/16 v71, #int 1 // #1
+436c1a: 5543 dba2                              |03df: iget-boolean v3, v4, LX/08rn;.A0W:Z // field@a2db
+436c1e: 1348 0000                              |03e1: const/16 v72, #int 0 // #0
+436c22: 3803 0400                              |03e3: if-eqz v3, 03e7 // +0004
+436c26: 1348 0100                              |03e5: const/16 v72, #int 1 // #1
+436c2a: 7110 51d1 0200                         |03e7: invoke-static {v2}, Lcom/facebook/video/heroplayer/service/heroexoplayer2/HeroExoPlayer2InitHelper;.A04:(LX/08ur;)Ljava/lang/String; // method@d151
+436c30: 0c38                                   |03ea: move-result-object v56
+436c32: 5443 d3a2                              |03eb: iget-object v3, v4, LX/08rn;.A0L:Ljava/lang/String; // field@a2d3
+436c36: 5442 d4a2                              |03ed: iget-object v2, v4, LX/08rn;.A0P:Ljava/lang/String; // field@a2d4
+436c3a: 2233 1808                              |03ef: new-instance v51, LX/00lx; // type@0818
+436c3e: 0834 0d00                              |03f1: move-object/from16 v52, v13
+436c42: 0836 0e00                              |03f3: move-object/from16 v54, v14
+436c46: 0839 0300                              |03f5: move-object/from16 v57, v3
+436c4a: 083a 0200                              |03f7: move-object/from16 v58, v2
+436c4e: 053d 0b00                              |03f9: move-wide/from16 v61, v11
+436c52: 053f 0900                              |03fb: move-wide/from16 v63, v9
+436c56: 0541 0500                              |03fd: move-wide/from16 v65, v5
+436c5a: 0543 0000                              |03ff: move-wide/from16 v67, v0
+436c5e: 0249 1500                              |0401: move/from16 v73, v21
+436c62: 024a 1500                              |0403: move/from16 v74, v21
+436c66: 7618 8b18 3300                         |0405: invoke-direct/range {v51, v52, v53, v54, v55, v56, v57, v58, v59, v60, v61, v62, v63, v64, v65, v66, v67, v68, v69, v70, v71, v72, v73, v74}, LX/00lx;.<init>:(LX/0Cmz;LX/0A40;LX/00kY;Ljava/lang/Integer;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;IIJJJJJZZZZ)V // method@188b
+436c6c: 6e10 be99 0800                         |0408: invoke-virtual {v8}, LX/08lb;.A03:()Z // method@99be
+436c72: 0a00                                   |040b: move-result v0
+436c74: 3800 35fe                              |040c: if-eqz v0, 0241 // -01cb
+436c78: 1a02 fb10                              |040e: const-string v2, "AV1 decoding using dash media source" // string@10fb
+436c7c: 0200 1500                              |0410: move/from16 v0, v21
+436c80: 2301 1c77                              |0412: new-array v1, v0, [Ljava/lang/Object; // type@771c
+436c84: 0800 1600                              |0414: move-object/from16 v0, v22
+436c88: 7130 c584 2001                         |0416: invoke-static {v0, v2, v1}, LX/06ul;.A01:(Ljava/lang/String;Ljava/lang/String;[Ljava/lang/Object;)V // method@84c5
+436c8e: 1133                                   |0419: return-object v51
+436c90: 160b 0000                              |041a: const-wide/16 v11, #int 0 // #0
+436c94: 1609 0000                              |041c: const-wide/16 v9, #int 0 // #0
+436c98: 1605 0000                              |041e: const-wide/16 v5, #int 0 // #0
+436c9c: 1600 0000                              |0420: const-wide/16 v0, #int 0 // #0
+436ca0: 1347 0000                              |0422: const/16 v71, #int 0 // #0
+436ca4: 28bb                                   |0424: goto 03df // -0045
+436ca6: 133b 0000                              |0425: const/16 v59, #int 0 // #0
+436caa: 3802 0300                              |0427: if-eqz v2, 042a // +0003
+436cae: 28a0                                   |0429: goto 03c9 // -0060
+436cb0: 133c 0000                              |042a: const/16 v60, #int 0 // #0
+436cb4: 28a5                                   |042c: goto 03d1 // -005b
+436cb6: 1b09 c60b 0100                         |042d: const-string/jumbo v9, "no valid dash representations" // string@00010bc6
+436cbc: 6201 9924                              |0430: sget-object v1, LX/01Ak;.A1G:LX/01Ak; // field@2499
+436cc0: 2900 5eff                              |0432: goto/16 0390 // -00a2
+436cc4: 120a                                   |0434: const/4 v10, #int 0 // #0
+436cc6: 2900 51ff                              |0435: goto/16 0386 // -00af
+436cca: 2202 9946                              |0437: new-instance v2, LX/08ur; // type@4699
+436cce: 7030 469c 6205                         |0439: invoke-direct {v2, v6, v5}, LX/08ur;.<init>:(Ljava/util/List;Ljava/util/List;)V // method@9c46
+436cd4: 5421 33a4                              |043c: iget-object v1, v2, LX/08ur;.A01:Ljava/util/List; // field@a433
+436cd8: 3801 3cff                              |043e: if-eqz v1, 037a // -00c4
+436cdc: 1310 0000                              |0440: const/16 v16, #int 0 // #0
+436ce0: 7210 d4fd 0100                         |0442: invoke-interface {v1}, Ljava/util/List;.isEmpty:()Z // method@fdd4
+436ce6: 0a01                                   |0445: move-result v1
+436ce8: 121f                                   |0446: const/4 v15, #int 1 // #1
+436cea: 3901 34ff                              |0447: if-nez v1, 037b // -00cc
+436cee: 2900 31ff                              |0449: goto/16 037a // -00cf
+436cf2: 1206                                   |044b: const/4 v6, #int 0 // #0
+436cf4: 2900 ccfc                              |044c: goto/16 0118 // -0334
+436cf8: 1605 0000                              |044e: const-wide/16 v5, #int 0 // #0
+436cfc: 2900 12fc                              |0450: goto/16 0062 // -03ee
+436d00: 7701 5490 1500                         |0452: invoke-static/range {v21}, LX/07pt;.A05:(Z)V // method@9054
+436d06: 7100 0100 0000                         |0455: invoke-static {}, LX/0002;.createAndThrow:()LX/0002; // method@0001
+436d0c: 0c00                                   |0458: move-result-object v0
+436d0e: 2700                                   |0459: throw v0
+      catches       : (none)
+      positions     :
+      locals        :
+
+    #6              : (in LX/00NW;)
+      name          : 'D2o'
+
+
+##### AV1 decoding using dash media source :: owner_count=1 #####
+===== classes13.txt:179481-180042 :: X.00NW.CYd =====
+--- hit offset=508, context=438..562 ---
+436b60: 0a01                                   |0382: move-result v1
+436b62: 3801 b100                              |0383: if-eqz v1, 0434 // +00b1
+436b66: 121a                                   |0385: const/4 v10, #int 1 // #1
+436b68: 32ab 1c00                              |0386: if-eq v11, v10, 03a2 // +001c
+436b6c: 3910 a500                              |0388: if-nez v16, 042d // +00a5
+436b70: 380f 1800                              |038a: if-eqz v15, 03a2 // +0018
+436b74: 1a09 2ade                              |038c: const-string v9, "all dash representation filtered out" // string@de2a
+436b78: 6201 4f24                              |038e: sget-object v1, LX/01Ak;.A04:LX/01Ak; // field@244f
+436b7c: 1a07 16bc                              |0390: const-string v7, "MANIFEST" // string@bc16
+436b80: 6e10 17fb 0100                         |0392: invoke-virtual {v1}, Ljava/lang/Enum;.name:()Ljava/lang/String; // method@fb17
+436b86: 0c06                                   |0395: move-result-object v6
+436b88: 2205 da07                              |0396: new-instance v5, LX/00kW; // type@07da
+436b8c: 0801 3800                              |0398: move-object/from16 v1, v56
+436b90: 7059 0d18 1567                         |039a: invoke-direct {v5, v1, v7, v6, v9}, LX/00kW;.<init>:(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)V // method@180d
+436b96: 0801 3900                              |039d: move-object/from16 v1, v57
+436b9a: 6e20 13d1 5100                         |039f: invoke-virtual {v1, v5}, Lcom/facebook/video/heroplayer/service/ServiceEventCallbackImpl;.callback:(LX/03p5;)V // method@d113
+436ba0: 32ba 0700                              |03a2: if-eq v10, v11, 03a9 // +0007
+436ba4: 3910 0500                              |03a4: if-nez v16, 03a9 // +0005
+436ba8: 1206                                   |03a6: const/4 v6, #int 0 // #0
+436baa: 380f 0300                              |03a7: if-eqz v15, 03aa // +0003
+436bae: 1216                                   |03a9: const/4 v6, #int 1 // #1
+436bb0: 54c1 d8a0                              |03aa: iget-object v1, v12, LX/08lb;.A06:Landroid/net/Uri; // field@a0d8
+436bb4: 3901 0600                              |03ac: if-nez v1, 03b2 // +0006
+436bb8: 54c1 e5a0                              |03ae: iget-object v1, v12, LX/08lb;.A0O:Ljava/util/List; // field@a0e5
+436bbc: 3801 0d00                              |03b0: if-eqz v1, 03bd // +000d
+436bc0: 1305 0a00                              |03b2: const/16 v5, #int 10 // #a
+436bc4: 2201 f03d                              |03b4: new-instance v1, LX/07nX; // type@3df0
+436bc8: 7030 508f e105                         |03b6: invoke-direct {v1, v14, v5}, LX/07nX;.<init>:(Ljava/lang/Object;I)V // method@8f50
+436bce: 7040 fa0c d013                         |03b9: invoke-direct {v0, v13, v3, v1}, LX/00NW;.A00:(LX/0Cmz;LX/08xk;Lcom/google/common/base/Supplier;)LX/0Cmz; // method@0cfa
+436bd4: 0c0d                                   |03bc: move-result-object v13
+436bd6: 3906 6800                              |03bd: if-nez v6, 0425 // +0068
+436bda: 3802 6600                              |03bf: if-eqz v2, 0425 // +0066
+436bde: 5420 33a4                              |03c1: iget-object v0, v2, LX/08ur;.A01:Ljava/util/List; // field@a433
+436be2: 3800 6200                              |03c3: if-eqz v0, 0425 // +0062
+436be6: 7210 defd 0000                         |03c5: invoke-interface {v0}, Ljava/util/List;.size:()I // method@fdde
+436bec: 0a3b                                   |03c8: move-result v59
+436bee: 5420 32a4                              |03c9: iget-object v0, v2, LX/08ur;.A00:Ljava/util/List; // field@a432
+436bf2: 3800 5f00                              |03cb: if-eqz v0, 042a // +005f
+436bf6: 7210 defd 0000                         |03cd: invoke-interface {v0}, Ljava/util/List;.size:()I // method@fdde
+436bfc: 0a3c                                   |03d0: move-result v60
+436bfe: 5540 daa2                              |03d1: iget-boolean v0, v4, LX/08rn;.A0V:Z // field@a2da
+436c02: 3800 4700                              |03d3: if-eqz v0, 041a // +0047
+436c06: 534b cba2                              |03d5: iget-wide v11, v4, LX/08rn;.A0C:J // field@a2cb
+436c0a: 5349 c7a2                              |03d7: iget-wide v9, v4, LX/08rn;.A08:J // field@a2c7
+436c0e: 5345 c5a2                              |03d9: iget-wide v5, v4, LX/08rn;.A06:J // field@a2c5
+436c12: 5340 c8a2                              |03db: iget-wide v0, v4, LX/08rn;.A09:J // field@a2c8
+436c16: 1347 0100                              |03dd: const/16 v71, #int 1 // #1
+436c1a: 5543 dba2                              |03df: iget-boolean v3, v4, LX/08rn;.A0W:Z // field@a2db
+436c1e: 1348 0000                              |03e1: const/16 v72, #int 0 // #0
+436c22: 3803 0400                              |03e3: if-eqz v3, 03e7 // +0004
+436c26: 1348 0100                              |03e5: const/16 v72, #int 1 // #1
+436c2a: 7110 51d1 0200                         |03e7: invoke-static {v2}, Lcom/facebook/video/heroplayer/service/heroexoplayer2/HeroExoPlayer2InitHelper;.A04:(LX/08ur;)Ljava/lang/String; // method@d151
+436c30: 0c38                                   |03ea: move-result-object v56
+436c32: 5443 d3a2                              |03eb: iget-object v3, v4, LX/08rn;.A0L:Ljava/lang/String; // field@a2d3
+436c36: 5442 d4a2                              |03ed: iget-object v2, v4, LX/08rn;.A0P:Ljava/lang/String; // field@a2d4
+436c3a: 2233 1808                              |03ef: new-instance v51, LX/00lx; // type@0818
+436c3e: 0834 0d00                              |03f1: move-object/from16 v52, v13
+436c42: 0836 0e00                              |03f3: move-object/from16 v54, v14
+436c46: 0839 0300                              |03f5: move-object/from16 v57, v3
+436c4a: 083a 0200                              |03f7: move-object/from16 v58, v2
+436c4e: 053d 0b00                              |03f9: move-wide/from16 v61, v11
+436c52: 053f 0900                              |03fb: move-wide/from16 v63, v9
+436c56: 0541 0500                              |03fd: move-wide/from16 v65, v5
+436c5a: 0543 0000                              |03ff: move-wide/from16 v67, v0
+436c5e: 0249 1500                              |0401: move/from16 v73, v21
+436c62: 024a 1500                              |0403: move/from16 v74, v21
+436c66: 7618 8b18 3300                         |0405: invoke-direct/range {v51, v52, v53, v54, v55, v56, v57, v58, v59, v60, v61, v62, v63, v64, v65, v66, v67, v68, v69, v70, v71, v72, v73, v74}, LX/00lx;.<init>:(LX/0Cmz;LX/0A40;LX/00kY;Ljava/lang/Integer;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;IIJJJJJZZZZ)V // method@188b
+436c6c: 6e10 be99 0800                         |0408: invoke-virtual {v8}, LX/08lb;.A03:()Z // method@99be
+436c72: 0a00                                   |040b: move-result v0
+436c74: 3800 35fe                              |040c: if-eqz v0, 0241 // -01cb
+436c78: 1a02 fb10                              |040e: const-string v2, "AV1 decoding using dash media source" // string@10fb
+436c7c: 0200 1500                              |0410: move/from16 v0, v21
+436c80: 2301 1c77                              |0412: new-array v1, v0, [Ljava/lang/Object; // type@771c
+436c84: 0800 1600                              |0414: move-object/from16 v0, v22
+436c88: 7130 c584 2001                         |0416: invoke-static {v0, v2, v1}, LX/06ul;.A01:(Ljava/lang/String;Ljava/lang/String;[Ljava/lang/Object;)V // method@84c5
+436c8e: 1133                                   |0419: return-object v51
+436c90: 160b 0000                              |041a: const-wide/16 v11, #int 0 // #0
+436c94: 1609 0000                              |041c: const-wide/16 v9, #int 0 // #0
+436c98: 1605 0000                              |041e: const-wide/16 v5, #int 0 // #0
+436c9c: 1600 0000                              |0420: const-wide/16 v0, #int 0 // #0
+436ca0: 1347 0000                              |0422: const/16 v71, #int 0 // #0
+436ca4: 28bb                                   |0424: goto 03df // -0045
+436ca6: 133b 0000                              |0425: const/16 v59, #int 0 // #0
+436caa: 3802 0300                              |0427: if-eqz v2, 042a // +0003
+436cae: 28a0                                   |0429: goto 03c9 // -0060
+436cb0: 133c 0000                              |042a: const/16 v60, #int 0 // #0
+436cb4: 28a5                                   |042c: goto 03d1 // -005b
+436cb6: 1b09 c60b 0100                         |042d: const-string/jumbo v9, "no valid dash representations" // string@00010bc6
+436cbc: 6201 9924                              |0430: sget-object v1, LX/01Ak;.A1G:LX/01Ak; // field@2499
+436cc0: 2900 5eff                              |0432: goto/16 0390 // -00a2
+436cc4: 120a                                   |0434: const/4 v10, #int 0 // #0
+436cc6: 2900 51ff                              |0435: goto/16 0386 // -00af
+436cca: 2202 9946                              |0437: new-instance v2, LX/08ur; // type@4699
+436cce: 7030 469c 6205                         |0439: invoke-direct {v2, v6, v5}, LX/08ur;.<init>:(Ljava/util/List;Ljava/util/List;)V // method@9c46
+436cd4: 5421 33a4                              |043c: iget-object v1, v2, LX/08ur;.A01:Ljava/util/List; // field@a433
+436cd8: 3801 3cff                              |043e: if-eqz v1, 037a // -00c4
+436cdc: 1310 0000                              |0440: const/16 v16, #int 0 // #0
+436ce0: 7210 d4fd 0100                         |0442: invoke-interface {v1}, Ljava/util/List;.isEmpty:()Z // method@fdd4
+436ce6: 0a01                                   |0445: move-result v1
+436ce8: 121f                                   |0446: const/4 v15, #int 1 // #1
+436cea: 3901 34ff                              |0447: if-nez v1, 037b // -00cc
+436cee: 2900 31ff                              |0449: goto/16 037a // -00cf
+436cf2: 1206                                   |044b: const/4 v6, #int 0 // #0
+436cf4: 2900 ccfc                              |044c: goto/16 0118 // -0334
+436cf8: 1605 0000                              |044e: const-wide/16 v5, #int 0 // #0
+436cfc: 2900 12fc                              |0450: goto/16 0062 // -03ee
+436d00: 7701 5490 1500                         |0452: invoke-static/range {v21}, LX/07pt;.A05:(Z)V // method@9054
+436d06: 7100 0100 0000                         |0455: invoke-static {}, LX/0002;.createAndThrow:()LX/0002; // method@0001
+436d0c: 0c00                                   |0458: move-result-object v0
+436d0e: 2700                                   |0459: throw v0
+      catches       : (none)
+      positions     :
+      locals        :
+
+    #6              : (in LX/00NW;)
+      name          : 'D2o'
+      type          : '()LX/0BBj;'
+      access        : 0x1011 (PUBLIC FINAL SYNTHETIC)
+      method_idx    : 3332
+      code          -
+      registers     : 2
+      ins           : 1
+      outs          : 0
+      insns size    : 2 16-bit code units
+
+
+##### AV1 decoding falls back to progressive :: owner_count=1 #####
+===== classes13.txt:179481-180042 :: X.00NW.CYd =====
+--- hit offset=271, context=201..381 ---
+436796: 0826 3600                              |019d: move-object/from16 v38, v54
+43679a: 0228 1500                              |019f: move/from16 v40, v21
+43679e: 7611 3018 1800                         |01a1: invoke-direct/range {v24, v25, v26, v27, v28, v29, v30, v31, v32, v33, v34, v35, v36, v37, v38, v39, v40}, LX/00lK;.<init>:(LX/073y;LX/073y;LX/073y;LX/073y;LX/09pj;LX/09gB;LX/00lJ;LX/00lC;LX/06vo;LX/00ND;LX/00Mp;LX/00MS;LX/00lH;LX/06vh;IZ)V // method@1830
+4367a4: 221d 0208                              |01a4: new-instance v29, LX/00lN; // type@0802
+4367a8: 7601 7dfb 1d00                         |01a6: invoke-direct/range {v29}, Ljava/lang/Object;.<init>:()V // method@fb7d
+4367ae: 3914 0400                              |01a9: if-nez v20, 01ad // +0004
+4367b2: 6214 a616                              |01ab: sget-object v20, LX/00lO;.A00:LX/00lO; // field@16a6
+4367b6: 1320 0300                              |01ad: const/16 v32, #int 3 // #3
+4367ba: 551d 6079                              |01af: iget-boolean v13, v1, LX/05xw;.A6b:Z // field@7960
+4367be: 5315 0979                              |01b1: iget-wide v5, v1, LX/05xw;.A0q:J // field@7909
+4367c2: 845b                                   |01b3: long-to-int v11, v5
+4367c4: 5315 0779                              |01b4: iget-wide v5, v1, LX/05xw;.A0n:J // field@7907
+4367c8: 845a                                   |01b6: long-to-int v10, v5
+4367ca: 5315 0e79                              |01b7: iget-wide v5, v1, LX/05xw;.A1e:J // field@790e
+4367ce: 8459                                   |01b9: long-to-int v9, v5
+4367d0: 221e 0508                              |01ba: new-instance v30, LX/00lQ; // type@0805
+4367d4: 021f 0d00                              |01bc: move/from16 v31, v13
+4367d8: 0221 0b00                              |01be: move/from16 v33, v11
+4367dc: 0222 0a00                              |01c0: move/from16 v34, v10
+4367e0: 0223 0900                              |01c2: move/from16 v35, v9
+4367e4: 7606 4418 1e00                         |01c4: invoke-direct/range {v30, v31, v32, v33, v34, v35}, LX/00lQ;.<init>:(ZIIII)V // method@1844
+4367ea: 5545 d7a2                              |01c7: iget-boolean v5, v4, LX/08rn;.A0S:Z // field@a2d7
+4367ee: 3805 7900                              |01c9: if-eqz v5, 0242 // +0079
+4367f2: 1a0a 16bc                              |01cb: const-string v10, "MANIFEST" // string@bc16
+4367f6: 1a09 1326                              |01cd: const-string v9, "DYNAMIC_MANIFEST_FOR_VOD" // string@2613
+4367fa: 1a05 0acf                              |01cf: const-string v5, "Trying to play VOD with dynamic manifest" // string@cf0a
+4367fe: 2204 da07                              |01d1: new-instance v4, LX/00kW; // type@07da
+436802: 0801 3800                              |01d3: move-object/from16 v1, v56
+436806: 7055 0d18 149a                         |01d5: invoke-direct {v4, v1, v10, v9, v5}, LX/00kW;.<init>:(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)V // method@180d
+43680c: 0801 3900                              |01d8: move-object/from16 v1, v57
+436810: 6e20 13d1 4100                         |01da: invoke-virtual {v1, v4}, Lcom/facebook/video/heroplayer/service/ServiceEventCallbackImpl;.callback:(LX/03p5;)V // method@d113
+436816: 5401 030b                              |01dd: iget-object v1, v0, LX/00NW;.A0F:Lcom/facebook/video/heroplayer/setting/HeroPlayerSetting; // field@0b03
+43681a: 5411 1cc5                              |01df: iget-object v1, v1, Lcom/facebook/video/heroplayer/setting/HeroPlayerSetting;.A1R:LX/05xw; // field@c51c
+43681e: 5511 4b79                              |01e1: iget-boolean v1, v1, LX/05xw;.A5P:Z // field@794b
+436822: 3801 3500                              |01e3: if-eqz v1, 0218 // +0035
+436826: 5481 d9a0                              |01e5: iget-object v1, v8, LX/08lb;.A07:Landroid/net/Uri; // field@a0d9
+43682a: 3901 3100                              |01e7: if-nez v1, 0218 // +0031
+43682e: 5484 dba0                              |01e9: iget-object v4, v8, LX/08lb;.A09:LX/08ks; // field@a0db
+436832: 6201 31a0                              |01eb: sget-object v1, LX/08ks;.A01:LX/08ks; // field@a031
+436836: 3214 2b00                              |01ed: if-eq v4, v1, 0218 // +002b
+43683a: 540c f90a                              |01ef: iget-object v12, v0, LX/00NW;.A05:Lcom/facebook/video/heroplayer/service/ServiceEventCallbackImpl; // field@0af9
+43683e: 548b e4a0                              |01f1: iget-object v11, v8, LX/08lb;.A0N:Ljava/lang/String; // field@a0e4
+436842: 1a0a 16bc                              |01f3: const-string v10, "MANIFEST" // string@bc16
+436846: 1a09 0fc1                              |01f5: const-string v9, "NULL_MEDIA_SOURCE" // string@c10f
+43684a: 1a0d c022                              |01f7: const-string v13, "DASH media source creation failed and no progressive fallback URI available. manifestContent=" // string@22c0
+43684e: 5481 dda0                              |01f9: iget-object v1, v8, LX/08lb;.A0C:Ljava/lang/String; // field@a0dd
+436852: 1b07 ec0b 0100                         |01fb: const-string/jumbo v7, "non-null" // string@00010bec
+436858: 1b06 6b0c 0100                         |01fe: const-string/jumbo v6, "null" // string@00010c6b
+43685e: 0765                                   |0201: move-object v5, v6
+436860: 3801 0300                              |0202: if-eqz v1, 0205 // +0003
+436864: 0775                                   |0204: move-object v5, v7
+436866: 1a04 1504                              |0205: const-string v4, ", inlineDashManifest=" // string@0415
+43686a: 5421 5016                              |0207: iget-object v1, v2, LX/00kX;.A07:LX/08rn; // field@1650
+43686e: 3901 0300                              |0209: if-nez v1, 020c // +0003
+436872: 0767                                   |020b: move-object v7, v6
+436874: 7140 f701 5d74                         |020c: invoke-static {v13, v5, v4, v7}, LX/002b;.A19:(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)Ljava/lang/String; // method@01f7
+43687a: 0c04                                   |020f: move-result-object v4
+43687c: 2201 da07                              |0210: new-instance v1, LX/00kW; // type@07da
+436880: 7054 0d18 b19a                         |0212: invoke-direct {v1, v11, v10, v9, v4}, LX/00kW;.<init>:(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)V // method@180d
+436886: 6e20 13d1 1c00                         |0215: invoke-virtual {v12, v1}, Lcom/facebook/video/heroplayer/service/ServiceEventCallbackImpl;.callback:(LX/03p5;)V // method@d113
+43688c: 5425 5116                              |0218: iget-object v5, v2, LX/00kX;.A08:Lcom/google/common/base/Supplier; // field@1651
+436890: 5424 4a16                              |021a: iget-object v4, v2, LX/00kX;.A01:LX/00lO; // field@164a
+436894: 5421 4f16                              |021c: iget-object v1, v2, LX/00kX;.A06:Lcom/facebook/video/heroplayer/service/heroexoplayer2/HeroExoPlayer2EventListener; // field@164f
+436898: 7055 fd0c 4013                         |021e: invoke-direct {v0, v4, v3, v1, v5}, LX/00NW;.A03:(LX/00lO;LX/08xk;Lcom/facebook/video/heroplayer/service/heroexoplayer2/HeroExoPlayer2EventListener;Lcom/google/common/base/Supplier;)LX/00lx; // method@0cfd
+43689e: 0c33                                   |0221: move-result-object v51
+4368a0: 6e10 be99 0800                         |0222: invoke-virtual {v8}, LX/08lb;.A03:()Z // method@99be
+4368a6: 0a01                                   |0225: move-result v1
+4368a8: 3801 1b00                              |0226: if-eqz v1, 0241 // +001b
+4368ac: 0201 1500                              |0228: move/from16 v1, v21
+4368b0: 2312 1c77                              |022a: new-array v2, v1, [Ljava/lang/Object; // type@771c
+4368b4: 1a04 f910                              |022c: const-string v4, "AV1 decoding falls back to progressive" // string@10f9
+4368b8: 0801 1600                              |022e: move-object/from16 v1, v22
+4368bc: 7130 c584 4102                         |0230: invoke-static {v1, v4, v2}, LX/06ul;.A01:(Ljava/lang/String;Ljava/lang/String;[Ljava/lang/Object;)V // method@84c5
+4368c2: 5403 f90a                              |0233: iget-object v3, v0, LX/00NW;.A05:Lcom/facebook/video/heroplayer/service/ServiceEventCallbackImpl; // field@0af9
+4368c6: 5482 e4a0                              |0235: iget-object v2, v8, LX/08lb;.A0N:Ljava/lang/String; // field@a0e4
+4368ca: 1a01 0011                              |0237: const-string v1, "AV1_INSTANTIATION" // string@1100
+4368ce: 2200 da07                              |0239: new-instance v0, LX/00kW; // type@07da
+4368d2: 7054 0d18 2011                         |023b: invoke-direct {v0, v2, v1, v1, v4}, LX/00kW;.<init>:(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)V // method@180d
+4368d8: 6e20 13d1 0300                         |023e: invoke-virtual {v3, v0}, Lcom/facebook/video/heroplayer/service/ServiceEventCallbackImpl;.callback:(LX/03p5;)V // method@d113
+4368de: 1133                                   |0241: return-object v51
+4368e0: 52c5 d4a0                              |0242: iget v5, v12, LX/08lb;.A02:I // field@a0d4
+4368e4: 3805 1d00                              |0244: if-eqz v5, 0261 // +001d
+4368e8: 7120 ed9a 5400                         |0246: invoke-static {v4, v5}, LX/08rl;.A05:(LX/08rn;I)Z // method@9aed
+4368ee: 0a06                                   |0249: move-result v6
+4368f0: 3906 1700                              |024a: if-nez v6, 0261 // +0017
+4368f4: 7110 eb9a 0400                         |024c: invoke-static {v4}, LX/08rl;.A03:(LX/08rn;)Ljava/lang/String; // method@9aeb
+4368fa: 0c07                                   |024f: move-result-object v7
+4368fc: 1a0a 16bc                              |0250: const-string v10, "MANIFEST" // string@bc16
+436900: 1a09 d7c7                              |0252: const-string v9, "ROLE_FLAG_NOT_IN_MANIFEST" // string@c7d7
+436904: 1b06 9a17 0100                         |0254: const-string/jumbo v6, "requested roleFlags " // string@0001179a
+43690a: 1a04 a901                              |0257: const-string v4, " not present in DASH manifest; availableRoleFlags=[" // string@01a9
+43690e: 1a01 8fdb                              |0259: const-string v1, "]" // string@db8f
+436912: 7151 c301 6574                         |025b: invoke-static {v5, v6, v4, v7, v1}, LX/002b;.A09:(ILjava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)Ljava/lang/String; // method@01c3
+436918: 0c05                                   |025e: move-result-object v5
+43691a: 2900 72ff                              |025f: goto/16 01d1 // -008e
+43691e: 1a02 3de0                              |0261: const-string v2, "application/dash+xml" // string@e03d
+436922: 5511 4e79                              |0263: iget-boolean v1, v1, LX/05xw;.A5p:Z // field@794e
+436926: 3801 a500                              |0265: if-eqz v1, 030a // +00a5
+43692a: 7120 c09d 7300                         |0267: invoke-static {v3, v7}, LX/08xk;.A00:(LX/08xk;Lcom/facebook/video/heroplayer/setting/HeroPlayerSetting;)Ljava/lang/String; // method@9dc0
+436930: 0c05                                   |026a: move-result-object v5
+436932: 2201 8b06                              |026b: new-instance v1, LX/00dQ; // type@068b
+436936: 7010 7314 0100                         |026d: invoke-direct {v1}, LX/00dQ;.<init>:()V // method@1473
+43693c: 6206 25c0                              |0270: sget-object v6, Landroid/net/Uri;.EMPTY:Landroid/net/Uri; // field@c025
+436940: 5b16 8a12                              |0272: iput-object v6, v1, LX/00dQ;.A01:Landroid/net/Uri; // field@128a
+436944: 5b12 9412                              |0274: iput-object v2, v1, LX/00dQ;.A0B:Ljava/lang/String; // field@1294
+436948: 6e20 7614 5100                         |0276: invoke-virtual {v1, v5}, LX/00dQ;.A01:(Ljava/lang/String;)V // method@1476
+43694e: 6e10 7514 0100                         |0279: invoke-virtual {v1}, LX/00dQ;.A00:()LX/00dO; // method@1475
+436954: 0c05                                   |027c: move-result-object v5
+436956: 1627 ffff                              |027d: const-wide/16 v39, #int -1 // #ffff
+43695a: 2201 8b06                              |027f: new-instance v1, LX/00dQ; // type@068b
+43695e: 7020 7414 5100                         |0281: invoke-direct {v1, v5}, LX/00dQ;.<init>:(LX/00dO;)V // method@1474
+436964: 5b12 9412                              |0284: iput-object v2, v1, LX/00dQ;.A0B:Ljava/lang/String; // field@1294
+436968: 5452 7112                              |0286: iget-object v2, v5, LX/00dO;.A03:LX/00dX; // field@1271
+43696c: 3902 0400                              |0288: if-nez v2, 028c // +0004
+436970: 5b16 8a12                              |028a: iput-object v6, v1, LX/00dQ;.A01:Landroid/net/Uri; // field@128a
+436974: 6e10 7514 0100                         |028c: invoke-virtual {v1}, LX/00dQ;.A00:()LX/00dO; // method@1475
+43697a: 0c1a                                   |028f: move-result-object v26
+43697c: 220d 0608                              |0290: new-instance v13, LX/00lR; // type@0806
+436980: 0819 0d00                              |0292: move-object/from16 v25, v13
+436984: 081b 3500                              |0294: move-object/from16 v27, v53
+436988: 081c 1400                              |0296: move-object/from16 v28, v20
+43698c: 081f 3500                              |0298: move-object/from16 v31, v53
+436990: 0820 1300                              |029a: move-object/from16 v32, v19
+436994: 0821 3500                              |029c: move-object/from16 v33, v53
+436998: 0822 2900                              |029e: move-object/from16 v34, v41
+43699c: 0823 1700                              |02a0: move-object/from16 v35, v23
+4369a0: 0824 1100                              |02a2: move-object/from16 v36, v17
+4369a4: 0825 1800                              |02a4: move-object/from16 v37, v24
+4369a8: 0826 0400                              |02a6: move-object/from16 v38, v4
+4369ac: 7610 4918 1900                         |02a8: invoke-direct/range {v25, v26, v27, v28, v29, v30, v31, v32, v33, v34, v35, v36, v37, v38, v39, v40}, LX/00lR;.<init>:(LX/00dO;LX/073y;LX/00lO;LX/09fZ;LX/09of;LX/0nIC;LX/00lC;LX/06vo;LX/00ND;LX/00lI;LX/00lH;LX/09dY;LX/08rn;J)V // method@1849
+4369b2: 1202                                   |02ab: const/4 v2, #int 0 // #0
+4369b4: 5446 d6a2                              |02ac: iget-object v6, v4, LX/08rn;.A0R:Ljava/util/List; // field@a2d6
+4369b8: 7210 defd 0600                         |02ae: invoke-interface {v6}, Ljava/util/List;.size:()I // method@fdde
+4369be: 0a05                                   |02b1: move-result v5
+4369c0: 0201 1000                              |02b2: move/from16 v1, v16
+4369c4: 3415 c600                              |02b4: if-lt v5, v1, 037a // +00c6
+4369c8: 0201 1500                              |02b6: move/from16 v1, v21
+4369cc: 7220 d1fd 1600                         |02b8: invoke-interface {v6, v1}, Ljava/util/List;.get:(I)Ljava/lang/Object; // method@fdd1
+4369d2: 0c01                                   |02bb: move-result-object v1
+4369d4: 1f01 6646                              |02bc: check-cast v1, LX/08tp; // type@4666
+4369d8: 2206 0474                              |02be: new-instance v6, Ljava/util/ArrayList; // type@7404
+4369dc: 7010 1afd 0600                         |02c0: invoke-direct {v6}, Ljava/util/ArrayList;.<init>:()V // method@fd1a
+4369e2: 2205 0474                              |02c3: new-instance v5, Ljava/util/ArrayList; // type@7404
+4369e6: 7010 1afd 0500                         |02c5: invoke-direct {v5}, Ljava/util/ArrayList;.<init>:()V // method@fd1a
+4369ec: 5411 c1a3                              |02c8: iget-object v1, v1, LX/08tp;.A03:Ljava/util/List; // field@a3c1
+4369f0: 7210 d5fd 0100                         |02ca: invoke-interface {v1}, Ljava/util/List;.iterator:()Ljava/util/Iterator; // method@fdd5
+4369f6: 0c0a                                   |02cd: move-result-object v10
+4369f8: 7210 abfd 0a00                         |02ce: invoke-interface {v10}, Ljava/util/Iterator;.hasNext:()Z // method@fdab
+4369fe: 0a01                                   |02d1: move-result v1
+436a00: 3801 7b00                              |02d2: if-eqz v1, 034d // +007b
+436a04: 7210 acfd 0a00                         |02d4: invoke-interface {v10}, Ljava/util/Iterator;.next:()Ljava/lang/Object; // method@fdac
+436a0a: 0c09                                   |02d7: move-result-object v9
+436a0c: 1f09 5f46                              |02d8: check-cast v9, LX/08ti; // type@465f
+436a10: 5297 9fa3                              |02da: iget v7, v9, LX/08ti;.A06:I // field@a39f
+436a14: 1211                                   |02dc: const/4 v1, #int 1 // #1
+436a16: 3217 1900                              |02dd: if-eq v7, v1, 02f6 // +0019
+436a1a: 1221                                   |02df: const/4 v1, #int 2 // #2
+436a1c: 3317 eeff                              |02e0: if-ne v7, v1, 02ce // -0012
+436a20: 5491 a2a3                              |02e2: iget-object v1, v9, LX/08ti;.A0E:Ljava/util/List; // field@a3a2
+436a24: 7210 d5fd 0100                         |02e4: invoke-interface {v1}, Ljava/util/List;.iterator:()Ljava/util/Iterator; // method@fdd5
+436a2a: 0c07                                   |02e7: move-result-object v7
+436a2c: 7210 abfd 0700                         |02e8: invoke-interface {v7}, Ljava/util/Iterator;.hasNext:()Z // method@fdab
+436a32: 0a01                                   |02eb: move-result v1
+436a34: 3801 e2ff                              |02ec: if-eqz v1, 02ce // -001e
+436a38: 7210 acfd 0700                         |02ee: invoke-interface {v7}, Ljava/util/Iterator;.next:()Ljava/lang/Object; // method@fdac
+436a3e: 0c01                                   |02f1: move-result-object v1
+436a40: 6e20 e7fc 1600                         |02f2: invoke-virtual {v6, v1}, Ljava/util/AbstractCollection;.add:(Ljava/lang/Object;)Z // method@fce7
+436a46: 28f3                                   |02f5: goto 02e8 // -000d
+436a48: 5491 a2a3                              |02f6: iget-object v1, v9, LX/08ti;.A0E:Ljava/util/List; // field@a3a2
+436a4c: 7210 d5fd 0100                         |02f8: invoke-interface {v1}, Ljava/util/List;.iterator:()Ljava/util/Iterator; // method@fdd5
+436a52: 0c07                                   |02fb: move-result-object v7
+436a54: 7210 abfd 0700                         |02fc: invoke-interface {v7}, Ljava/util/Iterator;.hasNext:()Z // method@fdab
+436a5a: 0a01                                   |02ff: move-result v1
+436a5c: 3801 ceff                              |0300: if-eqz v1, 02ce // -0032
+436a60: 7210 acfd 0700                         |0302: invoke-interface {v7}, Ljava/util/Iterator;.next:()Ljava/lang/Object; // method@fdac
+436a66: 0c01                                   |0305: move-result-object v1
+436a68: 6e20 e7fc 1500                         |0306: invoke-virtual {v5, v1}, Ljava/util/AbstractCollection;.add:(Ljava/lang/Object;)Z // method@fce7
+436a6e: 28f3                                   |0309: goto 02fc // -000d
+436a70: 2205 8b06                              |030a: new-instance v5, LX/00dQ; // type@068b
+436a74: 7010 7314 0500                         |030c: invoke-direct {v5}, LX/00dQ;.<init>:()V // method@1473
+
+
+##### dvFallback=true:skipDolbyVisionTrack :: owner_count=1 #####
+===== classes8.txt:351502-352233 :: X.0H9E.FZR =====
+--- hit offset=265, context=195..375 ---
+79559a: 5510 8830                              |0183: iget-boolean v0, v1, LX/0H5u;.A0J:Z // field@3088
+79559e: 022e 0000                              |0185: move/from16 v46, v0
+7955a2: 5210 7530                              |0187: iget v0, v1, LX/0H5u;.A00:F // field@3075
+7955a6: 0225 0000                              |0189: move/from16 v37, v0
+7955aa: 5410 7d30                              |018b: iget-object v0, v1, LX/0H5u;.A08:LX/0ccj; // field@307d
+7955ae: 081d 0000                              |018d: move-object/from16 v29, v0
+7955b2: 5410 7c30                              |018f: iget-object v0, v1, LX/0H5u;.A07:LX/0nbb; // field@307c
+7955b6: 081c 0000                              |0191: move-object/from16 v28, v0
+7955ba: 5510 8930                              |0193: iget-boolean v0, v1, LX/0H5u;.A0K:Z // field@3089
+7955be: 022f 0000                              |0195: move/from16 v47, v0
+7955c2: 5410 7f30                              |0197: iget-object v0, v1, LX/0H5u;.A0A:LX/0Xn6; // field@307f
+7955c6: 081f 0000                              |0199: move-object/from16 v31, v0
+7955ca: 5410 7b30                              |019b: iget-object v0, v1, LX/0H5u;.A06:LX/0mzh; // field@307b
+7955ce: 081b 0000                              |019d: move-object/from16 v27, v0
+7955d2: 5410 8230                              |019f: iget-object v0, v1, LX/0H5u;.A0D:LX/0H8W; // field@3082
+7955d6: 0822 0000                              |01a1: move-object/from16 v34, v0
+7955da: 5510 8530                              |01a3: iget-boolean v0, v1, LX/0H5u;.A0G:Z // field@3085
+7955de: 0217 0000                              |01a5: move/from16 v23, v0
+7955e2: 5410 8030                              |01a7: iget-object v0, v1, LX/0H5u;.A0B:LX/0mpa; // field@3080
+7955e6: 0812 0000                              |01a9: move-object/from16 v18, v0
+7955ea: 541c 8430                              |01ab: iget-object v12, v1, LX/0H5u;.A0F:Ljava/util/List; // field@3084
+7955ee: 541b 8330                              |01ad: iget-object v11, v1, LX/0H5u;.A0E:Ljava/util/List; // field@3083
+7955f2: 551a 8730                              |01af: iget-boolean v10, v1, LX/0H5u;.A0I:Z // field@3087
+7955f6: 5519 8a30                              |01b1: iget-boolean v9, v1, LX/0H5u;.A0L:Z // field@308a
+7955fa: 551d 8630                              |01b3: iget-boolean v13, v1, LX/0H5u;.A0H:Z // field@3086
+7955fe: 548f cf32                              |01b5: iget-object v15, v8, LX/0H9E;.A0Y:Ljava/util/List; // field@32cf
+795602: 7110 d608 0600                         |01b7: invoke-static {v6}, LX/0248;.A15:(Ljava/lang/String;)Ljava/lang/StringBuilder; // method@08d6
+795608: 0c0e                                   |01ba: move-result-object v14
+79560a: 5380 b032                              |01bb: iget-wide v0, v8, LX/0H9E;.A03:J // field@32b0
+79560e: 3805 8e01                              |01bd: if-eqz v5, 034b // +018e
+795612: 6e30 86ea 0e01                         |01bf: invoke-virtual {v14, v0, v1}, Ljava/lang/StringBuilder;.append:(J)Ljava/lang/StringBuilder; // method@ea86
+795618: 1a00 060b                              |01c2: const-string v0, ":codec=" // string@0b06
+79561c: 7140 3809 50e7                         |01c4: invoke-static {v0, v5, v7, v14}, LX/0288;.A1V:(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/StringBuilder;)V // method@0938
+795622: 6e10 43ea 0e00                         |01c7: invoke-virtual {v14}, Ljava/lang/Object;.toString:()Ljava/lang/String; // method@ea43
+795628: 0c00                                   |01ca: move-result-object v0
+79562a: 7220 d7eb 0f00                         |01cb: invoke-interface {v15, v0}, Ljava/util/List;.add:(Ljava/lang/Object;)Z // method@ebd7
+795630: 5480 c432                              |01ce: iget-object v0, v8, LX/0H9E;.A0N:LX/0H5u; // field@32c4
+795634: 5400 8330                              |01d0: iget-object v0, v0, LX/0H5u;.A0E:Ljava/util/List; // field@3083
+795638: 7120 5412 0500                         |01d2: invoke-static {v5, v0}, LX/04k4;.A1E:(Ljava/lang/Object;Ljava/util/Collection;)Ljava/util/ArrayList; // method@1254
+79563e: 0c0b                                   |01d5: move-result-object v11
+795640: 5380 b032                              |01d6: iget-wide v0, v8, LX/0H9E;.A03:J // field@32b0
+795644: 3105 0003                              |01d8: cmp-long v5, v0, v3
+795648: 3a05 0300                              |01da: if-ltz v5, 01dd // +0003
+79564c: 121a                                   |01dc: const/4 v10, #int 1 // #1
+79564e: 2200 b61e                              |01dd: new-instance v0, LX/0H5u; // type@1eb6
+795652: 081a 0000                              |01df: move-object/from16 v26, v0
+795656: 081e 0200                              |01e1: move-object/from16 v30, v2
+79565a: 0820 1200                              |01e3: move-object/from16 v32, v18
+79565e: 0823 0b00                              |01e5: move-object/from16 v35, v11
+795662: 0824 0c00                              |01e7: move-object/from16 v36, v12
+795666: 022b 1700                              |01e9: move/from16 v43, v23
+79566a: 022c 0d00                              |01eb: move/from16 v44, v13
+79566e: 022d 0a00                              |01ed: move/from16 v45, v10
+795672: 0230 0900                              |01ef: move/from16 v48, v9
+795676: 7617 c935 1a00                         |01f1: invoke-direct/range {v26, v27, v28, v29, v30, v31, v32, v33, v34, v35, v36, v37, v38, v39, v40, v41, v42, v43, v44, v45, v46, v47, v48}, LX/0H5u;.<init>:(LX/0mzh;LX/0nbb;LX/0ccj;Lcom/facebook/mediacomposition/shared/transcoder/base/composition/MediaComposition;LX/0Xn6;LX/0mpa;LX/0H4f;LX/0H8W;Ljava/util/List;Ljava/util/List;FIIIIIZZZZZZ)V // method@35c9
+79567c: 5b80 c432                              |01f4: iput-object v0, v8, LX/0H9E;.A0N:LX/0H5u; // field@32c4
+795680: 5481 c432                              |01f6: iget-object v1, v8, LX/0H9E;.A0N:LX/0H5u; // field@32c4
+795684: 5510 8a30                              |01f8: iget-boolean v0, v1, LX/0H5u;.A0L:Z // field@308a
+795688: 3900 8800                              |01fa: if-nez v0, 0282 // +0088
+79568c: 5410 8130                              |01fc: iget-object v0, v1, LX/0H5u;.A0C:LX/0H4f; // field@3081
+795690: 5401 a52f                              |01fe: iget-object v1, v0, LX/0H4f;.A03:LX/0H4H; // field@2fa5
+795694: 2010 563a                              |0200: instance-of v0, v1, LX/0UGN; // type@3a56
+795698: 3800 8000                              |0202: if-eqz v0, 0282 // +0080
+79569c: 1f01 563a                              |0204: check-cast v1, LX/0UGN; // type@3a56
+7956a0: 5410 0e7b                              |0206: iget-object v0, v1, LX/0UGN;.A1D:LX/0C8T; // field@7b0e
+7956a4: 7110 6a00 0000                         |0208: invoke-static {v0}, LX/0020;.A1a:(LX/0C8T;)Z // method@006a
+7956aa: 0a00                                   |020b: move-result v0
+7956ac: 3800 7600                              |020c: if-eqz v0, 0282 // +0076
+7956b0: 5483 cf32                              |020e: iget-object v3, v8, LX/0H9E;.A0Y:Ljava/util/List; // field@32cf
+7956b4: 5380 b032                              |0210: iget-wide v0, v8, LX/0H9E;.A03:J // field@32b0
+7956b8: 1a02 080b                              |0212: const-string v2, ":dvFallback=true:skipDolbyVisionTrack" // string@0b08
+7956bc: 7140 b100 0621                         |0214: invoke-static {v6, v0, v1, v2}, LX/002b;.A0V:(Ljava/lang/String;JLjava/lang/String;)Ljava/lang/String; // method@00b1
+7956c2: 0c00                                   |0217: move-result-object v0
+7956c4: 7220 d7eb 0300                         |0218: invoke-interface {v3, v0}, Ljava/util/List;.add:(Ljava/lang/Object;)Z // method@ebd7
+7956ca: 5480 c432                              |021b: iget-object v0, v8, LX/0H9E;.A0N:LX/0H5u; // field@32c4
+7956ce: 5401 8130                              |021d: iget-object v1, v0, LX/0H5u;.A0C:LX/0H4f; // field@3081
+7956d2: 0821 0100                              |021f: move-object/from16 v33, v1
+7956d6: 5201 7a30                              |0221: iget v1, v0, LX/0H5u;.A05:I // field@307a
+7956da: 022a 0100                              |0223: move/from16 v42, v1
+7956de: 5201 7930                              |0225: iget v1, v0, LX/0H5u;.A04:I // field@3079
+7956e2: 0229 0100                              |0227: move/from16 v41, v1
+7956e6: 5201 7730                              |0229: iget v1, v0, LX/0H5u;.A02:I // field@3077
+7956ea: 0227 0100                              |022b: move/from16 v39, v1
+7956ee: 540f 7e30                              |022d: iget-object v15, v0, LX/0H5u;.A09:Lcom/facebook/mediacomposition/shared/transcoder/base/composition/MediaComposition; // field@307e
+7956f2: 380f a802                              |022f: if-eqz v15, 04d7 // +02a8
+7956f6: 5201 7630                              |0231: iget v1, v0, LX/0H5u;.A01:I // field@3076
+7956fa: 0226 0100                              |0233: move/from16 v38, v1
+7956fe: 5201 7830                              |0235: iget v1, v0, LX/0H5u;.A03:I // field@3078
+795702: 0228 0100                              |0237: move/from16 v40, v1
+795706: 5501 8830                              |0239: iget-boolean v1, v0, LX/0H5u;.A0J:Z // field@3088
+79570a: 022e 0100                              |023b: move/from16 v46, v1
+79570e: 5201 7530                              |023d: iget v1, v0, LX/0H5u;.A00:F // field@3075
+795712: 0217 0100                              |023f: move/from16 v23, v1
+795716: 5401 7d30                              |0241: iget-object v1, v0, LX/0H5u;.A08:LX/0ccj; // field@307d
+79571a: 0812 0100                              |0243: move-object/from16 v18, v1
+79571e: 540e 7c30                              |0245: iget-object v14, v0, LX/0H5u;.A07:LX/0nbb; // field@307c
+795722: 550d 8930                              |0247: iget-boolean v13, v0, LX/0H5u;.A0K:Z // field@3089
+795726: 540c 7f30                              |0249: iget-object v12, v0, LX/0H5u;.A0A:LX/0Xn6; // field@307f
+79572a: 540b 7b30                              |024b: iget-object v11, v0, LX/0H5u;.A06:LX/0mzh; // field@307b
+79572e: 540a 8230                              |024d: iget-object v10, v0, LX/0H5u;.A0D:LX/0H8W; // field@3082
+795732: 5509 8530                              |024f: iget-boolean v9, v0, LX/0H5u;.A0G:Z // field@3085
+795736: 5405 8030                              |0251: iget-object v5, v0, LX/0H5u;.A0B:LX/0mpa; // field@3080
+79573a: 5404 8430                              |0253: iget-object v4, v0, LX/0H5u;.A0F:Ljava/util/List; // field@3084
+79573e: 5403 8330                              |0255: iget-object v3, v0, LX/0H5u;.A0E:Ljava/util/List; // field@3083
+795742: 5502 8730                              |0257: iget-boolean v2, v0, LX/0H5u;.A0I:Z // field@3087
+795746: 5501 8630                              |0259: iget-boolean v1, v0, LX/0H5u;.A0H:Z // field@3086
+79574a: 2200 b61e                              |025b: new-instance v0, LX/0H5u; // type@1eb6
+79574e: 081a 0000                              |025d: move-object/from16 v26, v0
+795752: 081b 0b00                              |025f: move-object/from16 v27, v11
+795756: 081c 0e00                              |0261: move-object/from16 v28, v14
+79575a: 081d 1200                              |0263: move-object/from16 v29, v18
+79575e: 081e 0f00                              |0265: move-object/from16 v30, v15
+795762: 081f 0c00                              |0267: move-object/from16 v31, v12
+795766: 0820 0500                              |0269: move-object/from16 v32, v5
+79576a: 0822 0a00                              |026b: move-object/from16 v34, v10
+79576e: 0823 0300                              |026d: move-object/from16 v35, v3
+795772: 0824 0400                              |026f: move-object/from16 v36, v4
+795776: 0225 1700                              |0271: move/from16 v37, v23
+79577a: 022b 0900                              |0273: move/from16 v43, v9
+79577e: 022c 0100                              |0275: move/from16 v44, v1
+795782: 022d 0200                              |0277: move/from16 v45, v2
+795786: 022f 0d00                              |0279: move/from16 v47, v13
+79578a: 0230 1900                              |027b: move/from16 v48, v25
+79578e: 7617 c935 1a00                         |027d: invoke-direct/range {v26, v27, v28, v29, v30, v31, v32, v33, v34, v35, v36, v37, v38, v39, v40, v41, v42, v43, v44, v45, v46, v47, v48}, LX/0H5u;.<init>:(LX/0mzh;LX/0nbb;LX/0ccj;Lcom/facebook/mediacomposition/shared/transcoder/base/composition/MediaComposition;LX/0Xn6;LX/0mpa;LX/0H4f;LX/0H8W;Ljava/util/List;Ljava/util/List;FIIIIIZZZZZZ)V // method@35c9
+795794: 5b80 c432                              |0280: iput-object v0, v8, LX/0H9E;.A0N:LX/0H5u; // field@32c4
+795798: 5480 c432                              |0282: iget-object v0, v8, LX/0H9E;.A0N:LX/0H5u; // field@32c4
+79579c: 5400 8130                              |0284: iget-object v0, v0, LX/0H5u;.A0C:LX/0H4f; // field@3081
+7957a0: 5401 a52f                              |0286: iget-object v1, v0, LX/0H4f;.A03:LX/0H4H; // field@2fa5
+7957a4: 2010 563a                              |0288: instance-of v0, v1, LX/0UGN; // type@3a56
+7957a8: 3800 a500                              |028a: if-eqz v0, 032f // +00a5
+7957ac: 1f01 563a                              |028c: check-cast v1, LX/0UGN; // type@3a56
+7957b0: 5410 d87a                              |028e: iget-object v0, v1, LX/0UGN;.A0L:LX/0C8T; // field@7ad8
+7957b4: 7110 6a00 0000                         |0290: invoke-static {v0}, LX/0020;.A1a:(LX/0C8T;)Z // method@006a
+7957ba: 0a00                                   |0293: move-result v0
+7957bc: 3800 9b00                              |0294: if-eqz v0, 032f // +009b
+7957c0: 3818 9900                              |0296: if-eqz v24, 032f // +0099
+7957c4: 5480 c432                              |0298: iget-object v0, v8, LX/0H9E;.A0N:LX/0H5u; // field@32c4
+7957c8: 5500 8630                              |029a: iget-boolean v0, v0, LX/0H5u;.A0H:Z // field@3086
+7957cc: 3900 9300                              |029c: if-nez v0, 032f // +0093
+7957d0: 0801 1300                              |029e: move-object/from16 v1, v19
+7957d4: 2010 0244                              |02a0: instance-of v0, v1, LX/0Xl3; // type@4402
+7957d8: 3800 a000                              |02a2: if-eqz v0, 0342 // +00a0
+7957dc: 0710                                   |02a4: move-object v0, v1
+7957de: 1f00 0244                              |02a5: check-cast v0, LX/0Xl3; // type@4402
+7957e2: 5404 dd98                              |02a7: iget-object v4, v0, LX/0Xl3;.A01:Ljava/lang/String; // field@98dd
+7957e6: 3804 9900                              |02a9: if-eqz v4, 0342 // +0099
+7957ea: 5483 cf32                              |02ab: iget-object v3, v8, LX/0H9E;.A0Y:Ljava/util/List; // field@32cf
+7957ee: 7110 d608 0600                         |02ad: invoke-static {v6}, LX/0248;.A15:(Ljava/lang/String;)Ljava/lang/StringBuilder; // method@08d6
+7957f4: 0c02                                   |02b0: move-result-object v2
+7957f6: 5380 b032                              |02b1: iget-wide v0, v8, LX/0H9E;.A03:J // field@32b0
+7957fa: 6e30 86ea 0201                         |02b3: invoke-virtual {v2, v0, v1}, Ljava/lang/StringBuilder;.append:(J)Ljava/lang/StringBuilder; // method@ea86
+795800: 1a00 040b                              |02b6: const-string v0, ":audioCodec=" // string@0b04
+795804: 6e20 8aea 0200                         |02b8: invoke-virtual {v2, v0}, Ljava/lang/StringBuilder;.append:(Ljava/lang/String;)Ljava/lang/StringBuilder; // method@ea8a
+79580a: 3904 0400                              |02bb: if-nez v4, 02bf // +0004
+79580e: 1a04 75c8                              |02bd: const-string v4, "fdk-aac-decoder" // string@c875
+795812: 7130 af0c 7402                         |02bf: invoke-static {v4, v7, v2}, LX/0345;.A0r:(Ljava/lang/String;Ljava/lang/String;Ljava/lang/StringBuilder;)Ljava/lang/String; // method@0caf
+795818: 0c00                                   |02c2: move-result-object v0
+79581a: 7220 d7eb 0300                         |02c3: invoke-interface {v3, v0}, Ljava/util/List;.add:(Ljava/lang/Object;)Z // method@ebd7
+795820: 5480 c432                              |02c6: iget-object v0, v8, LX/0H9E;.A0N:LX/0H5u; // field@32c4
+795824: 5401 8130                              |02c8: iget-object v1, v0, LX/0H5u;.A0C:LX/0H4f; // field@3081
+795828: 0821 0100                              |02ca: move-object/from16 v33, v1
+79582c: 5201 7a30                              |02cc: iget v1, v0, LX/0H5u;.A05:I // field@307a
+795830: 022a 0100                              |02ce: move/from16 v42, v1
+795834: 5201 7930                              |02d0: iget v1, v0, LX/0H5u;.A04:I // field@3079
+795838: 0229 0100                              |02d2: move/from16 v41, v1
+79583c: 5201 7730                              |02d4: iget v1, v0, LX/0H5u;.A02:I // field@3077
+795840: 0227 0100                              |02d6: move/from16 v39, v1
+795844: 540f 7e30                              |02d8: iget-object v15, v0, LX/0H5u;.A09:Lcom/facebook/mediacomposition/shared/transcoder/base/composition/MediaComposition; // field@307e
+795848: 380f f801                              |02da: if-eqz v15, 04d2 // +01f8
+79584c: 5201 7630                              |02dc: iget v1, v0, LX/0H5u;.A01:I // field@3076
+795850: 0218 0100                              |02de: move/from16 v24, v1
+795854: 5201 7830                              |02e0: iget v1, v0, LX/0H5u;.A03:I // field@3078
+795858: 0217 0100                              |02e2: move/from16 v23, v1
+79585c: 5501 8830                              |02e4: iget-boolean v1, v0, LX/0H5u;.A0J:Z // field@3088
+795860: 0212 0100                              |02e6: move/from16 v18, v1
+795864: 520e 7530                              |02e8: iget v14, v0, LX/0H5u;.A00:F // field@3075
+795868: 540d 7d30                              |02ea: iget-object v13, v0, LX/0H5u;.A08:LX/0ccj; // field@307d
+79586c: 540c 7c30                              |02ec: iget-object v12, v0, LX/0H5u;.A07:LX/0nbb; // field@307c
+795870: 550b 8930                              |02ee: iget-boolean v11, v0, LX/0H5u;.A0K:Z // field@3089
+795874: 540a 7f30                              |02f0: iget-object v10, v0, LX/0H5u;.A0A:LX/0Xn6; // field@307f
+
+
+##### No video representation selected :: owner_count=1 #####
+===== classes16.txt:2279978-2280804 :: X.0GAI.run =====
+--- hit offset=105, context=35..215 ---
+92d3b6: 5490 7e8e                              |0049: iget-object v0, v9, LX/0A5J;.A09:LX/06vo; // field@8e7e
+92d3ba: 6e10 e268 0000                         |004b: invoke-virtual {v0}, LX/06vo;.A01:()Ljava/lang/String; // method@68e2
+92d3c0: 0c00                                   |004e: move-result-object v0
+92d3c2: 6e30 4d90 3600                         |004f: invoke-virtual {v6, v3, v0}, LX/0A4X;.A0A:(Ljava/lang/String;Ljava/lang/String;)V // method@904d
+92d3c8: 6e20 7690 a900                         |0052: invoke-virtual {v9, v10}, LX/0A5J;.A0G:(LX/08lb;)LX/08rn; // method@9076
+92d3ce: 0c04                                   |0055: move-result-object v4
+92d3d0: 3904 1000                              |0056: if-nez v4, 0066 // +0010
+92d3d4: 6202 29a5                              |0058: sget-object v2, LX/0Dbm;.A05:LX/0Dbm; // field@a529
+92d3d8: 1a04 aa29                              |005a: const-string v4, "Failed to parse manifest" // string@29aa
+92d3dc: 0790                                   |005c: move-object v0, v9
+92d3de: 0801 3300                              |005d: move-object/from16 v1, v51
+92d3e2: 0205 1300                              |005f: move/from16 v5, v19
+92d3e6: 7706 7390 0000                         |0061: invoke-static/range {v0, v1, v2, v3, v4, v5}, LX/0A5J;.A0D:(LX/0A5J;LX/087h;LX/0Dbm;Ljava/lang/String;Ljava/lang/String;Z)V // method@9073
+92d3ec: 2900 2d05                              |0064: goto/16 0591 // +052d
+92d3f0: 7401 10ff 1800                         |0066: invoke-virtual/range {v24}, Ljava/util/concurrent/atomic/AtomicBoolean;.get:()Z // method@ff10
+92d3f6: 0a00                                   |0069: move-result v0
+92d3f8: 3900 e404                              |006a: if-nez v0, 054e // +04e4
+92d3fc: 1316 0200                              |006c: const/16 v22, #int 2 // #2
+92d400: 0200 1600                              |006e: move/from16 v0, v22
+92d404: 7120 7090 0400                         |0070: invoke-static {v4, v0}, LX/0A5J;.A0A:(LX/08rn;I)Ljava/util/ArrayList; // method@9070
+92d40a: 0c15                                   |0073: move-result-object v21
+92d40c: 121c                                   |0074: const/4 v12, #int 1 // #1
+92d40e: 7120 7090 c400                         |0075: invoke-static {v4, v12}, LX/0A5J;.A0A:(LX/08rn;I)Ljava/util/ArrayList; // method@9070
+92d414: 0c14                                   |0078: move-result-object v20
+92d416: 1b05 080d 0100                         |0079: const-string/jumbo v5, "video: %s manifest parsed, videoReps=%d audioReps=%d" // string@00010d08
+92d41c: 7401 acfd 1500                         |007c: invoke-virtual/range {v21}, Ljava/util/AbstractCollection;.size:()I // method@fdac
+92d422: 0a00                                   |007f: move-result v0
+92d424: 7110 82fc 0000                         |0080: invoke-static {v0}, Ljava/lang/Integer;.valueOf:(I)Ljava/lang/Integer; // method@fc82
+92d42a: 0c02                                   |0083: move-result-object v2
+92d42c: 7401 acfd 1400                         |0084: invoke-virtual/range {v20}, Ljava/util/AbstractCollection;.size:()I // method@fdac
+92d432: 0a00                                   |0087: move-result v0
+92d434: 7110 82fc 0000                         |0088: invoke-static {v0}, Ljava/lang/Integer;.valueOf:(I)Ljava/lang/Integer; // method@fc82
+92d43a: 0c00                                   |008b: move-result-object v0
+92d43c: 2430 736a 2300                         |008c: filled-new-array {v3, v2, v0}, [Ljava/lang/Object; // type@6a73
+92d442: 0c02                                   |008f: move-result-object v2
+92d444: 0800 1900                              |0090: move-object/from16 v0, v25
+92d448: 7130 d168 5002                         |0092: invoke-static {v0, v5, v2}, LX/06ul;.A01:(Ljava/lang/String;Ljava/lang/String;[Ljava/lang/Object;)V // method@68d1
+92d44e: 7401 a8fd 1500                         |0095: invoke-virtual/range {v21}, Ljava/util/AbstractCollection;.isEmpty:()Z // method@fda8
+92d454: 0a00                                   |0098: move-result v0
+92d456: 3800 1000                              |0099: if-eqz v0, 00a9 // +0010
+92d45a: 6202 2ba5                              |009b: sget-object v2, LX/0Dbm;.A07:LX/0Dbm; // field@a52b
+92d45e: 1a04 e3a8                              |009d: const-string v4, "No video representations found" // string@a8e3
+92d462: 0790                                   |009f: move-object v0, v9
+92d464: 0801 3300                              |00a0: move-object/from16 v1, v51
+92d468: 0205 1300                              |00a2: move/from16 v5, v19
+92d46c: 7706 7390 0000                         |00a4: invoke-static/range {v0, v1, v2, v3, v4, v5}, LX/0A5J;.A0D:(LX/0A5J;LX/087h;LX/0Dbm;Ljava/lang/String;Ljava/lang/String;Z)V // method@9073
+92d472: 2900 ea04                              |00a7: goto/16 0591 // +04ea
+92d476: 7120 6990 a900                         |00a9: invoke-static {v9, v10}, LX/0A5J;.A03:(LX/0A5J;LX/08lb;)LX/07my; // method@9069
+92d47c: 0c12                                   |00ac: move-result-object v18
+92d47e: 7110 6a90 0400                         |00ad: invoke-static {v4}, LX/0A5J;.A04:(LX/08rn;)LX/00KT; // method@906a
+92d484: 0c23                                   |00b0: move-result-object v35
+92d486: 7100 1d00 0000                         |00b1: invoke-static {}, LX/000H;.A0U:()Ljava/util/ArrayList; // method@001d
+92d48c: 0c20                                   |00b4: move-result-object v32
+92d48e: 0800 1500                              |00b5: move-object/from16 v0, v21
+92d492: 7120 6e90 0900                         |00b7: invoke-static {v9, v0}, LX/0A5J;.A08:(LX/0A5J;Ljava/util/List;)LX/096x; // method@906e
+92d498: 0c1e                                   |00ba: move-result-object v30
+92d49a: 0822 1200                              |00bb: move-object/from16 v34, v18
+92d49e: 0824 0a00                              |00bd: move-object/from16 v36, v10
+92d4a2: 0825 1e00                              |00bf: move-object/from16 v37, v30
+92d4a6: 0826 2000                              |00c1: move-object/from16 v38, v32
+92d4aa: 0827 0000                              |00c3: move-object/from16 v39, v0
+92d4ae: 0228 1300                              |00c5: move/from16 v40, v19
+92d4b2: 7707 7190 2200                         |00c7: invoke-static/range {v34, v35, v36, v37, v38, v39, v40}, LX/0A5J;.A0B:(LX/07my;LX/00KT;LX/08lb;LX/096x;Ljava/util/ArrayList;Ljava/util/List;Z)LX/04oE; // method@9071
+92d4b8: 0c00                                   |00ca: move-result-object v0
+92d4ba: 5404 b94f                              |00cb: iget-object v4, v0, LX/04oE;.A00:Ljava/lang/Object; // field@4fb9
+92d4be: 1f04 292b                              |00cd: check-cast v4, LX/096x; // type@2b29
+92d4c2: 5405 ba4f                              |00cf: iget-object v5, v0, LX/04oE;.A01:Ljava/lang/Object; // field@4fba
+92d4c6: 1f05 6501                              |00d1: check-cast v5, LX/00QO; // type@0165
+92d4ca: 3904 1000                              |00d3: if-nez v4, 00e3 // +0010
+92d4ce: 620b 2ca5                              |00d5: sget-object v11, LX/0Dbm;.A08:LX/0Dbm; // field@a52c
+92d4d2: 1a0d e2a8                              |00d7: const-string v13, "No video representation selected" // string@a8e2
+92d4d6: 080a 3300                              |00d9: move-object/from16 v10, v51
+92d4da: 073c                                   |00db: move-object v12, v3
+92d4dc: 020e 1300                              |00dc: move/from16 v14, v19
+92d4e0: 7706 7390 0900                         |00de: invoke-static/range {v9, v10, v11, v12, v13, v14}, LX/0A5J;.A0D:(LX/0A5J;LX/087h;LX/0Dbm;Ljava/lang/String;Ljava/lang/String;Z)V // method@9073
+92d4e6: 2900 b004                              |00e1: goto/16 0591 // +04b0
+92d4ea: 7701 3703 1500                         |00e3: invoke-static/range {v21}, LX/00KR;.A02:(Ljava/util/List;)[LX/03oR; // method@0337
+92d4f0: 0c02                                   |00e6: move-result-object v2
+92d4f2: 0800 1200                              |00e7: move-object/from16 v0, v18
+92d4f6: 5400 0773                              |00e9: iget-object v0, v0, LX/07my;.A03:LX/07ne; // field@7307
+92d4fa: 0830 0000                              |00eb: move-object/from16 v48, v0
+92d4fe: 6e20 4475 2000                         |00ed: invoke-virtual {v0, v2}, LX/07ne;.A00:([LX/03oR;)I // method@7544
+92d504: 0a21                                   |00f0: move-result v33
+92d506: 081c 0a00                              |00f1: move-object/from16 v28, v10
+92d50a: 081d 0400                              |00f3: move-object/from16 v29, v4
+92d50e: 081f 1500                              |00f5: move-object/from16 v31, v21
+92d512: 0222 1300                              |00f7: move/from16 v34, v19
+92d516: 081a 0500                              |00f9: move-object/from16 v26, v5
+92d51a: 081b 0900                              |00fb: move-object/from16 v27, v9
+92d51e: 7709 7290 1a00                         |00fd: invoke-static/range {v26, v27, v28, v29, v30, v31, v32, v33, v34}, LX/0A5J;.A0C:(LX/00QO;LX/0A5J;LX/08lb;LX/096x;LX/096x;Ljava/util/List;Ljava/util/List;IZ)V // method@9072
+92d524: 0800 1400                              |0100: move-object/from16 v0, v20
+92d528: 7120 6e90 0900                         |0102: invoke-static {v9, v0}, LX/0A5J;.A08:(LX/0A5J;Ljava/util/List;)LX/096x; // method@906e
+92d52e: 0c1e                                   |0105: move-result-object v30
+92d530: 7100 1d00 0000                         |0106: invoke-static {}, LX/000H;.A0U:()Ljava/util/ArrayList; // method@001d
+92d536: 0c20                                   |0109: move-result-object v32
+92d538: 0822 1200                              |010a: move-object/from16 v34, v18
+92d53c: 0825 1e00                              |010c: move-object/from16 v37, v30
+92d540: 0826 2000                              |010e: move-object/from16 v38, v32
+92d544: 0827 0000                              |0110: move-object/from16 v39, v0
+92d548: 0228 0c00                              |0112: move/from16 v40, v12
+92d54c: 7707 7190 2200                         |0114: invoke-static/range {v34, v35, v36, v37, v38, v39, v40}, LX/0A5J;.A0B:(LX/07my;LX/00KT;LX/08lb;LX/096x;Ljava/util/ArrayList;Ljava/util/List;Z)LX/04oE; // method@9071
+92d552: 0c02                                   |0117: move-result-object v2
+92d554: 5420 b94f                              |0118: iget-object v0, v2, LX/04oE;.A00:Ljava/lang/Object; // field@4fb9
+92d558: 1f00 292b                              |011a: check-cast v0, LX/096x; // type@2b29
+92d55c: 5422 ba4f                              |011c: iget-object v2, v2, LX/04oE;.A01:Ljava/lang/Object; // field@4fba
+92d560: 1f02 6501                              |011e: check-cast v2, LX/00QO; // type@0165
+92d564: 3800 0d00                              |0120: if-eqz v0, 012d // +000d
+92d568: 081d 0000                              |0122: move-object/from16 v29, v0
+92d56c: 081f 1400                              |0124: move-object/from16 v31, v20
+92d570: 0222 0c00                              |0126: move/from16 v34, v12
+92d574: 081a 0200                              |0128: move-object/from16 v26, v2
+92d578: 7709 7290 1a00                         |012a: invoke-static/range {v26, v27, v28, v29, v30, v31, v32, v33, v34}, LX/0A5J;.A0C:(LX/00QO;LX/0A5J;LX/08lb;LX/096x;LX/096x;Ljava/util/List;Ljava/util/List;IZ)V // method@9072
+92d57e: 1b08 0e0d 0100                         |012d: const-string/jumbo v8, "video: %s selected video bitrate=%d, audio bitrate=%s" // string@00010d0e
+92d584: 5447 8781                              |0130: iget-object v7, v4, LX/096x;.A03:LX/03oR; // field@8187
+92d588: 5272 203b                              |0132: iget v2, v7, LX/03oR;.A05:I // field@3b20
+92d58c: 7110 82fc 0200                         |0134: invoke-static {v2}, Ljava/lang/Integer;.valueOf:(I)Ljava/lang/Integer; // method@fc82
+92d592: 0c05                                   |0137: move-result-object v5
+92d594: 3800 1800                              |0138: if-eqz v0, 0150 // +0018
+92d598: 5402 8781                              |013a: iget-object v2, v0, LX/096x;.A03:LX/03oR; // field@8187
+92d59c: 5222 203b                              |013c: iget v2, v2, LX/03oR;.A05:I // field@3b20
+92d5a0: 7110 82fc 0200                         |013e: invoke-static {v2}, Ljava/lang/Integer;.valueOf:(I)Ljava/lang/Integer; // method@fc82
+92d5a6: 0c02                                   |0141: move-result-object v2
+92d5a8: 6e10 bcfc 0200                         |0142: invoke-virtual {v2}, Ljava/lang/Object;.toString:()Ljava/lang/String; // method@fcbc
+92d5ae: 0c02                                   |0145: move-result-object v2
+92d5b0: 2430 736a 5302                         |0146: filled-new-array {v3, v5, v2}, [Ljava/lang/Object; // type@6a73
+92d5b6: 0c05                                   |0149: move-result-object v5
+92d5b8: 0802 1900                              |014a: move-object/from16 v2, v25
+92d5bc: 7130 d168 8205                         |014c: invoke-static {v2, v8, v5}, LX/06ul;.A01:(Ljava/lang/String;Ljava/lang/String;[Ljava/lang/Object;)V // method@68d1
+92d5c2: 2804                                   |014f: goto 0153 // +0004
+92d5c4: 1a02 5bf8                              |0150: const-string v2, "none" // string@f85b
+92d5c8: 28f4                                   |0152: goto 0146 // -000c
+92d5ca: 7110 c200 0000                         |0153: invoke-static {v0}, LX/002L;.A0a:(Ljava/lang/Object;)Z // method@00c2
+92d5d0: 0a20                                   |0156: move-result v32
+92d5d2: 7110 c880 0700                         |0157: invoke-static {v7}, LX/08td;.A00:(LX/03oR;)LX/08td; // method@80c8
+92d5d8: 0c02                                   |015a: move-result-object v2
+92d5da: 542b 9180                              |015b: iget-object v11, v2, LX/08td;.A0A:Ljava/lang/String; // field@8091
+92d5de: 5478 223b                              |015d: iget-object v8, v7, LX/03oR;.A0W:Ljava/lang/String; // field@3b22
+92d5e2: 3800 1702                              |015f: if-eqz v0, 0376 // +0217
+92d5e6: 5407 8781                              |0161: iget-object v7, v0, LX/096x;.A03:LX/03oR; // field@8187
+92d5ea: 7110 c880 0700                         |0163: invoke-static {v7}, LX/08td;.A00:(LX/03oR;)LX/08td; // method@80c8
+92d5f0: 0c02                                   |0166: move-result-object v2
+92d5f2: 5425 9180                              |0167: iget-object v5, v2, LX/08td;.A0A:Ljava/lang/String; // field@8091
+92d5f6: 5472 223b                              |0169: iget-object v2, v7, LX/03oR;.A0W:Ljava/lang/String; // field@3b22
+92d5fa: 081a 0600                              |016b: move-object/from16 v26, v6
+92d5fe: 081b 0300                              |016d: move-object/from16 v27, v3
+92d602: 081c 0b00                              |016f: move-object/from16 v28, v11
+92d606: 081d 0800                              |0171: move-object/from16 v29, v8
+92d60a: 081e 0500                              |0173: move-object/from16 v30, v5
+92d60e: 081f 0200                              |0175: move-object/from16 v31, v2
+92d612: 7407 4f90 1a00                         |0177: invoke-virtual/range {v26, v27, v28, v29, v30, v31, v32}, LX/0A4X;.A0C:(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Z)V // method@904f
+92d618: 549b 7c8e                              |017a: iget-object v11, v9, LX/0A5J;.A07:LX/0A4u; // field@8e7c
+92d61c: 54b2 738e                              |017c: iget-object v2, v11, LX/0A4u;.A01:Ljava/util/concurrent/ConcurrentHashMap; // field@8e73
+92d620: 6e20 bcfd 3200                         |017e: invoke-virtual {v2, v3}, Ljava/util/AbstractMap;.get:(Ljava/lang/Object;)Ljava/lang/Object; // method@fdbc
+92d626: 0c05                                   |0181: move-result-object v5
+92d628: 1f05 c130                              |0182: check-cast v5, LX/0A5L; // type@30c1
+92d62c: 3805 0600                              |0184: if-eqz v5, 018a // +0006
+92d630: 6202 1700                              |0186: sget-object v2, LX/000A;.A0N:Ljava/lang/Integer; // field@0017
+92d634: 5b52 868e                              |0188: iput-object v2, v5, LX/0A5L;.A00:Ljava/lang/Integer; // field@8e86
+92d638: 620d 1700                              |018a: sget-object v13, LX/000A;.A0N:Ljava/lang/Integer; // field@0017
+92d63c: 7130 6190 db03                         |018c: invoke-static {v11, v13, v3}, LX/0A4u;.A00:(LX/0A4u;Ljava/lang/Integer;Ljava/lang/String;)V // method@9061
+92d642: 0205 1600                              |018f: move/from16 v5, v22
+92d646: 0802 1800                              |0191: move-object/from16 v2, v24
+92d64a: 7155 6c90 a924                         |0193: invoke-static {v9, v10, v4, v2, v5}, LX/0A5J;.A06:(LX/0A5J;LX/08lb;LX/096x;Ljava/util/concurrent/atomic/AtomicBoolean;I)LX/0cMQ; // method@906c
+92d650: 0c05                                   |0196: move-result-object v5
+92d652: 2052 7355                              |0197: instance-of v2, v5, LX/0XG7; // type@5573
+92d656: 3802 1300                              |0199: if-eqz v2, 01ac // +0013
+92d65a: 1f05 7355                              |019b: check-cast v5, LX/0XG7; // type@5573
+92d65e: 5455 dec7                              |019d: iget-object v5, v5, LX/0XG7;.A00:LX/00xE; // field@c7de
+92d662: 5512 98af                              |019f: iget-boolean v2, v1, LX/0Exp;.A02:Z // field@af98
+92d666: 3802 0400                              |01a1: if-eqz v2, 01a5 // +0004
+92d66a: 5c1c 99af                              |01a3: iput-boolean v12, v1, LX/0Exp;.A03:Z // field@af99
+92d66e: 3805 eaff                              |01a5: if-eqz v5, 018f // -0016
+92d672: 1207                                   |01a7: const/4 v7, #int 0 // #0
+92d674: 3800 0302                              |01a8: if-eqz v0, 03ab // +0203
+92d678: 2900 d001                              |01aa: goto/16 037a // +01d0
+92d67c: 2052 7455                              |01ac: instance-of v2, v5, LX/0XGV; // type@5574
+92d680: 3802 9203                              |01ae: if-eqz v2, 0540 // +0392
+92d684: 1f05 7455                              |01b0: check-cast v5, LX/0XGV; // type@5574
+92d688: 5452 dfc7                              |01b2: iget-object v2, v5, LX/0XGV;.A00:LX/0Dbm; // field@c7df
+92d68c: 620e 35a5                              |01b4: sget-object v14, LX/0Dbm;.A0H:LX/0Dbm; // field@a535
+
+
+##### preferFpsOverHdr :: owner_count=1 #####
+===== classes12.txt:1677428-1677763 :: X.0kzV.A00 =====
+--- hit offset=301, context=231..336 ---
+5068a6: 0800 1300                              |01bf: move-object/from16 v0, v19
+5068aa: 0813 1200                              |01c1: move-object/from16 v19, v18
+5068ae: 3800 0700                              |01c3: if-eqz v0, 01ca // +0007
+5068b2: 0811 0000                              |01c5: move-object/from16 v17, v0
+5068b6: 0808 1100                              |01c7: move-object/from16 v8, v17
+5068ba: 28eb                                   |01c9: goto 01b4 // -0015
+5068bc: 3813 fdff                              |01ca: if-eqz v19, 01c7 // -0003
+5068c0: 0811 1300                              |01cc: move-object/from16 v17, v19
+5068c4: 28f9                                   |01ce: goto 01c7 // -0007
+5068c6: 3808 5300                              |01cf: if-eqz v8, 0222 // +0053
+5068ca: 5427 623d                              |01d1: iget-object v7, v2, LX/0dQ0;.A02:LX/0gTO; // field@3d62
+5068ce: 5426 603d                              |01d3: iget-object v6, v2, LX/0dQ0;.A00:LX/0gQO; // field@3d60
+5068d2: 6e10 11f3 0600                         |01d5: invoke-virtual {v6}, Ljava/lang/Object;.getClass:()Ljava/lang/Class; // method@f311
+5068d8: 5475 d04e                              |01d8: iget-object v5, v7, LX/0gTO;.A07:LX/0kEp; // field@4ed0
+5068dc: 3805 0b00                              |01da: if-eqz v5, 01e5 // +000b
+5068e0: 5450 2b65                              |01dc: iget-object v0, v5, LX/0kEp;.A02:Ljava/util/Map; // field@652b
+5068e4: 7220 36f5 6000                         |01de: invoke-interface {v0, v6}, Ljava/util/Map;.get:(Ljava/lang/Object;)Ljava/lang/Object; // method@f536
+5068ea: 0c00                                   |01e1: move-result-object v0
+5068ec: 3380 0300                              |01e2: if-ne v0, v8, 01e5 // +0003
+5068f0: 0e00                                   |01e4: return-void
+5068f2: 5474 ce4e                              |01e5: iget-object v4, v7, LX/0gTO;.A05:LX/0hia; // field@4ece
+5068f6: 5440 6f54                              |01e7: iget-object v0, v4, LX/0hia;.A0C:LX/0Ahd; // field@546f
+5068fa: 5403 160b                              |01e9: iget-object v3, v0, LX/0Ahd;.A00:Ljava/util/List; // field@0b16
+5068fe: 7210 1df5 0300                         |01eb: invoke-interface {v3}, Ljava/util/List;.size:()I // method@f51d
+506904: 0a02                                   |01ee: move-result v2
+506906: 1201                                   |01ef: const/4 v1, #int 0 // #0
+506908: 3521 0e00                              |01f0: if-ge v1, v2, 01fe // +000e
+50690c: 7220 12f5 1300                         |01f2: invoke-interface {v3, v1}, Ljava/util/List;.get:(I)Ljava/lang/Object; // method@f512
+506912: 0c00                                   |01f5: move-result-object v0
+506914: 1f00 7a35                              |01f6: check-cast v0, LX/0nQh; // type@357a
+506918: 7210 c6b4 0000                         |01f8: invoke-interface {v0}, LX/0nQh;.FSA:()V // method@b4c6
+50691e: d801 0101                              |01fb: add-int/lit8 v1, v1, #int 1 // #01
+506922: 28f3                                   |01fd: goto 01f0 // -000d
+506924: 3805 0700                              |01fe: if-eqz v5, 0205 // +0007
+506928: 5450 2b65                              |0200: iget-object v0, v5, LX/0kEp;.A02:Ljava/util/Map; // field@652b
+50692c: 7230 3af5 6008                         |0202: invoke-interface {v0, v6, v8}, Ljava/util/Map;.put:(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object; // method@f53a
+506932: 5472 c94e                              |0205: iget-object v2, v7, LX/0gTO;.A00:LX/02Z8; // field@4ec9
+506936: 6e10 d289 0700                         |0207: invoke-virtual {v7}, LX/0gTO;.A00:()LX/0kEL; // method@89d2
+50693c: 0c01                                   |020a: move-result-object v1
+50693e: 5470 cf4e                              |020b: iget-object v0, v7, LX/0gTO;.A06:LX/0kDn; // field@4ecf
+506942: 3805 0d00                              |020d: if-eqz v5, 021a // +000d
+506946: 6e55 908f 1402                         |020f: invoke-virtual {v4, v1, v2, v0, v5}, LX/0hia;.A0B:(LX/0nVF;LX/02Z8;LX/0kDn;LX/0kEp;)V // method@8f90
+50694c: 5441 7354                              |0212: iget-object v1, v4, LX/0hia;.A0G:LX/0nWD; // field@5473
+506950: 5440 6c54                              |0214: iget-object v0, v4, LX/0hia;.A09:LX/0Ahd; // field@546c
+506954: 6e20 3f0f 1000                         |0216: invoke-virtual {v0, v1}, LX/0Ahd;.A01:(Ljava/lang/Object;)Z // method@0f3f
+50695a: 0e00                                   |0219: return-void
+50695c: 1a00 3d6d                              |021a: const-string v0, "StreamCombinationSetter is not initialized" // string@6d3d
+506960: 2201 f63f                              |021c: new-instance v1, Ljava/lang/IllegalArgumentException; // type@3ff6
+506964: 7020 bff2 0100                         |021e: invoke-direct {v1, v0}, Ljava/lang/IllegalArgumentException;.<init>:(Ljava/lang/String;)V // method@f2bf
+50696a: 2701                                   |0221: throw v1
+50696c: 2201 1440                              |0222: new-instance v1, Ljava/lang/StringBuilder; // type@4014
+506970: 7010 63f3 0100                         |0224: invoke-direct {v1}, Ljava/lang/StringBuilder;.<init>:()V // method@f363
+506976: 1a00 3b6d                              |0227: const-string v0, "Stream combination not found. currentResolutionText: " // string@6d3b
+50697a: 6e20 6ef3 0100                         |0229: invoke-virtual {v1, v0}, Ljava/lang/StringBuilder;.append:(Ljava/lang/String;)Ljava/lang/StringBuilder; // method@f36e
+506980: 6e20 6ef3 9100                         |022c: invoke-virtual {v1, v9}, Ljava/lang/StringBuilder;.append:(Ljava/lang/String;)Ljava/lang/StringBuilder; // method@f36e
+506986: 1a00 f400                              |022f: const-string v0, " selectedResolutionText: " // string@00f4
+50698a: 6e20 6ef3 0100                         |0231: invoke-virtual {v1, v0}, Ljava/lang/StringBuilder;.append:(Ljava/lang/String;)Ljava/lang/StringBuilder; // method@f36e
+506990: 6e20 6ef3 7100                         |0234: invoke-virtual {v1, v7}, Ljava/lang/StringBuilder;.append:(Ljava/lang/String;)Ljava/lang/StringBuilder; // method@f36e
+506996: 1a00 9b00                              |0237: const-string v0, " currentFpsText: " // string@009b
+50699a: 6e20 6ef3 0100                         |0239: invoke-virtual {v1, v0}, Ljava/lang/StringBuilder;.append:(Ljava/lang/String;)Ljava/lang/StringBuilder; // method@f36e
+5069a0: 6e20 6ef3 6100                         |023c: invoke-virtual {v1, v6}, Ljava/lang/StringBuilder;.append:(Ljava/lang/String;)Ljava/lang/StringBuilder; // method@f36e
+5069a6: 1a00 f300                              |023f: const-string v0, " selectedFpsText: " // string@00f3
+5069aa: 6e20 6ef3 0100                         |0241: invoke-virtual {v1, v0}, Ljava/lang/StringBuilder;.append:(Ljava/lang/String;)Ljava/lang/StringBuilder; // method@f36e
+5069b0: 6e20 6ef3 5100                         |0244: invoke-virtual {v1, v5}, Ljava/lang/StringBuilder;.append:(Ljava/lang/String;)Ljava/lang/StringBuilder; // method@f36e
+5069b6: 1a00 9a00                              |0247: const-string v0, " currentColorText: " // string@009a
+5069ba: 6e20 6ef3 0100                         |0249: invoke-virtual {v1, v0}, Ljava/lang/StringBuilder;.append:(Ljava/lang/String;)Ljava/lang/StringBuilder; // method@f36e
+5069c0: 6e20 6ef3 4100                         |024c: invoke-virtual {v1, v4}, Ljava/lang/StringBuilder;.append:(Ljava/lang/String;)Ljava/lang/StringBuilder; // method@f36e
+5069c6: 1a00 f200                              |024f: const-string v0, " selectedColorText: " // string@00f2
+5069ca: 6e20 6ef3 0100                         |0251: invoke-virtual {v1, v0}, Ljava/lang/StringBuilder;.append:(Ljava/lang/String;)Ljava/lang/StringBuilder; // method@f36e
+5069d0: 6e20 6ef3 3100                         |0254: invoke-virtual {v1, v3}, Ljava/lang/StringBuilder;.append:(Ljava/lang/String;)Ljava/lang/StringBuilder; // method@f36e
+5069d6: 1a00 e500                              |0257: const-string v0, " preferFpsOverHdr: " // string@00e5
+5069da: 6e20 6ef3 0100                         |0259: invoke-virtual {v1, v0}, Ljava/lang/StringBuilder;.append:(Ljava/lang/String;)Ljava/lang/StringBuilder; // method@f36e
+5069e0: 1200                                   |025c: const/4 v0, #int 0 // #0
+5069e2: 6e20 6ff3 0100                         |025d: invoke-virtual {v1, v0}, Ljava/lang/StringBuilder;.append:(Z)Ljava/lang/StringBuilder; // method@f36f
+5069e8: 1a00 e700                              |0260: const-string v0, " preferResolutionOverHdr: " // string@00e7
+5069ec: 6e20 6ef3 0100                         |0262: invoke-virtual {v1, v0}, Ljava/lang/StringBuilder;.append:(Ljava/lang/String;)Ljava/lang/StringBuilder; // method@f36e
+5069f2: 5520 6f3d                              |0265: iget-boolean v0, v2, LX/0dQ0;.A0F:Z // field@3d6f
+5069f6: 6e20 6ff3 0100                         |0267: invoke-virtual {v1, v0}, Ljava/lang/StringBuilder;.append:(Z)Ljava/lang/StringBuilder; // method@f36f
+5069fc: 1a00 e600                              |026a: const-string v0, " preferResolutionOverFps: " // string@00e6
+506a00: 6e20 6ef3 0100                         |026c: invoke-virtual {v1, v0}, Ljava/lang/StringBuilder;.append:(Ljava/lang/String;)Ljava/lang/StringBuilder; // method@f36e
+506a06: 5520 6e3d                              |026f: iget-boolean v0, v2, LX/0dQ0;.A0E:Z // field@3d6e
+506a0a: 6e20 6ff3 0100                         |0271: invoke-virtual {v1, v0}, Ljava/lang/StringBuilder;.append:(Z)Ljava/lang/StringBuilder; // method@f36f
+506a10: 1a00 e400                              |0274: const-string v0, " preferConstantOverVariableFps: " // string@00e4
+506a14: 6e20 6ef3 0100                         |0276: invoke-virtual {v1, v0}, Ljava/lang/StringBuilder;.append:(Ljava/lang/String;)Ljava/lang/StringBuilder; // method@f36e
+506a1a: 5520 6d3d                              |0279: iget-boolean v0, v2, LX/0dQ0;.A0D:Z // field@3d6d
+506a1e: 6e20 6ff3 0100                         |027b: invoke-virtual {v1, v0}, Ljava/lang/StringBuilder;.append:(Z)Ljava/lang/StringBuilder; // method@f36f
+506a24: 6e10 15f3 0100                         |027e: invoke-virtual {v1}, Ljava/lang/Object;.toString:()Ljava/lang/String; // method@f315
+506a2a: 0c00                                   |0281: move-result-object v0
+506a2c: 2201 0c40                              |0282: new-instance v1, Ljava/lang/RuntimeException; // type@400c
+506a30: 7020 1ef3 0100                         |0284: invoke-direct {v1, v0}, Ljava/lang/RuntimeException;.<init>:(Ljava/lang/String;)V // method@f31e
+506a36: 2701                                   |0287: throw v1
+      catches       : (none)
+      positions     :
+      locals        :
+
+    #1              : (in LX/0kzV;)
+      name          : 'A01'
+      type          : '(LX/0kzV;[Ljava/lang/String;)V'
+      access        : 0x0009 (PUBLIC STATIC)
+      method_idx    : 42855
+      code          -
+      registers     : 20
+      ins           : 2
+      outs          : 5
+      insns size    : 309 16-bit code units
+
+
+##### preferResolutionOverHdr :: owner_count=1 #####
+===== classes12.txt:1677428-1677763 :: X.0kzV.A00 =====
+--- hit offset=305, context=235..336 ---
+5068b6: 0808 1100                              |01c7: move-object/from16 v8, v17
+5068ba: 28eb                                   |01c9: goto 01b4 // -0015
+5068bc: 3813 fdff                              |01ca: if-eqz v19, 01c7 // -0003
+5068c0: 0811 1300                              |01cc: move-object/from16 v17, v19
+5068c4: 28f9                                   |01ce: goto 01c7 // -0007
+5068c6: 3808 5300                              |01cf: if-eqz v8, 0222 // +0053
+5068ca: 5427 623d                              |01d1: iget-object v7, v2, LX/0dQ0;.A02:LX/0gTO; // field@3d62
+5068ce: 5426 603d                              |01d3: iget-object v6, v2, LX/0dQ0;.A00:LX/0gQO; // field@3d60
+5068d2: 6e10 11f3 0600                         |01d5: invoke-virtual {v6}, Ljava/lang/Object;.getClass:()Ljava/lang/Class; // method@f311
+5068d8: 5475 d04e                              |01d8: iget-object v5, v7, LX/0gTO;.A07:LX/0kEp; // field@4ed0
+5068dc: 3805 0b00                              |01da: if-eqz v5, 01e5 // +000b
+5068e0: 5450 2b65                              |01dc: iget-object v0, v5, LX/0kEp;.A02:Ljava/util/Map; // field@652b
+5068e4: 7220 36f5 6000                         |01de: invoke-interface {v0, v6}, Ljava/util/Map;.get:(Ljava/lang/Object;)Ljava/lang/Object; // method@f536
+5068ea: 0c00                                   |01e1: move-result-object v0
+5068ec: 3380 0300                              |01e2: if-ne v0, v8, 01e5 // +0003
+5068f0: 0e00                                   |01e4: return-void
+5068f2: 5474 ce4e                              |01e5: iget-object v4, v7, LX/0gTO;.A05:LX/0hia; // field@4ece
+5068f6: 5440 6f54                              |01e7: iget-object v0, v4, LX/0hia;.A0C:LX/0Ahd; // field@546f
+5068fa: 5403 160b                              |01e9: iget-object v3, v0, LX/0Ahd;.A00:Ljava/util/List; // field@0b16
+5068fe: 7210 1df5 0300                         |01eb: invoke-interface {v3}, Ljava/util/List;.size:()I // method@f51d
+506904: 0a02                                   |01ee: move-result v2
+506906: 1201                                   |01ef: const/4 v1, #int 0 // #0
+506908: 3521 0e00                              |01f0: if-ge v1, v2, 01fe // +000e
+50690c: 7220 12f5 1300                         |01f2: invoke-interface {v3, v1}, Ljava/util/List;.get:(I)Ljava/lang/Object; // method@f512
+506912: 0c00                                   |01f5: move-result-object v0
+506914: 1f00 7a35                              |01f6: check-cast v0, LX/0nQh; // type@357a
+506918: 7210 c6b4 0000                         |01f8: invoke-interface {v0}, LX/0nQh;.FSA:()V // method@b4c6
+50691e: d801 0101                              |01fb: add-int/lit8 v1, v1, #int 1 // #01
+506922: 28f3                                   |01fd: goto 01f0 // -000d
+506924: 3805 0700                              |01fe: if-eqz v5, 0205 // +0007
+506928: 5450 2b65                              |0200: iget-object v0, v5, LX/0kEp;.A02:Ljava/util/Map; // field@652b
+50692c: 7230 3af5 6008                         |0202: invoke-interface {v0, v6, v8}, Ljava/util/Map;.put:(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object; // method@f53a
+506932: 5472 c94e                              |0205: iget-object v2, v7, LX/0gTO;.A00:LX/02Z8; // field@4ec9
+506936: 6e10 d289 0700                         |0207: invoke-virtual {v7}, LX/0gTO;.A00:()LX/0kEL; // method@89d2
+50693c: 0c01                                   |020a: move-result-object v1
+50693e: 5470 cf4e                              |020b: iget-object v0, v7, LX/0gTO;.A06:LX/0kDn; // field@4ecf
+506942: 3805 0d00                              |020d: if-eqz v5, 021a // +000d
+506946: 6e55 908f 1402                         |020f: invoke-virtual {v4, v1, v2, v0, v5}, LX/0hia;.A0B:(LX/0nVF;LX/02Z8;LX/0kDn;LX/0kEp;)V // method@8f90
+50694c: 5441 7354                              |0212: iget-object v1, v4, LX/0hia;.A0G:LX/0nWD; // field@5473
+506950: 5440 6c54                              |0214: iget-object v0, v4, LX/0hia;.A09:LX/0Ahd; // field@546c
+506954: 6e20 3f0f 1000                         |0216: invoke-virtual {v0, v1}, LX/0Ahd;.A01:(Ljava/lang/Object;)Z // method@0f3f
+50695a: 0e00                                   |0219: return-void
+50695c: 1a00 3d6d                              |021a: const-string v0, "StreamCombinationSetter is not initialized" // string@6d3d
+506960: 2201 f63f                              |021c: new-instance v1, Ljava/lang/IllegalArgumentException; // type@3ff6
+506964: 7020 bff2 0100                         |021e: invoke-direct {v1, v0}, Ljava/lang/IllegalArgumentException;.<init>:(Ljava/lang/String;)V // method@f2bf
+50696a: 2701                                   |0221: throw v1
+50696c: 2201 1440                              |0222: new-instance v1, Ljava/lang/StringBuilder; // type@4014
+506970: 7010 63f3 0100                         |0224: invoke-direct {v1}, Ljava/lang/StringBuilder;.<init>:()V // method@f363
+506976: 1a00 3b6d                              |0227: const-string v0, "Stream combination not found. currentResolutionText: " // string@6d3b
+50697a: 6e20 6ef3 0100                         |0229: invoke-virtual {v1, v0}, Ljava/lang/StringBuilder;.append:(Ljava/lang/String;)Ljava/lang/StringBuilder; // method@f36e
+506980: 6e20 6ef3 9100                         |022c: invoke-virtual {v1, v9}, Ljava/lang/StringBuilder;.append:(Ljava/lang/String;)Ljava/lang/StringBuilder; // method@f36e
+506986: 1a00 f400                              |022f: const-string v0, " selectedResolutionText: " // string@00f4
+50698a: 6e20 6ef3 0100                         |0231: invoke-virtual {v1, v0}, Ljava/lang/StringBuilder;.append:(Ljava/lang/String;)Ljava/lang/StringBuilder; // method@f36e
+506990: 6e20 6ef3 7100                         |0234: invoke-virtual {v1, v7}, Ljava/lang/StringBuilder;.append:(Ljava/lang/String;)Ljava/lang/StringBuilder; // method@f36e
+506996: 1a00 9b00                              |0237: const-string v0, " currentFpsText: " // string@009b
+50699a: 6e20 6ef3 0100                         |0239: invoke-virtual {v1, v0}, Ljava/lang/StringBuilder;.append:(Ljava/lang/String;)Ljava/lang/StringBuilder; // method@f36e
+5069a0: 6e20 6ef3 6100                         |023c: invoke-virtual {v1, v6}, Ljava/lang/StringBuilder;.append:(Ljava/lang/String;)Ljava/lang/StringBuilder; // method@f36e
+5069a6: 1a00 f300                              |023f: const-string v0, " selectedFpsText: " // string@00f3
+5069aa: 6e20 6ef3 0100                         |0241: invoke-virtual {v1, v0}, Ljava/lang/StringBuilder;.append:(Ljava/lang/String;)Ljava/lang/StringBuilder; // method@f36e
+5069b0: 6e20 6ef3 5100                         |0244: invoke-virtual {v1, v5}, Ljava/lang/StringBuilder;.append:(Ljava/lang/String;)Ljava/lang/StringBuilder; // method@f36e
+5069b6: 1a00 9a00                              |0247: const-string v0, " currentColorText: " // string@009a
+5069ba: 6e20 6ef3 0100                         |0249: invoke-virtual {v1, v0}, Ljava/lang/StringBuilder;.append:(Ljava/lang/String;)Ljava/lang/StringBuilder; // method@f36e
+5069c0: 6e20 6ef3 4100                         |024c: invoke-virtual {v1, v4}, Ljava/lang/StringBuilder;.append:(Ljava/lang/String;)Ljava/lang/StringBuilder; // method@f36e
+5069c6: 1a00 f200                              |024f: const-string v0, " selectedColorText: " // string@00f2
+5069ca: 6e20 6ef3 0100                         |0251: invoke-virtual {v1, v0}, Ljava/lang/StringBuilder;.append:(Ljava/lang/String;)Ljava/lang/StringBuilder; // method@f36e
+5069d0: 6e20 6ef3 3100                         |0254: invoke-virtual {v1, v3}, Ljava/lang/StringBuilder;.append:(Ljava/lang/String;)Ljava/lang/StringBuilder; // method@f36e
+5069d6: 1a00 e500                              |0257: const-string v0, " preferFpsOverHdr: " // string@00e5
+5069da: 6e20 6ef3 0100                         |0259: invoke-virtual {v1, v0}, Ljava/lang/StringBuilder;.append:(Ljava/lang/String;)Ljava/lang/StringBuilder; // method@f36e
+5069e0: 1200                                   |025c: const/4 v0, #int 0 // #0
+5069e2: 6e20 6ff3 0100                         |025d: invoke-virtual {v1, v0}, Ljava/lang/StringBuilder;.append:(Z)Ljava/lang/StringBuilder; // method@f36f
+5069e8: 1a00 e700                              |0260: const-string v0, " preferResolutionOverHdr: " // string@00e7
+5069ec: 6e20 6ef3 0100                         |0262: invoke-virtual {v1, v0}, Ljava/lang/StringBuilder;.append:(Ljava/lang/String;)Ljava/lang/StringBuilder; // method@f36e
+5069f2: 5520 6f3d                              |0265: iget-boolean v0, v2, LX/0dQ0;.A0F:Z // field@3d6f
+5069f6: 6e20 6ff3 0100                         |0267: invoke-virtual {v1, v0}, Ljava/lang/StringBuilder;.append:(Z)Ljava/lang/StringBuilder; // method@f36f
+5069fc: 1a00 e600                              |026a: const-string v0, " preferResolutionOverFps: " // string@00e6
+506a00: 6e20 6ef3 0100                         |026c: invoke-virtual {v1, v0}, Ljava/lang/StringBuilder;.append:(Ljava/lang/String;)Ljava/lang/StringBuilder; // method@f36e
+506a06: 5520 6e3d                              |026f: iget-boolean v0, v2, LX/0dQ0;.A0E:Z // field@3d6e
+506a0a: 6e20 6ff3 0100                         |0271: invoke-virtual {v1, v0}, Ljava/lang/StringBuilder;.append:(Z)Ljava/lang/StringBuilder; // method@f36f
+506a10: 1a00 e400                              |0274: const-string v0, " preferConstantOverVariableFps: " // string@00e4
+506a14: 6e20 6ef3 0100                         |0276: invoke-virtual {v1, v0}, Ljava/lang/StringBuilder;.append:(Ljava/lang/String;)Ljava/lang/StringBuilder; // method@f36e
+506a1a: 5520 6d3d                              |0279: iget-boolean v0, v2, LX/0dQ0;.A0D:Z // field@3d6d
+506a1e: 6e20 6ff3 0100                         |027b: invoke-virtual {v1, v0}, Ljava/lang/StringBuilder;.append:(Z)Ljava/lang/StringBuilder; // method@f36f
+506a24: 6e10 15f3 0100                         |027e: invoke-virtual {v1}, Ljava/lang/Object;.toString:()Ljava/lang/String; // method@f315
+506a2a: 0c00                                   |0281: move-result-object v0
+506a2c: 2201 0c40                              |0282: new-instance v1, Ljava/lang/RuntimeException; // type@400c
+506a30: 7020 1ef3 0100                         |0284: invoke-direct {v1, v0}, Ljava/lang/RuntimeException;.<init>:(Ljava/lang/String;)V // method@f31e
+506a36: 2701                                   |0287: throw v1
+      catches       : (none)
+      positions     :
+      locals        :
+
+    #1              : (in LX/0kzV;)
+      name          : 'A01'
+      type          : '(LX/0kzV;[Ljava/lang/String;)V'
+      access        : 0x0009 (PUBLIC STATIC)
+      method_idx    : 42855
+      code          -
+      registers     : 20
+      ins           : 2
+      outs          : 5
+      insns size    : 309 16-bit code units
+
+
+##### Dolby vision codec is not supported. :: owner_count=1 #####
+===== classes19.txt:1209291-1209818 :: X.0FZw.A06 =====
+--- hit offset=31, context=0..141 ---
+636d44:                                        |[636d44] X.0FZw.A06:(LX/03oR;)Ljava/nio/ByteBuffer;
+636d54: 0802 1000                              |0000: move-object/from16 v2, v16
+636d58: 5429 980d                              |0002: iget-object v9, v2, LX/03oR;.A0b:Ljava/lang/String; // field@0d98
+636d5c: 7110 d523 0900                         |0004: invoke-static {v9}, LX/07pt;.A01:(Ljava/lang/Object;)V // method@23d5
+636d62: 6e10 bcee 0900                         |0007: invoke-virtual {v9}, Ljava/lang/String;.hashCode:()I // method@eebc
+636d68: 0a0a                                   |000a: move-result v10
+636d6a: 1204                                   |000b: const/4 v4, #int 0 // #0
+636d6c: 2c0a d403 0000                         |000c: sparse-switch v10, 000003e0 // +000003d4
+636d72: 1a00 1599                              |000f: const-string v0, "Unsupported format: " // string@9915
+636d76: 7120 a000 9000                         |0011: invoke-static {v0, v9}, LX/002b;.A0W:(Ljava/lang/String;Ljava/lang/String;)Ljava/lang/String; // method@00a0
+636d7c: 0c01                                   |0014: move-result-object v1
+636d7e: 2200 ef52                              |0015: new-instance v0, Ljava/lang/IllegalArgumentException; // type@52ef
+636d82: 7020 4dee 1000                         |0017: invoke-direct {v0, v1}, Ljava/lang/IllegalArgumentException;.<init>:(Ljava/lang/String;)V // method@ee4d
+636d88: 2700                                   |001a: throw v0
+636d8a: 1a00 95a7                              |001b: const-string v0, "audio/eac3-joc" // string@a795
+636d8e: 2900 8f02                              |001d: goto/16 02ac // +028f
+636d92: 1a00 52df                              |001f: const-string v0, "video/dolby-vision" // string@df52
+636d96: 6e20 b6ee 0900                         |0021: invoke-virtual {v9, v0}, Ljava/lang/String;.equals:(Ljava/lang/Object;)Z // method@eeb6
+636d9c: 0a00                                   |0024: move-result v0
+636d9e: 3800 eaff                              |0025: if-eqz v0, 000f // -0016
+636da2: 5423 990d                              |0027: iget-object v3, v2, LX/03oR;.A0c:Ljava/util/List; // field@0d99
+636da6: 7210 6cf0 0300                         |0029: invoke-interface {v3}, Ljava/util/List;.isEmpty:()Z // method@f06c
+636dac: 0a00                                   |002c: move-result v0
+636dae: df01 0001                              |002d: xor-int/lit8 v1, v0, #int 1 // #01
+636db2: 1a00 2faf                              |002f: const-string v0, "csd is not found in the format for dolby vision" // string@af2f
+636db6: 7120 d923 0100                         |0031: invoke-static {v1, v0}, LX/07pt;.A07:(ZLjava/lang/Object;)V // method@23d9
+636dbc: 7110 f661 0300                         |0034: invoke-static {v3}, LX/0Fcg;.A01:(Ljava/lang/Iterable;)Ljava/lang/Object; // method@61f6
+636dc2: 0c04                                   |0037: move-result-object v4
+636dc4: 1f04 0954                              |0038: check-cast v4, [B // type@5409
+636dc8: 7110 9b61 0200                         |003a: invoke-static {v2}, LX/0FZw;.A02:(LX/03oR;)LX/0fJA; // method@619b
+636dce: 0c01                                   |003d: move-result-object v1
+636dd0: 1a00 dd19                              |003e: const-string v0, "Dolby vision codec is not supported." // string@19dd
+636dd4: 7120 d623 0100                         |0040: invoke-static {v1, v0}, LX/07pt;.A03:(Ljava/lang/Object;Ljava/lang/Object;)V // method@23d6
+636dda: 5213 8bbf                              |0043: iget v3, v1, LX/0fJA;.A00:I // field@bf8b
+636dde: 1300 0800                              |0045: const/16 v0, #int 8 // #8
+636de2: 3603 2800                              |0047: if-gt v3, v0, 006f // +0028
+636de6: 7110 a161 0200                         |0049: invoke-static {v2}, LX/0FZw;.A08:(LX/03oR;)Ljava/nio/ByteBuffer; // method@61a1
+636dec: 0c02                                   |004c: move-result-object v2
+636dee: 2140                                   |004d: array-length v0, v4
+636df0: 1201                                   |004e: const/4 v1, #int 0 // #0
+636df2: 3d00 0300                              |004f: if-lez v0, 0052 // +0003
+636df6: 1211                                   |0051: const/4 v1, #int 1 // #1
+636df8: 1a00 2eaf                              |0052: const-string v0, "csd is empty for dovi box." // string@af2e
+636dfc: 7120 d923 0100                         |0054: invoke-static {v1, v0}, LX/07pt;.A07:(ZLjava/lang/Object;)V // method@23d9
+636e02: 1270                                   |0057: const/4 v0, #int 7 // #7
+636e04: 1a01 c5b1                              |0058: const-string v1, "dvcC" // string@b1c5
+636e08: 3703 0400                              |005a: if-le v3, v0, 005e // +0004
+636e0c: 1a01 c7b1                              |005c: const-string v1, "dvvC" // string@b1c7
+636e10: 7110 81ef 0400                         |005e: invoke-static {v4}, Ljava/nio/ByteBuffer;.wrap:([B)Ljava/nio/ByteBuffer; // method@ef81
+636e16: 0c00                                   |0061: move-result-object v0
+636e18: 7120 a861 0100                         |0062: invoke-static {v1, v0}, LX/0FZx;.A00:(Ljava/lang/String;Ljava/nio/ByteBuffer;)Ljava/nio/ByteBuffer; // method@61a8
+636e1e: 0c00                                   |0065: move-result-object v0
+636e20: 2420 2957 0200                         |0066: filled-new-array {v2, v0}, [Ljava/nio/ByteBuffer; // type@5729
+636e26: 0c00                                   |0069: move-result-object v0
+636e28: 7110 aa61 0000                         |006a: invoke-static {v0}, LX/0FZx;.A02:([Ljava/nio/ByteBuffer;)Ljava/nio/ByteBuffer; // method@61aa
+636e2e: 0c00                                   |006d: move-result-object v0
+636e30: 1100                                   |006e: return-object v0
+636e32: 7110 a061 0200                         |006f: invoke-static {v2}, LX/0FZw;.A07:(LX/03oR;)Ljava/nio/ByteBuffer; // method@61a0
+636e38: 0c02                                   |0072: move-result-object v2
+636e3a: 28da                                   |0073: goto 004d // -0026
+636e3c: 1a00 4cdf                              |0074: const-string v0, "video/3gpp" // string@df4c
+636e40: 6e20 b6ee 0900                         |0076: invoke-virtual {v9, v0}, Ljava/lang/String;.equals:(Ljava/lang/Object;)Z // method@eeb6
+636e46: 0a00                                   |0079: move-result v0
+636e48: 3800 95ff                              |007a: if-eqz v0, 000f // -006b
+636e4c: 1270                                   |007c: const/4 v0, #int 7 // #7
+636e4e: 7110 67ef 0000                         |007d: invoke-static {v0}, Ljava/nio/ByteBuffer;.allocate:(I)Ljava/nio/ByteBuffer; // method@ef67
+636e54: 0c05                                   |0080: move-result-object v5
+636e56: 1a01 2200                              |0081: const-string v1, "    " // string@0022
+636e5a: 6200 2ad7                              |0083: sget-object v0, Ljava/nio/charset/StandardCharsets;.UTF_8:Ljava/nio/charset/Charset; // field@d72a
+636e5e: 6e20 bbee 0100                         |0085: invoke-virtual {v1, v0}, Ljava/lang/String;.getBytes:(Ljava/nio/charset/Charset;)[B // method@eebb
+636e64: 0c00                                   |0088: move-result-object v0
+636e66: 6e20 7aef 0500                         |0089: invoke-virtual {v5, v0}, Ljava/nio/ByteBuffer;.put:([B)Ljava/nio/ByteBuffer; // method@ef7a
+636e6c: 6e20 78ef 4500                         |008c: invoke-virtual {v5, v4}, Ljava/nio/ByteBuffer;.put:(B)Ljava/nio/ByteBuffer; // method@ef78
+636e72: 7110 d4d4 0200                         |008f: invoke-static {v2}, Landroidx/media3/common/util/CodecSpecificDataUtil;.A01:(LX/03oR;)Landroid/util/Pair; // method@d4d4
+636e78: 0c01                                   |0092: move-result-object v1
+636e7a: 3901 0c00                              |0093: if-nez v1, 009f // +000c
+636e7e: 1210                                   |0095: const/4 v0, #int 1 // #1
+636e80: 7110 5cee 0000                         |0096: invoke-static {v0}, Ljava/lang/Integer;.valueOf:(I)Ljava/lang/Integer; // method@ee5c
+636e86: 0c00                                   |0099: move-result-object v0
+636e88: 2201 714b                              |009a: new-instance v1, Landroid/util/Pair; // type@4b71
+636e8c: 7030 5cd1 0100                         |009c: invoke-direct {v1, v0, v0}, Landroid/util/Pair;.<init>:(Ljava/lang/Object;Ljava/lang/Object;)V // method@d15c
+636e92: 5410 a3c1                              |009f: iget-object v0, v1, Landroid/util/Pair;.second:Ljava/lang/Object; // field@c1a3
+636e96: 1f00 ff52                              |00a1: check-cast v0, Ljava/lang/Number; // type@52ff
+636e9a: 6e10 8aee 0000                         |00a3: invoke-virtual {v0}, Ljava/lang/Number;.byteValue:()B // method@ee8a
+636ea0: 0a00                                   |00a6: move-result v0
+636ea2: 6e20 78ef 0500                         |00a7: invoke-virtual {v5, v0}, Ljava/nio/ByteBuffer;.put:(B)Ljava/nio/ByteBuffer; // method@ef78
+636ea8: 5410 a2c1                              |00aa: iget-object v0, v1, Landroid/util/Pair;.first:Ljava/lang/Object; // field@c1a2
+636eac: 1f00 ff52                              |00ac: check-cast v0, Ljava/lang/Number; // type@52ff
+636eb0: 6e10 8aee 0000                         |00ae: invoke-virtual {v0}, Ljava/lang/Number;.byteValue:()B // method@ee8a
+636eb6: 0a00                                   |00b1: move-result v0
+636eb8: 6e20 78ef 0500                         |00b2: invoke-virtual {v5, v0}, Ljava/nio/ByteBuffer;.put:(B)Ljava/nio/ByteBuffer; // method@ef78
+636ebe: 6e10 5eef 0500                         |00b5: invoke-virtual {v5}, Ljava/nio/Buffer;.flip:()Ljava/nio/Buffer; // method@ef5e
+636ec4: 1a00 92af                              |00b8: const-string v0, "d263" // string@af92
+636ec8: 2900 5b02                              |00ba: goto/16 0315 // +025b
+636ecc: 1a00 4edf                              |00bc: const-string v0, "video/av01" // string@df4e
+636ed0: 6e20 b6ee 0900                         |00be: invoke-virtual {v9, v0}, Ljava/lang/String;.equals:(Ljava/lang/Object;)Z // method@eeb6
+636ed6: 0a00                                   |00c1: move-result v0
+636ed8: 3800 4dff                              |00c2: if-eqz v0, 000f // -00b3
+636edc: 5420 990d                              |00c4: iget-object v0, v2, LX/03oR;.A0c:Ljava/util/List; // field@0d99
+636ee0: 7220 6af0 4000                         |00c6: invoke-interface {v0, v4}, Ljava/util/List;.get:(I)Ljava/lang/Object; // method@f06a
+636ee6: 0c05                                   |00c9: move-result-object v5
+636ee8: 1f05 0954                              |00ca: check-cast v5, [B // type@5409
+636eec: 1a04 0fa8                              |00cc: const-string v4, "av1C" // string@a80f
+636ef0: 2900 0702                              |00ce: goto/16 02d5 // +0207
+636ef4: 1a00 55df                              |00d0: const-string v0, "video/hevc" // string@df55
+636ef8: 6e20 b6ee 0900                         |00d2: invoke-virtual {v9, v0}, Ljava/lang/String;.equals:(Ljava/lang/Object;)Z // method@eeb6
+636efe: 0a00                                   |00d5: move-result v0
+636f00: 3800 39ff                              |00d6: if-eqz v0, 000f // -00c7
+636f04: 7110 a161 0200                         |00d8: invoke-static {v2}, LX/0FZw;.A08:(LX/03oR;)Ljava/nio/ByteBuffer; // method@61a1
+636f0a: 0c00                                   |00db: move-result-object v0
+636f0c: 1100                                   |00dc: return-object v0
+636f0e: 1a00 93a7                              |00dd: const-string v0, "audio/amr-wb" // string@a793
+636f12: 6e20 b6ee 0900                         |00df: invoke-virtual {v9, v0}, Ljava/lang/String;.equals:(Ljava/lang/Object;)Z // method@eeb6
+636f18: 0a00                                   |00e2: move-result v0
+636f1a: 3800 2cff                              |00e3: if-eqz v0, 000f // -00d4
+636f1e: 1300 ff83                              |00e5: const/16 v0, #int -31745 // #83ff
+636f22: 7110 a561 0000                         |00e7: invoke-static {v0}, LX/0FZw;.A0C:(S)Ljava/nio/ByteBuffer; // method@61a5
+636f28: 0c00                                   |00ea: move-result-object v0
+636f2a: 1100                                   |00eb: return-object v0
+636f2c: 1a00 9ca7                              |00ec: const-string v0, "audio/vorbis" // string@a79c
+636f30: 2813                                   |00ee: goto 0101 // +0013
+636f32: 1a00 98a7                              |00ef: const-string v0, "audio/mp4a-latm" // string@a798
+636f36: 2810                                   |00f1: goto 0101 // +0010
+636f38: 1a00 9ba7                              |00f2: const-string v0, "audio/raw" // string@a79b
+636f3c: 6e20 b6ee 0900                         |00f4: invoke-virtual {v9, v0}, Ljava/lang/String;.equals:(Ljava/lang/Object;)Z // method@eeb6
+636f42: 0a00                                   |00f7: move-result v0
+636f44: 3800 17ff                              |00f8: if-eqz v0, 000f // -00e9
+636f48: 7110 67ef 0400                         |00fa: invoke-static {v4}, Ljava/nio/ByteBuffer;.allocate:(I)Ljava/nio/ByteBuffer; // method@ef67
+636f4e: 0c00                                   |00fd: move-result-object v0
+636f50: 1100                                   |00fe: return-object v0
+636f52: 1a00 59df                              |00ff: const-string v0, "video/mp4v-es" // string@df59
+636f56: 6e20 b6ee 0900                         |0101: invoke-virtual {v9, v0}, Ljava/lang/String;.equals:(Ljava/lang/Object;)Z // method@eeb6
+636f5c: 0a00                                   |0104: move-result v0
+636f5e: 3800 0aff                              |0105: if-eqz v0, 000f // -00f6
+636f62: 5423 990d                              |0107: iget-object v3, v2, LX/03oR;.A0c:Ljava/util/List; // field@0d99
+636f66: 7210 6cf0 0300                         |0109: invoke-interface {v3}, Ljava/util/List;.isEmpty:()Z // method@f06c
+636f6c: 0a00                                   |010c: move-result v0
+636f6e: 1216                                   |010d: const/4 v6, #int 1 // #1
+636f70: df01 0001                              |010e: xor-int/lit8 v1, v0, #int 1 // #01
+636f74: 1a00 3aaf                              |0110: const-string v0, "csd-0 not found in the format for esds box." // string@af3a
+636f78: 7120 d923 0100                         |0112: invoke-static {v1, v0}, LX/07pt;.A07:(ZLjava/lang/Object;)V // method@23d9
+
+
+##### Ignoring malformed AV1 codec string: :: owner_count=2 #####
+===== classes16.txt:1881024-1881908 :: androidx.media3.common.util.CodecSpecificDataUtil.A01 =====
+--- hit offset=696, context=626..806 ---
+84305a: 0a00                                   |0483: move-result v0
+84305c: d800 0010                              |0484: add-int/lit8 v0, v0, #int 16 // #10
+843060: b809                                   |0486: shl-int/2addr v9, v0
+843062: 1230                                   |0487: const/4 v0, #int 3 // #3
+843064: 4603 0800                              |0488: aget-object v3, v8, v0
+843068: 6e10 defc 0300                         |048a: invoke-virtual {v3}, Ljava/lang/String;.hashCode:()I // method@fcde
+84306e: 0a07                                   |048d: move-result v7
+843070: 12f5                                   |048e: const/4 v5, #int -1 // #ff
+843072: 1400 5f9c 2500                         |048f: const v0, #float 3.45401e-39 // #00259c5f
+843078: 3207 4100                              |0492: if-eq v7, v0, 04d3 // +0041
+84307c: 1400 2887 2f00                         |0494: const v0, #float 4.36475e-39 // #002f8728
+843082: 3207 3200                              |0497: if-eq v7, v0, 04c9 // +0032
+843086: 1400 d16b 3100                         |0499: const v0, #float 4.53862e-39 // #00316bd1
+84308c: 3207 2300                              |049c: if-eq v7, v0, 04bf // +0023
+843090: 1400 9037 3300                         |049e: const v0, #float 4.70354e-39 // #00333790
+843096: 3307 0b00                              |04a1: if-ne v7, v0, 04ac // +000b
+84309a: 1a00 2af5                              |04a3: const-string v0, "mp4a" // string@f52a
+84309e: 6e20 d7fc 0300                         |04a5: invoke-virtual {v3, v0}, Ljava/lang/String;.equals:(Ljava/lang/Object;)Z // method@fcd7
+8430a4: 0a00                                   |04a8: move-result v0
+8430a6: 3800 0300                              |04a9: if-eqz v0, 04ac // +0003
+8430aa: 1235                                   |04ab: const/4 v5, #int 3 // #3
+8430ac: 3805 3400                              |04ac: if-eqz v5, 04e0 // +0034
+8430b0: 1210                                   |04ae: const/4 v0, #int 1 // #1
+8430b2: 3205 3400                              |04af: if-eq v5, v0, 04e3 // +0034
+8430b6: 1220                                   |04b1: const/4 v0, #int 2 // #2
+8430b8: 3205 2b00                              |04b2: if-eq v5, v0, 04dd // +002b
+8430bc: 1230                                   |04b4: const/4 v0, #int 3 // #3
+8430be: 3205 2d00                              |04b5: if-eq v5, v0, 04e2 // +002d
+8430c2: 2202 bc67                              |04b7: new-instance v2, Ljava/lang/StringBuilder; // type@67bc
+8430c6: 7010 fcfc 0200                         |04b9: invoke-direct {v2}, Ljava/lang/StringBuilder;.<init>:()V // method@fcfc
+8430cc: 1a00 8236                              |04bc: const-string v0, "Ignoring unknown codec identifier for IAMF auxiliary profile: " // string@3682
+8430d0: 28b3                                   |04be: goto 0471 // -004d
+8430d2: 1a00 57ee                              |04bf: const-string v0, "ipcm" // string@ee57
+8430d6: 6e20 d7fc 0300                         |04c1: invoke-virtual {v3, v0}, Ljava/lang/String;.equals:(Ljava/lang/Object;)Z // method@fcd7
+8430dc: 0a00                                   |04c4: move-result v0
+8430de: 3800 e7ff                              |04c5: if-eqz v0, 04ac // -0019
+8430e2: 1225                                   |04c7: const/4 v5, #int 2 // #2
+8430e4: 28e4                                   |04c8: goto 04ac // -001c
+8430e6: 1a00 add9                              |04c9: const-string v0, "fLaC" // string@d9ad
+8430ea: 6e20 d7fc 0300                         |04cb: invoke-virtual {v3, v0}, Ljava/lang/String;.equals:(Ljava/lang/Object;)Z // method@fcd7
+8430f0: 0a00                                   |04ce: move-result v0
+8430f2: 3800 ddff                              |04cf: if-eqz v0, 04ac // -0023
+8430f6: 1215                                   |04d1: const/4 v5, #int 1 // #1
+8430f8: 28da                                   |04d2: goto 04ac // -0026
+8430fa: 1a00 a0a9                              |04d3: const-string v0, "Opus" // string@a9a0
+8430fe: 6e20 d7fc 0300                         |04d5: invoke-virtual {v3, v0}, Ljava/lang/String;.equals:(Ljava/lang/Object;)Z // method@fcd7
+843104: 0a00                                   |04d8: move-result v0
+843106: 3800 d3ff                              |04d9: if-eqz v0, 04ac // -002d
+84310a: 1205                                   |04db: const/4 v5, #int 0 // #0
+84310c: 28d0                                   |04dc: goto 04ac // -0030
+84310e: 1306 0800                              |04dd: const/16 v6, #int 8 // #8
+843112: 2804                                   |04df: goto 04e3 // +0004
+843114: 1216                                   |04e0: const/4 v6, #int 1 // #1
+843116: 2802                                   |04e1: goto 04e3 // +0002
+843118: 1226                                   |04e2: const/4 v6, #int 2 // #2
+84311a: 1500 0001                              |04e3: const/high16 v0, #int 16777216 // #100
+84311e: b690                                   |04e5: or-int/2addr v0, v9
+843120: b660                                   |04e6: or-int/2addr v0, v6
+843122: 7110 82fc 0000                         |04e7: invoke-static {v0}, Ljava/lang/Integer;.valueOf:(I)Ljava/lang/Integer; // method@fc82
+843128: 0c05                                   |04ea: move-result-object v5
+84312a: 7110 82fc 0200                         |04eb: invoke-static {v2}, Ljava/lang/Integer;.valueOf:(I)Ljava/lang/Integer; // method@fc82
+843130: 0c01                                   |04ee: move-result-object v1
+843132: 2900 cf00                              |04ef: goto/16 05be // +00cf
+843136: 1a00 e4cd                              |04f1: const-string v0, "av01" // string@cde4
+84313a: 6e20 d7fc 0400                         |04f3: invoke-virtual {v4, v0}, Ljava/lang/String;.equals:(Ljava/lang/Object;)Z // method@fcd7
+843140: 0a00                                   |04f6: move-result v0
+843142: 3800 7efb                              |04f7: if-eqz v0, 0075 // -0482
+843146: 54c9 213b                              |04f9: iget-object v9, v12, LX/03oR;.A0S:LX/00vX; // field@3b21
+84314a: 2185                                   |04fb: array-length v5, v8
+84314c: 1240                                   |04fc: const/4 v0, #int 4 // #4
+84314e: 1a07 7936                              |04fd: const-string v7, "Ignoring malformed AV1 codec string: " // string@3679
+843152: 1a04 9319                              |04ff: const-string v4, "CodecSpecificDataUtil" // string@1993
+843156: 3405 c900                              |0501: if-lt v5, v0, 05ca // +00c9
+84315a: 1215                                   |0503: const/4 v5, #int 1 // #1
+84315c: 4600 0805                              |0504: aget-object v0, v8, v5
+843160: 7110 7cfc 0000                         |0506: invoke-static {v0}, Ljava/lang/Integer;.parseInt:(Ljava/lang/String;)I // method@fc7c
+843166: 0a0a                                   |0509: move-result v10
+843168: 1226                                   |050a: const/4 v6, #int 2 // #2
+84316a: 4600 0806                              |050b: aget-object v0, v8, v6
+84316e: 6e30 eefc 2006                         |050d: invoke-virtual {v0, v2, v6}, Ljava/lang/String;.substring:(II)Ljava/lang/String; // method@fcee
+843174: 0c00                                   |0510: move-result-object v0
+843176: 7110 7cfc 0000                         |0511: invoke-static {v0}, Ljava/lang/Integer;.parseInt:(Ljava/lang/String;)I // method@fc7c
+84317c: 0a06                                   |0514: move-result v6
+84317e: 1230                                   |0515: const/4 v0, #int 3 // #3
+843180: 4600 0800                              |0516: aget-object v0, v8, v0
+843184: 7110 7cfc 0000                         |0518: invoke-static {v0}, Ljava/lang/Integer;.parseInt:(Ljava/lang/String;)I // method@fc7c
+84318a: 0a03                                   |051b: move-result v3
+84318c: 380a 0400                              |051c: if-eqz v10, 0520 // +0004
+843190: 2900 b800                              |051e: goto/16 05d6 // +00b8
+843194: 1302 0800                              |0520: const/16 v2, #int 8 // #8
+843198: 3223 1500                              |0522: if-eq v3, v2, 0537 // +0015
+84319c: 1300 0a00                              |0524: const/16 v0, #int 10 // #a
+8431a0: 3203 1100                              |0526: if-eq v3, v0, 0537 // +0011
+8431a4: 2202 bc67                              |0528: new-instance v2, Ljava/lang/StringBuilder; // type@67bc
+8431a8: 7010 fcfc 0200                         |052a: invoke-direct {v2}, Ljava/lang/StringBuilder;.<init>:()V // method@fcfc
+8431ae: 1a00 91b1                              |052d: const-string v0, "Unknown AV1 bit depth: " // string@b191
+8431b2: 6e20 09fd 0200                         |052f: invoke-virtual {v2, v0}, Ljava/lang/StringBuilder;.append:(Ljava/lang/String;)Ljava/lang/StringBuilder; // method@fd09
+8431b8: 6e20 04fd 3200                         |0532: invoke-virtual {v2, v3}, Ljava/lang/StringBuilder;.append:(I)Ljava/lang/StringBuilder; // method@fd04
+8431be: 2900 ae00                              |0535: goto/16 05e3 // +00ae
+8431c2: 3223 1200                              |0537: if-eq v3, v2, 0549 // +0012
+8431c6: 3809 6c00                              |0539: if-eqz v9, 05a5 // +006c
+8431ca: 5490 1504                              |053b: iget-object v0, v9, LX/00vX;.A06:[B // field@0415
+8431ce: 3900 0a00                              |053d: if-nez v0, 0547 // +000a
+8431d2: 5292 1404                              |053f: iget v2, v9, LX/00vX;.A04:I // field@0414
+8431d6: 1270                                   |0541: const/4 v0, #int 7 // #7
+8431d8: 3202 0500                              |0542: if-eq v2, v0, 0547 // +0005
+8431dc: 1260                                   |0544: const/4 v0, #int 6 // #6
+8431de: 3302 6000                              |0545: if-ne v2, v0, 05a5 // +0060
+8431e2: 1305 0010                              |0547: const/16 v5, #int 4096 // #1000
+8431e6: 2b06 6d01 0000                         |0549: packed-switch v6, 000006b6 // +0000016d
+8431ec: 12f7                                   |054c: const/4 v7, #int -1 // #ff
+8431ee: 12f0                                   |054d: const/4 v0, #int -1 // #ff
+8431f0: 3307 5900                              |054e: if-ne v7, v0, 05a7 // +0059
+8431f4: 2202 bc67                              |0550: new-instance v2, Ljava/lang/StringBuilder; // type@67bc
+8431f8: 7010 fcfc 0200                         |0552: invoke-direct {v2}, Ljava/lang/StringBuilder;.<init>:()V // method@fcfc
+8431fe: 1a00 92b1                              |0555: const-string v0, "Unknown AV1 level: " // string@b192
+843202: 6e20 09fd 0200                         |0557: invoke-virtual {v2, v0}, Ljava/lang/StringBuilder;.append:(Ljava/lang/String;)Ljava/lang/StringBuilder; // method@fd09
+843208: 6e20 04fd 6200                         |055a: invoke-virtual {v2, v6}, Ljava/lang/StringBuilder;.append:(I)Ljava/lang/StringBuilder; // method@fd04
+84320e: 2900 8600                              |055d: goto/16 05e3 // +0086
+843212: 1507 8000                              |055f: const/high16 v7, #int 8388608 // #80
+843216: 28ec                                   |0561: goto 054d // -0014
+843218: 1507 4000                              |0562: const/high16 v7, #int 4194304 // #40
+84321c: 28e9                                   |0564: goto 054d // -0017
+84321e: 1507 2000                              |0565: const/high16 v7, #int 2097152 // #20
+843222: 28e6                                   |0567: goto 054d // -001a
+843224: 1507 1000                              |0568: const/high16 v7, #int 1048576 // #10
+843228: 28e3                                   |056a: goto 054d // -001d
+84322a: 1507 0800                              |056b: const/high16 v7, #int 524288 // #8
+84322e: 28e0                                   |056d: goto 054d // -0020
+843230: 1507 0400                              |056e: const/high16 v7, #int 262144 // #4
+843234: 28dd                                   |0570: goto 054d // -0023
+843236: 1507 0200                              |0571: const/high16 v7, #int 131072 // #2
+84323a: 28da                                   |0573: goto 054d // -0026
+84323c: 1507 0100                              |0574: const/high16 v7, #int 65536 // #1
+843240: 28d7                                   |0576: goto 054d // -0029
+843242: 1407 0080 0000                         |0577: const v7, #float 4.59177e-41 // #00008000
+843248: 28d3                                   |057a: goto 054d // -002d
+84324a: 1307 0040                              |057b: const/16 v7, #int 16384 // #4000
+84324e: 28d0                                   |057d: goto 054d // -0030
+843250: 1307 0020                              |057e: const/16 v7, #int 8192 // #2000
+843254: 28cd                                   |0580: goto 054d // -0033
+843256: 1307 0010                              |0581: const/16 v7, #int 4096 // #1000
+84325a: 28ca                                   |0583: goto 054d // -0036
+84325c: 1307 0008                              |0584: const/16 v7, #int 2048 // #800
+843260: 28c7                                   |0586: goto 054d // -0039
+843262: 1307 0004                              |0587: const/16 v7, #int 1024 // #400
+843266: 28c4                                   |0589: goto 054d // -003c
+843268: 1307 0002                              |058a: const/16 v7, #int 512 // #200
+84326c: 28c1                                   |058c: goto 054d // -003f
+84326e: 1307 0001                              |058d: const/16 v7, #int 256 // #100
+843272: 28be                                   |058f: goto 054d // -0042
+843274: 1307 8000                              |0590: const/16 v7, #int 128 // #80
+843278: 28bb                                   |0592: goto 054d // -0045
+84327a: 1307 4000                              |0593: const/16 v7, #int 64 // #40
+84327e: 28b8                                   |0595: goto 054d // -0048
+843280: 1307 2000                              |0596: const/16 v7, #int 32 // #20
+843284: 28b5                                   |0598: goto 054d // -004b
+843286: 1307 1000                              |0599: const/16 v7, #int 16 // #10
+84328a: 28b2                                   |059b: goto 054d // -004e
+84328c: 1307 0800                              |059c: const/16 v7, #int 8 // #8
+843290: 28af                                   |059e: goto 054d // -0051
+843292: 1247                                   |059f: const/4 v7, #int 4 // #4
+843294: 28ad                                   |05a0: goto 054d // -0053
+843296: 1227                                   |05a1: const/4 v7, #int 2 // #2
+843298: 28ab                                   |05a2: goto 054d // -0055
+84329a: 1217                                   |05a3: const/4 v7, #int 1 // #1
+84329c: 28a9                                   |05a4: goto 054d // -0057
+84329e: 1225                                   |05a5: const/4 v5, #int 2 // #2
+8432a0: 28a3                                   |05a6: goto 0549 // -005d
+8432a2: 7110 82fc 0500                         |05a7: invoke-static {v5}, Ljava/lang/Integer;.valueOf:(I)Ljava/lang/Integer; // method@fc82
+8432a8: 0c05                                   |05aa: move-result-object v5
+8432aa: 7110 82fc 0700                         |05ab: invoke-static {v7}, Ljava/lang/Integer;.valueOf:(I)Ljava/lang/Integer; // method@fc82
+8432b0: 0c01                                   |05ae: move-result-object v1
+8432b2: 280f                                   |05af: goto 05be // +000f
+8432b4: 1a00 b705                              |05b0: const-string v0, "10" // string@05b7
+8432b8: 6e20 d7fc 0300                         |05b2: invoke-virtual {v3, v0}, Ljava/lang/String;.equals:(Ljava/lang/Object;)Z // method@fcd7
+8432be: 0a00                                   |05b5: move-result v0
+8432c0: 3800 abfa                              |05b6: if-eqz v0, 0061 // -0555
+8432c4: 1309 0002                              |05b8: const/16 v9, #int 512 // #200
+8432c8: 7110 82fc 0900                         |05ba: invoke-static {v9}, Ljava/lang/Integer;.valueOf:(I)Ljava/lang/Integer; // method@fc82
+
+===== classes2.txt:3314062-3314437 :: X.07za.A00 =====
+--- hit offset=3, context=0..113 ---
+78f89c:                                        |[78f89c] X.07za.A00:(LX/00vX;Ljava/lang/String;[Ljava/lang/String;)Landroid/util/Pair;
+78f8ac: 21b1                                   |0000: array-length v1, v11
+78f8ae: 1240                                   |0001: const/4 v0, #int 4 // #4
+78f8b0: 1a07 793a                              |0002: const-string v7, "Ignoring malformed AV1 codec string: " // string@3a79
+78f8b4: 1208                                   |0004: const/4 v8, #int 0 // #0
+78f8b6: 1a02 7f9d                              |0005: const-string v2, "MediaCodecUtil" // string@9d7f
+78f8ba: 3501 1500                              |0007: if-ge v1, v0, 001c // +0015
+78f8be: 2201 145b                              |0009: new-instance v1, Ljava/lang/StringBuilder; // type@5b14
+78f8c2: 7010 0ee8 0100                         |000b: invoke-direct {v1}, Ljava/lang/StringBuilder;.<init>:()V // method@e80e
+78f8c8: 6e20 1be8 7100                         |000e: invoke-virtual {v1, v7}, Ljava/lang/StringBuilder;.append:(Ljava/lang/String;)Ljava/lang/StringBuilder; // method@e81b
+78f8ce: 6e20 1be8 a100                         |0011: invoke-virtual {v1, v10}, Ljava/lang/StringBuilder;.append:(Ljava/lang/String;)Ljava/lang/StringBuilder; // method@e81b
+78f8d4: 6e10 a9e7 0100                         |0014: invoke-virtual {v1}, Ljava/lang/Object;.toString:()Ljava/lang/String; // method@e7a9
+78f8da: 0c00                                   |0017: move-result-object v0
+78f8dc: 7120 7b80 0200                         |0018: invoke-static {v2, v0}, LX/07xw;.A04:(Ljava/lang/String;Ljava/lang/String;)V // method@807b
+78f8e2: 1108                                   |001b: return-object v8
+78f8e4: 1216                                   |001c: const/4 v6, #int 1 // #1
+78f8e6: 4600 0b06                              |001d: aget-object v0, v11, v6
+78f8ea: 7110 64e7 0000                         |001f: invoke-static {v0}, Ljava/lang/Integer;.parseInt:(Ljava/lang/String;)I // method@e764
+78f8f0: 0a05                                   |0022: move-result v5
+78f8f2: 1223                                   |0023: const/4 v3, #int 2 // #2
+78f8f4: 4601 0b03                              |0024: aget-object v1, v11, v3
+78f8f8: 1200                                   |0026: const/4 v0, #int 0 // #0
+78f8fa: 6e30 fbe7 0103                         |0027: invoke-virtual {v1, v0, v3}, Ljava/lang/String;.substring:(II)Ljava/lang/String; // method@e7fb
+78f900: 0c00                                   |002a: move-result-object v0
+78f902: 7110 64e7 0000                         |002b: invoke-static {v0}, Ljava/lang/Integer;.parseInt:(Ljava/lang/String;)I // method@e764
+78f908: 0a04                                   |002e: move-result v4
+78f90a: 1230                                   |002f: const/4 v0, #int 3 // #3
+78f90c: 4600 0b00                              |0030: aget-object v0, v11, v0
+78f910: 7110 64e7 0000                         |0032: invoke-static {v0}, Ljava/lang/Integer;.parseInt:(Ljava/lang/String;)I // method@e764
+78f916: 0a03                                   |0035: move-result v3
+78f918: 3805 1000                              |0036: if-eqz v5, 0046 // +0010
+78f91c: 2201 145b                              |0038: new-instance v1, Ljava/lang/StringBuilder; // type@5b14
+78f920: 7010 0ee8 0100                         |003a: invoke-direct {v1}, Ljava/lang/StringBuilder;.<init>:()V // method@e80e
+78f926: 1a00 f1ae                              |003d: const-string v0, "Unknown AV1 profile: " // string@aef1
+78f92a: 6e20 1be8 0100                         |003f: invoke-virtual {v1, v0}, Ljava/lang/StringBuilder;.append:(Ljava/lang/String;)Ljava/lang/StringBuilder; // method@e81b
+78f930: 6e20 16e8 5100                         |0042: invoke-virtual {v1, v5}, Ljava/lang/StringBuilder;.append:(I)Ljava/lang/StringBuilder; // method@e816
+78f936: 28cf                                   |0045: goto 0014 // -0031
+78f938: 1301 0800                              |0046: const/16 v1, #int 8 // #8
+78f93c: 3213 1400                              |0048: if-eq v3, v1, 005c // +0014
+78f940: 1300 0a00                              |004a: const/16 v0, #int 10 // #a
+78f944: 3203 1000                              |004c: if-eq v3, v0, 005c // +0010
+78f948: 2201 145b                              |004e: new-instance v1, Ljava/lang/StringBuilder; // type@5b14
+78f94c: 7010 0ee8 0100                         |0050: invoke-direct {v1}, Ljava/lang/StringBuilder;.<init>:()V // method@e80e
+78f952: 1a00 efae                              |0053: const-string v0, "Unknown AV1 bit depth: " // string@aeef
+78f956: 6e20 1be8 0100                         |0055: invoke-virtual {v1, v0}, Ljava/lang/StringBuilder;.append:(Ljava/lang/String;)Ljava/lang/StringBuilder; // method@e81b
+78f95c: 6e20 16e8 3100                         |0058: invoke-virtual {v1, v3}, Ljava/lang/StringBuilder;.append:(I)Ljava/lang/StringBuilder; // method@e816
+78f962: 28b9                                   |005b: goto 0014 // -0047
+78f964: 3213 1200                              |005c: if-eq v3, v1, 006e // +0012
+78f968: 3809 6b00                              |005e: if-eqz v9, 00c9 // +006b
+78f96c: 5490 3716                              |0060: iget-object v0, v9, LX/00vX;.A06:[B // field@1637
+78f970: 3900 0a00                              |0062: if-nez v0, 006c // +000a
+78f974: 5291 3616                              |0064: iget v1, v9, LX/00vX;.A04:I // field@1636
+78f978: 1270                                   |0066: const/4 v0, #int 7 // #7
+78f97a: 3201 0500                              |0067: if-eq v1, v0, 006c // +0005
+78f97e: 1260                                   |0069: const/4 v0, #int 6 // #6
+78f980: 3301 5f00                              |006a: if-ne v1, v0, 00c9 // +005f
+78f984: 1306 0010                              |006c: const/16 v6, #int 4096 // #1000
+78f988: 2b04 7400 0000                         |006e: packed-switch v4, 000000e2 // +00000074
+78f98e: 12f1                                   |0071: const/4 v1, #int -1 // #ff
+78f990: 12f0                                   |0072: const/4 v0, #int -1 // #ff
+78f992: 3301 5800                              |0073: if-ne v1, v0, 00cb // +0058
+78f996: 2201 145b                              |0075: new-instance v1, Ljava/lang/StringBuilder; // type@5b14
+78f99a: 7010 0ee8 0100                         |0077: invoke-direct {v1}, Ljava/lang/StringBuilder;.<init>:()V // method@e80e
+78f9a0: 1a00 f0ae                              |007a: const-string v0, "Unknown AV1 level: " // string@aef0
+78f9a4: 6e20 1be8 0100                         |007c: invoke-virtual {v1, v0}, Ljava/lang/StringBuilder;.append:(Ljava/lang/String;)Ljava/lang/StringBuilder; // method@e81b
+78f9aa: 6e20 16e8 4100                         |007f: invoke-virtual {v1, v4}, Ljava/lang/StringBuilder;.append:(I)Ljava/lang/StringBuilder; // method@e816
+78f9b0: 2892                                   |0082: goto 0014 // -006e
+78f9b2: 1211                                   |0083: const/4 v1, #int 1 // #1
+78f9b4: 28ee                                   |0084: goto 0072 // -0012
+78f9b6: 1221                                   |0085: const/4 v1, #int 2 // #2
+78f9b8: 28ec                                   |0086: goto 0072 // -0014
+78f9ba: 1241                                   |0087: const/4 v1, #int 4 // #4
+78f9bc: 28ea                                   |0088: goto 0072 // -0016
+78f9be: 1301 0800                              |0089: const/16 v1, #int 8 // #8
+78f9c2: 28e7                                   |008b: goto 0072 // -0019
+78f9c4: 1301 1000                              |008c: const/16 v1, #int 16 // #10
+78f9c8: 28e4                                   |008e: goto 0072 // -001c
+78f9ca: 1301 2000                              |008f: const/16 v1, #int 32 // #20
+78f9ce: 28e1                                   |0091: goto 0072 // -001f
+78f9d0: 1301 4000                              |0092: const/16 v1, #int 64 // #40
+78f9d4: 28de                                   |0094: goto 0072 // -0022
+78f9d6: 1301 8000                              |0095: const/16 v1, #int 128 // #80
+78f9da: 28db                                   |0097: goto 0072 // -0025
+78f9dc: 1301 0001                              |0098: const/16 v1, #int 256 // #100
+78f9e0: 28d8                                   |009a: goto 0072 // -0028
+78f9e2: 1301 0002                              |009b: const/16 v1, #int 512 // #200
+78f9e6: 28d5                                   |009d: goto 0072 // -002b
+78f9e8: 1301 0004                              |009e: const/16 v1, #int 1024 // #400
+78f9ec: 28d2                                   |00a0: goto 0072 // -002e
+78f9ee: 1301 0008                              |00a1: const/16 v1, #int 2048 // #800
+78f9f2: 28cf                                   |00a3: goto 0072 // -0031
+78f9f4: 1301 0010                              |00a4: const/16 v1, #int 4096 // #1000
+78f9f8: 28cc                                   |00a6: goto 0072 // -0034
+78f9fa: 1301 0020                              |00a7: const/16 v1, #int 8192 // #2000
+78f9fe: 28c9                                   |00a9: goto 0072 // -0037
+78fa00: 1301 0040                              |00aa: const/16 v1, #int 16384 // #4000
+78fa04: 28c6                                   |00ac: goto 0072 // -003a
+78fa06: 1401 0080 0000                         |00ad: const v1, #float 4.59177e-41 // #00008000
+78fa0c: 28c2                                   |00b0: goto 0072 // -003e
+78fa0e: 1501 0100                              |00b1: const/high16 v1, #int 65536 // #1
+78fa12: 28bf                                   |00b3: goto 0072 // -0041
+78fa14: 1501 0200                              |00b4: const/high16 v1, #int 131072 // #2
+78fa18: 28bc                                   |00b6: goto 0072 // -0044
+78fa1a: 1501 0400                              |00b7: const/high16 v1, #int 262144 // #4
+78fa1e: 28b9                                   |00b9: goto 0072 // -0047
+78fa20: 1501 0800                              |00ba: const/high16 v1, #int 524288 // #8
+78fa24: 28b6                                   |00bc: goto 0072 // -004a
+78fa26: 1501 1000                              |00bd: const/high16 v1, #int 1048576 // #10
+78fa2a: 28b3                                   |00bf: goto 0072 // -004d
+78fa2c: 1501 2000                              |00c0: const/high16 v1, #int 2097152 // #20
+78fa30: 28b0                                   |00c2: goto 0072 // -0050
+78fa32: 1501 4000                              |00c3: const/high16 v1, #int 4194304 // #40
+78fa36: 28ad                                   |00c5: goto 0072 // -0053
+
+
+##### UNIQUE OWNER SUMMARY #####
+classes13.txt:179481-180042 :: X.00NW.CYd
+classes8.txt:351502-352233 :: X.0H9E.FZR
+classes16.txt:2279978-2280804 :: X.0GAI.run
+classes12.txt:1677428-1677763 :: X.0kzV.A00
+classes19.txt:1209291-1209818 :: X.0FZw.A06
+classes16.txt:1881024-1881908 :: androidx.media3.common.util.CodecSpecificDataUtil.A01
+classes2.txt:3314062-3314437 :: X.07za.A00
+unique_owner_count=7
+
