@@ -1,0 +1,90 @@
+name: IG 439 HDR Type1 Consumer Probe
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - .github/workflows/ig-hdr-a08-consumer-probe.yml
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  probe:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    env:
+      APK_NAME: instagram-piko-v439.0.0.37.89-arm64-v8a.apk
+      APK_SHA256: 4015b171ac59f3e7172134d194ec2dcf701f64c3339f127c19d7a04c13d529c8
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+
+      - name: Download exact Release 8 APK
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          mkdir -p work/dex work/dis research/generated
+          gh release download 8 --pattern "$APK_NAME" --dir work
+          echo "$APK_SHA256  work/$APK_NAME" | sha256sum -c -
+          unzip -j "work/$APK_NAME" 'classes*.dex' -d work/dex
+
+      - name: Find dexdump
+        run: |
+          DEXDUMP="$(find "$ANDROID_HOME/build-tools" -type f -name dexdump | sort -V | tail -1)"
+          test -n "$DEXDUMP"
+          echo "DEXDUMP=$DEXDUMP" >> "$GITHUB_ENV"
+
+      - name: Trace X.0D2R.A08 and neighboring capability providers
+        shell: bash
+        run: |
+          REPORT=research/generated/instagram_439_hdr_type1_consumer_trace.txt
+          : > "$REPORT"
+          {
+            echo "Instagram 439 HDR type-1 capability consumer trace"
+            echo "================================================"
+            echo "Known exact method: X.0D2R.A08() scans Display.HdrCapabilities.getSupportedHdrTypes() and returns true only when value 1 is present."
+            echo "Android value 1 = Dolby Vision; V2329A reports [2,3,4] = HDR10/HLG/HDR10+, so A08 returns false on V2329A."
+            echo
+          } >> "$REPORT"
+
+          for d in work/dex/classes*.dex; do
+            if strings "$d" | grep -Fq 'LX/0D2R;'; then
+              b="$(basename "$d" .dex)"
+              echo "Disassembling $b" >&2
+              "$DEXDUMP" -d -f -h "$d" > "work/dis/$b.txt"
+            fi
+          done
+
+          {
+            echo "===== DIRECT A08 CALLERS ====="
+            grep -Hn -B 100 -A 140 -E 'LX/0D2R;\.A08:\(\)Ljava/lang/Object;' work/dis/*.txt || true
+            echo
+            echo "===== ALL X.0D2R REFERENCES ====="
+            grep -Hn -B 35 -A 55 -E 'LX/0D2R;\.(A0[0-9A-D]|A08)' work/dis/*.txt || true
+            echo
+            echo "===== X.0D2R CLASS DEFINITION ====="
+            for f in work/dis/*.txt; do
+              line="$(grep -nF "Class descriptor  : 'LX/0D2R;'" "$f" | head -1 | cut -d: -f1 || true)"
+              if [ -n "$line" ]; then
+                start=$((line>20?line-20:1)); end=$((line+900))
+                echo "--- $f ---"
+                sed -n "${start},${end}p" "$f"
+              fi
+            done
+          } >> "$REPORT"
+
+          sed -n '1,1400p' "$REPORT"
+
+      - name: Commit report
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add research/generated/instagram_439_hdr_type1_consumer_trace.txt
+          if ! git diff --cached --quiet; then
+            git commit -m "Trace Instagram 439 HDR type1 capability consumer"
+          fi
+          git pull --rebase origin main
+          git push origin HEAD:main
