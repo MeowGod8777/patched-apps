@@ -1,0 +1,96 @@
+name: IG 439 HDR Device Score Owner R20c
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - .github/workflows/ig-hdr-device-score-owner-r20c.yml
+
+permissions:
+  contents: write
+
+jobs:
+  trace:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    env:
+      APK_NAME: instagram-piko-v439.0.0.37.89-arm64-v8a.apk
+      APK_SHA256: 4015b171ac59f3e7172134d194ec2dcf701f64c3339f127c19d7a04c13d529c8
+    steps:
+      - uses: actions/checkout@v6
+        with: {fetch-depth: 0}
+      - uses: actions/setup-java@v5
+        with:
+          distribution: zulu
+          java-version: '21'
+      - name: Fetch exact APK and target dexes
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          set -euo pipefail
+          mkdir -p work/smali research/generated
+          gh release download 8 --pattern "$APK_NAME" --dir work
+          echo "$APK_SHA256  work/$APK_NAME" | sha256sum -c -
+          gh release download 3.0.10 --repo baksmali/smali --pattern 'baksmali-3.0.10-fat.jar' --dir work
+          for n in 7 8 10; do
+            unzip -p "work/$APK_NAME" "classes${n}.dex" > "work/classes${n}.dex"
+            java -jar work/baksmali-3.0.10-fat.jar d "work/classes${n}.dex" -o "work/smali/classes${n}" >/dev/null &
+          done
+          wait
+      - name: Extract score owners and local callers
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          from pathlib import Path
+          import re
+          root=Path('work/smali')
+          keys=('media_performance_class','performance_class','MEDIA_PERFORMANCE_CLASS','nativeGetDeviceARClass','deviceARClass','getMediaPerformanceClass')
+          O=['Instagram 439 exact device score owners R20c','==========================================','']
+          owners=[]
+          def methods(ls):
+            i=0
+            while i<len(ls):
+              if not ls[i].startswith('.method'): i+=1; continue
+              s=i; i+=1
+              while i<len(ls) and not ls[i].startswith('.end method'): i+=1
+              e=min(i,len(ls)-1); yield ls[s],ls[s:e+1]
+              i+=1
+          def cls_of(ls):
+            for x in ls[:40]:
+              m=re.match(r'^\.class\s+.*\s+(L[^;]+;)$',x)
+              if m:return m.group(1)
+            return '?'
+          for p in root.rglob('*.smali'):
+            ls=p.read_text(errors='replace').splitlines(); c=cls_of(ls)
+            for sig,b in methods(ls):
+              t='\n'.join(b)
+              hits=[k for k in keys if k in t]
+              if hits:
+                owners.append((c,sig,str(p),hits,b))
+                O += [f'===== OWNER {c} {sig} FILE={p} KEYS={hits} =====']+b+['']
+          owner_classes={x[0] for x in owners}
+          O += ['===== LOCAL REFERENCES TO OWNER CLASSES =====','']
+          for p in root.rglob('*.smali'):
+            ls=p.read_text(errors='replace').splitlines(); c=cls_of(ls)
+            for sig,b in methods(ls):
+              t='\n'.join(b)
+              refs=[oc for oc in owner_classes if oc+'->' in t and oc!=c]
+              if refs:
+                O += [f'--- REF {c} {sig} FILE={p} OWNER_REFS={refs} ---']+b+['']
+          text='\n'.join(O)
+          if len(text)>950000:text=text[:950000]+'\n[TRUNCATED]\n'
+          Path('research/generated/instagram_439_hdr_device_score_owner_r20c.txt').write_text(text,encoding='utf-8')
+          print(text)
+          PY
+      - name: Commit report
+        run: |
+          set -euo pipefail
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add research/generated/instagram_439_hdr_device_score_owner_r20c.txt
+          if ! git diff --cached --quiet; then
+            git commit -m 'Add exact Instagram device score owner trace R20c'
+            git pull --rebase origin main
+            git push origin HEAD:main
+          fi
