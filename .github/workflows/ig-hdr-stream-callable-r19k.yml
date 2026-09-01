@@ -1,0 +1,110 @@
+name: IG 439 HDR Streaming Callable R19k
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - .github/workflows/ig-hdr-stream-callable-r19k.yml
+
+permissions:
+  contents: write
+
+jobs:
+  trace:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    env:
+      APK_NAME: instagram-piko-v439.0.0.37.89-arm64-v8a.apk
+      APK_SHA256: 4015b171ac59f3e7172134d194ec2dcf701f64c3339f127c19d7a04c13d529c8
+    steps:
+      - uses: actions/checkout@v6
+        with: {fetch-depth: 0}
+      - uses: actions/setup-java@v5
+        with: {distribution: zulu, java-version: '21'}
+      - name: Fetch and disassemble exact owner dexes
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          set -euo pipefail
+          mkdir -p work/apk work/c2 work/c15 research/generated
+          gh release download 8 --pattern "$APK_NAME" --dir work
+          echo "$APK_SHA256  work/$APK_NAME" | sha256sum -c -
+          gh release download 3.0.10 --repo baksmali/smali --pattern 'baksmali-3.0.10-fat.jar' --dir work
+          unzip -q "work/$APK_NAME" classes2.dex classes15.dex -d work/apk
+          java -jar work/baksmali-3.0.10-fat.jar d work/apk/classes2.dex -o work/c2 >/dev/null &
+          java -jar work/baksmali-3.0.10-fat.jar d work/apk/classes15.dex -o work/c15 >/dev/null &
+          wait
+      - name: Extract 02uA callable and exact downstream chain
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          from pathlib import Path
+          import re
+          roots=[Path('work/c2'),Path('work/c15')]
+          O=['Instagram 439 HDR streaming callable R19k','====================================','']
+          # Full target classes involved in request creation.
+          targets=['02uA','02tw','03u7','03ci','03AS','03AV','02xt','02xo']
+          for n in targets:
+              for root in roots:
+                  for p in root.rglob(n+'.smali'):
+                      O += [f'===== CLASS {n} FILE={p} =====']+p.read_text(errors='replace').splitlines()+['']
+          # Build method index and follow every invoke from 02uA.call() one hop, then two hops for 03u7 methods.
+          cls_re=re.compile(r'^\.class\s+.*\s+(L[^;]+;)$')
+          inv_re=re.compile(r'(L[^;]+;)->([^\s(]+)\(([^)]*)\)(\S+)')
+          methods={}
+          for root in roots:
+            for p in root.rglob('*.smali'):
+              ls=p.read_text(errors='replace').splitlines(); cls='?'
+              for x in ls[:60]:
+                m=cls_re.match(x)
+                if m: cls=m.group(1); break
+              i=0
+              while i<len(ls):
+                if not ls[i].startswith('.method'): i+=1; continue
+                s=i; sig=ls[i]; i+=1
+                while i<len(ls) and not ls[i].startswith('.end method'): i+=1
+                b=ls[s:min(i+1,len(ls))]
+                mm=re.search(r'\s([^\s(]+)\(([^)]*)\)(\S+)$',sig)
+                if mm: methods[(cls,mm.group(1),mm.group(2),mm.group(3))]=(sig,p,b)
+                i+=1
+          seeds=[]
+          for k,(sig,p,b) in methods.items():
+              if k[0]=='LX/02uA;' and k[1] in ('call','A00'):
+                  seeds.append(k)
+          seen=set(); frontier=seeds[:]
+          for depth in range(4):
+              nxt=[]
+              O += [f'===== CALLGRAPH DEPTH {depth} =====']
+              for k in frontier:
+                  if k in seen or k not in methods: continue
+                  seen.add(k); sig,p,b=methods[k]
+                  vals=[]
+                  for x in b:
+                      sm=re.search(r'const-string(?:/jumbo)?\s+[^,]+,\s+"([^"]*)"',x)
+                      if sm: vals.append(sm.group(1))
+                  O += [f'--- {k} FILE={p}',f'STRINGS={vals}']+b+['']
+                  for x in b:
+                      if 'invoke-' not in x: continue
+                      m=inv_re.search(x)
+                      if not m: continue
+                      q=m.groups()
+                      # prioritize local Meta request core only
+                      if q in methods and (q[0].startswith('LX/02') or q[0].startswith('LX/03')):
+                          nxt.append(q)
+              frontier=nxt
+          out=Path('research/generated/instagram_439_hdr_stream_callable_r19k.txt')
+          out.write_text('\n'.join(O),encoding='utf-8')
+          print('\n'.join(O[:16000])); print('bytes',out.stat().st_size,'seen',len(seen))
+          PY
+      - name: Commit report
+        run: |
+          set -euo pipefail
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add research/generated/instagram_439_hdr_stream_callable_r19k.txt
+          if ! git diff --cached --quiet; then
+            git commit -m 'Add Instagram streaming callable finalizer trace R19k'
+            git pull --rebase origin main
+            git push origin HEAD:main
+          fi
