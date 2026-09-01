@@ -1,0 +1,8 @@
+classes10.dex: performance_class
+classes12.dex: display_hdr_supported, video_decoder_hdr_supported
+classes18.dex: device_capabilities
+classes19.dex: device_capabilities, supported_display_hdr_types, is_av1_hdr_supported, is_hevc_hdr_supported
+classes20.dex: device_capabilities
+classes4.dex: display_hdr_supported, key_display_hdr_supported, key_video_decoder_hdr_supported, video_decoder_hdr_supported
+classes7.dex: performance_class
+classes8.dex: hdr_supported_types, media_codec_info, profile_levels, performance_class, chipset_platform
