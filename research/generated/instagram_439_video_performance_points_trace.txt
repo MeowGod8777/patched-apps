@@ -1,0 +1,2508 @@
+===== classes10.txt LX/0nth;-><clinit> line=1641803 =====
+STRINGS: name | stages | runMiniBenchmark | pipelineNamespace | clientLibraryName | clientLibraryVersion | minClientLibraryVersion | maxClientLibraryVersion | sourceProduct | deviceInfo | nnapiInfo | gpuInfo | pipelineIdentifier | acceptedConfigurations | action | status | customErrors | benchmarkStatus | validationTestResult | timestampUs | elapsedUs
+      name          : '<clinit>'
+      type          : '()V'
+      access        : 0x10009 (PUBLIC STATIC CONSTRUCTOR)
+      method_idx    : 25887
+      code          -
+      registers     : 2
+      ins           : 0
+      outs          : 2
+      insns size    : 24 16-bit code units
+3542fc:                                        |[3542fc] X.0nth.<clinit>:()V
+35430c: 2200 ab31                              |0000: new-instance v0, LX/0nth; // type@31ab
+354310: 7010 15d1 0000                         |0002: invoke-direct {v0}, Ljava/lang/Object;.<init>:()V // method@d115
+354316: 6900 8c5b                              |0005: sput-object v0, LX/0nth;.A00:LX/0nth; // field@5b8c
+35431a: 1a00 53c1                              |0007: const-string v0, "name" // string@c153
+35431e: 7110 8361 0000                         |0009: invoke-static {v0}, LX/0neU;.A00:(Ljava/lang/String;)LX/0c1l; // method@6183
+354324: 0c01                                   |000c: move-result-object v1
+354326: 1a00 edd4                              |000d: const-string v0, "stages" // string@d4ed
+35432a: 7120 8961 0100                         |000f: invoke-static {v1, v0}, LX/0neU;.A06:(LX/0c1l;Ljava/lang/String;)V // method@6189
+354330: 1a00 5cce                              |0012: const-string v0, "runMiniBenchmark" // string@ce5c
+354334: 7120 8a61 0100                         |0014: invoke-static {v1, v0}, LX/0neU;.A07:(LX/0c1l;Ljava/lang/String;)V // method@618a
+35433a: 0e00                                   |0017: return-void
+      catches       : (none)
+      positions     :
+      locals        :
+
+    #1              : (in LX/0nth;)
+      name          : '<init>'
+      type          : '()V'
+      access        : 0x10001 (PUBLIC CONSTRUCTOR)
+      method_idx    : 25888
+      code          -
+      registers     : 1
+      ins           : 1
+      outs          : 1
+      insns size    : 4 16-bit code units
+44ff98:                                        |[44ff98] X.0nth.<init>:()V
+44ffa8: 7010 15d1 0000                         |0000: invoke-direct {v0}, Ljava/lang/Object;.<init>:()V // method@d115
+44ffae: 0e00                                   |0003: return-void
+      catches       : (none)
+      positions     :
+      locals        :
+
+  Virtual methods   -
+    #0              : (in LX/0nth;)
+      name          : 'B83'
+      type          : '(Ljava/lang/Object;Ljava/lang/Object;)V'
+      access        : 0x1051 (PUBLIC FINAL BRIDGE SYNTHETIC)
+      method_idx    : 25889
+      code          -
+      registers     : 4
+      ins           : 3
+      outs          : 0
+      insns size    : 2 16-bit code units
+408910:                                        |[408910] X.0nth.B83:(Ljava/lang/Object;Ljava/lang/Object;)V
+408920: 1200                                   |0000: const/4 v0, #int 0 // #0
+408922: 2700                                   |0001: throw v0
+      catches       : (none)
+      positions     :
+      locals        :
+
+  source_file_idx   : 0 ()
+
+Class #10616 header:
+class_idx           : 12716
+access_flags        : 17 (0x0011)
+superclass_idx      : 20298
+interfaces_off      : 1827248 (0x1be1b0)
+source_file_idx     : 0
+annotations_off     : 0 (0x000000)
+class_data_off      : 7884474 (0x784eba)
+static_fields_size  : 1
+instance_fields_size: 0
+direct_methods_size : 2
+virtual_methods_size: 1
+
+Class #10616            -
+  Class descriptor  : 'LX/0nti;'
+  Access flags      : 0x0011 (PUBLIC FINAL)
+  Superclass        : 'Ljava/lang/Object;'
+  Interfaces        -
+    #0              : 'LX/0yAL;'
+  Static fields     -
+    #0              : (in LX/0nti;)
+      name          : 'A00'
+      type          : 'LX/0nti;'
+      access        : 0x0019 (PUBLIC STATIC FINAL)
+  Instance fields   -
+  Direct methods    -
+    #0              : (in LX/0nti;)
+      name          : '<clinit>'
+      type          : '()V'
+      access        : 0x10009 (PUBLIC STATIC CONSTRUCTOR)
+      method_idx    : 25890
+      code          -
+      registers     : 2
+      ins           : 0
+      outs          : 2
+      insns size    : 44 16-bit code units
+353d78:                                        |[353d78] X.0nti.<clinit>:()V
+353d88: 2200 ac31                              |0000: new-instance v0, LX/0nti; // type@31ac
+353d8c: 7010 15d1 0000                         |0002: invoke-direct {v0}, Ljava/lang/Object;.<init>:()V // method@d115
+353d92: 6900 8d5b                              |0005: sput-object v0, LX/0nti;.A00:LX/0nti; // field@5b8d
+353d96: 1a00 28c9                              |0007: const-string v0, "pipelineNamespace" // string@c928
+353d9a: 7110 8361 0000                         |0009: invoke-static {v0}, LX/0neU;.A00:(Ljava/lang/String;)LX/0c1l; // method@6183
+353da0: 0c01                                   |000c: move-result-object v1
+353da2: 1a00 53c1                              |000d: const-string v0, "name" // string@c153
+353da6: 7120 8961 0100                         |000f: invoke-static {v1, v0}, LX/0neU;.A06:(LX/0c1l;Ljava/lang/String;)V // method@6189
+353dac: 1a00 4da2                              |0012: const-string v0, "clientLibraryName" // string@a24d
+353db0: 7120 8a61 0100                         |0014: invoke-static {v1, v0}, LX/0neU;.A07:(LX/0c1l;Ljava/lang/String;)V // method@618a
+353db6: 1a00 4ea2                              |0017: const-string v0, "clientLibraryVersion" // string@a24e
+353dba: 7120 8b61 0100                         |0019: invoke-static {v1, v0}, LX/0neU;.A08:(LX/0c1l;Ljava/lang/String;)V // method@618b
+353dc0: 1a00 8dc0                              |001c: const-string v0, "minClientLibraryVersion" // string@c08d
+353dc4: 7120 8c61 0100                         |001e: invoke-static {v1, v0}, LX/0neU;.A09:(LX/0c1l;Ljava/lang/String;)V // method@618c
+353dca: 1a00 85bf                              |0021: const-string v0, "maxClientLibraryVersion" // string@bf85
+353dce: 7120 8d61 0100                         |0023: invoke-static {v1, v0}, LX/0neU;.A0A:(LX/0c1l;Ljava/lang/String;)V // method@618d
+353dd4: 1a00 afd4                              |0026: const-string v0, "sourceProduct" // string@d4af
+353dd8: 7120 8e61 0100                         |0028: invoke-static {v1, v0}, LX/0neU;.A0B:(LX/0c1l;Ljava/lang/String;)V // method@618e
+353dde: 0e00                                   |002b: return-void
+      catches       : (none)
+      positions     :
+      locals        :
+
+    #1              : (in LX/0nti;)
+      name          : '<init>'
+      type          : '()V'
+      access        : 0x10001 (PUBLIC CONSTRUCTOR)
+      method_idx    : 25891
+      code          -
+      registers     : 1
+      ins           : 1
+      outs          : 1
+      insns size    : 4 16-bit code units
+44ffb0:                                        |[44ffb0] X.0nti.<init>:()V
+44ffc0: 7010 15d1 0000                         |0000: invoke-direct {v0}, Ljava/lang/Object;.<init>:()V // method@d115
+44ffc6: 0e00                                   |0003: return-void
+      catches       : (none)
+      positions     :
+      locals        :
+
+  Virtual methods   -
+    #0              : (in LX/0nti;)
+      name          : 'B83'
+      type          : '(Ljava/lang/Object;Ljava/lang/Object;)V'
+      access        : 0x1051 (PUBLIC FINAL BRIDGE SYNTHETIC)
+      method_idx    : 25892
+      code          -
+      registers     : 4
+      ins           : 3
+      outs          : 0
+      insns size    : 2 16-bit code units
+408924:                                        |[408924] X.0nti.B83:(Ljava/lang/Object;Ljava/lang/Object;)V
+408934: 1200                                   |0000: const/4 v0, #int 0 // #0
+408936: 2700                                   |0001: throw v0
+      catches       : (none)
+      positions     :
+      locals        :
+
+  source_file_idx   : 0 ()
+
+Class #10617 header:
+class_idx           : 12717
+access_flags        : 17 (0x0011)
+superclass_idx      : 20298
+interfaces_off      : 1827248 (0x1be1b0)
+source_file_idx     : 0
+annotations_off     : 0 (0x000000)
+class_data_off      : 7884509 (0x784edd)
+static_fields_size  : 1
+instance_fields_size: 0
+direct_methods_size : 2
+virtual_methods_size: 1
+
+Class #10617            -
+  Class descriptor  : 'LX/0ntj;'
+  Access flags      : 0x0011 (PUBLIC FINAL)
+  Superclass        : 'Ljava/lang/Object;'
+  Interfaces        -
+    #0              : 'LX/0yAL;'
+  Static fields     -
+    #0              : (in LX/0ntj;)
+      name          : 'A00'
+      type          : 'LX/0ntj;'
+      access        : 0x0019 (PUBLIC STATIC FINAL)
+  Instance fields   -
+  Direct methods    -
+    #0              : (in LX/0ntj;)
+      name          : '<clinit>'
+      type          : '()V'
+      access        : 0x10009 (PUBLIC STATIC CONSTRUCTOR)
+      method_idx    : 25893
+      code          -
+      registers     : 3
+      ins           : 0
+      outs          : 3
+      insns size    : 99 16-bit code units
+3531bc:                                        |[3531bc] X.0ntj.<clinit>:()V
+3531cc: 2200 ad31                              |0000: new-instance v0, LX/0ntj; // type@31ad
+3531d0: 7010 15d1 0000                         |0002: invoke-direct {v0}, Ljava/lang/Object;.<init>:()V // method@d115
+3531d6: 6900 8e5b                              |0005: sput-object v0, LX/0ntj;.A00:LX/0ntj; // field@5b8e
+3531da: 1a00 6ca8                              |0007: const-string v0, "deviceInfo" // string@a86c
+3531de: 7110 8361 0000                         |0009: invoke-static {v0}, LX/0neU;.A00:(Ljava/lang/String;)LX/0c1l; // method@6183
+3531e4: 0c02                                   |000c: move-result-object v2
+3531e6: 1a00 22c3                              |000d: const-string v0, "nnapiInfo" // string@c322
+3531ea: 7120 8961 0200                         |000f: invoke-static {v2, v0}, LX/0neU;.A06:(LX/0c1l;Ljava/lang/String;)V // method@6189
+3531f0: 1a00 41b6                              |0012: const-string v0, "gpuInfo" // string@b641
+3531f4: 7120 8a61 0200                         |0014: invoke-static {v2, v0}, LX/0neU;.A07:(LX/0c1l;Ljava/lang/String;)V // method@618a
+3531fa: 1a00 26c9                              |0017: const-string v0, "pipelineIdentifier" // string@c926
+3531fe: 7120 8b61 0200                         |0019: invoke-static {v2, v0}, LX/0neU;.A08:(LX/0c1l;Ljava/lang/String;)V // method@618b
+353204: 1a00 d199                              |001c: const-string v0, "acceptedConfigurations" // string@99d1
+353208: 7120 8c61 0200                         |001e: invoke-static {v2, v0}, LX/0neU;.A09:(LX/0c1l;Ljava/lang/String;)V // method@618c
+35320e: 1a00 d79a                              |0021: const-string v0, "action" // string@9ad7
+353212: 7120 8d61 0200                         |0023: invoke-static {v2, v0}, LX/0neU;.A0A:(LX/0c1l;Ljava/lang/String;)V // method@618d
+353218: 1a00 71d5                              |0026: const-string v0, "status" // string@d571
+35321c: 7120 8e61 0200                         |0028: invoke-static {v2, v0}, LX/0neU;.A0B:(LX/0c1l;Ljava/lang/String;)V // method@618e
+353222: 1a00 7da7                              |002b: const-string v0, "customErrors" // string@a77d
+353226: 7110 c410 0000                         |002d: invoke-static {v0}, LX/0C4G;.A0c:(Ljava/lang/String;)LX/063f; // method@10c4
+35322c: 0c01                                   |0030: move-result-object v1
+35322e: 1300 0800                              |0031: const/16 v0, #int 8 // #8
+353232: 7130 8861 1200                         |0033: invoke-static {v2, v1, v0}, LX/0neU;.A05:(LX/0c1l;LX/063f;I)V // method@6188
+353238: 1a00 2e9f                              |0036: const-string v0, "benchmarkStatus" // string@9f2e
+35323c: 7110 c410 0000                         |0038: invoke-static {v0}, LX/0C4G;.A0c:(Ljava/lang/String;)LX/063f; // method@10c4
+353242: 0c01                                   |003b: move-result-object v1
+353244: 1300 0900                              |003c: const/16 v0, #int 9 // #9
+353248: 7130 8861 1200                         |003e: invoke-static {v2, v1, v0}, LX/0neU;.A05:(LX/0c1l;LX/063f;I)V // method@6188
+35324e: 1a00 cfda                              |0041: const-string v0, "validationTestResult" // string@dacf
+353252: 7110 c410 0000                         |0043: invoke-static {v0}, LX/0C4G;.A0c:(Ljava/lang/String;)LX/063f; // method@10c4
+353258: 0c01                                   |0046: move-result-object v1
+35325a: 1300 0a00                              |0047: const/16 v0, #int 10 // #a
+35325e: 7130 8861 1200                         |0049: invoke-static {v2, v1, v0}, LX/0neU;.A05:(LX/0c1l;LX/063f;I)V // method@6188
+353264: 1a00 d2d7                              |004c: const-string v0, "timestampUs" // string@d7d2
+353268: 7110 c410 0000                         |004e: invoke-static {v0}, LX/0C4G;.A0c:(Ljava/lang/String;)LX/063f; // method@10c4
+35326e: 0c01                                   |0051: move-result-object v1
+353270: 1300 0b00                              |0052: const/16 v0, #int 11 // #b
+353274: 7130 8861 1200                         |0054: invoke-static {v2, v1, v0}, LX/0neU;.A05:(LX/0c1l;LX/063f;I)V // method@6188
+35327a: 1a00 feaa                              |0057: const-string v0, "elapsedUs" // string@aafe
+35327e: 7110 c410 0000                         |0059: invoke-static {v0}, LX/0C4G;.A0c:(Ljava/lang/String;)LX/063f; // method@10c4
+353284: 0c01                                   |005c: move-result-object v1
+353286: 1300 0c00                              |005d: const/16 v0, #int 12 // #c
+
+===== classes10.txt LX/0nzA;-><clinit> line=1654446 =====
+STRINGS: name | stages | runMiniBenchmark | language | durationMs | errorCode | numSamples | metricResults
+      name          : '<clinit>'
+      type          : '()V'
+      access        : 0x10009 (PUBLIC STATIC CONSTRUCTOR)
+      method_idx    : 26272
+      code          -
+      registers     : 2
+      ins           : 0
+      outs          : 2
+      insns size    : 38 16-bit code units
+357a38:                                        |[357a38] X.0nzA.<clinit>:()V
+357a48: 2200 2f32                              |0000: new-instance v0, LX/0nzA; // type@322f
+357a4c: 7010 15d1 0000                         |0002: invoke-direct {v0}, Ljava/lang/Object;.<init>:()V // method@d115
+357a52: 6900 e15c                              |0005: sput-object v0, LX/0nzA;.A00:LX/0nzA; // field@5ce1
+357a56: 1a00 53c1                              |0007: const-string v0, "name" // string@c153
+357a5a: 7110 c410 0000                         |0009: invoke-static {v0}, LX/0C4G;.A0c:(Ljava/lang/String;)LX/063f; // method@10c4
+357a60: 0c00                                   |000c: move-result-object v0
+357a62: 6201 ff2e                              |000d: sget-object v1, LX/0c0l;.A01:LX/0c0l; // field@2eff
+357a66: 7120 ca60 0100                         |000f: invoke-static {v1, v0}, LX/0nZy;.A00:(LX/0c0l;LX/063f;)LX/060k; // method@60ca
+357a6c: 0c00                                   |0012: move-result-object v0
+357a6e: 6900 e25c                              |0013: sput-object v0, LX/0nzA;.A01:LX/060k; // field@5ce2
+357a72: 1a00 edd4                              |0015: const-string v0, "stages" // string@d4ed
+357a76: 7120 cc60 0100                         |0017: invoke-static {v1, v0}, LX/0nZy;.A02:(LX/0c0l;Ljava/lang/String;)LX/060k; // method@60cc
+357a7c: 0c00                                   |001a: move-result-object v0
+357a7e: 6900 e35c                              |001b: sput-object v0, LX/0nzA;.A02:LX/060k; // field@5ce3
+357a82: 1a00 5cce                              |001d: const-string v0, "runMiniBenchmark" // string@ce5c
+357a86: 7120 cd60 0100                         |001f: invoke-static {v1, v0}, LX/0nZy;.A03:(LX/0c0l;Ljava/lang/String;)LX/060k; // method@60cd
+357a8c: 0c00                                   |0022: move-result-object v0
+357a8e: 6900 e45c                              |0023: sput-object v0, LX/0nzA;.A03:LX/060k; // field@5ce4
+357a92: 0e00                                   |0025: return-void
+      catches       : (none)
+      positions     :
+      locals        :
+
+    #1              : (in LX/0nzA;)
+      name          : '<init>'
+      type          : '()V'
+      access        : 0x10001 (PUBLIC CONSTRUCTOR)
+      method_idx    : 26273
+      code          -
+      registers     : 1
+      ins           : 1
+      outs          : 1
+      insns size    : 4 16-bit code units
+450b98:                                        |[450b98] X.0nzA.<init>:()V
+450ba8: 7010 15d1 0000                         |0000: invoke-direct {v0}, Ljava/lang/Object;.<init>:()V // method@d115
+450bae: 0e00                                   |0003: return-void
+      catches       : (none)
+      positions     :
+      locals        :
+
+  Virtual methods   -
+    #0              : (in LX/0nzA;)
+      name          : 'B83'
+      type          : '(Ljava/lang/Object;Ljava/lang/Object;)V'
+      access        : 0x1051 (PUBLIC FINAL BRIDGE SYNTHETIC)
+      method_idx    : 26274
+      code          -
+      registers     : 4
+      ins           : 3
+      outs          : 0
+      insns size    : 2 16-bit code units
+4092c0:                                        |[4092c0] X.0nzA.B83:(Ljava/lang/Object;Ljava/lang/Object;)V
+4092d0: 1200                                   |0000: const/4 v0, #int 0 // #0
+4092d2: 2700                                   |0001: throw v0
+      catches       : (none)
+      positions     :
+      locals        :
+
+  source_file_idx   : 0 ()
+
+Class #10744 header:
+class_idx           : 12848
+access_flags        : 17 (0x0011)
+superclass_idx      : 20298
+interfaces_off      : 1827248 (0x1be1b0)
+source_file_idx     : 0
+annotations_off     : 0 (0x000000)
+class_data_off      : 7889386 (0x7861ea)
+static_fields_size  : 4
+instance_fields_size: 0
+direct_methods_size : 2
+virtual_methods_size: 1
+
+Class #10744            -
+  Class descriptor  : 'LX/0nzc;'
+  Access flags      : 0x0011 (PUBLIC FINAL)
+  Superclass        : 'Ljava/lang/Object;'
+  Interfaces        -
+    #0              : 'LX/0yAL;'
+  Static fields     -
+    #0              : (in LX/0nzc;)
+      name          : 'A00'
+      type          : 'LX/0nzc;'
+      access        : 0x0019 (PUBLIC STATIC FINAL)
+    #1              : (in LX/0nzc;)
+      name          : 'A01'
+      type          : 'LX/060k;'
+      access        : 0x0019 (PUBLIC STATIC FINAL)
+    #2              : (in LX/0nzc;)
+      name          : 'A02'
+      type          : 'LX/060k;'
+      access        : 0x0019 (PUBLIC STATIC FINAL)
+    #3              : (in LX/0nzc;)
+      name          : 'A03'
+      type          : 'LX/060k;'
+      access        : 0x0019 (PUBLIC STATIC FINAL)
+  Instance fields   -
+  Direct methods    -
+    #0              : (in LX/0nzc;)
+      name          : '<clinit>'
+      type          : '()V'
+      access        : 0x10009 (PUBLIC STATIC CONSTRUCTOR)
+      method_idx    : 26275
+      code          -
+      registers     : 2
+      ins           : 0
+      outs          : 2
+      insns size    : 38 16-bit code units
+3578c8:                                        |[3578c8] X.0nzc.<clinit>:()V
+3578d8: 2200 3032                              |0000: new-instance v0, LX/0nzc; // type@3230
+3578dc: 7010 15d1 0000                         |0002: invoke-direct {v0}, Ljava/lang/Object;.<init>:()V // method@d115
+3578e2: 6900 e55c                              |0005: sput-object v0, LX/0nzc;.A00:LX/0nzc; // field@5ce5
+3578e6: 1a00 e3bc                              |0007: const-string v0, "language" // string@bce3
+3578ea: 7110 c410 0000                         |0009: invoke-static {v0}, LX/0C4G;.A0c:(Ljava/lang/String;)LX/063f; // method@10c4
+3578f0: 0c00                                   |000c: move-result-object v0
+3578f2: 6201 ff2e                              |000d: sget-object v1, LX/0c0l;.A01:LX/0c0l; // field@2eff
+3578f6: 7120 ca60 0100                         |000f: invoke-static {v1, v0}, LX/0nZy;.A00:(LX/0c0l;LX/063f;)LX/060k; // method@60ca
+3578fc: 0c00                                   |0012: move-result-object v0
+3578fe: 6900 e65c                              |0013: sput-object v0, LX/0nzc;.A01:LX/060k; // field@5ce6
+357902: 1a00 89aa                              |0015: const-string v0, "durationMs" // string@aa89
+357906: 7120 cc60 0100                         |0017: invoke-static {v1, v0}, LX/0nZy;.A02:(LX/0c0l;Ljava/lang/String;)LX/060k; // method@60cc
+35790c: 0c00                                   |001a: move-result-object v0
+35790e: 6900 e75c                              |001b: sput-object v0, LX/0nzc;.A02:LX/060k; // field@5ce7
+357912: 1a00 60ac                              |001d: const-string v0, "errorCode" // string@ac60
+357916: 7120 cd60 0100                         |001f: invoke-static {v1, v0}, LX/0nZy;.A03:(LX/0c0l;Ljava/lang/String;)LX/060k; // method@60cd
+35791c: 0c00                                   |0022: move-result-object v0
+35791e: 6900 e85c                              |0023: sput-object v0, LX/0nzc;.A03:LX/060k; // field@5ce8
+357922: 0e00                                   |0025: return-void
+      catches       : (none)
+      positions     :
+      locals        :
+
+    #1              : (in LX/0nzc;)
+      name          : '<init>'
+      type          : '()V'
+      access        : 0x10001 (PUBLIC CONSTRUCTOR)
+      method_idx    : 26276
+      code          -
+      registers     : 1
+      ins           : 1
+      outs          : 1
+      insns size    : 4 16-bit code units
+450bb0:                                        |[450bb0] X.0nzc.<init>:()V
+450bc0: 7010 15d1 0000                         |0000: invoke-direct {v0}, Ljava/lang/Object;.<init>:()V // method@d115
+450bc6: 0e00                                   |0003: return-void
+      catches       : (none)
+      positions     :
+      locals        :
+
+  Virtual methods   -
+    #0              : (in LX/0nzc;)
+      name          : 'B83'
+      type          : '(Ljava/lang/Object;Ljava/lang/Object;)V'
+      access        : 0x1051 (PUBLIC FINAL BRIDGE SYNTHETIC)
+      method_idx    : 26277
+      code          -
+      registers     : 4
+      ins           : 3
+      outs          : 0
+      insns size    : 2 16-bit code units
+4092d4:                                        |[4092d4] X.0nzc.B83:(Ljava/lang/Object;Ljava/lang/Object;)V
+4092e4: 1200                                   |0000: const/4 v0, #int 0 // #0
+4092e6: 2700                                   |0001: throw v0
+      catches       : (none)
+      positions     :
+      locals        :
+
+  source_file_idx   : 0 ()
+
+Class #10745 header:
+class_idx           : 12849
+access_flags        : 17 (0x0011)
+superclass_idx      : 20298
+interfaces_off      : 1827248 (0x1be1b0)
+source_file_idx     : 0
+annotations_off     : 0 (0x000000)
+class_data_off      : 7889427 (0x786213)
+static_fields_size  : 4
+instance_fields_size: 0
+direct_methods_size : 2
+virtual_methods_size: 1
+
+Class #10745            -
+  Class descriptor  : 'LX/0nzd;'
+  Access flags      : 0x0011 (PUBLIC FINAL)
+  Superclass        : 'Ljava/lang/Object;'
+  Interfaces        -
+    #0              : 'LX/0yAL;'
+  Static fields     -
+    #0              : (in LX/0nzd;)
+      name          : 'A00'
+      type          : 'LX/0nzd;'
+      access        : 0x0019 (PUBLIC STATIC FINAL)
+    #1              : (in LX/0nzd;)
+      name          : 'A01'
+      type          : 'LX/060k;'
+      access        : 0x0019 (PUBLIC STATIC FINAL)
+    #2              : (in LX/0nzd;)
+      name          : 'A02'
+      type          : 'LX/060k;'
+      access        : 0x0019 (PUBLIC STATIC FINAL)
+    #3              : (in LX/0nzd;)
+      name          : 'A03'
+      type          : 'LX/060k;'
+      access        : 0x0019 (PUBLIC STATIC FINAL)
+  Instance fields   -
+  Direct methods    -
+    #0              : (in LX/0nzd;)
+      name          : '<clinit>'
+      type          : '()V'
+      access        : 0x10009 (PUBLIC STATIC CONSTRUCTOR)
+      method_idx    : 26278
+      code          -
+      registers     : 2
+      ins           : 0
+      outs          : 2
+      insns size    : 38 16-bit code units
+357758:                                        |[357758] X.0nzd.<clinit>:()V
+357768: 2200 3132                              |0000: new-instance v0, LX/0nzd; // type@3231
+35776c: 7010 15d1 0000                         |0002: invoke-direct {v0}, Ljava/lang/Object;.<init>:()V // method@d115
+357772: 6900 e95c                              |0005: sput-object v0, LX/0nzd;.A00:LX/0nzd; // field@5ce9
+357776: 1a00 12c4                              |0007: const-string v0, "numSamples" // string@c412
+35777a: 7110 c410 0000                         |0009: invoke-static {v0}, LX/0C4G;.A0c:(Ljava/lang/String;)LX/063f; // method@10c4
+357780: 0c00                                   |000c: move-result-object v0
+357782: 6201 ff2e                              |000d: sget-object v1, LX/0c0l;.A01:LX/0c0l; // field@2eff
+357786: 7120 ca60 0100                         |000f: invoke-static {v1, v0}, LX/0nZy;.A00:(LX/0c0l;LX/063f;)LX/060k; // method@60ca
+35778c: 0c00                                   |0012: move-result-object v0
+35778e: 6900 ea5c                              |0013: sput-object v0, LX/0nzd;.A01:LX/060k; // field@5cea
+357792: 1a00 60ac                              |0015: const-string v0, "errorCode" // string@ac60
+357796: 7120 cc60 0100                         |0017: invoke-static {v1, v0}, LX/0nZy;.A02:(LX/0c0l;Ljava/lang/String;)LX/060k; // method@60cc
+35779c: 0c00                                   |001a: move-result-object v0
+35779e: 6900 eb5c                              |001b: sput-object v0, LX/0nzd;.A02:LX/060k; // field@5ceb
+3577a2: 1a00 60c0                              |001d: const-string v0, "metricResults" // string@c060
+3577a6: 7120 cd60 0100                         |001f: invoke-static {v1, v0}, LX/0nZy;.A03:(LX/0c0l;Ljava/lang/String;)LX/060k; // method@60cd
+
+===== classes10.txt LX/0oA9;-><clinit> line=1658992 =====
+STRINGS: name | stages | runMiniBenchmark | language | durationMs | errorCode | numSamples | metricResults
+      name          : '<clinit>'
+      type          : '()V'
+      access        : 0x10009 (PUBLIC STATIC CONSTRUCTOR)
+      method_idx    : 26398
+      code          -
+      registers     : 2
+      ins           : 0
+      outs          : 2
+      insns size    : 38 16-bit code units
+3570f8:                                        |[3570f8] X.0oA9.<clinit>:()V
+357108: 2200 5932                              |0000: new-instance v0, LX/0oA9; // type@3259
+35710c: 7010 15d1 0000                         |0002: invoke-direct {v0}, Ljava/lang/Object;.<init>:()V // method@d115
+357112: 6900 895d                              |0005: sput-object v0, LX/0oA9;.A00:LX/0oA9; // field@5d89
+357116: 1a00 53c1                              |0007: const-string v0, "name" // string@c153
+35711a: 7110 c410 0000                         |0009: invoke-static {v0}, LX/0C4G;.A0c:(Ljava/lang/String;)LX/063f; // method@10c4
+357120: 0c00                                   |000c: move-result-object v0
+357122: 6201 012f                              |000d: sget-object v1, LX/0c0m;.A01:LX/0c0m; // field@2f01
+357126: 7120 da60 0100                         |000f: invoke-static {v1, v0}, LX/0nbV;.A00:(LX/0c0m;LX/063f;)LX/060k; // method@60da
+35712c: 0c00                                   |0012: move-result-object v0
+35712e: 6900 8a5d                              |0013: sput-object v0, LX/0oA9;.A01:LX/060k; // field@5d8a
+357132: 1a00 edd4                              |0015: const-string v0, "stages" // string@d4ed
+357136: 7120 dc60 0100                         |0017: invoke-static {v1, v0}, LX/0nbV;.A02:(LX/0c0m;Ljava/lang/String;)LX/060k; // method@60dc
+35713c: 0c00                                   |001a: move-result-object v0
+35713e: 6900 8b5d                              |001b: sput-object v0, LX/0oA9;.A02:LX/060k; // field@5d8b
+357142: 1a00 5cce                              |001d: const-string v0, "runMiniBenchmark" // string@ce5c
+357146: 7120 dd60 0100                         |001f: invoke-static {v1, v0}, LX/0nbV;.A03:(LX/0c0m;Ljava/lang/String;)LX/060k; // method@60dd
+35714c: 0c00                                   |0022: move-result-object v0
+35714e: 6900 8c5d                              |0023: sput-object v0, LX/0oA9;.A03:LX/060k; // field@5d8c
+357152: 0e00                                   |0025: return-void
+      catches       : (none)
+      positions     :
+      locals        :
+
+    #1              : (in LX/0oA9;)
+      name          : '<init>'
+      type          : '()V'
+      access        : 0x10001 (PUBLIC CONSTRUCTOR)
+      method_idx    : 26399
+      code          -
+      registers     : 1
+      ins           : 1
+      outs          : 1
+      insns size    : 4 16-bit code units
+450f88:                                        |[450f88] X.0oA9.<init>:()V
+450f98: 7010 15d1 0000                         |0000: invoke-direct {v0}, Ljava/lang/Object;.<init>:()V // method@d115
+450f9e: 0e00                                   |0003: return-void
+      catches       : (none)
+      positions     :
+      locals        :
+
+  Virtual methods   -
+    #0              : (in LX/0oA9;)
+      name          : 'B83'
+      type          : '(Ljava/lang/Object;Ljava/lang/Object;)V'
+      access        : 0x1051 (PUBLIC FINAL BRIDGE SYNTHETIC)
+      method_idx    : 26400
+      code          -
+      registers     : 4
+      ins           : 3
+      outs          : 0
+      insns size    : 2 16-bit code units
+409608:                                        |[409608] X.0oA9.B83:(Ljava/lang/Object;Ljava/lang/Object;)V
+409618: 1200                                   |0000: const/4 v0, #int 0 // #0
+40961a: 2700                                   |0001: throw v0
+      catches       : (none)
+      positions     :
+      locals        :
+
+  source_file_idx   : 0 ()
+
+Class #10786 header:
+class_idx           : 12890
+access_flags        : 17 (0x0011)
+superclass_idx      : 20298
+interfaces_off      : 1827248 (0x1be1b0)
+source_file_idx     : 0
+annotations_off     : 0 (0x000000)
+class_data_off      : 7891108 (0x7868a4)
+static_fields_size  : 4
+instance_fields_size: 0
+direct_methods_size : 2
+virtual_methods_size: 1
+
+Class #10786            -
+  Class descriptor  : 'LX/0oAA;'
+  Access flags      : 0x0011 (PUBLIC FINAL)
+  Superclass        : 'Ljava/lang/Object;'
+  Interfaces        -
+    #0              : 'LX/0yAL;'
+  Static fields     -
+    #0              : (in LX/0oAA;)
+      name          : 'A00'
+      type          : 'LX/0oAA;'
+      access        : 0x0019 (PUBLIC STATIC FINAL)
+    #1              : (in LX/0oAA;)
+      name          : 'A01'
+      type          : 'LX/060k;'
+      access        : 0x0019 (PUBLIC STATIC FINAL)
+    #2              : (in LX/0oAA;)
+      name          : 'A02'
+      type          : 'LX/060k;'
+      access        : 0x0019 (PUBLIC STATIC FINAL)
+    #3              : (in LX/0oAA;)
+      name          : 'A03'
+      type          : 'LX/060k;'
+      access        : 0x0019 (PUBLIC STATIC FINAL)
+  Instance fields   -
+  Direct methods    -
+    #0              : (in LX/0oAA;)
+      name          : '<clinit>'
+      type          : '()V'
+      access        : 0x10009 (PUBLIC STATIC CONSTRUCTOR)
+      method_idx    : 26401
+      code          -
+      registers     : 2
+      ins           : 0
+      outs          : 2
+      insns size    : 38 16-bit code units
+357154:                                        |[357154] X.0oAA.<clinit>:()V
+357164: 2200 5a32                              |0000: new-instance v0, LX/0oAA; // type@325a
+357168: 7010 15d1 0000                         |0002: invoke-direct {v0}, Ljava/lang/Object;.<init>:()V // method@d115
+35716e: 6900 8d5d                              |0005: sput-object v0, LX/0oAA;.A00:LX/0oAA; // field@5d8d
+357172: 1a00 e3bc                              |0007: const-string v0, "language" // string@bce3
+357176: 7110 c410 0000                         |0009: invoke-static {v0}, LX/0C4G;.A0c:(Ljava/lang/String;)LX/063f; // method@10c4
+35717c: 0c00                                   |000c: move-result-object v0
+35717e: 6201 012f                              |000d: sget-object v1, LX/0c0m;.A01:LX/0c0m; // field@2f01
+357182: 7120 da60 0100                         |000f: invoke-static {v1, v0}, LX/0nbV;.A00:(LX/0c0m;LX/063f;)LX/060k; // method@60da
+357188: 0c00                                   |0012: move-result-object v0
+35718a: 6900 8e5d                              |0013: sput-object v0, LX/0oAA;.A01:LX/060k; // field@5d8e
+35718e: 1a00 89aa                              |0015: const-string v0, "durationMs" // string@aa89
+357192: 7120 dc60 0100                         |0017: invoke-static {v1, v0}, LX/0nbV;.A02:(LX/0c0m;Ljava/lang/String;)LX/060k; // method@60dc
+357198: 0c00                                   |001a: move-result-object v0
+35719a: 6900 8f5d                              |001b: sput-object v0, LX/0oAA;.A02:LX/060k; // field@5d8f
+35719e: 1a00 60ac                              |001d: const-string v0, "errorCode" // string@ac60
+3571a2: 7120 dd60 0100                         |001f: invoke-static {v1, v0}, LX/0nbV;.A03:(LX/0c0m;Ljava/lang/String;)LX/060k; // method@60dd
+3571a8: 0c00                                   |0022: move-result-object v0
+3571aa: 6900 905d                              |0023: sput-object v0, LX/0oAA;.A03:LX/060k; // field@5d90
+3571ae: 0e00                                   |0025: return-void
+      catches       : (none)
+      positions     :
+      locals        :
+
+    #1              : (in LX/0oAA;)
+      name          : '<init>'
+      type          : '()V'
+      access        : 0x10001 (PUBLIC CONSTRUCTOR)
+      method_idx    : 26402
+      code          -
+      registers     : 1
+      ins           : 1
+      outs          : 1
+      insns size    : 4 16-bit code units
+450fa0:                                        |[450fa0] X.0oAA.<init>:()V
+450fb0: 7010 15d1 0000                         |0000: invoke-direct {v0}, Ljava/lang/Object;.<init>:()V // method@d115
+450fb6: 0e00                                   |0003: return-void
+      catches       : (none)
+      positions     :
+      locals        :
+
+  Virtual methods   -
+    #0              : (in LX/0oAA;)
+      name          : 'B83'
+      type          : '(Ljava/lang/Object;Ljava/lang/Object;)V'
+      access        : 0x1051 (PUBLIC FINAL BRIDGE SYNTHETIC)
+      method_idx    : 26403
+      code          -
+      registers     : 4
+      ins           : 3
+      outs          : 0
+      insns size    : 2 16-bit code units
+40961c:                                        |[40961c] X.0oAA.B83:(Ljava/lang/Object;Ljava/lang/Object;)V
+40962c: 1200                                   |0000: const/4 v0, #int 0 // #0
+40962e: 2700                                   |0001: throw v0
+      catches       : (none)
+      positions     :
+      locals        :
+
+  source_file_idx   : 0 ()
+
+Class #10787 header:
+class_idx           : 12891
+access_flags        : 17 (0x0011)
+superclass_idx      : 20298
+interfaces_off      : 1827248 (0x1be1b0)
+source_file_idx     : 0
+annotations_off     : 0 (0x000000)
+class_data_off      : 7891149 (0x7868cd)
+static_fields_size  : 4
+instance_fields_size: 0
+direct_methods_size : 2
+virtual_methods_size: 1
+
+Class #10787            -
+  Class descriptor  : 'LX/0oAB;'
+  Access flags      : 0x0011 (PUBLIC FINAL)
+  Superclass        : 'Ljava/lang/Object;'
+  Interfaces        -
+    #0              : 'LX/0yAL;'
+  Static fields     -
+    #0              : (in LX/0oAB;)
+      name          : 'A00'
+      type          : 'LX/0oAB;'
+      access        : 0x0019 (PUBLIC STATIC FINAL)
+    #1              : (in LX/0oAB;)
+      name          : 'A01'
+      type          : 'LX/060k;'
+      access        : 0x0019 (PUBLIC STATIC FINAL)
+    #2              : (in LX/0oAB;)
+      name          : 'A02'
+      type          : 'LX/060k;'
+      access        : 0x0019 (PUBLIC STATIC FINAL)
+    #3              : (in LX/0oAB;)
+      name          : 'A03'
+      type          : 'LX/060k;'
+      access        : 0x0019 (PUBLIC STATIC FINAL)
+  Instance fields   -
+  Direct methods    -
+    #0              : (in LX/0oAB;)
+      name          : '<clinit>'
+      type          : '()V'
+      access        : 0x10009 (PUBLIC STATIC CONSTRUCTOR)
+      method_idx    : 26404
+      code          -
+      registers     : 2
+      ins           : 0
+      outs          : 2
+      insns size    : 38 16-bit code units
+3571b0:                                        |[3571b0] X.0oAB.<clinit>:()V
+3571c0: 2200 5b32                              |0000: new-instance v0, LX/0oAB; // type@325b
+3571c4: 7010 15d1 0000                         |0002: invoke-direct {v0}, Ljava/lang/Object;.<init>:()V // method@d115
+3571ca: 6900 915d                              |0005: sput-object v0, LX/0oAB;.A00:LX/0oAB; // field@5d91
+3571ce: 1a00 12c4                              |0007: const-string v0, "numSamples" // string@c412
+3571d2: 7110 c410 0000                         |0009: invoke-static {v0}, LX/0C4G;.A0c:(Ljava/lang/String;)LX/063f; // method@10c4
+3571d8: 0c00                                   |000c: move-result-object v0
+3571da: 6201 012f                              |000d: sget-object v1, LX/0c0m;.A01:LX/0c0m; // field@2f01
+3571de: 7120 da60 0100                         |000f: invoke-static {v1, v0}, LX/0nbV;.A00:(LX/0c0m;LX/063f;)LX/060k; // method@60da
+3571e4: 0c00                                   |0012: move-result-object v0
+3571e6: 6900 925d                              |0013: sput-object v0, LX/0oAB;.A01:LX/060k; // field@5d92
+3571ea: 1a00 60ac                              |0015: const-string v0, "errorCode" // string@ac60
+3571ee: 7120 dc60 0100                         |0017: invoke-static {v1, v0}, LX/0nbV;.A02:(LX/0c0m;Ljava/lang/String;)LX/060k; // method@60dc
+3571f4: 0c00                                   |001a: move-result-object v0
+3571f6: 6900 935d                              |001b: sput-object v0, LX/0oAB;.A02:LX/060k; // field@5d93
+3571fa: 1a00 60c0                              |001d: const-string v0, "metricResults" // string@c060
+3571fe: 7120 dd60 0100                         |001f: invoke-static {v1, v0}, LX/0nbV;.A03:(LX/0c0m;Ljava/lang/String;)LX/060k; // method@60dd
+
+===== classes13.txt LX/07lX;->A02 line=1995519 =====
+STRINGS: preference_logged_performance_benchmarks | ig_device_perf_benchmark | , | FILE | ig_benchmarks | .dat | benchmark_name | benchmark_units | benchmark_samples | benchmark_min | benchmark_quartile1 | benchmark_median | benchmark_quartile3 | benchmark_max | benchmark_arithmeticmean | benchmark_standarddeviation | power | is_power_save_mode | perf_benchmark_failure | progressLog | preference_has_logged_static_attributes | preference_static_attributes_logging_failure_count
+896354: 7110 d239 0800                         |0006: invoke-static {v8}, LX/02rW;.A00:(LX/04BE;)LX/02rW; // method@39d2
+89635a: 0c00                                   |0009: move-result-object v0
+89635c: 5400 9f3e                              |000a: iget-object v0, v0, LX/02rW;.A01:LX/09si; // field@3e9f
+896360: 1b02 fe12 0100                         |000c: const-string/jumbo v2, "preference_logged_performance_benchmarks" // string@000112fe
+896366: 6203 9364                              |000f: sget-object v3, LX/04k6;.A00:LX/04k6; // field@6493
+89636a: 7230 3ba6 2003                         |0011: invoke-interface {v0, v2, v3}, LX/09si;.getStringSet:(Ljava/lang/String;Ljava/util/Set;)Ljava/util/Set; // method@a63b
+896370: 0c00                                   |0014: move-result-object v0
+896372: 3900 0300                              |0015: if-nez v0, 0018 // +0003
+896376: 0730                                   |0017: move-object v0, v3
+896378: 7210 26fe 0000                         |0018: invoke-interface {v0}, Ljava/util/Set;.size:()I // method@fe26
+89637e: 0a00                                   |001b: move-result v0
+896380: 8106                                   |001c: int-to-long v6, v0
+896382: 1604 1600                              |001d: const-wide/16 v4, #int 22 // #16
+896386: 3100 0604                              |001f: cmp-long v0, v6, v4
+89638a: 3b00 1302                              |0021: if-gez v0, 0234 // +0213
+89638e: 0800 1800                              |0023: move-object/from16 v0, v24
+896392: 5405 b692                              |0025: iget-object v5, v0, LX/07lX;.A00:Ljava/lang/Object; // field@92b6
+896396: 1f05 e124                              |0027: check-cast v5, LX/04BG; // type@24e1
+89639a: 120c                                   |0029: const/4 v12, #int 0 // #0
+89639c: 7110 253b 0500                         |002a: invoke-static {v5}, LX/02tU;.A02:(LX/04BG;)LX/02tU; // method@3b25
+8963a2: 0c04                                   |002d: move-result-object v4
+8963a4: 1a01 f1fa                              |002e: const-string v1, "ig_device_perf_benchmark" // string@faf1
+8963a8: 5440 2a3f                              |0030: iget-object v0, v4, LX/02tU;.A01:LX/02tV; // field@3f2a
+8963ac: 6e30 263b 0401                         |0032: invoke-virtual {v4, v0, v1}, LX/02tU;.A03:(LX/02tV;Ljava/lang/String;)LX/00vv; // method@3b26
+8963b2: 0c01                                   |0035: move-result-object v1
+8963b4: 1300 eb01                              |0036: const/16 v0, #int 491 // #1eb
+8963b8: 220d 411e                              |0038: new-instance v13, LX/03Tz; // type@1e41
+8963bc: 7030 b041 1d00                         |003a: invoke-direct {v13, v1, v0}, LX/03Tz;.<init>:(LX/00vv;I)V // method@41b0
+8963c2: 7110 d239 0800                         |003d: invoke-static {v8}, LX/02rW;.A00:(LX/04BE;)LX/02rW; // method@39d2
+8963c8: 0c00                                   |0040: move-result-object v0
+8963ca: 5400 9f3e                              |0041: iget-object v0, v0, LX/02rW;.A01:LX/09si; // field@3e9f
+8963ce: 7230 3ba6 2003                         |0043: invoke-interface {v0, v2, v3}, LX/09si;.getStringSet:(Ljava/lang/String;Ljava/util/Set;)Ljava/util/Set; // method@a63b
+8963d4: 0c04                                   |0046: move-result-object v4
+8963d6: 3904 0300                              |0047: if-nez v4, 004a // +0003
+8963da: 0734                                   |0049: move-object v4, v3
+8963dc: 7110 3939 0500                         |004a: invoke-static {v5}, LX/02qP;.A01:(LX/04BG;)LX/00AT; // method@3939
+8963e2: 0c05                                   |004d: move-result-object v5
+8963e4: 1800 e301 0300 e304 8300               |004e: const-wide v0, #double 3.38551e-306 // #008304e3000301e3
+8963ee: 7130 1b00 0501                         |0053: invoke-static {v5, v0, v1}, LX/000H;.A0M:(Ljava/lang/Object;J)Ljava/lang/String; // method@001b
+8963f4: 0c01                                   |0056: move-result-object v1
+8963f6: 1312 0100                              |0057: const/16 v18, #int 1 // #1
+8963fa: 1a00 cf02                              |0059: const-string v0, "," // string@02cf
+8963fe: 2410 1e77 0000                         |005b: filled-new-array {v0}, [Ljava/lang/String; // type@771e
+896404: 0c00                                   |005e: move-result-object v0
+896406: 7130 685e 010c                         |005f: invoke-static {v1, v0, v12}, LX/04m9;.A0l:(Ljava/lang/CharSequence;[Ljava/lang/String;I)Ljava/util/List; // method@5e68
+89640c: 0c00                                   |0062: move-result-object v0
+89640e: 7110 2400 0000                         |0063: invoke-static {v0}, LX/000H;.A0V:(Ljava/lang/Iterable;)Ljava/util/ArrayList; // method@0024
+896414: 0c06                                   |0066: move-result-object v6
+896416: 7210 d5fd 0000                         |0067: invoke-interface {v0}, Ljava/util/List;.iterator:()Ljava/util/Iterator; // method@fdd5
+89641c: 0c05                                   |006a: move-result-object v5
+89641e: 7210 abfd 0500                         |006b: invoke-interface {v5}, Ljava/util/Iterator;.hasNext:()Z // method@fdab
+896424: 0a00                                   |006e: move-result v0
+896426: 3800 1400                              |006f: if-eqz v0, 0083 // +0014
+89642a: 7110 1f00 0500                         |0071: invoke-static {v5}, LX/000H;.A0Q:(Ljava/util/Iterator;)Ljava/lang/String; // method@001f
+896430: 0c00                                   |0074: move-result-object v0
+896432: 7100 f7ab 0000                         |0075: invoke-static {}, LX/0Aix;.values:()[LX/0Aix; // method@abf7
+896438: 0c01                                   |0078: move-result-object v1
+89643a: 7110 39fb 0000                         |0079: invoke-static {v0}, Ljava/lang/Integer;.parseInt:(Ljava/lang/String;)I // method@fb39
+896440: 0a00                                   |007c: move-result v0
+896442: 4600 0100                              |007d: aget-object v0, v1, v0
+896446: 6e20 e7fc 0600                         |007f: invoke-virtual {v6, v0}, Ljava/util/AbstractCollection;.add:(Ljava/lang/Object;)Z // method@fce7
+89644c: 28e9                                   |0082: goto 006b // -0017
+89644e: 7110 905c 0600                         |0083: invoke-static {v6}, LX/04j9;.A00:(Ljava/lang/Iterable;)Ljava/util/List; // method@5c90
+896454: 0c00                                   |0086: move-result-object v0
+896456: 7210 d5fd 0000                         |0087: invoke-interface {v0}, Ljava/util/List;.iterator:()Ljava/util/Iterator; // method@fdd5
+89645c: 0c01                                   |008a: move-result-object v1
+89645e: 7210 abfd 0100                         |008b: invoke-interface {v1}, Ljava/util/Iterator;.hasNext:()Z // method@fdab
+896464: 0a00                                   |008e: move-result v0
+896466: 3800 1600                              |008f: if-eqz v0, 00a5 // +0016
+89646a: 7210 acfd 0100                         |0091: invoke-interface {v1}, Ljava/util/Iterator;.next:()Ljava/lang/Object; // method@fdac
+896470: 0c05                                   |0094: move-result-object v5
+896472: 0750                                   |0095: move-object v0, v5
+896474: 1f00 664f                              |0096: check-cast v0, LX/0Aix; // type@4f66
+896478: 6e10 17fb 0000                         |0098: invoke-virtual {v0}, Ljava/lang/Enum;.name:()Ljava/lang/String; // method@fb17
+89647e: 0c00                                   |009b: move-result-object v0
+896480: 7220 1efe 0400                         |009c: invoke-interface {v4, v0}, Ljava/util/Set;.contains:(Ljava/lang/Object;)Z // method@fe1e
+896486: 0a00                                   |009f: move-result v0
+896488: 3900 ebff                              |00a0: if-nez v0, 008b // -0015
+89648c: 1f05 664f                              |00a2: check-cast v5, LX/0Aix; // type@4f66
+896490: 2803                                   |00a4: goto 00a7 // +0003
+896492: 1205                                   |00a5: const/4 v5, #int 0 // #0
+896494: 28fc                                   |00a6: goto 00a2 // -0004
+896496: 3805 8d01                              |00a7: if-eqz v5, 0234 // +018d
+89649a: 7110 d239 0800                         |00a9: invoke-static {v8}, LX/02rW;.A00:(LX/04BE;)LX/02rW; // method@39d2
+8964a0: 0c00                                   |00ac: move-result-object v0
+8964a2: 5400 9f3e                              |00ad: iget-object v0, v0, LX/02rW;.A01:LX/09si; // field@3e9f
+8964a6: 7230 3ba6 2003                         |00af: invoke-interface {v0, v2, v3}, LX/09si;.getStringSet:(Ljava/lang/String;Ljava/util/Set;)Ljava/util/Set; // method@a63b
+8964ac: 0c00                                   |00b2: move-result-object v0
+8964ae: 3900 0300                              |00b3: if-nez v0, 00b6 // +0003
+8964b2: 0730                                   |00b5: move-object v0, v3
+8964b4: 7110 3c5d 0000                         |00b6: invoke-static {v0}, LX/04k4;.A1Z:(Ljava/lang/Iterable;)Ljava/util/Set; // method@5d3c
+8964ba: 0c01                                   |00b9: move-result-object v1
+8964bc: 6e10 17fb 0500                         |00ba: invoke-virtual {v5}, Ljava/lang/Enum;.name:()Ljava/lang/String; // method@fb17
+8964c2: 0c00                                   |00bd: move-result-object v0
+8964c4: 7220 1bfe 0100                         |00be: invoke-interface {v1, v0}, Ljava/util/Set;.add:(Ljava/lang/Object;)Z // method@fe1b
+8964ca: 7110 d239 0800                         |00c1: invoke-static {v8}, LX/02rW;.A00:(LX/04BE;)LX/02rW; // method@39d2
+8964d0: 0c00                                   |00c4: move-result-object v0
+8964d2: 5400 9f3e                              |00c5: iget-object v0, v0, LX/02rW;.A01:LX/09si; // field@3e9f
+8964d6: 7210 2fa6 0000                         |00c7: invoke-interface {v0}, LX/09si;.B73:()LX/09sA; // method@a62f
+8964dc: 0c00                                   |00ca: move-result-object v0
+8964de: 7230 cda5 2001                         |00cb: invoke-interface {v0, v2, v1}, LX/09sA;.GHD:(Ljava/lang/String;Ljava/util/Set;)V // method@a5cd
+8964e4: 7210 cfa5 0000                         |00ce: invoke-interface {v0}, LX/09sA;.apply:()V // method@a5cf
+8964ea: 6e10 84fb 0500                         |00d1: invoke-virtual {v5}, Ljava/lang/Object;.toString:()Ljava/lang/String; // method@fb84
+8964f0: 0c04                                   |00d4: move-result-object v4
+8964f2: 2202 bd6f                              |00d5: new-instance v2, Lcom/instagram/devicesegmentation/logging/PerfMetricRunnerJni; // type@6fbd
+8964f6: 7010 7ce0 0200                         |00d7: invoke-direct {v2}, Lcom/instagram/devicesegmentation/logging/PerfMetricRunnerJni;.<init>:()V // method@e07c
+8964fc: 1a00 8e31                              |00da: const-string v0, "FILE" // string@318e
+896500: 1203                                   |00dc: const/4 v3, #int 0 // #0
+896502: 7130 6f5e 040c                         |00dd: invoke-static {v4, v0, v12}, LX/04m9;.A0w:(Ljava/lang/CharSequence;Ljava/lang/CharSequence;Z)Z // method@5e6f
+896508: 0a00                                   |00e0: move-result v0
+89650a: 3800 1700                              |00e1: if-eqz v0, 00f8 // +0017
+89650e: 1a01 bafa                              |00e3: const-string v1, "ig_benchmarks" // string@faba
+896512: 1a00 6506                              |00e5: const-string v0, ".dat" // string@0665
+896516: 7120 64fa 0100                         |00e7: invoke-static {v1, v0}, Ljava/io/File;.createTempFile:(Ljava/lang/String;Ljava/lang/String;)Ljava/io/File; // method@fa64
+89651c: 0c00                                   |00ea: move-result-object v0
+89651e: 6e10 67fa 0000                         |00eb: invoke-virtual {v0}, Ljava/io/File;.deleteOnExit:()V // method@fa67
+896524: 6e10 6bfa 0000                         |00ee: invoke-virtual {v0}, Ljava/io/File;.getCanonicalPath:()Ljava/lang/String; // method@fa6b
+89652a: 0c00                                   |00f1: move-result-object v0
+89652c: 7110 cb5d 0000                         |00f2: invoke-static {v0}, LX/04l9;.A0h:(Ljava/lang/Object;)V // method@5dcb
+896532: 6e20 8be0 0200                         |00f5: invoke-virtual {v2, v0}, Lcom/instagram/devicesegmentation/logging/PerfMetricRunnerJni;.setTempFilename:(Ljava/lang/String;)V // method@e08b
+896538: 6e20 8ae0 4200                         |00f8: invoke-virtual {v2, v4}, Lcom/instagram/devicesegmentation/logging/PerfMetricRunnerJni;.runBenchmark:(Ljava/lang/String;)Z // method@e08a
+89653e: 0a00                                   |00fb: move-result v0
+896540: 6e10 7ee0 0200                         |00fc: invoke-virtual {v2}, Lcom/instagram/devicesegmentation/logging/PerfMetricRunnerJni;.getProgressLog:()Ljava/lang/String; // method@e07e
+896546: 0c11                                   |00ff: move-result-object v17
+896548: 3800 0301                              |0100: if-eqz v0, 0203 // +0103
+89654c: 5450 98ac                              |0102: iget-object v0, v5, LX/0Aix;.A00:LX/069K; // field@ac98
+896550: 0818 0000                              |0104: move-object/from16 v24, v0
+896554: 6e10 88e0 0200                         |0106: invoke-virtual {v2}, Lcom/instagram/devicesegmentation/logging/PerfMetricRunnerJni;.getResultUnits:()Ljava/lang/String; // method@e088
+89655a: 0c10                                   |0109: move-result-object v16
+89655c: 6e10 86e0 0200                         |010a: invoke-virtual {v2}, Lcom/instagram/devicesegmentation/logging/PerfMetricRunnerJni;.getResultSampleCount:()I // method@e086
+896562: 0a00                                   |010d: move-result v0
+896564: 8100                                   |010e: int-to-long v0, v0
+896566: 0516 0000                              |010f: move-wide/from16 v22, v0
+89656a: 6e10 82e0 0200                         |0111: invoke-virtual {v2}, Lcom/instagram/devicesegmentation/logging/PerfMetricRunnerJni;.getResultMin:()F // method@e082
+896570: 0a00                                   |0114: move-result v0
+896572: 8900                                   |0115: float-to-double v0, v0
+896574: 0514 0000                              |0116: move-wide/from16 v20, v0
+896578: 6e10 84e0 0200                         |0118: invoke-virtual {v2}, Lcom/instagram/devicesegmentation/logging/PerfMetricRunnerJni;.getResultQuartile1:()F // method@e084
+89657e: 0a00                                   |011b: move-result v0
+896580: 890e                                   |011c: float-to-double v14, v0
+896582: 6e10 81e0 0200                         |011d: invoke-virtual {v2}, Lcom/instagram/devicesegmentation/logging/PerfMetricRunnerJni;.getResultMedian:()F // method@e081
+896588: 0a00                                   |0120: move-result v0
+89658a: 890a                                   |0121: float-to-double v10, v0
+89658c: 6e10 85e0 0200                         |0122: invoke-virtual {v2}, Lcom/instagram/devicesegmentation/logging/PerfMetricRunnerJni;.getResultQuartile3:()F // method@e085
+896592: 0a00                                   |0125: move-result v0
+896594: 8908                                   |0126: float-to-double v8, v0
+896596: 6e10 7fe0 0200                         |0127: invoke-virtual {v2}, Lcom/instagram/devicesegmentation/logging/PerfMetricRunnerJni;.getResultMax:()F // method@e07f
+89659c: 0a00                                   |012a: move-result v0
+89659e: 8906                                   |012b: float-to-double v6, v0
+8965a0: 6e10 80e0 0200                         |012c: invoke-virtual {v2}, Lcom/instagram/devicesegmentation/logging/PerfMetricRunnerJni;.getResultMean:()F // method@e080
+8965a6: 0a00                                   |012f: move-result v0
+8965a8: 8904                                   |0130: float-to-double v4, v0
+8965aa: 6e10 87e0 0200                         |0131: invoke-virtual {v2}, Lcom/instagram/devicesegmentation/logging/PerfMetricRunnerJni;.getResultStdDev:()F // method@e087
+8965b0: 0a00                                   |0134: move-result v0
+8965b2: 8902                                   |0135: float-to-double v2, v0
+8965b4: 0800 1800                              |0136: move-object/from16 v0, v24
+8965b8: 7120 cc5d c000                         |0138: invoke-static {v0, v12}, LX/04l9;.A0j:(Ljava/lang/Object;I)V // method@5dcc
+8965be: 0801 1000                              |013b: move-object/from16 v1, v16
+8965c2: 0200 1200                              |013d: move/from16 v0, v18
+8965c6: 7120 cc5d 0100                         |013f: invoke-static {v1, v0}, LX/04l9;.A0j:(Ljava/lang/Object;I)V // method@5dcc
+8965cc: 220c b244                              |0142: new-instance v12, LX/08lG; // type@44b2
+8965d0: 7010 7dfb 0c00                         |0144: invoke-direct {v12}, Ljava/lang/Object;.<init>:()V // method@fb7d
+8965d6: 0800 1800                              |0147: move-object/from16 v0, v24
+8965da: 5bc0 6ea0                              |0149: iput-object v0, v12, LX/08lG;.A08:LX/069K; // field@a06e
+8965de: 5bc1 6fa0                              |014b: iput-object v1, v12, LX/08lG;.A09:Ljava/lang/String; // field@a06f
+8965e2: 0500 1600                              |014d: move-wide/from16 v0, v22
+8965e6: 5ac0 6da0                              |014f: iput-wide v0, v12, LX/08lG;.A07:J // field@a06d
+8965ea: 0500 1400                              |0151: move-wide/from16 v0, v20
+8965ee: 5ac0 69a0                              |0153: iput-wide v0, v12, LX/08lG;.A03:D // field@a069
+8965f2: 5ace 6aa0                              |0155: iput-wide v14, v12, LX/08lG;.A04:D // field@a06a
+8965f6: 5aca 68a0                              |0157: iput-wide v10, v12, LX/08lG;.A02:D // field@a068
+8965fa: 5ac8 6ba0                              |0159: iput-wide v8, v12, LX/08lG;.A05:D // field@a06b
+8965fe: 5ac6 67a0                              |015b: iput-wide v6, v12, LX/08lG;.A01:D // field@a067
+896602: 5ac4 66a0                              |015d: iput-wide v4, v12, LX/08lG;.A00:D // field@a066
+896606: 5ac2 6ca0                              |015f: iput-wide v2, v12, LX/08lG;.A06:D // field@a06c
+89660a: 1200                                   |0161: const/4 v0, #int 0 // #0
+89660c: 6700 f4d7                              |0162: sput v0, Lredex/$StoreFenceHelper;.DUMMY_VOLATILE:I // field@d7f4
+896610: 0800 1100                              |0164: move-object/from16 v0, v17
+896614: 7120 2800 0c00                         |0166: invoke-static {v12, v0}, LX/000H;.A0Z:(Ljava/lang/Object;Ljava/lang/Object;)LX/04oE; // method@0028
+89661a: 0c00                                   |0169: move-result-object v0
+89661c: 5402 0a67                              |016a: iget-object v2, v0, LX/04oE;.A00:Ljava/lang/Object; // field@670a
+896620: 1f02 b244                              |016c: check-cast v2, LX/08lG; // type@44b2
+896624: 5403 0b67                              |016e: iget-object v3, v0, LX/04oE;.A01:Ljava/lang/Object; // field@670b
+896628: 1f03 9073                              |0170: check-cast v3, Ljava/lang/String; // type@7390
+89662c: 3802 ab00                              |0172: if-eqz v2, 021d // +00ab
+896630: 54d0 8e21                              |0174: iget-object v0, v13, LX/00vy;.A00:LX/00vv; // field@218e
+896634: 7210 5c1e 0000                         |0176: invoke-interface {v0}, LX/00vv;.isSampled:()Z // method@1e5c
+89663a: 0a00                                   |0179: move-result v0
+89663c: 3800 ba00                              |017a: if-eqz v0, 0234 // +00ba
+896640: 5421 6ea0                              |017c: iget-object v1, v2, LX/08lG;.A08:LX/069K; // field@a06e
+896644: 1a00 2be2                              |017e: const-string v0, "benchmark_name" // string@e22b
+896648: 6e30 5d1e 1d00                         |0180: invoke-virtual {v13, v1, v0}, LX/00vy;.A0l:(LX/00vr;Ljava/lang/String;)V // method@1e5d
+89664e: 5421 6fa0                              |0183: iget-object v1, v2, LX/08lG;.A09:Ljava/lang/String; // field@a06f
+896652: 1a00 30e2                              |0185: const-string v0, "benchmark_units" // string@e230
+896656: 6e30 621e 0d01                         |0187: invoke-virtual {v13, v0, v1}, LX/00vy;.A0q:(Ljava/lang/String;Ljava/lang/String;)V // method@1e62
+89665c: 5320 6da0                              |018a: iget-wide v0, v2, LX/08lG;.A07:J // field@a06d
+896660: 7120 4efb 1000                         |018c: invoke-static {v0, v1}, Ljava/lang/Long;.valueOf:(J)Ljava/lang/Long; // method@fb4e
+896666: 0c01                                   |018f: move-result-object v1
+896668: 1a00 2ee2                              |0190: const-string v0, "benchmark_samples" // string@e22e
+89666c: 6e30 611e 0d01                         |0192: invoke-virtual {v13, v0, v1}, LX/00vy;.A0p:(Ljava/lang/String;Ljava/lang/Long;)V // method@1e61
+896672: 5320 69a0                              |0195: iget-wide v0, v2, LX/08lG;.A03:D // field@a069
+896676: 7120 14fb 1000                         |0197: invoke-static {v0, v1}, Ljava/lang/Double;.valueOf:(D)Ljava/lang/Double; // method@fb14
+89667c: 0c01                                   |019a: move-result-object v1
+89667e: 1a00 2ae2                              |019b: const-string v0, "benchmark_min" // string@e22a
+896682: 6e30 601e 0d01                         |019d: invoke-virtual {v13, v0, v1}, LX/00vy;.A0o:(Ljava/lang/String;Ljava/lang/Double;)V // method@1e60
+896688: 5320 6aa0                              |01a0: iget-wide v0, v2, LX/08lG;.A04:D // field@a06a
+89668c: 7120 14fb 1000                         |01a2: invoke-static {v0, v1}, Ljava/lang/Double;.valueOf:(D)Ljava/lang/Double; // method@fb14
+896692: 0c01                                   |01a5: move-result-object v1
+896694: 1a00 2ce2                              |01a6: const-string v0, "benchmark_quartile1" // string@e22c
+896698: 6e30 601e 0d01                         |01a8: invoke-virtual {v13, v0, v1}, LX/00vy;.A0o:(Ljava/lang/String;Ljava/lang/Double;)V // method@1e60
+89669e: 5320 68a0                              |01ab: iget-wide v0, v2, LX/08lG;.A02:D // field@a068
+8966a2: 7120 14fb 1000                         |01ad: invoke-static {v0, v1}, Ljava/lang/Double;.valueOf:(D)Ljava/lang/Double; // method@fb14
+8966a8: 0c01                                   |01b0: move-result-object v1
+8966aa: 1a00 29e2                              |01b1: const-string v0, "benchmark_median" // string@e229
+8966ae: 6e30 601e 0d01                         |01b3: invoke-virtual {v13, v0, v1}, LX/00vy;.A0o:(Ljava/lang/String;Ljava/lang/Double;)V // method@1e60
+8966b4: 5320 6ba0                              |01b6: iget-wide v0, v2, LX/08lG;.A05:D // field@a06b
+8966b8: 7120 14fb 1000                         |01b8: invoke-static {v0, v1}, Ljava/lang/Double;.valueOf:(D)Ljava/lang/Double; // method@fb14
+8966be: 0c01                                   |01bb: move-result-object v1
+8966c0: 1a00 2de2                              |01bc: const-string v0, "benchmark_quartile3" // string@e22d
+8966c4: 6e30 601e 0d01                         |01be: invoke-virtual {v13, v0, v1}, LX/00vy;.A0o:(Ljava/lang/String;Ljava/lang/Double;)V // method@1e60
+8966ca: 5320 67a0                              |01c1: iget-wide v0, v2, LX/08lG;.A01:D // field@a067
+8966ce: 7120 14fb 1000                         |01c3: invoke-static {v0, v1}, Ljava/lang/Double;.valueOf:(D)Ljava/lang/Double; // method@fb14
+8966d4: 0c01                                   |01c6: move-result-object v1
+8966d6: 1a00 28e2                              |01c7: const-string v0, "benchmark_max" // string@e228
+8966da: 6e30 601e 0d01                         |01c9: invoke-virtual {v13, v0, v1}, LX/00vy;.A0o:(Ljava/lang/String;Ljava/lang/Double;)V // method@1e60
+8966e0: 5320 66a0                              |01cc: iget-wide v0, v2, LX/08lG;.A00:D // field@a066
+8966e4: 7120 14fb 1000                         |01ce: invoke-static {v0, v1}, Ljava/lang/Double;.valueOf:(D)Ljava/lang/Double; // method@fb14
+8966ea: 0c01                                   |01d1: move-result-object v1
+8966ec: 1a00 27e2                              |01d2: const-string v0, "benchmark_arithmeticmean" // string@e227
+8966f0: 6e30 601e 0d01                         |01d4: invoke-virtual {v13, v0, v1}, LX/00vy;.A0o:(Ljava/lang/String;Ljava/lang/Double;)V // method@1e60
+8966f6: 5320 6ca0                              |01d7: iget-wide v0, v2, LX/08lG;.A06:D // field@a06c
+8966fa: 7120 14fb 1000                         |01d9: invoke-static {v0, v1}, Ljava/lang/Double;.valueOf:(D)Ljava/lang/Double; // method@fb14
+896700: 0c01                                   |01dc: move-result-object v1
+896702: 1a00 2fe2                              |01dd: const-string v0, "benchmark_standarddeviation" // string@e22f
+896706: 6e30 601e 0d01                         |01df: invoke-virtual {v13, v0, v1}, LX/00vy;.A0o:(Ljava/lang/String;Ljava/lang/Double;)V // method@1e60
+89670c: 1202                                   |01e2: const/4 v2, #int 0 // #0
+89670e: 1b01 d112 0100                         |01e3: const-string/jumbo v1, "power" // string@000112d1
+896714: 0800 1300                              |01e6: move-object/from16 v0, v19
+896718: 6e20 dac0 1000                         |01e8: invoke-virtual {v0, v1}, Landroid/content/Context;.getSystemService:(Ljava/lang/String;)Ljava/lang/Object; // method@c0da
+89671e: 0c01                                   |01eb: move-result-object v1
+896720: 2010 2d68                              |01ec: instance-of v0, v1, Landroid/os/PowerManager; // type@682d
+896724: 3800 2500                              |01ee: if-eqz v0, 0213 // +0025
+896728: 1f01 2d68                              |01f0: check-cast v1, Landroid/os/PowerManager; // type@682d
+89672c: 3801 2100                              |01f2: if-eqz v1, 0213 // +0021
+896730: 6e10 fec3 0100                         |01f4: invoke-virtual {v1}, Landroid/os/PowerManager;.isPowerSaveMode:()Z // method@c3fe
+896736: 0a02                                   |01f7: move-result v2
+896738: 7401 d4c0 1300                         |01f8: invoke-virtual/range {v19}, Landroid/content/Context;.getPackageName:()Ljava/lang/String; // method@c0d4
+89673e: 0c00                                   |01fb: move-result-object v0
+896740: 6e20 fdc3 0100                         |01fc: invoke-virtual {v1, v0}, Landroid/os/PowerManager;.isIgnoringBatteryOptimizations:(Ljava/lang/String;)Z // method@c3fd
+896746: 0a01                                   |01ff: move-result v1
+896748: 3802 0e00                              |0200: if-eqz v2, 020e // +000e
+89674c: 2809                                   |0202: goto 020b // +0009
+89674e: 0800 1100                              |0203: move-object/from16 v0, v17
+896752: 7120 2800 0300                         |0205: invoke-static {v3, v0}, LX/000H;.A0Z:(Ljava/lang/Object;Ljava/lang/Object;)LX/04oE; // method@0028
+896758: 0c00                                   |0208: move-result-object v0
+89675a: 2900 61ff                              |0209: goto/16 016a // -009f
+89675e: 1210                                   |020b: const/4 v0, #int 1 // #1
+896760: 3801 0300                              |020c: if-eqz v1, 020f // +0003
+896764: 1200                                   |020e: const/4 v0, #int 0 // #0
+896766: 7110 c7fa 0000                         |020f: invoke-static {v0}, Ljava/lang/Boolean;.valueOf:(Z)Ljava/lang/Boolean; // method@fac7
+89676c: 0c02                                   |0212: move-result-object v2
+89676e: 1b00 6b01 0100                         |0213: const-string/jumbo v0, "is_power_save_mode" // string@0001016b
+896774: 6e30 5f1e 0d02                         |0216: invoke-virtual {v13, v0, v2}, LX/00vy;.A0n:(Ljava/lang/String;Ljava/lang/Boolean;)V // method@1e5f
+89677a: 6e10 e041 0d00                         |0219: invoke-virtual {v13}, LX/03Tz;.A0t:()V // method@41e0
+896780: 2818                                   |021c: goto 0234 // +0018
+896782: 6202 213f                              |021d: sget-object v2, LX/02tO;.A01:LX/02tO; // field@3f21
+896786: 1401 8f1b c030                         |021f: const v1, #float 1.39777e-09 // #30c01b8f
+89678c: 1b00 f111 0100                         |0222: const-string/jumbo v0, "perf_benchmark_failure" // string@000111f1
+896792: 6e30 e13a 0201                         |0225: invoke-virtual {v2, v0, v1}, LX/02tO;.AW1:(Ljava/lang/String;I)LX/0Iel; // method@3ae1
+896798: 0c01                                   |0228: move-result-object v1
+89679a: 3801 0b00                              |0229: if-eqz v1, 0234 // +000b
+89679e: 1b00 0f14 0100                         |022b: const-string/jumbo v0, "progressLog" // string@0001140f
+8967a4: 7230 7cb3 0103                         |022e: invoke-interface {v1, v0, v3}, LX/0Iel;.AQH:(Ljava/lang/String;Ljava/lang/String;)V // method@b37c
+8967aa: 7210 80b3 0100                         |0231: invoke-interface {v1}, LX/0Iel;.report:()V // method@b380
+8967b0: 6200 2c63                              |0234: sget-object v0, LX/04i9;.A00:LX/04i9; // field@632c
+8967b4: 1100                                   |0236: return-object v0
+      catches       : 1
+        0x002a - 0x0234
+          Ljava/lang/Exception; -> 0x0234
+      positions     :
+      locals        :
+
+    #4              : (in LX/07lX;)
+      name          : 'A03'
+      type          : '(LX/07lX;)Ljava/lang/Object;'
+      access        : 0x0009 (PUBLIC STATIC)
+      method_idx    : 36377
+      code          -
+      registers     : 5
+      ins           : 1
+      outs          : 3
+      insns size    : 67 16-bit code units
+8967c8:                                        |[8967c8] X.07lX.A03:(LX/07lX;)Ljava/lang/Object;
+8967d8: 5443 b692                              |0000: iget-object v3, v4, LX/07lX;.A00:Ljava/lang/Object; // field@92b6
+8967dc: 1f03 e124                              |0002: check-cast v3, LX/04BG; // type@24e1
+8967e0: 1204                                   |0004: const/4 v4, #int 0 // #0
+8967e2: 6202 fa5a                              |0005: sget-object v2, LX/04BF;.A00:LX/04BE; // field@5afa
+8967e6: 7110 d239 0200                         |0007: invoke-static {v2}, LX/02rW;.A00:(LX/04BE;)LX/02rW; // method@39d2
+8967ec: 0c00                                   |000a: move-result-object v0
+8967ee: 5401 9f3e                              |000b: iget-object v1, v0, LX/02rW;.A01:LX/09si; // field@3e9f
+8967f2: 1b00 f812 0100                         |000d: const-string/jumbo v0, "preference_has_logged_static_attributes" // string@000112f8
+8967f8: 7230 36a6 0104                         |0010: invoke-interface {v1, v0, v4}, LX/09si;.getBoolean:(Ljava/lang/String;Z)Z // method@a636
+8967fe: 0a00                                   |0013: move-result v0
+896800: 3900 2c00                              |0014: if-nez v0, 0040 // +002c
+896804: 7110 d239 0200                         |0016: invoke-static {v2}, LX/02rW;.A00:(LX/04BE;)LX/02rW; // method@39d2
+89680a: 0c00                                   |0019: move-result-object v0
+89680c: 5401 9f3e                              |001a: iget-object v1, v0, LX/02rW;.A01:LX/09si; // field@3e9f
+896810: 1b00 0513 0100                         |001c: const-string/jumbo v0, "preference_static_attributes_logging_failure_count" // string@00011305
+896816: 7230 38a6 0104                         |001f: invoke-interface {v1, v0, v4}, LX/09si;.getInt:(Ljava/lang/String;I)I // method@a638
+89681c: 0a01                                   |0022: move-result v1
+89681e: 1230                                   |0023: const/4 v0, #int 3 // #3
+896820: 3501 1c00                              |0024: if-ge v1, v0, 0040 // +001c
+896824: 7110 3939 0300                         |0026: invoke-static {v3}, LX/02qP;.A01:(LX/04BG;)LX/00AT; // method@3939
+89682a: 0c02                                   |0029: move-result-object v2
+89682c: 1800 7c15 0000 e304 8100               |002a: const-wide v0, #double 3.0295e-306 // #008104e30000157c
+896836: 7130 3400 0201                         |002f: invoke-static {v2, v0, v1}, LX/000H;.A0l:(Ljava/lang/Object;J)Z // method@0034
+89683c: 0a00                                   |0032: move-result v0
+89683e: 3800 0d00                              |0033: if-eqz v0, 0040 // +000d
+896842: 1210                                   |0035: const/4 v0, #int 1 // #1
+896844: 2201 0349                              |0036: new-instance v1, LX/09Ux; // type@4903
+896848: 7030 8ea0 3100                         |0038: invoke-direct {v1, v3, v0}, LX/09Ux;.<init>:(Ljava/lang/Object;I)V // method@a08e
+89684e: 6200 2540                              |003b: sget-object v0, LX/02uB;.A0D:Ljava/util/concurrent/CopyOnWriteArrayList; // field@4025
+896852: 6e20 77fe 1000                         |003d: invoke-virtual {v0, v1}, Ljava/util/concurrent/CopyOnWriteArrayList;.addIfAbsent:(Ljava/lang/Object;)Z // method@fe77
+896858: 6200 2c63                              |0040: sget-object v0, LX/04i9;.A00:LX/04i9; // field@632c
+89685c: 1100                                   |0042: return-object v0
+      catches       : (none)
+      positions     :
+      locals        :
+
+  Virtual methods   -
+    #0              : (in LX/07lX;)
+      name          : 'A04'
+      type          : '()LX/08ki;'
+      access        : 0x0011 (PUBLIC FINAL)
+      method_idx    : 36378
+      code          -
+      registers     : 128
+      ins           : 1
+      outs          : 3
+      insns size    : 1202 16-bit code units
+
+===== classes13.txt Lcom/instagram/devicesegmentation/logging/PerfMetricRunnerJni;->runBenchmark line=2182268 =====
+STRINGS: num_iaa_reach_limit | feed_eager_refresh_disable_pae | did_triggered_rti_eager_refresh | next_item_rifu_disable_pae | feed_inline_disable_pae
+      name          : 'runBenchmark'
+      type          : '(Ljava/lang/String;)Z'
+      access        : 0x0111 (PUBLIC FINAL NATIVE)
+      method_idx    : 57482
+      code          : (none)
+
+    #12              : (in Lcom/instagram/devicesegmentation/logging/PerfMetricRunnerJni;)
+      name          : 'setTempFilename'
+      type          : '(Ljava/lang/String;)V'
+      access        : 0x0111 (PUBLIC FINAL NATIVE)
+      method_idx    : 57483
+      code          : (none)
+
+  source_file_idx   : 0 ()
+
+Class #7359 header:
+class_idx           : 18005
+access_flags        : 1025 (0x0401)
+superclass_idx      : 29575
+interfaces_off      : 0 (0x000000)
+source_file_idx     : 0
+annotations_off     : 0 (0x000000)
+class_data_off      : 10036553 (0x992549)
+static_fields_size  : 0
+instance_fields_size: 0
+direct_methods_size : 5
+virtual_methods_size: 0
+
+Class #7359            -
+  Class descriptor  : 'LX/08tY;'
+  Access flags      : 0x0401 (PUBLIC ABSTRACT)
+  Superclass        : 'Ljava/lang/Object;'
+  Interfaces        -
+  Static fields     -
+  Instance fields   -
+  Direct methods    -
+    #0              : (in LX/08tY;)
+      name          : 'A00'
+      type          : '(Lcom/instagram/common/session/UserSession;LX/05sV;Ljava/util/Map;)I'
+      access        : 0x0019 (PUBLIC STATIC FINAL)
+      method_idx    : 39857
+      code          -
+      registers     : 6
+      ins           : 3
+      outs          : 4
+      insns size    : 60 16-bit code units
+91cabc:                                        |[91cabc] X.08tY.A00:(Lcom/instagram/common/session/UserSession;LX/05sV;Ljava/util/Map;)I
+91cacc: 7110 3939 0300                         |0000: invoke-static {v3}, LX/02qP;.A01:(LX/04BG;)LX/00AT; // method@3939
+91cad2: 0c03                                   |0003: move-result-object v3
+91cad4: 6202 5804                              |0004: sget-object v2, LX/00A4;.A06:LX/00A4; // field@0458
+91cad8: 1800 ac03 4d00 2d01 8100               |0006: const-wide v0, #double 3.02692e-306 // #0081012d004d03ac
+91cae2: 7140 3200 3210                         |000b: invoke-static {v2, v3, v0, v1}, LX/000H;.A0j:(LX/00A4;Ljava/lang/Object;J)Z // method@0032
+91cae8: 0a00                                   |000e: move-result v0
+91caea: 1202                                   |000f: const/4 v2, #int 0 // #0
+91caec: 3800 1f00                              |0010: if-eqz v0, 002f // +001f
+91caf0: 6200 b976                              |0012: sget-object v0, LX/05sV;.A03:LX/05sV; // field@76b9
+91caf4: 7120 b29b 5000                         |0014: invoke-static {v0, v5}, LX/08tY;.A01:(Ljava/lang/Object;Ljava/util/Map;)I // method@9bb2
+91cafa: 0a01                                   |0017: move-result v1
+91cafc: 6200 bb76                              |0018: sget-object v0, LX/05sV;.A05:LX/05sV; // field@76bb
+91cb00: 7120 b29b 5000                         |001a: invoke-static {v0, v5}, LX/08tY;.A01:(Ljava/lang/Object;Ljava/util/Map;)I // method@9bb2
+91cb06: 0a00                                   |001d: move-result v0
+91cb08: b001                                   |001e: add-int/2addr v1, v0
+91cb0a: 6200 ba76                              |001f: sget-object v0, LX/05sV;.A04:LX/05sV; // field@76ba
+91cb0e: 7220 f7fd 0500                         |0021: invoke-interface {v5, v0}, Ljava/util/Map;.get:(Ljava/lang/Object;)Ljava/lang/Object; // method@fdf7
+91cb14: 0c00                                   |0024: move-result-object v0
+91cb16: 1f00 8573                              |0025: check-cast v0, Ljava/lang/Number; // type@7385
+91cb1a: 3800 0600                              |0027: if-eqz v0, 002d // +0006
+91cb1e: 6e10 79fb 0000                         |0029: invoke-virtual {v0}, Ljava/lang/Number;.intValue:()I // method@fb79
+91cb24: 0a02                                   |002c: move-result v2
+91cb26: b021                                   |002d: add-int/2addr v1, v2
+91cb28: 0f01                                   |002e: return v1
+91cb2a: 7220 f7fd 4500                         |002f: invoke-interface {v5, v4}, Ljava/util/Map;.get:(Ljava/lang/Object;)Ljava/lang/Object; // method@fdf7
+91cb30: 0c00                                   |0032: move-result-object v0
+91cb32: 1f00 8573                              |0033: check-cast v0, Ljava/lang/Number; // type@7385
+91cb36: 3800 0600                              |0035: if-eqz v0, 003b // +0006
+91cb3a: 6e10 79fb 0000                         |0037: invoke-virtual {v0}, Ljava/lang/Number;.intValue:()I // method@fb79
+91cb40: 0a02                                   |003a: move-result v2
+91cb42: 0f02                                   |003b: return v2
+      catches       : (none)
+      positions     :
+      locals        :
+
+    #1              : (in LX/08tY;)
+      name          : 'A01'
+      type          : '(Ljava/lang/Object;Ljava/util/Map;)I'
+      access        : 0x0009 (PUBLIC STATIC)
+      method_idx    : 39858
+      code          -
+      registers     : 2
+      ins           : 2
+      outs          : 2
+      insns size    : 15 16-bit code units
+900cfc:                                        |[900cfc] X.08tY.A01:(Ljava/lang/Object;Ljava/util/Map;)I
+900d0c: 7220 f7fd 0100                         |0000: invoke-interface {v1, v0}, Ljava/util/Map;.get:(Ljava/lang/Object;)Ljava/lang/Object; // method@fdf7
+900d12: 0c00                                   |0003: move-result-object v0
+900d14: 1f00 8573                              |0004: check-cast v0, Ljava/lang/Number; // type@7385
+900d18: 3800 0700                              |0006: if-eqz v0, 000d // +0007
+900d1c: 6e10 79fb 0000                         |0008: invoke-virtual {v0}, Ljava/lang/Number;.intValue:()I // method@fb79
+900d22: 0a00                                   |000b: move-result v0
+900d24: 0f00                                   |000c: return v0
+900d26: 1200                                   |000d: const/4 v0, #int 0 // #0
+900d28: 0f00                                   |000e: return v0
+      catches       : (none)
+      positions     :
+      locals        :
+
+    #2              : (in LX/08tY;)
+      name          : 'A02'
+      type          : '(Lcom/instagram/common/session/UserSession;LX/00R5;Ljava/lang/Integer;Ljava/util/Map;LX/0C8T;I)Ljava/lang/String;'
+      access        : 0x0019 (PUBLIC STATIC FINAL)
+      method_idx    : 39859
+      code          -
+      registers     : 10
+      ins           : 6
+      outs          : 4
+      insns size    : 124 16-bit code units
+91cd70:                                        |[91cd70] X.08tY.A02:(Lcom/instagram/common/session/UserSession;LX/00R5;Ljava/lang/Integer;Ljava/util/Map;LX/0C8T;I)Ljava/lang/String;
+91cd80: 7130 b59b 6407                         |0000: invoke-static {v4, v6, v7}, LX/08tY;.A04:(Lcom/instagram/common/session/UserSession;Ljava/lang/Integer;Ljava/util/Map;)Z // method@9bb5
+91cd86: 0a00                                   |0003: move-result v0
+91cd88: 3800 0600                              |0004: if-eqz v0, 000a // +0006
+91cd8c: 1b00 a10d 0100                         |0006: const-string/jumbo v0, "num_iaa_reach_limit" // string@00010da1
+91cd92: 1100                                   |0009: return-object v0
+91cd94: 7110 3939 0400                         |000a: invoke-static {v4}, LX/02qP;.A01:(LX/04BG;)LX/00AT; // method@3939
+91cd9a: 0c02                                   |000d: move-result-object v2
+91cd9c: 6203 5804                              |000e: sget-object v3, LX/00A4;.A06:LX/00A4; // field@0458
+91cda0: 1800 0218 0d00 2f05 8100               |0010: const-wide v0, #double 3.0297e-306 // #0081052f000d1802
+91cdaa: 7140 3200 2310                         |0015: invoke-static {v3, v2, v0, v1}, LX/000H;.A0j:(LX/00A4;Ljava/lang/Object;J)Z // method@0032
+91cdb0: 0a00                                   |0018: move-result v0
+91cdb2: 3800 0500                              |0019: if-eqz v0, 001e // +0005
+91cdb6: 1a00 42f0                              |001b: const-string v0, "feed_eager_refresh_disable_pae" // string@f042
+91cdba: 1100                                   |001d: return-object v0
+91cdbc: 1211                                   |001e: const/4 v1, #int 1 // #1
+91cdbe: 5550 160d                              |001f: iget-boolean v0, v5, LX/00R5;.A3O:Z // field@0d16
+91cdc2: 3310 1400                              |0021: if-ne v0, v1, 0035 // +0014
+91cdc6: 7110 3939 0400                         |0023: invoke-static {v4}, LX/02qP;.A01:(LX/04BG;)LX/00AT; // method@3939
+91cdcc: 0c02                                   |0026: move-result-object v2
+91cdce: 1800 1718 2e00 2f05 8100               |0027: const-wide v0, #double 3.0297e-306 // #0081052f002e1817
+91cdd8: 7140 3200 2310                         |002c: invoke-static {v3, v2, v0, v1}, LX/000H;.A0j:(LX/00A4;Ljava/lang/Object;J)Z // method@0032
+91cdde: 0a00                                   |002f: move-result v0
+91cde0: 3800 0500                              |0030: if-eqz v0, 0035 // +0005
+91cde4: 1a00 cdeb                              |0032: const-string v0, "did_triggered_rti_eager_refresh" // string@ebcd
+91cde8: 1100                                   |0034: return-object v0
+91cdea: 3808 2d00                              |0035: if-eqz v8, 0062 // +002d
+91cdee: 7210 a8ae 0800                         |0037: invoke-interface {v8}, LX/0C8T;.getValue:()Ljava/lang/Object; // method@aea8
+91cdf4: 0c01                                   |003a: move-result-object v1
+91cdf6: 1f01 ac30                              |003b: check-cast v1, LX/05tI; // type@30ac
+91cdfa: 3801 2500                              |003d: if-eqz v1, 0062 // +0025
+91cdfe: d800 0901                              |003f: add-int/lit8 v0, v9, #int 1 // #01
+91ce02: 6e20 d472 0100                         |0041: invoke-virtual {v1, v0}, LX/05tI;.A0w:(I)LX/05qw; // method@72d4
+91ce08: 0c00                                   |0044: move-result-object v0
+91ce0a: 3800 1d00                              |0045: if-eqz v0, 0062 // +001d
+91ce0e: 6e10 0e70 0000                         |0047: invoke-virtual {v0}, LX/05qw;.A08:()LX/04a3; // method@700e
+91ce14: 0c01                                   |004a: move-result-object v1
+91ce16: 6200 615d                              |004b: sget-object v0, LX/04a3;.A0C:LX/04a3; // field@5d61
+91ce1a: 3301 1700                              |004d: if-ne v1, v0, 0064 // +0017
+91ce1e: 7110 3939 0400                         |004f: invoke-static {v4}, LX/02qP;.A01:(LX/04BG;)LX/00AT; // method@3939
+91ce24: 0c02                                   |0052: move-result-object v2
+91ce26: 1800 3704 f500 2d01 8100               |0053: const-wide v0, #double 3.02692e-306 // #0081012d00f50437
+91ce30: 7140 3200 2310                         |0058: invoke-static {v3, v2, v0, v1}, LX/000H;.A0j:(LX/00A4;Ljava/lang/Object;J)Z // method@0032
+91ce36: 0a00                                   |005b: move-result v0
+91ce38: 3800 0800                              |005c: if-eqz v0, 0064 // +0008
+91ce3c: 1b00 9e0b 0100                         |005e: const-string/jumbo v0, "next_item_rifu_disable_pae" // string@00010b9e
+91ce42: 1100                                   |0061: return-object v0
+91ce44: 1201                                   |0062: const/4 v1, #int 0 // #0
+91ce46: 28e8                                   |0063: goto 004b // -0018
+91ce48: 5550 390d                              |0064: iget-boolean v0, v5, LX/00R5;.A4V:Z // field@0d39
+91ce4c: 3800 1400                              |0066: if-eqz v0, 007a // +0014
+91ce50: 7110 3939 0400                         |0068: invoke-static {v4}, LX/02qP;.A01:(LX/04BG;)LX/00AT; // method@3939
+91ce56: 0c02                                   |006b: move-result-object v2
+91ce58: 1800 a235 1300 7409 8100               |006c: const-wide v0, #double 3.03267e-306 // #00810974001335a2
+91ce62: 7140 3200 2310                         |0071: invoke-static {v3, v2, v0, v1}, LX/000H;.A0j:(LX/00A4;Ljava/lang/Object;J)Z // method@0032
+91ce68: 0a00                                   |0074: move-result v0
+91ce6a: 3800 0500                              |0075: if-eqz v0, 007a // +0005
+91ce6e: 1a00 53f0                              |0077: const-string v0, "feed_inline_disable_pae" // string@f053
+91ce72: 1100                                   |0079: return-object v0
+91ce74: 1200                                   |007a: const/4 v0, #int 0 // #0
+91ce76: 1100                                   |007b: return-object v0
+      catches       : (none)
+      positions     :
+      locals        :
+
+    #3              : (in LX/08tY;)
+      name          : 'A03'
+      type          : '(LX/0C8T;)Ljava/util/LinkedHashMap;'
+      access        : 0x0019 (PUBLIC STATIC FINAL)
+      method_idx    : 39860
+      code          -
+      registers     : 8
+      ins           : 1
+      outs          : 3
+      insns size    : 268 16-bit code units
+91a6b8:                                        |[91a6b8] X.08tY.A03:(LX/0C8T;)Ljava/util/LinkedHashMap;
+91a6c8: 7100 8c72 0000                         |0000: invoke-static {}, LX/05sV;.values:()[LX/05sV; // method@728c
+91a6ce: 0c06                                   |0003: move-result-object v6
+91a6d0: 2165                                   |0004: array-length v5, v6
+91a6d2: 7110 c638 0500                         |0005: invoke-static {v5}, LX/02pQ;.A00:(I)I // method@38c6
+91a6d8: 0a00                                   |0008: move-result v0
+91a6da: 2204 1674                              |0009: new-instance v4, Ljava/util/LinkedHashMap; // type@7416
+91a6de: 7020 affd 0400                         |000b: invoke-direct {v4, v0}, Ljava/util/LinkedHashMap;.<init>:(I)V // method@fdaf
+91a6e4: 1203                                   |000e: const/4 v3, #int 0 // #0
+91a6e6: 1202                                   |000f: const/4 v2, #int 0 // #0
+91a6e8: 3552 0e00                              |0010: if-ge v2, v5, 001e // +000e
+91a6ec: 4601 0602                              |0012: aget-object v1, v6, v2
+91a6f0: 7110 40fb 0300                         |0014: invoke-static {v3}, Ljava/lang/Integer;.valueOf:(I)Ljava/lang/Integer; // method@fb40
+91a6f6: 0c00                                   |0017: move-result-object v0
+91a6f8: 6e30 06fd 1400                         |0018: invoke-virtual {v4, v1, v0}, Ljava/util/AbstractMap;.put:(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object; // method@fd06
+91a6fe: d802 0201                              |001b: add-int/lit8 v2, v2, #int 1 // #01
+91a702: 28f3                                   |001d: goto 0010 // -000d
+91a704: 2201 1674                              |001e: new-instance v1, Ljava/util/LinkedHashMap; // type@7416
+91a708: 7020 b1fd 4100                         |0020: invoke-direct {v1, v4}, Ljava/util/LinkedHashMap;.<init>:(Ljava/util/Map;)V // method@fdb1
+91a70e: 3807 e800                              |0023: if-eqz v7, 010b // +00e8
+91a712: 7210 a8ae 0700                         |0025: invoke-interface {v7}, LX/0C8T;.getValue:()Ljava/lang/Object; // method@aea8
+91a718: 0c00                                   |0028: move-result-object v0
+91a71a: 1f00 ac30                              |0029: check-cast v0, LX/05tI; // type@30ac
+91a71e: 3800 e000                              |002b: if-eqz v0, 010b // +00e0
+91a722: 6e10 d972 0000                         |002d: invoke-virtual {v0}, LX/05tI;.A11:()Ljava/util/List; // method@72d9
+91a728: 0c00                                   |0030: move-result-object v0
+91a72a: 3800 da00                              |0031: if-eqz v0, 010b // +00da
+91a72e: 7210 d5fd 0000                         |0033: invoke-interface {v0}, Ljava/util/List;.iterator:()Ljava/util/Iterator; // method@fdd5
+91a734: 0c07                                   |0036: move-result-object v7
+
+===== classes19.txt Lcom/facebook/cameracore/mediapipeline/arclass/benchmark/implementation/instagram/InstagramARClassBenchmark;->startBenchmarks line=2033246 =====
+STRINGS: Invalid configuration key:  |  Please set moduleClassName in ServiceTypeKey constructor, or use a valid ServiceTypeKey.
+      name          : 'startBenchmarks'
+      type          : '()V'
+      access        : 0x0011 (PUBLIC FINAL)
+      method_idx    : 55312
+      code          -
+      registers     : 1
+      ins           : 1
+      outs          : 0
+      insns size    : 1 16-bit code units
+715a20:                                        |[715a20] com.facebook.cameracore.mediapipeline.arclass.benchmark.implementation.instagram.InstagramARClassBenchmark.startBenchmarks:()V
+715a30: 0e00                                   |0000: return-void
+      catches       : (none)
+      positions     :
+      locals        :
+
+  source_file_idx   : 0 ()
+
+Class #9090 header:
+class_idx           : 14233
+access_flags        : 1025 (0x0401)
+superclass_idx      : 21249
+interfaces_off      : 1878724 (0x1caac4)
+source_file_idx     : 0
+annotations_off     : 0 (0x000000)
+class_data_off      : 9166581 (0x8bdef5)
+static_fields_size  : 0
+instance_fields_size: 2
+direct_methods_size : 0
+virtual_methods_size: 2
+
+Class #9090            -
+  Class descriptor  : 'LX/0MoB;'
+  Access flags      : 0x0401 (PUBLIC ABSTRACT)
+  Superclass        : 'Ljava/lang/Object;'
+  Interfaces        -
+    #0              : 'LX/0Pbx;'
+  Static fields     -
+  Instance fields   -
+    #0              : (in LX/0MoB;)
+      name          : 'A00'
+      type          : 'LX/0BON;'
+      access        : 0x0001 (PUBLIC)
+    #1              : (in LX/0MoB;)
+      name          : 'A01'
+      type          : 'Ljava/lang/String;'
+      access        : 0x0001 (PUBLIC)
+  Direct methods    -
+  Virtual methods   -
+    #0              : (in LX/0MoB;)
+      name          : 'Cd0'
+      type          : '()Ljava/lang/String;'
+      access        : 0x0011 (PUBLIC FINAL)
+      method_idx    : 41258
+      code          -
+      registers     : 2
+      ins           : 1
+      outs          : 0
+      insns size    : 3 16-bit code units
+70aedc:                                        |[70aedc] X.0MoB.Cd0:()Ljava/lang/String;
+70aeec: 5410 77a5                              |0000: iget-object v0, v1, LX/0MoB;.A01:Ljava/lang/String; // field@a577
+70aef0: 1100                                   |0002: return-object v0
+      catches       : (none)
+      positions     :
+      locals        :
+
+    #1              : (in LX/0MoB;)
+      name          : 'DCz'
+      type          : '()LX/0BON;'
+      access        : 0x0011 (PUBLIC FINAL)
+      method_idx    : 41259
+      code          -
+      registers     : 2
+      ins           : 1
+      outs          : 0
+      insns size    : 3 16-bit code units
+70aef4:                                        |[70aef4] X.0MoB.DCz:()LX/0BON;
+70af04: 5410 76a5                              |0000: iget-object v0, v1, LX/0MoB;.A00:LX/0BON; // field@a576
+70af08: 1100                                   |0002: return-object v0
+      catches       : (none)
+      positions     :
+      locals        :
+
+  source_file_idx   : 0 ()
+
+Class #9091 header:
+class_idx           : 14234
+access_flags        : 17 (0x0011)
+superclass_idx      : 21249
+interfaces_off      : 1878724 (0x1caac4)
+source_file_idx     : 0
+annotations_off     : 0 (0x000000)
+class_data_off      : 9166605 (0x8bdf0d)
+static_fields_size  : 0
+instance_fields_size: 1
+direct_methods_size : 0
+virtual_methods_size: 3
+
+Class #9091            -
+  Class descriptor  : 'LX/0MoC;'
+  Access flags      : 0x0011 (PUBLIC FINAL)
+  Superclass        : 'Ljava/lang/Object;'
+  Interfaces        -
+    #0              : 'LX/0Pbx;'
+  Static fields     -
+  Instance fields   -
+    #0              : (in LX/0MoC;)
+      name          : 'A00'
+      type          : 'LX/0FzJ;'
+      access        : 0x0001 (PUBLIC)
+  Direct methods    -
+  Virtual methods   -
+    #0              : (in LX/0MoC;)
+      name          : 'Cd0'
+      type          : '()Ljava/lang/String;'
+      access        : 0x0011 (PUBLIC FINAL)
+      method_idx    : 41260
+      code          -
+      registers     : 4
+      ins           : 1
+      outs          : 2
+      insns size    : 30 16-bit code units
+7565ec:                                        |[7565ec] X.0MoC.Cd0:()Ljava/lang/String;
+7565fc: 5432 78a5                              |0000: iget-object v2, v3, LX/0MoC;.A00:LX/0FzJ; // field@a578
+756600: 5420 ab71                              |0002: iget-object v0, v2, LX/0FzJ;.A01:Ljava/lang/String; // field@71ab
+756604: 3800 0300                              |0004: if-eqz v0, 0007 // +0003
+756608: 1100                                   |0006: return-object v0
+75660a: 7100 1d00 0000                         |0007: invoke-static {}, LX/000H;.A0S:()Ljava/lang/StringBuilder; // method@001d
+756610: 0c01                                   |000a: move-result-object v1
+756612: 1a00 1131                              |000b: const-string v0, "Invalid configuration key: " // string@3111
+756616: 6e20 e7ee 0100                         |000d: invoke-virtual {v1, v0}, Ljava/lang/StringBuilder;.append:(Ljava/lang/String;)Ljava/lang/StringBuilder; // method@eee7
+75661c: 6e20 e6ee 2100                         |0010: invoke-virtual {v1, v2}, Ljava/lang/StringBuilder;.append:(Ljava/lang/Object;)Ljava/lang/StringBuilder; // method@eee6
+756622: 1a00 5700                              |0013: const-string v0, " Please set moduleClassName in ServiceTypeKey constructor, or use a valid ServiceTypeKey." // string@0057
+756626: 7120 1900 1000                         |0015: invoke-static {v0, v1}, LX/000H;.A0O:(Ljava/lang/String;Ljava/lang/StringBuilder;)Ljava/lang/String; // method@0019
+75662c: 0c00                                   |0018: move-result-object v0
+75662e: 7110 4e00 0000                         |0019: invoke-static {v0}, LX/0020;.A0R:(Ljava/lang/String;)Ljava/lang/IllegalArgumentException; // method@004e
+756634: 0c00                                   |001c: move-result-object v0
+756636: 2700                                   |001d: throw v0
+      catches       : (none)
+      positions     :
+      locals        :
+
+    #1              : (in LX/0MoC;)
+      name          : 'DCz'
+      type          : '()LX/0BON;'
+      access        : 0x0011 (PUBLIC FINAL)
+      method_idx    : 41261
+      code          -
+      registers     : 2
+      ins           : 1
+      outs          : 0
+      insns size    : 5 16-bit code units
+706a70:                                        |[706a70] X.0MoC.DCz:()LX/0BON;
+706a80: 5410 78a5                              |0000: iget-object v0, v1, LX/0MoC;.A00:LX/0FzJ; // field@a578
+706a84: 5400 aa71                              |0002: iget-object v0, v0, LX/0FzJ;.A00:LX/0BON; // field@71aa
+706a88: 1100                                   |0004: return-object v0
+      catches       : (none)
+      positions     :
+      locals        :
+
+    #2              : (in LX/0MoC;)
+      name          : 'EBn'
+      type          : '(LX/0GAs;)Z'
+      access        : 0x0011 (PUBLIC FINAL)
+      method_idx    : 41262
+      code          -
+      registers     : 4
+      ins           : 2
+      outs          : 2
+      insns size    : 16 16-bit code units
+77b318:                                        |[77b318] X.0MoC.EBn:(LX/0GAs;)Z
+77b328: 3803 0e00                              |0000: if-eqz v3, 000e // +000e
+77b32c: 5421 78a5                              |0002: iget-object v1, v2, LX/0MoC;.A00:LX/0FzJ; // field@a578
+77b330: 5430 d271                              |0004: iget-object v0, v3, LX/0GAs;.A08:Ljava/util/HashMap; // field@71d2
+77b334: 6e20 cfef 1000                         |0006: invoke-virtual {v0, v1}, Ljava/util/AbstractMap;.containsKey:(Ljava/lang/Object;)Z // method@efcf
+77b33a: 0a00                                   |0009: move-result v0
+77b33c: 3800 0400                              |000a: if-eqz v0, 000e // +0004
+77b340: 1210                                   |000c: const/4 v0, #int 1 // #1
+77b342: 0f00                                   |000d: return v0
+77b344: 1200                                   |000e: const/4 v0, #int 0 // #0
+77b346: 0f00                                   |000f: return v0
+      catches       : (none)
+      positions     :
+      locals        :
+
+  source_file_idx   : 0 ()
+
+Class #9092 header:
+class_idx           : 14235
+access_flags        : 17 (0x0011)
+superclass_idx      : 21249
+interfaces_off      : 1935224 (0x1d8778)
+source_file_idx     : 0
+annotations_off     : 9270108 (0x8d735c)
+class_data_off      : 9166633 (0x8bdf29)
+static_fields_size  : 0
+instance_fields_size: 2
+direct_methods_size : 1
+virtual_methods_size: 1
+
+Class #9092            -
+  Class descriptor  : 'LX/0MoD;'
+  Access flags      : 0x0011 (PUBLIC FINAL)
+  Superclass        : 'Ljava/lang/Object;'
+  Interfaces        -
+    #0              : 'Lcom/facebook/cameracore/mediapipeline/dataproviders/facetracker/interfaces/FaceTrackerDataProviderConfiguration$FaceTrackerErrorHandler;'
+  Static fields     -
+  Instance fields   -
+    #0              : (in LX/0MoD;)
+      name          : 'A00'
+      type          : 'LX/059w;'
+      access        : 0x1011 (PUBLIC FINAL SYNTHETIC)
+    #1              : (in LX/0MoD;)
+      name          : 'A01'
+      type          : 'LX/0GCY;'
+      access        : 0x1011 (PUBLIC FINAL SYNTHETIC)
+  Direct methods    -
+    #0              : (in LX/0MoD;)
+      name          : '<init>'
+      type          : '(LX/059w;LX/0GCY;)V'
+      access        : 0x10001 (PUBLIC CONSTRUCTOR)
+
+===== classes19.txt Lcom/facebook/cameracore/mediapipeline/arclass/benchmark/implementation/instagram/InstagramARClassBenchmark;->startBenchmarks line=2033255 =====
+STRINGS: Invalid configuration key:  |  Please set moduleClassName in ServiceTypeKey constructor, or use a valid ServiceTypeKey.
+      name          : 'startBenchmarks'
+      type          : '()V'
+      access        : 0x0011 (PUBLIC FINAL)
+      method_idx    : 55312
+      code          -
+      registers     : 1
+      ins           : 1
+      outs          : 0
+      insns size    : 1 16-bit code units
+715a20:                                        |[715a20] com.facebook.cameracore.mediapipeline.arclass.benchmark.implementation.instagram.InstagramARClassBenchmark.startBenchmarks:()V
+715a30: 0e00                                   |0000: return-void
+      catches       : (none)
+      positions     :
+      locals        :
+
+  source_file_idx   : 0 ()
+
+Class #9090 header:
+class_idx           : 14233
+access_flags        : 1025 (0x0401)
+superclass_idx      : 21249
+interfaces_off      : 1878724 (0x1caac4)
+source_file_idx     : 0
+annotations_off     : 0 (0x000000)
+class_data_off      : 9166581 (0x8bdef5)
+static_fields_size  : 0
+instance_fields_size: 2
+direct_methods_size : 0
+virtual_methods_size: 2
+
+Class #9090            -
+  Class descriptor  : 'LX/0MoB;'
+  Access flags      : 0x0401 (PUBLIC ABSTRACT)
+  Superclass        : 'Ljava/lang/Object;'
+  Interfaces        -
+    #0              : 'LX/0Pbx;'
+  Static fields     -
+  Instance fields   -
+    #0              : (in LX/0MoB;)
+      name          : 'A00'
+      type          : 'LX/0BON;'
+      access        : 0x0001 (PUBLIC)
+    #1              : (in LX/0MoB;)
+      name          : 'A01'
+      type          : 'Ljava/lang/String;'
+      access        : 0x0001 (PUBLIC)
+  Direct methods    -
+  Virtual methods   -
+    #0              : (in LX/0MoB;)
+      name          : 'Cd0'
+      type          : '()Ljava/lang/String;'
+      access        : 0x0011 (PUBLIC FINAL)
+      method_idx    : 41258
+      code          -
+      registers     : 2
+      ins           : 1
+      outs          : 0
+      insns size    : 3 16-bit code units
+70aedc:                                        |[70aedc] X.0MoB.Cd0:()Ljava/lang/String;
+70aeec: 5410 77a5                              |0000: iget-object v0, v1, LX/0MoB;.A01:Ljava/lang/String; // field@a577
+70aef0: 1100                                   |0002: return-object v0
+      catches       : (none)
+      positions     :
+      locals        :
+
+    #1              : (in LX/0MoB;)
+      name          : 'DCz'
+      type          : '()LX/0BON;'
+      access        : 0x0011 (PUBLIC FINAL)
+      method_idx    : 41259
+      code          -
+      registers     : 2
+      ins           : 1
+      outs          : 0
+      insns size    : 3 16-bit code units
+70aef4:                                        |[70aef4] X.0MoB.DCz:()LX/0BON;
+70af04: 5410 76a5                              |0000: iget-object v0, v1, LX/0MoB;.A00:LX/0BON; // field@a576
+70af08: 1100                                   |0002: return-object v0
+      catches       : (none)
+      positions     :
+      locals        :
+
+  source_file_idx   : 0 ()
+
+Class #9091 header:
+class_idx           : 14234
+access_flags        : 17 (0x0011)
+superclass_idx      : 21249
+interfaces_off      : 1878724 (0x1caac4)
+source_file_idx     : 0
+annotations_off     : 0 (0x000000)
+class_data_off      : 9166605 (0x8bdf0d)
+static_fields_size  : 0
+instance_fields_size: 1
+direct_methods_size : 0
+virtual_methods_size: 3
+
+Class #9091            -
+  Class descriptor  : 'LX/0MoC;'
+  Access flags      : 0x0011 (PUBLIC FINAL)
+  Superclass        : 'Ljava/lang/Object;'
+  Interfaces        -
+    #0              : 'LX/0Pbx;'
+  Static fields     -
+  Instance fields   -
+    #0              : (in LX/0MoC;)
+      name          : 'A00'
+      type          : 'LX/0FzJ;'
+      access        : 0x0001 (PUBLIC)
+  Direct methods    -
+  Virtual methods   -
+    #0              : (in LX/0MoC;)
+      name          : 'Cd0'
+      type          : '()Ljava/lang/String;'
+      access        : 0x0011 (PUBLIC FINAL)
+      method_idx    : 41260
+      code          -
+      registers     : 4
+      ins           : 1
+      outs          : 2
+      insns size    : 30 16-bit code units
+7565ec:                                        |[7565ec] X.0MoC.Cd0:()Ljava/lang/String;
+7565fc: 5432 78a5                              |0000: iget-object v2, v3, LX/0MoC;.A00:LX/0FzJ; // field@a578
+756600: 5420 ab71                              |0002: iget-object v0, v2, LX/0FzJ;.A01:Ljava/lang/String; // field@71ab
+756604: 3800 0300                              |0004: if-eqz v0, 0007 // +0003
+756608: 1100                                   |0006: return-object v0
+75660a: 7100 1d00 0000                         |0007: invoke-static {}, LX/000H;.A0S:()Ljava/lang/StringBuilder; // method@001d
+756610: 0c01                                   |000a: move-result-object v1
+756612: 1a00 1131                              |000b: const-string v0, "Invalid configuration key: " // string@3111
+756616: 6e20 e7ee 0100                         |000d: invoke-virtual {v1, v0}, Ljava/lang/StringBuilder;.append:(Ljava/lang/String;)Ljava/lang/StringBuilder; // method@eee7
+75661c: 6e20 e6ee 2100                         |0010: invoke-virtual {v1, v2}, Ljava/lang/StringBuilder;.append:(Ljava/lang/Object;)Ljava/lang/StringBuilder; // method@eee6
+756622: 1a00 5700                              |0013: const-string v0, " Please set moduleClassName in ServiceTypeKey constructor, or use a valid ServiceTypeKey." // string@0057
+756626: 7120 1900 1000                         |0015: invoke-static {v0, v1}, LX/000H;.A0O:(Ljava/lang/String;Ljava/lang/StringBuilder;)Ljava/lang/String; // method@0019
+75662c: 0c00                                   |0018: move-result-object v0
+75662e: 7110 4e00 0000                         |0019: invoke-static {v0}, LX/0020;.A0R:(Ljava/lang/String;)Ljava/lang/IllegalArgumentException; // method@004e
+756634: 0c00                                   |001c: move-result-object v0
+756636: 2700                                   |001d: throw v0
+      catches       : (none)
+      positions     :
+      locals        :
+
+    #1              : (in LX/0MoC;)
+      name          : 'DCz'
+      type          : '()LX/0BON;'
+      access        : 0x0011 (PUBLIC FINAL)
+      method_idx    : 41261
+      code          -
+      registers     : 2
+      ins           : 1
+      outs          : 0
+      insns size    : 5 16-bit code units
+706a70:                                        |[706a70] X.0MoC.DCz:()LX/0BON;
+706a80: 5410 78a5                              |0000: iget-object v0, v1, LX/0MoC;.A00:LX/0FzJ; // field@a578
+706a84: 5400 aa71                              |0002: iget-object v0, v0, LX/0FzJ;.A00:LX/0BON; // field@71aa
+706a88: 1100                                   |0004: return-object v0
+      catches       : (none)
+      positions     :
+      locals        :
+
+    #2              : (in LX/0MoC;)
+      name          : 'EBn'
+      type          : '(LX/0GAs;)Z'
+      access        : 0x0011 (PUBLIC FINAL)
+      method_idx    : 41262
+      code          -
+      registers     : 4
+      ins           : 2
+      outs          : 2
+      insns size    : 16 16-bit code units
+77b318:                                        |[77b318] X.0MoC.EBn:(LX/0GAs;)Z
+77b328: 3803 0e00                              |0000: if-eqz v3, 000e // +000e
+77b32c: 5421 78a5                              |0002: iget-object v1, v2, LX/0MoC;.A00:LX/0FzJ; // field@a578
+77b330: 5430 d271                              |0004: iget-object v0, v3, LX/0GAs;.A08:Ljava/util/HashMap; // field@71d2
+77b334: 6e20 cfef 1000                         |0006: invoke-virtual {v0, v1}, Ljava/util/AbstractMap;.containsKey:(Ljava/lang/Object;)Z // method@efcf
+77b33a: 0a00                                   |0009: move-result v0
+77b33c: 3800 0400                              |000a: if-eqz v0, 000e // +0004
+77b340: 1210                                   |000c: const/4 v0, #int 1 // #1
+77b342: 0f00                                   |000d: return v0
+77b344: 1200                                   |000e: const/4 v0, #int 0 // #0
+77b346: 0f00                                   |000f: return v0
+      catches       : (none)
+      positions     :
+      locals        :
+
+  source_file_idx   : 0 ()
+
+Class #9092 header:
+class_idx           : 14235
+access_flags        : 17 (0x0011)
+superclass_idx      : 21249
+interfaces_off      : 1935224 (0x1d8778)
+source_file_idx     : 0
+annotations_off     : 9270108 (0x8d735c)
+class_data_off      : 9166633 (0x8bdf29)
+static_fields_size  : 0
+instance_fields_size: 2
+direct_methods_size : 1
+virtual_methods_size: 1
+
+Class #9092            -
+  Class descriptor  : 'LX/0MoD;'
+  Access flags      : 0x0011 (PUBLIC FINAL)
+  Superclass        : 'Ljava/lang/Object;'
+  Interfaces        -
+    #0              : 'Lcom/facebook/cameracore/mediapipeline/dataproviders/facetracker/interfaces/FaceTrackerDataProviderConfiguration$FaceTrackerErrorHandler;'
+  Static fields     -
+  Instance fields   -
+    #0              : (in LX/0MoD;)
+      name          : 'A00'
+      type          : 'LX/059w;'
+      access        : 0x1011 (PUBLIC FINAL SYNTHETIC)
+    #1              : (in LX/0MoD;)
+      name          : 'A01'
+      type          : 'LX/0GCY;'
+      access        : 0x1011 (PUBLIC FINAL SYNTHETIC)
+  Direct methods    -
+    #0              : (in LX/0MoD;)
+      name          : '<init>'
+      type          : '(LX/059w;LX/0GCY;)V'
+      access        : 0x10001 (PUBLIC CONSTRUCTOR)
+      method_idx    : 41263
+      code          -
+      registers     : 3
+      ins           : 3
+      outs          : 1
+      insns size    : 8 16-bit code units
+73ec8c:                                        |[73ec8c] X.0MoD.<init>:(LX/059w;LX/0GCY;)V
+73ec9c: 5b02 7aa5                              |0000: iput-object v2, v0, LX/0MoD;.A01:LX/0GCY; // field@a57a
+73eca0: 5b01 79a5                              |0002: iput-object v1, v0, LX/0MoD;.A00:LX/059w; // field@a579
+
+===== classes19.txt Lcom/facebook/cameracore/mediapipeline/arclass/benchmark/interfaces/IARClassBenchmark;->startBenchmarks line=2286003 =====
+STRINGS: 
+      name          : 'startBenchmarks'
+      type          : '()V'
+      access        : 0x0401 (PUBLIC ABSTRACT)
+      method_idx    : 55313
+      code          : (none)
+
+  source_file_idx   : 0 ()
+
+Class #10722 header:
+class_idx           : 19647
+access_flags        : 1537 (0x0601)
+superclass_idx      : 21249
+interfaces_off      : 0 (0x000000)
+source_file_idx     : 0
+annotations_off     : 0 (0x000000)
+class_data_off      : 9236103 (0x8cee87)
+static_fields_size  : 0
+instance_fields_size: 0
+direct_methods_size : 0
+virtual_methods_size: 1
+
+Class #10722            -
+  Class descriptor  : 'Lcom/facebook/cameracore/mediapipeline/dataproviders/facetracker/interfaces/FaceTrackerDataProviderConfiguration$FaceTrackerErrorHandler;'
+  Access flags      : 0x0601 (PUBLIC INTERFACE ABSTRACT)
+  Superclass        : 'Ljava/lang/Object;'
+  Interfaces        -
+  Static fields     -
+  Instance fields   -
+  Direct methods    -
+  Virtual methods   -
+    #0              : (in Lcom/facebook/cameracore/mediapipeline/dataproviders/facetracker/interfaces/FaceTrackerDataProviderConfiguration$FaceTrackerErrorHandler;)
+      name          : 'handleLoadError'
+      type          : '(Ljava/lang/String;)V'
+      access        : 0x0401 (PUBLIC ABSTRACT)
+      method_idx    : 55371
+      code          : (none)
+
+  source_file_idx   : 0 ()
+
+Class #10723 header:
+class_idx           : 16042
+access_flags        : 1537 (0x0601)
+superclass_idx      : 21249
+interfaces_off      : 0 (0x000000)
+source_file_idx     : 0
+annotations_off     : 0 (0x000000)
+class_data_off      : 9236113 (0x8cee91)
+static_fields_size  : 0
+instance_fields_size: 0
+direct_methods_size : 0
+virtual_methods_size: 1
+
+Class #10723            -
+  Class descriptor  : 'LX/0Ovu;'
+  Access flags      : 0x0601 (PUBLIC INTERFACE ABSTRACT)
+  Superclass        : 'Ljava/lang/Object;'
+  Interfaces        -
+  Static fields     -
+  Instance fields   -
+  Direct methods    -
+  Virtual methods   -
+    #0              : (in LX/0Ovu;)
+      name          : 'B49'
+      type          : '(Lorg/json/JSONObject;)V'
+      access        : 0x0401 (PUBLIC ABSTRACT)
+      method_idx    : 47351
+      code          : (none)
+
+  source_file_idx   : 0 ()
+
+Class #10724 header:
+class_idx           : 19661
+access_flags        : 1537 (0x0601)
+superclass_idx      : 21249
+interfaces_off      : 0 (0x000000)
+source_file_idx     : 0
+annotations_off     : 0 (0x000000)
+class_data_off      : 9236123 (0x8cee9b)
+static_fields_size  : 0
+instance_fields_size: 0
+direct_methods_size : 0
+virtual_methods_size: 1
+
+Class #10724            -
+  Class descriptor  : 'Lcom/facebook/cameracore/mediapipeline/dataproviders/slam/interfaces/SlamLibraryProvider;'
+  Access flags      : 0x0601 (PUBLIC INTERFACE ABSTRACT)
+  Superclass        : 'Ljava/lang/Object;'
+  Interfaces        -
+  Static fields     -
+  Instance fields   -
+  Direct methods    -
+  Virtual methods   -
+    #0              : (in Lcom/facebook/cameracore/mediapipeline/dataproviders/slam/interfaces/SlamLibraryProvider;)
+      name          : 'getLibraryPath'
+      type          : '()Ljava/lang/String;'
+      access        : 0x0401 (PUBLIC ABSTRACT)
+      method_idx    : 55411
+      code          : (none)
+
+  source_file_idx   : 0 ()
+
+Class #10725 header:
+class_idx           : 16043
+access_flags        : 1537 (0x0601)
+superclass_idx      : 21249
+interfaces_off      : 0 (0x000000)
+source_file_idx     : 0
+annotations_off     : 0 (0x000000)
+class_data_off      : 9236133 (0x8ceea5)
+static_fields_size  : 0
+instance_fields_size: 0
+direct_methods_size : 0
+virtual_methods_size: 1
+
+Class #10725            -
+  Class descriptor  : 'LX/0Ovv;'
+  Access flags      : 0x0601 (PUBLIC INTERFACE ABSTRACT)
+  Superclass        : 'Ljava/lang/Object;'
+  Interfaces        -
+  Static fields     -
+  Instance fields   -
+  Direct methods    -
+  Virtual methods   -
+    #0              : (in LX/0Ovv;)
+      name          : 'B1j'
+      type          : '()J'
+      access        : 0x0401 (PUBLIC ABSTRACT)
+      method_idx    : 47352
+      code          : (none)
+
+  source_file_idx   : 0 ()
+
+Class #10726 header:
+class_idx           : 16044
+access_flags        : 1537 (0x0601)
+superclass_idx      : 21249
+interfaces_off      : 0 (0x000000)
+source_file_idx     : 0
+annotations_off     : 0 (0x000000)
+class_data_off      : 9236143 (0x8ceeaf)
+static_fields_size  : 0
+instance_fields_size: 0
+direct_methods_size : 0
+virtual_methods_size: 1
+
+Class #10726            -
+  Class descriptor  : 'LX/0Ovw;'
+  Access flags      : 0x0601 (PUBLIC INTERFACE ABSTRACT)
+  Superclass        : 'Ljava/lang/Object;'
+  Interfaces        -
+  Static fields     -
+  Instance fields   -
+  Direct methods    -
+  Virtual methods   -
+    #0              : (in LX/0Ovw;)
+      name          : 'H7Q'
+      type          : '(LX/021p;I)V'
+      access        : 0x0401 (PUBLIC ABSTRACT)
+      method_idx    : 47353
+      code          : (none)
+
+  source_file_idx   : 0 ()
+
+Class #10727 header:
+class_idx           : 16045
+access_flags        : 1537 (0x0601)
+superclass_idx      : 21249
+interfaces_off      : 0 (0x000000)
+source_file_idx     : 0
+annotations_off     : 0 (0x000000)
+class_data_off      : 9236153 (0x8ceeb9)
+static_fields_size  : 0
+instance_fields_size: 0
+direct_methods_size : 0
+virtual_methods_size: 1
+
+Class #10727            -
+  Class descriptor  : 'LX/0Ovx;'
+  Access flags      : 0x0601 (PUBLIC INTERFACE ABSTRACT)
+  Superclass        : 'Ljava/lang/Object;'
+  Interfaces        -
+  Static fields     -
+  Instance fields   -
+  Direct methods    -
+  Virtual methods   -
+    #0              : (in LX/0Ovx;)
+      name          : 'Ehn'
+      type          : '(Ljava/lang/String;)V'
+      access        : 0x0401 (PUBLIC ABSTRACT)
+      method_idx    : 47354
+      code          : (none)
+
+  source_file_idx   : 0 ()
+
+Class #10728 header:
+class_idx           : 16046
+access_flags        : 1537 (0x0601)
+superclass_idx      : 21249
+interfaces_off      : 0 (0x000000)
+source_file_idx     : 0
+annotations_off     : 0 (0x000000)
+class_data_off      : 9236163 (0x8ceec3)
+static_fields_size  : 0
+instance_fields_size: 0
+direct_methods_size : 0
+virtual_methods_size: 1
+
+Class #10728            -
+  Class descriptor  : 'LX/0Ovy;'
+  Access flags      : 0x0601 (PUBLIC INTERFACE ABSTRACT)
+  Superclass        : 'Ljava/lang/Object;'
+  Interfaces        -
+  Static fields     -
+  Instance fields   -
+  Direct methods    -
+  Virtual methods   -
+    #0              : (in LX/0Ovy;)
+      name          : 'H7B'
+      type          : '(F)V'
+      access        : 0x0401 (PUBLIC ABSTRACT)
+
+===== classes3.txt Lcom/facebook/fbreact/specs/NativeDeviceBenchmarkSpec;->reportBenchmark line=319961 =====
+STRINGS: 
+      name          : 'reportBenchmark'
+      type          : '(ZLcom/facebook/react/bridge/Promise;)V'
+      access        : 0x0401 (PUBLIC ABSTRACT)
+      method_idx    : 35354
+      code          : (none)
+
+    #3              : (in Lcom/facebook/fbreact/specs/NativeDeviceBenchmarkSpec;)
+      name          : 'runAllTests'
+      type          : '(DLcom/facebook/react/bridge/Promise;)V'
+      access        : 0x0401 (PUBLIC ABSTRACT)
+      method_idx    : 35355
+      code          : (none)
+
+    #4              : (in Lcom/facebook/fbreact/specs/NativeDeviceBenchmarkSpec;)
+      name          : 'runCpuTest'
+      type          : '(Ljava/lang/String;Lcom/facebook/react/bridge/Promise;)V'
+      access        : 0x0401 (PUBLIC ABSTRACT)
+      method_idx    : 35356
+      code          : (none)
+
+    #5              : (in Lcom/facebook/fbreact/specs/NativeDeviceBenchmarkSpec;)
+      name          : 'runGpuTest'
+      type          : '(Ljava/lang/String;DLcom/facebook/react/bridge/Promise;)V'
+      access        : 0x0401 (PUBLIC ABSTRACT)
+      method_idx    : 35357
+      code          : (none)
+
+  source_file_idx   : 0 ()
+
+Class #2016 header:
+class_idx           : 16551
+access_flags        : 1025 (0x0401)
+superclass_idx      : 14884
+interfaces_off      : 1357336 (0x14b618)
+source_file_idx     : 0
+annotations_off     : 6168248 (0x5e1eb8)
+class_data_off      : 5889374 (0x59dd5e)
+static_fields_size  : 1
+instance_fields_size: 0
+direct_methods_size : 1
+virtual_methods_size: 6
+
+Class #2016            -
+  Class descriptor  : 'Lcom/facebook/fbreact/specs/NativeImageLoaderAndroidSpec;'
+  Access flags      : 0x0401 (PUBLIC ABSTRACT)
+  Superclass        : 'LX/0VTZ;'
+  Interfaces        -
+    #0              : 'Lcom/facebook/react/turbomodule/core/interfaces/TurboModule;'
+  Static fields     -
+    #0              : (in Lcom/facebook/fbreact/specs/NativeImageLoaderAndroidSpec;)
+      name          : 'NAME'
+      type          : 'Ljava/lang/String;'
+      access        : 0x0019 (PUBLIC STATIC FINAL)
+      value         : "ImageLoader"
+  Instance fields   -
+  Direct methods    -
+    #0              : (in Lcom/facebook/fbreact/specs/NativeImageLoaderAndroidSpec;)
+      name          : '<init>'
+      type          : '(LX/0X1G;)V'
+      access        : 0x10001 (PUBLIC CONSTRUCTOR)
+      method_idx    : 35453
+      code          -
+      registers     : 2
+      ins           : 2
+      outs          : 2
+      insns size    : 4 16-bit code units
+2e4b2c:                                        |[2e4b2c] com.facebook.fbreact.specs.NativeImageLoaderAndroidSpec.<init>:(LX/0X1G;)V
+2e4b3c: 7020 f481 1000                         |0000: invoke-direct {v0, v1}, LX/0VTZ;.<init>:(LX/0X1G;)V // method@81f4
+2e4b42: 0e00                                   |0003: return-void
+      catches       : (none)
+      positions     :
+      locals        :
+
+  Virtual methods   -
+    #0              : (in Lcom/facebook/fbreact/specs/NativeImageLoaderAndroidSpec;)
+      name          : 'abortRequest'
+      type          : '(D)V'
+      access        : 0x0401 (PUBLIC ABSTRACT)
+      method_idx    : 35454
+      code          : (none)
+
+    #1              : (in Lcom/facebook/fbreact/specs/NativeImageLoaderAndroidSpec;)
+      name          : 'getName'
+      type          : '()Ljava/lang/String;'
+      access        : 0x0401 (PUBLIC ABSTRACT)
+      method_idx    : 35455
+      code          : (none)
+
+    #2              : (in Lcom/facebook/fbreact/specs/NativeImageLoaderAndroidSpec;)
+      name          : 'getSize'
+      type          : '(Ljava/lang/String;Lcom/facebook/react/bridge/Promise;)V'
+      access        : 0x0401 (PUBLIC ABSTRACT)
+      method_idx    : 35456
+      code          : (none)
+
+    #3              : (in Lcom/facebook/fbreact/specs/NativeImageLoaderAndroidSpec;)
+      name          : 'getSizeWithHeaders'
+      type          : '(Ljava/lang/String;Lcom/facebook/react/bridge/ReadableMap;Lcom/facebook/react/bridge/Promise;)V'
+      access        : 0x0401 (PUBLIC ABSTRACT)
+      method_idx    : 35457
+      code          : (none)
+
+    #4              : (in Lcom/facebook/fbreact/specs/NativeImageLoaderAndroidSpec;)
+      name          : 'prefetchImage'
+      type          : '(Ljava/lang/String;DLcom/facebook/react/bridge/Promise;)V'
+      access        : 0x0401 (PUBLIC ABSTRACT)
+      method_idx    : 35458
+      code          : (none)
+
+    #5              : (in Lcom/facebook/fbreact/specs/NativeImageLoaderAndroidSpec;)
+      name          : 'queryCache'
+      type          : '(Lcom/facebook/react/bridge/ReadableArray;Lcom/facebook/react/bridge/Promise;)V'
+      access        : 0x0401 (PUBLIC ABSTRACT)
+      method_idx    : 35459
+      code          : (none)
+
+  source_file_idx   : 0 ()
+
+Class #2017 header:
+class_idx           : 16554
+access_flags        : 1025 (0x0401)
+superclass_idx      : 14884
+interfaces_off      : 1357336 (0x14b618)
+source_file_idx     : 0
+annotations_off     : 6168120 (0x5e1e38)
+class_data_off      : 5889418 (0x59dd8a)
+static_fields_size  : 1
+instance_fields_size: 0
+direct_methods_size : 1
+virtual_methods_size: 6
+
+Class #2017            -
+  Class descriptor  : 'Lcom/facebook/fbreact/specs/NativeLeadGenHelperSpec;'
+  Access flags      : 0x0401 (PUBLIC ABSTRACT)
+  Superclass        : 'LX/0VTZ;'
+  Interfaces        -
+    #0              : 'Lcom/facebook/react/turbomodule/core/interfaces/TurboModule;'
+  Static fields     -
+    #0              : (in Lcom/facebook/fbreact/specs/NativeLeadGenHelperSpec;)
+      name          : 'NAME'
+      type          : 'Ljava/lang/String;'
+      access        : 0x0019 (PUBLIC STATIC FINAL)
+      value         : "LeadGenHelper"
+  Instance fields   -
+  Direct methods    -
+    #0              : (in Lcom/facebook/fbreact/specs/NativeLeadGenHelperSpec;)
+      name          : '<init>'
+      type          : '(LX/0X1G;)V'
+      access        : 0x10001 (PUBLIC CONSTRUCTOR)
+      method_idx    : 35467
+      code          -
+      registers     : 3
+      ins           : 2
+      outs          : 0
+      insns size    : 5 16-bit code units
+2dd3ec:                                        |[2dd3ec] com.facebook.fbreact.specs.NativeLeadGenHelperSpec.<init>:(LX/0X1G;)V
+2dd3fc: 7100 0100 0000                         |0000: invoke-static {}, LX/0002;.createAndThrow:()LX/0002; // method@0001
+2dd402: 0c00                                   |0003: move-result-object v0
+2dd404: 2700                                   |0004: throw v0
+      catches       : (none)
+      positions     :
+      locals        :
+
+  Virtual methods   -
+    #0              : (in Lcom/facebook/fbreact/specs/NativeLeadGenHelperSpec;)
+      name          : 'getName'
+      type          : '()Ljava/lang/String;'
+      access        : 0x0401 (PUBLIC ABSTRACT)
+      method_idx    : 35468
+      code          : (none)
+
+    #1              : (in Lcom/facebook/fbreact/specs/NativeLeadGenHelperSpec;)
+      name          : 'onAppPrepareToClose'
+      type          : '()V'
+      access        : 0x0401 (PUBLIC ABSTRACT)
+      method_idx    : 35469
+      code          : (none)
+
+    #2              : (in Lcom/facebook/fbreact/specs/NativeLeadGenHelperSpec;)
+      name          : 'onScroll'
+      type          : '(D)V'
+      access        : 0x0401 (PUBLIC ABSTRACT)
+      method_idx    : 35470
+      code          : (none)
+
+    #3              : (in Lcom/facebook/fbreact/specs/NativeLeadGenHelperSpec;)
+      name          : 'openAdUrl'
+      type          : '(Ljava/lang/String;Ljava/lang/String;DDLjava/lang/String;)V'
+      access        : 0x0401 (PUBLIC ABSTRACT)
+      method_idx    : 35471
+      code          : (none)
+
+    #4              : (in Lcom/facebook/fbreact/specs/NativeLeadGenHelperSpec;)
+      name          : 'openDialer'
+      type          : '(Ljava/lang/String;Ljava/lang/String;DDLjava/lang/String;)V'
+      access        : 0x0401 (PUBLIC ABSTRACT)
+      method_idx    : 35472
+      code          : (none)
+
+    #5              : (in Lcom/facebook/fbreact/specs/NativeLeadGenHelperSpec;)
+      name          : 'submitForm'
+      type          : '(Ljava/lang/String;Ljava/lang/String;)V'
+      access        : 0x0401 (PUBLIC ABSTRACT)
+      method_idx    : 35473
+      code          : (none)
+
+  source_file_idx   : 0 ()
+
+Class #2018 header:
+class_idx           : 16565
+access_flags        : 1025 (0x0401)
+superclass_idx      : 14884
+interfaces_off      : 1357336 (0x14b618)
+source_file_idx     : 0
+annotations_off     : 6168080 (0x5e1e10)
+class_data_off      : 5889462 (0x59ddb6)
+static_fields_size  : 1
+instance_fields_size: 0
+direct_methods_size : 1
+virtual_methods_size: 6
+
+===== classes8.txt LX/0cby;->A03 line=1581739 =====
+STRINGS: video_height_alignment | video_width_alignment | video_bitrate_range | video_frame_rates | video_supported_heights | video_supported_widths | video_hd_frame_rate | , | video_performance_points
+      name          : 'A03'
+      type          : '(Landroid/media/MediaCodecInfo$VideoCapabilities;)Ljava/util/Map;'
+      access        : 0x0011 (PUBLIC FINAL)
+      method_idx    : 36021
+      code          -
+      registers     : 10
+      ins           : 2
+      outs          : 3
+      insns size    : 155 16-bit code units
+6b6ac8:                                        |[6b6ac8] X.0cby.A03:(Landroid/media/MediaCodecInfo$VideoCapabilities;)Ljava/util/Map;
+6b6ad8: 3909 0500                              |0000: if-nez v9, 0005 // +0005
+6b6adc: 6203 2007                              |0002: sget-object v3, LX/02tQ;.A00:LX/02tQ; // field@0720
+6b6ae0: 1103                                   |0004: return-object v3
+6b6ae2: 6e10 c8cc 0900                         |0005: invoke-virtual {v9}, Landroid/media/MediaCodecInfo$VideoCapabilities;.getHeightAlignment:()I // method@ccc8
+6b6ae8: 0a00                                   |0008: move-result v0
+6b6aea: 7110 0cea 0000                         |0009: invoke-static {v0}, Ljava/lang/Integer;.valueOf:(I)Ljava/lang/Integer; // method@ea0c
+6b6af0: 0c01                                   |000c: move-result-object v1
+6b6af2: 1a00 92ec                              |000d: const-string v0, "video_height_alignment" // string@ec92
+6b6af6: 7120 2300 1000                         |000f: invoke-static {v0, v1}, LX/000H;.A0Z:(Ljava/lang/Object;Ljava/lang/Object;)LX/04oE; // method@0023
+6b6afc: 0c02                                   |0012: move-result-object v2
+6b6afe: 6e10 cfcc 0900                         |0013: invoke-virtual {v9}, Landroid/media/MediaCodecInfo$VideoCapabilities;.getWidthAlignment:()I // method@cccf
+6b6b04: 0a00                                   |0016: move-result v0
+6b6b06: 7110 0cea 0000                         |0017: invoke-static {v0}, Ljava/lang/Integer;.valueOf:(I)Ljava/lang/Integer; // method@ea0c
+6b6b0c: 0c01                                   |001a: move-result-object v1
+6b6b0e: 1a00 a7ec                              |001b: const-string v0, "video_width_alignment" // string@eca7
+6b6b12: 7120 2300 1000                         |001d: invoke-static {v0, v1}, LX/000H;.A0Z:(Ljava/lang/Object;Ljava/lang/Object;)LX/04oE; // method@0023
+6b6b18: 0c03                                   |0020: move-result-object v3
+6b6b1a: 6e10 c7cc 0900                         |0021: invoke-virtual {v9}, Landroid/media/MediaCodecInfo$VideoCapabilities;.getBitrateRange:()Landroid/util/Range; // method@ccc7
+6b6b20: 0c00                                   |0024: move-result-object v0
+6b6b22: 7110 fe07 0000                         |0025: invoke-static {v0}, LX/0225;.A0r:(Ljava/lang/Object;)Ljava/lang/String; // method@07fe
+6b6b28: 0c01                                   |0028: move-result-object v1
+6b6b2a: 1a00 77ec                              |0029: const-string v0, "video_bitrate_range" // string@ec77
+6b6b2e: 7120 2300 1000                         |002b: invoke-static {v0, v1}, LX/000H;.A0Z:(Ljava/lang/Object;Ljava/lang/Object;)LX/04oE; // method@0023
+6b6b34: 0c04                                   |002e: move-result-object v4
+6b6b36: 6e10 c9cc 0900                         |002f: invoke-virtual {v9}, Landroid/media/MediaCodecInfo$VideoCapabilities;.getSupportedFrameRates:()Landroid/util/Range; // method@ccc9
+6b6b3c: 0c00                                   |0032: move-result-object v0
+6b6b3e: 7110 fe07 0000                         |0033: invoke-static {v0}, LX/0225;.A0r:(Ljava/lang/Object;)Ljava/lang/String; // method@07fe
+6b6b44: 0c01                                   |0036: move-result-object v1
+6b6b46: 1a00 8cec                              |0037: const-string v0, "video_frame_rates" // string@ec8c
+6b6b4a: 7120 2300 1000                         |0039: invoke-static {v0, v1}, LX/000H;.A0Z:(Ljava/lang/Object;Ljava/lang/Object;)LX/04oE; // method@0023
+6b6b50: 0c05                                   |003c: move-result-object v5
+6b6b52: 6e10 cbcc 0900                         |003d: invoke-virtual {v9}, Landroid/media/MediaCodecInfo$VideoCapabilities;.getSupportedHeights:()Landroid/util/Range; // method@cccb
+6b6b58: 0c00                                   |0040: move-result-object v0
+6b6b5a: 7110 fe07 0000                         |0041: invoke-static {v0}, LX/0225;.A0r:(Ljava/lang/Object;)Ljava/lang/String; // method@07fe
+6b6b60: 0c01                                   |0044: move-result-object v1
+6b6b62: 1a00 a0ec                              |0045: const-string v0, "video_supported_heights" // string@eca0
+6b6b66: 7120 2300 1000                         |0047: invoke-static {v0, v1}, LX/000H;.A0Z:(Ljava/lang/Object;Ljava/lang/Object;)LX/04oE; // method@0023
+6b6b6c: 0c06                                   |004a: move-result-object v6
+6b6b6e: 6e10 cecc 0900                         |004b: invoke-virtual {v9}, Landroid/media/MediaCodecInfo$VideoCapabilities;.getSupportedWidths:()Landroid/util/Range; // method@ccce
+6b6b74: 0c00                                   |004e: move-result-object v0
+6b6b76: 7110 fe07 0000                         |004f: invoke-static {v0}, LX/0225;.A0r:(Ljava/lang/Object;)Ljava/lang/String; // method@07fe
+6b6b7c: 0c01                                   |0052: move-result-object v1
+6b6b7e: 1a00 a1ec                              |0053: const-string v0, "video_supported_widths" // string@eca1
+6b6b82: 7120 2300 1000                         |0055: invoke-static {v0, v1}, LX/000H;.A0Z:(Ljava/lang/Object;Ljava/lang/Object;)LX/04oE; // method@0023
+6b6b88: 0c07                                   |0058: move-result-object v7
+6b6b8a: 2506 bf6f 0200                         |0059: filled-new-array/range {v2, v3, v4, v5, v6, v7}, [LX/04oE; // type@6fbf
+6b6b90: 0c00                                   |005c: move-result-object v0
+6b6b92: 7110 710b 0000                         |005d: invoke-static {v0}, LX/02pX;.A09:([LX/04oE;)Ljava/util/LinkedHashMap; // method@0b71
+6b6b98: 0c03                                   |0060: move-result-object v3
+6b6b9a: 1302 0005                              |0061: const/16 v2, #int 1280 // #500
+6b6b9e: 1301 d002                              |0063: const/16 v1, #int 720 // #2d0
+6b6ba2: 6e30 d0cc 2901                         |0065: invoke-virtual {v9, v2, v1}, Landroid/media/MediaCodecInfo$VideoCapabilities;.isSizeSupported:(II)Z // method@ccd0
+6b6ba8: 0a00                                   |0068: move-result v0
+6b6baa: 3800 1800                              |0069: if-eqz v0, 0081 // +0018
+6b6bae: 6e30 cacc 2901                         |006b: invoke-virtual {v9, v2, v1}, Landroid/media/MediaCodecInfo$VideoCapabilities;.getSupportedFrameRatesFor:(II)Landroid/util/Range; // method@ccca
+6b6bb4: 0c00                                   |006e: move-result-object v0
+6b6bb6: 6e10 d8ce 0000                         |006f: invoke-virtual {v0}, Landroid/util/Range;.getUpper:()Ljava/lang/Comparable; // method@ced8
+6b6bbc: 0c00                                   |0072: move-result-object v0
+6b6bbe: 7110 4207 0000                         |0073: invoke-static {v0}, LX/021Q;.A00:(Ljava/lang/Object;)D // method@0742
+6b6bc4: 0b01                                   |0076: move-result-wide v1
+6b6bc6: 8a10                                   |0077: double-to-int v0, v1
+6b6bc8: 7110 0cea 0000                         |0078: invoke-static {v0}, Ljava/lang/Integer;.valueOf:(I)Ljava/lang/Integer; // method@ea0c
+6b6bce: 0c01                                   |007b: move-result-object v1
+6b6bd0: 1a00 91ec                              |007c: const-string v0, "video_hd_frame_rate" // string@ec91
+6b6bd4: 6e30 6beb 0301                         |007e: invoke-virtual {v3, v0, v1}, Ljava/util/AbstractMap;.put:(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object; // method@eb6b
+6b6bda: 6001 72e3                              |0081: sget v1, Landroid/os/Build$VERSION;.SDK_INT:I // field@e372
+6b6bde: 1300 1d00                              |0083: const/16 v0, #int 29 // #1d
+6b6be2: 3401 7fff                              |0085: if-lt v1, v0, 0004 // -0081
+6b6be6: 6e10 cdcc 0900                         |0087: invoke-virtual {v9}, Landroid/media/MediaCodecInfo$VideoCapabilities;.getSupportedPerformancePoints:()Ljava/util/List; // method@cccd
+6b6bec: 0c01                                   |008a: move-result-object v1
+6b6bee: 3801 0e00                              |008b: if-eqz v1, 0099 // +000e
+6b6bf2: 1a00 da01                              |008d: const-string v0, "," // string@01da
+6b6bf6: 7120 b507 1000                         |008f: invoke-static {v0, v1}, LX/0222;.A0j:(Ljava/lang/CharSequence;Ljava/lang/Iterable;)Ljava/lang/String; // method@07b5
+6b6bfc: 0c01                                   |0092: move-result-object v1
+6b6bfe: 1a00 98ec                              |0093: const-string v0, "video_performance_points" // string@ec98
+6b6c02: 6e30 6beb 0301                         |0095: invoke-virtual {v3, v0, v1}, Ljava/util/AbstractMap;.put:(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object; // method@eb6b
+6b6c08: 1103                                   |0098: return-object v3
+6b6c0a: 1201                                   |0099: const/4 v1, #int 0 // #0
+6b6c0c: 28f9                                   |009a: goto 0093 // -0007
+      catches       : (none)
+      positions     :
+      locals        :
+
+  source_file_idx   : 0 ()
+
+Class #7723 header:
+class_idx           : 27278
+access_flags        : 17 (0x0011)
+superclass_idx      : 28336
+interfaces_off      : 0 (0x000000)
+source_file_idx     : 0
+annotations_off     : 0 (0x000000)
+class_data_off      : 9994058 (0x987f4a)
+static_fields_size  : 4
+instance_fields_size: 0
+direct_methods_size : 4
+virtual_methods_size: 2
+
+Class #7723            -
+  Class descriptor  : 'Lcom/instagram/common/ui/base/BadgingUtil;'
+  Access flags      : 0x0011 (PUBLIC FINAL)
+  Superclass        : 'Ljava/lang/Object;'
+  Interfaces        -
+  Static fields     -
+    #0              : (in Lcom/instagram/common/ui/base/BadgingUtil;)
+      name          : 'INSTANCE'
+      type          : 'Lcom/instagram/common/ui/base/BadgingUtil;'
+      access        : 0x0019 (PUBLIC STATIC FINAL)
+    #1              : (in Lcom/instagram/common/ui/base/BadgingUtil;)
+      name          : 'badgeLabelBgPaint'
+      type          : 'Landroid/graphics/Paint;'
+      access        : 0x0019 (PUBLIC STATIC FINAL)
+    #2              : (in Lcom/instagram/common/ui/base/BadgingUtil;)
+      name          : 'badgeLabelPaint'
+      type          : 'Landroid/graphics/Paint;'
+      access        : 0x0019 (PUBLIC STATIC FINAL)
+    #3              : (in Lcom/instagram/common/ui/base/BadgingUtil;)
+      name          : 'bounds'
+      type          : 'Landroid/graphics/Rect;'
+      access        : 0x0019 (PUBLIC STATIC FINAL)
+  Instance fields   -
+  Direct methods    -
+    #0              : (in Lcom/instagram/common/ui/base/BadgingUtil;)
+      name          : '<clinit>'
+      type          : '()V'
+      access        : 0x10009 (PUBLIC STATIC CONSTRUCTOR)
+      method_idx    : 56970
+      code          -
+      registers     : 2
+      ins           : 0
+      outs          : 1
+      insns size    : 27 16-bit code units
+33db18:                                        |[33db18] com.instagram.common.ui.base.BadgingUtil.<clinit>:()V
+33db28: 2200 8e6a                              |0000: new-instance v0, Lcom/instagram/common/ui/base/BadgingUtil; // type@6a8e
+33db2c: 7010 3cea 0000                         |0002: invoke-direct {v0}, Ljava/lang/Object;.<init>:()V // method@ea3c
+33db32: 6900 3aeb                              |0005: sput-object v0, Lcom/instagram/common/ui/base/BadgingUtil;.INSTANCE:Lcom/instagram/common/ui/base/BadgingUtil; // field@eb3a
+33db36: 1211                                   |0007: const/4 v1, #int 1 // #1
+33db38: 7110 af03 0100                         |0008: invoke-static {v1}, LX/0129;.A0Q:(I)Landroid/graphics/Paint; // method@03af
+33db3e: 0c00                                   |000b: move-result-object v0
+33db40: 6900 3ceb                              |000c: sput-object v0, Lcom/instagram/common/ui/base/BadgingUtil;.badgeLabelPaint:Landroid/graphics/Paint; // field@eb3c
+33db44: 7110 af03 0100                         |000e: invoke-static {v1}, LX/0129;.A0Q:(I)Landroid/graphics/Paint; // method@03af
+33db4a: 0c00                                   |0011: move-result-object v0
+33db4c: 6900 3beb                              |0012: sput-object v0, Lcom/instagram/common/ui/base/BadgingUtil;.badgeLabelBgPaint:Landroid/graphics/Paint; // field@eb3b
+33db50: 7100 b003 0000                         |0014: invoke-static {}, LX/0129;.A0R:()Landroid/graphics/Rect; // method@03b0
+33db56: 0c00                                   |0017: move-result-object v0
+33db58: 6900 3deb                              |0018: sput-object v0, Lcom/instagram/common/ui/base/BadgingUtil;.bounds:Landroid/graphics/Rect; // field@eb3d
+33db5c: 0e00                                   |001a: return-void
+      catches       : (none)
+      positions     :
+      locals        :
+
+    #1              : (in Lcom/instagram/common/ui/base/BadgingUtil;)
+      name          : '<init>'
+      type          : '()V'
+      access        : 0x10001 (PUBLIC CONSTRUCTOR)
+      method_idx    : 56971
+      code          -
+      registers     : 1
+      ins           : 1
+      outs          : 1
+      insns size    : 4 16-bit code units
+4aefc0:                                        |[4aefc0] com.instagram.common.ui.base.BadgingUtil.<init>:()V
+4aefd0: 7010 3cea 0000                         |0000: invoke-direct {v0}, Ljava/lang/Object;.<init>:()V // method@ea3c
+4aefd6: 0e00                                   |0003: return-void
+      catches       : (none)
+      positions     :
+      locals        :
+
+    #2              : (in Lcom/instagram/common/ui/base/BadgingUtil;)
+      name          : 'drawBadge$default'
+      type          : '(Lcom/instagram/common/ui/base/BadgingUtil;Landroid/view/View;Landroid/graphics/Canvas;Landroid/content/Context;Ljava/lang/String;FILandroid/graphics/Typeface;FFFFILjava/lang/Object;)V'
+      access        : 0x1009 (PUBLIC STATIC SYNTHETIC)
+      method_idx    : 56973
+      code          -
+      registers     : 15
+      ins           : 14
+      outs          : 12
+      insns size    : 29 16-bit code units
+55d59c:                                        |[55d59c] com.instagram.common.ui.base.BadgingUtil.drawBadge$default:(Lcom/instagram/common/ui/base/BadgingUtil;Landroid/view/View;Landroid/graphics/Canvas;Landroid/content/Context;Ljava/lang/String;FILandroid/graphics/Typeface;FFFFILjava/lang/Object;)V
+55d5ac: dd00 0d40                              |0000: and-int/lit8 v0, v13, #int 64 // #40
+55d5b0: 3800 0300                              |0002: if-eqz v0, 0005 // +0003
+55d5b4: 1208                                   |0004: const/4 v8, #int 0 // #0
+55d5b6: d5d0 8000                              |0005: and-int/lit16 v0, v13, #int 128 // #0080
+55d5ba: 3800 0300                              |0007: if-eqz v0, 000a // +0003
+55d5be: 1209                                   |0009: const/4 v9, #int 0 // #0
+55d5c0: d5d0 0001                              |000a: and-int/lit16 v0, v13, #int 256 // #0100
+55d5c4: 3800 0300                              |000c: if-eqz v0, 000f // +0003
+55d5c8: 120a                                   |000e: const/4 v10, #int 0 // #0
+55d5ca: d5d0 0002                              |000f: and-int/lit16 v0, v13, #int 512 // #0200
+55d5ce: 3800 0300                              |0011: if-eqz v0, 0014 // +0003
+55d5d2: 120b                                   |0013: const/4 v11, #int 0 // #0
+55d5d4: d5d0 0004                              |0014: and-int/lit16 v0, v13, #int 1024 // #0400
+55d5d8: 3800 0300                              |0016: if-eqz v0, 0019 // +0003
+55d5dc: 120c                                   |0018: const/4 v12, #int 0 // #0
+55d5de: 740c 8cde 0100                         |0019: invoke-virtual/range {v1, v2, v3, v4, v5, v6, v7, v8, v9, v10, v11, v12}, Lcom/instagram/common/ui/base/BadgingUtil;.drawBadge:(Landroid/view/View;Landroid/graphics/Canvas;Landroid/content/Context;Ljava/lang/String;FILandroid/graphics/Typeface;FFFF)V // method@de8c
+55d5e4: 0e00                                   |001c: return-void
+      catches       : (none)
+      positions     :
+      locals        :
+
+    #3              : (in Lcom/instagram/common/ui/base/BadgingUtil;)
+      name          : 'drawBaselNewBadge$default'
+      type          : '(Lcom/instagram/common/ui/base/BadgingUtil;Landroid/view/View;Landroid/graphics/Canvas;Ljava/lang/String;FILjava/lang/Object;)V'
+      access        : 0x1009 (PUBLIC STATIC SYNTHETIC)
+      method_idx    : 56975
+      code          -
+      registers     : 8
+      ins           : 7
+      outs          : 5
+      insns size    : 16 16-bit code units
+567794:                                        |[567794] com.instagram.common.ui.base.BadgingUtil.drawBaselNewBadge$default:(Lcom/instagram/common/ui/base/BadgingUtil;Landroid/view/View;Landroid/graphics/Canvas;Ljava/lang/String;FILjava/lang/Object;)V
+5677a4: dd00 0608                              |0000: and-int/lit8 v0, v6, #int 8 // #08
+5677a8: 3800 0a00                              |0002: if-eqz v0, 000c // +000a
+5677ac: 7110 8100 0200                         |0004: invoke-static {v2}, LX/002L;.A06:(Landroid/view/View;)Landroid/content/Context; // method@0081
+5677b2: 0c00                                   |0007: move-result-object v0
+5677b4: 7110 d60e 0000                         |0008: invoke-static {v0}, LX/03ds;.A01:(Landroid/content/Context;)F // method@0ed6
+5677ba: 0a05                                   |000b: move-result v5
+5677bc: 6e55 8ede 2143                         |000c: invoke-virtual {v1, v2, v3, v4, v5}, Lcom/instagram/common/ui/base/BadgingUtil;.drawBaselNewBadge:(Landroid/view/View;Landroid/graphics/Canvas;Ljava/lang/String;F)V // method@de8e
+5677c2: 0e00                                   |000f: return-void
+      catches       : (none)
+      positions     :
+      locals        :
+
+  Virtual methods   -
+    #0              : (in Lcom/instagram/common/ui/base/BadgingUtil;)
+      name          : 'drawBadge'
+      type          : '(Landroid/view/View;Landroid/graphics/Canvas;Landroid/content/Context;Ljava/lang/String;FILandroid/graphics/Typeface;FFFF)V'
+      access        : 0x0011 (PUBLIC FINAL)
+      method_idx    : 56972
+      code          -
+      registers     : 21
+      ins           : 12
+      outs          : 5
+      insns size    : 90 16-bit code units
+610344:                                        |[610344] com.instagram.common.ui.base.BadgingUtil.drawBadge:(Landroid/view/View;Landroid/graphics/Canvas;Landroid/content/Context;Ljava/lang/String;FILandroid/graphics/Typeface;FFFF)V
+610354: 1202                                   |0000: const/4 v2, #int 0 // #0
+610356: 715d 401e a2cb                         |0001: invoke-static {v2, v10, v11, v12, v13}, LX/0BPE;.A0t:(ILjava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;)V // method@1e40
+61035c: 6205 3ceb                              |0004: sget-object v5, Lcom/instagram/common/ui/base/BadgingUtil;.badgeLabelPaint:Landroid/graphics/Paint; // field@eb3c
+610360: 7110 0c10 0c00                         |0006: invoke-static {v12}, LX/03ys;.A0M:(Landroid/content/Context;)I // method@100c
+610366: 0a00                                   |0009: move-result v0
+610368: 7130 4e03 5c00                         |000a: invoke-static {v12, v5, v0}, LX/0112;.A14:(Landroid/content/Context;Landroid/graphics/Paint;I)V // method@034e
+61036e: 6e10 a3cf 0a00                         |000d: invoke-virtual {v10}, Landroid/view/View;.getResources:()Landroid/content/res/Resources; // method@cfa3
+610374: 0c01                                   |0010: move-result-object v1
+610376: 1400 0a00 077f                         |0011: const v0, #float 1.79446e+38 // #7f07000a
+61037c: 6e20 74ca 0100                         |0014: invoke-virtual {v1, v0}, Landroid/content/res/Resources;.getDimension:(I)F // method@ca74
+610382: 0a00                                   |0017: move-result v0
+610384: 6e20 64cb 0500                         |0018: invoke-virtual {v5, v0}, Landroid/graphics/Paint;.setTextSize:(F)V // method@cb64
+61038a: 6204 3beb                              |001b: sget-object v4, Lcom/instagram/common/ui/base/BadgingUtil;.badgeLabelBgPaint:Landroid/graphics/Paint; // field@eb3b
+61038e: 7130 4e03 4c0f                         |001d: invoke-static {v12, v4, v15}, LX/0112;.A14:(Landroid/content/Context;Landroid/graphics/Paint;I)V // method@034e
+610394: 0800 1000                              |0020: move-object/from16 v0, v16
+610398: 3810 0500                              |0022: if-eqz v16, 0027 // +0005
+61039c: 6e20 65cb 0500                         |0024: invoke-virtual {v5, v0}, Landroid/graphics/Paint;.setTypeface:(Landroid/graphics/Typeface;)Landroid/graphics/Typeface; // method@cb65
+6103a2: 6e10 68ea 0d00                         |0027: invoke-virtual {v13}, Ljava/lang/String;.length:()I // method@ea68
+6103a8: 0a01                                   |002a: move-result v1
+6103aa: 6200 3deb                              |002b: sget-object v0, Lcom/instagram/common/ui/base/BadgingUtil;.bounds:Landroid/graphics/Rect; // field@eb3d
+6103ae: 6e50 46cb d512                         |002d: invoke-virtual {v5, v13, v2, v1, v0}, Landroid/graphics/Paint;.getTextBounds:(Ljava/lang/String;IILandroid/graphics/Rect;)V // method@cb46
+6103b4: 6e10 98cb 0000                         |0030: invoke-virtual {v0}, Landroid/graphics/Rect;.height:()I // method@cb98
+6103ba: 0a00                                   |0033: move-result v0
+6103bc: 8207                                   |0034: int-to-float v7, v0
+6103be: 6e20 4acb d500                         |0035: invoke-virtual {v5, v13}, Landroid/graphics/Paint;.measureText:(Ljava/lang/String;)F // method@cb4a
+6103c4: 0a06                                   |0038: move-result v6
+6103c6: 6e10 afcf 0a00                         |0039: invoke-virtual {v10}, Landroid/view/View;.getTranslationX:()F // method@cfaf
+6103cc: 0a03                                   |003c: move-result v3
+6103ce: a603 0311                              |003d: add-float v3, v3, v17
+6103d2: 6e10 b0cf 0a00                         |003f: invoke-virtual {v10}, Landroid/view/View;.getTranslationY:()F // method@cfb0
+6103d8: 0a00                                   |0042: move-result v0
+6103da: a600 0012                              |0043: add-float v0, v0, v18
+6103de: a602 0314                              |0045: add-float v2, v3, v20
+6103e2: 0208 1300                              |0047: move/from16 v8, v19
+6103e6: a601 0013                              |0049: add-float v1, v0, v19
+6103ea: c671                                   |004b: add-float/2addr v1, v7
+6103ec: c626                                   |004c: add-float/2addr v6, v2
+6103ee: a606 0614                              |004d: add-float v6, v6, v20
+6103f2: 7156 3d1f 1803                         |004f: invoke-static {v8, v1, v3, v0, v6}, LX/0BSG;.A0G:(FFFFF)Landroid/graphics/RectF; // method@1f3d
+6103f8: 0c00                                   |0052: move-result-object v0
+6103fa: 6e54 d9ca 0bee                         |0053: invoke-virtual {v11, v0, v14, v14, v4}, Landroid/graphics/Canvas;.drawRoundRect:(Landroid/graphics/RectF;FFLandroid/graphics/Paint;)V // method@cad9
+610400: 6e55 dbca db12                         |0056: invoke-virtual {v11, v13, v2, v1, v5}, Landroid/graphics/Canvas;.drawText:(Ljava/lang/String;FFLandroid/graphics/Paint;)V // method@cadb
+610406: 0e00                                   |0059: return-void
+      catches       : (none)
+      positions     :
+      locals        :
+
+    #1              : (in Lcom/instagram/common/ui/base/BadgingUtil;)
+      name          : 'drawBaselNewBadge'
+      type          : '(Landroid/view/View;Landroid/graphics/Canvas;Ljava/lang/String;F)V'
+      access        : 0x0011 (PUBLIC FINAL)
+      method_idx    : 56974
+      code          -
+      registers     : 16
+      ins           : 5
+      outs          : 5
+      insns size    : 117 16-bit code units
+610408:                                        |[610408] com.instagram.common.ui.base.BadgingUtil.drawBaselNewBadge:(Landroid/view/View;Landroid/graphics/Canvas;Ljava/lang/String;F)V
+610418: 7120 b812 dc00                         |0000: invoke-static {v12, v13}, LX/04l9;.A1A:(Ljava/lang/Object;Ljava/lang/Object;)Z // method@12b8
