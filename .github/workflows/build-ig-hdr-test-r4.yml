@@ -33,14 +33,14 @@ jobs:
           mkdir -p work/smali13 out
           gh release download 8 --pattern "$BASE_APK" --dir work
           echo "$BASE_SHA256  work/$BASE_APK" | sha256sum -c -
-          gh release download v3.0.9 --repo baksmali/smali --pattern 'smali-3.0.9-fat.jar' --pattern 'baksmali-3.0.9-fat.jar' --dir work
+          gh release download 3.0.10 --repo baksmali/smali --pattern 'smali-3.0.10-fat.jar' --pattern 'baksmali-3.0.10-fat.jar' --dir work
           sudo apt-get update -qq
           sudo apt-get install -y -qq libbcprov-java
       - name: Inject real selected/candidate track logger
         run: |
           set -euo pipefail
           unzip -p "work/$BASE_APK" classes13.dex > work/classes13.dex
-          java -jar work/baksmali-3.0.9-fat.jar d work/classes13.dex -o work/smali13
+          java -jar work/baksmali-3.0.10-fat.jar d work/classes13.dex -o work/smali13
           test -f work/smali13/X/00PV.smali
           python3 - <<'PY'
           from pathlib import Path
@@ -85,7 +85,7 @@ jobs:
           lines += [''] + helper + ['']
           p.write_text('\n'.join(lines)+'\n')
           PY
-          java -jar work/smali-3.0.9-fat.jar a work/smali13 -o work/classes13-patched.dex
+          java -jar work/smali-3.0.10-fat.jar a work/smali13 -o work/classes13-patched.dex
           test -s work/classes13-patched.dex
       - name: Repack align and sign with exact R8 key
         run: |
@@ -111,7 +111,7 @@ jobs:
           test -n "$ORIG_CERT" && test "$ORIG_CERT" = "$NEW_CERT"
           unzip -p "out/$OUT_APK" classes13.dex > work/verify-classes13.dex
           rm -rf work/verify-smali13
-          java -jar work/baksmali-3.0.9-fat.jar d work/verify-classes13.dex -o work/verify-smali13
+          java -jar work/baksmali-3.0.10-fat.jar d work/verify-classes13.dex -o work/verify-smali13
           grep -q 'hdrTrackDump439' work/verify-smali13/X/00PV.smali
           grep -q 'IG_HDR_SELECTED' work/verify-smali13/X/00PV.smali
           grep -q 'IG_HDR_CANDIDATE' work/verify-smali13/X/00PV.smali
