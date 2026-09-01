@@ -1,0 +1,184 @@
+name: IG 439 HDR Rendition Eligibility Probe
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - .github/workflows/ig-hdr-rendition-probe.yml
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  probe:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    env:
+      APK_NAME: instagram-piko-v439.0.0.37.89-arm64-v8a.apk
+      APK_SHA256: 4015b171ac59f3e7172134d194ec2dcf701f64c3339f127c19d7a04c13d529c8
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+
+      - name: Download exact Release 8 APK
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          mkdir -p work research/generated
+          gh release download 8 --pattern "$APK_NAME" --dir work
+          echo "$APK_SHA256  work/$APK_NAME" | sha256sum -c -
+
+      - name: Download JADX
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          JADX_URL="$(gh api repos/skylot/jadx/releases/latest --jq '.assets[] | select(.name | test("^jadx-[0-9].*\\.zip$")) | .browser_download_url' | head -1)"
+          test -n "$JADX_URL"
+          curl -fL "$JADX_URL" -o work/jadx.zip
+          mkdir -p work/jadx-bin
+          unzip -q work/jadx.zip -d work/jadx-bin
+
+      - name: Decompile exact Instagram 439
+        run: |
+          mkdir -p work/jadx-out
+          work/jadx-bin/bin/jadx --no-res --show-bad-code --threads-count 4 -d work/jadx-out "work/$APK_NAME" || true
+          test -d work/jadx-out/sources
+
+      - name: Trace HDR and Main10 rendition eligibility
+        shell: bash
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          import re
+
+          src = Path('work/jadx-out/sources')
+          out = Path('research/generated/instagram_439_hdr_rendition_eligibility.txt')
+
+          groups = {
+              'codec_probe': [
+                  r'MediaCodecList', r'MediaCodecInfo', r'CodecCapabilities', r'CodecProfileLevel',
+                  r'isFormatSupported', r'getCapabilitiesForType', r'profileLevels', r'video/av01'
+              ],
+              'hdr10bit': [
+                  r'AV1ProfileMain10', r'AV1ProfileMain10HDR10', r'AV1ProfileMain10HDR10Plus',
+                  r'COLOR_FormatYUVP010', r'P010', r'10[-_ ]?bit', r'ten[-_ ]?bit',
+                  r'BT2020', r'ST2084', r'HLG', r'hdr-static-info', r'color-transfer'
+              ],
+              'display_hdr': [
+                  r'getHdrCapabilities', r'HdrCapabilities', r'isHdr', r'hdrCapable', r'supportsHdr',
+                  r'Display\.HDR_TYPE_', r'HDR_TYPE_HDR10', r'HDR_TYPE_HLG'
+              ],
+              'rendition': [
+                  r'rendition', r'representation', r'adaptation', r'manifest', r'abr', r'bitrate',
+                  r'qualityLabel', r'videoQuality', r'playbackCapability', r'capabilityScore'
+              ],
+          }
+
+          compiled = {k:[re.compile(p, re.I) for p in v] for k,v in groups.items()}
+          rows=[]
+          texts={}
+          for p in src.rglob('*.java'):
+              try:
+                  text=p.read_text(errors='ignore')
+              except Exception:
+                  continue
+              texts[p]=text
+              hits={}
+              for g, regs in compiled.items():
+                  n=sum(len(r.findall(text)) for r in regs)
+                  if n:
+                      hits[g]=n
+              if hits:
+                  cats=len(hits)
+                  score=sum(hits.values()) + cats*20
+                  # Strongly prefer files that bridge codec/HDR with rendition logic.
+                  if 'codec_probe' in hits and 'hdr10bit' in hits: score += 80
+                  if 'hdr10bit' in hits and 'rendition' in hits: score += 100
+                  if 'codec_probe' in hits and 'rendition' in hits: score += 80
+                  if 'display_hdr' in hits and 'rendition' in hits: score += 60
+                  rows.append((score,cats,p,hits))
+
+          rows.sort(reverse=True, key=lambda x:(x[0],x[1]))
+
+          def contexts(text, regs, radius=8, max_blocks=12):
+              lines=text.splitlines()
+              idx=[]
+              for i,line in enumerate(lines):
+                  if any(r.search(line) for r in regs):
+                      idx.append(i)
+              blocks=[]
+              last=-999
+              for i in idx:
+                  if i-last <= radius:
+                      continue
+                  lo=max(0,i-radius); hi=min(len(lines),i+radius+1)
+                  blocks.append((lo,hi,lines[lo:hi]))
+                  last=i
+                  if len(blocks)>=max_blocks:
+                      break
+              return blocks
+
+          with out.open('w',encoding='utf-8') as f:
+              f.write('Instagram 439 HDR rendition eligibility probe\n')
+              f.write('============================================\n')
+              f.write(f'APK SHA256: {"4015b171ac59f3e7172134d194ec2dcf701f64c3339f127c19d7a04c13d529c8"}\n')
+              f.write('Runtime anchor from V2329A: IG selected video/av01 profile=1 (AV1 Main8), output BT.709 SDR.\n')
+              f.write('Goal: locate client code deciding HDR/Main10 capability or filtering/selecting renditions.\n\n')
+
+              f.write('===== RANKED MULTI-CATEGORY FILES =====\n')
+              for score,cats,p,hits in rows[:250]:
+                  f.write(f'{score}\t{cats}\t{p}\t{hits}\n')
+
+              # Dump targeted contexts only for the best bridge candidates.
+              target_regs=[]
+              for g in ('codec_probe','hdr10bit','display_hdr','rendition'):
+                  target_regs += compiled[g]
+              f.write('\n===== TOP CANDIDATE CONTEXTS =====\n')
+              for score,cats,p,hits in rows[:80]:
+                  if cats < 2:
+                      continue
+                  text=texts[p]
+                  f.write(f'\n### {p} score={score} hits={hits}\n')
+                  for lo,hi,block in contexts(text,target_regs):
+                      f.write(f'--- lines {lo+1}-{hi} ---\n')
+                      for n,line in enumerate(block,lo+1):
+                          f.write(f'{n:05d}: {line}\n')
+
+              # Exact API-reference index for fast follow-up.
+              f.write('\n===== EXACT API / CONSTANT INDEX =====\n')
+              exact_terms = [
+                  'MediaCodecList','MediaCodecInfo','CodecCapabilities','CodecProfileLevel',
+                  'isFormatSupported','getCapabilitiesForType','AV1ProfileMain10',
+                  'AV1ProfileMain10HDR10','AV1ProfileMain10HDR10Plus','COLOR_FormatYUVP010',
+                  'getHdrCapabilities','HdrCapabilities','video/av01','hdr-static-info','color-transfer'
+              ]
+              for term in exact_terms:
+                  f.write(f'\n## {term}\n')
+                  count=0
+                  for p,text in texts.items():
+                      for i,line in enumerate(text.splitlines(),1):
+                          if term.lower() in line.lower():
+                              f.write(f'{p}:{i}:{line.strip()}\n')
+                              count += 1
+                              if count >= 300:
+                                  f.write('...TRUNCATED...\n')
+                                  break
+                      if count >= 300:
+                          break
+                  f.write(f'COUNT_SHOWN={count}\n')
+          PY
+
+          sed -n '1,420p' research/generated/instagram_439_hdr_rendition_eligibility.txt
+
+      - name: Commit report
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add research/generated/instagram_439_hdr_rendition_eligibility.txt
+          if ! git diff --cached --quiet; then
+            git commit -m "Add Instagram 439 HDR rendition eligibility report"
+          fi
+          git pull --rebase origin main
+          git push origin HEAD:main
