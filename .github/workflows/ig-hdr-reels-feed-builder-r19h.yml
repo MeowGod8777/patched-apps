@@ -1,0 +1,171 @@
+name: IG 439 HDR Reels Feed Builder R19h
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - .github/workflows/ig-hdr-reels-feed-builder-r19h.yml
+
+permissions:
+  contents: write
+
+jobs:
+  trace:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    env:
+      APK_NAME: instagram-piko-v439.0.0.37.89-arm64-v8a.apk
+      APK_SHA256: 4015b171ac59f3e7172134d194ec2dcf701f64c3339f127c19d7a04c13d529c8
+    steps:
+      - uses: actions/checkout@v6
+        with: {fetch-depth: 0}
+      - uses: actions/setup-java@v5
+        with:
+          distribution: zulu
+          java-version: '21'
+
+      - name: Fetch exact APK and disassemble feed-route dexes
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          set -euo pipefail
+          mkdir -p work/apk work/smali research/generated
+          gh release download 8 --pattern "$APK_NAME" --dir work
+          echo "$APK_SHA256  work/$APK_NAME" | sha256sum -c -
+          gh release download 3.0.10 --repo baksmali/smali --pattern 'baksmali-3.0.10-fat.jar' --dir work
+          unzip -q "work/$APK_NAME" 'classes*.dex' -d work/apk
+          python3 - <<'PY'
+          from pathlib import Path
+          import subprocess
+          needles=['clips/discover/stream/','LX/04tC;','LX/04u9;','LX/03Mf;','X-IG-Accept-Hint','clips_viewer_feed_timeline','reel_feed_timeline']
+          hit=[]; rows=[]
+          for p in sorted(Path('work/apk').glob('classes*.dex')):
+              s=subprocess.run(['strings','-a',str(p)],capture_output=True,text=True,errors='replace').stdout
+              hs=[n for n in needles if n in s]
+              if hs:
+                  hit.append(p.name); rows.append(f'{p.name}: '+', '.join(hs))
+          Path('work/hitdex.txt').write_text('\n'.join(hit)+'\n')
+          Path('research/generated/instagram_439_hdr_reels_feed_builder_dex_hits_r19h.txt').write_text('\n'.join(rows)+'\n')
+          print('\n'.join(rows)); print('HITDEX',hit)
+          PY
+          while read d; do
+            [ -n "$d" ] || continue
+            n="${d%.dex}"
+            java -jar work/baksmali-3.0.10-fat.jar d "work/apk/$d" -o "work/smali/$n" >/dev/null &
+          done < work/hitdex.txt
+          wait
+
+      - name: Extract main Reels feed request and callers
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          from pathlib import Path
+          import re
+
+          ROOT=Path('work/smali')
+          OUT=Path('research/generated/instagram_439_hdr_reels_feed_builder_r19h.txt')
+          cr=re.compile(r'^\.class\s+.*\s+(L[^;]+;)$')
+          sr=re.compile(r'^\s*const-string(?:/jumbo)?\s+([^,]+),\s+"(.*)"')
+          invr=re.compile(r'(L[^;]+;)->([^\s(]+)\(([^)]*)\)(\S+)')
+          methods=[]; classes={}
+          for p in ROOT.rglob('*.smali'):
+              ls=p.read_text(errors='replace').splitlines(); cls='?'
+              for x in ls[:60]:
+                  m=cr.match(x)
+                  if m: cls=m.group(1); break
+              classes[cls]=(p,ls)
+              i=0
+              while i<len(ls):
+                  if not ls[i].startswith('.method'):
+                      i+=1; continue
+                  s=i; sig=ls[i]; i+=1
+                  while i<len(ls) and not ls[i].startswith('.end method'):
+                      i+=1
+                  e=min(i,len(ls)-1); methods.append((cls,sig,p,ls[s:e+1])); i+=1
+
+          O=['Instagram 439 HDR main Reels feed builder R19h','===========================================','']
+
+          # Full high-value methods/classes.
+          for cls,sig,p,b in methods:
+              if cls=='LX/04tC;' and (' A0A(' in sig or ' A05(' in sig):
+                  O += [f'===== {cls} {sig} =====',f'FILE={p}']+b+['']
+              if cls in ('LX/04u9;','LX/03Mf;') and (' A00(' in sig or ' A01(' in sig):
+                  O += [f'===== HELPER {cls} {sig} =====',f'FILE={p}']+b+['']
+
+          # Semantic extraction from 04tC.A0A.
+          target=None
+          for m in methods:
+              if m[0]=='LX/04tC;' and ' A0A(' in m[1]: target=m; break
+          O += ['===== A0A REQUEST SEMANTICS =====','']
+          if target:
+              cls,sig,p,b=target
+              strings=[]; writes=[]; mcs=[]; routes=[]
+              for i,l in enumerate(b):
+                  sm=sr.match(l)
+                  if sm:
+                      strings.append((i,sm.group(1),sm.group(2)))
+                      if '/' in sm.group(2) or 'clips' in sm.group(2).lower() or 'reel' in sm.group(2).lower():
+                          routes.append((i,sm.group(2)))
+                  if 'invoke-' in l:
+                      im=invr.search(l)
+                      if im:
+                          owner,name,args,ret=im.groups()
+                          if owner=='LX/03u7;' and name in ('AOA','A0F','AOQ','A0C','A0E','A0G','A08','AMu','A07'):
+                              writes.append((i,name,l.strip()))
+                          if 'MobileConfigUnsafeContext;' in owner:
+                              mcs.append((i,name,l.strip()))
+              O += [f'ROUTE_LITERALS={routes}','', 'ALL_CONST_STRINGS:']+[f'{i}: {r}={v}' for i,r,v in strings]+['']
+              O += ['REQUEST_WRITES:']
+              for i,name,l in writes:
+                  O += [f'--- {name} at {i} ---']+[f'{j:04d}: {b[j]}' for j in range(max(0,i-10),min(len(b),i+4))]
+              O += ['','MOBILECONFIG_CALLS:']
+              for i,name,l in mcs:
+                  O += [f'--- {name} at {i} ---']+[f'{j:04d}: {b[j]}' for j in range(max(0,i-12),min(len(b),i+4))]
+              O += ['']
+
+          # Exact reverse callers of the enormous A0A signature via owner/name match.
+          callrows=[]
+          for cls,sig,p,b in methods:
+              for i,l in enumerate(b):
+                  if 'LX/04tC;->A0A(' in l:
+                      callrows.append((cls,sig,p,b,i,l))
+          O += [f'===== EXACT 04tC.A0A CALLERS ({len(callrows)}) =====','']
+          for cls,sig,p,b,i,l in callrows:
+              ss=[]
+              for x in b:
+                  sm=sr.match(x)
+                  if sm and any(k in sm.group(2).lower() for k in ('clips','reel','feed','discover','stream','prefetch','rank','session','quality','codec','hdr','dash','media')):
+                      ss.append(sm.group(2))
+              O += [f'--- {cls} {sig}',f'FILE={p}',f'CALL_INDEX={i}',f'CALL={l}',f'RELEVANT_STRINGS={ss}','[CONTEXT]']
+              O += [f'{j:04d}: {b[j]}' for j in range(max(0,i-120),min(len(b),i+40))]+['']
+
+          # Find all request methods in the same class with routes and server-visible negotiation/delivery fields.
+          O += ['===== OTHER 04tC REQUEST METHODS / FIELDS =====','']
+          for cls,sig,p,b in methods:
+              if cls!='LX/04tC;' or ' A0A(' in sig: continue
+              vals=[]; req=False
+              for l in b:
+                  sm=sr.match(l)
+                  if sm and any(k in sm.group(2).lower() for k in ('clips/','reel','accept-hint','quality','codec','hdr','dash','delivery','bandwidth','resolution','video','media')):
+                      vals.append(sm.group(2))
+                  if 'LX/03u7;->' in l: req=True
+              if vals and req:
+                  O += [f'{cls} {sig}',f'FILE={p}',f'STRINGS={vals}']+b+['']
+
+          OUT.write_text('\n'.join(O),encoding='utf-8')
+          print('\n'.join(O[:9000]))
+          print('bytes',OUT.stat().st_size,'callers',len(callrows))
+          PY
+
+      - name: Commit R19h reports
+        run: |
+          set -euo pipefail
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add research/generated/instagram_439_hdr_reels_feed_builder_dex_hits_r19h.txt research/generated/instagram_439_hdr_reels_feed_builder_r19h.txt
+          if ! git diff --cached --quiet; then
+            git commit -m 'Add exact Reels feed builder trace R19h'
+            git pull --rebase origin main
+            git push origin HEAD:main
+          fi
