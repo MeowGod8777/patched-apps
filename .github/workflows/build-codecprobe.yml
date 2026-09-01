@@ -1,0 +1,38 @@
+name: Build CodecProbe
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - tools/CodecProbe.java
+      - .github/workflows/build-codecprobe.yml
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+
+      - name: Build dex jar
+        shell: bash
+        run: |
+          set -euxo pipefail
+          PLATFORM_JAR="$(find "$ANDROID_HOME/platforms" -maxdepth 2 -name android.jar | sort -V | tail -1)"
+          D8="$(find "$ANDROID_HOME/build-tools" -type f -name d8 | sort -V | tail -1)"
+          mkdir -p build/classes build/dex
+          javac -source 8 -target 8 -cp "$PLATFORM_JAR" -d build/classes tools/CodecProbe.java
+          "$D8" --lib "$PLATFORM_JAR" --output build/dex build/classes/CodecProbe.class
+          (cd build/dex && zip -9 ../codecprobe.jar classes.dex)
+          sha256sum build/codecprobe.jar
+
+      - name: Upload codecprobe.jar
+        uses: actions/upload-artifact@v4
+        with:
+          name: codecprobe
+          path: build/codecprobe.jar
+          if-no-files-found: error
+          retention-days: 7
