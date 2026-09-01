@@ -1,0 +1,9 @@
+classes10.dex: performance_class
+classes12.dex: ig_device_static_attributes, com.facebook.devicesegmentation
+classes14.dex: device_segmentation
+classes15.dex: X-IG-Device-ID
+classes18.dex: device_class
+classes2.dex: X-IG-Device-ID
+classes4.dex: key_display_hdr_supported, key_video_decoder_hdr_supported
+classes7.dex: performance_class
+classes8.dex: performance_class
