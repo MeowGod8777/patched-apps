@@ -1,0 +1,192 @@
+name: IG 439 HDR Capability Chain Concise
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - .github/workflows/ig-hdr-capability-chain-concise.yml
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  probe:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    env:
+      APK_NAME: instagram-piko-v439.0.0.37.89-arm64-v8a.apk
+      APK_SHA256: 4015b171ac59f3e7172134d194ec2dcf701f64c3339f127c19d7a04c13d529c8
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+
+      - name: Download and disassemble exact R8
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          mkdir -p work/dex work/dis research/generated
+          gh release download 8 --pattern "$APK_NAME" --dir work
+          echo "$APK_SHA256  work/$APK_NAME" | sha256sum -c -
+          unzip -j "work/$APK_NAME" 'classes*.dex' -d work/dex
+          DEXDUMP="$(find "$ANDROID_HOME/build-tools" -type f -name dexdump | sort -V | tail -1)"
+          for d in work/dex/classes*.dex; do
+            b="$(basename "$d" .dex)"
+            "$DEXDUMP" -d -f -h "$d" > "work/dis/$b.txt"
+          done
+
+      - name: Extract only the capability event/caller chain
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          import re
+
+          files = sorted(Path('work/dis').glob('classes*.txt'))
+          out = []
+          out.append('Instagram 439 HDR capability chain — concise exact-R8 trace')
+          out.append('===========================================================')
+          out.append('APK SHA256: 4015b171ac59f3e7172134d194ec2dcf701f64c3339f127c19d7a04c13d529c8')
+          out.append('')
+
+          method_start = re.compile(r'\|\[[0-9a-f]+\]\s+([^\s]+\.[^:]+):')
+
+          def split_methods(lines):
+              starts = []
+              for i, line in enumerate(lines):
+                  if method_start.search(line):
+                      starts.append(i)
+              chunks = []
+              for j, s in enumerate(starts):
+                  e = starts[j+1] if j+1 < len(starts) else len(lines)
+                  chunks.append((s, e, lines[s:e]))
+              return chunks
+
+          def compact_method(path, chunk, reason):
+              s, e, lines = chunk
+              out.append(f'===== {reason} :: {path.name}:{s+1}-{e} =====')
+              # Header plus only semantic instructions; keep branch/register noise out.
+              header = lines[0].rstrip() if lines else ''
+              out.append(header)
+              keep = []
+              for line in lines[1:]:
+                  if any(tok in line for tok in (
+                      'const-string', 'new-instance', 'invoke-', 'iget-object', 'iput-object',
+                      'sget-object', 'sput-object', 'check-cast', 'return-', 'throw',
+                      'LX/0Uiy;', 'LX/03Tz;', 'LX/00vy;', 'LX/0020;'
+                  )):
+                      keep.append(line.rstrip())
+              # Dedup only exact adjacent repeats.
+              prev = None
+              for line in keep[:350]:
+                  if line != prev:
+                      out.append(line)
+                  prev = line
+              if len(keep) > 350:
+                  out.append(f'... omitted {len(keep)-350} semantic lines ...')
+              out.append('')
+
+          all_methods = []
+          for p in files:
+              text = p.read_text(errors='replace')
+              lines = text.splitlines()
+              for ch in split_methods(lines):
+                  all_methods.append((p, ch))
+
+          # 1) Direct callers/constructors of the capability serializer runnable.
+          seen = set()
+          for p, ch in all_methods:
+              body = '\n'.join(ch[2])
+              if ('LX/0Uiy;.<init>:(LX/03Tz;)V' in body or
+                  'new-instance' in body and 'LX/0Uiy;' in body or
+                  'LX/0Uiy;.A00:Ljava/lang/Object;' in body):
+                  key = (p.name, ch[0])
+                  if key not in seen:
+                      compact_method(p, ch, 'X.0Uiy constructor / payload caller')
+                      seen.add(key)
+
+          # 2) Any method that both handles X.03Tz and schedules/calls X.0Uiy.
+          for p, ch in all_methods:
+              body = '\n'.join(ch[2])
+              if 'LX/03Tz;' in body and 'LX/0Uiy;' in body:
+                  key = (p.name, ch[0])
+                  if key not in seen:
+                      compact_method(p, ch, 'X.03Tz + X.0Uiy bridge')
+                      seen.add(key)
+
+          # 3) Constructors of X.03Tz, especially event-name/schema setup.
+          n = 0
+          for p, ch in all_methods:
+              body = '\n'.join(ch[2])
+              if ('LX/03Tz;.<init>' in body or ('new-instance' in body and 'LX/03Tz;' in body)):
+                  compact_method(p, ch, 'X.03Tz construction')
+                  n += 1
+                  if n >= 20:
+                      out.append('Stopped after first 20 X.03Tz construction methods.')
+                      out.append('')
+                      break
+
+          # 4) Definition of 0020.A1Z(00vy): this guards serializer.run().
+          for p, ch in all_methods:
+              head = ch[2][0] if ch[2] else ''
+              if 'X.0020.A1Z:(LX/00vy;)Z' in head:
+                  compact_method(p, ch, 'Guard X.0020.A1Z(X.00vy)')
+
+          # 5) X.03Tz and X.00vy class headers: inheritance/interfaces often identify Falco/QPL/event objects.
+          for target in ("Class descriptor  : 'LX/03Tz;'", "Class descriptor  : 'LX/00vy;'"):
+              out.append(f'===== class identity: {target} =====')
+              found = False
+              for p in files:
+                  lines = p.read_text(errors='replace').splitlines()
+                  for i, line in enumerate(lines):
+                      if target in line:
+                          found = True
+                          lo, hi = max(0, i-12), min(len(lines), i+95)
+                          for x in lines[lo:hi]:
+                              if any(tok in x for tok in (
+                                  'Class descriptor', 'Access flags', 'Superclass', 'Interfaces',
+                                  "name          : '<init>'", "name          : 'A0", 'type          :',
+                                  'const-string', 'invoke-', 'iput-object', 'iget-object'
+                              )):
+                                  out.append(f'{p.name}: {x.rstrip()}')
+                          out.append('')
+                          break
+                  if found:
+                      break
+              if not found:
+                  out.append('NOT FOUND')
+                  out.append('')
+
+          # 6) Global exact string-name clues near device capability / upload / telemetry concepts.
+          clues = re.compile(r'(?i)(device[_ -]?capabil|hardware[_ -]?capabil|capability[_ -]?(event|report|upload|request)|falco|qpl|analytics|telemetry)')
+          out.append('===== global semantic string clues =====')
+          hits = 0
+          for p in files:
+              lines = p.read_text(errors='replace').splitlines()
+              for i, line in enumerate(lines):
+                  if 'const-string' in line and clues.search(line):
+                      out.append(f'{p.name}:{i+1}: {line.strip()}')
+                      hits += 1
+                      if hits >= 200:
+                          break
+              if hits >= 200:
+                  break
+          if not hits:
+              out.append('NO MATCHING PLAINTEXT STRINGS')
+          out.append('')
+
+          report = Path('research/generated/instagram_439_hdr_capability_chain_concise.txt')
+          report.write_text('\n'.join(out) + '\n')
+          print(report.read_text()[:180000])
+          PY
+
+      - name: Commit concise report
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add research/generated/instagram_439_hdr_capability_chain_concise.txt
+          if ! git diff --cached --quiet; then
+            git commit -m "Trace Instagram 439 HDR capability event chain"
+          fi
+          git pull --rebase origin main
+          git push origin HEAD:main
