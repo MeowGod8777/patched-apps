@@ -1,0 +1,135 @@
+name: IG 439 HDR HKT Direct Callers
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - .github/workflows/ig-hdr-hkt-direct-callers.yml
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  probe:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    env:
+      APK_NAME: instagram-piko-v439.0.0.37.89-arm64-v8a.apk
+      APK_SHA256: 4015b171ac59f3e7172134d194ec2dcf701f64c3339f127c19d7a04c13d529c8
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+      - name: Download and disassemble exact R8
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          mkdir -p work/dex work/dis research/generated
+          gh release download 8 --pattern "$APK_NAME" --dir work
+          echo "$APK_SHA256  work/$APK_NAME" | sha256sum -c -
+          unzip -j "work/$APK_NAME" 'classes*.dex' -d work/dex
+          DEXDUMP="$(find "$ANDROID_HOME/build-tools" -type f -name dexdump | sort -V | tail -1)"
+          for d in work/dex/classes*.dex; do
+            b="$(basename "$d" .dex)"
+            "$DEXDUMP" -d -f -h "$d" > "work/dis/$b.txt"
+          done
+      - name: Trace X.0hkt direct callers only
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          import re
+
+          files=sorted(Path('work/dis').glob('classes*.txt'))
+          hdr=re.compile(r'\|\[[0-9a-f]+\]\s+([^\s]+):')
+          methods=[]
+          for p in files:
+              lines=p.read_text(errors='replace').splitlines()
+              starts=[]; heads=[]
+              for i,l in enumerate(lines):
+                  m=hdr.search(l)
+                  if m: starts.append(i); heads.append(m.group(1))
+              for j,s in enumerate(starts):
+                  e=starts[j+1] if j+1<len(starts) else len(lines)
+                  methods.append((p.name,s+1,e,heads[j],lines[s:e]))
+
+          # dexdump invocation references use LX/0hkt;.method:(...)Ret; collect exact refs actually present.
+          target_re=re.compile(r'LX/0hkt;\.[A-Za-z0-9_$<>]+:\([^\s]*?\)[^\s/]+')
+          target_refs=set()
+          for _,_,_,head,body in methods:
+              if head.startswith('X.0hkt.'):
+                  # body can include self/helper refs; also derive from header where possible later
+                  for l in body:
+                      target_refs.update(target_re.findall(l))
+          # More reliable: collect every invocation/reference to X.0hkt globally.
+          global_refs=set()
+          for _,_,_,_,body in methods:
+              for l in body:
+                  if 'LX/0hkt;.' in l:
+                      global_refs.update(target_re.findall(l))
+          target_refs |= global_refs
+
+          out=['Instagram 439 X.0hkt direct callers','==================================','',f'X.0hkt exact refs found: {len(target_refs)}']
+          for x in sorted(target_refs): out.append('  '+x)
+          out.append('')
+
+          def compact(rec,label):
+              p,s,e,head,b=rec
+              out.append(f'===== {label} :: {p}:{s}-{e} :: {head} =====')
+              for l in b:
+                  if (l is b[0] if False else False): pass
+                  if ('invoke-' in l or 'const-string' in l or 'new-instance' in l or
+                      'LX/0hkt;' in l or 'MediaCodec' in l or 'MediaFormat' in l or
+                      'ColorInfo' in l or 'Hdr' in l or 'HDR' in l or 'color-' in l or
+                      'video/av01' in l or 'track' in l.lower() or 'format' in l.lower() or
+                      'manifest' in l.lower() or 'rendition' in l.lower() or 'adaptation' in l.lower() or
+                      'profile' in l.lower() or 'return-' in l or 'if-' in l):
+                      out.append(l.rstrip())
+              out.append('')
+
+          # Definitions
+          defs=[m for m in methods if m[3].startswith('X.0hkt.')]
+          out.append(f'===== X.0hkt definitions count={len(defs)} =====')
+          for m in defs: compact(m,'X.0hkt definition')
+
+          # Direct callers: any method containing an invoke/reference to X.0hkt, excluding X.0hkt itself.
+          callers=[]
+          for rec in methods:
+              if rec[3].startswith('X.0hkt.'): continue
+              txt='\n'.join(rec[4])
+              if 'LX/0hkt;.' in txt:
+                  callers.append(rec)
+          out.append(f'===== direct callers count={len(callers)} =====')
+          for m in callers: compact(m,'direct X.0hkt caller')
+
+          # Gather signatures of direct caller classes/method names and find likely one-level upstream callers by class.method prefix.
+          # We avoid descriptor reconstruction; extract exact invocation refs to each direct caller class from global lines.
+          caller_prefixes=[]
+          for rec in callers:
+              h=rec[3]
+              mm=re.match(r'X\.([^.]+)\.([^:]+):',h)
+              if mm:
+                  caller_prefixes.append(f'LX/{mm.group(1)};.{mm.group(2)}:')
+          caller_prefixes=sorted(set(caller_prefixes))
+          upstream=[]
+          for rec in methods:
+              if rec in callers or rec[3].startswith('X.0hkt.'): continue
+              txt='\n'.join(rec[4])
+              if any(pref in txt for pref in caller_prefixes):
+                  upstream.append(rec)
+          out.append(f'===== one-level upstream caller count={len(upstream)} =====')
+          for m in upstream[:120]: compact(m,'upstream of direct X.0hkt caller')
+          if len(upstream)>120: out.append(f'... omitted {len(upstream)-120} upstream methods ...\n')
+
+          path=Path('research/generated/instagram_439_hdr_hkt_direct_callers.txt')
+          path.write_text('\n'.join(out)+'\n')
+          print(path.read_text()[:180000])
+          PY
+      - name: Commit report
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add research/generated/instagram_439_hdr_hkt_direct_callers.txt
+          if ! git diff --cached --quiet; then git commit -m "Trace Instagram 439 codec wrapper direct callers"; fi
+          git pull --rebase origin main
+          git push origin HEAD:main
