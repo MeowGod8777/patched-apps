@@ -1,0 +1,205 @@
+name: IG 439 HDR Media Payload Origin R19
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - .github/workflows/ig-hdr-media-payload-origin-r19.yml
+
+permissions:
+  contents: write
+
+jobs:
+  trace:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    env:
+      APK_NAME: instagram-piko-v439.0.0.37.89-arm64-v8a.apk
+      APK_SHA256: 4015b171ac59f3e7172134d194ec2dcf701f64c3339f127c19d7a04c13d529c8
+    steps:
+      - uses: actions/checkout@v6
+        with: {fetch-depth: 0}
+      - uses: actions/setup-java@v5
+        with:
+          distribution: zulu
+          java-version: '21'
+      - name: Prepare exact smali
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          set -euo pipefail
+          mkdir -p work/apk work/smali research/generated
+          gh release download 8 --pattern "$APK_NAME" --dir work
+          echo "$APK_SHA256  work/$APK_NAME" | sha256sum -c -
+          gh release download 3.0.10 --repo baksmali/smali --pattern 'baksmali-3.0.10-fat.jar' --dir work
+          unzip -q "work/$APK_NAME" 'classes*.dex' -d work/apk
+          for d in work/apk/classes*.dex; do
+            n="$(basename "$d" .dex)"
+            java -jar work/baksmali-3.0.10-fat.jar d "$d" -o "work/smali/$n" >/dev/null &
+          done
+          wait
+
+      - name: Trace payload model to clips/reels request operations
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          from pathlib import Path
+          import re, collections
+          root=Path('work/smali'); out=Path('research/generated/instagram_439_hdr_media_payload_origin_r19.txt')
+          cr=re.compile(r'^\.class\s+.*\s+(L[^;]+;)$')
+          mr=re.compile(r'^\.method\s+.*?([^\s]+\([^)]*\).+)$')
+          ir=re.compile(r'invoke-[^\s]+\s+\{[^}]*\},\s+(L[^;]+;->[^\s]+)')
+          sr=re.compile(r'^\s*const-string(?:/jumbo)?\s+[^,]+,\s+"(.*)"')
+          M={}; callers=collections.defaultdict(set); classes={}
+          for p in root.rglob('*.smali'):
+            ls=p.read_text(errors='replace').splitlines(); cls=None
+            for x in ls[:40]:
+              q=cr.match(x)
+              if q: cls=q.group(1); break
+            if not cls: continue
+            classes[cls]=(str(p),ls)
+            i=0
+            while i<len(ls):
+              q=mr.match(ls[i])
+              if not q: i+=1; continue
+              ref=cls+'->'+q.group(1); s=i; i+=1
+              while i<len(ls) and not ls[i].startswith('.end method'): i+=1
+              b=ls[s:min(i+1,len(ls))]; inv=[]; ss=[]
+              for x in b:
+                z=ir.search(x)
+                if z: inv.append(z.group(1))
+                z=sr.match(x)
+                if z: ss.append(z.group(1))
+              M[ref]={'file':str(p),'body':b,'invokes':inv,'strings':ss,'class':cls}
+              for n in inv: callers[n].add(ref)
+              i+=1
+          def txt(m): return '\n'.join(M[m]['body'])+'\n'+'\n'.join(M[m]['strings'])
+          def emit(O,m,label,full=True):
+            if m not in M:return
+            d=M[m]; O += [f'===== {label} {m} =====','FILE: '+d['file'],
+              'STRINGS: '+' | '.join(dict.fromkeys(d['strings'])),
+              'CALLERS: '+' | '.join(sorted(callers.get(m,()))[:100]),
+              'CALLEES: '+' | '.join(dict.fromkeys(d['invokes'][:140]))]
+            if full: O += d['body']
+            O.append('')
+          def bfs(starts,reverse=False,depth=10):
+            D={x:0 for x in starts if x in M}; q=collections.deque(D)
+            while q:
+              x=q.popleft(); d=D[x]
+              if d>=depth: continue
+              ns=callers.get(x,()) if reverse else M[x]['invokes']
+              for n in ns:
+                if n in M and n not in D: D[n]=d+1; q.append(n)
+            return D
+
+          # 1. Exact model / getter / manifest string seeds.
+          model_classes={c for c in classes if 'LiveTreeMediaDict' in c or 'XDTMediaDict' in c or 'MediaDict' in c and ('feed/media' in c.lower() or 'xdt' in c.lower())}
+          manifest_methods=set()
+          for m,d in M.items():
+            t=txt(m)
+            if 'video_dash_manifest' in t or 'LiveTreeMediaDict;->A7q(' in t:
+              manifest_methods.add(m)
+          model_methods={m for m,d in M.items() if d['class'] in model_classes}
+          model_refs={m for m,d in M.items() if any(('LiveTreeMediaDict;' in x or 'XDTMediaDict;' in x) for x in d['body'])}
+
+          # 2. Clips/Reels request-operation candidates.
+          op_tokens=(
+            'clips_viewer_feed_timeline','clips_viewer_reel_feed_timeline','reel_feed_timeline',
+            'clips_viewer','clips_fetch','clips/items','clips/feed','reels/feed','feed/reels',
+            '/clips/','/reels/','clips_media','reels_media','clips_tab','clips_viewer_homecoming',
+            'clips_viewer_homecoming_fyp','clips_discover','reel_media','reels_tray'
+          )
+          request_tokens=('GraphQlCallInput','doc_id','query_id','query_hash','variables','signed_body','LX/03u7;','LX/03ci;',
+                          'LX/02qb;','/api/v1/','/api/v2/','AMu(','A0D(','A0E(','A0F(')
+          ops=set()
+          for m,d in M.items():
+            t=txt(m).lower()
+            if any(k.lower() in t for k in op_tokens) and any(k.lower() in t for k in request_tokens): ops.add(m)
+
+          # Broader methods carrying clips/reels operation strings; request builder may be one hop away.
+          op_string=set()
+          for m,d in M.items():
+            t='\n'.join(d['strings']).lower()
+            if any(k.lower() in t for k in op_tokens): op_string.add(m)
+          op_near=bfs(op_string,False,4)
+          model_rev=bfs(model_methods|manifest_methods|model_refs,True,9)
+          model_fwd=bfs(model_methods|manifest_methods|model_refs,False,6)
+          op_rev=bfs(op_string|ops,True,6)
+
+          O=['Instagram 439 HDR media payload origin R19','=========================================',
+             f'methods={len(M)} model_classes={len(model_classes)} manifest_methods={len(manifest_methods)} model_refs={len(model_refs)} ops={len(ops)} op_string={len(op_string)}','']
+
+          O += ['===== A. EXACT VIDEO_DASH_MANIFEST / MEDIADICT OWNERS =====','']
+          for m in sorted(manifest_methods): emit(O,m,'MANIFEST_OWNER')
+
+          O += ['===== B. CLIPS/REELS REQUEST OPERATION CANDIDATES =====','']
+          ranked=[]
+          for m in ops|op_string:
+            t=txt(m).lower(); req=sum(2 for k in request_tokens if k.lower() in t)
+            op=sum(2 for k in op_tokens if k.lower() in t)
+            score=req+op
+            ranked.append((-score,m))
+          for ns,m in sorted(ranked)[:160]: emit(O,m,f'REQUEST_OP score={-ns}',full=True)
+
+          # 3. Methods that bridge/generated-model territory and operation territory.
+          O += ['===== C. MODEL <-> REELS OPERATION BRIDGES =====','']
+          bridges=[]
+          for m in M:
+            dm=model_rev.get(m,99); df=model_fwd.get(m,99); do=op_near.get(m,99); dr=op_rev.get(m,99)
+            if (dm<=9 or df<=6) and (do<=4 or dr<=6):
+              score=min(dm,df)*2 + min(do,dr)
+              bridges.append((score,dm,df,do,dr,m))
+          for score,dm,df,do,dr,m in sorted(bridges)[:180]:
+            d=M[m]
+            O += [f'BRIDGE score={score} model_rev={dm} model_fwd={df} op_fwd={do} op_rev={dr} {m}',
+                  '  STRINGS: '+' | '.join(dict.fromkeys(d['strings'])),
+                  '  CALLERS: '+' | '.join(sorted(callers.get(m,()))[:60]),
+                  '  CALLEES: '+' | '.join(dict.fromkeys(d['invokes'][:100]))]
+
+          # 4. Request variables/client hints specifically inside clips/reels request neighborhoods.
+          O += ['','===== D. SERVER-VISIBLE VARIABLES NEAR REELS REQUESTS =====','']
+          hint_terms=('capabil','codec','hdr','device','performance','quality','bandwidth','network','media','video','av1','hevc','vp9',
+                      'display','screen','resolution','delivery','rendition','dash','manifest','xdt','playback','abr','bitrate','connection')
+          candidate_neighborhood=set(op_near)|set(op_rev)|ops|op_string
+          hints=[]
+          for m in candidate_neighborhood:
+            d=M.get(m)
+            if not d: continue
+            ss=' | '.join(d['strings']); low=ss.lower()
+            hs=[h for h in hint_terms if h in low]
+            if hs:
+              score=len(hs)*3 + sum(1 for k in request_tokens if k.lower() in txt(m).lower())
+              hints.append((-score,m,hs))
+          for ns,m,hs in sorted(hints)[:220]:
+            d=M[m]
+            O += [f'HINT score={-ns} {m} HITS={hs}',
+                  '  STRINGS: '+' | '.join(dict.fromkeys(d['strings'])),
+                  '  CALLERS: '+' | '.join(sorted(callers.get(m,()))[:80]),
+                  '  CALLEES: '+' | '.join(dict.fromkeys(d['invokes'][:120]))]
+
+          # 5. All string-bearing request methods around video_dash_manifest literal, useful for generated parser linkage.
+          O += ['','===== E. VIDEO_DASH_MANIFEST STRING CONTEXT CLASSES =====','']
+          for c,(p,ls) in sorted(classes.items()):
+            if any('video_dash_manifest' in x for x in ls):
+              O += [f'CLASS {c} FILE={p}']
+              for m,d in M.items():
+                if d['class']==c: O += [f'  {m}', '    STRINGS: '+' | '.join(dict.fromkeys(d['strings']))]
+
+          text='\n'.join(O)
+          if len(text)>980000: text=text[:980000]+'\n[TRUNCATED]\n'
+          out.write_text(text,encoding='utf-8')
+          print(text[:300000]); print('bytes',out.stat().st_size)
+          PY
+
+      - name: Commit report
+        run: |
+          set -euo pipefail
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add research/generated/instagram_439_hdr_media_payload_origin_r19.txt
+          if ! git diff --cached --quiet; then
+            git commit -m 'Add Instagram Reel media payload origin trace R19'
+            git pull --rebase origin main
+            git push origin HEAD:main
+          fi
