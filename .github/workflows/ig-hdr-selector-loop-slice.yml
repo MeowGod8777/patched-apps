@@ -1,0 +1,40 @@
+name: IG HDR Selector Loop Slice
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - .github/workflows/ig-hdr-selector-loop-slice.yml
+
+permissions:
+  contents: write
+
+jobs:
+  slice:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+      - name: Slice selector loop from existing report
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          src=Path('research/generated/instagram_439_hdr_list_producer_fast.txt').read_text()
+          # Work only inside the first CYd method.
+          ms=src.index('.method public final CYd(LX/00kX;)LX/00lx;')
+          me=src.index('.end method', ms)
+          m=src[ms:me]
+          s=m.index(':cond_2ce')
+          e=m.index(':cond_34d', s)
+          chunk=m[s:e+len(':cond_34d')]
+          Path('research/generated/instagram_439_hdr_selector_loop_slice.txt').write_text(chunk+'\n')
+          print(chunk)
+          PY
+      - name: Commit
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add research/generated/instagram_439_hdr_selector_loop_slice.txt
+          git commit -m 'Slice Instagram DASH selector loop' || true
+          git pull --rebase origin main
+          git push origin HEAD:main
