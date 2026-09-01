@@ -1,0 +1,2374 @@
+Instagram 439 HDR reporter sink targeted R18e
+============================================
+
+===== EXACT SINK LX/0knW; .method public static final A01(Landroid/content/Context;LX/02rJ;)V FILE=work/smali/classes10/X/0knW.smali =====
+.method public static final A01(Landroid/content/Context;LX/02rJ;)V
+    .registers 8
+
+    const/4 v1, 0x3
+
+    new-instance v0, LX/0FRB;
+
+    invoke-direct {v0, p1, v1}, LX/0FRB;-><init>(Ljava/lang/Object;I)V
+
+    invoke-static {v0}, LX/06cv;->A00(Lkotlin/jvm/functions/Function0;)LX/0C8T;
+
+    move-result-object v5
+
+    const v4, 0x6e03ce0
+
+    :try_start_d
+    invoke-interface {v5}, LX/0C8T;->getValue()Ljava/lang/Object;
+
+    move-result-object v0
+
+    check-cast v0, LX/02rM;
+
+    invoke-virtual {v0, v4}, LX/03e9;->markerStart(I)V
+
+    invoke-static {p0, p1}, LX/0knW;->A00(Landroid/content/Context;LX/02rJ;)Ljava/util/LinkedHashMap;
+
+    move-result-object v0
+
+    invoke-static {v0}, LX/000H;->A0W(Ljava/util/AbstractMap;)Ljava/util/Iterator;
+
+    move-result-object v3
+
+    :goto_1e
+    invoke-interface {v3}, Ljava/util/Iterator;->hasNext()Z
+
+    move-result v0
+
+    if-eqz v0, :cond_3e
+
+    invoke-static {v3}, LX/0020;->A0u(Ljava/util/Iterator;)Ljava/util/Map$Entry;
+
+    move-result-object v0
+
+    invoke-interface {v5}, LX/0C8T;->getValue()Ljava/lang/Object;
+
+    move-result-object v2
+
+    check-cast v2, LX/02rM;
+
+    invoke-static {v0}, LX/021X;->A13(Ljava/util/Map$Entry;)Ljava/lang/String;
+
+    move-result-object v1
+
+    invoke-interface {v0}, Ljava/util/Map$Entry;->getValue()Ljava/lang/Object;
+
+    move-result-object v0
+
+    invoke-virtual {v0}, Ljava/lang/Object;->toString()Ljava/lang/String;
+
+    move-result-object v0
+
+    invoke-virtual {v2, v4, v1, v0}, LX/03e9;->markerAnnotate(ILjava/lang/String;Ljava/lang/String;)V
+
+    goto :goto_1e
+
+    :cond_3e
+    invoke-interface {v5}, LX/0C8T;->getValue()Ljava/lang/Object;
+
+    move-result-object v0
+
+    check-cast v0, LX/02rM;
+
+    invoke-virtual {v0, v4}, LX/03e9;->A0Y(I)V
+
+    return-void
+    :try_end_48
+    .catchall {:try_start_d .. :try_end_48} :catchall_48
+
+    :catchall_48
+    move-exception v0
+
+    invoke-static {v5}, LX/0222;->A0P(LX/0C8T;)LX/03e9;
+
+    move-result-object v2
+
+    const-string v1, "error"
+
+    invoke-virtual {v0}, Ljava/lang/Object;->toString()Ljava/lang/String;
+
+    move-result-object v0
+
+    invoke-virtual {v2, v4, v1, v0}, LX/03e9;->markerAnnotate(ILjava/lang/String;Ljava/lang/String;)V
+
+    invoke-static {v5}, LX/0222;->A0P(LX/0C8T;)LX/03e9;
+
+    move-result-object v0
+
+    invoke-virtual {v0, v4}, LX/03e9;->A0Z(I)V
+
+    return-void
+.end method
+
+===== ALL HDR_REPORTER_REF =====
+
+--- LX/0knW; .method public static final A01(Landroid/content/Context;LX/02rJ;)V FILE=work/smali/classes10/X/0knW.smali ---
+.method public static final A01(Landroid/content/Context;LX/02rJ;)V
+    .registers 8
+
+    const/4 v1, 0x3
+
+    new-instance v0, LX/0FRB;
+
+    invoke-direct {v0, p1, v1}, LX/0FRB;-><init>(Ljava/lang/Object;I)V
+
+    invoke-static {v0}, LX/06cv;->A00(Lkotlin/jvm/functions/Function0;)LX/0C8T;
+
+    move-result-object v5
+
+    const v4, 0x6e03ce0
+
+    :try_start_d
+    invoke-interface {v5}, LX/0C8T;->getValue()Ljava/lang/Object;
+
+    move-result-object v0
+
+    check-cast v0, LX/02rM;
+
+    invoke-virtual {v0, v4}, LX/03e9;->markerStart(I)V
+
+    invoke-static {p0, p1}, LX/0knW;->A00(Landroid/content/Context;LX/02rJ;)Ljava/util/LinkedHashMap;
+
+    move-result-object v0
+
+    invoke-static {v0}, LX/000H;->A0W(Ljava/util/AbstractMap;)Ljava/util/Iterator;
+
+    move-result-object v3
+
+    :goto_1e
+    invoke-interface {v3}, Ljava/util/Iterator;->hasNext()Z
+
+    move-result v0
+
+    if-eqz v0, :cond_3e
+
+    invoke-static {v3}, LX/0020;->A0u(Ljava/util/Iterator;)Ljava/util/Map$Entry;
+
+    move-result-object v0
+
+    invoke-interface {v5}, LX/0C8T;->getValue()Ljava/lang/Object;
+
+    move-result-object v2
+
+    check-cast v2, LX/02rM;
+
+    invoke-static {v0}, LX/021X;->A13(Ljava/util/Map$Entry;)Ljava/lang/String;
+
+    move-result-object v1
+
+    invoke-interface {v0}, Ljava/util/Map$Entry;->getValue()Ljava/lang/Object;
+
+    move-result-object v0
+
+    invoke-virtual {v0}, Ljava/lang/Object;->toString()Ljava/lang/String;
+
+    move-result-object v0
+
+    invoke-virtual {v2, v4, v1, v0}, LX/03e9;->markerAnnotate(ILjava/lang/String;Ljava/lang/String;)V
+
+    goto :goto_1e
+
+    :cond_3e
+    invoke-interface {v5}, LX/0C8T;->getValue()Ljava/lang/Object;
+
+    move-result-object v0
+
+    check-cast v0, LX/02rM;
+
+    invoke-virtual {v0, v4}, LX/03e9;->A0Y(I)V
+
+    return-void
+    :try_end_48
+    .catchall {:try_start_d .. :try_end_48} :catchall_48
+
+    :catchall_48
+    move-exception v0
+
+    invoke-static {v5}, LX/0222;->A0P(LX/0C8T;)LX/03e9;
+
+    move-result-object v2
+
+    const-string v1, "error"
+
+    invoke-virtual {v0}, Ljava/lang/Object;->toString()Ljava/lang/String;
+
+    move-result-object v0
+
+    invoke-virtual {v2, v4, v1, v0}, LX/03e9;->markerAnnotate(ILjava/lang/String;Ljava/lang/String;)V
+
+    invoke-static {v5}, LX/0222;->A0P(LX/0C8T;)LX/03e9;
+
+    move-result-object v0
+
+    invoke-virtual {v0, v4}, LX/03e9;->A0Z(I)V
+
+    return-void
+.end method
+
+===== ALL DEVICE_CLASSIFIER_REF =====
+
+--- LX/03yq; .method public final Ekk(LX/02rJ;)V FILE=work/smali/classes2/X/03yq.smali ---
+.method public final Ekk(LX/02rJ;)V
+    .registers 4
+
+    .line 0
+    invoke-static {p1}, LX/04l9;->A0f(Ljava/lang/Object;)V
+
+    .line 1
+    .line 2
+    .line 3
+    iget-boolean v0, p0, LX/03yq;->A01:Z
+
+    .line 4
+    .line 5
+    if-eqz v0, :cond_10
+
+    .line 6
+    .line 7
+    new-instance v1, LX/0lAl;
+
+    .line 8
+    .line 9
+    invoke-direct {v1, p0, p1}, LX/0lAl;-><init>(LX/03yq;LX/02rJ;)V
+
+    .line 10
+    .line 11
+    .line 12
+    const/4 v0, 0x6
+
+    .line 13
+    invoke-static {v1, v0}, LX/02oD;->A02(Ljava/lang/Runnable;I)V
+
+    .line 14
+    .line 15
+    .line 16
+    :cond_10
+    return-void
+.end method
+
+--- LX/0lAl; .method public constructor <init>(LX/03yq;LX/02rJ;)V FILE=work/smali/classes8/X/0lAl.smali ---
+.method public constructor <init>(LX/03yq;LX/02rJ;)V
+    .registers 3
+
+    iput-object p1, p0, LX/0lAl;->A00:LX/03yq;
+
+    iput-object p2, p0, LX/0lAl;->A01:LX/02rJ;
+
+    invoke-direct {p0}, Ljava/lang/Object;-><init>()V
+
+    return-void
+.end method
+
+===== 0lAl CONSTRUCTOR + NEW-INSTANCE SITES =====
+
+--- LX/03yq; .method public final Ekk(LX/02rJ;)V FILE=work/smali/classes2/X/03yq.smali ---
+.method public final Ekk(LX/02rJ;)V
+    .registers 4
+
+    .line 0
+    invoke-static {p1}, LX/04l9;->A0f(Ljava/lang/Object;)V
+
+    .line 1
+    .line 2
+    .line 3
+    iget-boolean v0, p0, LX/03yq;->A01:Z
+
+    .line 4
+    .line 5
+    if-eqz v0, :cond_10
+
+    .line 6
+    .line 7
+    new-instance v1, LX/0lAl;
+
+    .line 8
+    .line 9
+    invoke-direct {v1, p0, p1}, LX/0lAl;-><init>(LX/03yq;LX/02rJ;)V
+
+    .line 10
+    .line 11
+    .line 12
+    const/4 v0, 0x6
+
+    .line 13
+    invoke-static {v1, v0}, LX/02oD;->A02(Ljava/lang/Runnable;I)V
+
+    .line 14
+    .line 15
+    .line 16
+    :cond_10
+    return-void
+.end method
+
+--- LX/0lAl; .method public constructor <init>(LX/03yq;LX/02rJ;)V FILE=work/smali/classes8/X/0lAl.smali ---
+.method public constructor <init>(LX/03yq;LX/02rJ;)V
+    .registers 3
+
+    iput-object p1, p0, LX/0lAl;->A00:LX/03yq;
+
+    iput-object p2, p0, LX/0lAl;->A01:LX/02rJ;
+
+    invoke-direct {p0}, Ljava/lang/Object;-><init>()V
+
+    return-void
+.end method
+
+--- LX/0lAl; .method public final run()V FILE=work/smali/classes8/X/0lAl.smali ---
+.method public final run()V
+    .registers 35
+
+    move-object/from16 v1, p0
+
+    iget-object v0, v1, LX/0lAl;->A00:LX/03yq;
+
+    iget-object v0, v0, LX/03yq;->A00:Landroid/content/Context;
+
+    move-object/from16 v33, v0
+
+    iget-object v0, v1, LX/0lAl;->A01:LX/02rJ;
+
+    move-object/from16 v32, v0
+
+    const/16 v23, 0x0
+
+    const/16 v24, 0x1
+
+    :try_start_10
+    invoke-static {}, LX/0020;->A0p()Ljava/util/HashMap;
+
+    move-result-object v21
+
+    invoke-static {}, LX/0020;->A0p()Ljava/util/HashMap;
+
+    move-result-object v20
+
+    new-instance v1, Landroid/media/MediaCodecList;
+
+    move/from16 v0, v24
+
+    invoke-direct {v1, v0}, Landroid/media/MediaCodecList;-><init>(I)V
+
+    invoke-virtual {v1}, Landroid/media/MediaCodecList;->getCodecInfos()[Landroid/media/MediaCodecInfo;
+
+    move-result-object v1
+
+    array-length v0, v1
+
+    invoke-static {v1, v0}, Ljava/util/Arrays;->copyOf([Ljava/lang/Object;I)[Ljava/lang/Object;
+
+    move-result-object v0
+
+    invoke-static {v0}, LX/04jB;->A09([Ljava/lang/Object;)Ljava/util/List;
+
+    move-result-object v0
+
+    invoke-static {v0}, Ljava/util/Collections;->unmodifiableList(Ljava/util/List;)Ljava/util/List;
+
+    move-result-object v17
+
+    invoke-static {}, LX/01ku;->A01()LX/01ku;
+
+    move-result-object v1
+
+    sget-object v22, LX/0cby;->A01:LX/0cby;
+
+    new-instance v11, Landroid/util/ArrayMap;
+
+    invoke-direct {v11}, Landroid/util/ArrayMap;-><init>()V
+
+    const-string v2, "os_build"
+
+    sget-object v0, Landroid/os/Build;->ID:Ljava/lang/String;
+
+    invoke-virtual {v11, v2, v0}, Landroid/util/ArrayMap;->put(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;
+
+    const/16 v0, 0x64e
+
+    invoke-static {v0}, LX/0000;->A00(I)Ljava/lang/String;
+
+    move-result-object v0
+
+    invoke-static {v0}, Ljava/lang/System;->getProperty(Ljava/lang/String;)Ljava/lang/String;
+
+    move-result-object v2
+
+    const-string v0, "kernel"
+
+    invoke-virtual {v11, v0, v2}, Landroid/util/ArrayMap;->put(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;
+
+    const-string v2, "client_device_model"
+
+    sget-object v0, Landroid/os/Build;->MODEL:Ljava/lang/String;
+
+    invoke-virtual {v11, v2, v0}, Landroid/util/ArrayMap;->put(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;
+
+    const-string v2, "device_brand"
+
+    sget-object v0, Landroid/os/Build;->MANUFACTURER:Ljava/lang/String;
+
+    invoke-virtual {v11, v2, v0}, Landroid/util/ArrayMap;->put(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;
+
+    const-string v2, "ro.boot.hardware.platform"
+
+    const-string v4, "unknown"
+
+    invoke-static {v2, v4}, LX/00wd;->A03(Ljava/lang/String;Ljava/lang/String;)Ljava/lang/String;
+
+    move-result-object v0
+
+    sget-object v3, Ljava/util/Locale;->ROOT:Ljava/util/Locale;
+
+    invoke-virtual {v0, v3}, Ljava/lang/String;->toLowerCase(Ljava/util/Locale;)Ljava/lang/String;
+
+    move-result-object v0
+
+    invoke-static {v0}, LX/01P1;->A0z(Ljava/lang/CharSequence;)Ljava/lang/String;
+
+    move-result-object v0
+
+    invoke-virtual {v11, v2, v0}, Landroid/util/ArrayMap;->put(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;
+
+    const-string v2, "ro.hardware"
+
+    invoke-static {v2, v4}, LX/00wd;->A03(Ljava/lang/String;Ljava/lang/String;)Ljava/lang/String;
+
+    move-result-object v0
+
+    invoke-virtual {v0, v3}, Ljava/lang/String;->toLowerCase(Ljava/util/Locale;)Ljava/lang/String;
+
+    move-result-object v0
+
+    invoke-static {v0}, LX/01P1;->A0z(Ljava/lang/CharSequence;)Ljava/lang/String;
+
+    move-result-object v0
+
+    invoke-virtual {v11, v2, v0}, Landroid/util/ArrayMap;->put(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;
+
+    const-string v2, "ro.build.board"
+
+    sget-object v0, Landroid/os/Build;->BOARD:Ljava/lang/String;
+
+    invoke-virtual {v11, v2, v0}, Landroid/util/ArrayMap;->put(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;
+
+    const-string v2, "ro.product.device"
+
+    sget-object v0, Landroid/os/Build;->DEVICE:Ljava/lang/String;
+
+    invoke-virtual {v11, v2, v0}, Landroid/util/ArrayMap;->put(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;
+
+    invoke-static {}, LX/01rb;->A00()LX/01rb;
+
+    move-result-object v3
+
+    const/16 v0, 0x35d
+
+    invoke-static {v0}, LX/0120;->A00(I)Ljava/lang/String;
+
+    move-result-object v0
+
+    iget-object v2, v3, LX/01rb;->A01:Ljava/lang/String;
+
+    invoke-virtual {v11, v0, v2}, Landroid/util/ArrayMap;->put(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;
+
+    const/16 v0, 0x35c
+
+    invoke-static {v0}, LX/0120;->A00(I)Ljava/lang/String;
+
+    move-result-object v0
+
+    iget-object v3, v3, LX/01rb;->A00:Ljava/lang/String;
+
+    invoke-virtual {v11, v0, v3}, Landroid/util/ArrayMap;->put(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;
+
+    const/16 v0, 0x672
+
+    invoke-static {v0}, LX/0000;->A00(I)Ljava/lang/String;
+
+    move-result-object v0
+
+    invoke-virtual {v0, v2}, Ljava/lang/String;->equals(Ljava/lang/Object;)Z
+
+    move-result v0
+
+    if-eqz v0, :cond_137
+
+    const-string v2, "Qualcomm"
+
+    :goto_bb
+    const-string v0, "chipset_platform"
+
+    invoke-virtual {v11, v0, v2}, Landroid/util/ArrayMap;->put(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;
+
+    const-string v2, "cpu_features"
+
+    iget-boolean v0, v1, LX/01ku;->A03:Z
+
+    if-nez v0, :cond_c9
+
+    invoke-static {v1}, LX/01ku;->A03(LX/01ku;)V
+
+    :cond_c9
+    iget-object v0, v1, LX/01ku;->A02:Ljava/lang/String;
+
+    invoke-virtual {v11, v2, v0}, Landroid/util/ArrayMap;->put(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;
+
+    const-string v4, "cpu_abi"
+
+    sget-object v3, Landroid/os/Build;->SUPPORTED_ABIS:[Ljava/lang/String;
+
+    if-eqz v3, :cond_133
+
+    invoke-static {v3}, LX/02oI;->A0Q([Ljava/lang/Object;)Ljava/util/List;
+
+    move-result-object v2
+
+    if-eqz v2, :cond_133
+
+    const-string v0, "|"
+
+    const-string v10, ""
+
+    invoke-static {v0, v10, v10, v2}, LX/04k4;->A19(Ljava/lang/CharSequence;Ljava/lang/CharSequence;Ljava/lang/CharSequence;Ljava/lang/Iterable;)Ljava/lang/String;
+
+    move-result-object v0
+
+    :goto_e2
+    invoke-virtual {v11, v4, v0}, Landroid/util/ArrayMap;->put(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;
+
+    invoke-static {}, Ljava/lang/Runtime;->getRuntime()Ljava/lang/Runtime;
+
+    move-result-object v0
+
+    invoke-virtual {v0}, Ljava/lang/Runtime;->availableProcessors()I
+
+    move-result v0
+
+    invoke-static {v0}, Ljava/lang/Integer;->valueOf(I)Ljava/lang/Integer;
+
+    move-result-object v2
+
+    const-string v0, "cpu_cores"
+
+    invoke-virtual {v11, v0, v2}, Landroid/util/ArrayMap;->put(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;
+
+    sget-object v0, LX/07js;->A04:LX/0C8T;
+
+    invoke-static {v0}, LX/0BUB;->A06(LX/0C8T;)F
+
+    move-result v0
+
+    invoke-static {v0}, Ljava/lang/Float;->valueOf(F)Ljava/lang/Float;
+
+    move-result-object v2
+
+    const-string v0, "cpu_max_ghz_sum"
+
+    invoke-virtual {v11, v0, v2}, Landroid/util/ArrayMap;->put(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;
+
+    iget-boolean v0, v1, LX/01ku;->A03:Z
+
+    if-nez v0, :cond_10c
+
+    invoke-static {v1}, LX/01ku;->A03(LX/01ku;)V
+
+    :cond_10c
+    iget-object v2, v1, LX/01ku;->A06:Ljava/util/HashMap;
+
+    invoke-virtual {v2}, Ljava/util/AbstractMap;->isEmpty()Z
+
+    move-result v0
+
+    if-nez v0, :cond_11d
+
+    const-string v1, "cpu_parts"
+
+    invoke-virtual {v2}, Ljava/lang/Object;->toString()Ljava/lang/String;
+
+    move-result-object v0
+
+    invoke-virtual {v11, v1, v0}, Landroid/util/ArrayMap;->put(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;
+
+    :cond_11d
+    invoke-static {}, LX/01ku;->A01()LX/01ku;
+
+    move-object/from16 v1, v33
+
+    move/from16 v0, v24
+
+    invoke-static {v1, v0}, LX/01ku;->A00(Landroid/content/Context;Z)J
+
+    move-result-wide v8
+
+    invoke-static/range {v33 .. v33}, LX/00Ai;->A00(Landroid/content/Context;)J
+
+    move-result-wide v6
+
+    const-wide/16 v4, 0x0
+
+    cmp-long v0, v8, v4
+
+    if-lez v0, :cond_177
+
+    goto :goto_173
+
+    :cond_133
+    const-string v0, ""
+
+    move-object v10, v0
+
+    goto :goto_e2
+
+    :cond_137
+    const-string v0, "mediatek"
+
+    invoke-virtual {v0, v2}, Ljava/lang/String;->equals(Ljava/lang/Object;)Z
+
+    move-result v0
+
+    if-eqz v0, :cond_143
+
+    const-string v2, "MediaTek"
+
+    goto/16 :goto_bb
+
+    :cond_143
+    const/16 v0, 0x6c1
+
+    invoke-static {v0}, LX/0000;->A00(I)Ljava/lang/String;
+
+    move-result-object v0
+
+    invoke-virtual {v0, v2}, Ljava/lang/String;->equals(Ljava/lang/Object;)Z
+
+    move-result v0
+
+    if-eqz v0, :cond_153
+
+    const-string v2, "Spreadtrum"
+
+    goto/16 :goto_bb
+
+    :cond_153
+    const-string v0, "samsung"
+
+    invoke-virtual {v0, v2}, Ljava/lang/String;->equals(Ljava/lang/Object;)Z
+
+    move-result v0
+
+    if-eqz v0, :cond_15f
+
+    const-string v2, "Samsung"
+
+    goto/16 :goto_bb
+
+    :cond_15f
+    const/16 v0, 0x59e
+
+    invoke-static {v0}, LX/0000;->A00(I)Ljava/lang/String;
+
+    move-result-object v0
+
+    invoke-virtual {v0, v2}, Ljava/lang/String;->equals(Ljava/lang/Object;)Z
+
+    move-result v0
+
+    if-eqz v0, :cond_16f
+
+    const-string v2, "Hisilicon"
+
+    goto/16 :goto_bb
+
+    :cond_16f
+    const-string v2, "Unknown"
+
+    goto/16 :goto_bb
+
+    :goto_173
+    cmp-long v0, v6, v4
+
+    if-gtz v0, :cond_192
+
+    :cond_177
+    new-instance v2, Landroid/app/ActivityManager$MemoryInfo;
+
+    invoke-direct {v2}, Landroid/app/ActivityManager$MemoryInfo;-><init>()V
+
+    const-string v1, "activity"
+
+    move-object/from16 v0, v33
+
+    invoke-virtual {v0, v1}, Landroid/content/Context;->getSystemService(Ljava/lang/String;)Ljava/lang/Object;
+
+    move-result-object v1
+
+    instance-of v0, v1, Landroid/app/ActivityManager;
+
+    if-eqz v0, :cond_192
+
+    check-cast v1, Landroid/app/ActivityManager;
+
+    if-eqz v1, :cond_192
+
+    invoke-virtual {v1, v2}, Landroid/app/ActivityManager;->getMemoryInfo(Landroid/app/ActivityManager$MemoryInfo;)V
+
+    iget-wide v1, v2, Landroid/app/ActivityManager$MemoryInfo;->totalMem:J
+
+    goto :goto_194
+
+    :cond_192
+    const-wide/16 v1, -0x1
+
+    :goto_194
+    cmp-long v0, v8, v4
+
+    if-gtz v0, :cond_199
+
+    move-wide v8, v1
+
+    :cond_199
+    cmp-long v0, v6, v4
+
+    if-lez v0, :cond_19e
+
+    move-wide v1, v6
+
+    :cond_19e
+    const/16 v0, 0xc21
+
+    invoke-static {v0}, LX/0000;->A00(I)Ljava/lang/String;
+
+    move-result-object v0
+
+    invoke-static {v8, v9}, Ljava/lang/Long;->valueOf(J)Ljava/lang/Long;
+
+    move-result-object v4
+
+    invoke-virtual {v11, v0, v4}, Landroid/util/ArrayMap;->put(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;
+
+    const-string v4, "total_ram"
+
+    invoke-static {v1, v2}, Ljava/lang/Long;->valueOf(J)Ljava/lang/Long;
+
+    move-result-object v0
+
+    invoke-virtual {v11, v4, v0}, Landroid/util/ArrayMap;->put(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;
+
+    invoke-static {v6, v7}, LX/02y9;->A00(J)LX/02y9;
+
+    move-result-object v0
+
+    invoke-virtual {v0}, Ljava/lang/Enum;->name()Ljava/lang/String;
+
+    move-result-object v2
+
+    invoke-static {v6, v7}, LX/08Sd;->A00(J)LX/08Sd;
+
+    move-result-object v0
+
+    invoke-virtual {v0}, Ljava/lang/Enum;->ordinal()I
+
+    move-result v0
+
+    packed-switch v0, :pswitch_data_76c
+
+    invoke-static {}, LX/002L;->A0Q()Lkotlin/NoWhenBranchMatchedException;
+
+    move-result-object v0
+
+    throw v0
+
+    :pswitch_1cc
+    const-string v1, "Unknown"
+
+    goto :goto_1ef
+
+    :pswitch_1cf
+    const-string v1, "0-0.75 gb"
+
+    goto :goto_1ef
+
+    :pswitch_1d2
+    const-string v1, "0.75-1 gb"
+
+    goto :goto_1ef
+
+    :pswitch_1d5
+    const-string v1, "1-1.5 gb"
+
+    goto :goto_1ef
+
+    :pswitch_1d8
+    const-string v1, "1.5-2 gb"
+
+    goto :goto_1ef
+
+    :pswitch_1db
+    const-string v1, "2-3 gb"
+
+    goto :goto_1ef
+
+    :pswitch_1de
+    const-string v1, "3-4 gb"
+
+    goto :goto_1ef
+
+    :pswitch_1e1
+    const-string v1, "4-6 gb"
+
+    goto :goto_1ef
+
+    :pswitch_1e4
+    const-string v1, "6-8 gb"
+
+    goto :goto_1ef
+
+    :pswitch_1e7
+    const-string v1, "8-12 gb"
+
+    goto :goto_1ef
+
+    :pswitch_1ea
+    const-string v1, "12-16 gb"
+
+    goto :goto_1ef
+
+    :pswitch_1ed
+    const-string v1, "16+ gb"
+
+    :goto_1ef
+    const-string v0, "ram_class"
+
+    invoke-virtual {v11, v0, v2}, Landroid/util/ArrayMap;->put(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;
+
+    const-string v0, "ram_class_v2"
+
+    invoke-virtual {v11, v0, v1}, Landroid/util/ArrayMap;->put(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;
+
+    invoke-static {v3}, LX/04l9;->A0S(Ljava/lang/Object;)V
+
+    array-length v6, v3
+
+    const/4 v5, 0x0
+
+    const/4 v4, 0x0
+
+    :goto_1ff
+    if-ge v4, v6, :cond_213
+
+    aget-object v2, v3, v4
+
+    invoke-static {v2}, LX/04l9;->A0h(Ljava/lang/Object;)V
+
+    const-string v1, "64"
+
+    invoke-static {v2, v1, v5}, LX/04m9;->A0w(Ljava/lang/CharSequence;Ljava/lang/CharSequence;Z)Z
+
+    move-result v0
+
+    if-eqz v0, :cond_20f
+
+    goto :goto_212
+
+    :cond_20f
+    add-int/lit8 v4, v4, 0x1
+
+    goto :goto_1ff
+
+    :goto_212
+    const/4 v5, 0x1
+
+    :cond_213
+    invoke-static {v5}, Ljava/lang/Boolean;->valueOf(Z)Ljava/lang/Boolean;
+
+    move-result-object v1
+
+    const-string v0, "is_64bit_os"
+
+    invoke-virtual {v11, v0, v1}, Landroid/util/ArrayMap;->put(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;
+
+    invoke-static {}, Lcom/facebook/common/build/BuildConstants;->A03()Z
+
+    move-result v0
+
+    invoke-static {v0}, Ljava/lang/Boolean;->valueOf(Z)Ljava/lang/Boolean;
+
+    move-result-object v1
+
+    const-string v0, "is_64bit_app"
+
+    invoke-virtual {v11, v0, v1}, Landroid/util/ArrayMap;->put(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;
+
+    sget-object v0, LX/0aJ6;->A01:Ljava/util/List;
+
+    invoke-interface {v0}, Ljava/util/List;->isEmpty()Z
+
+    move-result v0
+
+    if-eqz v0, :cond_23a
+
+    invoke-static {}, Lcom/facebook/jni/CpuCapabilitiesJni;->nativeGetArmFeatures()Ljava/util/ArrayList;
+
+    move-result-object v0
+
+    invoke-static {v0}, LX/04l9;->A0R(Ljava/lang/Object;)V
+
+    sput-object v0, LX/0aJ6;->A01:Ljava/util/List;
+
+    :cond_23a
+    sget-object v0, LX/0aJ6;->A01:Ljava/util/List;
+
+    invoke-static {v0}, LX/04k4;->A1O(Ljava/lang/Iterable;)Ljava/util/List;
+
+    move-result-object v0
+
+    const-string v9, ","
+
+    const/4 v8, 0x0
+
+    invoke-static {v9, v10, v10, v0, v8}, LX/04k4;->A1A(Ljava/lang/CharSequence;Ljava/lang/CharSequence;Ljava/lang/CharSequence;Ljava/lang/Iterable;Lkotlin/jvm/functions/Function1;)Ljava/lang/String;
+
+    move-result-object v1
+
+    const-string v0, "arm_features"
+
+    invoke-virtual {v11, v0, v1}, Landroid/util/ArrayMap;->put(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;
+
+    sget-object v1, LX/0aJ6;->A00:Lcom/facebook/common/util/TriState;
+
+    sget-object v0, Lcom/facebook/common/util/TriState;->UNSET:Lcom/facebook/common/util/TriState;
+
+    if-ne v1, v0, :cond_25c
+
+    invoke-static {}, Lcom/facebook/jni/CpuCapabilitiesJni;->nativeDeviceSupportsNeon()Z
+
+    move-result v0
+
+    if-eqz v0, :cond_25f
+
+    sget-object v1, Lcom/facebook/common/util/TriState;->YES:Lcom/facebook/common/util/TriState;
+
+    :goto_25a
+    sput-object v1, LX/0aJ6;->A00:Lcom/facebook/common/util/TriState;
+
+    :cond_25c
+    sget-object v0, Lcom/facebook/common/util/TriState;->YES:Lcom/facebook/common/util/TriState;
+
+    goto :goto_262
+
+    :cond_25f
+    sget-object v1, Lcom/facebook/common/util/TriState;->NO:Lcom/facebook/common/util/TriState;
+
+    goto :goto_25a
+    :try_end_262
+    .catch Ljava/lang/Exception; {:try_start_10 .. :try_end_262} :catch_75c
+
+    :goto_262
+    invoke-static {v1, v0}, LX/000H;->A0m(Ljava/lang/Object;Ljava/lang/Object;)Z
+
+    move-result v0
+
+    :try_start_266
+    invoke-static {v0}, Ljava/lang/Boolean;->valueOf(Z)Ljava/lang/Boolean;
+
+    move-result-object v1
+
+    const-string v0, "is_neon_supported"
+
+    invoke-virtual {v11, v0, v1}, Landroid/util/ArrayMap;->put(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;
+
+    invoke-static/range {v33 .. v33}, LX/0cby;->A00(Landroid/content/Context;)Landroid/util/ArrayMap;
+
+    move-result-object v25
+
+    new-instance v7, Landroid/util/ArrayMap;
+
+    invoke-direct {v7}, Landroid/util/ArrayMap;-><init>()V
+
+    invoke-virtual/range {v33 .. v33}, Landroid/content/Context;->getPackageManager()Landroid/content/pm/PackageManager;
+
+    move-result-object v12
+
+    const-string v5, "Unknown"
+
+    const-string v6, "vulkan_hardware_version"
+
+    const-string v15, "vulkan_hardware_level"
+
+    const/16 v16, 0x0
+
+    const-string v2, "has_vulkan"
+
+    const/16 v0, 0x7f
+
+    invoke-static {v0}, LX/0120;->A00(I)Ljava/lang/String;
+
+    move-result-object v0
+
+    invoke-virtual {v12, v0}, Landroid/content/pm/PackageManager;->hasSystemFeature(Ljava/lang/String;)Z
+
+    move-result v1
+
+    invoke-static {v1}, Ljava/lang/Boolean;->valueOf(Z)Ljava/lang/Boolean;
+
+    move-result-object v1
+
+    invoke-virtual {v7, v2, v1}, Landroid/util/ArrayMap;->put(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;
+
+    const/4 v14, -0x1
+
+    invoke-virtual {v12}, Landroid/content/pm/PackageManager;->getSystemAvailableFeatures()[Landroid/content/pm/FeatureInfo;
+
+    move-result-object v13
+
+    if-eqz v13, :cond_2ad
+
+    array-length v4, v13
+
+    const/4 v3, 0x0
+
+    goto :goto_2c1
+
+    :goto_2a1
+    aget-object v2, v13, v3
+
+    iget-object v1, v2, Landroid/content/pm/FeatureInfo;->name:Ljava/lang/String;
+
+    invoke-static {v1, v0}, LX/04l9;->areEqual(Ljava/lang/Object;Ljava/lang/Object;)Z
+
+    move-result v1
+
+    if-eqz v1, :cond_2bf
+
+    iget v14, v2, Landroid/content/pm/FeatureInfo;->version:I
+
+    :cond_2ad
+    invoke-static {v14}, Ljava/lang/Integer;->valueOf(I)Ljava/lang/Integer;
+
+    move-result-object v0
+
+    invoke-virtual {v7, v15, v0}, Landroid/util/ArrayMap;->put(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;
+
+    const-string v13, "android.hardware.vulkan.version"
+
+    invoke-virtual {v12}, Landroid/content/pm/PackageManager;->getSystemAvailableFeatures()[Landroid/content/pm/FeatureInfo;
+
+    move-result-object v4
+
+    if-eqz v4, :cond_2f8
+
+    array-length v3, v4
+
+    const/4 v2, 0x0
+
+    goto :goto_2c4
+
+    :cond_2bf
+    add-int/lit8 v3, v3, 0x1
+
+    :goto_2c1
+    if-ge v3, v4, :cond_2ad
+
+    goto :goto_2a1
+
+    :goto_2c4
+    if-ge v2, v3, :cond_2f8
+
+    aget-object v1, v4, v2
+
+    iget-object v0, v1, Landroid/content/pm/FeatureInfo;->name:Ljava/lang/String;
+
+    invoke-static {v0, v13}, LX/04l9;->areEqual(Ljava/lang/Object;Ljava/lang/Object;)Z
+
+    move-result v0
+
+    if-eqz v0, :cond_2d3
+
+    iget v0, v1, Landroid/content/pm/FeatureInfo;->version:I
+
+    goto :goto_2d6
+
+    :cond_2d3
+    add-int/lit8 v2, v2, 0x1
+
+    goto :goto_2c4
+
+    :goto_2d6
+    if-ltz v0, :cond_2f8
+
+    and-int/lit16 v3, v0, 0xfff
+
+    shr-int/lit8 v1, v0, 0xc
+
+    and-int/lit16 v2, v1, 0x3ff
+
+    shr-int/lit8 v0, v0, 0x16
+
+    and-int/lit16 v0, v0, 0x3ff
+
+    invoke-static {}, LX/000H;->A0S()Ljava/lang/StringBuilder;
+
+    move-result-object v1
+
+    invoke-virtual {v1, v0}, Ljava/lang/StringBuilder;->append(I)Ljava/lang/StringBuilder;
+
+    const/16 v0, 0x2e
+
+    invoke-virtual {v1, v0}, Ljava/lang/StringBuilder;->append(C)Ljava/lang/StringBuilder;
+
+    invoke-virtual {v1, v2}, Ljava/lang/StringBuilder;->append(I)Ljava/lang/StringBuilder;
+
+    invoke-virtual {v1, v0}, Ljava/lang/StringBuilder;->append(C)Ljava/lang/StringBuilder;
+
+    invoke-static {v1, v3}, LX/0222;->A0p(Ljava/lang/StringBuilder;I)Ljava/lang/String;
+
+    move-result-object v5
+
+    :cond_2f8
+    invoke-virtual {v7, v6, v5}, Landroid/util/ArrayMap;->put(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;
+
+    const-string v0, "android.hardware.vulkan.compute"
+
+    invoke-virtual {v12, v0}, Landroid/content/pm/PackageManager;->hasSystemFeature(Ljava/lang/String;)Z
+
+    move-result v0
+
+    if-eqz v0, :cond_305
+
+    const/16 v16, 0x1
+
+    :cond_305
+    invoke-static/range {v16 .. v16}, Ljava/lang/Boolean;->valueOf(Z)Ljava/lang/Boolean;
+
+    move-result-object v1
+
+    const-string v0, "has_vulkan_compute"
+
+    invoke-virtual {v7, v0, v1}, Landroid/util/ArrayMap;->put(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;
+
+    invoke-static/range {v32 .. v32}, LX/02qP;->A01(LX/04BG;)LX/00AT;
+
+    move-result-object v3
+
+    sget-object v2, LX/00A4;->A06:LX/00A4;
+
+    const-wide v0, 0x8200ba000002dcL
+
+    invoke-static {v2, v3, v0, v1}, LX/0112;->A0H(LX/00A4;Ljava/lang/Object;J)J
+
+    move-result-wide v2
+
+    const-string v1, "ar_class"
+
+    invoke-static {v2, v3}, Ljava/lang/Long;->valueOf(J)Ljava/lang/Long;
+
+    move-result-object v0
+
+    invoke-virtual {v11, v1, v0}, Landroid/util/ArrayMap;->put(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;
+
+    const/16 v1, 0x11a
+
+    move-object/from16 v0, v32
+
+    invoke-static {v0, v1}, LX/0233;->A0p(Ljava/lang/Object;I)LX/04i7;
+
+    move-result-object v28
+
+    invoke-interface/range {v17 .. v17}, Ljava/util/List;->iterator()Ljava/util/Iterator;
+
+    move-result-object v27
+
+    :cond_332
+    invoke-interface/range {v27 .. v27}, Ljava/util/Iterator;->hasNext()Z
+
+    move-result v0
+
+    if-eqz v0, :cond_764
+
+    invoke-interface/range {v27 .. v27}, Ljava/util/Iterator;->next()Ljava/lang/Object;
+
+    move-result-object v13
+
+    check-cast v13, Landroid/media/MediaCodecInfo;
+
+    invoke-virtual {v13}, Landroid/media/MediaCodecInfo;->getSupportedTypes()[Ljava/lang/String;
+
+    move-result-object v0
+
+    invoke-static {v0}, LX/02sP;->A00([Ljava/lang/Object;)LX/02sR;
+
+    move-result-object v26
+
+    :goto_346
+    invoke-virtual/range {v26 .. v26}, LX/02sR;->hasNext()Z
+
+    move-result v0
+
+    if-eqz v0, :cond_332
+
+    invoke-virtual/range {v26 .. v26}, LX/02sR;->next()Ljava/lang/Object;
+
+    move-result-object v12
+
+    check-cast v12, Ljava/lang/String;
+
+    const-string v0, "media_codec_info"
+
+    invoke-static {v0, v8}, LX/02hd;->A01(Ljava/lang/String;Ljava/lang/String;)LX/02hd;
+
+    move-result-object v6
+
+    invoke-static {v6, v11}, LX/0bbU;->A00(LX/02hd;Ljava/util/Map;)V
+
+    move-object/from16 v0, v25
+
+    invoke-static {v6, v0}, LX/0bbU;->A00(LX/02hd;Ljava/util/Map;)V
+
+    invoke-static {v6, v7}, LX/0bbU;->A00(LX/02hd;Ljava/util/Map;)V
+
+    invoke-static {v12}, LX/04l9;->A0h(Ljava/lang/Object;)V
+
+    invoke-virtual {v13}, Landroid/media/MediaCodecInfo;->isEncoder()Z
+
+    move-result v0
+
+    move-object/from16 v2, v20
+
+    if-eqz v0, :cond_370
+
+    move-object/from16 v2, v21
+
+    :cond_370
+    invoke-virtual {v2, v12}, Ljava/util/AbstractMap;->containsKey(Ljava/lang/Object;)Z
+
+    move-result v0
+
+    if-nez v0, :cond_3cf
+
+    invoke-virtual {v13}, Landroid/media/MediaCodecInfo;->isEncoder()Z
+
+    move-result v16
+
+    invoke-static {}, Landroid/os/SystemClock;->elapsedRealtime()J
+
+    move-result-wide v14
+
+    move-object v4, v8
+
+    const/4 v5, 0x0
+
+    :goto_380
+    const-string v3, "MediaCodecCache"
+
+    const/4 v0, 0x3
+
+    if-ge v5, v0, :cond_3b2
+    :try_end_385
+    .catch Ljava/lang/Exception; {:try_start_266 .. :try_end_385} :catch_75c
+
+    :try_start_385
+    invoke-static {}, LX/0BSG;->A0K()LX/0nAK;
+
+    move-result-object v4
+
+    if-eqz v16, :cond_3a1
+
+    sget-object v0, LX/0I4a;->A0H:LX/0I4a;
+
+    invoke-interface {v4, v0, v12}, LX/0nAK;->BCn(LX/0I4a;Ljava/lang/String;)LX/0nda;
+
+    move-result-object v1
+
+    :goto_391
+    invoke-interface {v1}, LX/0nda;->getName()Ljava/lang/String;
+
+    invoke-static {}, Landroid/os/SystemClock;->elapsedRealtime()J
+
+    invoke-interface {v1}, LX/0nda;->getName()Ljava/lang/String;
+
+    move-result-object v3
+
+    move/from16 v0, v23
+
+    invoke-interface {v4, v1, v0}, LX/0nAK;->GUA(LX/0nda;Z)V
+
+    goto :goto_3cc
+
+    :cond_3a1
+    sget-object v1, LX/0I4a;->A0H:LX/0I4a;
+
+    move/from16 v0, v23
+
+    invoke-interface {v4, v1, v12, v0}, LX/0nAK;->BCm(LX/0I4a;Ljava/lang/String;Z)LX/0ndA;
+
+    move-result-object v1
+
+    goto :goto_391
+    :try_end_3aa
+    .catch Ljava/lang/Exception; {:try_start_385 .. :try_end_3aa} :catch_3aa
+    .catch Ljava/lang/Exception; {:try_start_385 .. :try_end_3aa} :catch_75c
+
+    :catch_3aa
+    :try_start_3aa
+    move-exception v4
+
+    invoke-static {}, Landroid/os/SystemClock;->elapsedRealtime()J
+
+    move-result-wide v14
+
+    add-int/lit8 v5, v5, 0x1
+
+    goto :goto_380
+
+    :cond_3b2
+    if-eqz v16, :cond_3b5
+
+    goto :goto_3b8
+
+    :cond_3b5
+    const-string v1, "Decoder"
+
+    goto :goto_3ba
+
+    :goto_3b8
+    const-string v1, "Encoder"
+
+    :goto_3ba
+    invoke-static {v14, v15}, LX/0222;->A05(J)J
+
+    move-result-wide v14
+
+    invoke-static {v14, v15}, Ljava/lang/Long;->valueOf(J)Ljava/lang/Long;
+
+    move-result-object v0
+
+    filled-new-array {v1, v12, v0}, [Ljava/lang/Object;
+
+    move-result-object v1
+
+    const-string v0, "%s MediaCodec create for type %s failed in %d ms."
+
+    invoke-static {v3, v0, v4, v1}, LX/00Iv;->A0J(Ljava/lang/String;Ljava/lang/String;Ljava/lang/Throwable;[Ljava/lang/Object;)V
+
+    move-object v3, v8
+
+    :goto_3cc
+    invoke-virtual {v2, v12, v3}, Ljava/util/AbstractMap;->put(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;
+
+    :cond_3cf
+    invoke-virtual {v2, v12}, Ljava/util/AbstractMap;->containsKey(Ljava/lang/Object;)Z
+
+    move-result v0
+
+    if-eqz v0, :cond_435
+
+    invoke-virtual {v2, v12}, Ljava/util/AbstractMap;->get(Ljava/lang/Object;)Ljava/lang/Object;
+
+    move-result-object v0
+
+    if-eqz v0, :cond_435
+
+    invoke-static {v12, v2}, LX/021X;->A10(Ljava/lang/Object;Ljava/util/AbstractMap;)Ljava/lang/String;
+
+    move-result-object v3
+
+    invoke-virtual {v13}, Landroid/media/MediaCodecInfo;->getName()Ljava/lang/String;
+
+    move-result-object v2
+
+    const/4 v1, 0x1
+
+    invoke-static {v3, v2, v1}, LX/04m6;->A0C(Ljava/lang/String;Ljava/lang/String;Z)Z
+
+    move-result v0
+
+    if-eqz v0, :cond_435
+
+    :goto_3ea
+    const/16 v0, 0xaee
+
+    invoke-static {v0}, LX/0000;->A00(I)Ljava/lang/String;
+
+    move-result-object v0
+
+    invoke-static {v0, v12}, LX/000H;->A0Z(Ljava/lang/Object;Ljava/lang/Object;)LX/04oE;
+
+    move-result-object v4
+
+    const/16 v0, 0x961
+
+    invoke-static {v0}, LX/0000;->A00(I)Ljava/lang/String;
+
+    move-result-object v0
+
+    invoke-virtual {v13}, Landroid/media/MediaCodecInfo;->getName()Ljava/lang/String;
+
+    move-result-object v2
+
+    invoke-static {v0, v2}, LX/000H;->A0Z(Ljava/lang/Object;Ljava/lang/Object;)LX/04oE;
+
+    move-result-object v5
+
+    invoke-virtual {v13}, Landroid/media/MediaCodecInfo;->isEncoder()Z
+
+    move-result v0
+
+    if-eqz v0, :cond_432
+
+    const-string v2, "encoder"
+
+    :goto_40a
+    const-string v0, "codec_type"
+
+    invoke-static {v0, v2}, LX/000H;->A0Z(Ljava/lang/Object;Ljava/lang/Object;)LX/04oE;
+
+    move-result-object v3
+
+    const-string v0, "is_default"
+
+    invoke-static {v0, v1}, LX/0224;->A0r(Ljava/lang/Object;Z)LX/04oE;
+
+    move-result-object v2
+
+    sget-object v0, LX/0lCd;->A00:LX/0lCd;
+
+    invoke-virtual {v0}, LX/0lCd;->A00()I
+
+    move-result v0
+
+    invoke-static {v0}, Ljava/lang/Integer;->valueOf(I)Ljava/lang/Integer;
+
+    move-result-object v1
+
+    const-string v0, "performance_class"
+
+    invoke-static {v0, v1}, LX/000H;->A0Z(Ljava/lang/Object;Ljava/lang/Object;)LX/04oE;
+
+    move-result-object v0
+
+    filled-new-array {v4, v5, v3, v2, v0}, [LX/04oE;
+
+    move-result-object v0
+
+    invoke-static {v0}, LX/02pX;->A0G([LX/04oE;)Ljava/util/Map;
+
+    move-result-object v0
+
+    invoke-static {v6, v0}, LX/0bbU;->A00(LX/02hd;Ljava/util/Map;)V
+
+    goto :goto_437
+
+    :cond_432
+    const-string v2, "decoder"
+
+    goto :goto_40a
+
+    :cond_435
+    const/4 v1, 0x0
+
+    goto :goto_3ea
+    :try_end_437
+    .catch Ljava/lang/Exception; {:try_start_3aa .. :try_end_437} :catch_75c
+
+    :goto_437
+    :try_start_437
+    invoke-virtual {v13, v12}, Landroid/media/MediaCodecInfo;->getCapabilitiesForType(Ljava/lang/String;)Landroid/media/MediaCodecInfo$CodecCapabilities;
+
+    move-result-object v5
+
+    invoke-static {v5}, LX/04l9;->A0h(Ljava/lang/Object;)V
+
+    const-string v3, "profile_levels"
+
+    iget-object v2, v5, Landroid/media/MediaCodecInfo$CodecCapabilities;->profileLevels:[Landroid/media/MediaCodecInfo$CodecProfileLevel;
+
+    if-eqz v2, :cond_475
+
+    array-length v0, v2
+
+    if-eqz v0, :cond_475
+
+    const/16 v1, 0x29
+
+    new-instance v0, LX/0I29;
+
+    invoke-direct {v0, v1}, LX/0I29;-><init>(I)V
+
+    invoke-static {v9, v10, v10, v0, v2}, LX/02oI;->A0A(Ljava/lang/CharSequence;Ljava/lang/CharSequence;Ljava/lang/CharSequence;Lkotlin/jvm/functions/Function1;[Ljava/lang/Object;)Ljava/lang/String;
+
+    move-result-object v0
+
+    :goto_452
+    invoke-static {v3, v0}, LX/000H;->A0Z(Ljava/lang/Object;Ljava/lang/Object;)LX/04oE;
+
+    move-result-object v19
+
+    const-string v2, "color_formats"
+
+    iget-object v1, v5, Landroid/media/MediaCodecInfo$CodecCapabilities;->colorFormats:[I
+
+    if-eqz v1, :cond_473
+
+    array-length v0, v1
+
+    if-eqz v0, :cond_473
+
+    invoke-static {v9, v1}, LX/02oI;->A0C(Ljava/lang/CharSequence;[I)Ljava/lang/String;
+
+    move-result-object v0
+
+    :goto_463
+    invoke-static {v2, v0}, LX/000H;->A0Z(Ljava/lang/Object;Ljava/lang/Object;)LX/04oE;
+
+    move-result-object v18
+
+    const-string v17, "features"
+
+    const/16 v16, 0xa
+
+    new-instance v14, LX/02oH;
+
+    move/from16 v0, v16
+
+    invoke-direct {v14, v0}, LX/02oH;-><init>(I)V
+
+    goto :goto_477
+
+    :cond_473
+    const/4 v0, 0x0
+
+    goto :goto_463
+
+    :cond_475
+    const/4 v0, 0x0
+
+    goto :goto_452
+    :try_end_477
+    .catch Ljava/lang/Exception; {:try_start_437 .. :try_end_477} :catch_696
+
+    :goto_477
+    :try_start_477
+    sget-object v2, LX/0cby;->A00:Ljava/util/List;
+
+    if-nez v2, :cond_4cf
+
+    invoke-virtual {v5}, Ljava/lang/Object;->getClass()Ljava/lang/Class;
+
+    move-result-object v0
+
+    invoke-virtual {v0}, Ljava/lang/Class;->getFields()[Ljava/lang/reflect/Field;
+
+    move-result-object v15
+
+    invoke-static {v15}, LX/0BTH;->A0z(Ljava/lang/Object;)Ljava/util/ArrayList;
+
+    move-result-object v3
+
+    array-length v0, v15
+
+    move/from16 v29, v0
+
+    const/4 v4, 0x0
+
+    :goto_48b
+    move/from16 v0, v29
+
+    if-ge v4, v0, :cond_4a0
+
+    aget-object v2, v15, v4
+
+    invoke-virtual {v2}, Ljava/lang/reflect/Field;->getName()Ljava/lang/String;
+
+    move-result-object v1
+
+    invoke-static {v1}, LX/04l9;->A0R(Ljava/lang/Object;)V
+
+    const-string v0, "FEATURE_"
+
+    invoke-static {v2, v1, v0, v3}, LX/0BUB;->A1S(Ljava/lang/Object;Ljava/lang/String;Ljava/lang/String;Ljava/util/AbstractCollection;)V
+
+    add-int/lit8 v4, v4, 0x1
+
+    goto :goto_48b
+
+    :cond_4a0
+    invoke-static {}, LX/000H;->A0U()Ljava/util/ArrayList;
+
+    move-result-object v2
+
+    invoke-interface {v3}, Ljava/util/List;->iterator()Ljava/util/Iterator;
+
+    move-result-object v3
+
+    :cond_4a8
+    :goto_4a8
+    invoke-interface {v3}, Ljava/util/Iterator;->hasNext()Z
+
+    move-result v0
+
+    if-eqz v0, :cond_4cf
+
+    invoke-interface {v3}, Ljava/util/Iterator;->next()Ljava/lang/Object;
+
+    move-result-object v0
+
+    check-cast v0, Ljava/lang/reflect/Field;
+    :try_end_4b4
+    .catchall {:try_start_477 .. :try_end_4b4} :catchall_4e9
+
+    :try_start_4b4
+    invoke-virtual {v0, v8}, Ljava/lang/reflect/Field;->get(Ljava/lang/Object;)Ljava/lang/Object;
+
+    move-result-object v1
+
+    const-string v0, "null cannot be cast to non-null type kotlin.String"
+
+    invoke-static {v1, v0}, LX/04l9;->A0o(Ljava/lang/Object;Ljava/lang/String;)V
+
+    check-cast v1, Ljava/lang/String;
+
+    goto :goto_4c5
+    :try_end_4c0
+    .catchall {:try_start_4b4 .. :try_end_4c0} :catchall_4c0
+
+    :catchall_4c0
+    :try_start_4c0
+    move-exception v0
+
+    invoke-static {v0}, LX/0222;->A11(Ljava/lang/Throwable;)LX/02pD;
+
+    move-result-object v1
+
+    :goto_4c5
+    instance-of v0, v1, LX/02pD;
+
+    if-nez v0, :cond_4a8
+
+    if-eqz v1, :cond_4a8
+
+    invoke-virtual {v2, v1}, Ljava/util/AbstractCollection;->add(Ljava/lang/Object;)Z
+
+    goto :goto_4a8
+
+    :cond_4cf
+    sput-object v2, LX/0cby;->A00:Ljava/util/List;
+
+    invoke-interface {v2}, Ljava/util/List;->iterator()Ljava/util/Iterator;
+
+    move-result-object v2
+
+    :cond_4d5
+    :goto_4d5
+    invoke-interface {v2}, Ljava/util/Iterator;->hasNext()Z
+
+    move-result v0
+
+    if-eqz v0, :cond_4ef
+
+    invoke-static {v2}, LX/000H;->A0Q(Ljava/util/Iterator;)Ljava/lang/String;
+
+    move-result-object v1
+
+    invoke-virtual {v5, v1}, Landroid/media/MediaCodecInfo$CodecCapabilities;->isFeatureSupported(Ljava/lang/String;)Z
+
+    move-result v0
+
+    if-eqz v0, :cond_4d5
+
+    invoke-virtual {v14, v1}, Ljava/util/AbstractCollection;->add(Ljava/lang/Object;)Z
+
+    goto :goto_4d5
+    :try_end_4e9
+    .catchall {:try_start_4c0 .. :try_end_4e9} :catchall_4e9
+
+    :catchall_4e9
+    :try_start_4e9
+    move-exception v1
+
+    const-string v0, "MediaCodecInfoCollector_get_supported_features_error"
+
+    invoke-static {v0, v1}, LX/04AT;->A07(Ljava/lang/String;Ljava/lang/Throwable;)V
+
+    :cond_4ef
+    invoke-static {v14}, LX/04j9;->A02(Ljava/util/List;)LX/02oH;
+
+    move-result-object v0
+
+    const/4 v2, 0x0
+
+    invoke-static {v9, v10, v10, v0, v8}, LX/04k4;->A1A(Ljava/lang/CharSequence;Ljava/lang/CharSequence;Ljava/lang/CharSequence;Ljava/lang/Iterable;Lkotlin/jvm/functions/Function1;)Ljava/lang/String;
+
+    move-result-object v1
+
+    move-object/from16 v0, v17
+
+    invoke-static {v0, v1}, LX/000H;->A0Z(Ljava/lang/Object;Ljava/lang/Object;)LX/04oE;
+
+    move-result-object v3
+
+    const/4 v14, 0x2
+
+    move-object/from16 v1, v19
+
+    move-object/from16 v0, v18
+
+    filled-new-array {v1, v0, v3}, [LX/04oE;
+
+    move-result-object v0
+
+    invoke-static {v0}, LX/02pX;->A0G([LX/04oE;)Ljava/util/Map;
+
+    move-result-object v0
+
+    invoke-static {v6, v0}, LX/0bbU;->A00(LX/02hd;Ljava/util/Map;)V
+
+    invoke-static {v5}, LX/0cby;->A01(Landroid/media/MediaCodecInfo$CodecCapabilities;)Ljava/util/Map;
+
+    move-result-object v0
+
+    invoke-static {v6, v0}, LX/0bbU;->A00(LX/02hd;Ljava/util/Map;)V
+
+    invoke-virtual {v5}, Landroid/media/MediaCodecInfo$CodecCapabilities;->getEncoderCapabilities()Landroid/media/MediaCodecInfo$EncoderCapabilities;
+
+    move-result-object v4
+
+    if-nez v4, :cond_628
+
+    sget-object v2, LX/02tQ;->A00:LX/02tQ;
+
+    :goto_51d
+    invoke-static {v6, v2}, LX/0bbU;->A00(LX/02hd;Ljava/util/Map;)V
+
+    invoke-virtual {v5}, Landroid/media/MediaCodecInfo$CodecCapabilities;->getAudioCapabilities()Landroid/media/MediaCodecInfo$AudioCapabilities;
+
+    move-result-object v15
+
+    if-nez v15, :cond_5e3
+
+    sget-object v0, LX/02tQ;->A00:LX/02tQ;
+
+    :goto_528
+    invoke-static {v6, v0}, LX/0bbU;->A00(LX/02hd;Ljava/util/Map;)V
+
+    invoke-virtual {v5}, Landroid/media/MediaCodecInfo$CodecCapabilities;->getVideoCapabilities()Landroid/media/MediaCodecInfo$VideoCapabilities;
+
+    move-result-object v1
+
+    move-object/from16 v0, v22
+
+    invoke-virtual {v0, v1}, LX/0cby;->A03(Landroid/media/MediaCodecInfo$VideoCapabilities;)Ljava/util/Map;
+
+    move-result-object v0
+
+    invoke-static {v6, v0}, LX/0bbU;->A00(LX/02hd;Ljava/util/Map;)V
+
+    invoke-virtual {v13}, Landroid/media/MediaCodecInfo;->isEncoder()Z
+
+    move-result v0
+
+    if-eqz v0, :cond_68c
+
+    const-string v1, "video/avc"
+
+    const-string v0, "video/hevc"
+
+    filled-new-array {v1, v0}, [Ljava/lang/String;
+
+    move-result-object v0
+
+    invoke-static {v0}, Ljava/util/Arrays;->asList([Ljava/lang/Object;)Ljava/util/List;
+
+    move-result-object v0
+
+    invoke-interface {v0, v12}, Ljava/util/List;->contains(Ljava/lang/Object;)Z
+
+    move-result v0
+
+    if-eqz v0, :cond_68c
+
+    invoke-virtual {v5}, Landroid/media/MediaCodecInfo$CodecCapabilities;->getVideoCapabilities()Landroid/media/MediaCodecInfo$VideoCapabilities;
+
+    move-result-object v4
+
+    if-eqz v4, :cond_68c
+
+    sget-object v0, LX/0bbU;->A01:LX/0C8T;
+
+    invoke-static {v0}, LX/021Q;->A0w(LX/0C8T;)Ljava/util/List;
+
+    move-result-object v1
+
+    sget-object v0, LX/0bbU;->A00:LX/0C8T;
+
+    invoke-static {v0}, LX/021Q;->A0w(LX/0C8T;)Ljava/util/List;
+
+    move-result-object v19
+
+    move/from16 v0, v24
+
+    invoke-static {v1, v0}, LX/04l9;->A0j(Ljava/lang/Object;I)V
+
+    move-object/from16 v0, v19
+
+    invoke-static {v0, v14}, LX/04l9;->A0j(Ljava/lang/Object;I)V
+
+    invoke-static {}, LX/0020;->A0q()Ljava/util/LinkedHashMap;
+
+    move-result-object v3
+
+    invoke-interface {v1}, Ljava/util/List;->iterator()Ljava/util/Iterator;
+
+    move-result-object v18
+
+    :goto_574
+    invoke-interface/range {v18 .. v18}, Ljava/util/Iterator;->hasNext()Z
+
+    move-result v0
+
+    if-eqz v0, :cond_689
+
+    invoke-interface/range {v18 .. v18}, Ljava/util/Iterator;->next()Ljava/lang/Object;
+
+    move-result-object v2
+
+    check-cast v2, LX/0Hrf;
+
+    invoke-interface/range {v19 .. v19}, Ljava/util/List;->iterator()Ljava/util/Iterator;
+
+    move-result-object v17
+
+    :goto_584
+    invoke-interface/range {v17 .. v17}, Ljava/util/Iterator;->hasNext()Z
+
+    move-result v1
+
+    const/16 v14, 0x58
+
+    const-string v0, "enc_"
+
+    if-eqz v1, :cond_5c4
+
+    invoke-interface/range {v17 .. v17}, Ljava/util/Iterator;->next()Ljava/lang/Object;
+
+    move-result-object v15
+
+    check-cast v15, LX/0HRI;
+
+    invoke-static {v0}, LX/0248;->A15(Ljava/lang/String;)Ljava/lang/StringBuilder;
+
+    move-result-object v1
+
+    iget v0, v2, LX/0Hrf;->A01:I
+
+    move/from16 v31, v0
+
+    invoke-virtual {v1, v0}, Ljava/lang/StringBuilder;->append(I)Ljava/lang/StringBuilder;
+
+    invoke-virtual {v1, v14}, Ljava/lang/StringBuilder;->append(C)Ljava/lang/StringBuilder;
+
+    iget v14, v2, LX/0Hrf;->A00:I
+
+    invoke-virtual {v1, v14}, Ljava/lang/StringBuilder;->append(I)Ljava/lang/StringBuilder;
+
+    const/16 v0, 0x40
+
+    invoke-virtual {v1, v0}, Ljava/lang/StringBuilder;->append(C)Ljava/lang/StringBuilder;
+
+    iget v15, v15, LX/0HRI;->A00:I
+
+    invoke-virtual {v1, v15}, Ljava/lang/StringBuilder;->append(I)Ljava/lang/StringBuilder;
+
+    const-string v0, "fps"
+
+    invoke-static {v0, v1}, LX/000H;->A0O(Ljava/lang/String;Ljava/lang/StringBuilder;)Ljava/lang/String;
+
+    move-result-object v16
+
+    int-to-double v0, v15
+
+    move/from16 v15, v31
+
+    invoke-virtual {v4, v15, v14, v0, v1}, Landroid/media/MediaCodecInfo$VideoCapabilities;->areSizeAndRateSupported(IID)Z
+
+    move-result v1
+
+    move-object/from16 v0, v16
+
+    invoke-static {v0, v3, v1}, LX/0221;->A1Z(Ljava/lang/Object;Ljava/util/AbstractMap;Z)V
+
+    goto :goto_584
+
+    :cond_5c4
+    invoke-static {v0}, LX/0248;->A15(Ljava/lang/String;)Ljava/lang/StringBuilder;
+
+    move-result-object v1
+
+    iget v15, v2, LX/0Hrf;->A01:I
+
+    invoke-virtual {v1, v15}, Ljava/lang/StringBuilder;->append(I)Ljava/lang/StringBuilder;
+
+    invoke-virtual {v1, v14}, Ljava/lang/StringBuilder;->append(C)Ljava/lang/StringBuilder;
+
+    iget v2, v2, LX/0Hrf;->A00:I
+
+    invoke-virtual {v1, v2}, Ljava/lang/StringBuilder;->append(I)Ljava/lang/StringBuilder;
+
+    const-string v0, "@any"
+
+    invoke-static {v0, v1}, LX/000H;->A0O(Ljava/lang/String;Ljava/lang/StringBuilder;)Ljava/lang/String;
+
+    move-result-object v1
+
+    invoke-virtual {v4, v15, v2}, Landroid/media/MediaCodecInfo$VideoCapabilities;->isSizeSupported(II)Z
+
+    move-result v0
+
+    invoke-static {v1, v3, v0}, LX/0221;->A1Z(Ljava/lang/Object;Ljava/util/AbstractMap;Z)V
+
+    goto :goto_574
+
+    :cond_5e3
+    invoke-virtual {v15}, Landroid/media/MediaCodecInfo$AudioCapabilities;->getSupportedSampleRateRanges()[Landroid/util/Range;
+
+    move-result-object v4
+
+    invoke-virtual {v15}, Landroid/media/MediaCodecInfo$AudioCapabilities;->getBitrateRange()Landroid/util/Range;
+
+    move-result-object v0
+
+    if-eqz v0, :cond_626
+
+    invoke-virtual {v0}, Ljava/lang/Object;->toString()Ljava/lang/String;
+
+    move-result-object v1
+
+    :goto_5f1
+    const-string v0, "audio_bitrate_range"
+
+    invoke-static {v0, v1}, LX/000H;->A0Z(Ljava/lang/Object;Ljava/lang/Object;)LX/04oE;
+
+    move-result-object v3
+
+    invoke-virtual {v15}, Landroid/media/MediaCodecInfo$AudioCapabilities;->getMaxInputChannelCount()I
+
+    move-result v0
+
+    invoke-static {v0}, Ljava/lang/Integer;->valueOf(I)Ljava/lang/Integer;
+
+    move-result-object v1
+
+    const-string v0, "audio_max_input_channels"
+
+    invoke-static {v0, v1}, LX/000H;->A0Z(Ljava/lang/Object;Ljava/lang/Object;)LX/04oE;
+
+    move-result-object v2
+
+    if-eqz v4, :cond_60d
+
+    invoke-static {v9, v10, v10, v8, v4}, LX/02oI;->A0A(Ljava/lang/CharSequence;Ljava/lang/CharSequence;Ljava/lang/CharSequence;Lkotlin/jvm/functions/Function1;[Ljava/lang/Object;)Ljava/lang/String;
+
+    move-result-object v1
+
+    if-nez v1, :cond_61a
+
+    :cond_60d
+    invoke-virtual {v15}, Landroid/media/MediaCodecInfo$AudioCapabilities;->getSupportedSampleRates()[I
+
+    move-result-object v1
+
+    invoke-static {v1}, LX/04l9;->A0R(Ljava/lang/Object;)V
+
+    const-string v0, ";"
+
+    invoke-static {v0, v1}, LX/02oI;->A0C(Ljava/lang/CharSequence;[I)Ljava/lang/String;
+
+    move-result-object v1
+
+    :cond_61a
+    const-string v0, "audio_supported_sample_rates"
+
+    invoke-static {v0, v1, v3, v2}, LX/0112;->A1b(Ljava/lang/Object;Ljava/lang/Object;LX/04oE;LX/04oE;)[LX/04oE;
+
+    move-result-object v0
+
+    invoke-static {v0}, LX/02pX;->A0G([LX/04oE;)Ljava/util/Map;
+
+    move-result-object v0
+
+    goto/16 :goto_528
+
+    :cond_626
+    const/4 v1, 0x0
+
+    goto :goto_5f1
+
+    :cond_628
+    invoke-virtual {v4}, Landroid/media/MediaCodecInfo$EncoderCapabilities;->getComplexityRange()Landroid/util/Range;
+
+    move-result-object v0
+
+    if-eqz v0, :cond_632
+
+    invoke-virtual {v0}, Ljava/lang/Object;->toString()Ljava/lang/String;
+
+    move-result-object v2
+
+    :cond_632
+    const-string v0, "encoder_complexity_range"
+
+    invoke-static {v0, v2}, LX/000H;->A0Z(Ljava/lang/Object;Ljava/lang/Object;)LX/04oE;
+
+    move-result-object v3
+
+    const-string v2, "encoder_bitrate_modes"
+
+    new-instance v1, LX/02oH;
+
+    move/from16 v0, v16
+
+    invoke-direct {v1, v0}, LX/02oH;-><init>(I)V
+
+    invoke-virtual {v4, v14}, Landroid/media/MediaCodecInfo$EncoderCapabilities;->isBitrateModeSupported(I)Z
+
+    move-result v0
+
+    if-eqz v0, :cond_64c
+
+    const-string v0, "CBR"
+
+    invoke-virtual {v1, v0}, Ljava/util/AbstractCollection;->add(Ljava/lang/Object;)Z
+
+    :cond_64c
+    move/from16 v0, v24
+
+    invoke-virtual {v4, v0}, Landroid/media/MediaCodecInfo$EncoderCapabilities;->isBitrateModeSupported(I)Z
+
+    move-result v0
+
+    if-eqz v0, :cond_659
+
+    const-string v0, "VBR"
+
+    invoke-virtual {v1, v0}, Ljava/util/AbstractCollection;->add(Ljava/lang/Object;)Z
+
+    :cond_659
+    move/from16 v0, v23
+
+    invoke-virtual {v4, v0}, Landroid/media/MediaCodecInfo$EncoderCapabilities;->isBitrateModeSupported(I)Z
+
+    move-result v0
+
+    if-eqz v0, :cond_666
+
+    const-string v0, "CQ"
+
+    invoke-virtual {v1, v0}, Ljava/util/AbstractCollection;->add(Ljava/lang/Object;)Z
+
+    :cond_666
+    invoke-static {v1}, LX/04j9;->A02(Ljava/util/List;)LX/02oH;
+
+    move-result-object v0
+
+    invoke-static {v9, v10, v10, v0, v8}, LX/04k4;->A1A(Ljava/lang/CharSequence;Ljava/lang/CharSequence;Ljava/lang/CharSequence;Ljava/lang/Iterable;Lkotlin/jvm/functions/Function1;)Ljava/lang/String;
+
+    move-result-object v0
+
+    invoke-static {v2, v0, v3}, LX/0223;->A1b(Ljava/lang/Object;Ljava/lang/Object;LX/04oE;)[LX/04oE;
+
+    move-result-object v0
+
+    invoke-static {v0}, LX/02pX;->A09([LX/04oE;)Ljava/util/LinkedHashMap;
+
+    move-result-object v2
+
+    invoke-virtual {v4}, Landroid/media/MediaCodecInfo$EncoderCapabilities;->getQualityRange()Landroid/util/Range;
+
+    move-result-object v0
+
+    if-eqz v0, :cond_687
+
+    invoke-virtual {v0}, Ljava/lang/Object;->toString()Ljava/lang/String;
+
+    move-result-object v1
+
+    :goto_680
+    const-string v0, "encoder_quality_range"
+
+    invoke-virtual {v2, v0, v1}, Ljava/util/AbstractMap;->put(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;
+
+    goto/16 :goto_51d
+
+    :cond_687
+    const/4 v1, 0x0
+
+    goto :goto_680
+
+    :cond_689
+    invoke-static {v6, v3}, LX/0bbU;->A00(LX/02hd;Ljava/util/Map;)V
+
+    :cond_68c
+    move-object/from16 v0, v22
+
+    invoke-virtual {v0, v5, v13}, LX/0cby;->A02(Landroid/media/MediaCodecInfo$CodecCapabilities;Landroid/media/MediaCodecInfo;)Ljava/util/LinkedHashMap;
+
+    move-result-object v0
+
+    invoke-static {v6, v0}, LX/0bbU;->A00(LX/02hd;Ljava/util/Map;)V
+
+    goto :goto_6a0
+    :try_end_696
+    .catch Ljava/lang/Exception; {:try_start_4e9 .. :try_end_696} :catch_696
+
+    :catch_696
+    move-exception v0
+
+    :try_start_697
+    const-string v1, "extraction_error"
+
+    invoke-virtual {v0}, Ljava/lang/Throwable;->getMessage()Ljava/lang/String;
+
+    move-result-object v0
+
+    invoke-virtual {v6, v1, v0}, LX/02hd;->A0C(Ljava/lang/String;Ljava/lang/String;)V
+
+    :goto_6a0
+    const-string v0, "audio/eac3"
+
+    invoke-virtual {v12, v0}, Ljava/lang/String;->equalsIgnoreCase(Ljava/lang/String;)Z
+
+    move-result v0
+
+    if-eqz v0, :cond_6ce
+
+    invoke-static {v13}, LX/0btQ;->A02(Landroid/media/MediaCodecInfo;)Z
+
+    move-result v0
+
+    if-eqz v0, :cond_6ce
+
+    invoke-virtual/range {v28 .. v28}, LX/04i7;->getValue()Ljava/lang/Object;
+
+    move-result-object v0
+
+    invoke-static {v0}, LX/000H;->A0k(Ljava/lang/Object;)Z
+
+    move-result v0
+
+    if-eqz v0, :cond_6ce
+
+    invoke-static {v13}, LX/0btQ;->A00(Landroid/media/MediaCodecInfo;)Ljava/util/List;
+
+    move-result-object v15
+
+    :goto_6bc
+    iget-object v5, v6, LX/02hd;->A07:LX/02uT;
+
+    const/4 v2, 0x4
+
+    new-instance v1, LX/0FRB;
+
+    move-object/from16 v0, v32
+
+    invoke-direct {v1, v0, v2}, LX/0FRB;-><init>(Ljava/lang/Object;I)V
+
+    invoke-static {v1}, LX/06cv;->A00(Lkotlin/jvm/functions/Function0;)LX/0C8T;
+
+    move-result-object v16
+
+    const v3, 0x1eb83ece
+
+    goto :goto_6d1
+
+    :cond_6ce
+    sget-object v15, LX/04k5;->A00:LX/04k5;
+
+    goto :goto_6bc
+    :try_end_6d1
+    .catch Ljava/lang/Exception; {:try_start_697 .. :try_end_6d1} :catch_75c
+
+    :goto_6d1
+    :try_start_6d1
+    invoke-interface/range {v16 .. v16}, LX/0C8T;->getValue()Ljava/lang/Object;
+
+    move-result-object v0
+
+    check-cast v0, LX/02rM;
+
+    invoke-virtual {v0, v3}, LX/03e9;->markerStart(I)V
+
+    const/4 v12, 0x0
+
+    :goto_6db
+    move v14, v12
+
+    iget-object v4, v5, LX/02uT;->A00:LX/02he;
+
+    iget v0, v4, LX/02he;->A00:I
+
+    if-ge v12, v0, :cond_710
+
+    invoke-virtual {v4, v12}, LX/02he;->A02(I)Ljava/lang/String;
+
+    move-result-object v2
+
+    add-int/lit8 v12, v12, 0x1
+
+    mul-int/lit8 v0, v14, 0x2
+
+    add-int/lit8 v1, v0, 0x1
+
+    invoke-static {v4, v14, v1}, LX/02he;->A00(LX/02he;II)V
+
+    iget-object v0, v4, LX/02he;->A01:Ljava/util/ArrayList;
+
+    invoke-virtual {v0, v1}, Ljava/util/AbstractList;->get(I)Ljava/lang/Object;
+
+    move-result-object v0
+
+    new-instance v4, Landroid/util/Pair;
+
+    invoke-direct {v4, v2, v0}, Landroid/util/Pair;-><init>(Ljava/lang/Object;Ljava/lang/Object;)V
+
+    invoke-interface/range {v16 .. v16}, LX/0C8T;->getValue()Ljava/lang/Object;
+
+    move-result-object v2
+
+    check-cast v2, LX/02rM;
+
+    iget-object v0, v4, Landroid/util/Pair;->first:Ljava/lang/Object;
+
+    invoke-static {v0}, Ljava/lang/String;->valueOf(Ljava/lang/Object;)Ljava/lang/String;
+
+    move-result-object v1
+
+    iget-object v0, v4, Landroid/util/Pair;->second:Ljava/lang/Object;
+
+    invoke-static {v0}, Ljava/lang/String;->valueOf(Ljava/lang/Object;)Ljava/lang/String;
+
+    move-result-object v0
+
+    invoke-virtual {v2, v3, v1, v0}, LX/03e9;->markerAnnotate(ILjava/lang/String;Ljava/lang/String;)V
+
+    goto :goto_6db
+
+    :cond_710
+    invoke-interface {v15}, Ljava/util/List;->iterator()Ljava/util/Iterator;
+
+    move-result-object v4
+
+    :goto_714
+    invoke-interface {v4}, Ljava/util/Iterator;->hasNext()Z
+
+    move-result v0
+
+    if-eqz v0, :cond_730
+
+    invoke-static {v4}, LX/0129;->A16(Ljava/util/Iterator;)LX/04oE;
+
+    move-result-object v0
+
+    iget-object v2, v0, LX/04oE;->A00:Ljava/lang/Object;
+
+    check-cast v2, Ljava/lang/String;
+
+    iget-object v1, v0, LX/04oE;->A01:Ljava/lang/Object;
+
+    check-cast v1, Ljava/lang/String;
+
+    invoke-interface/range {v16 .. v16}, LX/0C8T;->getValue()Ljava/lang/Object;
+
+    move-result-object v0
+
+    check-cast v0, LX/02rM;
+
+    invoke-virtual {v0, v3, v2, v1}, LX/03e9;->markerAnnotate(ILjava/lang/String;Ljava/lang/String;)V
+
+    goto :goto_714
+
+    :cond_730
+    invoke-interface/range {v16 .. v16}, LX/0C8T;->getValue()Ljava/lang/Object;
+
+    move-result-object v0
+
+    check-cast v0, LX/02rM;
+
+    invoke-virtual {v0, v3}, LX/03e9;->A0Y(I)V
+
+    goto :goto_753
+    :try_end_73a
+    .catchall {:try_start_6d1 .. :try_end_73a} :catchall_73a
+
+    :catchall_73a
+    :try_start_73a
+    move-exception v0
+
+    invoke-interface/range {v16 .. v16}, LX/0C8T;->getValue()Ljava/lang/Object;
+
+    move-result-object v2
+
+    check-cast v2, LX/02rM;
+
+    const-string v1, "error"
+
+    invoke-virtual {v0}, Ljava/lang/Object;->toString()Ljava/lang/String;
+
+    move-result-object v0
+
+    invoke-virtual {v2, v3, v1, v0}, LX/03e9;->markerAnnotate(ILjava/lang/String;Ljava/lang/String;)V
+
+    invoke-interface/range {v16 .. v16}, LX/0C8T;->getValue()Ljava/lang/Object;
+
+    move-result-object v0
+
+    check-cast v0, LX/02rM;
+
+    invoke-virtual {v0, v3}, LX/03e9;->A0Z(I)V
+
+    :goto_753
+    invoke-static/range {v32 .. v32}, LX/02uU;->A00(LX/04BG;)LX/0Kv4;
+
+    move-result-object v0
+
+    invoke-interface {v0, v6}, LX/0nDz;->GPi(LX/02hd;)V
+
+    goto/16 :goto_346
+    :try_end_75c
+    .catch Ljava/lang/Exception; {:try_start_73a .. :try_end_75c} :catch_75c
+
+    :catch_75c
+    move-exception v2
+
+    const-string v1, "Error During MediaCodec info reporting"
+
+    const-string v0, "MediaCodecInfoReporter"
+
+    invoke-static {v0, v2, v1}, LX/00Iv;->A0O(Ljava/lang/String;Ljava/lang/Throwable;Ljava/lang/String;)V
+
+    :cond_764
+    move-object/from16 v1, v33
+
+    move-object/from16 v0, v32
+
+    invoke-static {v1, v0}, LX/0knW;->A01(Landroid/content/Context;LX/02rJ;)V
+
+    return-void
+
+    :pswitch_data_76c
+    .packed-switch 0x0
+        :pswitch_1cc
+        :pswitch_1cf
+        :pswitch_1d2
+        :pswitch_1d5
+        :pswitch_1d8
+        :pswitch_1db
+        :pswitch_1de
+        :pswitch_1e1
+        :pswitch_1e4
+        :pswitch_1e7
+        :pswitch_1ea
+        :pswitch_1ed
+    .end packed-switch
+.end method
