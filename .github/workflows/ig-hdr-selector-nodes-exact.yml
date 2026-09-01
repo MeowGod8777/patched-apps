@@ -1,0 +1,149 @@
+name: IG 439 HDR Selector Nodes Exact
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - .github/workflows/ig-hdr-selector-nodes-exact.yml
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  probe:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    env:
+      APK_NAME: instagram-piko-v439.0.0.37.89-arm64-v8a.apk
+      APK_SHA256: 4015b171ac59f3e7172134d194ec2dcf701f64c3339f127c19d7a04c13d529c8
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+      - name: Download and disassemble exact R8
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          set -euo pipefail
+          mkdir -p work/dex work/dis research/generated
+          gh release download 8 --pattern "$APK_NAME" --dir work
+          echo "$APK_SHA256  work/$APK_NAME" | sha256sum -c -
+          unzip -j "work/$APK_NAME" 'classes*.dex' -d work/dex
+          DEXDUMP="$(find "$ANDROID_HOME/build-tools" -type f -name dexdump | sort -V | tail -1)"
+          for d in work/dex/classes*.dex; do
+            b="$(basename "$d" .dex)"
+            "$DEXDUMP" -d -f -h "$d" > "work/dis/$b.txt"
+          done
+      - name: Extract exact selector nodes
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          from pathlib import Path
+          import re
+          from collections import defaultdict
+
+          hr=re.compile(r'\|\[[0-9a-f]+\]\s+([^\s]+):')
+          inv=re.compile(r'invoke-[^,]+.*?\s(L[^;]+;\.[^:]+:\([^\n ]*?\)[^\s/]+)')
+          methods=[]
+          class_chunks=[]
+          def sig(h):
+              m=re.match(r'X\.([^.]+)\.([^:]+):(.*)$',h)
+              return f'LX/{m.group(1)};.{m.group(2)}:{m.group(3)}' if m else None
+          for p in sorted(Path('work/dis').glob('classes*.txt')):
+              lines=p.read_text(errors='replace').splitlines()
+              starts=[]; heads=[]
+              for i,l in enumerate(lines):
+                  m=hr.search(l)
+                  if m: starts.append(i); heads.append(m.group(1))
+              for j,s in enumerate(starts):
+                  e=starts[j+1] if j+1<len(starts) else len(lines)
+                  methods.append({'file':p.name,'s':s+1,'e':e,'head':heads[j],'sig':sig(heads[j]),'body':lines[s:e]})
+              for target in ('LX/00pG;','LX/00OZ;','LX/0XPs;','LX/0XQ2;','LX/0khY;'):
+                  for i,l in enumerate(lines):
+                      if f"Class descriptor  : '{target}'" in l:
+                          class_chunks.append((target,p.name,i+1,lines[i:min(len(lines),i+260)]))
+                          break
+
+          rev=defaultdict(set)
+          for i,m in enumerate(methods):
+              for t in inv.findall('\n'.join(m['body'])): rev[t].add(i)
+
+          out=['Instagram 439 exact selector-node trace','=======================================',f'APK SHA256: {"4015b171ac59f3e7172134d194ec2dcf701f64c3339f127c19d7a04c13d529c8"}','']
+          def emit(m,label,semantic=False,cap=700):
+              out.append(f'===== {label} :: {m["file"]}:{m["s"]}-{m["e"]} :: {m["head"]} =====')
+              if not semantic:
+                  out.extend(x.rstrip() for x in m['body'][:cap])
+              else:
+                  toks=('invoke-','iget-','iput-','sget-','sput-','const-string','new-instance','check-cast','instance-of','if-','switch','return-',
+                        'video/','av01','hdr','HDR','profile','Profile','color','Color','codec','Codec','mime','Mime','bitrate','width','height','frame',
+                        'LX/096x;','LX/03oR;','LX/08ti;','LX/08tp;','LX/08rn;','LX/00OZ;','LX/08ui;')
+                  xs=[x.rstrip() for x in m['body'] if any(t in x for t in toks)]
+                  out.extend(xs[:cap])
+              out.append('')
+
+          # Node A: direct representation iterator that detects AV1 then invokes 00OZ.A00.
+          a=[]
+          for i,m in enumerate(methods):
+              txt='\n'.join(m['body'])
+              if 'LX/096x;' in txt and 'video/av01' in txt and 'LX/00OZ;.A00:' in txt:
+                  a.append(i); emit(m,'REPRESENTATION AV1 -> 00OZ NODE',False,1200)
+          out.append(f'REPRESENTATION_AV1_00OZ_NODE_COUNT={len(a)}\n')
+
+          # Exact 00OZ definition(s), all direct callers and class header.
+          oz=[]
+          for i,m in enumerate(methods):
+              if m['head'].startswith('X.00OZ.'):
+                  oz.append(i); emit(m,'X.00OZ DEFINITION',False,1000)
+          oz_sigs=[methods[i]['sig'] for i in oz if methods[i]['sig']]
+          callers=set()
+          for s in oz_sigs: callers.update(rev.get(s,()))
+          out.append(f'X_00OZ_CALLER_COUNT={len(callers)}')
+          for i in sorted(callers): emit(methods[i],'DIRECT CALLER OF X.00OZ',True,500)
+
+          # Node B: X.00pG full class methods and every constructor caller.
+          pg=[]
+          for i,m in enumerate(methods):
+              if m['head'].startswith('X.00pG.'):
+                  pg.append(i); emit(m,'X.00pG DEFINITION',False,1100)
+          ctor_sigs=[methods[i]['sig'] for i in pg if methods[i]['head'].startswith('X.00pG.<init>') and methods[i]['sig']]
+          pg_call=set()
+          for s in ctor_sigs: pg_call.update(rev.get(s,()))
+          # Also catch invoke-direct by prefix in case signature parser differs.
+          for i,m in enumerate(methods):
+              if 'LX/00pG;.<init>:' in '\n'.join(m['body']): pg_call.add(i)
+          out.append(f'X_00pG_CONSTRUCTOR_CALLER_COUNT={len(pg_call)}')
+          for i in sorted(pg_call): emit(methods[i],'X.00pG CONSTRUCTOR CALLER',True,700)
+
+          # Node C: representation-rebuilding filters seen in prior report + helper.
+          for prefix in ('X.0XPs.','X.0XQ2.','X.0khY.'):
+              defs=[i for i,m in enumerate(methods) if m['head'].startswith(prefix)]
+              for i in defs: emit(methods[i],f'{prefix} DEFINITION',False,900)
+              ss=[methods[i]['sig'] for i in defs if methods[i]['sig']]
+              cc=set()
+              for s in ss: cc.update(rev.get(s,()))
+              out.append(f'{prefix}_CALLER_COUNT={len(cc)}')
+              for i in sorted(cc): emit(methods[i],f'CALLER OF {prefix}',True,450)
+
+          # Class headers / superclass / field inventory.
+          for target,p,ln,chunk in class_chunks:
+              out.append(f'===== CLASS HEADER {target} :: {p}:{ln} =====')
+              for x in chunk:
+                  if any(k in x for k in ('Class descriptor','Superclass','Interfaces','source_file','static fields','instance fields','name          :','type          :','access        :')):
+                      out.append(x.rstrip())
+              out.append('')
+
+          path=Path('research/generated/instagram_439_hdr_selector_nodes_exact.txt')
+          path.write_text('\n'.join(out)+'\n',encoding='utf-8')
+          if path.stat().st_size < 1000: raise SystemExit('unexpectedly small report')
+          print(path.read_text()[:220000])
+          PY
+      - name: Commit report
+        run: |
+          set -euo pipefail
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add research/generated/instagram_439_hdr_selector_nodes_exact.txt
+          if ! git diff --cached --quiet; then git commit -m "Trace Instagram 439 exact selector nodes"; fi
+          git pull --rebase origin main
+          git push origin HEAD:main
