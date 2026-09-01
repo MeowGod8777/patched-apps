@@ -1,0 +1,115 @@
+name: IG 439 HDR Reels Media Stream R19f
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - .github/workflows/ig-hdr-reels-media-stream-r19f.yml
+
+permissions:
+  contents: write
+
+jobs:
+  trace:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    env:
+      APK_NAME: instagram-piko-v439.0.0.37.89-arm64-v8a.apk
+      APK_SHA256: 4015b171ac59f3e7172134d194ec2dcf701f64c3339f127c19d7a04c13d529c8
+    steps:
+      - uses: actions/checkout@v6
+        with: {fetch-depth: 0}
+      - uses: actions/setup-java@v5
+        with:
+          distribution: zulu
+          java-version: '21'
+      - name: Fetch exact APK and disassemble focused dexes
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          set -euo pipefail
+          mkdir -p work/apk work/smali research/generated
+          gh release download 8 --pattern "$APK_NAME" --dir work
+          echo "$APK_SHA256  work/$APK_NAME" | sha256sum -c -
+          gh release download 3.0.10 --repo baksmali/smali --pattern 'baksmali-3.0.10-fat.jar' --dir work
+          unzip -q "work/$APK_NAME" 'classes*.dex' -d work/apk
+          : > work/hitdex.txt
+          for d in work/apk/classes*.dex; do
+            if strings -a "$d" | grep -Eq 'feed/reels_media_stream/|X-IG-Accept-Hint|LX/03Hy|LX/02qh'; then
+              basename "$d" >> work/hitdex.txt
+            fi
+          done
+          grep -qx 'classes15.dex' work/hitdex.txt || echo classes15.dex >> work/hitdex.txt
+          sort -u work/hitdex.txt -o work/hitdex.txt
+          cat work/hitdex.txt
+          while read d; do
+            [ -n "$d" ] || continue
+            n="${d%.dex}"
+            java -jar work/baksmali-3.0.10-fat.jar d "work/apk/$d" -o "work/smali/$n" >/dev/null &
+          done < work/hitdex.txt
+          wait
+
+      - name: Extract exact media stream path
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          from pathlib import Path
+          import re
+          root=Path('work/smali')
+          O=['Instagram 439 HDR Reels media-stream R19f','========================================','']
+          cr=re.compile(r'^\.class\s+.*\s+(L[^;]+;)$')
+          def meths(p):
+            ls=p.read_text(errors='replace').splitlines(); cls='?'
+            for x in ls[:50]:
+              m=cr.match(x)
+              if m: cls=m.group(1); break
+            i=0
+            while i<len(ls):
+              if not ls[i].startswith('.method'): i+=1; continue
+              s=i; i+=1
+              while i<len(ls) and not ls[i].startswith('.end method'): i+=1
+              e=min(i,len(ls)-1)
+              yield cls,ls[s],ls[s:e+1],p
+              i+=1
+
+          # Full relevant small classes.
+          for name in ('03Hy.smali','02qh.smali','02po.smali'):
+            for p in root.rglob(name):
+              O += [f'===== FULL CLASS {name} FILE={p} ====='] + p.read_text(errors='replace').splitlines() + ['']
+
+          targets=('feed/reels_media_stream/','feed/reels','X-IG-Accept-Hint')
+          O += ['===== METHODS CONTAINING ROUTE / ACCEPT HINT =====','']
+          for p in root.rglob('*.smali'):
+            for cls,sig,b,path in meths(p):
+              text='\n'.join(b)
+              hits=[x for x in targets if x in text]
+              if hits:
+                O += [f'--- {cls} {sig}',f'FILE={path}',f'HITS={hits}']+b+['']
+
+          O += ['===== CALLERS OF LX/03Hy.A00 =====','']
+          needle='LX/03Hy;->A00(Lcom/instagram/common/session/UserSession;LX/07b1;LX/02po;Ljava/lang/String;Ljava/lang/String;Ljava/util/Map;Ljava/util/Set;)LX/02ue;'
+          count=0
+          for p in root.rglob('*.smali'):
+            for cls,sig,b,path in meths(p):
+              text='\n'.join(b)
+              if needle in text:
+                count+=1
+                O += [f'--- {cls} {sig}',f'FILE={path}']+b+['']
+          O += [f'CALLER_COUNT={count}','']
+
+          Path('research/generated/instagram_439_hdr_reels_media_stream_r19f.txt').write_text('\n'.join(O),encoding='utf-8')
+          print('\n'.join(O)[:250000])
+          PY
+
+      - name: Commit R19f report
+        run: |
+          set -euo pipefail
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add research/generated/instagram_439_hdr_reels_media_stream_r19f.txt
+          if ! git diff --cached --quiet; then
+            git commit -m 'Add exact Reels media-stream trace R19f'
+            git pull --rebase origin main
+            git push origin HEAD:main
+          fi
