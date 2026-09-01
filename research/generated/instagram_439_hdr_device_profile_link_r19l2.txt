@@ -1,0 +1,2713 @@
+Instagram 439 HDR device-profile linkage R19l2
+==========================================
+
+SEED_COUNT=7
+
+===== SEED ['key_display_hdr_supported', 'key_video_decoder_hdr_supported'] LX/0Uiy; .method public final run()V FILE=work/smali/c4/X/0Uiy.smali =====
+.method public final run()V
+    .registers 7
+
+    iget-object v4, p0, LX/0Uiy;->A00:Ljava/lang/Object;
+
+    check-cast v4, [Ljava/lang/Object;
+
+    iget-object v3, p0, LX/0Uiy;->A01:LX/03Tz;
+
+    invoke-static {v3}, LX/0020;->A1Z(LX/00vy;)Z
+
+    move-result v0
+
+    if-eqz v0, :cond_95b
+
+    if-eqz v4, :cond_95b
+
+    const/4 v0, 0x0
+
+    aget-object v1, v4, v0
+
+    check-cast v1, Ljava/lang/Long;
+
+    const-string v0, "key_ram_total_kb"
+
+    invoke-virtual {v3, v0, v1}, LX/00vy;->A0p(Ljava/lang/String;Ljava/lang/Long;)V
+
+    const/4 v2, 0x1
+
+    aget-object v0, v4, v2
+
+    check-cast v0, Ljava/lang/Number;
+
+    const/4 v5, 0x0
+
+    invoke-static {v0}, LX/0021;->A06(Ljava/lang/Number;)Ljava/lang/Long;
+
+    move-result-object v1
+
+    const-string v0, "key_cpu_num_cores"
+
+    invoke-virtual {v3, v0, v1}, LX/00vy;->A0p(Ljava/lang/String;Ljava/lang/Long;)V
+
+    const/4 v0, 0x2
+
+    invoke-static {v4, v0}, LX/0Uiy;->A00([Ljava/lang/Object;I)Ljava/lang/Long;
+
+    move-result-object v1
+
+    const-string v0, "key_cpu_max_frequency_mhz"
+
+    invoke-virtual {v3, v0, v1}, LX/00vy;->A0p(Ljava/lang/String;Ljava/lang/Long;)V
+
+    const/4 v0, 0x3
+
+    invoke-static {v0, v4}, LX/0Uiy;->A01(I[Ljava/lang/Object;)Ljava/lang/String;
+
+    move-result-object v1
+
+    const-string v0, "key_display_size_pixels"
+
+    invoke-virtual {v3, v0, v1}, LX/00vy;->A0q(Ljava/lang/String;Ljava/lang/String;)V
+
+    const/4 v0, 0x4
+
+    aget-object v0, v4, v0
+
+    check-cast v0, Ljava/lang/Number;
+
+    invoke-static {v0}, LX/0021;->A04(Ljava/lang/Number;)Ljava/lang/Double;
+
+    move-result-object v1
+
+    const-string v0, "key_display_max_refresh_rate_fps"
+
+    invoke-virtual {v3, v0, v1}, LX/00vy;->A0o(Ljava/lang/String;Ljava/lang/Double;)V
+
+    const/4 v0, 0x5
+
+    aget-object v1, v4, v0
+
+    check-cast v1, Ljava/lang/Boolean;
+
+    const-string v0, "key_display_hdr_supported"
+
+    invoke-virtual {v3, v0, v1}, LX/00vy;->A0n(Ljava/lang/String;Ljava/lang/Boolean;)V
+
+    const/4 v0, 0x6
+
+    aget-object v1, v4, v0
+
+    check-cast v1, Ljava/lang/Boolean;
+
+    const-string v0, "key_display_wide_colour_gamut_supported"
+
+    invoke-virtual {v3, v0, v1}, LX/00vy;->A0n(Ljava/lang/String;Ljava/lang/Boolean;)V
+
+    const/4 v0, 0x7
+
+    aget-object v1, v4, v0
+
+    check-cast v1, Ljava/lang/Boolean;
+
+    const-string v0, "key_camera_back_facing_present"
+
+    invoke-virtual {v3, v0, v1}, LX/00vy;->A0n(Ljava/lang/String;Ljava/lang/Boolean;)V
+
+    const/16 v0, 0x8
+
+    aget-object v1, v4, v0
+
+    check-cast v1, Ljava/lang/Boolean;
+
+    const-string v0, "key_camera_front_facing_present"
+
+    invoke-virtual {v3, v0, v1}, LX/00vy;->A0n(Ljava/lang/String;Ljava/lang/Boolean;)V
+
+    const/16 v0, 0x9
+
+    aget-object v1, v4, v0
+
+    check-cast v1, Ljava/lang/Boolean;
+
+    const-string v0, "key_camera_autofocus_supported"
+
+    invoke-virtual {v3, v0, v1}, LX/00vy;->A0n(Ljava/lang/String;Ljava/lang/Boolean;)V
+
+    const/16 v0, 0xa
+
+    aget-object v1, v4, v0
+
+    check-cast v1, Ljava/lang/Boolean;
+
+    const-string v0, "key_camera_motion_tracking_supported"
+
+    invoke-virtual {v3, v0, v1}, LX/00vy;->A0n(Ljava/lang/String;Ljava/lang/Boolean;)V
+
+    const/16 v0, 0xb
+
+    aget-object v1, v4, v0
+
+    check-cast v1, Ljava/lang/Boolean;
+
+    const-string v0, "key_camera_flash_supported"
+
+    invoke-virtual {v3, v0, v1}, LX/00vy;->A0n(Ljava/lang/String;Ljava/lang/Boolean;)V
+
+    const/16 v0, 0xc
+
+    aget-object v1, v4, v0
+
+    check-cast v1, Ljava/lang/Boolean;
+
+    const-string v0, "key_camera_is_full_hardware_level"
+
+    invoke-virtual {v3, v0, v1}, LX/00vy;->A0n(Ljava/lang/String;Ljava/lang/Boolean;)V
+
+    const/16 v0, 0xd
+
+    aget-object v1, v4, v0
+
+    check-cast v1, Ljava/lang/Boolean;
+
+    const-string v0, "key_camera_concurrent_capture_supported"
+
+    invoke-virtual {v3, v0, v1}, LX/00vy;->A0n(Ljava/lang/String;Ljava/lang/Boolean;)V
+
+    const/16 v0, 0xe
+
+    aget-object v1, v4, v0
+
+    check-cast v1, Ljava/lang/Boolean;
+
+    const-string v0, "key_camera_manual_post_processing_supported"
+
+    invoke-virtual {v3, v0, v1}, LX/00vy;->A0n(Ljava/lang/String;Ljava/lang/Boolean;)V
+
+    const/16 v0, 0xf
+
+    aget-object v1, v4, v0
+
+    check-cast v1, Ljava/lang/Boolean;
+
+    const-string v0, "key_camera_manual_sensor_supported"
+
+    invoke-virtual {v3, v0, v1}, LX/00vy;->A0n(Ljava/lang/String;Ljava/lang/Boolean;)V
+
+    const/16 v0, 0x10
+
+    aget-object v1, v4, v0
+
+    check-cast v1, Ljava/lang/Boolean;
+
+    const-string v0, "key_video_av1_hardware_encoder_max_instances"
+
+    invoke-virtual {v3, v0, v1}, LX/00vy;->A0p(Ljava/lang/String;Ljava/lang/Long;)V
+
+    const/16 v0, 0x3f
+
+    aget-object v1, v4, v0
+
+    check-cast v1, Ljava/lang/Boolean;
+
+    const-string v0, "key_video_vp9_software_decoder_supported"
+
+    invoke-virtual {v3, v0, v1}, LX/00vy;->A0n(Ljava/lang/String;Ljava/lang/Boolean;)V
+
+    const/16 v0, 0x40
+
+    invoke-static {v4, v0}, LX/0Uiy;->A00([Ljava/lang/Object;I)Ljava/lang/Long;
+
+    move-result-object v1
+
+    const-string v0, "key_video_vp9_software_decoder_max_instances"
+
+    invoke-virtual {v3, v0, v1}, LX/00vy;->A0p(Ljava/lang/String;Ljava/lang/Long;)V
+
+    const/16 v0, 0x41
+
+    aget-object v1, v4, v0
+
+    check-cast v1, Ljava/lang/Boolean;
+
+    const-string v0, "key_video_vp9_hardware_decoder_supported"
+
+    invoke-virtual {v3, v0, v1}, LX/00vy;->A0n(Ljava/lang/String;Ljava/lang/Boolean;)V
+
+    const/16 v0, 0x42
+
+    invoke-static {v4, v0}, LX/0Uiy;->A00([Ljava/lang/Object;I)Ljava/lang/Long;
+
+    move-result-object v1
+
+    const-string v0, "key_video_vp9_hardware_decoder_max_instances"
+
+    invoke-virtual {v3, v0, v1}, LX/00vy;->A0p(Ljava/lang/String;Ljava/lang/Long;)V
+
+    const/16 v0, 0x43
+
+    aget-object v1, v4, v0
+
+    check-cast v1, Ljava/lang/Boolean;
+
+    const-string v0, "key_video_vp9_software_encoder_supported"
+
+    invoke-virtual {v3, v0, v1}, LX/00vy;->A0n(Ljava/lang/String;Ljava/lang/Boolean;)V
+
+    const/16 v0, 0x44
+
+    invoke-static {v4, v0}, LX/0Uiy;->A00([Ljava/lang/Object;I)Ljava/lang/Long;
+
+    move-result-object v1
+
+    const-string v0, "key_video_vp9_software_encoder_max_instances"
+
+    invoke-virtual {v3, v0, v1}, LX/00vy;->A0p(Ljava/lang/String;Ljava/lang/Long;)V
+
+    const/16 v0, 0x45
+
+    aget-object v1, v4, v0
+
+    check-cast v1, Ljava/lang/Boolean;
+
+    const-string v0, "key_video_vp9_hardware_encoder_supported"
+
+    invoke-virtual {v3, v0, v1}, LX/00vy;->A0n(Ljava/lang/String;Ljava/lang/Boolean;)V
+
+    const/16 v0, 0x46
+
+    invoke-static {v4, v0}, LX/0Uiy;->A00([Ljava/lang/Object;I)Ljava/lang/Long;
+
+    move-result-object v1
+
+    const-string v0, "key_video_vp9_hardware_encoder_max_instances"
+
+    invoke-virtual {v3, v0, v1}, LX/00vy;->A0p(Ljava/lang/String;Ljava/lang/Long;)V
+
+    const/16 v0, 0x47
+
+    aget-object v1, v4, v0
+
+    check-cast v1, Ljava/lang/Boolean;
+
+    const-string v0, "key_video_decoder_hdr_supported"
+
+    invoke-virtual {v3, v0, v1}, LX/00vy;->A0n(Ljava/lang/String;Ljava/lang/Boolean;)V
+
+    const/16 v0, 0x48
+
+    aget-object v1, v4, v0
+
+    check-cast v1, Ljava/lang/Boolean;
+
+    const-string v0, "key_video_encoder_hdr_supported"
+
+    invoke-virtual {v3, v0, v1}, LX/00vy;->A0n(Ljava/lang/String;Ljava/lang/Boolean;)V
+
+    const/16 v0, 0x49
+
+    invoke-static {v0, v4}, LX/0Uiy;->A01(I[Ljava/lang/Object;)Ljava/lang/String;
+
+    move-result-object v1
+
+    const-string v0, "key_camera_back_sensor_pixel_resolution"
+
+    invoke-virtual {v3, v0, v1}, LX/00vy;->A0q(Ljava/lang/String;Ljava/lang/String;)V
+
+    const/16 v0, 0x4a
+
+    invoke-static {v0, v4}, LX/0Uiy;->A01(I[Ljava/lang/Object;)Ljava/lang/String;
+
+    move-result-object v1
+
+    const-string v0, "key_camera_front_sensor_pixel_resolution"
+
+    invoke-virtual {v3, v0, v1}, LX/00vy;->A0q(Ljava/lang/String;Ljava/lang/String;)V
+
+    const/16 v0, 0x4b
+
+    invoke-static {v0, v4}, LX/0Uiy;->A01(I[Ljava/lang/Object;)Ljava/lang/String;
+
+    move-result-object v1
+
+    const-string v0, "key_camera_back_sensor_physical_size_mm"
+
+    invoke-virtual {v3, v0, v1}, LX/00vy;->A0q(Ljava/lang/String;Ljava/lang/String;)V
+
+    const/16 v0, 0x4c
+
+    invoke-static {v0, v4}, LX/0Uiy;->A01(I[Ljava/lang/Object;)Ljava/lang/String;
+
+    move-result-object v1
+
+    const-string v0, "key_camera_front_sensor_physical_size_mm"
+
+    invoke-virtual {v3, v0, v1}, LX/00vy;->A0q(Ljava/lang/String;Ljava/lang/String;)V
+
+    const/16 v0, 0x4d
+
+    invoke-static {v0, v4}, LX/0Uiy;->A01(I[Ljava/lang/Object;)Ljava/lang/String;
+
+    move-result-object v1
+
+    const-string v0, "key_camera_front_jpeg_photo_max_pixel_resolution"
+
+    invoke-virtual {v3, v0, v1}, LX/00vy;->A0q(Ljava/lang/String;Ljava/lang/String;)V
+
+    const/16 v0, 0x4e
+
+    invoke-static {v0, v4}, LX/0Uiy;->A01(I[Ljava/lang/Object;)Ljava/lang/String;
+
+    move-result-object v1
+
+    const-string v0, "key_camera_back_jpeg_photo_max_pixel_resolution"
+
+    invoke-virtual {v3, v0, v1}, LX/00vy;->A0q(Ljava/lang/String;Ljava/lang/String;)V
+
+    const/16 v0, 0x4f
+
+    invoke-static {v0, v4}, LX/0Uiy;->A01(I[Ljava/lang/Object;)Ljava/lang/String;
+
+    move-result-object v1
+
+    const-string v0, "key_camera_front_raw_photo_max_pixel_resolution"
+
+    invoke-virtual {v3, v0, v1}, LX/00vy;->A0q(Ljava/lang/String;Ljava/lang/String;)V
+
+    const/16 v0, 0x50
+
+    invoke-static {v0, v4}, LX/0Uiy;->A01(I[Ljava/lang/Object;)Ljava/lang/String;
+
+    move-result-object v1
+
+    const-string v0, "key_camera_back_raw_photo_max_pixel_resolution"
+
+    invoke-virtual {v3, v0, v1}, LX/00vy;->A0q(Ljava/lang/String;Ljava/lang/String;)V
+
+    const/16 v0, 0x51
+
+    invoke-static {v0, v4}, LX/0Uiy;->A01(I[Ljava/lang/Object;)Ljava/lang/String;
+
+    move-result-object v1
+
+    const-string v0, "key_camera_front_raw10_photo_max_pixel_resolution"
+
+    invoke-virtual {v3, v0, v1}, LX/00vy;->A0q(Ljava/lang/String;Ljava/lang/String;)V
+
+    const/16 v0, 0x52
+
+    invoke-static {v0, v4}, LX/0Uiy;->A01(I[Ljava/lang/Object;)Ljava/lang/String;
+
+    move-result-object v1
+
+
+===== SEED ['com.facebook.devicesegmentation'] LX/0hqj; .method public static A04(Landroid/content/Context;Landroid/content/SharedPreferences;LX/0fKx;)LX/0dkb; FILE=work/smali/c12/X/0hqj.smali =====
+.method public static A04(Landroid/content/Context;Landroid/content/SharedPreferences;LX/0fKx;)LX/0dkb;
+    .registers 11
+
+    iget-object v7, p2, LX/0fKx;->A01:Ljava/lang/String;
+
+    const-string v4, "com.facebook.devicesegmentation.NOT_STORED"
+
+    invoke-interface {p1, v7, v4}, Landroid/content/SharedPreferences;->getString(Ljava/lang/String;Ljava/lang/String;)Ljava/lang/String;
+
+    move-result-object v3
+
+    invoke-static {v3}, LX/00Oi;->A02(Ljava/lang/Object;)V
+
+    invoke-virtual {v3, v4}, Ljava/lang/String;->equals(Ljava/lang/Object;)Z
+
+    move-result v0
+
+    const/4 v6, 0x0
+
+    const/16 v5, 0x78
+
+    if-nez v0, :cond_48
+
+    invoke-virtual {v3, v5}, Ljava/lang/String;->indexOf(I)I
+
+    move-result v2
+
+    if-lez v2, :cond_48
+
+    invoke-virtual {v3}, Ljava/lang/String;->length()I
+
+    move-result v0
+
+    add-int/lit8 v1, v2, 0x1
+
+    if-le v0, v1, :cond_48
+
+    invoke-virtual {v3, v6, v2}, Ljava/lang/String;->substring(II)Ljava/lang/String;
+
+    move-result-object v0
+
+    invoke-static {v0}, Ljava/lang/Float;->parseFloat(Ljava/lang/String;)F
+
+    move-result v2
+
+    invoke-virtual {v3, v1}, Ljava/lang/String;->substring(I)Ljava/lang/String;
+
+    move-result-object v0
+
+    invoke-static {v0}, Ljava/lang/Float;->parseFloat(Ljava/lang/String;)F
+
+    move-result v1
+
+    new-instance v4, LX/0dkb;
+
+    invoke-direct {v4}, Ljava/lang/Object;-><init>()V
+
+    const-string v0, "width"
+
+    invoke-static {v0, v2}, LX/00Oi;->A04(Ljava/lang/String;F)V
+
+    iput v2, v4, LX/0dkb;->A01:F
+
+    const-string v0, "height"
+
+    invoke-static {v0, v1}, LX/00Oi;->A04(Ljava/lang/String;F)V
+
+    iput v1, v4, LX/0dkb;->A00:F
+
+    :goto_45
+    sput v6, Lredex/$StoreFenceHelper;->DUMMY_VOLATILE:I
+
+    return-object v4
+
+    :cond_48
+    invoke-static {p0, p1}, LX/0hqj;->A08(Landroid/content/Context;Landroid/content/SharedPreferences;)V
+
+    invoke-interface {p1, v7, v4}, Landroid/content/SharedPreferences;->getString(Ljava/lang/String;Ljava/lang/String;)Ljava/lang/String;
+
+    move-result-object v4
+
+    invoke-static {v4}, LX/00Oi;->A02(Ljava/lang/Object;)V
+
+    const/4 v3, 0x0
+
+    :try_start_53
+    invoke-virtual {v4, v5}, Ljava/lang/String;->indexOf(I)I
+
+    move-result v2
+
+    if-lez v2, :cond_85
+
+    invoke-virtual {v4}, Ljava/lang/String;->length()I
+
+    move-result v0
+
+    add-int/lit8 v1, v2, 0x1
+
+    if-le v0, v1, :cond_85
+
+    invoke-virtual {v4, v6, v2}, Ljava/lang/String;->substring(II)Ljava/lang/String;
+
+    move-result-object v0
+
+    invoke-static {v0}, Ljava/lang/Float;->parseFloat(Ljava/lang/String;)F
+
+    move-result v2
+
+    invoke-virtual {v4, v1}, Ljava/lang/String;->substring(I)Ljava/lang/String;
+
+    move-result-object v0
+
+    invoke-static {v0}, Ljava/lang/Float;->parseFloat(Ljava/lang/String;)F
+
+    move-result v1
+
+    new-instance v4, LX/0dkb;
+
+    invoke-direct {v4}, Ljava/lang/Object;-><init>()V
+
+    const-string v0, "width"
+
+    invoke-static {v0, v2}, LX/00Oi;->A04(Ljava/lang/String;F)V
+
+    iput v2, v4, LX/0dkb;->A01:F
+
+    const-string v0, "height"
+
+    invoke-static {v0, v1}, LX/00Oi;->A04(Ljava/lang/String;F)V
+
+    iput v1, v4, LX/0dkb;->A00:F
+
+    goto :goto_45
+    :try_end_85
+    .catch Ljava/lang/NumberFormatException; {:try_start_53 .. :try_end_85} :catch_85
+
+    :catch_85
+    :cond_85
+    return-object v3
+.end method
+
+===== SEED ['com.facebook.devicesegmentation'] LX/0hqj; .method public static A05(Landroid/content/Context;Landroid/content/SharedPreferences;LX/0fKx;)LX/037o; FILE=work/smali/c12/X/0hqj.smali =====
+.method public static A05(Landroid/content/Context;Landroid/content/SharedPreferences;LX/0fKx;)LX/037o;
+    .registers 7
+
+    iget-object v3, p2, LX/0fKx;->A01:Ljava/lang/String;
+
+    const-string v2, "com.facebook.devicesegmentation.NOT_STORED"
+
+    invoke-interface {p1, v3, v2}, Landroid/content/SharedPreferences;->getString(Ljava/lang/String;Ljava/lang/String;)Ljava/lang/String;
+
+    move-result-object v1
+
+    invoke-static {v1}, LX/00Oi;->A02(Ljava/lang/Object;)V
+
+    invoke-virtual {v1, v2}, Ljava/lang/String;->equals(Ljava/lang/Object;)Z
+
+    move-result v0
+
+    if-nez v0, :cond_16
+
+    :try_start_11
+    invoke-static {v1}, LX/037o;->A01(Ljava/lang/String;)LX/037o;
+
+    move-result-object v0
+
+    return-object v0
+    :try_end_16
+    .catch Ljava/lang/NumberFormatException; {:try_start_11 .. :try_end_16} :catch_16
+
+    :catch_16
+    :cond_16
+    invoke-static {p0, p1}, LX/0hqj;->A08(Landroid/content/Context;Landroid/content/SharedPreferences;)V
+
+    invoke-interface {p1, v3, v2}, Landroid/content/SharedPreferences;->getString(Ljava/lang/String;Ljava/lang/String;)Ljava/lang/String;
+
+    move-result-object v0
+
+    :try_start_1d
+    invoke-static {v0}, LX/037o;->A01(Ljava/lang/String;)LX/037o;
+
+    move-result-object v0
+
+    return-object v0
+    :try_end_22
+    .catch Ljava/lang/NumberFormatException; {:try_start_1d .. :try_end_22} :catch_22
+
+    :catch_22
+    const/4 v0, 0x0
+
+    return-object v0
+.end method
+
+===== SEED ['ig_device_static_attributes'] LX/0ece; .method public static final A00(Landroid/content/Context;Lcom/instagram/common/session/UserSession;)V FILE=work/smali/c12/X/0ece.smali =====
+.method public static final A00(Landroid/content/Context;Lcom/instagram/common/session/UserSession;)V
+    .registers 9
+
+    if-eqz p0, :cond_8a
+
+    invoke-static {p0}, LX/0hkS;->A00(Landroid/content/Context;)Landroid/view/Display;
+
+    move-result-object v0
+
+    invoke-static {v0}, LX/002L;->A0a(Ljava/lang/Object;)Z
+
+    move-result v0
+
+    if-eqz v0, :cond_8a
+
+    invoke-static {p1}, LX/02tU;->A02(LX/04BG;)LX/02tU;
+
+    move-result-object v1
+
+    const-string v0, "ig_device_static_attributes"
+
+    invoke-virtual {v1, v0}, LX/02tU;->AKx(Ljava/lang/String;)LX/00vv;
+
+    move-result-object v2
+
+    const/16 v1, 0x1ec
+
+    new-instance v0, LX/03Tz;
+
+    invoke-direct {v0, v2, v1}, LX/03Tz;-><init>(LX/00vv;I)V
+
+    new-instance v4, LX/0Uiy;
+
+    invoke-direct {v4, v0}, LX/0Uiy;-><init>(LX/03Tz;)V
+
+    sget-object v0, LX/0hkS;->A3W:LX/0hkS;
+
+    if-nez v0, :cond_7c
+
+    const-class v6, LX/0hkS;
+
+    monitor-enter v6
+
+    :try_start_29
+    sget-object v0, LX/0hkS;->A3W:LX/0hkS;
+
+    if-nez v0, :cond_77
+
+    new-instance v5, LX/0hkS;
+
+    invoke-direct {v5}, Ljava/lang/Object;-><init>()V
+
+    const/4 v0, 0x1
+
+    new-instance v3, LX/0Qgy;
+
+    invoke-direct {v3, v5, v0}, LX/0Qgy;-><init>(Ljava/lang/Object;I)V
+
+    iput-object v3, v5, LX/0hkS;->A02:Landroid/os/Handler$Callback;
+
+    invoke-static {}, LX/0020;->A0A()Landroid/os/Handler;
+
+    move-result-object v0
+
+    iput-object v0, v5, LX/0hkS;->A03:Landroid/os/Handler;
+
+    new-instance v2, Ljava/lang/ref/WeakReference;
+
+    invoke-direct {v2, p0}, Ljava/lang/ref/WeakReference;-><init>(Ljava/lang/Object;)V
+
+    iput-object v2, v5, LX/0hkS;->A06:Ljava/lang/ref/WeakReference;
+
+    const-string v0, "One-Device-Classifier-Handler-Thread"
+
+    invoke-static {v0}, LX/0BTH;->A0I(Ljava/lang/String;)Landroid/os/HandlerThread;
+
+    move-result-object v0
+
+    iput-object v0, v5, LX/0hkS;->A05:Landroid/os/HandlerThread;
+
+    invoke-virtual {v0}, Ljava/lang/Thread;->start()V
+
+    invoke-virtual {v0}, Landroid/os/HandlerThread;->getLooper()Landroid/os/Looper;
+
+    move-result-object v1
+
+    invoke-static {v1}, LX/00Oi;->A02(Ljava/lang/Object;)V
+
+    new-instance v0, Landroid/os/Handler;
+
+    invoke-direct {v0, v1, v3}, Landroid/os/Handler;-><init>(Landroid/os/Looper;Landroid/os/Handler$Callback;)V
+
+    iput-object v0, v5, LX/0hkS;->A04:Landroid/os/Handler;
+
+    invoke-virtual {v2}, Ljava/lang/ref/Reference;->get()Ljava/lang/Object;
+
+    move-result-object v0
+
+    invoke-static {v0}, LX/00Oi;->A02(Ljava/lang/Object;)V
+
+    check-cast v0, Landroid/content/Context;
+
+    invoke-virtual {v0}, Landroid/content/Context;->getPackageManager()Landroid/content/pm/PackageManager;
+
+    move-result-object v0
+
+    invoke-static {v0}, LX/00Oi;->A02(Ljava/lang/Object;)V
+
+    iput-object v0, v5, LX/0hkS;->A01:Landroid/content/pm/PackageManager;
+    :try_end_72
+    .catchall {:try_start_29 .. :try_end_72} :catchall_79
+
+    const/4 v0, 0x0
+
+    sput v0, Lredex/$StoreFenceHelper;->DUMMY_VOLATILE:I
+
+    :try_start_75
+    sput-object v5, LX/0hkS;->A3W:LX/0hkS;
+
+    :cond_77
+    monitor-exit v6
+
+    goto :goto_7c
+
+    :catchall_79
+    move-exception v0
+
+    monitor-exit v6
+    :try_end_7b
+    .catchall {:try_start_75 .. :try_end_7b} :catchall_79
+
+    throw v0
+
+    :cond_7c
+    :goto_7c
+    sget-object v3, LX/0hkS;->A3W:LX/0hkS;
+
+    sget-object v2, LX/0hkS;->A3V:[LX/0fKx;
+
+    iget-object v1, v3, LX/0hkS;->A04:Landroid/os/Handler;
+
+    new-instance v0, LX/0mJp;
+
+    invoke-direct {v0, v3, v4, v2}, LX/0mJp;-><init>(LX/0hkS;LX/0Uiy;[LX/0fKx;)V
+
+    invoke-virtual {v1, v0}, Landroid/os/Handler;->post(Ljava/lang/Runnable;)Z
+
+    :cond_8a
+    return-void
+.end method
+
+===== SEED ['com.facebook.devicesegmentation'] LX/0hld; .method public static A01(Landroid/content/SharedPreferences;LX/0fKx;)Ljava/lang/String; FILE=work/smali/c12/X/0hld.smali =====
+.method public static A01(Landroid/content/SharedPreferences;LX/0fKx;)Ljava/lang/String;
+    .registers 6
+
+    iget-object v3, p1, LX/0fKx;->A01:Ljava/lang/String;
+
+    const-string v2, "com.facebook.devicesegmentation.GET_FAILED"
+
+    invoke-interface {p0, v3, v2}, Landroid/content/SharedPreferences;->getString(Ljava/lang/String;Ljava/lang/String;)Ljava/lang/String;
+
+    move-result-object v1
+
+    if-eqz v1, :cond_11
+
+    invoke-virtual {v1, v2}, Ljava/lang/String;->equals(Ljava/lang/Object;)Z
+
+    move-result v0
+
+    if-nez v0, :cond_11
+
+    :cond_10
+    return-object v1
+
+    :cond_11
+    invoke-static {p0}, LX/0hld;->A04(Landroid/content/SharedPreferences;)V
+
+    invoke-interface {p0, v3, v2}, Landroid/content/SharedPreferences;->getString(Ljava/lang/String;Ljava/lang/String;)Ljava/lang/String;
+
+    move-result-object v1
+
+    if-nez v1, :cond_10
+
+    return-object v2
+.end method
+
+===== SEED ['com.facebook.devicesegmentation'] LX/0hkS; .method public static A02(LX/0hkS;)V FILE=work/smali/c12/X/0hkS.smali =====
+.method public static A02(LX/0hkS;)V
+    .registers 4
+
+    iget-object v0, p0, LX/0hkS;->A05:Landroid/os/HandlerThread;
+
+    invoke-virtual {v0}, Landroid/os/HandlerThread;->getLooper()Landroid/os/Looper;
+
+    move-result-object v0
+
+    invoke-static {v0}, LX/00Oi;->A02(Ljava/lang/Object;)V
+
+    invoke-virtual {v0}, Landroid/os/Looper;->getThread()Ljava/lang/Thread;
+
+    move-result-object v1
+
+    invoke-static {}, Ljava/lang/Thread;->currentThread()Ljava/lang/Thread;
+
+    move-result-object v0
+
+    if-ne v1, v0, :cond_2c
+
+    iget-object v0, p0, LX/0hkS;->A00:Landroid/content/SharedPreferences;
+
+    if-nez v0, :cond_2b
+
+    iget-object v0, p0, LX/0hkS;->A06:Ljava/lang/ref/WeakReference;
+
+    invoke-virtual {v0}, Ljava/lang/ref/Reference;->get()Ljava/lang/Object;
+
+    move-result-object v2
+
+    invoke-static {v2}, LX/00Oi;->A02(Ljava/lang/Object;)V
+
+    check-cast v2, Landroid/content/Context;
+
+    const-string v1, "com.facebook.devicesegmentation"
+
+    const/4 v0, 0x0
+
+    invoke-virtual {v2, v1, v0}, Landroid/content/Context;->getSharedPreferences(Ljava/lang/String;I)Landroid/content/SharedPreferences;
+
+    move-result-object v0
+
+    iput-object v0, p0, LX/0hkS;->A00:Landroid/content/SharedPreferences;
+
+    :cond_2b
+    return-void
+
+    :cond_2c
+    const-string v1, "Attempting to initialize the SharedPreferences on the wrong thread"
+
+    new-instance v0, Ljava/lang/RuntimeException;
+
+    invoke-direct {v0, v1}, Ljava/lang/RuntimeException;-><init>(Ljava/lang/String;)V
+
+    throw v0
+.end method
+
+===== SEED ['X-IG-Device-ID'] LX/03u7; .method public static A01(LX/03u7;LX/04BE;LX/04BG;Ljava/lang/Integer;Ljava/lang/Object;Ljava/lang/String;Ljava/lang/String;I)LX/03ci; FILE=work/smali/c15/X/03u7.smali =====
+
+    if-eqz v0, :cond_5b6
+
+    const/16 v0, 0x57a
+
+    invoke-static {v0}, LX/0005;->A00(I)Ljava/lang/String;
+
+    move-result-object v0
+
+    const-string v1, "chunked"
+
+    invoke-virtual {v4, v0, v1}, LX/02xt;->A03(Ljava/lang/String;Ljava/lang/String;)V
+
+    :cond_5b6
+    const/16 v0, 0x9
+
+    invoke-static {v0}, LX/02vG;->A02(I)Ljava/util/Set;
+
+    move-result-object v0
+
+    invoke-interface {v0}, Ljava/util/Set;->iterator()Ljava/util/Iterator;
+
+    move-result-object v1
+
+    invoke-interface {v1}, Ljava/util/Iterator;->hasNext()Z
+
+    move-result v0
+
+    if-eqz v0, :cond_5d2
+
+    invoke-interface {v1}, Ljava/util/Iterator;->next()Ljava/lang/Object;
+
+    const-string v0, "addHeaders"
+
+    new-instance v2, Ljava/lang/NullPointerException;
+
+    invoke-direct {v2, v0}, Ljava/lang/NullPointerException;-><init>(Ljava/lang/String;)V
+
+    goto/16 :goto_9a8
+
+    :cond_5d2
+    invoke-static {}, LX/049A;->A00()Landroid/content/Context;
+
+    move-result-object v10
+
+    const-string v0, "accessibility"
+
+    invoke-virtual {v10, v0}, Landroid/content/Context;->getSystemService(Ljava/lang/String;)Ljava/lang/Object;
+
+    move-result-object v1
+
+    check-cast v1, Landroid/view/accessibility/AccessibilityManager;
+
+    if-eqz v1, :cond_5f1
+
+    invoke-virtual {v1}, Landroid/view/accessibility/AccessibilityManager;->isEnabled()Z
+
+    move-result v0
+
+    if-ne v0, v2, :cond_5f1
+
+    invoke-virtual {v1}, Landroid/view/accessibility/AccessibilityManager;->isTouchExplorationEnabled()Z
+
+    move-result v0
+
+    if-eqz v0, :cond_5f1
+
+    const-string v0, "X-IG-Fetch-AAT"
+
+    invoke-virtual {v4, v0, v3}, LX/02xt;->A03(Ljava/lang/String;Ljava/lang/String;)V
+
+    :cond_5f1
+    invoke-static {v10}, LX/02zW;->A03(Landroid/content/Context;)Z
+
+    move-result v0
+
+    invoke-static {v0}, Ljava/lang/String;->valueOf(Z)Ljava/lang/String;
+
+    move-result-object v1
+
+    const-string v0, "X-Bloks-Is-Layout-RTL"
+
+    invoke-virtual {v4, v0, v1}, LX/02xt;->A03(Ljava/lang/String;Ljava/lang/String;)V
+
+    sget-object v0, LX/04Ba;->A02:LX/04Ba;
+
+    invoke-virtual {v0, v10}, LX/04Ba;->A07(Landroid/content/Context;)Ljava/lang/String;
+
+    move-result-object v1
+
+    const-string v0, "X-IG-Device-ID"
+
+    invoke-virtual {v4, v0, v1}, LX/02xt;->A03(Ljava/lang/String;Ljava/lang/String;)V
+
+    invoke-static {v7}, LX/02tT;->A00(LX/04BG;)LX/02tT;
+
+    move-result-object v1
+
+    sget-object v0, LX/02tX;->A1z:LX/02tX;
+
+    invoke-virtual {v1, v0}, LX/02tT;->A04(LX/02tX;)Ljava/lang/String;
+
+    move-result-object v1
+
+    if-eqz v1, :cond_61a
+
+    const-string v0, "X-IG-Family-Device-ID"
+
+    invoke-virtual {v4, v0, v1}, LX/02xt;->A03(Ljava/lang/String;Ljava/lang/String;)V
+
+    :cond_61a
+    invoke-static {v10}, LX/04Ba;->A00(Landroid/content/Context;)Ljava/lang/String;
+
+    move-result-object v1
+
+    invoke-static {v1}, LX/04l9;->A0R(Ljava/lang/Object;)V
+
+    const-string v0, "X-IG-Android-ID"
+
+    invoke-virtual {v4, v0, v1}, LX/02xt;->A03(Ljava/lang/String;Ljava/lang/String;)V
+
+    new-instance v0, LX/03bn;
+
+    invoke-direct {v0}, Ljava/lang/Object;-><init>()V
+
+    invoke-static {v10, v0}, LX/03bo;->A00(Landroid/content/Context;LX/03bn;)LX/03bu;
+
+    move-result-object v19
+    :try_end_62f
+    .catchall {:try_start_58a .. :try_end_62f} :catchall_9a9
+
+    :try_start_62f
+    invoke-static {}, Landroid/os/SystemClock;->elapsedRealtime()J
+
+    move-result-wide v2
+
+    sget-object v11, LX/03bw;->A00:Ljava/util/concurrent/atomic/AtomicLong;
+
+    invoke-virtual {v11}, Ljava/util/concurrent/atomic/AtomicLong;->get()J
+
+    move-result-wide v0
+
+    sub-long v14, v2, v0
+
+    const-wide/32 v12, 0x493e0
+
+    cmp-long v10, v14, v12
+
+    if-ltz v10, :cond_657
+
+    invoke-virtual {v11, v0, v1, v2, v3}, Ljava/util/concurrent/atomic/AtomicLong;->compareAndSet(JJ)Z
+
+    move-result v0
+
+    if-eqz v0, :cond_657
+
+    invoke-virtual/range {v19 .. v19}, LX/03bu;->A00()Landroid/net/wifi/WifiInfo;
+
+    move-result-object v0
+
+    if-eqz v0, :cond_655
+
+    invoke-virtual {v0}, Landroid/net/wifi/WifiInfo;->getBSSID()Ljava/lang/String;
+
+    move-result-object v0
+
+    :goto_652
+    sput-object v0, LX/03bw;->A01:Ljava/lang/String;
+
+    goto :goto_657
+
+    :cond_655
+    const/4 v0, 0x0
+
+    goto :goto_652
+    :try_end_657
+    .catchall {:try_start_62f .. :try_end_657} :catchall_8be
+
+    :cond_657
+    :goto_657
+    :try_start_657
+    sget-object v1, LX/03bw;->A01:Ljava/lang/String;
+
+    if-eqz v1, :cond_660
+
+    const-string v0, "X-Network-Signal"
+
+    invoke-virtual {v4, v0, v1}, LX/02xt;->A03(Ljava/lang/String;Ljava/lang/String;)V
+
+    :cond_660
+    invoke-static {}, LX/02su;->A00()J
+
+    move-result-wide v0
+
+    invoke-static {v0, v1}, Ljava/lang/String;->valueOf(J)Ljava/lang/String;
+
+    move-result-object v1
+
+    const/16 v0, 0x84c
+
+
+===== EXACT CALLERS OF SEEDS =====
+--- LX/0Qgy; .method public final handleMessage(Landroid/os/Message;)Z FILE=work/smali/c4/X/0Qgy.smali TARGETS=[('LX/0hkS;', 'A02', ['com.facebook.devicesegmentation'])]
+
+    invoke-static {v1, v5}, LX/021Q;->A03(Ljava/util/List;I)I
+
+    move-result v0
+
+    invoke-interface {v1, v0}, Ljava/util/List;->get(I)Ljava/lang/Object;
+
+    iget-object v0, v2, LX/0hzx;->A06:LX/0Ahd;
+
+    iget-object v3, v0, LX/0Ahd;->A00:Ljava/util/List;
+
+    invoke-interface {v3}, Ljava/util/List;->size()I
+
+    move-result v2
+
+    const/4 v1, 0x0
+
+    :goto_87
+    if-ge v1, v2, :cond_b9
+
+    invoke-interface {v3, v1}, Ljava/util/List;->get(I)Ljava/lang/Object;
+
+    move-result-object v0
+
+    check-cast v0, LX/0ZkA;
+
+    invoke-interface {v0, v7, v4, v8, v6}, LX/0ZkA;->GA6(FFII)V
+
+    add-int/lit8 v1, v1, 0x1
+
+    goto :goto_87
+
+    :cond_95
+    iget v1, p1, Landroid/os/Message;->what:I
+
+    const/4 v0, 0x2
+
+    if-ne v1, v0, :cond_1ac
+
+    iget-object v4, p1, Landroid/os/Message;->obj:Ljava/lang/Object;
+
+    check-cast v4, Ljava/lang/Exception;
+
+    iget-object v0, p0, LX/0Qgy;->A00:Ljava/lang/Object;
+
+    check-cast v0, LX/0hzx;
+
+    iget-object v0, v0, LX/0hzx;->A06:LX/0Ahd;
+
+    iget-object v3, v0, LX/0Ahd;->A00:Ljava/util/List;
+
+    invoke-interface {v3}, Ljava/util/List;->size()I
+
+    move-result v2
+
+    const/4 v1, 0x0
+
+    :goto_ab
+    if-ge v1, v2, :cond_b9
+
+    invoke-interface {v3, v1}, Ljava/util/List;->get(I)Ljava/lang/Object;
+
+    move-result-object v0
+
+    check-cast v0, LX/0ZkA;
+
+    invoke-interface {v0, v4}, LX/0ZkA;->GA7(Ljava/lang/Exception;)V
+
+    add-int/lit8 v1, v1, 0x1
+
+    goto :goto_ab
+
+    :cond_b9
+    return v5
+
+    :cond_ba
+    iget-object v5, p0, LX/0Qgy;->A00:Ljava/lang/Object;
+
+    check-cast v5, LX/0hkS;
+
+    invoke-static {v5}, LX/0hkS;->A02(LX/0hkS;)V
+
+    iget-object v4, p1, Landroid/os/Message;->obj:Ljava/lang/Object;
+
+    invoke-static {v4}, LX/00Oi;->A02(Ljava/lang/Object;)V
+
+    check-cast v4, LX/0Uiy;
+
+    iget v3, p1, Landroid/os/Message;->what:I
+
+    iget-object v0, v5, LX/0hkS;->A06:Ljava/lang/ref/WeakReference;
+
+    invoke-virtual {v0}, Ljava/lang/ref/Reference;->get()Ljava/lang/Object;
+
+    move-result-object v2
+
+    invoke-static {v2}, LX/00Oi;->A02(Ljava/lang/Object;)V
+
+    check-cast v2, Landroid/content/Context;
+
+    iget-object v1, v5, LX/0hkS;->A01:Landroid/content/pm/PackageManager;
+
+    iget-object v0, v5, LX/0hkS;->A00:Landroid/content/SharedPreferences;
+
+    invoke-static {v0}, LX/00Oi;->A02(Ljava/lang/Object;)V
+
+    invoke-static {v2, v0, v1, v3}, LX/0hkS;->A01(Landroid/content/Context;Landroid/content/SharedPreferences;Landroid/content/pm/PackageManager;I)Ljava/lang/Object;
+
+    move-result-object v0
+
+    iput-object v0, v4, LX/0Uiy;->A00:Ljava/lang/Object;
+
+    iget-object v0, v5, LX/0hkS;->A03:Landroid/os/Handler;
+
+    invoke-virtual {v0, v4}, Landroid/os/Handler;->post(Ljava/lang/Runnable;)Z
+
+    goto/16 :goto_1ab
+
+    :cond_e9
+    iget v1, p1, Landroid/os/Message;->what:I
+
+    const/16 v0, 0x522
+
+    const/4 v6, 0x1
+
+    if-ne v1, v0, :cond_1ac
+
+    invoke-virtual {p1}, Landroid/os/Message;->getData()Landroid/os/Bundle;
+
+    move-result-object v1
+
+    const-string v0, "downloadManagerId"
+
+    invoke-virtual {v1, v0}, Landroid/os/BaseBundle;->getLong(Ljava/lang/String;)J
+
+    move-result-wide v3
+
+    iget-object v9, p0, LX/0Qgy;->A00:Ljava/lang/Object;
+
+    check-cast v9, LX/0Bs9;
+
+    iget-wide v1, v9, LX/0Bs9;->A00:J
+
+    cmp-long v0, v3, v1
+
+    if-nez v0, :cond_1ac
+
+    sget-object v0, LX/0PCC;->A01:LX/0X1G;
+
+    invoke-virtual {v0}, Landroid/content/Context;->getApplicationContext()Landroid/content/Context;
+
+    move-result-object v1
+
+    const-string v0, "download"
+
+    invoke-virtual {v1, v0}, Landroid/content/Context;->getSystemService(Ljava/lang/String;)Ljava/lang/Object;
+
+    move-result-object v5
+
+    check-cast v5, Landroid/app/DownloadManager;
+
+    new-instance v4, Landroid/app/DownloadManager$Query;
+
+    invoke-direct {v4}, Landroid/app/DownloadManager$Query;-><init>()V
+
+    new-array v3, v6, [J
+
+    iget-wide v1, v9, LX/0Bs9;->A00:J
+
+    const/4 v0, 0x0
+
+    aput-wide v1, v3, v0
+
+    invoke-virtual {v4, v3}, Landroid/app/DownloadManager$Query;->setFilterById([J)Landroid/app/DownloadManager$Query;
+
+    invoke-virtual {v5, v4}, Landroid/app/DownloadManager;->query(Landroid/app/DownloadManager$Query;)Landroid/database/Cursor;
+
+    move-result-object v5
+
+    if-eqz v5, :cond_1ac
+
+--- LX/0mJp; .method public final run()V FILE=work/smali/c12/X/0mJp.smali TARGETS=[('LX/0hkS;', 'A02', ['com.facebook.devicesegmentation'])]
+.method public final run()V
+    .registers 10
+
+    iget-object v8, p0, LX/0mJp;->A00:LX/0hkS;
+
+    invoke-static {v8}, LX/0hkS;->A02(LX/0hkS;)V
+
+    iget-object v7, p0, LX/0mJp;->A02:[LX/0fKx;
+
+    const/16 v6, 0xd2
+
+    new-array v5, v6, [Ljava/lang/Object;
+
+    const/4 v4, 0x0
+
+    :cond_c
+    aget-object v0, v7, v4
+
+    iget v3, v0, LX/0fKx;->A00:I
+
+    iget-object v0, v8, LX/0hkS;->A06:Ljava/lang/ref/WeakReference;
+
+    invoke-virtual {v0}, Ljava/lang/ref/Reference;->get()Ljava/lang/Object;
+
+    move-result-object v2
+
+    invoke-static {v2}, LX/00Oi;->A02(Ljava/lang/Object;)V
+
+    check-cast v2, Landroid/content/Context;
+
+    iget-object v1, v8, LX/0hkS;->A01:Landroid/content/pm/PackageManager;
+
+    iget-object v0, v8, LX/0hkS;->A00:Landroid/content/SharedPreferences;
+
+    invoke-static {v0}, LX/00Oi;->A02(Ljava/lang/Object;)V
+
+    invoke-static {v2, v0, v1, v3}, LX/0hkS;->A01(Landroid/content/Context;Landroid/content/SharedPreferences;Landroid/content/pm/PackageManager;I)Ljava/lang/Object;
+
+    move-result-object v0
+
+    aput-object v0, v5, v4
+
+    add-int/lit8 v4, v4, 0x1
+
+    if-lt v4, v6, :cond_c
+
+    iget-object v1, p0, LX/0mJp;->A01:LX/0Uiy;
+
+    iput-object v5, v1, LX/0Uiy;->A00:Ljava/lang/Object;
+
+    iget-object v0, v8, LX/0hkS;->A03:Landroid/os/Handler;
+
+    invoke-virtual {v0, v1}, Landroid/os/Handler;->post(Ljava/lang/Runnable;)Z
+
+    return-void
+.end method
+
+--- LX/0hkS; .method public static A01(Landroid/content/Context;Landroid/content/SharedPreferences;Landroid/content/pm/PackageManager;I)Ljava/lang/Object; FILE=work/smali/c12/X/0hkS.smali TARGETS=[('LX/0hqj;', 'A04', ['com.facebook.devicesegmentation']), ('LX/0hqj;', 'A05', ['com.facebook.devicesegmentation']), ('LX/0hld;', 'A01', ['com.facebook.devicesegmentation'])]
+
+    invoke-static {v0}, LX/0BRB;->A00(I)Ljava/lang/String;
+
+    move-result-object v0
+
+    invoke-static {p2, v0}, LX/0hld;->A00(Landroid/content/pm/PackageManager;Ljava/lang/String;)Ljava/lang/Integer;
+
+    move-result-object v0
+
+    invoke-virtual {v0}, Ljava/lang/Number;->intValue()I
+
+    move-result v1
+
+    const/4 v0, -0x1
+
+    if-eq v1, v0, :cond_247
+
+    and-int/lit16 v3, v1, 0xfff
+
+    shr-int/lit8 v0, v1, 0xc
+
+    and-int/lit16 v2, v0, 0x3ff
+
+    shr-int/lit8 v0, v1, 0x16
+
+    and-int/lit16 v0, v0, 0x3ff
+
+    new-instance v1, Ljava/lang/StringBuilder;
+
+    invoke-direct {v1}, Ljava/lang/StringBuilder;-><init>()V
+
+    invoke-virtual {v1, v0}, Ljava/lang/StringBuilder;->append(I)Ljava/lang/StringBuilder;
+
+    const/16 v0, 0x2e
+
+    invoke-virtual {v1, v0}, Ljava/lang/StringBuilder;->append(C)Ljava/lang/StringBuilder;
+
+    invoke-virtual {v1, v2}, Ljava/lang/StringBuilder;->append(I)Ljava/lang/StringBuilder;
+
+    invoke-virtual {v1, v0}, Ljava/lang/StringBuilder;->append(C)Ljava/lang/StringBuilder;
+
+    invoke-virtual {v1, v3}, Ljava/lang/StringBuilder;->append(I)Ljava/lang/StringBuilder;
+
+    invoke-virtual {v1}, Ljava/lang/Object;->toString()Ljava/lang/String;
+
+    move-result-object v0
+
+    return-object v0
+
+    :cond_247
+    return-object v2
+
+    :pswitch_248
+    invoke-static {}, Ljava/lang/Runtime;->getRuntime()Ljava/lang/Runtime;
+
+    move-result-object v0
+
+    invoke-virtual {v0}, Ljava/lang/Runtime;->availableProcessors()I
+
+    move-result v4
+
+    goto/16 :goto_520
+
+    :pswitch_252
+    invoke-static {p2}, LX/0hld;->A02(Landroid/content/pm/PackageManager;)Ljava/lang/String;
+
+    move-result-object v0
+
+    return-object v0
+
+    :pswitch_257
+    invoke-static {p2}, LX/0hld;->A03(Landroid/content/pm/PackageManager;)Ljava/lang/String;
+
+    move-result-object v0
+
+    return-object v0
+
+    :pswitch_25c
+    sget-object v0, LX/0hkS;->A2p:LX/0fKx;
+
+    invoke-static {p1, v0}, LX/0hld;->A01(Landroid/content/SharedPreferences;LX/0fKx;)Ljava/lang/String;
+
+    move-result-object v0
+
+    return-object v0
+
+    :pswitch_263
+    sget-object v0, LX/0hkS;->A2q:LX/0fKx;
+
+    invoke-static {p1, v0}, LX/0hld;->A01(Landroid/content/SharedPreferences;LX/0fKx;)Ljava/lang/String;
+
+    move-result-object v0
+
+    return-object v0
+
+    :pswitch_26a
+    sget-object v0, LX/0hkS;->A2r:LX/0fKx;
+
+    invoke-static {p1, v0}, LX/0hld;->A01(Landroid/content/SharedPreferences;LX/0fKx;)Ljava/lang/String;
+
+    move-result-object v0
+
+    return-object v0
+
+    :pswitch_271
+    sget-object v0, LX/0hkS;->A2l:LX/0fKx;
+
+    goto :goto_28b
+
+    :pswitch_274
+    sget-object v0, LX/0hkS;->A2j:LX/0fKx;
+
+    goto :goto_28b
+
+    :pswitch_277
+    sget-object v0, LX/0hkS;->A2m:LX/0fKx;
+
+    goto :goto_28b
+
+    :pswitch_27a
+    sget-object v0, LX/0hkS;->A2g:LX/0fKx;
+
+    goto :goto_28b
+
+    :pswitch_27d
+    sget-object v0, LX/0hkS;->A2i:LX/0fKx;
+
+    goto :goto_28b
+
+    :pswitch_280
+    sget-object v0, LX/0hkS;->A2h:LX/0fKx;
+
+    goto :goto_28b
+
+    :pswitch_283
+    sget-object v0, LX/0hkS;->A2k:LX/0fKx;
+
+    goto :goto_28b
+
+    :pswitch_286
+    sget-object v0, LX/0hkS;->A2o:LX/0fKx;
+
+    goto :goto_28b
+
+    :pswitch_289
+    sget-object v0, LX/0hkS;->A2n:LX/0fKx;
+
+    :goto_28b
+    iget-object v1, v0, LX/0fKx;->A01:Ljava/lang/String;
+
+    const/4 v0, -0x2
+
+    invoke-interface {p1, v1, v0}, Landroid/content/SharedPreferences;->getInt(Ljava/lang/String;I)I
+
+    move-result v4
+
+    if-ne v4, v0, :cond_520
+
+    invoke-static {p1}, LX/0hld;->A04(Landroid/content/SharedPreferences;)V
+
+    goto/16 :goto_51c
+
+    :pswitch_299
+    sget-object v0, LX/0hkS;->A36:LX/0fKx;
+
+    goto :goto_30b
+
+    :pswitch_29c
+    sget-object v0, LX/0hkS;->A35:LX/0fKx;
+
+    goto :goto_2f8
+
+    :pswitch_29f
+    sget-object v0, LX/0hkS;->A32:LX/0fKx;
+
+    goto :goto_30b
+
+    :pswitch_2a2
+    sget-object v0, LX/0hkS;->A31:LX/0fKx;
+
+    invoke-virtual {v0}, Ljava/lang/Number;->intValue()I
+
+    move-result v1
+
+    const/4 v0, -0x1
+
+    if-eq v1, v0, :cond_247
+
+    and-int/lit16 v3, v1, 0xfff
+
+    shr-int/lit8 v0, v1, 0xc
+
+    and-int/lit16 v2, v0, 0x3ff
+
+    shr-int/lit8 v0, v1, 0x16
+
+    and-int/lit16 v0, v0, 0x3ff
+
+    new-instance v1, Ljava/lang/StringBuilder;
+
+    invoke-direct {v1}, Ljava/lang/StringBuilder;-><init>()V
+
+    invoke-virtual {v1, v0}, Ljava/lang/StringBuilder;->append(I)Ljava/lang/StringBuilder;
+
+    const/16 v0, 0x2e
+
+    invoke-virtual {v1, v0}, Ljava/lang/StringBuilder;->append(C)Ljava/lang/StringBuilder;
+
+    invoke-virtual {v1, v2}, Ljava/lang/StringBuilder;->append(I)Ljava/lang/StringBuilder;
+
+    invoke-virtual {v1, v0}, Ljava/lang/StringBuilder;->append(C)Ljava/lang/StringBuilder;
+
+    invoke-virtual {v1, v3}, Ljava/lang/StringBuilder;->append(I)Ljava/lang/StringBuilder;
+
+    invoke-virtual {v1}, Ljava/lang/Object;->toString()Ljava/lang/String;
+
+    move-result-object v0
+
+    return-object v0
+
+    :cond_247
+    return-object v2
+
+    :pswitch_248
+    invoke-static {}, Ljava/lang/Runtime;->getRuntime()Ljava/lang/Runtime;
+
+    move-result-object v0
+
+    invoke-virtual {v0}, Ljava/lang/Runtime;->availableProcessors()I
+
+    move-result v4
+
+    goto/16 :goto_520
+
+    :pswitch_252
+    invoke-static {p2}, LX/0hld;->A02(Landroid/content/pm/PackageManager;)Ljava/lang/String;
+
+    move-result-object v0
+
+    return-object v0
+
+    :pswitch_257
+    invoke-static {p2}, LX/0hld;->A03(Landroid/content/pm/PackageManager;)Ljava/lang/String;
+
+    move-result-object v0
+
+    return-object v0
+
+    :pswitch_25c
+    sget-object v0, LX/0hkS;->A2p:LX/0fKx;
+
+    invoke-static {p1, v0}, LX/0hld;->A01(Landroid/content/SharedPreferences;LX/0fKx;)Ljava/lang/String;
+
+    move-result-object v0
+
+    return-object v0
+
+    :pswitch_263
+    sget-object v0, LX/0hkS;->A2q:LX/0fKx;
+
+    invoke-static {p1, v0}, LX/0hld;->A01(Landroid/content/SharedPreferences;LX/0fKx;)Ljava/lang/String;
+
+    move-result-object v0
+
+    return-object v0
+
+    :pswitch_26a
+    sget-object v0, LX/0hkS;->A2r:LX/0fKx;
+
+    invoke-static {p1, v0}, LX/0hld;->A01(Landroid/content/SharedPreferences;LX/0fKx;)Ljava/lang/String;
+
+    move-result-object v0
+
+    return-object v0
+
+    :pswitch_271
+    sget-object v0, LX/0hkS;->A2l:LX/0fKx;
+
+    goto :goto_28b
+
+    :pswitch_274
+    sget-object v0, LX/0hkS;->A2j:LX/0fKx;
+
+    goto :goto_28b
+
+    :pswitch_277
+    sget-object v0, LX/0hkS;->A2m:LX/0fKx;
+
+    goto :goto_28b
+
+    :pswitch_27a
+    sget-object v0, LX/0hkS;->A2g:LX/0fKx;
+
+    goto :goto_28b
+
+    :pswitch_27d
+    sget-object v0, LX/0hkS;->A2i:LX/0fKx;
+
+    goto :goto_28b
+
+    :pswitch_280
+    sget-object v0, LX/0hkS;->A2h:LX/0fKx;
+
+    goto :goto_28b
+
+    :pswitch_283
+    sget-object v0, LX/0hkS;->A2k:LX/0fKx;
+
+    goto :goto_28b
+
+    :pswitch_286
+    sget-object v0, LX/0hkS;->A2o:LX/0fKx;
+
+    goto :goto_28b
+
+    :pswitch_289
+    sget-object v0, LX/0hkS;->A2n:LX/0fKx;
+
+    :goto_28b
+    iget-object v1, v0, LX/0fKx;->A01:Ljava/lang/String;
+
+    const/4 v0, -0x2
+
+    invoke-interface {p1, v1, v0}, Landroid/content/SharedPreferences;->getInt(Ljava/lang/String;I)I
+
+    move-result v4
+
+    if-ne v4, v0, :cond_520
+
+    invoke-static {p1}, LX/0hld;->A04(Landroid/content/SharedPreferences;)V
+
+    goto/16 :goto_51c
+
+    :pswitch_299
+    sget-object v0, LX/0hkS;->A36:LX/0fKx;
+
+    goto :goto_30b
+
+    :pswitch_29c
+    sget-object v0, LX/0hkS;->A35:LX/0fKx;
+
+    goto :goto_2f8
+
+    :pswitch_29f
+    sget-object v0, LX/0hkS;->A32:LX/0fKx;
+
+    goto :goto_30b
+
+    :pswitch_2a2
+    sget-object v0, LX/0hkS;->A31:LX/0fKx;
+
+    goto :goto_2f8
+
+    :pswitch_2a5
+    sget-object v0, LX/0hkS;->A38:LX/0fKx;
+
+    goto :goto_30b
+
+    :pswitch_2a8
+    sget-object v0, LX/0hkS;->A37:LX/0fKx;
+
+    shr-int/lit8 v0, v1, 0xc
+
+    and-int/lit16 v2, v0, 0x3ff
+
+    shr-int/lit8 v0, v1, 0x16
+
+    and-int/lit16 v0, v0, 0x3ff
+
+    new-instance v1, Ljava/lang/StringBuilder;
+
+    invoke-direct {v1}, Ljava/lang/StringBuilder;-><init>()V
+
+    invoke-virtual {v1, v0}, Ljava/lang/StringBuilder;->append(I)Ljava/lang/StringBuilder;
+
+    const/16 v0, 0x2e
+
+    invoke-virtual {v1, v0}, Ljava/lang/StringBuilder;->append(C)Ljava/lang/StringBuilder;
+
+    invoke-virtual {v1, v2}, Ljava/lang/StringBuilder;->append(I)Ljava/lang/StringBuilder;
+
+    invoke-virtual {v1, v0}, Ljava/lang/StringBuilder;->append(C)Ljava/lang/StringBuilder;
+
+    invoke-virtual {v1, v3}, Ljava/lang/StringBuilder;->append(I)Ljava/lang/StringBuilder;
+
+    invoke-virtual {v1}, Ljava/lang/Object;->toString()Ljava/lang/String;
+
+    move-result-object v0
+
+    return-object v0
+
+    :cond_247
+    return-object v2
+
+    :pswitch_248
+    invoke-static {}, Ljava/lang/Runtime;->getRuntime()Ljava/lang/Runtime;
+
+    move-result-object v0
+
+    invoke-virtual {v0}, Ljava/lang/Runtime;->availableProcessors()I
+
+    move-result v4
+
+    goto/16 :goto_520
+
+    :pswitch_252
+    invoke-static {p2}, LX/0hld;->A02(Landroid/content/pm/PackageManager;)Ljava/lang/String;
+
+    move-result-object v0
+
+    return-object v0
+
+    :pswitch_257
+    invoke-static {p2}, LX/0hld;->A03(Landroid/content/pm/PackageManager;)Ljava/lang/String;
+
+    move-result-object v0
+
+    return-object v0
+
+    :pswitch_25c
+    sget-object v0, LX/0hkS;->A2p:LX/0fKx;
+
+    invoke-static {p1, v0}, LX/0hld;->A01(Landroid/content/SharedPreferences;LX/0fKx;)Ljava/lang/String;
+
+    move-result-object v0
+
+    return-object v0
+
+    :pswitch_263
+    sget-object v0, LX/0hkS;->A2q:LX/0fKx;
+
+    invoke-static {p1, v0}, LX/0hld;->A01(Landroid/content/SharedPreferences;LX/0fKx;)Ljava/lang/String;
+
+    move-result-object v0
+
+    return-object v0
+
+    :pswitch_26a
+    sget-object v0, LX/0hkS;->A2r:LX/0fKx;
+
+    invoke-static {p1, v0}, LX/0hld;->A01(Landroid/content/SharedPreferences;LX/0fKx;)Ljava/lang/String;
+
+    move-result-object v0
+
+    return-object v0
+
+    :pswitch_271
+    sget-object v0, LX/0hkS;->A2l:LX/0fKx;
+
+    goto :goto_28b
+
+    :pswitch_274
+    sget-object v0, LX/0hkS;->A2j:LX/0fKx;
+
+    goto :goto_28b
+
+    :pswitch_277
+    sget-object v0, LX/0hkS;->A2m:LX/0fKx;
+
+    goto :goto_28b
+
+    :pswitch_27a
+    sget-object v0, LX/0hkS;->A2g:LX/0fKx;
+
+    goto :goto_28b
+
+    :pswitch_27d
+    sget-object v0, LX/0hkS;->A2i:LX/0fKx;
+
+    goto :goto_28b
+
+    :pswitch_280
+    sget-object v0, LX/0hkS;->A2h:LX/0fKx;
+
+    goto :goto_28b
+
+    :pswitch_283
+    sget-object v0, LX/0hkS;->A2k:LX/0fKx;
+
+    goto :goto_28b
+
+    :pswitch_286
+    sget-object v0, LX/0hkS;->A2o:LX/0fKx;
+
+    goto :goto_28b
+
+    :pswitch_289
+    sget-object v0, LX/0hkS;->A2n:LX/0fKx;
+
+    :goto_28b
+    iget-object v1, v0, LX/0fKx;->A01:Ljava/lang/String;
+
+    const/4 v0, -0x2
+
+    invoke-interface {p1, v1, v0}, Landroid/content/SharedPreferences;->getInt(Ljava/lang/String;I)I
+
+    move-result v4
+
+    if-ne v4, v0, :cond_520
+
+    invoke-static {p1}, LX/0hld;->A04(Landroid/content/SharedPreferences;)V
+
+    goto/16 :goto_51c
+
+    :pswitch_299
+    sget-object v0, LX/0hkS;->A36:LX/0fKx;
+
+    goto :goto_30b
+
+    :pswitch_29c
+    sget-object v0, LX/0hkS;->A35:LX/0fKx;
+
+    goto :goto_2f8
+
+    :pswitch_29f
+    sget-object v0, LX/0hkS;->A32:LX/0fKx;
+
+    goto :goto_30b
+
+    :pswitch_2a2
+    sget-object v0, LX/0hkS;->A31:LX/0fKx;
+
+    goto :goto_2f8
+
+    :pswitch_2a5
+    sget-object v0, LX/0hkS;->A38:LX/0fKx;
+
+    goto :goto_30b
+
+    :pswitch_2a8
+    sget-object v0, LX/0hkS;->A37:LX/0fKx;
+
+    goto :goto_2f8
+
+    :pswitch_2ab
+    sget-object v0, LX/0hkS;->A34:LX/0fKx;
+
+    goto :goto_30b
+
+    :pswitch_2ae
+    sget-object v0, LX/0hkS;->A3O:LX/0fKx;
+
+    goto :goto_30b
+
+    :pswitch_2e4
+    sget-object v0, LX/0hkS;->A3N:LX/0fKx;
+
+    goto :goto_2f8
+
+    :pswitch_2e7
+    sget-object v0, LX/0hkS;->A3K:LX/0fKx;
+
+    goto :goto_30b
+
+    :pswitch_2ea
+    sget-object v0, LX/0hkS;->A3J:LX/0fKx;
+
+    goto :goto_2f8
+
+    :pswitch_2ed
+    sget-object v0, LX/0hkS;->A3Q:LX/0fKx;
+
+    goto :goto_30b
+
+    :pswitch_2f0
+    sget-object v0, LX/0hkS;->A3P:LX/0fKx;
+
+    goto :goto_2f8
+
+    :pswitch_2f3
+    sget-object v0, LX/0hkS;->A3M:LX/0fKx;
+
+    goto :goto_30b
+
+    :pswitch_2f6
+    sget-object v0, LX/0hkS;->A3L:LX/0fKx;
+
+    :goto_2f8
+    iget-object v1, v0, LX/0fKx;->A01:Ljava/lang/String;
+
+    const/4 v0, -0x2
+
+    invoke-interface {p1, v1, v0}, Landroid/content/SharedPreferences;->getInt(Ljava/lang/String;I)I
+
+    move-result v4
+
+    if-ne v4, v0, :cond_520
+
+    invoke-static {p1}, LX/0hTo;->A00(Landroid/content/SharedPreferences;)V
+
+    goto/16 :goto_51c
+
+    :pswitch_306
+    sget-object v0, LX/0hkS;->A39:LX/0fKx;
+
+    goto :goto_30b
+
+    :pswitch_309
+    sget-object v0, LX/0hkS;->A3A:LX/0fKx;
+
+    :goto_30b
+    invoke-static {p1, v0}, LX/0hTo;->A01(Landroid/content/SharedPreferences;LX/0fKx;)Z
+
+    move-result v0
+
+    goto/16 :goto_53a
+
+    :pswitch_311
+    sget-object v0, LX/0hkS;->A15:LX/0fKx;
+
+    goto/16 :goto_3cb
+
+    :pswitch_315
+    sget-object v0, LX/0hkS;->A2E:LX/0fKx;
+
+    goto/16 :goto_3cb
+
+    :pswitch_319
+    sget-object v0, LX/0hkS;->A14:LX/0fKx;
+
+    invoke-static {p0, p1, v0}, LX/0hqj;->A04(Landroid/content/Context;Landroid/content/SharedPreferences;LX/0fKx;)LX/0dkb;
+
+    move-result-object v0
+
+    return-object v0
+
+    :pswitch_320
+    sget-object v0, LX/0hkS;->A2D:LX/0fKx;
+
+    invoke-static {p0, p1, v0}, LX/0hqj;->A04(Landroid/content/Context;Landroid/content/SharedPreferences;LX/0fKx;)LX/0dkb;
+
+    move-result-object v0
+
+    return-object v0
+
+    :pswitch_327
+    sget-object v0, LX/0hkS;->A1o:LX/0fKx;
+
+    goto/16 :goto_3cb
+
+    :pswitch_32b
+    sget-object v0, LX/0hkS;->A0f:LX/0fKx;
+
+    goto/16 :goto_3cb
+
+    :pswitch_32f
+    sget-object v0, LX/0hkS;->A28:LX/0fKx;
+
+    goto/16 :goto_3cb
+
+    :pswitch_333
+    sget-object v0, LX/0hkS;->A0z:LX/0fKx;
+
+    goto/16 :goto_3cb
+
+    :pswitch_337
+    sget-object v0, LX/0hkS;->A26:LX/0fKx;
+
+    goto/16 :goto_3cb
+
+    :pswitch_33b
+    sget-object v0, LX/0hkS;->A0x:LX/0fKx;
+
+    goto/16 :goto_3cb
+
+    :pswitch_33f
+    sget-object v0, LX/0hkS;->A27:LX/0fKx;
+
+    goto/16 :goto_3cb
+
+    :pswitch_343
+    sget-object v0, LX/0hkS;->A0y:LX/0fKx;
+
+    goto/16 :goto_3cb
+
+    :pswitch_347
+    sget-object v0, LX/0hkS;->A1j:LX/0fKx;
+
+    goto/16 :goto_3cb
+
+    :pswitch_34b
+    sget-object v0, LX/0hkS;->A0a:LX/0fKx;
+
+    goto :goto_3cb
+
+    :pswitch_34e
+    sget-object v0, LX/0hkS;->A2H:LX/0fKx;
+
+    goto :goto_3cb
+
+    :pswitch_351
+    sget-object v0, LX/0hkS;->A18:LX/0fKx;
+
+    goto :goto_3cb
+
+    :pswitch_354
+    sget-object v0, LX/0hkS;->A25:LX/0fKx;
+
+    goto :goto_3cb
+
+    :pswitch_357
+    sget-object v0, LX/0hkS;->A0w:LX/0fKx;
+
+    goto :goto_3cb
+
+    :pswitch_35a
+    sget-object v0, LX/0hkS;->A2L:LX/0fKx;
+
+    goto :goto_3cb
+
+    :pswitch_35d
+    sget-object v0, LX/0hkS;->A1C:LX/0fKx;
+
+    goto :goto_3cb
+
+    :pswitch_360
+    sget-object v0, LX/0hkS;->A1T:LX/0fKx;
+
+    goto :goto_3cb
+
+    :pswitch_2e7
+    sget-object v0, LX/0hkS;->A3K:LX/0fKx;
+
+    goto :goto_30b
+
+    :pswitch_2ea
+    sget-object v0, LX/0hkS;->A3J:LX/0fKx;
+
+    goto :goto_2f8
+
+    :pswitch_2ed
+    sget-object v0, LX/0hkS;->A3Q:LX/0fKx;
+
+    goto :goto_30b
+
+    :pswitch_2f0
+    sget-object v0, LX/0hkS;->A3P:LX/0fKx;
+
+    goto :goto_2f8
+
+    :pswitch_2f3
+    sget-object v0, LX/0hkS;->A3M:LX/0fKx;
+
+    goto :goto_30b
+
+    :pswitch_2f6
+    sget-object v0, LX/0hkS;->A3L:LX/0fKx;
+
+    :goto_2f8
+    iget-object v1, v0, LX/0fKx;->A01:Ljava/lang/String;
+
+    const/4 v0, -0x2
+
+    invoke-interface {p1, v1, v0}, Landroid/content/SharedPreferences;->getInt(Ljava/lang/String;I)I
+
+    move-result v4
+
+    if-ne v4, v0, :cond_520
+
+    invoke-static {p1}, LX/0hTo;->A00(Landroid/content/SharedPreferences;)V
+
+    goto/16 :goto_51c
+
+    :pswitch_306
+    sget-object v0, LX/0hkS;->A39:LX/0fKx;
+
+    goto :goto_30b
+
+    :pswitch_309
+    sget-object v0, LX/0hkS;->A3A:LX/0fKx;
+
+    :goto_30b
+    invoke-static {p1, v0}, LX/0hTo;->A01(Landroid/content/SharedPreferences;LX/0fKx;)Z
+
+    move-result v0
+
+    goto/16 :goto_53a
+
+    :pswitch_311
+    sget-object v0, LX/0hkS;->A15:LX/0fKx;
+
+    goto/16 :goto_3cb
+
+    :pswitch_315
+    sget-object v0, LX/0hkS;->A2E:LX/0fKx;
+
+    goto/16 :goto_3cb
+
+    :pswitch_319
+    sget-object v0, LX/0hkS;->A14:LX/0fKx;
+
+    invoke-static {p0, p1, v0}, LX/0hqj;->A04(Landroid/content/Context;Landroid/content/SharedPreferences;LX/0fKx;)LX/0dkb;
+
+    move-result-object v0
+
+    return-object v0
+
+    :pswitch_320
+    sget-object v0, LX/0hkS;->A2D:LX/0fKx;
+
+    invoke-static {p0, p1, v0}, LX/0hqj;->A04(Landroid/content/Context;Landroid/content/SharedPreferences;LX/0fKx;)LX/0dkb;
+
+    move-result-object v0
+
+    return-object v0
+
+    :pswitch_327
+    sget-object v0, LX/0hkS;->A1o:LX/0fKx;
+
+    goto/16 :goto_3cb
+
+    :pswitch_32b
+    sget-object v0, LX/0hkS;->A0f:LX/0fKx;
+
+    goto/16 :goto_3cb
+
+    :pswitch_32f
+    sget-object v0, LX/0hkS;->A28:LX/0fKx;
+
+    goto/16 :goto_3cb
+
+    :pswitch_333
+    sget-object v0, LX/0hkS;->A0z:LX/0fKx;
+
+    goto/16 :goto_3cb
+
+    :pswitch_337
+    sget-object v0, LX/0hkS;->A26:LX/0fKx;
+
+    goto/16 :goto_3cb
+
+    :pswitch_33b
+    sget-object v0, LX/0hkS;->A0x:LX/0fKx;
+
+    goto/16 :goto_3cb
+
+    :pswitch_33f
+    sget-object v0, LX/0hkS;->A27:LX/0fKx;
+
+    goto/16 :goto_3cb
+
+    :pswitch_343
+    sget-object v0, LX/0hkS;->A0y:LX/0fKx;
+
+    goto/16 :goto_3cb
+
+    :pswitch_347
+    sget-object v0, LX/0hkS;->A1j:LX/0fKx;
+
+    goto/16 :goto_3cb
+
+    :pswitch_34b
+    sget-object v0, LX/0hkS;->A0a:LX/0fKx;
+
+    goto :goto_3cb
+
+    :pswitch_34e
+    sget-object v0, LX/0hkS;->A2H:LX/0fKx;
+
+    goto :goto_3cb
+
+    :pswitch_351
+    sget-object v0, LX/0hkS;->A18:LX/0fKx;
+
+    goto :goto_3cb
+
+    :pswitch_354
+    sget-object v0, LX/0hkS;->A25:LX/0fKx;
+
+    goto :goto_3cb
+
+    :pswitch_357
+    sget-object v0, LX/0hkS;->A0w:LX/0fKx;
+
+    goto :goto_3cb
+
+    :pswitch_35a
+    sget-object v0, LX/0hkS;->A2L:LX/0fKx;
+
+    goto :goto_3cb
+
+    :pswitch_35d
+    sget-object v0, LX/0hkS;->A1C:LX/0fKx;
+
+    goto :goto_3cb
+
+    :pswitch_360
+    sget-object v0, LX/0hkS;->A1T:LX/0fKx;
+
+    goto :goto_3cb
+
+    :pswitch_363
+    sget-object v0, LX/0hkS;->A0K:LX/0fKx;
+
+    goto :goto_3cb
+
+    :pswitch_366
+    sget-object v0, LX/0hkS;->A1m:LX/0fKx;
+
+    goto/16 :goto_52a
+
+    :pswitch_38e
+    sget-object v0, LX/0hkS;->A2R:LX/0fKx;
+
+    goto/16 :goto_52a
+
+    :pswitch_392
+    sget-object v0, LX/0hkS;->A1I:LX/0fKx;
+
+    goto/16 :goto_52a
+
+    :pswitch_396
+    sget-object v0, LX/0hkS;->A2B:LX/0fKx;
+
+    goto/16 :goto_52a
+
+    :pswitch_39a
+    sget-object v0, LX/0hkS;->A12:LX/0fKx;
+
+    goto/16 :goto_52a
+
+    :pswitch_39e
+    sget-object v0, LX/0hkS;->A1U:LX/0fKx;
+
+    goto/16 :goto_52a
+
+    :pswitch_3a2
+    sget-object v0, LX/0hkS;->A0L:LX/0fKx;
+
+    goto/16 :goto_52a
+
+    :pswitch_3a6
+    sget-object v0, LX/0hkS;->A29:LX/0fKx;
+
+    goto/16 :goto_52a
+
+    :pswitch_3aa
+    sget-object v0, LX/0hkS;->A10:LX/0fKx;
+
+    goto/16 :goto_52a
+
+    :pswitch_3ae
+    sget-object v0, LX/0hkS;->A2C:LX/0fKx;
+
+    goto/16 :goto_52a
+
+    :pswitch_3b2
+    sget-object v0, LX/0hkS;->A13:LX/0fKx;
+
+    goto/16 :goto_52a
+
+    :pswitch_3b6
+    sget-object v0, LX/0hkS;->A2G:LX/0fKx;
+
+    goto/16 :goto_52a
+
+    :pswitch_3ba
+    sget-object v0, LX/0hkS;->A17:LX/0fKx;
+
+    goto/16 :goto_52a
+
+    :pswitch_3be
+    sget-object v0, LX/0hkS;->A1R:LX/0fKx;
+
+    goto/16 :goto_52a
+
+    :pswitch_3c2
+    sget-object v0, LX/0hkS;->A0I:LX/0fKx;
+
+    goto/16 :goto_52a
+
+    :pswitch_3c6
+    sget-object v0, LX/0hkS;->A1P:LX/0fKx;
+
+    goto :goto_3cb
+
+    :pswitch_3c9
+    sget-object v0, LX/0hkS;->A0G:LX/0fKx;
+
+    :goto_3cb
+    invoke-static {p0, p1, v0}, LX/0hqj;->A05(Landroid/content/Context;Landroid/content/SharedPreferences;LX/0fKx;)LX/037o;
+
+    move-result-object v0
+
+    return-object v0
+
+    :pswitch_3d0
+    sget-object v0, LX/0hkS;->A1O:LX/0fKx;
+
+    goto/16 :goto_4f6
+
+    :pswitch_3d4
+    sget-object v0, LX/0hkS;->A0F:LX/0fKx;
+
+    goto/16 :goto_4f6
+
+    :pswitch_3d8
+    sget-object v0, LX/0hkS;->A1Q:LX/0fKx;
+
+    goto/16 :goto_4ac
+
+    :pswitch_3dc
+    sget-object v0, LX/0hkS;->A0H:LX/0fKx;
+
+    goto/16 :goto_4ac
+
+    :pswitch_3e0
+    sget-object v0, LX/0hkS;->A1s:LX/0fKx;
+
+    goto/16 :goto_4f6
+
+    :pswitch_3e4
+    sget-object v0, LX/0hkS;->A0j:LX/0fKx;
+
+    goto/16 :goto_4f6
+
+    :pswitch_3e8
+    sget-object v0, LX/0hkS;->A1x:LX/0fKx;
+
+    goto/16 :goto_4ac
+
+    :pswitch_3ec
+    sget-object v0, LX/0hkS;->A0o:LX/0fKx;
+
+    goto/16 :goto_4ac
+
+    :pswitch_3f0
+    sget-object v0, LX/0hkS;->A24:LX/0fKx;
+
+    goto/16 :goto_52a
+
+    :pswitch_3f4
+    sget-object v0, LX/0hkS;->A0v:LX/0fKx;
+
+    goto/16 :goto_52a
+
+    :pswitch_3f8
+    sget-object v0, LX/0hkS;->A22:LX/0fKx;
+
+    goto/16 :goto_52a
+
+    :pswitch_3fc
+    sget-object v0, LX/0hkS;->A0t:LX/0fKx;
+
+    goto/16 :goto_52a
+
+    :pswitch_400
+    sget-object v0, LX/0hkS;->A2A:LX/0fKx;
+
+    goto/16 :goto_52a
+
+    :pswitch_404
+    sget-object v0, LX/0hkS;->A11:LX/0fKx;
+
+    goto/16 :goto_52a
+
+    :pswitch_408
+    sget-object v0, LX/0hkS;->A1k:LX/0fKx;
+
+    goto/16 :goto_52a
+
+    :pswitch_40c
+    sget-object v0, LX/0hkS;->A0b:LX/0fKx;
+
+    goto/16 :goto_52a
+
+    :pswitch_410
+    sget-object v0, LX/0hkS;->A2P:LX/0fKx;
+
+    goto/16 :goto_52a
+
+    :pswitch_414
+    sget-object v0, LX/0hkS;->A1G:LX/0fKx;
+
+    goto/16 :goto_52a
+
+    :pswitch_418
+    sget-object v0, LX/0hkS;->A1y:LX/0fKx;
+
+    goto/16 :goto_52a
+    sget-object v0, LX/0hkS;->A1u:LX/0fKx;
+
+    goto :goto_510
+
+    :pswitch_508
+    sget-object v0, LX/0hkS;->A0l:LX/0fKx;
+
+    goto :goto_510
+
+    :pswitch_50b
+    sget-object v0, LX/0hkS;->A1w:LX/0fKx;
+
+    goto :goto_510
+
+    :pswitch_50e
+    sget-object v0, LX/0hkS;->A0n:LX/0fKx;
+
+    :goto_510
+    iget-object v1, v0, LX/0fKx;->A01:Ljava/lang/String;
+
+    invoke-interface {p1, v1}, Landroid/content/SharedPreferences;->contains(Ljava/lang/String;)Z
+
+    move-result v0
+
+    if-nez v0, :cond_51b
+
+    invoke-static {p0, p1}, LX/0hqj;->A08(Landroid/content/Context;Landroid/content/SharedPreferences;)V
+
+    :cond_51b
+    const/4 v0, -0x2
+
+    :goto_51c
+    invoke-interface {p1, v1, v0}, Landroid/content/SharedPreferences;->getInt(Ljava/lang/String;I)I
+
+    move-result v4
+
+    :cond_520
+    :goto_520
+    invoke-static {v4}, Ljava/lang/Integer;->valueOf(I)Ljava/lang/Integer;
+
+    move-result-object v0
+
+    return-object v0
+
+    :pswitch_525
+    sget-object v0, LX/0hkS;->A2K:LX/0fKx;
+
+    goto :goto_52a
+
+    :pswitch_528
+    sget-object v0, LX/0hkS;->A1B:LX/0fKx;
+
+    :goto_52a
+    iget-object v1, v0, LX/0fKx;->A01:Ljava/lang/String;
+
+    invoke-interface {p1, v1}, Landroid/content/SharedPreferences;->contains(Ljava/lang/String;)Z
+
+    move-result v0
+
+    if-nez v0, :cond_535
+
+    invoke-static {p0, p1}, LX/0hqj;->A08(Landroid/content/Context;Landroid/content/SharedPreferences;)V
+
+    :cond_535
+    const/4 v0, 0x0
+
+    invoke-interface {p1, v1, v0}, Landroid/content/SharedPreferences;->getBoolean(Ljava/lang/String;Z)Z
+
+    move-result v0
+
+    :goto_53a
+    invoke-static {v0}, Ljava/lang/Boolean;->valueOf(Z)Ljava/lang/Boolean;
+
+    move-result-object v0
+
+    return-object v0
+
+    :pswitch_53f
+    sget-object v0, LX/0hkS;->A2f:LX/0fKx;
+
+    invoke-static {p1, v0}, LX/0hld;->A01(Landroid/content/SharedPreferences;LX/0fKx;)Ljava/lang/String;
+
+    move-result-object v0
+
+    return-object v0
+
+    :pswitch_data_546
+    .packed-switch 0x0
+        :pswitch_11
+        :pswitch_248
+        :pswitch_2b
+        :pswitch_119
+        :pswitch_138
+        :pswitch_15f
+        :pswitch_16f
+        :pswitch_17d
+        :pswitch_184
+        :pswitch_18b
+        :pswitch_18e
+        :pswitch_191
+        :pswitch_194
+        :pswitch_19b
+        :pswitch_1d3
+        :pswitch_1d6
+        :pswitch_1d9
+        :pswitch_1dc
+        :pswitch_1df
+        :pswitch_1e2
+        :pswitch_1e5
+        :pswitch_252
+        :pswitch_1ec
+        :pswitch_257
+        :pswitch_1f4
+        :pswitch_204
+        :pswitch_20f
+        :pswitch_25c
+        :pswitch_263
+        :pswitch_26a
+        :pswitch_271
+        :pswitch_274
+        :pswitch_277
+        :pswitch_27a
+        :pswitch_27d
+        :pswitch_280
+        :pswitch_283
+        :pswitch_286
+        :pswitch_289
+        :pswitch_299
+        :pswitch_29c
+        :pswitch_29f
+        :pswitch_2a2
+        :pswitch_2a5
+        :pswitch_2a8
+        :pswitch_2ab
+        :pswitch_2ae
+        :pswitch_2b1
+        :pswitch_2b4
+        :pswitch_2b7
+        :pswitch_2ba
+        :pswitch_2bd
+        :pswitch_2c0
+        :pswitch_2c3
+        :pswitch_2c6
+        :pswitch_2c9
+        :pswitch_2cc
+        :pswitch_2cf
+        :pswitch_2d2
+        :pswitch_2d5
+        :pswitch_2d8
+        :pswitch_2db
+        :pswitch_2de
+        :pswitch_2e1
+        :pswitch_2e4
+        :pswitch_2e7
+        :pswitch_2ea
+        :pswitch_2ed
+        :pswitch_2f0
+        :pswitch_2f3
+        :pswitch_2f6
+        :pswitch_306
+        :pswitch_309
+        :pswitch_311
+        :pswitch_315
+        :pswitch_319
+        :pswitch_320
+        :pswitch_327
+        :pswitch_32b
+        :pswitch_32f
+        :pswitch_333
+        :pswitch_337
+        :pswitch_33b
+        :pswitch_33f
+        :pswitch_343
+        :pswitch_347
+        :pswitch_34b
+        :pswitch_34e
+        :pswitch_351
+        :pswitch_354
+        :pswitch_357
+        :pswitch_35a
+
+--- LX/09Ux; .method public final onAppForegrounded()V FILE=work/smali/c15/X/09Ux.smali TARGETS=[('LX/0ece;', 'A00', ['ig_device_static_attributes'])]
+.method public final onAppForegrounded()V
+    .registers 6
+
+    iget v0, p0, LX/09Ux;->$t:I
+
+    if-eqz v0, :cond_3a
+
+    iget-object v1, p0, LX/09Ux;->A00:Ljava/lang/Object;
+
+    check-cast v1, Lcom/instagram/common/session/UserSession;
+
+    sget-object v0, LX/02uB;->A0H:Ljava/lang/ref/WeakReference;
+
+    invoke-virtual {v0}, Ljava/lang/ref/Reference;->get()Ljava/lang/Object;
+
+    move-result-object v0
+
+    check-cast v0, Landroid/content/Context;
+
+    const/4 v4, 0x0
+
+    :try_start_11
+    invoke-static {v0, v1}, LX/0ece;->A00(Landroid/content/Context;Lcom/instagram/common/session/UserSession;)V
+
+    goto :goto_36
+    :try_end_15
+    .catch Ljava/lang/Exception; {:try_start_11 .. :try_end_15} :catch_15
+
+    :catch_15
+    sget-object v0, LX/04BF;->A00:LX/04BE;
+
+    invoke-static {v0}, LX/02rW;->A00(LX/04BE;)LX/02rW;
+
+    move-result-object v0
+
+    iget-object v3, v0, LX/02rW;->A01:LX/09si;
+
+    const/16 v0, 0x740
+
+    invoke-static {v0}, LX/0005;->A00(I)Ljava/lang/String;
+
+    move-result-object v2
+
+    invoke-interface {v3, v2, v4}, LX/09si;->getInt(Ljava/lang/String;I)I
+
+    move-result v0
+
+    add-int/lit8 v1, v0, 0x1
+
+    invoke-interface {v3}, LX/09si;->B73()LX/09sA;
+
+    move-result-object v0
+
+    invoke-interface {v0, v2, v1}, LX/09sA;->GH3(Ljava/lang/String;I)V
+
+    invoke-interface {v0}, LX/09sA;->apply()V
+
+    invoke-interface {v3, v2, v4}, LX/09si;->getInt(Ljava/lang/String;I)I
+
+    :goto_36
+    invoke-static {p0}, LX/02uB;->A03(LX/0wah;)V
+
+    return-void
+
+    :cond_3a
+    iget-object v2, p0, LX/09Ux;->A00:Ljava/lang/Object;
+
+    check-cast v2, LX/09jI;
+
+    invoke-static {}, Landroid/os/SystemClock;->uptimeMillis()J
+
+    move-result-wide v0
+
+    iput-wide v0, v2, LX/09jI;->A02:J
+
+    return-void
+.end method
+
+--- LX/03u7; .method public final A04()LX/03ci; FILE=work/smali/c15/X/03u7.smali TARGETS=[('LX/03u7;', 'A01', ['X-IG-Device-ID'])]
+    :try_start_1f3
+    move-exception v1
+
+    const-string v0, "error in add param"
+
+    invoke-static {v6, v1, v0}, LX/00Iv;->A0O(Ljava/lang/String;Ljava/lang/Throwable;Ljava/lang/String;)V
+
+    :cond_1f9
+    :goto_1f9
+    iget-object v0, v15, LX/03u7;->A05:Lcom/google/common/base/Supplier;
+
+    const-string v4, "Required value was null."
+
+    if-eqz v0, :cond_230
+
+    iget-object v1, v15, LX/03u7;->A0a:LX/02pv;
+
+    invoke-interface {v0}, Lcom/google/common/base/Supplier;->get()Ljava/lang/Object;
+
+    move-result-object v0
+
+    if-eqz v0, :cond_210
+
+    check-cast v0, LX/02pv;
+
+    invoke-static {v0, v2}, LX/04l9;->A0j(Ljava/lang/Object;I)V
+
+    invoke-virtual {v1, v0, v8}, LX/02pv;->A04(LX/02pv;Ljava/util/Set;)V
+
+    goto :goto_230
+
+    :cond_210
+    new-instance v0, Ljava/lang/IllegalStateException;
+
+    invoke-direct {v0, v4}, Ljava/lang/IllegalStateException;-><init>(Ljava/lang/String;)V
+
+    goto :goto_221
+
+    :cond_216
+    new-instance v0, LX/0BfQ;
+
+    invoke-direct {v0}, LX/0BfQ;-><init>()V
+
+    goto :goto_221
+
+    :cond_21c
+    new-instance v0, LX/0B0z;
+
+    invoke-direct {v0}, LX/0B0z;-><init>()V
+
+    :goto_221
+    throw v0
+    :try_end_222
+    .catchall {:try_start_1f3 .. :try_end_222} :catchall_222
+
+    :catchall_222
+    move-exception v1
+
+    invoke-static {}, Lcom/facebook/systrace/Systrace;->A0E()Z
+
+    move-result v0
+
+    if-eqz v0, :cond_19
+
+    const v0, -0x18a1e225
+
+    invoke-static {v0}, LX/03Al;->A00(I)V
+
+    throw v1
+
+    :cond_230
+    :goto_230
+    move-object/from16 v20, v3
+
+    move-object/from16 v19, v10
+
+    move-object/from16 v18, v9
+
+    move-object/from16 v17, v5
+
+    invoke-static/range {v15 .. v22}, LX/03u7;->A01(LX/03u7;LX/04BE;LX/04BG;Ljava/lang/Integer;Ljava/lang/Object;Ljava/lang/String;Ljava/lang/String;I)LX/03ci;
+
+    move-result-object v0
+
+    return-object v0
+.end method
+
+===== JOINT TOKEN METHODS =====
