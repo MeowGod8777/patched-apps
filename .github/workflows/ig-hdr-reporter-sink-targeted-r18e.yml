@@ -1,0 +1,107 @@
+name: IG 439 HDR Reporter Sink Targeted R18e
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - .github/workflows/ig-hdr-reporter-sink-targeted-r18e.yml
+
+permissions:
+  contents: write
+
+jobs:
+  trace:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    env:
+      APK_NAME: instagram-piko-v439.0.0.37.89-arm64-v8a.apk
+      APK_SHA256: 4015b171ac59f3e7172134d194ec2dcf701f64c3339f127c19d7a04c13d529c8
+    steps:
+      - uses: actions/checkout@v6
+        with: {fetch-depth: 0}
+      - uses: actions/setup-java@v5
+        with:
+          distribution: zulu
+          java-version: '21'
+      - name: Prepare exact smali
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          set -euo pipefail
+          mkdir -p work/apk work/smali research/generated
+          gh release download 8 --pattern "$APK_NAME" --dir work
+          echo "$APK_SHA256  work/$APK_NAME" | sha256sum -c -
+          gh release download 3.0.10 --repo baksmali/smali --pattern 'baksmali-3.0.10-fat.jar' --dir work
+          unzip -q "work/$APK_NAME" 'classes*.dex' -d work/apk
+          for d in work/apk/classes*.dex; do
+            n="$(basename "$d" .dex)"
+            java -jar work/baksmali-3.0.10-fat.jar d "$d" -o "work/smali/$n" >/dev/null &
+          done
+          wait
+
+      - name: Extract only sink/scheduler methods
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          from pathlib import Path
+          import re
+          root=Path('work/smali'); out=Path('research/generated/instagram_439_hdr_reporter_sink_targeted_r18e.txt')
+          O=['Instagram 439 HDR reporter sink targeted R18e','============================================','']
+          def cls_of(ls):
+            for x in ls[:40]:
+              m=re.match(r'^\.class\s+.*\s+(L[^;]+;)$',x)
+              if m:return m.group(1)
+            return '?'
+          def methods(ls):
+            i=0
+            while i<len(ls):
+              if not ls[i].startswith('.method'): i+=1; continue
+              s=i; i+=1
+              while i<len(ls) and not ls[i].startswith('.end method'): i+=1
+              e=min(i,len(ls)-1); yield ls[s],ls[s:e+1]
+              i+=1
+          # Exact A01 sink body only.
+          for p in root.rglob('0knW.smali'):
+            ls=p.read_text(errors='replace').splitlines(); c=cls_of(ls)
+            if c!='LX/0knW;': continue
+            for sig,b in methods(ls):
+              if ' A01(Landroid/content/Context;LX/02rJ;)V' in sig:
+                O += [f'===== EXACT SINK {c} {sig} FILE={p} =====']+b+['']
+          # Every method anywhere referencing 0knW or 0lAl class, excluding the collector A00 body itself.
+          for needle,label in [('LX/0knW;','HDR_REPORTER_REF'),('LX/0lAl;','DEVICE_CLASSIFIER_REF')]:
+            O += [f'===== ALL {label} =====','']
+            for p in root.rglob('*.smali'):
+              ls=p.read_text(errors='replace').splitlines()
+              if not any(needle in x for x in ls): continue
+              c=cls_of(ls)
+              for sig,b in methods(ls):
+                if not any(needle in x for x in b): continue
+                if c=='LX/0knW;' and ' A00(' in sig: continue
+                if c=='LX/0lAl;' and ' run()V' in sig: continue
+                O += [f'--- {c} {sig} FILE={p} ---']+b+['']
+          # Every constructor of 0lAl and any call site that new-instances it.
+          O += ['===== 0lAl CONSTRUCTOR + NEW-INSTANCE SITES =====','']
+          for p in root.rglob('*.smali'):
+            ls=p.read_text(errors='replace').splitlines(); c=cls_of(ls)
+            for sig,b in methods(ls):
+              t='\n'.join(b)
+              if (c=='LX/0lAl;' and '<init>(' in sig) or 'new-instance' in t and 'LX/0lAl;' in t:
+                O += [f'--- {c} {sig} FILE={p} ---']+b+['']
+          # Methods referring to likely sink interface/class from A01 once discovered by direct body.
+          text='\n'.join(O)
+          out.write_text(text,encoding='utf-8')
+          print(text[:300000]); print('bytes',out.stat().st_size)
+          PY
+
+      - name: Commit report
+        run: |
+          set -euo pipefail
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add research/generated/instagram_439_hdr_reporter_sink_targeted_r18e.txt
+          if ! git diff --cached --quiet; then
+            git commit -m 'Add targeted Instagram HDR reporter sink R18e'
+            git pull --rebase origin main
+            git push origin HEAD:main
+          fi
