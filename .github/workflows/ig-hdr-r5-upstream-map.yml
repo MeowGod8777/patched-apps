@@ -1,0 +1,180 @@
+name: IG 439 HDR R5 Upstream Map
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - .github/workflows/ig-hdr-r5-upstream-map.yml
+
+permissions:
+  contents: write
+
+jobs:
+  map:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    env:
+      APK_NAME: instagram-piko-v439.0.0.37.89-arm64-v8a.apk
+      APK_SHA256: 4015b171ac59f3e7172134d194ec2dcf701f64c3339f127c19d7a04c13d529c8
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-java@v5
+        with:
+          distribution: zulu
+          java-version: '21'
+
+      - name: Download exact R8 and smali 3.0.10
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          set -euo pipefail
+          mkdir -p work/dex work/dis research/generated
+          gh release download 8 --pattern "$APK_NAME" --dir work
+          echo "$APK_SHA256  work/$APK_NAME" | sha256sum -c -
+          unzip -j "work/$APK_NAME" 'classes*.dex' -d work/dex
+          gh release download 3.0.10 --repo baksmali/smali --pattern 'baksmali-3.0.10-fat.jar' --dir work
+
+      - name: Locate and disassemble DEXes containing representation metadata
+        run: |
+          set -euo pipefail
+          : > work/targets.txt
+          for d in work/dex/classes*.dex; do
+            if grep -a -q -E 'LX/08td;|LX/08tc;|LX/00PV;|LX/03oR;' "$d"; then
+              echo "$d" >> work/targets.txt
+            fi
+          done
+          cat work/targets.txt
+          test -s work/targets.txt
+          while read -r d; do
+            b="$(basename "$d" .dex)"
+            mkdir -p "work/dis/$b"
+            java -jar work/baksmali-3.0.10-fat.jar d "$d" -o "work/dis/$b"
+          done < work/targets.txt
+
+      - name: Build upstream representation map
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          from pathlib import Path
+          import re
+
+          roots=[]
+          for p in Path('work/dis').glob('classes*/X/*.smali'):
+              txt=p.read_text(errors='replace')
+              if any(x in txt for x in ('LX/08td;','LX/08tc;','LX/00PV;','LX/03oR;')):
+                  roots.append((p,txt))
+
+          out=[]
+          out += [
+              'Instagram 439 HDR R5 upstream representation map',
+              '================================================',
+              'Exact base SHA256: 4015b171ac59f3e7172134d194ec2dcf701f64c3339f127c19d7a04c13d529c8',
+              '',
+          ]
+
+          def emit_file(p, txt, label, cap=16000):
+              out.append(f'===== {label}: {p} =====')
+              lines=txt.splitlines()
+              out.extend(lines[:cap])
+              if len(lines)>cap: out.append(f'... OMITTED {len(lines)-cap} LINES ...')
+              out.append('')
+
+          # Full metadata classes first.
+          for cls in ('08tc','08td'):
+              hits=[]
+              for p in Path('work/dis').glob(f'classes*/X/{cls}.smali'):
+                  hits.append(p)
+              out.append(f'CLASS_{cls}_COUNT={len(hits)}')
+              for p in hits:
+                  emit_file(p,p.read_text(errors='replace'),f'FULL X.{cls}',22000)
+
+          # Methods that construct or mutate 08tc/08td, preserving surrounding obfuscated code.
+          anchors=(
+              'new-instance', 'LX/08tc;-><init>', 'LX/08td;-><init>',
+              'iput', 'sput', 'video/av01', 'av01', 'representation', 'Representation',
+              'manifest', 'Manifest', 'codec', 'Codec', 'hdr', 'HDR', 'color', 'Color',
+              'transfer', 'Transfer', 'bitDepth', 'bit_depth', '10bit', '10-bit',
+              'SupplementalProperty', 'EssentialProperty', 'schemeIdUri', 'role'
+          )
+
+          # Split smali into methods and retain methods referencing metadata classes.
+          methods=[]
+          for p,txt in roots:
+              lines=txt.splitlines()
+              start=None
+              for i,l in enumerate(lines):
+                  if l.startswith('.method'):
+                      start=i
+                  elif l.startswith('.end method') and start is not None:
+                      block='\n'.join(lines[start:i+1])
+                      if 'LX/08td;' in block or 'LX/08tc;' in block:
+                          score=sum(block.count(a) for a in anchors)
+                          methods.append((score,p,lines[start],block))
+                      start=None
+
+          methods.sort(key=lambda x:(-x[0],str(x[1]),x[2]))
+          out.append(f'METADATA_REFERENCING_METHOD_COUNT={len(methods)}')
+          for rank,(score,p,head,block) in enumerate(methods[:260],1):
+              out.append(f'===== META METHOD #{rank} SCORE={score} FILE={p} HEAD={head} =====')
+              out.extend(block.splitlines())
+              out.append('')
+
+          # Explicit field readers/writers grouped by X.08td field name.
+          field_re=re.compile(r'LX/08td;->([A-Za-z0-9_$]+):([^\s]+)')
+          fields={}
+          for p,txt in roots:
+              for name,typ in field_re.findall(txt):
+                  fields.setdefault((name,typ),[]).append(p)
+          out.append('===== X.08td FIELD REFERENCE INDEX =====')
+          for (name,typ),ps in sorted(fields.items()):
+              uniq=sorted({str(x) for x in ps})
+              out.append(f'{name}:{typ} refs={len(uniq)} files={";".join(uniq[:20])}')
+          out.append('')
+
+          # Candidate upstream parser/manifest methods even if they do not directly mention metadata.
+          semantic=('video/av01','av01','SupplementalProperty','EssentialProperty','schemeIdUri',
+                    'representation','Representation','manifest','Manifest','hdr','HDR','st2084','ST2084',
+                    'hlg','HLG','bt2020','BT2020','color-transfer','colorTransfer','bit_depth','bitDepth')
+          sem=[]
+          for p in Path('work/dis').glob('classes*/X/*.smali'):
+              txt=p.read_text(errors='replace')
+              if not any(k in txt for k in semantic):
+                  continue
+              lines=txt.splitlines(); start=None
+              for i,l in enumerate(lines):
+                  if l.startswith('.method'): start=i
+                  elif l.startswith('.end method') and start is not None:
+                      block='\n'.join(lines[start:i+1])
+                      score=sum(block.count(k) for k in semantic)
+                      if score:
+                          sem.append((score,p,lines[start],block))
+                      start=None
+          sem.sort(key=lambda x:(-x[0],str(x[1]),x[2]))
+          out.append(f'SEMANTIC_METHOD_COUNT={len(sem)}')
+          for rank,(score,p,head,block) in enumerate(sem[:180],1):
+              out.append(f'===== SEMANTIC METHOD #{rank} SCORE={score} FILE={p} HEAD={head} =====')
+              out.extend(block.splitlines())
+              out.append('')
+
+          path=Path('research/generated/instagram_439_hdr_r5_upstream_map.txt')
+          path.write_text('\n'.join(out)+'\n',encoding='utf-8')
+          print(f'REPORT_BYTES={path.stat().st_size}')
+          print('\n'.join(out[:1200]))
+          if path.stat().st_size < 10000:
+              raise SystemExit('upstream map unexpectedly small')
+          PY
+
+      - name: Commit report
+        run: |
+          set -euo pipefail
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add research/generated/instagram_439_hdr_r5_upstream_map.txt
+          if ! git diff --cached --quiet; then
+            git commit -m 'Map Instagram 439 upstream HDR representations for R5'
+          fi
+          git pull --rebase origin main
+          git push origin HEAD:main
