@@ -1,0 +1,190 @@
+name: IG 439 HDR R5 Owner Index
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - .github/workflows/ig-hdr-r5-owner-index.yml
+
+permissions:
+  contents: write
+
+jobs:
+  index:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    env:
+      APK_NAME: instagram-piko-v439.0.0.37.89-arm64-v8a.apk
+      APK_SHA256: 4015b171ac59f3e7172134d194ec2dcf701f64c3339f127c19d7a04c13d529c8
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-java@v5
+        with:
+          distribution: zulu
+          java-version: '21'
+
+      - name: Fetch exact R8 and tools
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          set -euo pipefail
+          mkdir -p work/dex work/dis research/generated
+          gh release download 8 --pattern "$APK_NAME" --dir work
+          echo "$APK_SHA256  work/$APK_NAME" | sha256sum -c -
+          unzip -j "work/$APK_NAME" 'classes*.dex' -d work/dex
+          gh release download 3.0.10 --repo baksmali/smali --pattern 'baksmali-3.0.10-fat.jar' --dir work
+
+      - name: Disassemble metadata DEXes only
+        run: |
+          set -euo pipefail
+          : > work/targets.txt
+          for d in work/dex/classes*.dex; do
+            if grep -a -q -E 'LX/08td;|LX/08tc;' "$d"; then echo "$d" >> work/targets.txt; fi
+          done
+          cat work/targets.txt
+          test -s work/targets.txt
+          while read -r d; do
+            b="$(basename "$d" .dex)"
+            mkdir -p "work/dis/$b"
+            java -jar work/baksmali-3.0.10-fat.jar d "$d" -o "work/dis/$b"
+          done < work/targets.txt
+
+      - name: Build compact owner caller index
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          from pathlib import Path
+          import re
+          from collections import defaultdict
+
+          files=list(Path('work/dis').glob('classes*/X/*.smali'))
+          class_re=re.compile(r'^\.class\s+.*?\s(LX/[^;]+;)$',re.M)
+          mh_re=re.compile(r'^\.method\s+.*?\s([^\s(]+)\(([^)]*)\)(\S+)$')
+          inv_re=re.compile(r'invoke-[^\s]+\s+\{[^}]*\},\s+(LX/[^;]+;)->([^\s(]+)\(([^)]*)\)(\S+)')
+          str_re=re.compile(r'const-string(?:/jumbo)?\s+[^,]+,\s+"(.*?)"')
+          write_re=re.compile(r'iput-[^\s]+\s+[^\n]*LX/08tc;->([A-Za-z0-9_$]+):([^\s]+)')
+          read_re=re.compile(r'iget-[^\s]+\s+[^\n]*LX/08td;->([A-Za-z0-9_$]+):([^\s]+)')
+
+          methods=[]
+          by_sig={}
+          for p in files:
+            txt=p.read_text(errors='replace')
+            cm=class_re.search(txt)
+            if not cm: continue
+            cls=cm.group(1)
+            ls=txt.splitlines(); s=None; head=None
+            for i,l in enumerate(ls):
+              if l.startswith('.method'):
+                s=i; head=l
+              elif l.startswith('.end method') and s is not None:
+                mm=mh_re.match(head)
+                if mm:
+                  name,args,ret=mm.groups()
+                  sig=f'{cls}->{name}({args}){ret}'
+                  block='\n'.join(ls[s:i+1])
+                  m={'path':str(p),'cls':cls,'sig':sig,'head':head,'block':block}
+                  methods.append(m); by_sig[sig]=m
+                s=None; head=None
+
+          callers=defaultdict(list)
+          for m in methods:
+            for cls,name,args,ret in inv_re.findall(m['block']):
+              callers[f'{cls}->{name}({args}){ret}'].append(m)
+
+          def safe_strings(block):
+            vals=[]
+            for s in str_re.findall(block):
+              s=s.replace('|','/').replace('\n',' ')[:100]
+              if s not in vals: vals.append(s)
+            joined=' ; '.join(vals)
+            return joined[:700]
+
+          semantic_words=('representation','manifest','adaptation','supplemental','essential','schemeiduri',
+                          'hdr','st2084','hlg','bt2020','color','transfer','bitdepth','bit_depth','10-bit',
+                          'codec','av01','video/av01','hevc','vp9','dolby','role','dynamic_range','dynamicrange')
+          def sem_score(block):
+            low=block.lower()
+            return sum(low.count(x) for x in semantic_words)
+
+          owners=[]
+          for m in methods:
+            if m['cls'] in ('LX/08tc;','LX/08td;'): continue
+            b=m['block']
+            writes=write_re.findall(b)
+            newtc='LX/08tc;-><init>' in b
+            newtd='LX/08td;-><init>(LX/08tc;)V' in b
+            if not (writes or newtc or newtd): continue
+            score=len(writes)*20 + (30 if newtc else 0) + (40 if newtd else 0) + sem_score(b)*15
+            owners.append((score,m,writes,newtc,newtd))
+          owners.sort(key=lambda x:(-x[0],x[1]['path'],x[1]['sig']))
+
+          lines=[
+            'Instagram 439 HDR R5 owner/caller index',
+            '=======================================',
+            f'METHODS_TOTAL={len(methods)}',
+            f'OWNER_COUNT={len(owners)}',
+            '',
+          ]
+
+          for rank,(score,m,writes,newtc,newtd) in enumerate(owners,1):
+            fields=','.join(sorted({f for f,t in writes})) or '-'
+            lines.append(
+              f'OWNER|{rank}|score={score}|file={m["path"]}|sig={m["sig"]}|fields={fields}|new08tc={int(newtc)}|new08td={int(newtd)}|sem={sem_score(m["block"])}|strings={safe_strings(m["block"])}'
+            )
+            cs=callers.get(m['sig'],[])
+            for ci,c in enumerate(cs[:20],1):
+              lines.append(
+                f'CALLER|owner={rank}|n={ci}|file={c["path"]}|sig={c["sig"]}|sem={sem_score(c["block"])}|strings={safe_strings(c["block"])}'
+              )
+
+          lines += ['', 'FIELD_WRITE_INDEX']
+          fw=defaultdict(set)
+          for rank,(score,m,writes,newtc,newtd) in enumerate(owners,1):
+            for f,t in writes: fw[(f,t)].add(m['sig'])
+          for (f,t),sigs in sorted(fw.items()):
+            lines.append(f'FIELD|{f}:{t}|writers={len(sigs)}|'+' ; '.join(sorted(sigs)))
+
+          # One-line immutable readers, to expose selection/filter semantics without giant method bodies.
+          lines += ['', 'IMMUTABLE_READERS']
+          readers=[]
+          for m in methods:
+            if m['cls'] in ('LX/08tc;','LX/08td;'): continue
+            rr=read_re.findall(m['block'])
+            if not rr: continue
+            readers.append((sem_score(m['block']),m,rr))
+          readers.sort(key=lambda x:(-x[0],x[1]['path'],x[1]['sig']))
+          for rank,(sem,m,rr) in enumerate(readers[:120],1):
+            fields=','.join(sorted({f for f,t in rr}))
+            lines.append(f'READER|{rank}|file={m["path"]}|sig={m["sig"]}|fields={fields}|sem={sem}|strings={safe_strings(m["block"])}')
+
+          # Semantic methods in these same DEXes that mention metadata classes, one line only.
+          lines += ['', 'SEMANTIC_METADATA_METHODS']
+          sm=[]
+          for m in methods:
+            if 'LX/08tc;' not in m['block'] and 'LX/08td;' not in m['block']: continue
+            sem=sem_score(m['block'])
+            if sem: sm.append((sem,m))
+          sm.sort(key=lambda x:(-x[0],x[1]['path'],x[1]['sig']))
+          for rank,(sem,m) in enumerate(sm[:150],1):
+            lines.append(f'SEM|{rank}|file={m["path"]}|sig={m["sig"]}|sem={sem}|strings={safe_strings(m["block"])}')
+
+          path=Path('research/generated/instagram_439_hdr_r5_owner_index.txt')
+          path.write_text('\n'.join(lines)+'\n',encoding='utf-8')
+          print(f'REPORT_BYTES={path.stat().st_size}')
+          print(path.read_text())
+          if not owners or path.stat().st_size > 120000:
+            raise SystemExit(f'bad compact report size={path.stat().st_size}, owners={len(owners)}')
+          PY
+
+      - name: Commit compact index
+        run: |
+          set -euo pipefail
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add research/generated/instagram_439_hdr_r5_owner_index.txt
+          if ! git diff --cached --quiet; then git commit -m 'Add Instagram 439 HDR R5 owner index'; fi
+          git pull --rebase origin main
+          git push origin HEAD:main
