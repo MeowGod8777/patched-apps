@@ -1,0 +1,137 @@
+name: IG 439 HDR R6 Target Map
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - .github/workflows/ig-hdr-r6-target-map.yml
+
+permissions:
+  contents: write
+
+jobs:
+  map:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    env:
+      APK_NAME: instagram-piko-v439.0.0.37.89-arm64-v8a.apk
+      APK_SHA256: 4015b171ac59f3e7172134d194ec2dcf701f64c3339f127c19d7a04c13d529c8
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+      - name: Download and disassemble exact R8
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          set -euo pipefail
+          mkdir -p work/dex work/dis research/generated
+          gh release download 8 --pattern "$APK_NAME" --dir work
+          echo "$APK_SHA256  work/$APK_NAME" | sha256sum -c -
+          unzip -j "work/$APK_NAME" 'classes*.dex' -d work/dex
+          DEXDUMP="$(find "$ANDROID_HOME/build-tools" -type f -name dexdump | sort -V | tail -1)"
+          for d in work/dex/classes*.dex; do
+            b="$(basename "$d" .dex)"
+            "$DEXDUMP" -d -f -h "$d" > "work/dis/$b.txt"
+          done
+      - name: Build concise exact target map
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          from pathlib import Path
+          import re
+          from collections import defaultdict
+
+          hdr = re.compile(r'\|\[[0-9a-f]+\]\s+([^\s]+):')
+          invoke = re.compile(r'invoke-[^,]+.*?\s(L[^;]+;\.[^:]+:\([^\n ]*?\)[^\s/]+)')
+          methods=[]
+          def sig(h):
+              m=re.match(r'X\.([^.]+)\.([^:]+):(.*)$',h)
+              return f'LX/{m.group(1)};.{m.group(2)}:{m.group(3)}' if m else None
+          for p in sorted(Path('work/dis').glob('classes*.txt')):
+              lines=p.read_text(errors='replace').splitlines(); starts=[]; heads=[]
+              for i,l in enumerate(lines):
+                  m=hdr.search(l)
+                  if m: starts.append(i); heads.append(m.group(1))
+              for j,s in enumerate(starts):
+                  e=starts[j+1] if j+1<len(starts) else len(lines)
+                  methods.append({'file':p.name,'s':s+1,'e':e,'head':heads[j],'sig':sig(heads[j]),'body':lines[s:e]})
+
+          reverse=defaultdict(set)
+          for i,m in enumerate(methods):
+              for t in invoke.findall('\n'.join(m['body'])): reverse[t].add(i)
+
+          out=['Instagram 439 R6 full-chain target map','======================================','APK SHA256: '+__import__('os').environ['APK_SHA256'],'']
+          def emit(i,label,cap=500):
+              m=methods[i]
+              out.append(f'===== {label} :: {m["file"]}:{m["s"]}-{m["e"]} :: {m["head"]} =====')
+              out.extend(x.rstrip() for x in m['body'][:cap])
+              if len(m['body'])>cap: out.append(f'... omitted {len(m["body"])-cap} lines ...')
+              out.append('')
+
+          exact_strings=[
+            'video_dash_manifest','dash_manifest','video_versions','video_codec','is_hdr','hdr_source',
+            'hdr_type','bit_depth','bitdepth','video_url','playback_url'
+          ]
+          for needle in exact_strings:
+              ids=[]
+              for i,m in enumerate(methods):
+                  txt='\n'.join(m['body'])
+                  if f'"{needle}"' in txt or needle in txt:
+                      ids.append(i)
+              out.append(f'STRING {needle} COUNT={len(ids)}')
+              for i in ids[:30]: emit(i,f'STRING {needle}',700)
+
+          targets={
+            'Hero prefilter':'LX/08oh;.A0b:(Ljava/util/List;)Ljava/util/List;',
+            'Renderer candidate':'LX/00PV;.A0f:(LX/03oR;LX/08ui;)I',
+          }
+          for label,s in targets.items():
+              owners=[i for i,m in enumerate(methods) if m['sig']==s]
+              out.append(f'{label} OWNER_COUNT={len(owners)}')
+              for i in owners:
+                  emit(i,label,900)
+                  callers=sorted(reverse.get(s,()))
+                  out.append(f'{label} CALLER_COUNT={len(callers)}')
+                  for c in callers[:30]: emit(c,label+' CALLER',700)
+
+          # Model constructors and their callers: manifest -> periods -> adaptation sets -> representations -> Format.
+          ctor_needles=['LX/08rn;.<init>:','LX/08tp;.<init>:','LX/08ti;.<init>:','LX/096x;.<init>:','LX/03oR;.<init>:']
+          for needle in ctor_needles:
+              ids=[i for i,m in enumerate(methods) if needle in '\n'.join(m['body'])]
+              out.append(f'CTOR {needle} COUNT={len(ids)}')
+              for i in ids[:35]: emit(i,'CTOR '+needle,700)
+
+          # Candidate selected-format state seen in prior static reports.
+          field_needles=['LX/0hVf;.A0f:LX/03oR;','LX/00PM;.A0f:LX/03oR;']
+          for needle in field_needles:
+              ids=[i for i,m in enumerate(methods) if needle in '\n'.join(m['body'])]
+              out.append(f'FIELD {needle} COUNT={len(ids)}')
+              for i in ids[:50]: emit(i,'FIELD '+needle,800)
+
+          # Methods that both touch parsed representation tree and a raw manifest/string parser primitive.
+          bridge=[]
+          primitives=('XmlPullParser','JsonReader','JSONObject','JSONArray','Ljava/lang/String;','Uri;')
+          models=('LX/08rn;','LX/08tp;','LX/08ti;','LX/096x;','LX/03oR;')
+          for i,m in enumerate(methods):
+              txt='\n'.join(m['body'])
+              low=txt.lower()
+              if any(x in txt for x in models) and any(x in txt for x in primitives) and any(x in low for x in ('manifest','dash','codec','video','representation','adaptation')):
+                  bridge.append(i)
+          out.append(f'RAW_TO_MODEL_BRIDGE_COUNT={len(bridge)}')
+          for i in bridge[:80]: emit(i,'RAW_TO_MODEL_BRIDGE',900)
+
+          path=Path('research/generated/instagram_439_hdr_r6_target_map.txt')
+          path.write_text('\n'.join(out)+'\n',encoding='utf-8')
+          print(path.read_text()[:300000])
+          PY
+      - name: Commit report
+        run: |
+          set -euo pipefail
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add research/generated/instagram_439_hdr_r6_target_map.txt
+          if ! git diff --cached --quiet; then git commit -m "Map Instagram HDR R6 full-chain targets"; fi
+          git pull --rebase origin main
+          git push origin HEAD:main
