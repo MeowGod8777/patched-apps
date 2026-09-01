@@ -1,0 +1,152 @@
+name: IG 439 HDR Outbound Device Identity Trace
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - .github/workflows/ig-hdr-outbound-device-identity.yml
+
+permissions:
+  contents: write
+
+jobs:
+  trace:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    env:
+      APK_NAME: instagram-piko-v439.0.0.37.89-arm64-v8a.apk
+      APK_SHA256: 4015b171ac59f3e7172134d194ec2dcf701f64c3339f127c19d7a04c13d529c8
+    steps:
+      - uses: actions/checkout@v6
+        with: {fetch-depth: 0}
+      - uses: actions/setup-java@v5
+        with:
+          distribution: zulu
+          java-version: '21'
+      - name: Prepare exact smali
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          set -euo pipefail
+          mkdir -p work/apk work/smali research/generated
+          gh release download 8 --pattern "$APK_NAME" --dir work
+          echo "$APK_SHA256  work/$APK_NAME" | sha256sum -c -
+          gh release download 3.0.10 --repo baksmali/smali --pattern 'baksmali-3.0.10-fat.jar' --dir work
+          unzip -q "work/$APK_NAME" 'classes*.dex' -d work/apk
+          for d in work/apk/classes*.dex; do
+            n="$(basename "$d" .dex)"
+            java -jar work/baksmali-3.0.10-fat.jar d "$d" -o "work/smali/$n" >/dev/null
+          done
+
+      - name: Trace User-Agent and device identity into requests
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          from pathlib import Path
+          import re, collections
+          ROOT=Path('work/smali'); OUT=Path('research/generated/instagram_439_hdr_outbound_device_identity.txt')
+          cr=re.compile(r'^\.class\s+.*\s+(L[^;]+;)$'); mr=re.compile(r'^\.method\s+.*?([^\s]+\([^)]*\).+)$')
+          ir=re.compile(r'invoke-[^\s]+\s+\{[^}]*\},\s+(L[^;]+;->[^\s]+)'); sr=re.compile(r'^\s*const-string(?:/jumbo)?\s+[^,]+,\s+"(.*)"')
+          M={}; C=collections.defaultdict(set)
+          for p in ROOT.rglob('*.smali'):
+            L=p.read_text(errors='replace').splitlines(); cls=None
+            for x in L[:25]:
+              z=cr.match(x)
+              if z: cls=z.group(1); break
+            if not cls: continue
+            i=0
+            while i<len(L):
+              z=mr.match(L[i])
+              if not z: i+=1; continue
+              ref=cls+'->'+z.group(1); s=i; i+=1
+              while i<len(L) and not L[i].startswith('.end method'): i+=1
+              b=L[s:min(i+1,len(L))]; ss=[]; inv=[]
+              for x in b:
+                q=sr.match(x)
+                if q: ss.append(q.group(1))
+                q=ir.search(x)
+                if q: inv.append(q.group(1))
+              M[ref]={'file':str(p),'body':b,'strings':ss,'invokes':inv}
+              for n in inv: C[n].add(ref)
+              i+=1
+          def body(m): return '\n'.join(M[m]['body'])
+          def strings(m): return '\n'.join(M[m]['strings']).lower()
+          header_terms=('user-agent','x-ig-capabilities','x-ig-device-id','x-ig-android-id','x-ig-family-device-id','x-ig-app-id','x-ig-connection-type','x-ig-device-locale')
+          header=[m for m in M if any(t in strings(m) for t in header_terms)]
+          # UA/model formatter candidates, including app version and Android identity fields.
+          identity=[]
+          for m in M:
+            t=body(m); s=strings(m)
+            build_count=sum(x in t for x in ('Landroid/os/Build;->MODEL','Landroid/os/Build;->MANUFACTURER','Landroid/os/Build;->DEVICE','Landroid/os/Build;->PRODUCT','Landroid/os/Build;->BRAND'))
+            ua_clue=any(x in s for x in ('instagram','android (','dpi','versionname','device_model','client_device_model'))
+            if build_count>=2 or (build_count>=1 and ua_clue): identity.append(m)
+          reel_terms=('clips/feed','reels/feed','feed/reels','clips/items','clips_timeline','reels_timeline','starting_clips_media_id','feed_request_id','clips_viewer','reels_viewer')
+          reel=[m for m in M if any(t in strings(m) for t in reel_terms)]
+          request_terms=('graphql','http','request','i.instagram.com','/api/','feed_request_id')
+          request=[m for m in reel if any(t in strings(m) or t in body(m).lower() for t in request_terms)]
+          def emit(O,m,label,full=True):
+            d=M[m]; O += [f'===== {label} {m} =====','FILE: '+d['file'],'STRINGS: '+' | '.join(dict.fromkeys(d['strings'])),'CALLERS: '+' | '.join(sorted(C.get(m,()))[:30]),'CALLEES: '+' | '.join(list(dict.fromkeys(d['invokes']))[:50])]
+            if full: O+=d['body']
+            O.append('')
+          def fwd(starts,maxd=5):
+            D={x:0 for x in starts}; q=collections.deque(starts)
+            while q:
+              x=q.popleft()
+              if D[x]>=maxd: continue
+              for n in M[x]['invokes']:
+                if n in M and n not in D: D[n]=D[x]+1;q.append(n)
+            return D
+          def rev(starts,maxd=5):
+            D={x:0 for x in starts}; q=collections.deque(starts)
+            while q:
+              x=q.popleft()
+              if D[x]>=maxd: continue
+              for n in C.get(x,()):
+                if n in M and n not in D: D[n]=D[x]+1;q.append(n)
+            return D
+          O=['Instagram 439 outbound device identity / HDR backend classification trace','=================================================================',f'methods={len(M)} headers={len(header)} identity={len(identity)} reel_request={len(request)}','']
+          O += ['===== 1. HEADER LITERAL OWNERS =====','']
+          for m in header: emit(O,m,'HEADER_OWNER',True)
+          O += ['===== 2. BUILD MODEL / UA FORMATTER CANDIDATES =====','']
+          for m in identity: emit(O,m,'IDENTITY_FORMATTER',True)
+          # Graph bridges between identity/header and actual Reel request seed methods.
+          A=set(header)|set(identity); B=set(request)
+          AF=fwd(A,5); AR=rev(A,5); BF=fwd(B,5); BR=rev(B,5)
+          hits=[]
+          for m in M:
+            ad=min(AF.get(m,99),AR.get(m,99)); bd=min(BF.get(m,99),BR.get(m,99))
+            if ad<=5 and bd<=5: hits.append((ad+bd,ad,bd,m))
+          O += ['===== 3. DEVICE IDENTITY ↔ REEL REQUEST BRIDGES <=5 HOPS =====','']
+          for total,ad,bd,m in sorted(hits)[:500]:
+            O.append(f'BRIDGE total={total} identity={ad} reelreq={bd} {m}')
+            O.append('  STRINGS: '+' | '.join(dict.fromkeys(M[m]['strings'])))
+            O.append('  CALLERS: '+' | '.join(sorted(C.get(m,()))[:20]))
+            O.append('  CALLEES: '+' | '.join(list(dict.fromkeys(M[m]['invokes']))[:20]))
+          O.append('')
+          # Most useful bridges get full bodies.
+          O += ['===== 4. TOP BRIDGE FULL BODIES =====','']
+          emitted=set()
+          for total,ad,bd,m in sorted(hits)[:80]:
+            if m not in emitted:
+              emit(O,m,f'TOP_BRIDGE total={total} identity={ad} reelreq={bd}',True); emitted.add(m)
+          O += ['===== 5. REEL REQUEST SEEDS =====','']
+          for m in request[:180]: emit(O,m,'REEL_REQUEST',False)
+          text='\n'.join(O)
+          if len(text)>1000000: text=text[:1000000]+'\n[TRUNCATED 1MB]\n'
+          OUT.write_text(text,encoding='utf-8')
+          print(f'bytes={OUT.stat().st_size} bridges={len(hits)}')
+          print(text[:300000])
+          PY
+
+      - name: Commit report
+        run: |
+          set -euo pipefail
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add research/generated/instagram_439_hdr_outbound_device_identity.txt
+          if ! git diff --cached --quiet; then
+            git commit -m 'Trace Instagram 439 outbound device identity for HDR delivery'
+            git pull --rebase origin main
+            git push origin HEAD:main
+          fi
