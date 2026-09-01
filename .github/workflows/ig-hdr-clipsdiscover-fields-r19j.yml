@@ -1,0 +1,84 @@
+name: IG 439 HDR ClipsDiscover Fields R19j
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - .github/workflows/ig-hdr-clipsdiscover-fields-r19j.yml
+
+permissions:
+  contents: write
+
+jobs:
+  trace:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    env:
+      APK_NAME: instagram-piko-v439.0.0.37.89-arm64-v8a.apk
+      APK_SHA256: 4015b171ac59f3e7172134d194ec2dcf701f64c3339f127c19d7a04c13d529c8
+    steps:
+      - uses: actions/checkout@v6
+        with: {fetch-depth: 0}
+      - uses: actions/setup-java@v5
+        with:
+          distribution: zulu
+          java-version: '21'
+      - name: Fetch exact classes15 and dump 04tC
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          set -euo pipefail
+          mkdir -p work/apk work/smali research/generated
+          gh release download 8 --pattern "$APK_NAME" --dir work
+          echo "$APK_SHA256  work/$APK_NAME" | sha256sum -c -
+          gh release download 3.0.10 --repo baksmali/smali --pattern 'baksmali-3.0.10-fat.jar' --dir work
+          unzip -q "work/$APK_NAME" classes15.dex -d work/apk
+          java -jar work/baksmali-3.0.10-fat.jar d work/apk/classes15.dex -o work/smali >/dev/null
+          python3 - <<'PY'
+          from pathlib import Path
+          import re
+          p=Path('work/smali/X/04tC.smali')
+          ls=p.read_text(errors='replace').splitlines()
+          out=['Instagram 439 HDR ClipsDiscover exact fields R19j','=============================================','FILE='+str(p),'']
+          targets={'A02','A07','A08','A09','A0A','A0B'}
+          sr=re.compile(r'^\s*const-string(?:/jumbo)?\s+([^,]+),\s+"(.*)"')
+          inv=re.compile(r'(L[^;]+;)->([^\s(]+)\(([^)]*)\)(\S+)')
+          i=0
+          while i<len(ls):
+            if not ls[i].startswith('.method'): i+=1; continue
+            s=i; sig=ls[i]; i+=1
+            while i<len(ls) and not ls[i].startswith('.end method'): i+=1
+            e=min(i,len(ls)-1); b=ls[s:e+1]
+            m=re.search(r'\s([^\s(]+)\(',sig)
+            name=m.group(1) if m else '?'
+            if name in targets:
+              strings=[]; req=[]; mc=[]
+              for n,l in enumerate(b):
+                sm=sr.match(l)
+                if sm: strings.append((n,sm.group(1),sm.group(2)))
+                if 'invoke-' in l:
+                  im=inv.search(l)
+                  if im:
+                    q=(n,im.group(1),im.group(2),im.group(3),im.group(4))
+                    if im.group(1)=='LX/03u7;' or im.group(1)=='LX/02pu;': req.append(q)
+                    if 'MobileConfig' in im.group(1) or im.group(2) in ('BTb','CUf','A01','A04','A06'): mc.append(q)
+              out += [f'===== {sig} =====',f'STRINGS={[v for _,_,v in strings]}',f'REQUEST_CALLS={[x[1:] for x in req]}','-- BODY --']+b+['']
+          text='\n'.join(out)
+          Path('research/generated/instagram_439_hdr_clipsdiscover_fields_r19j.txt').write_text(text,encoding='utf-8')
+          print(text)
+          print('BYTES',len(text))
+          PY
+      - name: Commit report with retry
+        run: |
+          set -euo pipefail
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add research/generated/instagram_439_hdr_clipsdiscover_fields_r19j.txt
+          git commit -m 'Add exact ClipsDiscover request fields R19j' || exit 0
+          for n in 1 2 3 4 5; do
+            git pull --rebase origin main
+            if git push origin HEAD:main; then exit 0; fi
+            sleep $((n*2))
+          done
+          exit 1
