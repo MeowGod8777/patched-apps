@@ -1,0 +1,117 @@
+name: IG 439 HDR Color Selector Exact
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - .github/workflows/ig-hdr-color-selector-exact.yml
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  probe:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    env:
+      APK_NAME: instagram-piko-v439.0.0.37.89-arm64-v8a.apk
+      APK_SHA256: 4015b171ac59f3e7172134d194ec2dcf701f64c3339f127c19d7a04c13d529c8
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+      - name: Download and disassemble exact R8
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          set -euo pipefail
+          mkdir -p work/dex work/dis research/generated
+          gh release download 8 --pattern "$APK_NAME" --dir work
+          echo "$APK_SHA256  work/$APK_NAME" | sha256sum -c -
+          unzip -j "work/$APK_NAME" 'classes*.dex' -d work/dex
+          DEXDUMP="$(find "$ANDROID_HOME/build-tools" -type f -name dexdump | sort -V | tail -1)"
+          for d in work/dex/classes*.dex; do b="$(basename "$d" .dex)"; "$DEXDUMP" -d -f -h "$d" > "work/dis/$b.txt"; done
+      - name: Extract color selector and callers
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          from pathlib import Path
+          import re
+          from collections import defaultdict
+          hr=re.compile(r'\|\[[0-9a-f]+\]\s+([^\s]+):')
+          inv=re.compile(r'invoke-[^,]+.*?\s(L[^;]+;\.[^:]+:\([^\n ]*?\)[^\s/]+)')
+          methods=[]
+          def sig(h):
+              m=re.match(r'X\.([^.]+)\.([^:]+):(.*)$',h)
+              return f'LX/{m.group(1)};.{m.group(2)}:{m.group(3)}' if m else None
+          for p in sorted(Path('work/dis').glob('classes*.txt')):
+              lines=p.read_text(errors='replace').splitlines(); starts=[]; heads=[]
+              for i,l in enumerate(lines):
+                  m=hr.search(l)
+                  if m: starts.append(i); heads.append(m.group(1))
+              for j,s in enumerate(starts):
+                  e=starts[j+1] if j+1<len(starts) else len(lines)
+                  methods.append({'file':p.name,'s':s+1,'e':e,'head':heads[j],'sig':sig(heads[j]),'body':lines[s:e]})
+          rev=defaultdict(set)
+          for i,m in enumerate(methods):
+              for t in inv.findall('\n'.join(m['body'])): rev[t].add(i)
+          out=['Instagram 439 HDR color selector exact trace','============================================','APK SHA256: 4015b171ac59f3e7172134d194ec2dcf701f64c3339f127c19d7a04c13d529c8','']
+          def emit(m,label,cap=2400):
+              out.append(f'===== {label} :: {m["file"]}:{m["s"]}-{m["e"]} :: {m["head"]} =====')
+              out.extend(x.rstrip() for x in m['body'][:cap])
+              if len(m['body'])>cap: out.append(f'... omitted {len(m["body"])-cap} lines ...')
+              out.append('')
+
+          targets=[]
+          for i,m in enumerate(methods):
+              if m['head'].startswith('X.0kzV.A00:'):
+                  targets.append(i); emit(m,'X.0kzV.A00 FULL RAW',3000)
+          sigs=[methods[i]['sig'] for i in targets if methods[i]['sig']]
+          c=set()
+          for s in sigs: c.update(rev.get(s,()))
+          out.append(f'X_0kzV_A00_CALLER_COUNT={len(c)}')
+          for i in sorted(c): emit(methods[i],'DIRECT CALLER X.0kzV.A00',1800)
+
+          # Methods containing the diagnostic strings or HDR/color-selection semantics nearby.
+          needles=('preferFpsOverHdr','preferResolutionOverHdr','selectedColorText','currentColorText','supportedColor','isHdr','is_hdr','hdr','HDR')
+          ids=[]
+          for i,m in enumerate(methods):
+              txt='\n'.join(m['body'])
+              if any(n in txt for n in needles): ids.append(i)
+          out.append(f'HDR_COLOR_STRING_OWNER_COUNT={len(ids)}')
+          for i in ids[:160]: emit(methods[i],'HDR/COLOR STRING OWNER',1600)
+
+          # All definitions and callers in same class, to identify object role and output consumer.
+          defs=[i for i,m in enumerate(methods) if m['head'].startswith('X.0kzV.')]
+          out.append(f'X_0kzV_METHOD_COUNT={len(defs)}')
+          for i in defs: emit(methods[i],'X.0kzV DEFINITION',1800)
+
+          # Types referenced by the selector; dump their constructors/static init and methods that mention color/HDR.
+          typ_re=re.compile(r'L(X/[A-Za-z0-9_$]+);')
+          refs=set()
+          for i in targets:
+              refs.update(typ_re.findall('\n'.join(methods[i]['body'])))
+          out.append('SELECTOR_REFERENCED_X_TYPES='+' '.join(sorted(refs)))
+          for typ in sorted(refs):
+              prefix='X.'+typ.split('/',1)[1]+'.'
+              for i,m in enumerate(methods):
+                  if not m['head'].startswith(prefix): continue
+                  txt='\n'.join(m['body']); low=txt.lower()
+                  if '.<init>:' in m['head'] or '.<clinit>:' in m['head'] or any(k in low for k in ('hdr','color','transfer','profile','codec','video/')):
+                      emit(m,f'REFERENCED TYPE {prefix} RELEVANT DEF',1400)
+
+          path=Path('research/generated/instagram_439_hdr_color_selector_exact.txt')
+          path.write_text('\n'.join(out)+'\n',encoding='utf-8')
+          if path.stat().st_size<3000: raise SystemExit('report unexpectedly small')
+          print(path.read_text()[:250000])
+          PY
+      - name: Commit report
+        run: |
+          set -euo pipefail
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add research/generated/instagram_439_hdr_color_selector_exact.txt
+          if ! git diff --cached --quiet; then git commit -m "Trace Instagram 439 HDR color selector"; fi
+          git pull --rebase origin main
+          git push origin HEAD:main
