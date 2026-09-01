@@ -21,7 +21,9 @@ jobs:
       - uses: actions/checkout@v6
         with: {fetch-depth: 0}
       - uses: actions/setup-java@v5
-        with: {distribution: zulu, java-version: '21'}
+        with:
+          distribution: zulu
+          java-version: '21'
       - name: Fetch exact classes15
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -33,7 +35,7 @@ jobs:
           gh release download 3.0.10 --repo baksmali/smali --pattern 'baksmali-3.0.10-fat.jar' --dir work
           unzip -q "work/$APK_NAME" classes15.dex -d work/apk
           java -jar work/baksmali-3.0.10-fat.jar d work/apk/classes15.dex -o work/smali/classes15 >/dev/null
-      - name: Extract 04u9 A00 and ClipsApiUtilHelper A01 compactly
+      - name: Extract final request layer
         run: |
           python3 - <<'PY'
           from pathlib import Path
@@ -50,11 +52,11 @@ jobs:
               ss=re.findall(r'const-string(?:/jumbo)?\s+[^,]+,\s+"([^"]*)"',t)
               O += [f'===== {cls} {sig} =====',f'STRINGS={ss}']
               for n,line in enumerate(b):
-                if ('LX/03u7;->' in line or 'LX/02pu;->' in line or 'MobileConfigUnsafeContext;->' in line or 'const-wide' in line or 'const-string' in line):
-                  O += [f'{n+1:04d}: {line.strip()}']
+                if ('LX/03u7;->' in line or 'LX/02pu;->' in line or 'MobileConfigUnsafeContext;->' in line or 'const-wide' in line or 'const-string' in line): O += [f'{n+1:04d}: {line.strip()}']
               O += ['','FULL_METHOD:']+b+['']
               break
-          text='\n'.join(O); Path('research/generated/instagram_439_hdr_clips_final_request_layer_r19l.txt').write_text(text)
+          text='\n'.join(O)
+          Path('research/generated/instagram_439_hdr_clips_final_request_layer_r19l.txt').write_text(text)
           print(text)
           PY
       - name: Commit report
@@ -62,4 +64,8 @@ jobs:
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
           git add research/generated/instagram_439_hdr_clips_final_request_layer_r19l.txt
-          if ! git diff --cached --quiet; then git commit -m 'Add Clips final request layer trace R19l'; git pull --rebase origin main; git push origin HEAD:main; fi
+          if ! git diff --cached --quiet; then
+            git commit -m 'Add Clips final request layer trace R19l'
+            git pull --rebase origin main
+            git push origin HEAD:main
+          fi
