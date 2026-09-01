@@ -53,10 +53,8 @@ jobs:
           python3 - <<'PY'
           from pathlib import Path
           import re
-
           root=Path('.')
           invoke_re=re.compile(r'^(\s*)invoke-virtual(?P<range>/range)?\s+\{(?P<regs>[^}]*)\},\s+Landroid/media/MediaCodec;->configure\(Landroid/media/MediaFormat;Landroid/view/Surface;Landroid/media/MediaCrypto;I\)V')
-
           def second_reg(regs, is_range):
               regs=regs.strip()
               if is_range:
@@ -64,12 +62,9 @@ jobs:
                   if not m:
                       return None
                   prefix, start, end=m.group(1), int(m.group(2)), int(m.group(3))
-                  if end-start < 1:
-                      return None
-                  return f'{prefix}{start+1}'
+                  return f'{prefix}{start+1}' if end-start >= 1 else None
               parts=[x.strip() for x in regs.split(',') if x.strip()]
               return parts[1] if len(parts)>=2 else None
-
           touched=[]
           total=0
           for d in sorted(root.glob('smali-classes*')):
@@ -93,51 +88,47 @@ jobs:
                       print(f'PATCHED {p}: {changed}')
               if dex_touched:
                   touched.append(d.name.replace('smali-','')+'.dex')
-
           if total == 0:
               raise SystemExit('No MediaCodec.configure callsites found')
-
+          helper_lines=[
+              '.class public final Lcom/instagram/hdrprobe/HdrCodecProbe;',
+              '.super Ljava/lang/Object;',
+              '',
+              '.method public static log(Landroid/media/MediaFormat;)V',
+              '    .registers 5',
+              '',
+              '    if-eqz p0, :done',
+              '    const-string v0, "mime"',
+              '    invoke-virtual {p0, v0}, Landroid/media/MediaFormat;->getString(Ljava/lang/String;)Ljava/lang/String;',
+              '    move-result-object v0',
+              '    if-eqz v0, :done',
+              '    const-string v1, "video/"',
+              '    invoke-virtual {v0, v1}, Ljava/lang/String;->startsWith(Ljava/lang/String;)Z',
+              '    move-result v1',
+              '    if-eqz v1, :done',
+              '    const-string v1, "IG_HDR_CODEC"',
+              '    invoke-static {p0}, Ljava/lang/String;->valueOf(Ljava/lang/Object;)Ljava/lang/String;',
+              '    move-result-object v2',
+              '    invoke-static {v1, v2}, Landroid/util/Log;->i(Ljava/lang/String;Ljava/lang/String;)I',
+              '    new-instance v2, Ljava/lang/Throwable;',
+              '    invoke-direct {v2}, Ljava/lang/Throwable;-><init>()V',
+              '    invoke-static {v2}, Landroid/util/Log;->getStackTraceString(Ljava/lang/Throwable;)Ljava/lang/String;',
+              '    move-result-object v2',
+              '    invoke-static {v1, v2}, Landroid/util/Log;->i(Ljava/lang/String;Ljava/lang/String;)I',
+              ':done',
+              '    return-void',
+              '.end method',
+              ''
+          ]
           helper_dir=root/'smali-classes2'/'com/instagram/hdrprobe'
           helper_dir.mkdir(parents=True, exist_ok=True)
-          helper=helper_dir/'HdrCodecProbe.smali'
-          helper.write_text(r'''.class public final Lcom/instagram/hdrprobe/HdrCodecProbe;
-.super Ljava/lang/Object;
-
-.method public static log(Landroid/media/MediaFormat;)V
-    .registers 5
-
-    if-eqz p0, :done
-
-    const-string v0, "mime"
-    invoke-virtual {p0, v0}, Landroid/media/MediaFormat;->getString(Ljava/lang/String;)Ljava/lang/String;
-    move-result-object v0
-    if-eqz v0, :done
-
-    const-string v1, "video/"
-    invoke-virtual {v0, v1}, Ljava/lang/String;->startsWith(Ljava/lang/String;)Z
-    move-result v1
-    if-eqz v1, :done
-
-    const-string v1, "IG_HDR_CODEC"
-    invoke-static {p0}, Ljava/lang/String;->valueOf(Ljava/lang/Object;)Ljava/lang/String;
-    move-result-object v2
-    invoke-static {v1, v2}, Landroid/util/Log;->i(Ljava/lang/String;Ljava/lang/String;)I
-
-    new-instance v2, Ljava/lang/Throwable;
-    invoke-direct {v2}, Ljava/lang/Throwable;-><init>()V
-    invoke-static {v2}, Landroid/util/Log;->getStackTraceString(Ljava/lang/Throwable;)Ljava/lang/String;
-    move-result-object v2
-    invoke-static {v1, v2}, Landroid/util/Log;->i(Ljava/lang/String;Ljava/lang/String;)I
-
-:done
-    return-void
-.end method
-''')
+          (helper_dir/'HdrCodecProbe.smali').write_text('\n'.join(helper_lines))
           if 'classes2.dex' not in touched:
               touched.append('classes2.dex')
-          Path('touched.list').write_text('\n'.join(sorted(set(touched)))+'\n')
-          Path('../out/patch-count.txt').write_text(f'mediacodec_configure_calls_patched={total}\n' + 'touched=' + ','.join(sorted(set(touched))) + '\n')
-          print(f'TOTAL PATCHED: {total}; touched={sorted(set(touched))}')
+          touched=sorted(set(touched))
+          Path('touched.list').write_text('\n'.join(touched)+'\n')
+          Path('../out/patch-count.txt').write_text(f'mediacodec_configure_calls_patched={total}\n'+'touched='+','.join(touched)+'\n')
+          print(f'TOTAL PATCHED: {total}; touched={touched}')
           PY
 
           while read -r dex; do
@@ -155,10 +146,8 @@ jobs:
             cp "work/patched-$dex" "work/$dex"
             (cd work && zip -q -0 unsigned.apk "$dex")
           done < work/touched.list
-
           ZIPALIGN="$(find "$ANDROID_HOME/build-tools" -type f -name zipalign | sort -V | tail -1)"
           "$ZIPALIGN" -f -p 4 work/unsigned.apk work/aligned.apk
-
           BCJAR="$(find /usr/share/java -maxdepth 1 -type f -name 'bcprov*.jar' | head -1)"
           test -n "$BCJAR"
           rm -f work/ks-r8.p12
@@ -169,7 +158,6 @@ jobs:
             -deststorepass 123456789 -destkeypass 123456789 -destalias andrewliang \
             -providerclass org.bouncycastle.jce.provider.BouncyCastleProvider \
             -providerpath "$BCJAR" -noprompt
-
           java -jar bin/apksigner.jar sign \
             --ks work/ks-r8.p12 --ks-type PKCS12 \
             --ks-pass pass:123456789 --key-pass pass:123456789 \
