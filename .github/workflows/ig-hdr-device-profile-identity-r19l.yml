@@ -1,0 +1,156 @@
+name: IG 439 HDR Device Profile Identity R19l
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - .github/workflows/ig-hdr-device-profile-identity-r19l.yml
+
+permissions:
+  contents: write
+
+jobs:
+  trace:
+    runs-on: ubuntu-latest
+    timeout-minutes: 18
+    env:
+      APK_NAME: instagram-piko-v439.0.0.37.89-arm64-v8a.apk
+      APK_SHA256: 4015b171ac59f3e7172134d194ec2dcf701f64c3339f127c19d7a04c13d529c8
+    steps:
+      - uses: actions/checkout@v6
+        with: {fetch-depth: 0}
+      - uses: actions/setup-java@v5
+        with: {distribution: zulu, java-version: '21'}
+      - name: Fetch exact APK and disassemble identity/profile hit dexes
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          set -euo pipefail
+          mkdir -p work/apk work/smali research/generated
+          gh release download 8 --pattern "$APK_NAME" --dir work
+          echo "$APK_SHA256  work/$APK_NAME" | sha256sum -c -
+          gh release download 3.0.10 --repo baksmali/smali --pattern 'baksmali-3.0.10-fat.jar' --dir work
+          unzip -q "work/$APK_NAME" 'classes*.dex' -d work/apk
+          python3 - <<'PY'
+          from pathlib import Path
+          import subprocess
+          needles=['ig_device_static_attributes','key_display_hdr_supported','key_video_decoder_hdr_supported','com.facebook.devicesegmentation','X-IG-Device-ID','device_segmentation','device_class','device_tier','performance_class']
+          hit=[]; rows=[]
+          for p in sorted(Path('work/apk').glob('classes*.dex')):
+              s=subprocess.run(['strings','-a',str(p)],capture_output=True,text=True,errors='replace').stdout
+              hs=[n for n in needles if n.lower() in s.lower()]
+              if hs:
+                  hit.append(p.name); rows.append(f'{p.name}: '+', '.join(hs))
+          Path('work/hitdex.txt').write_text('\n'.join(hit)+'\n')
+          Path('research/generated/instagram_439_hdr_device_profile_identity_dex_hits_r19l.txt').write_text('\n'.join(rows)+'\n')
+          print('\n'.join(rows)); print('HITDEX',hit)
+          PY
+          while read d; do
+            [ -n "$d" ] || continue
+            n="${d%.dex}"
+            java -jar work/baksmali-3.0.10-fat.jar d "work/apk/$d" -o "work/smali/$n" >/dev/null &
+          done < work/hitdex.txt
+          wait
+      - name: Trace exact producers sinks and cross-links
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          from pathlib import Path
+          import re
+          R=Path('work/smali')
+          OUT=Path('research/generated/instagram_439_hdr_device_profile_identity_r19l.txt')
+          cls_re=re.compile(r'^\.class\s+.*\s+(L[^;]+;)$')
+          inv_re=re.compile(r'(L[^;]+;)->([^\s(]+)\(([^)]*)\)(\S+)')
+          str_re=re.compile(r'^\s*const-string(?:/jumbo)?\s+[^,]+,\s+"(.*)"')
+          methods=[]
+          for p in R.rglob('*.smali'):
+              ls=p.read_text(errors='replace').splitlines(); cls='?'
+              for x in ls[:60]:
+                  m=cls_re.match(x)
+                  if m: cls=m.group(1); break
+              i=0
+              while i<len(ls):
+                  if not ls[i].startswith('.method'): i+=1; continue
+                  s=i; sig=ls[i]; i+=1
+                  while i<len(ls) and not ls[i].startswith('.end method'): i+=1
+                  b=ls[s:min(i+1,len(ls))]; methods.append((cls,sig,p,b)); i+=1
+          O=['Instagram 439 HDR device profile / identity R19l','===========================================','']
+          seeds=[]
+          needle_groups={
+            'STATIC_EVENT':['ig_device_static_attributes'],
+            'HDR_ATTR':['key_display_hdr_supported','key_video_decoder_hdr_supported'],
+            'DEVICESEG':['com.facebook.devicesegmentation','device_segmentation'],
+            'DEVICE_ID':['X-IG-Device-ID'],
+            'CLASSIFIER':['device_class','device_tier','performance_class']
+          }
+          for cls,sig,p,b in methods:
+              low='\n'.join(b).lower()
+              tags=[]
+              for tag,ns in needle_groups.items():
+                  if any(n.lower() in low for n in ns): tags.append(tag)
+              if not tags: continue
+              seeds.append((cls,sig,p,b,tags))
+          O += [f'===== SEED METHODS ({len(seeds)}) =====','']
+          for cls,sig,p,b,tags in seeds:
+              vals=[]
+              for x in b:
+                  m=str_re.match(x)
+                  if m: vals.append(m.group(1))
+              O += [f'--- {tags} {cls} {sig}',f'FILE={p}',f'STRINGS={vals}']
+              # full if reasonably sized; otherwise contexts around needles and invokes
+              if len(b)<=650:
+                  O += b
+              else:
+                  inds=[]
+                  for i,x in enumerate(b):
+                      if any(n.lower() in x.lower() for ns in needle_groups.values() for n in ns): inds.append(i)
+                  for i in inds: O += b[max(0,i-80):min(len(b),i+100)]
+              O += ['']
+          # Exact callers of seed methods, one hop and local network/event hints.
+          keys=[]
+          for cls,sig,p,b,tags in seeds:
+              mm=re.search(r'\s([^\s(]+)\(([^)]*)\)(\S+)$',sig)
+              if mm: keys.append((cls,mm.group(1),mm.group(2),mm.group(3),tags))
+          O += ['===== EXACT CALLERS OF PROFILE / IDENTITY SEEDS =====','']
+          for cls,sig,p,b in methods:
+              text='\n'.join(b)
+              matched=[]
+              for kc,kn,ka,kr,tags in keys:
+                  n=f'{kc}->{kn}({ka}){kr}'
+                  if n in text: matched.append((kc,kn,tags))
+              if not matched: continue
+              vals=[]
+              for x in b:
+                  m=str_re.match(x)
+                  if m: vals.append(m.group(1))
+              interesting=[v for v in vals if any(k in v.lower() for k in ('device','segment','static','class','tier','hdr','codec','graphql','api/','event','request','odc','one_device'))]
+              O += [f'--- CALLER {cls} {sig}',f'FILE={p}',f'TARGETS={matched}',f'INTERESTING={interesting}']
+              for i,x in enumerate(b):
+                  if any(f'{kc}->{kn}(' in x for kc,kn,_ in matched):
+                      O += b[max(0,i-100):min(len(b),i+120)]
+              O += ['']
+          # Search for methods that jointly touch device segmentation + media/reels request vocabulary.
+          O += ['===== DEVICESEG x REELS/MEDIA JOINT METHODS =====','']
+          for cls,sig,p,b in methods:
+              low='\n'.join(b).lower()
+              if ('0hks' in low or '0hld' in low or '0hqj' in low or 'devicesegmentation' in low) and any(k in low for k in ('clips','reel','media','video','playback','stream')):
+                  vals=[]
+                  for x in b:
+                      m=str_re.match(x)
+                      if m: vals.append(m.group(1))
+                  O += [f'--- {cls} {sig}',f'FILE={p}',f'STRINGS={vals}']+b+['']
+          OUT.write_text('\n'.join(O),encoding='utf-8')
+          print('\n'.join(O[:12000])); print('bytes',OUT.stat().st_size,'seeds',len(seeds))
+          PY
+      - name: Commit reports
+        run: |
+          set -euo pipefail
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add research/generated/instagram_439_hdr_device_profile_identity_dex_hits_r19l.txt research/generated/instagram_439_hdr_device_profile_identity_r19l.txt
+          if ! git diff --cached --quiet; then
+            git commit -m 'Add device profile identity and segmentation trace R19l'
+            git pull --rebase origin main
+            git push origin HEAD:main
+          fi
