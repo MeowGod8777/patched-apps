@@ -1,0 +1,61 @@
+name: IG 439 HDR Performance Class Context R19p0
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - .github/workflows/ig-hdr-performance-class-context-r19p0.yml
+
+permissions:
+  contents: write
+
+jobs:
+  extract:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+        with: {fetch-depth: 0}
+      - name: Extract performance_class ownership from existing reports
+        run: |
+          set -euo pipefail
+          mkdir -p research/generated
+          python3 - <<'PY'
+          from pathlib import Path
+          out=['Instagram 439 HDR performance_class existing-context R19p0','=======================================================','']
+          files=[]
+          for p in Path('research').rglob('*'):
+              if not p.is_file(): continue
+              try: text=p.read_text(errors='replace')
+              except: continue
+              if 'performance_class' in text:
+                  files.append((p,text))
+          out += [f'FILES_WITH_performance_class={len(files)}']+[str(p) for p,_ in files]+['']
+          for p,text in files:
+              ls=text.splitlines()
+              hits=[i for i,l in enumerate(ls) if 'performance_class' in l]
+              out += [f'===== FILE {p} HITS={hits} =====']
+              for i in hits:
+                  # find nearest enclosing generated-report section / method heading
+                  owner=None
+                  for j in range(i,-1,-1):
+                      if ls[j].startswith('--- ') or ls[j].startswith('===== '):
+                          owner=(j,ls[j]); break
+                  out += [f'--- HIT line={i+1} owner={owner} ---']
+                  lo=max(0,i-120); hi=min(len(ls),i+121)
+                  out += [f'{j+1:06d}: {ls[j]}' for j in range(lo,hi)]
+                  out += ['']
+          Path('research/generated/instagram_439_hdr_performance_class_context_r19p0.txt').write_text('\n'.join(out),encoding='utf-8')
+          print('\n'.join(out[:5000]))
+          PY
+      - name: Commit report
+        run: |
+          set -euo pipefail
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add research/generated/instagram_439_hdr_performance_class_context_r19p0.txt
+          if ! git diff --cached --quiet; then
+            git commit -m 'Add performance_class ownership context R19p0'
+            git pull --rebase origin main
+            git push origin HEAD:main
+          fi
