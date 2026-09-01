@@ -33,7 +33,7 @@ jobs:
           mkdir -p work/smali13 out
           gh release download 8 --pattern "$BASE_APK" --dir work
           echo "$BASE_SHA256  work/$BASE_APK" | sha256sum -c -
-          gh release download v3.0.9 --repo google/smali --pattern 'smali-3.0.9-fat.jar' --pattern 'baksmali-3.0.9-fat.jar' --dir work
+          gh release download v3.0.9 --repo baksmali/smali --pattern 'smali-3.0.9-fat.jar' --pattern 'baksmali-3.0.9-fat.jar' --dir work
           sudo apt-get update -qq
           sudo apt-get install -y -qq libbcprov-java
       - name: Inject real selected/candidate track logger
