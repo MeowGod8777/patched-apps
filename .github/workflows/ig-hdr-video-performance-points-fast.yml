@@ -1,0 +1,55 @@
+name: IG 439 Video Performance Points Fast Trace
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - .github/workflows/ig-hdr-video-performance-points-fast.yml
+permissions:
+  contents: write
+jobs:
+  probe:
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    env:
+      APK_NAME: instagram-piko-v439.0.0.37.89-arm64-v8a.apk
+      APK_SHA256: 4015b171ac59f3e7172134d194ec2dcf701f64c3339f127c19d7a04c13d529c8
+    steps:
+      - uses: actions/checkout@v6
+        with: {fetch-depth: 0}
+      - name: Download and dexdump
+        env: {GH_TOKEN: "${{ secrets.GITHUB_TOKEN }}"}
+        run: |
+          set -euo pipefail
+          mkdir -p work/dex work/dis research/generated
+          gh release download 8 --pattern "$APK_NAME" --dir work
+          echo "$APK_SHA256  work/$APK_NAME" | sha256sum -c -
+          unzip -j "work/$APK_NAME" 'classes*.dex' -d work/dex
+          DEXDUMP="$(find "$ANDROID_HOME/build-tools" -type f -name dexdump | sort -V | tail -1)"
+          for d in work/dex/classes*.dex; do b="$(basename "$d" .dex)"; "$DEXDUMP" -d -f -h "$d" > "work/dis/$b.txt"; done
+      - name: Grep exact symbols
+        run: |
+          set -euo pipefail
+          REPORT=research/generated/instagram_439_video_performance_points_fast.txt
+          {
+            for q in video_performance_points startBenchmarks runMiniBenchmark runBenchmark reportBenchmark; do
+              echo "========== $q =========="
+              grep -aHn -B 140 -A 220 -F "$q" work/dis/*.txt || true
+              echo
+            done
+          } | tr -cd '\11\12\15\40-\176' > "$REPORT"
+          python3 - <<'PY'
+          from pathlib import Path
+          p=Path('research/generated/instagram_439_video_performance_points_fast.txt')
+          b=p.read_bytes(); p.write_bytes(b[:240000])
+          PY
+          sed -n '1,3200p' "$REPORT"
+      - name: Commit report
+        run: |
+          set -euo pipefail
+          git config user.name 'github-actions[bot]'; git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add research/generated/instagram_439_video_performance_points_fast.txt
+          if ! git diff --cached --quiet; then git commit -m 'Fast trace Instagram 439 video performance points'; fi
+          git pull --rebase origin main
+          git push origin HEAD:main
