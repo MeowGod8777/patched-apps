@@ -1,0 +1,57 @@
+name: IG 439 HDR Benchmark Native R20e
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - .github/workflows/ig-hdr-benchmark-native-r20e.yml
+
+permissions:
+  contents: write
+
+jobs:
+  inspect:
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    env:
+      APK_NAME: instagram-piko-v439.0.0.37.89-arm64-v8a.apk
+      APK_SHA256: 4015b171ac59f3e7172134d194ec2dcf701f64c3339f127c19d7a04c13d529c8
+    steps:
+      - uses: actions/checkout@v6
+        with: {fetch-depth: 0}
+      - name: Extract benchmark native library strings
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          set -euo pipefail
+          mkdir -p work research/generated
+          gh release download 8 --pattern "$APK_NAME" --dir work
+          echo "$APK_SHA256  work/$APK_NAME" | sha256sum -c -
+          unzip -l "work/$APK_NAME" | grep -Ei 'benchmark.*\.so|deviceseg.*\.so|classif.*\.so' | tee work/native-list.txt || true
+          so=$(unzip -Z1 "work/$APK_NAME" | grep -E 'lib/arm64-v8a/.*benchmark.*\.so$' | head -1 || true)
+          [ -n "$so" ] || { echo 'NO_BENCHMARK_SO'; exit 1; }
+          unzip -p "work/$APK_NAME" "$so" > work/benchmark.so
+          {
+            echo "Instagram 439 benchmark native inventory R20e"
+            echo "=========================================="
+            echo "SO=$so"
+            echo
+            echo "===== RELEVANT STRINGS ====="
+            strings -a -n 3 work/benchmark.so | grep -Ei 'gaussian|blur|memory|alloc|copy|render|gpu|cpu|benchmark|metric|sample|median|mean|time|latenc|throughput|ops|bytes|millis|micro|nano|score|class|device|perf|unit' | sort -u || true
+            echo
+            echo "===== ALL SHORT HUMAN STRINGS ====="
+            strings -a -n 4 work/benchmark.so | grep -E '^[[:alnum:]_./:+ -]{4,120}$' | sort -u | head -2000
+          } > research/generated/instagram_439_hdr_benchmark_native_r20e.txt
+          cat research/generated/instagram_439_hdr_benchmark_native_r20e.txt
+      - name: Commit report
+        run: |
+          set -euo pipefail
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add research/generated/instagram_439_hdr_benchmark_native_r20e.txt
+          if ! git diff --cached --quiet; then
+            git commit -m 'Add Meta benchmark native metric inventory R20e'
+            git pull --rebase origin main
+            git push origin HEAD:main
+          fi
