@@ -1,0 +1,187 @@
+name: IG 439 HDR Representation Boundary
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - .github/workflows/ig-hdr-representation-boundary.yml
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  probe:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    env:
+      APK_NAME: instagram-piko-v439.0.0.37.89-arm64-v8a.apk
+      APK_SHA256: 4015b171ac59f3e7172134d194ec2dcf701f64c3339f127c19d7a04c13d529c8
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+
+      - name: Download and disassemble exact R8
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          set -euo pipefail
+          mkdir -p work/dex work/dis research/generated
+          gh release download 8 --pattern "$APK_NAME" --dir work
+          echo "$APK_SHA256  work/$APK_NAME" | sha256sum -c -
+          unzip -j "work/$APK_NAME" 'classes*.dex' -d work/dex
+          DEXDUMP="$(find "$ANDROID_HOME/build-tools" -type f -name dexdump | sort -V | tail -1)"
+          for d in work/dex/classes*.dex; do
+            b="$(basename "$d" .dex)"
+            "$DEXDUMP" -d -f -h "$d" > "work/dis/$b.txt"
+          done
+
+      - name: Trace parsed representation boundary
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          from pathlib import Path
+          import re
+          from collections import defaultdict
+
+          header_re = re.compile(r'\|\[[0-9a-f]+\]\s+([^\s]+):')
+          invoke_re = re.compile(r'invoke-[^,]+.*?\s(L[^;]+;\.[^:]+:\([^\n ]*?\)[^\s/]+)')
+          methods=[]
+          reverse=defaultdict(set)
+
+          def to_sig(h):
+              m=re.match(r'X\.([^.]+)\.([^:]+):(.*)$',h)
+              return f'LX/{m.group(1)};.{m.group(2)}:{m.group(3)}' if m else None
+
+          for p in sorted(Path('work/dis').glob('classes*.txt')):
+              lines=p.read_text(errors='replace').splitlines()
+              starts=[]; heads=[]
+              for i,l in enumerate(lines):
+                  m=header_re.search(l)
+                  if m:
+                      starts.append(i); heads.append(m.group(1))
+              for j,s in enumerate(starts):
+                  e=starts[j+1] if j+1<len(starts) else len(lines)
+                  rec={'file':p.name,'s':s+1,'e':e,'head':heads[j],'sig':to_sig(heads[j]),'body':lines[s:e]}
+                  methods.append(rec)
+
+          for i,m in enumerate(methods):
+              txt='\n'.join(m['body'])
+              for target in invoke_re.findall(txt):
+                  reverse[target].add(i)
+
+          out=[
+            'Instagram 439 parsed DASH representation boundary trace',
+            '=======================================================',
+            'APK SHA256: 4015b171ac59f3e7172134d194ec2dcf701f64c3339f127c19d7a04c13d529c8',
+            '',
+          ]
+
+          fields={
+            'manifest_periods':'LX/08rn;.A0R:Ljava/util/List;',
+            'period_adaptation_sets':'LX/08tp;.A03:Ljava/util/List;',
+            'adaptation_representations':'LX/08ti;.A0E:Ljava/util/List;',
+          }
+          mutations=('Ljava/util/List;.remove:', 'Ljava/util/List;.clear:', 'Ljava/util/List;.removeAll:',
+                     'Ljava/util/List;.retainAll:', 'Ljava/util/Iterator;.remove:', 'Ljava/util/List;.set:',
+                     'Ljava/util/Collection;.remove:', 'Ljava/util/AbstractCollection;.remove:')
+          additions=('Ljava/util/List;.add:', 'Ljava/util/List;.addAll:', 'Ljava/util/AbstractCollection;.add:',
+                     'Ljava/util/ArrayList;.add:')
+          semantic=('invoke-','iget-','iput-','sget-','sput-','const-string','new-instance','check-cast','instance-of',
+                    'if-','switch','return-','profile','Profile','hdr','HDR','color','Color','codec','Codec','mime','Mime',
+                    'video/','bitrate','bandwidth','width','height','frameRate','Representation','Adaptation','Dash','MediaFormat','MediaCodec')
+
+          def emit(m,label,cap=260):
+              out.append(f'===== {label} :: {m["file"]}:{m["s"]}-{m["e"]} :: {m["head"]} =====')
+              kept=[l.rstrip() for l in m['body'] if any(x in l for x in semantic)]
+              out.extend(kept[:cap])
+              if len(kept)>cap: out.append(f'... omitted {len(kept)-cap} semantic lines ...')
+              out.append('')
+
+          # 1) Every consumer of the three parsed model lists, classified by mutating/non-mutating behavior.
+          boundary=[]
+          for i,m in enumerate(methods):
+              txt='\n'.join(m['body'])
+              hits=[name for name,f in fields.items() if f in txt]
+              if not hits: continue
+              mut=[x for x in mutations if x in txt]
+              add=[x for x in additions if x in txt]
+              boundary.append((i,hits,mut,add))
+          out.append(f'BOUNDARY_CONSUMER_COUNT={len(boundary)}')
+          out.append('')
+          for i,hits,mut,add in boundary:
+              tag='LIST_CONSUMER'
+              if mut: tag='LIST_MUTATOR'
+              elif add: tag='LIST_ADDER'
+              out.append('FIELDS='+' | '.join(hits))
+              if mut: out.append('MUTATIONS='+' | '.join(mut))
+              if add: out.append('ADDITIONS='+' | '.join(add))
+              emit(methods[i],tag)
+
+          # 2) Constructor/builders for AdaptationSet and likely Representation model.
+          ctor_needles=('LX/08ti;.<init>:', 'LX/03oR;.<init>:', 'LX/08tp;.<init>:', 'LX/08rn;.<init>:')
+          ctor_owners=[]
+          for i,m in enumerate(methods):
+              txt='\n'.join(m['body'])
+              hits=[n for n in ctor_needles if n in txt]
+              if hits:
+                  ctor_owners.append(i)
+                  out.append('CTOR_TARGETS='+' | '.join(hits))
+                  emit(m,'MODEL_CONSTRUCTOR_CALLER',320)
+          out.append(f'MODEL_CONSTRUCTOR_CALLER_COUNT={len(ctor_owners)}')
+          out.append('')
+
+          # 3) Methods touching representation/adaptation model plus HDR/profile/color semantics.
+          hdr_clues=('hdr','st2084','bt2020','hlg','10bit','10_bit','bitdepth','bit_depth','profile','video/av01','av01','dolby')
+          hdr_methods=[]
+          for i,m in enumerate(methods):
+              txt='\n'.join(m['body'])
+              low=txt.lower()
+              if ('LX/08ti;' in txt or 'LX/03oR;' in txt) and any(c in low for c in hdr_clues):
+                  hdr_methods.append(i)
+          out.append(f'MODEL_HDR_SEMANTIC_METHOD_COUNT={len(hdr_methods)}')
+          for i in hdr_methods[:120]: emit(methods[i],'MODEL + HDR/PROFILE SEMANTICS',300)
+          out.append('')
+
+          # 4) One-layer callers of any list mutator. This is where a real pre-selector filter policy should surface.
+          mutator_sigs=[]
+          for i,hits,mut,add in boundary:
+              if mut and methods[i]['sig']:
+                  mutator_sigs.append(methods[i]['sig'])
+          caller_ids=set()
+          for sig in mutator_sigs:
+              caller_ids.update(reverse.get(sig,()))
+          out.append(f'LIST_MUTATOR_CALLER_COUNT={len(caller_ids)}')
+          for i in sorted(caller_ids)[:160]: emit(methods[i],'CALLER OF MODEL LIST MUTATOR',300)
+          out.append('')
+
+          # 5) Explicitly dump X.00NW.CYd representation traversal region and exact A0E references.
+          for m in methods:
+              if m['head'].startswith('X.00NW.CYd:'):
+                  out.append('===== X.00NW.CYd exact A0E traversal windows =====')
+                  for j,l in enumerate(m['body']):
+                      if fields['adaptation_representations'] in l:
+                          lo=max(0,j-24); hi=min(len(m['body']),j+55)
+                          out.append(f'--- window around method line {m["s"]+j}')
+                          out.extend(x.rstrip() for x in m['body'][lo:hi])
+                          out.append('')
+
+          path=Path('research/generated/instagram_439_hdr_representation_boundary.txt')
+          path.write_text('\n'.join(out)+'\n',encoding='utf-8')
+          if path.stat().st_size < 200:
+              raise SystemExit('report unexpectedly empty')
+          print(path.read_text()[:220000])
+          PY
+
+      - name: Commit report
+        run: |
+          set -euo pipefail
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add research/generated/instagram_439_hdr_representation_boundary.txt
+          if ! git diff --cached --quiet; then
+            git commit -m "Trace Instagram 439 parsed HDR representation boundary"
+          fi
+          git pull --rebase origin main
+          git push origin HEAD:main
