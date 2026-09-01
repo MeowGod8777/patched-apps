@@ -24,36 +24,35 @@ jobs:
           set -euo pipefail
           python3 - <<'PY'
           from pathlib import Path
+          import re
+
           p=Path('.github/workflows/build-ig-hdr-test-r6-final.yml')
           s=p.read_text()
 
-          old='''          out=[]; patched=0
-          for l in lines[s:e+1]:
-              if l.strip()=='return v0':
-                  indent=l[:len(l)-len(l.lstrip())]
-                  out.append(f'{indent}invoke-static {{p1, v0}}, LX/00PV;->hdrCandidateR6(LX/03oR;I)V')
-                  patched+=1
-              out.append(l)
-          if patched!=2: raise SystemExit(f'A0f return paths={patched}')
-          lines[s:e+1]=out
-          '''
-          new='''          directive=next(i for i in range(s+1,min(s+12,e)) if lines[i].strip().startswith(('.registers','.locals')))
+          # Replace the A0f return-hook block with a method-entry /range hook.
+          pat=r'''          out=\[\]; patched=0\n          for l in lines\[s:e\+1\]:\n(?:.*\n){1,12}?          lines\[s:e\+1\]=out\n'''
+          repl='''          directive=next(i for i in range(s+1,min(s+12,e)) if lines[i].strip().startswith(('.registers','.locals')))
           lines[directive+1:directive+1]=[
             '',
             '    invoke-static/range {p1 .. p1}, LX/00PV;->hdrCandidateR6(LX/03oR;)V',
             ''
           ]
-          '''
-          if s.count(old)!=1: raise SystemExit(f'A0f patch block count={s.count(old)}')
-          s=s.replace(old,new)
+'''
+          s2,n=re.subn(pat,repl,s,count=1)
+          if n!=1:
+              raise SystemExit(f'A0f block regex matches={n}')
+          s=s2
 
           old="            '    invoke-static {p2}, LX/00PV;->hdrSelectedR6(LX/03oR;)V',"
           new="            '    invoke-static/range {p2 .. p2}, LX/00PV;->hdrSelectedR6(LX/03oR;)V',"
-          if s.count(old)!=1: raise SystemExit(f'selected call count={s.count(old)}')
+          if s.count(old)!=1:
+              raise SystemExit(f'selected call count={s.count(old)}')
           s=s.replace(old,new)
 
-          start=s.index("            '.method private static hdrCandidateR6(LX/03oR;I)V',")
-          end=s.index("            '.method private static hdrSelectedR6(LX/03oR;)V',", start)
+          start=s.find("            '.method private static hdrCandidateR6(LX/03oR;I)V',")
+          end=s.find("            '.method private static hdrSelectedR6(LX/03oR;)V',", start)
+          if start < 0 or end < 0:
+              raise SystemExit(f'helper markers start={start} end={end}')
           replacement='''            '.method private static hdrCandidateR6(LX/03oR;)V',
             '    .registers 3',
             '    if-eqz p0, :done_c',
@@ -65,9 +64,8 @@ jobs:
             '    return-void',
             '.end method',
             '',
-          '''
+'''
           s=s[:start]+replacement+s[end:]
-
           s=s.replace('renderer candidates with support code (IG_HDR_R6_CAND)', 'renderer candidate formats (IG_HDR_R6_CAND)')
           p.write_text(s)
           PY
