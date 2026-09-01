@@ -1,0 +1,101 @@
+name: IG HDR S24 List Owner R16b
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - .github/workflows/ig-hdr-s24-list-owner-r16b.yml
+
+permissions:
+  contents: write
+
+jobs:
+  trace:
+    runs-on: ubuntu-latest
+    timeout-minutes: 18
+    env:
+      APK_NAME: instagram-piko-v439.0.0.37.89-arm64-v8a.apk
+      APK_SHA256: 4015b171ac59f3e7172134d194ec2dcf701f64c3339f127c19d7a04c13d529c8
+    steps:
+      - uses: actions/checkout@v6
+      - uses: actions/setup-java@v5
+        with:
+          distribution: zulu
+          java-version: '21'
+      - name: Fetch exact APK and decompile target classes
+        run: |
+          set -euo pipefail
+          mkdir -p work/apk work/smali research/generated
+          curl -fL --retry 3 --connect-timeout 20 --max-time 180 \
+            'https://github.com/MeowGod8777/patched-apps/releases/download/8/instagram-piko-v439.0.0.37.89-arm64-v8a.apk' -o "work/$APK_NAME"
+          echo "$APK_SHA256  work/$APK_NAME" | sha256sum -c -
+          curl -fL --retry 3 --connect-timeout 20 --max-time 120 \
+            'https://github.com/baksmali/smali/releases/download/3.0.10/baksmali-3.0.10-fat.jar' -o work/baksmali.jar
+          unzip -q "work/$APK_NAME" 'classes*.dex' -d work/apk
+          for d in work/apk/classes*.dex; do
+            n="$(basename "$d" .dex)"
+            java -jar work/baksmali.jar d "$d" -o "work/smali/$n" >/dev/null &
+          done
+          wait
+      - name: Extract S24 list owner caller and neighbors
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          from pathlib import Path
+          import re
+          root=Path('work/smali')
+          out=Path('research/generated/instagram_439_hdr_s24_list_owner_r16b.txt')
+          files={p.read_text(errors='replace').splitlines()[0] if False else p for p in root.rglob('*.smali')}
+          targets=['LX/0eEx;','LX/0hhJ;']
+          O=['Instagram 439 HDR S24-list owner R16b','====================================','']
+          def class_name(lines):
+              for l in lines[:30]:
+                  m=re.match(r'^\.class\s+.*\s+(L[^;]+;)$',l)
+                  if m:return m.group(1)
+          bycls={}
+          for p in root.rglob('*.smali'):
+              ls=p.read_text(errors='replace').splitlines(); c=class_name(ls)
+              if c in targets: bycls[c]=(p,ls)
+          for c in targets:
+              if c not in bycls:
+                  O += [f'===== {c} =====','NOT_FOUND','']; continue
+              p,ls=bycls[c]
+              O += [f'===== FULL CLASS {c} =====',f'FILE: {p}']+ls+['']
+          # Every method in the APK that directly invokes LX/0eEx.A00 or LX/0hhJ.A01.
+          O += ['===== DIRECT INVOKERS =====','']
+          needles=['LX/0eEx;->A00(', 'LX/0hhJ;->A01(']
+          for p in root.rglob('*.smali'):
+              ls=p.read_text(errors='replace').splitlines()
+              if not any(any(n in l for n in needles) for l in ls): continue
+              cls=class_name(ls); i=0
+              while i<len(ls):
+                  if not ls[i].startswith('.method'): i+=1; continue
+                  s=i; i+=1
+                  while i<len(ls) and not ls[i].startswith('.end method'): i+=1
+                  e=min(i,len(ls)-1); b=ls[s:e+1]
+                  if any(any(n in l for n in needles) for l in b):
+                      O += [f'--- {cls} {ls[s]} FILE={p} ---']+b+['']
+                  i+=1
+          # Nearby semantic strings: HDR/media/codec/reel/dash around these two classes' direct refs.
+          O += ['===== SEMANTIC SUMMARY =====']
+          for c,(p,ls) in bycls.items():
+              strings=[]
+              for l in ls:
+                  m=re.search(r'const-string(?:/jumbo)?\s+[^,]+,\s+"(.*)"',l)
+                  if m: strings.append(m.group(1))
+              O += [c+' strings: '+' | '.join(strings)]
+          out.write_text('\n'.join(O)+'\n',encoding='utf-8')
+          print('\n'.join(O)[:180000])
+          PY
+      - name: Commit report
+        run: |
+          set -euo pipefail
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add research/generated/instagram_439_hdr_s24_list_owner_r16b.txt
+          if ! git diff --cached --quiet; then
+            git commit -m 'Add Instagram HDR S24 list owner trace R16b'
+            git pull --rebase origin main
+            git push origin HEAD:main
+          fi
