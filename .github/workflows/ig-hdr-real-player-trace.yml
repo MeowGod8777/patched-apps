@@ -1,0 +1,115 @@
+name: IG 439 HDR Real Player Trace
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - .github/workflows/ig-hdr-real-player-trace.yml
+
+permissions:
+  contents: write
+
+jobs:
+  trace:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    env:
+      BASE_APK: instagram-piko-v439.0.0.37.89-arm64-v8a.apk
+      BASE_SHA256: 4015b171ac59f3e7172134d194ec2dcf701f64c3339f127c19d7a04c13d529c8
+      REPORT: research/generated/instagram_439_real_player_trace.txt
+    steps:
+      - uses: actions/checkout@v6
+      - name: Prepare exact R8
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          set -euo pipefail
+          mkdir -p work/smali research/generated
+          gh release download 8 --pattern "$BASE_APK" --dir work
+          echo "$BASE_SHA256  work/$BASE_APK" | sha256sum -c -
+          sudo apt-get update -qq
+          sudo apt-get install -y -qq smali ripgrep
+          cd work
+          unzip -Z1 "$BASE_APK" | grep -E '^classes[0-9]*\.dex$' | sort -V > dex.list
+          while read -r dex; do
+            unzip -p "$BASE_APK" "$dex" > "$dex"
+            mkdir -p "smali/${dex%.dex}"
+            baksmali d "$dex" -o "smali/${dex%.dex}"
+          done < dex.list
+      - name: Build focused report
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          from pathlib import Path
+          root=Path('work/smali')
+          out=Path('research/generated/instagram_439_real_player_trace.txt')
+          classes=['X/08qA.smali','X/08zc.smali','X/00PV.smali','X/080F.smali','X/03Sj.smali','X/00TE.smali','X/00gG.smali','X/0hkt.smali','X/00pG.smali','X/03oR.smali']
+          sections=[]
+          def hits_for(rel):
+            hs=[]
+            for p in root.rglob(rel): hs.append(p)
+            return hs
+          sections.append('=== EXACT R8 REAL PLAYER TRACE ===\n')
+          for rel in classes:
+            hs=hits_for(rel)
+            sections.append(f'\n===== CLASS {rel} count={len(hs)} =====\n')
+            for p in hs:
+              txt=p.read_text(errors='ignore')
+              sections.append(f'--- {p} ---\n{txt}\n')
+          needles=[
+            'LX/00PV;->A0n',
+            'LX/00PV;->A0q',
+            'LX/00PV;->GOc',
+            'LX/080F;->A0K',
+            'LX/080F;->A0k',
+            'LX/080F;->A0q',
+            'LX/080F;->A0N',
+            'LX/080F;->GOc',
+            'LX/03Sj;->GOc',
+            'LX/0hkt;->A07',
+            'LX/00pG;-><init>',
+            'CodecProfileLevel;->profile:I',
+            'color-transfer',
+            'video/av01',
+          ]
+          allfiles=list(root.rglob('*.smali'))
+          for needle in needles:
+            sections.append(f'\n===== CALLERS/REFS {needle} =====\n')
+            n=0
+            for p in allfiles:
+              lines=p.read_text(errors='ignore').splitlines()
+              for i,line in enumerate(lines):
+                if needle in line:
+                  n+=1
+                  lo=max(0,i-25); hi=min(len(lines),i+35)
+                  sections.append(f'--- {p}:{i+1} ---\n'+'\n'.join(lines[lo:hi])+'\n')
+                  if n>=80: break
+              if n>=80: break
+            sections.append(f'COUNT_SHOWN={n}\n')
+          # Focus method headers with Format inputs/arrays/lists in real renderer classes.
+          for rel in ['X/00PV.smali','X/080F.smali']:
+            for p in hits_for(rel):
+              lines=p.read_text(errors='ignore').splitlines()
+              sections.append(f'\n===== FORMAT-RELATED METHODS {p} =====\n')
+              for i,line in enumerate(lines):
+                if line.startswith('.method') and ('LX/03oR;' in line or '[LX/03oR;' in line or 'Ljava/util/List;' in line):
+                  j=i+1
+                  while j<len(lines) and not lines[j].startswith('.end method'): j+=1
+                  body='\n'.join(lines[i:min(j+1,len(lines))])
+                  if any(k in body for k in ['LX/03oR;','LX/0hkt;','CodecProfileLevel','color-transfer','video/av01','A0V:LX/']):
+                    sections.append(body+'\n')
+          out.write_text(''.join(sections))
+          print('report bytes', out.stat().st_size)
+          if out.stat().st_size < 5000:
+            raise SystemExit('report unexpectedly small')
+          PY
+      - name: Commit report
+        run: |
+          set -euo pipefail
+          git config user.name github-actions[bot]
+          git config user.email 41898282+github-actions[bot]@users.noreply.github.com
+          git add "$REPORT"
+          if git diff --cached --quiet; then exit 0; fi
+          git commit -m 'Add IG 439 real Reels player trace'
+          git push
