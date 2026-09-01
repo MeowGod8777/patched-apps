@@ -1,0 +1,152 @@
+name: IG 439 HDR Performance Gate R16
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths: [.github/workflows/ig-hdr-performance-gate-r16.yml]
+
+permissions:
+  contents: write
+
+jobs:
+  trace:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    env:
+      APK_NAME: instagram-piko-v439.0.0.37.89-arm64-v8a.apk
+      APK_SHA256: 4015b171ac59f3e7172134d194ec2dcf701f64c3339f127c19d7a04c13d529c8
+    steps:
+      - uses: actions/checkout@v6
+        with: {fetch-depth: 0}
+      - uses: actions/setup-java@v5
+        with:
+          distribution: zulu
+          java-version: '21'
+      - name: Prepare exact smali
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          set -euo pipefail
+          mkdir -p work/apk work/smali research/generated
+          gh release download 8 --pattern "$APK_NAME" --dir work
+          echo "$APK_SHA256  work/$APK_NAME" | sha256sum -c -
+          gh release download 3.0.10 --repo baksmali/smali --pattern 'baksmali-3.0.10-fat.jar' --dir work
+          unzip -q "work/$APK_NAME" 'classes*.dex' -d work/apk
+          for d in work/apk/classes*.dex; do
+            n="$(basename "$d" .dex)"
+            java -jar work/baksmali-3.0.10-fat.jar d "$d" -o "work/smali/$n" >/dev/null
+          done
+
+      - name: Find performance class and shortest request links
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          from pathlib import Path
+          import re,collections
+          ROOT=Path('work/smali'); OUT=Path('research/generated/instagram_439_hdr_performance_gate_r16.txt')
+          cr=re.compile(r'^\.class\s+.*\s+(L[^;]+;)$'); mr=re.compile(r'^\.method\s+.*?([^\s]+\([^)]*\).+)$')
+          ir=re.compile(r'invoke-[^\s]+\s+\{[^}]*\},\s+(L[^;]+;->[^\s]+)'); sr=re.compile(r'^\s*const-string(?:/jumbo)?\s+[^,]+,\s+"(.*)"')
+          M={}; C=collections.defaultdict(set)
+          for p in ROOT.rglob('*.smali'):
+            ls=p.read_text(errors='replace').splitlines(); cls=None
+            for x in ls[:30]:
+              z=cr.match(x)
+              if z: cls=z.group(1); break
+            if not cls: continue
+            i=0
+            while i<len(ls):
+              z=mr.match(ls[i])
+              if not z: i+=1; continue
+              ref=cls+'->'+z.group(1); s=i; i+=1
+              while i<len(ls) and not ls[i].startswith('.end method'): i+=1
+              b=ls[s:min(i+1,len(ls))]; inv=[]; ss=[]
+              for x in b:
+                q=ir.search(x)
+                if q: inv.append(q.group(1))
+                q=sr.match(x)
+                if q: ss.append(q.group(1))
+              M[ref]={'file':str(p),'body':b,'invokes':inv,'strings':ss}
+              for n in inv:C[n].add(ref)
+              i+=1
+          def t(m):return '\n'.join(M[m]['body'])
+          def sl(m):return ' | '.join(dict.fromkeys(M[m]['strings']))
+          perf_terms=('performance_score','device_performance','performance_class','device_class','device_tier','device_score','benchmark_score','benchmark_result','benchmark_version','year_class','yearclass','cpu_score','gpu_score','compute_score','perf_score','gaussian','memory_copy','memory copy','memcpy','benchmark')
+          hdr_terms=('10-bit','10bit','hdr_playback','hdr_supported','av1_hdr','hevc_hdr')
+          reel_terms=('clips_viewer_feed_timeline','clips_viewer_reel_feed_timeline','reel_feed_timeline','clips_viewer_homecoming_fyp','clips_viewer_reel','clips_fetch','starting_clips_media_id','is_cold_start_reel_tab','feed_request_id')
+          request_terms=('GraphQlCallInput','LX/05xm;','LX/03u7;','LX/03Da;','LX/00K8;','/api/v1','graphql','request')
+          perf=[]; reels=[]; ua=[]; hdr=[]
+          for m in M:
+            lo=t(m).lower(); strings='\n'.join(M[m]['strings']).lower()
+            ph=[x for x in perf_terms if x in lo]
+            hh=[x for x in hdr_terms if x in lo]
+            rh=[x for x in reel_terms if x in lo]
+            if ph: perf.append((len(ph),ph,m))
+            if hh: hdr.append((len(hh),hh,m))
+            if rh and any(x.lower() in lo for x in request_terms): reels.append(m)
+            if 'LX/02rk;->A00()Ljava/lang/String;' in t(m) or 'LX/02xS;->A00(Landroid/content/Context;)Ljava/lang/String;' in t(m): ua.append(m)
+          # Known producer itself
+          for m in M:
+            if m.startswith('LX/02xS;->A00(') or m.startswith('LX/02rk;->A00('): ua.append(m)
+          ua=set(ua); reels=set(reels); perfset={m for _,_,m in perf}; hdrset={m for _,_,m in hdr}
+          def bfs(starts,rev=False,md=7):
+            D={x:0 for x in starts};q=collections.deque(starts)
+            while q:
+              x=q.popleft();d=D[x]
+              if d>=md:continue
+              ns=C.get(x,()) if rev else M[x]['invokes']
+              for n in ns:
+                if n in M and n not in D:D[n]=d+1;q.append(n)
+            return D
+          def bridge(A,B):
+            af=bfs(A); ar=bfs(A,True); bf=bfs(B); br=bfs(B,True); h=[]
+            for m in M:
+              ad=min(af.get(m,99),ar.get(m,99));bd=min(bf.get(m,99),br.get(m,99))
+              if ad<=7 and bd<=7:h.append((ad+bd,ad,bd,m))
+            return sorted(h)
+          up=bridge(ua,reels) if ua and reels else []
+          pp=bridge(perfset,reels) if perfset and reels else []
+          hp=bridge(hdrset,reels) if hdrset and reels else []
+          O=['Instagram 439 HDR performance/device-class gate R16','=================================================',
+             f'methods={len(M)} perf_hits={len(perf)} hdr_hits={len(hdr)} reels_request={len(reels)} ua={len(ua)}',
+             f'ua_reels_bridges={len(up)} perf_reels_bridges={len(pp)} hdr_reels_bridges={len(hp)}','']
+          O += ['===== 1. PERFORMANCE / DEVICE CLASS HITS (metadata first) =====']
+          for n,terms,m in sorted(perf,key=lambda x:(-x[0],x[2]))[:250]:
+            O += [f'PERF score={n} {m}',f'  FILE: {M[m]["file"]}',f'  TERMS: {terms}',f'  STRINGS: {sl(m)}',f'  CALLERS: {" | ".join(sorted(C.get(m,()))[:30])}',f'  CALLEES: {" | ".join(M[m]["invokes"][:30])}']
+          O += ['','===== 2. SHORTEST UA -> REELS REQUEST BRIDGES =====']
+          for z in up[:200]:
+            total,a,b,m=z; O += [f'UA_BRIDGE total={total} ua={a} reels={b} {m}',f'  STRINGS: {sl(m)}']
+          O += ['','===== 3. SHORTEST PERFORMANCE -> REELS REQUEST BRIDGES =====']
+          for z in pp[:250]:
+            total,a,b,m=z; O += [f'PERF_BRIDGE total={total} perf={a} reels={b} {m}',f'  STRINGS: {sl(m)}']
+          O += ['','===== 4. SHORTEST HDR -> REELS REQUEST BRIDGES =====']
+          for z in hp[:200]:
+            total,a,b,m=z; O += [f'HDR_BRIDGE total={total} hdr={a} reels={b} {m}',f'  STRINGS: {sl(m)}']
+          # Only body-dump the strongest literal perf candidates and direct <=2 bridges.
+          selected=[]
+          for n,terms,m in sorted(perf,key=lambda x:(-x[0],len(M[x[2]]["body"])))[:25]: selected.append(('PERF_BODY '+','.join(terms),m))
+          for label,arr in [('UA_REELS',up),('PERF_REELS',pp),('HDR_REELS',hp)]:
+            for total,a,b,m in arr:
+              if total<=2:selected.append((f'{label} total={total}',m))
+              if len([1 for l,_ in selected if l.startswith(label)])>=12:break
+          O += ['','===== 5. HIGH VALUE METHOD BODIES =====']
+          seen=set()
+          for label,m in selected:
+            if m in seen:continue
+            seen.add(m); O += ['',f'===== {label}: {m} =====',f'FILE: {M[m]["file"]}',*M[m]['body']]
+          text='\n'.join(O)
+          if len(text)>700000:text=text[:700000]+'\n[TRUNCATED 700KB]\n'
+          OUT.write_text(text,encoding='utf-8')
+          print(text[:300000]);print('bytes',OUT.stat().st_size)
+          PY
+      - name: Commit report
+        run: |
+          set -euo pipefail
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add research/generated/instagram_439_hdr_performance_gate_r16.txt
+          if ! git diff --cached --quiet; then
+            git commit -m 'Trace Instagram HDR performance eligibility gate R16'
+            git pull --rebase origin main
+            git push origin HEAD:main
+          fi
