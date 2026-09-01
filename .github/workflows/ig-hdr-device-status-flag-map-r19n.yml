@@ -1,0 +1,90 @@
+name: IG 439 HDR Device Status Flag Map R19n
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - .github/workflows/ig-hdr-device-status-flag-map-r19n.yml
+
+permissions:
+  contents: write
+
+jobs:
+  trace:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    env:
+      APK_NAME: instagram-piko-v439.0.0.37.89-arm64-v8a.apk
+      APK_SHA256: 4015b171ac59f3e7172134d194ec2dcf701f64c3339f127c19d7a04c13d529c8
+    steps:
+      - uses: actions/checkout@v6
+        with: {fetch-depth: 0}
+      - uses: actions/setup-java@v5
+        with:
+          distribution: zulu
+          java-version: '21'
+      - name: Fetch exact APK and exact dexes
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          set -euo pipefail
+          mkdir -p work/apk work/smali research/generated
+          gh release download 8 --pattern "$APK_NAME" --dir work
+          echo "$APK_SHA256  work/$APK_NAME" | sha256sum -c -
+          gh release download 3.0.10 --repo baksmali/smali --pattern 'baksmali-3.0.10-fat.jar' --dir work
+          unzip -q "work/$APK_NAME" 'classes*.dex' -d work/apk
+          for d in classes15.dex classes19.dex; do
+            java -jar work/baksmali-3.0.10-fat.jar d "work/apk/$d" -o "work/smali/${d%.dex}" >/dev/null &
+          done
+          wait
+      - name: Extract exact relevant cases
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          from pathlib import Path
+          import re
+          O=['Instagram 439 exact device_status HDR flag map R19n','=============================================','']
+          p=next(Path('work/smali').rglob('0GiY.smali'))
+          ls=p.read_text(errors='replace').splitlines()
+          s=next(i for i,x in enumerate(ls) if x.startswith('.method public static A01(I)Ljava/lang/Object;'))
+          e=s+1
+          while not ls[e].startswith('.end method'): e+=1
+          b=ls[s:e+1]
+          # switch table
+          t=next(i for i,x in enumerate(b) if ':pswitch_data_' in x and x.strip().startswith(':pswitch_data_'))
+          first=int(re.search(r'\.packed-switch\s+(0x[0-9a-fA-F]+|\d+)',b[t+1]).group(1),0)
+          labels=[]
+          k=t+2
+          while k<len(b) and not b[k].strip().startswith('.end packed-switch'):
+            q=b[k].strip()
+            if q.startswith(':'): labels.append(q)
+            k+=1
+          O += [f'0GiY.A01 packed-switch first={hex(first)} count={len(labels)}']
+          # locate block by label and stop on next label; include goto-shared target where easy.
+          for val in (0x18,0x1c,0x1d,0x1e):
+            lab=labels[val-first] if 0 <= val-first < len(labels) else None
+            O += [f'===== CASE {hex(val)} -> {lab} =====']
+            if lab:
+              idx=next(i for i,x in enumerate(b) if x.strip()==lab)
+              j=idx+1
+              while j<len(b) and not (b[j].startswith('    :pswitch_') or b[j].strip().startswith(':pswitch_data_')): j+=1
+              O += b[idx:j]
+          # Full HLG lazy class, normally modest-sized; include relevant method only if huge.
+          hp=next(Path('work/smali').rglob('07mA.smali'))
+          h=hp.read_text(errors='replace').splitlines()
+          O += [f'===== FULL HLG LAZY CLASS FILE={hp} =====']+h+['']
+          Path('research/generated/instagram_439_hdr_device_status_flag_map_r19n.txt').write_text('\n'.join(O),encoding='utf-8')
+          print('\n'.join(O)[:180000])
+          PY
+      - name: Commit R19n report
+        run: |
+          set -euo pipefail
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add research/generated/instagram_439_hdr_device_status_flag_map_r19n.txt
+          if ! git diff --cached --quiet; then
+            git commit -m 'Add exact device_status HDR flag map R19n'
+            git pull --rebase origin main
+            git push origin HEAD:main
+          fi
