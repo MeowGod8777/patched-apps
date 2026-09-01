@@ -1,0 +1,131 @@
+name: IG 439 AV1 Main10 Track Gate
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - .github/workflows/ig-hdr-av1-track-gate.yml
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  probe:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    env:
+      APK_NAME: instagram-piko-v439.0.0.37.89-arm64-v8a.apk
+      APK_SHA256: 4015b171ac59f3e7172134d194ec2dcf701f64c3339f127c19d7a04c13d529c8
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+
+      - name: Download exact Release 8 APK
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          mkdir -p work/dex work/dis research/generated
+          gh release download 8 --pattern "$APK_NAME" --dir work
+          echo "$APK_SHA256  work/$APK_NAME" | sha256sum -c -
+          unzip -j "work/$APK_NAME" 'classes*.dex' -d work/dex
+          DEXDUMP="$(find "$ANDROID_HOME/build-tools" -type f -name dexdump | sort -V | tail -1)"
+          echo "DEXDUMP=$DEXDUMP" >> "$GITHUB_ENV"
+
+      - name: Disassemble AV1 and codec-capability DEXes
+        shell: bash
+        run: |
+          for d in work/dex/classes*.dex; do
+            S="$(strings "$d")"
+            if printf '%s' "$S" | grep -Eqi 'av01|av1|MediaCodecInfo|CodecProfileLevel|profileLevels|getCapabilitiesForType|track.?selector|representation'; then
+              b="$(basename "$d" .dex)"
+              echo "Disassembling $b" >&2
+              "$DEXDUMP" -d -f -h "$d" > "work/dis/$b.txt"
+            fi
+          done
+
+      - name: Rank methods bridging AV1 codec capability and track selection
+        shell: bash
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          import re
+
+          report=Path('research/generated/instagram_439_av1_main10_track_gate.txt')
+          groups={
+            'av1':[r'video/av01',r'av01',r'\bav1\b',r'dav1d'],
+            'codec':[r'MediaCodecInfo',r'MediaCodecList',r'CodecProfileLevel',r'CodecCapabilities',r'getCapabilitiesForType',r'profileLevels',r'isFormatSupported',r'findDecoderForFormat'],
+            'profile':[r'\.profile:I',r'profile',r'level',r'10.?bit',r'Main10',r'P010',r'color-transfer',r'color-standard',r'hdr'],
+            'track':[r'track',r'representation',r'adaptation',r'manifest',r'FormatSupport',r'supportsFormat',r'selectTracks',r'TrackSelector',r'preferredMimeType',r'codecSupport'],
+          }
+          cre={k:[re.compile(x,re.I) for x in v] for k,v in groups.items()}
+          method_marker=re.compile(r'^([0-9a-f]+):\s+\|\[([0-9a-f]+)\]\s+(.+)$')
+          all_methods=[]
+          for p in Path('work/dis').glob('*.txt'):
+            lines=p.read_text(errors='ignore').splitlines()
+            starts=[]
+            for i,l in enumerate(lines):
+              m=method_marker.match(l.strip())
+              if m and ':(' in m.group(3):
+                starts.append((i,m.group(3)))
+            for n,(i,name) in enumerate(starts):
+              j=starts[n+1][0] if n+1<len(starts) else min(len(lines),i+3000)
+              block=lines[i:j]
+              text='\n'.join(block)
+              hits={g:sum(len(r.findall(text)) for r in regs) for g,regs in cre.items()}
+              hits={g:n for g,n in hits.items() if n}
+              if not hits: continue
+              cats=len(hits)
+              score=sum(hits.values())+cats*20
+              if 'av1' in hits and 'codec' in hits: score+=150
+              if 'codec' in hits and 'track' in hits: score+=170
+              if 'av1' in hits and 'track' in hits: score+=150
+              if 'codec' in hits and 'profile' in hits: score+=120
+              if {'av1','codec','track'} <= hits.keys(): score+=350
+              all_methods.append((score,cats,p.name,name,hits,block))
+
+          all_methods.sort(key=lambda x:(x[0],x[1]), reverse=True)
+          with report.open('w',encoding='utf-8') as f:
+            f.write('Instagram 439 AV1 Main10 / track eligibility trace\n')
+            f.write('================================================\n')
+            f.write('APK SHA256: 4015b171ac59f3e7172134d194ec2dcf701f64c3339f127c19d7a04c13d529c8\n')
+            f.write('Runtime: V2329A selected video/av01 profile=1 Main8, 720x1280@60, BT.709 SDR.\n')
+            f.write('Goal: find code that bridges MediaCodecInfo/profile capability to AV1 representation/track selection.\n\n')
+            f.write('===== RANKED METHODS =====\n')
+            for score,cats,p,name,hits,_ in all_methods[:400]:
+              f.write(f'{score}\t{cats}\t{p}\t{name}\t{hits}\n')
+
+            f.write('\n===== TOP BRIDGE METHOD BODIES =====\n')
+            shown=0
+            for score,cats,p,name,hits,block in all_methods:
+              if cats<2: continue
+              if not (('codec' in hits and ('av1' in hits or 'track' in hits or 'profile' in hits)) or ('av1' in hits and 'track' in hits)):
+                continue
+              f.write(f'\n### {p} :: {name} score={score} hits={hits}\n')
+              for line in block[:700]: f.write(line+'\n')
+              shown+=1
+              if shown>=70: break
+
+            # Exact call references, independent of method ranking.
+            f.write('\n===== EXACT PROFILE/CAPABILITY REFERENCES =====\n')
+            needles=['CodecProfileLevel;.profile:I','CodecProfileLevel;.level:I','getCapabilitiesForType','profileLevels','isFormatSupported','findDecoderForFormat']
+            for p in Path('work/dis').glob('*.txt'):
+              lines=p.read_text(errors='ignore').splitlines()
+              for i,l in enumerate(lines):
+                if any(n.lower() in l.lower() for n in needles):
+                  f.write(f'\n--- {p.name}:{i+1} ---\n')
+                  for x in lines[max(0,i-45):min(len(lines),i+90)]: f.write(x+'\n')
+          print('\n'.join(report.read_text(errors='ignore').splitlines()[:700]))
+          PY
+
+      - name: Commit report
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add research/generated/instagram_439_av1_main10_track_gate.txt
+          if ! git diff --cached --quiet; then
+            git commit -m "Trace Instagram 439 AV1 Main10 track gate"
+          fi
+          git pull --rebase origin main
+          git push origin HEAD:main
