@@ -1,0 +1,157 @@
+name: IG 439 HDR 08td Field Semantics
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - .github/workflows/ig-hdr-08td-field-semantics.yml
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  probe:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    env:
+      APK_NAME: instagram-piko-v439.0.0.37.89-arm64-v8a.apk
+      APK_SHA256: 4015b171ac59f3e7172134d194ec2dcf701f64c3339f127c19d7a04c13d529c8
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+
+      - name: Download and disassemble exact R8
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          set -euo pipefail
+          mkdir -p work/dex work/dis research/generated
+          gh release download 8 --pattern "$APK_NAME" --dir work
+          echo "$APK_SHA256  work/$APK_NAME" | sha256sum -c -
+          unzip -j "work/$APK_NAME" 'classes*.dex' -d work/dex
+          DEXDUMP="$(find "$ANDROID_HOME/build-tools" -type f -name dexdump | sort -V | tail -1)"
+          for d in work/dex/classes*.dex; do
+            b="$(basename "$d" .dex)"
+            "$DEXDUMP" -d -f -h "$d" > "work/dis/$b.txt"
+          done
+
+      - name: Trace A0E A0F metadata semantics
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          from pathlib import Path
+          import re
+          from collections import defaultdict
+
+          header_re=re.compile(r'\|\[[0-9a-f]+\]\s+([^\s]+):')
+          invoke_re=re.compile(r'invoke-[^,]+.*?\s(L[^;]+;\.[^:]+:\([^\n ]*?\)[^\s/]+)')
+          methods=[]
+          def sig(h):
+              m=re.match(r'X\.([^.]+)\.([^:]+):(.*)$',h)
+              return f'LX/{m.group(1)};.{m.group(2)}:{m.group(3)}' if m else None
+
+          for p in sorted(Path('work/dis').glob('classes*.txt')):
+              lines=p.read_text(errors='replace').splitlines(); starts=[]; heads=[]
+              for i,l in enumerate(lines):
+                  m=header_re.search(l)
+                  if m:
+                      starts.append(i); heads.append(m.group(1))
+              for j,s in enumerate(starts):
+                  e=starts[j+1] if j+1<len(starts) else len(lines)
+                  methods.append({'file':p.name,'s':s+1,'e':e,'head':heads[j],'sig':sig(heads[j]),'body':lines[s:e]})
+
+          reverse=defaultdict(set)
+          for i,m in enumerate(methods):
+              for t in invoke_re.findall('\n'.join(m['body'])):
+                  reverse[t].add(i)
+
+          out=['Instagram 439 Hero representation metadata field semantics','==========================================================','APK SHA256: 4015b171ac59f3e7172134d194ec2dcf701f64c3339f127c19d7a04c13d529c8','']
+          def emit(m,label,cap=3200):
+              out.append(f'===== {label} :: {m["file"]}:{m["s"]}-{m["e"]} :: {m["head"]} =====')
+              out.extend(x.rstrip() for x in m['body'][:cap])
+              if len(m['body'])>cap: out.append(f'... omitted {len(m["body"])-cap} lines ...')
+              out.append('')
+
+          fields={
+              'builder_A0D':'LX/08tc;.A0D:Z',
+              'builder_A0E':'LX/08tc;.A0E:Z',
+              'immutable_A0E':'LX/08td;.A0E:Z',
+              'immutable_A0F':'LX/08td;.A0F:Z',
+          }
+
+          owners={}
+          for label,needle in fields.items():
+              ids=[]
+              for i,m in enumerate(methods):
+                  if needle in '\n'.join(m['body']): ids.append(i)
+              owners[label]=ids
+              out.append(f'{label}_OWNER_COUNT={len(ids)}')
+              for i in ids: emit(methods[i],f'{label} OWNER',4200)
+
+          # Every method that creates a fresh metadata builder. Fresh builders are where parser/manifest fields are assigned.
+          fresh=[]
+          for i,m in enumerate(methods):
+              txt='\n'.join(m['body'])
+              if 'new-instance' in txt and 'LX/08tc;' in txt:
+                  fresh.append(i); emit(m,'NEW X.08tc OWNER',5000)
+          out.append(f'NEW_X_08tc_OWNER_COUNT={len(fresh)}')
+
+          # Every method that constructs immutable metadata; parser often writes builder then invokes this ctor.
+          build=[]
+          for i,m in enumerate(methods):
+              txt='\n'.join(m['body'])
+              if 'LX/08td;.<init>:(LX/08tc;)V' in txt:
+                  build.append(i); emit(m,'X.08td CONSTRUCTION OWNER',5000)
+          out.append(f'X_08td_CONSTRUCTION_OWNER_COUNT={len(build)}')
+
+          # One caller layer of fresh-builder/build owners, to expose parser names and XML/JSON key context.
+          caller_ids=set()
+          for i in sorted(set(fresh+build)):
+              s=methods[i]['sig']
+              if s: caller_ids.update(reverse.get(s,()))
+          out.append(f'BUILDER_OWNER_CALLER_COUNT={len(caller_ids)}')
+          for i in sorted(caller_ids): emit(methods[i],'CALLER OF 08tc/08td BUILDER OWNER',3600)
+
+          # Find methods that combine metadata types with manifest/parser/string/XML/JSON/HDR/color semantics.
+          semantic=('hdr','hlg','st2084','pq','bt2020','color','transfer','primaries','matrix','range','10bit','10-bit','bit_depth','bitdepth',
+                    'supplementalproperty','essentialproperty','adaptationset','representation','dash','manifest','schemeiduri','role','codec','av01','hevc','dolby',
+                    'jsonreader','xmlpullparser','attributevalue','parse')
+          sem=[]
+          for i,m in enumerate(methods):
+              txt='\n'.join(m['body']); low=txt.lower()
+              if ('LX/08tc;' in txt or 'LX/08td;' in txt) and any(k in low for k in semantic): sem.append(i)
+          out.append(f'METADATA_SEMANTIC_METHOD_COUNT={len(sem)}')
+          for i in sem[:220]: emit(methods[i],'08tc/08td + PARSER/HDR/COLOR SEMANTICS',4600)
+
+          # String-bearing methods around metadata. This often preserves source field names despite obfuscation.
+          stringy=[]
+          for i,m in enumerate(methods):
+              txt='\n'.join(m['body'])
+              if ('LX/08tc;' in txt or 'LX/08td;' in txt) and 'const-string' in txt:
+                  stringy.append(i)
+          out.append(f'METADATA_STRING_OWNER_COUNT={len(stringy)}')
+          for i in stringy[:240]: emit(methods[i],'08tc/08td STRING OWNER',4600)
+
+          # Dump complete class definitions for 08tc and 08td.
+          for prefix in ('X.08tc.','X.08td.'):
+              ids=[i for i,m in enumerate(methods) if m['head'].startswith(prefix)]
+              out.append(f'{prefix}_METHOD_COUNT={len(ids)}')
+              for i in ids: emit(methods[i],f'{prefix} FULL DEFINITION',5000)
+
+          path=Path('research/generated/instagram_439_hdr_08td_field_semantics.txt')
+          path.write_text('\n'.join(out)+'\n',encoding='utf-8')
+          if path.stat().st_size < 5000: raise SystemExit('report unexpectedly small')
+          print(path.read_text()[:280000])
+          PY
+
+      - name: Commit report
+        run: |
+          set -euo pipefail
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add research/generated/instagram_439_hdr_08td_field_semantics.txt
+          if ! git diff --cached --quiet; then git commit -m "Trace Instagram 439 Hero metadata field semantics"; fi
+          git pull --rebase origin main
+          git push origin HEAD:main
