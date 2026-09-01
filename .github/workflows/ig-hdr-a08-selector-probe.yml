@@ -30,40 +30,56 @@ jobs:
           gh release download 8 --pattern "$APK_NAME" --dir work
           echo "$APK_SHA256  work/$APK_NAME" | sha256sum -c -
           unzip -p "work/$APK_NAME" classes10.dex > work/classes10.dex
+          DEXDUMP="$(find "$ANDROID_HOME/build-tools" -type f -name dexdump | sort -V | tail -1)"
+          "$DEXDUMP" -d -f -h work/classes10.dex > work/classes10.txt
 
-      - name: Resolve A08 packed-switch selector
+      - name: Trace X.0m8z A08 consumer
         shell: bash
         run: |
+          REPORT=research/generated/instagram_439_hdr_a08_consumer_exact.txt
           python3 - <<'PY'
           from pathlib import Path
-          import struct
-          dex=Path('work/classes10.dex').read_bytes()
-          payload=0x3693f4
-          ident,size=struct.unpack_from('<HH',dex,payload)
-          first_key=struct.unpack_from('<i',dex,payload+4)[0]
-          targets=struct.unpack_from('<'+'i'*size,dex,payload+8)
-          switch_off=0x2
-          branches={'A0C':0x0a,'A0B':0x0f,'A0A':0x14,'A09':0x19,'A08':0x1e,'A07':0x23,'A06':0x28,'A05':0x2d,'A04':0x32}
-          out=Path('research/generated/instagram_439_hdr_a08_switch_payload.txt')
-          with out.open('w') as f:
-              f.write('Instagram 439 X.0D2R.A08 exact selector\n')
-              f.write('======================================\n')
-              f.write('Exact APK SHA256: 4015b171ac59f3e7172134d194ec2dcf701f64c3339f127c19d7a04c13d529c8\n')
-              f.write(f'ident=0x{ident:04x} size={size} first_key={first_key}\n')
-              for name,off in branches.items():
-                  rel=off-switch_off
-                  keys=[first_key+i for i,t in enumerate(targets) if t==rel]
-                  f.write(f'{name}: branch=0x{off:x} rel=0x{rel:x} selectors={keys}\n')
-          print(out.read_text())
+          lines=Path('work/classes10.txt').read_text(errors='ignore').splitlines()
+          out=[]
+          out.append('Instagram 439 X.0m8z.A08 exact consumer')
+          out.append('======================================')
+          out.append('X.0D2R selector 105 -> A08() -> has Display HDR type 1 (Dolby Vision) -> X.0m8z.A08 lazy')
+          out.append('')
+
+          # Class definition block.
+          idx=next((i for i,l in enumerate(lines) if "Class descriptor  : 'LX/0m8z;'" in l),None)
+          if idx is not None:
+              lo=max(0,idx-20); hi=min(len(lines),idx+1800)
+              out.append('===== X.0m8z CLASS =====')
+              out.extend(lines[lo:hi])
+
+          # Every read/write/reference to static field A08.
+          out.append('\n===== X.0m8z.A08 REFERENCES =====')
+          for i,l in enumerate(lines):
+              if 'LX/0m8z;.A08:' in l:
+                  lo=max(0,i-55); hi=min(len(lines),i+100)
+                  out.append(f'--- around line {i+1} ---')
+                  out.extend(lines[lo:hi])
+
+          # Dolby codec strings and nearby methods in same DEX.
+          out.append('\n===== DOLBY CODEC STRING CONTEXTS =====')
+          for i,l in enumerate(lines):
+              if 'dolby.decoder' in l.lower() or 'qti.dv.decoder' in l.lower() or 'dolby vision' in l.lower():
+                  lo=max(0,i-45); hi=min(len(lines),i+80)
+                  out.append(f'--- around line {i+1} ---')
+                  out.extend(lines[lo:hi])
+
+          Path('research/generated/instagram_439_hdr_a08_consumer_exact.txt').write_text('\n'.join(out)+'\n')
           PY
+          sed -n '1,2200p' "$REPORT"
 
       - name: Commit report
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add research/generated/instagram_439_hdr_a08_switch_payload.txt
+          git add research/generated/instagram_439_hdr_a08_consumer_exact.txt
           if ! git diff --cached --quiet; then
-            git commit -m "Resolve Instagram 439 HDR A08 selector"
+            git commit -m "Trace Instagram 439 X.0m8z HDR type1 consumer"
           fi
           git pull --rebase origin main
           git push origin HEAD:main
