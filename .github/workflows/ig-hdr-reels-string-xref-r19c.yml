@@ -1,0 +1,214 @@
+name: IG 439 HDR Reels String Xref R19c
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - .github/workflows/ig-hdr-reels-string-xref-r19c.yml
+
+permissions:
+  contents: write
+
+jobs:
+  trace:
+    runs-on: ubuntu-latest
+    timeout-minutes: 18
+    env:
+      APK_NAME: instagram-piko-v439.0.0.37.89-arm64-v8a.apk
+      APK_SHA256: 4015b171ac59f3e7172134d194ec2dcf701f64c3339f127c19d7a04c13d529c8
+    steps:
+      - uses: actions/checkout@v6
+        with: {fetch-depth: 0}
+      - uses: actions/setup-java@v5
+        with:
+          distribution: zulu
+          java-version: '21'
+      - name: Fetch exact APK and disassemble operation dexes
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          set -euo pipefail
+          mkdir -p work/apk work/smali research/generated
+          gh release download 8 --pattern "$APK_NAME" --dir work
+          echo "$APK_SHA256  work/$APK_NAME" | sha256sum -c -
+          gh release download 3.0.10 --repo baksmali/smali --pattern 'baksmali-3.0.10-fat.jar' --dir work
+          unzip -q "work/$APK_NAME" 'classes*.dex' -d work/apk
+          python3 - <<'PY'
+          from pathlib import Path
+          import subprocess
+          toks=['clips_viewer_feed_timeline','clips_viewer_reel_feed_timeline','reel_feed_timeline','clips_fetch',
+                'clips/items','clips/feed','reels/feed','feed/reels','clips_viewer_homecoming_fyp','video_dash_manifest']
+          hit=[]
+          for p in sorted(Path('work/apk').glob('classes*.dex')):
+            s=subprocess.run(['strings','-a',str(p)],capture_output=True,text=True,errors='replace').stdout.lower()
+            if any(t.lower() in s for t in toks): hit.append(p.name)
+          Path('work/hitdex.txt').write_text('\n'.join(hit)+'\n')
+          print('HITDEX',hit)
+          PY
+          while read d; do
+            [ -n "$d" ] || continue
+            n="${d%.dex}"
+            java -jar work/baksmali-3.0.10-fat.jar d "work/apk/$d" -o "work/smali/$n" >/dev/null &
+          done < work/hitdex.txt
+          wait
+
+      - name: Resolve string-table indices and exact callers
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          from pathlib import Path
+          import re, collections
+
+          ROOT=Path('work/smali')
+          OUT=Path('research/generated/instagram_439_hdr_reels_string_xref_r19c.txt')
+          targets={
+            'clips_viewer_feed_timeline','clips_viewer_reel_feed_timeline','reel_feed_timeline','clips_fetch',
+            'clips/items','clips/feed','reels/feed','feed/reels','clips_viewer_homecoming_fyp','video_dash_manifest'
+          }
+          reqwords=('GraphQlCallInput','doc_id','query_id','query_hash','variables','signed_body','/api/v1/','/api/v2/',
+                    'media_delivery','is_dash_eligible','video_dash_manifest','hdr','codec','av1','hevc','vp9','capabil',
+                    'device','playback','quality','bandwidth','resolution','network','screen')
+          cls_re=re.compile(r'^\.class\s+.*\s+(L[^;]+;)$')
+          method_ref_re=re.compile(r'(L[^;]+;)->([^\s(]+)\(([^)]*)\)(\S+)')
+          const_re=re.compile(r'^\s*const(?:/4|/16|/high16)?\s+([vp]\d+),\s+(-?0x[0-9a-fA-F]+|-?\d+)')
+          str_re=re.compile(r'^\s*const-string(?:/jumbo)?\s+([vp]\d+),\s+"(.*)"')
+
+          files={}
+          methods={}
+          file_methods=collections.defaultdict(list)
+          for p in ROOT.rglob('*.smali'):
+            ls=p.read_text(errors='replace').splitlines(); cls=None
+            for x in ls[:50]:
+              m=cls_re.match(x)
+              if m: cls=m.group(1); break
+            if not cls: continue
+            files[cls]=(p,ls)
+            i=0
+            while i<len(ls):
+              if not ls[i].startswith('.method'): i+=1; continue
+              s=i; sig=ls[i]; i+=1
+              while i<len(ls) and not ls[i].startswith('.end method'): i+=1
+              e=min(i,len(ls)-1); body=ls[s:e+1]
+              # parse method name+descriptor from declaration tail
+              mm=re.search(r'\s([^\s(]+)\(([^)]*)\)(\S+)$', sig)
+              if mm:
+                key=(cls,mm.group(1),mm.group(2),mm.group(3))
+                methods[key]=(p,s,e,body,sig)
+                file_methods[cls].append(key)
+              i+=1
+
+          # Locate centralized X/0000 A00(I)String and resolve packed-switch key -> returned literal.
+          xcls='LX/0000;'
+          if xcls not in files: raise SystemExit('LX/0000; not disassembled')
+          p,ls=files[xcls]
+          key=(xcls,'A00','I','Ljava/lang/String;')
+          if key not in methods: raise SystemExit('LX/0000.A00(I)String missing')
+          _,s,e,body,_=methods[key]
+          label_to_string={}
+          cur=None
+          for line in body:
+            if re.match(r'^\s*:pswitch_[0-9a-fA-F]+\s*$',line): cur=line.strip()
+            elif cur:
+              m=str_re.match(line)
+              if m:
+                label_to_string[cur]=bytes(m.group(2),'utf-8').decode('unicode_escape',errors='replace')
+                cur=None
+              elif line.strip().startswith('return-object'): cur=None
+          base=None; labels=[]; inps=False
+          for line in body:
+            st=line.strip()
+            if st.startswith('.packed-switch'):
+              try: base=int(st.split()[1],0)
+              except Exception: base=None
+              labels=[]; inps=True; continue
+            if inps:
+              if st.startswith('.end packed-switch'):
+                break
+              if st.startswith(':pswitch_'): labels.append(st)
+          if base is None or not labels: raise SystemExit('packed-switch payload not parsed')
+          val_to_string={base+i:label_to_string.get(lab) for i,lab in enumerate(labels)}
+          target_vals={v:s for v,s in val_to_string.items() if s in targets}
+
+          O=['Instagram 439 HDR Reels String Xref R19c','==========================================','',
+             '===== RESOLVED LX/0000.A00 INDICES =====']
+          for v,sval in sorted(target_vals.items()): O.append(f'{v} / {hex(v)} -> {sval}')
+          if not target_vals:
+            O.append('NONE -- target literals were not resolved from packed-switch')
+
+          # Scan each method for direct target literals or const-index -> invoke LX/0000.A00 within a small register window.
+          seeds=[]
+          for mkey,(mp,ms,me,b,sig) in methods.items():
+            if mkey[0]==xcls and mkey[1]=='A00': continue
+            regs={}
+            hits=[]
+            direct=[]
+            for idx,line in enumerate(b):
+              sm=str_re.match(line)
+              if sm and sm.group(2) in targets: direct.append(sm.group(2))
+              cm=const_re.match(line)
+              if cm:
+                try: regs[cm.group(1)]=(int(cm.group(2),0),idx)
+                except: pass
+              if 'LX/0000;->A00(I)Ljava/lang/String;' in line:
+                rm=re.search(r'\{\s*([vp]\d+)\s*\}',line)
+                if rm and rm.group(1) in regs:
+                  val,at=regs[rm.group(1)]
+                  if idx-at<=12 and val in target_vals:
+                    hits.append((target_vals[val],val,idx-at))
+            if hits or direct:
+              low='\n'.join(b).lower()
+              rw=[w for w in reqwords if w.lower() in low]
+              seeds.append((mkey,mp,sig,hits,direct,rw,b))
+
+          O += ['',f'===== EXACT OPERATION CALLER METHODS ({len(seeds)}) =====']
+          for mkey,mp,sig,hits,direct,rw,b in seeds:
+            O += ['',f'--- {mkey[0]} {sig}',f'FILE={mp}',f'INDIRECT={hits}',f'DIRECT={direct}',f'REQWORDS={rw}','---']+b
+
+          # Build invoke graph for one-hop callees and reverse callers around exact seeds.
+          def refs(body):
+            out=[]
+            for line in body:
+              if 'invoke-' not in line: continue
+              m=method_ref_re.search(line)
+              if m: out.append((m.group(1),m.group(2),m.group(3),m.group(4)))
+            return out
+          seed_keys={x[0] for x in seeds}
+          onehop=set()
+          for sk in seed_keys:
+            for r in refs(methods[sk][3]):
+              if r in methods: onehop.add(r)
+          reverse=[]
+          for mk,entry in methods.items():
+            rr=set(refs(entry[3]))
+            hs=rr & seed_keys
+            if hs: reverse.append((mk,hs))
+
+          O += ['',f'===== ONE-HOP CALLEES ({len(onehop)}) =====']
+          for mk in sorted(onehop):
+            mp,ms,me,b,sig=methods[mk]; low='\n'.join(b).lower(); rw=[w for w in reqwords if w.lower() in low]
+            O += ['',f'--- {mk[0]} {sig}',f'FILE={mp}',f'REQWORDS={rw}','---']+b
+          O += ['',f'===== REVERSE CALLERS ({len(reverse)}) =====']
+          for mk,hs in sorted(reverse,key=lambda x:x[0]):
+            mp,ms,me,b,sig=methods[mk]; low='\n'.join(b).lower(); rw=[w for w in reqwords if w.lower() in low]
+            O += ['',f'--- {mk[0]} {sig}',f'FILE={mp}',f'CALLS_SEEDS={sorted(hs)}',f'REQWORDS={rw}','---']+b
+
+          text='\n'.join(O)
+          if len(text)>950000: text=text[:950000]+'\n[TRUNCATED]\n'
+          OUT.write_text(text,encoding='utf-8')
+          print('\n'.join(O[:4000]))
+          print('target_vals',target_vals)
+          print('seed_count',len(seeds),'onehop',len(onehop),'reverse',len(reverse),'bytes',OUT.stat().st_size)
+          PY
+
+      - name: Commit R19c report
+        run: |
+          set -euo pipefail
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add research/generated/instagram_439_hdr_reels_string_xref_r19c.txt
+          if ! git diff --cached --quiet; then
+            git commit -m 'Add exact Reels operation string xrefs R19c'
+            git pull --rebase origin main
+            git push origin HEAD:main
+          fi
