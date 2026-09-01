@@ -1,0 +1,133 @@
+name: IG 439 HDR Streaming Request Core R19h
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - .github/workflows/ig-hdr-stream-request-core-r19h.yml
+
+permissions:
+  contents: write
+
+jobs:
+  trace:
+    runs-on: ubuntu-latest
+    timeout-minutes: 18
+    env:
+      APK_NAME: instagram-piko-v439.0.0.37.89-arm64-v8a.apk
+      APK_SHA256: 4015b171ac59f3e7172134d194ec2dcf701f64c3339f127c19d7a04c13d529c8
+    steps:
+      - uses: actions/checkout@v6
+        with: {fetch-depth: 0}
+      - uses: actions/setup-java@v5
+        with:
+          distribution: zulu
+          java-version: '21'
+      - name: Fetch APK and disassemble request-core dexes
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          set -euo pipefail
+          mkdir -p work/apk work/smali research/generated
+          gh release download 8 --pattern "$APK_NAME" --dir work
+          echo "$APK_SHA256  work/$APK_NAME" | sha256sum -c -
+          gh release download 3.0.10 --repo baksmali/smali --pattern 'baksmali-3.0.10-fat.jar' --dir work
+          unzip -q "work/$APK_NAME" 'classes*.dex' -d work/apk
+          python3 - <<'PY'
+          from pathlib import Path
+          import subprocess
+          needles=['LX/02pu','LX/02ue','LX/02pz','LX/03u7','LX/0AMH','ClipsApiUtilHelper']
+          hit=[]; rows=[]
+          for p in sorted(Path('work/apk').glob('classes*.dex')):
+              s=subprocess.run(['strings','-a',str(p)],capture_output=True,text=True,errors='replace').stdout
+              hs=[n for n in needles if n in s]
+              if hs:
+                  hit.append(p.name); rows.append(f'{p.name}: {hs}')
+          Path('work/hitdex.txt').write_text('\n'.join(hit)+'\n')
+          print('\n'.join(rows)); print('HITDEX',hit)
+          PY
+          while read d; do
+            [ -n "$d" ] || continue
+            n="${d%.dex}"
+            java -jar work/baksmali-3.0.10-fat.jar d "work/apk/$d" -o "work/smali/$n" >/dev/null &
+          done < work/hitdex.txt
+          wait
+      - name: Extract core classes and request decorators
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          from pathlib import Path
+          import re
+          R=Path('work/smali')
+          OUT=Path('research/generated/instagram_439_hdr_stream_request_core_r19h.txt')
+          targets={'LX/02pu;','LX/02ue;','LX/02pz;','LX/03u7;','LX/0AMH;'}
+          cls_re=re.compile(r'^\.class\s+.*\s+(L[^;]+;)$')
+          inv_re=re.compile(r'(L[^;]+;)->([^\s(]+)\(([^)]*)\)(\S+)')
+          methods=[]; class_files={}
+          for p in R.rglob('*.smali'):
+              ls=p.read_text(errors='replace').splitlines(); cls='?'
+              for x in ls[:60]:
+                  m=cls_re.match(x)
+                  if m: cls=m.group(1); break
+              class_files[cls]=(p,ls)
+              i=0
+              while i<len(ls):
+                  if not ls[i].startswith('.method'): i+=1; continue
+                  s=i; sig=ls[i]; i+=1
+                  while i<len(ls) and not ls[i].startswith('.end method'): i+=1
+                  e=min(i,len(ls)-1); methods.append((cls,sig,p,ls[s:e+1])); i+=1
+          O=['Instagram 439 HDR streaming request core R19h','============================================','']
+          for cls in targets:
+              if cls in class_files:
+                  p,ls=class_files[cls]
+                  O += [f'===== CORE CLASS {cls} FILE={p} =====']+ls+['']
+          # Collect direct callee classes/methods from core, especially A0K and constructors.
+          refs=set()
+          for cls,sig,p,b in methods:
+              if cls not in targets: continue
+              if (' A0K(' in sig or '<init>' in sig or ' AMu(' in sig or ' AOA(' in sig or ' A0F(' in sig):
+                  O += [f'===== CORE METHOD {cls} {sig} =====',f'FILE={p}']+b+['']
+                  for x in b:
+                      if 'invoke-' in x:
+                          m=inv_re.search(x)
+                          if m: refs.add(m.groups())
+          O += ['===== DIRECT CORE CALLEES =====']+[str(x) for x in sorted(refs)]+['']
+          # Emit locally resolvable callee methods if they contain request/header/device/media terms.
+          kws=('x-ig-','header','device','capabil','codec','hdr','media','playback','quality','bandwidth','resolution','delivery','network','accept','user-agent','model','manufacturer')
+          refkeys={(a,b,c,d) for a,b,c,d in refs}
+          for cls,sig,p,b in methods:
+              mm=re.search(r'\s([^\s(]+)\(([^)]*)\)(\S+)$',sig)
+              if not mm: continue
+              key=(cls,mm.group(1),mm.group(2),mm.group(3))
+              if key not in refkeys: continue
+              text='\n'.join(b).lower()
+              if any(k in text for k in kws):
+                  O += [f'===== RELEVANT CORE CALLEE {cls} {sig} =====',f'FILE={p}']+b+['']
+          # All methods in disassembled corpus containing server-visible X-IG headers AND referring to core request types.
+          O += ['===== X-IG WRITERS TOUCHING REQUEST CORE =====']
+          for cls,sig,p,b in methods:
+              text='\n'.join(b)
+              low=text.lower()
+              if 'x-ig-' in low and any(t.replace(';','').lower() in low for t in ['LX/02pu;','LX/03u7;','LX/0AMH;']):
+                  vals=re.findall(r'const-string(?:/jumbo)?\s+[^,]+,\s+"([^"]+)"',text)
+                  interesting=[v for v in vals if v.lower().startswith('x-ig-') or any(k in v.lower() for k in ('device','capabil','codec','hdr','media','playback','quality','bandwidth','resolution','delivery'))]
+                  O += [f'--- {cls} {sig}',f'FILE={p}',f'INTERESTING={interesting}']
+                  # Avoid huge generic methods; give neighborhoods around headers.
+                  idx=[i for i,x in enumerate(b) if 'X-IG-' in x or 'x-ig-' in x]
+                  for i in idx: O += b[max(0,i-25):min(len(b),i+35)]
+                  O += ['']
+          OUT.write_text('\n'.join(O),encoding='utf-8')
+          print('\n'.join(O[:9000])); print('bytes',OUT.stat().st_size)
+          PY
+      - name: Commit R19h report
+        run: |
+          set -euo pipefail
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add research/generated/instagram_439_hdr_stream_request_core_r19h.txt
+          if ! git diff --cached --quiet; then
+            git commit -m 'Add Clips streaming request core trace R19h'
+            git pull --rebase origin main
+            git push origin HEAD:main
+          fi
