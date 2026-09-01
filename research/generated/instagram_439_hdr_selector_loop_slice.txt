@@ -4,3 +4,131 @@
     move-result v1
 
     if-eqz v1, :cond_34d
+
+    invoke-interface {v10}, Ljava/util/Iterator;->next()Ljava/lang/Object;
+
+    move-result-object v9
+
+    check-cast v9, LX/08ti;
+
+    iget v7, v9, LX/08ti;->A06:I
+
+    const/4 v1, 0x1
+
+    if-eq v7, v1, :cond_2f6
+
+    const/4 v1, 0x2
+
+    if-ne v7, v1, :cond_2ce
+
+    iget-object v1, v9, LX/08ti;->A0E:Ljava/util/List;
+
+    invoke-interface {v1}, Ljava/util/List;->iterator()Ljava/util/Iterator;
+
+    move-result-object v7
+
+    :goto_2e8
+    invoke-interface {v7}, Ljava/util/Iterator;->hasNext()Z
+
+    move-result v1
+
+    if-eqz v1, :cond_2ce
+
+    invoke-interface {v7}, Ljava/util/Iterator;->next()Ljava/lang/Object;
+
+    move-result-object v1
+
+    invoke-virtual {v6, v1}, Ljava/util/AbstractCollection;->add(Ljava/lang/Object;)Z
+
+    goto :goto_2e8
+
+    :cond_2f6
+    iget-object v1, v9, LX/08ti;->A0E:Ljava/util/List;
+
+    invoke-interface {v1}, Ljava/util/List;->iterator()Ljava/util/Iterator;
+
+    move-result-object v7
+
+    :goto_2fc
+    invoke-interface {v7}, Ljava/util/Iterator;->hasNext()Z
+
+    move-result v1
+
+    if-eqz v1, :cond_2ce
+
+    invoke-interface {v7}, Ljava/util/Iterator;->next()Ljava/lang/Object;
+
+    move-result-object v1
+
+    invoke-virtual {v5, v1}, Ljava/util/AbstractCollection;->add(Ljava/lang/Object;)Z
+
+    goto :goto_2fc
+
+    :cond_30a
+    new-instance v5, LX/00dQ;
+
+    invoke-direct {v5}, LX/00dQ;-><init>()V
+
+    sget-object v6, Landroid/net/Uri;->EMPTY:Landroid/net/Uri;
+
+    iput-object v6, v5, LX/00dQ;->A01:Landroid/net/Uri;
+
+    const-string v1, "DashMediaSource"
+
+    iput-object v1, v5, LX/00dQ;->A0A:Ljava/lang/String;
+
+    iput-object v2, v5, LX/00dQ;->A0B:Ljava/lang/String;
+
+    invoke-virtual {v5}, LX/00dQ;->A00()LX/00dO;
+
+    move-result-object v5
+
+    const-wide/16 v39, -0x1
+
+    new-instance v1, LX/00dQ;
+
+    invoke-direct {v1, v5}, LX/00dQ;-><init>(LX/00dO;)V
+
+    iput-object v2, v1, LX/00dQ;->A0B:Ljava/lang/String;
+
+    iget-object v2, v5, LX/00dO;->A03:LX/00dX;
+
+    if-nez v2, :cond_32c
+
+    iput-object v6, v1, LX/00dQ;->A01:Landroid/net/Uri;
+
+    :cond_32c
+    invoke-virtual {v1}, LX/00dQ;->A00()LX/00dO;
+
+    move-result-object v26
+
+    new-instance v13, LX/00lR;
+
+    move-object/from16 v25, v13
+
+    move-object/from16 v27, v53
+
+    move-object/from16 v28, v20
+
+    move-object/from16 v31, v53
+
+    move-object/from16 v32, v19
+
+    move-object/from16 v33, v53
+
+    move-object/from16 v34, v41
+
+    move-object/from16 v35, v23
+
+    move-object/from16 v36, v17
+
+    move-object/from16 v37, v24
+
+    move-object/from16 v38, v4
+
+    invoke-direct/range {v25 .. v40}, LX/00lR;-><init>(LX/00dO;LX/073y;LX/00lO;LX/09fZ;LX/09of;LX/0nIC;LX/00lC;LX/06vo;LX/00ND;LX/00lI;LX/00lH;LX/09dY;LX/08rn;J)V
+
+    goto/16 :goto_2ab
+
+    :cond_34d
+
