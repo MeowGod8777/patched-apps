@@ -1,0 +1,211 @@
+name: IG 439 HDR Persistent Classification R19n
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - .github/workflows/ig-hdr-persistent-classification-r19n.yml
+
+permissions:
+  contents: write
+
+jobs:
+  trace:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    env:
+      APK_NAME: instagram-piko-v439.0.0.37.89-arm64-v8a.apk
+      APK_SHA256: 4015b171ac59f3e7172134d194ec2dcf701f64c3339f127c19d7a04c13d529c8
+    steps:
+      - uses: actions/checkout@v6
+        with: {fetch-depth: 0}
+      - uses: actions/setup-java@v5
+        with:
+          distribution: zulu
+          java-version: '21'
+
+      - name: Fetch exact APK and disassemble all dexes
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          set -euo pipefail
+          mkdir -p work/apk work/smali research/generated
+          gh release download 8 --pattern "$APK_NAME" --dir work
+          echo "$APK_SHA256  work/$APK_NAME" | sha256sum -c -
+          gh release download 3.0.10 --repo baksmali/smali --pattern 'baksmali-3.0.10-fat.jar' --dir work
+          unzip -q "work/$APK_NAME" 'classes*.dex' -d work/apk
+          for d in work/apk/classes*.dex; do
+            n="$(basename "${d%.dex}")"
+            java -Xmx768m -jar work/baksmali-3.0.10-fat.jar d "$d" -o "work/smali/$n" >/dev/null &
+            while [ "$(jobs -rp | wc -l)" -ge 6 ]; do sleep 1; done
+          done
+          wait
+
+      - name: Trace capability owners fields and sinks
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          from pathlib import Path
+          import re, json
+          ROOT=Path('work/smali')
+          OUT=Path('research/generated/instagram_439_hdr_persistent_classification_r19n.txt')
+          cls_re=re.compile(r'^\.class\s+.*\s+(L[^;]+;)$')
+          meth_re=re.compile(r'^\.method.*?\s([^\s(]+)\(([^)]*)\)(\S+)')
+          inv_re=re.compile(r'(L[^;]+;)->([^\s(]+)\(([^)]*)\)(\S+)')
+          str_re=re.compile(r'^\s*const-string(?:/jumbo)?\s+([^,]+),\s+"(.*)"')
+          field_ref_re=re.compile(r'LX/0hkS;->([A-Za-z0-9_$]+):LX/0fKx;')
+
+          caps=(
+            'device_capabilities','display_hdr_supported','supported_display_hdr_types','hdr_supported_types',
+            'is_av1_hdr_supported','is_hevc_hdr_supported','key_display_hdr_supported',
+            'key_video_decoder_hdr_supported','video_decoder_hdr_supported','video_encoder_hdr_supported',
+            'key_video_encoder_hdr_supported','media_codec_info','profile_levels','performance_class','chipset_platform'
+          )
+          owner_classes={'LX/0Uiy;','LX/0hkS;','LX/0hld;','LX/0hqj;','LX/0ece;','LX/0knW;','LX/0lAl;'}
+
+          # Stream method parser, retaining only targeted methods to avoid huge memory.
+          defs={}
+          targeted=[]
+          hk_clinit=None
+          file_count=0; method_count=0
+          for p in ROOT.rglob('*.smali'):
+              file_count+=1
+              ls=p.read_text(errors='replace').splitlines(); cls='?'
+              for x in ls[:60]:
+                  m=cls_re.match(x)
+                  if m: cls=m.group(1); break
+              i=0
+              while i<len(ls):
+                  if not ls[i].startswith('.method'): i+=1; continue
+                  s=i; sig=ls[i]; mm=meth_re.match(sig); i+=1
+                  while i<len(ls) and not ls[i].startswith('.end method'): i+=1
+                  e=min(i,len(ls)-1); b=ls[s:e+1]; method_count+=1; i+=1
+                  if mm:
+                      key=(cls,mm.group(1),mm.group(2),mm.group(3)); defs[key]=(str(p),sig)
+                  text='\n'.join(b); low=text.lower()
+                  hs=[c for c in caps if c in low]
+                  owner=(cls in owner_classes)
+                  seg=('devicesegmentation' in low or 'com.facebook.devicesegmentation' in low)
+                  hkref=('LX/0hkS;->' in text)
+                  uiyref=('LX/0Uiy;->' in text or 'new-instance' in text and 'LX/0Uiy;' in text)
+                  if cls=='LX/0hkS;' and '<clinit>' in sig: hk_clinit=(p,sig,b)
+                  if hs or owner or seg or hkref or uiyref:
+                      targeted.append((cls,sig,p,b,hs,owner,seg,hkref,uiyref))
+
+          # Decode 0hkS field mapping from string -> field.
+          hk_map={}
+          if hk_clinit:
+              p,sig,b=hk_clinit
+              last_string=None
+              for idx,l in enumerate(b):
+                  sm=str_re.match(l)
+                  if sm: last_string=sm.group(2)
+                  fm=field_ref_re.search(l)
+                  if fm and 'sput-object' in l and last_string:
+                      hk_map[last_string]=fm.group(1)
+          hdr_fields={k:v for k,v in hk_map.items() if any(x in k.lower() for x in ['hdr','codec','display','video_decoder','video_encoder'])}
+          relevant_fields=set(v for k,v in hk_map.items() if k in {
+              'display_hdr_supported','video_decoder_hdr_supported','video_encoder_hdr_supported',
+              'supported_display_hdr_types','hdr_supported_types','is_av1_hdr_supported','is_hevc_hdr_supported'
+          })
+
+          # Keep exact seed descriptors for one-hop caller scan.
+          seed_keys=[]
+          for cls,sig,p,b,hs,owner,seg,hkref,uiyref in targeted:
+              mm=meth_re.match(sig)
+              if mm and (hs or cls in {'LX/0Uiy;','LX/0hkS;','LX/0hld;','LX/0hqj;','LX/0ece;'}):
+                  seed_keys.append((cls,mm.group(1),mm.group(2),mm.group(3)))
+          seed_needles={f'{c}->{n}({a}){r}':(c,n,a,r) for c,n,a,r in seed_keys}
+
+          # Second pass: exact one-hop callers of seed methods and any consumers of relevant 0hkS fields.
+          callers=[]; field_consumers=[]
+          for p in ROOT.rglob('*.smali'):
+              ls=p.read_text(errors='replace').splitlines(); cls='?'
+              for x in ls[:60]:
+                  m=cls_re.match(x)
+                  if m: cls=m.group(1); break
+              i=0
+              while i<len(ls):
+                  if not ls[i].startswith('.method'): i+=1; continue
+                  s=i; sig=ls[i]; i+=1
+                  while i<len(ls) and not ls[i].startswith('.end method'): i+=1
+                  e=min(i,len(ls)-1); b=ls[s:e+1]; i+=1
+                  text='\n'.join(b)
+                  matched=[(needle,key) for needle,key in seed_needles.items() if needle in text]
+                  if matched: callers.append((cls,sig,p,b,matched))
+                  fms=[]
+                  for f in relevant_fields:
+                      if f'LX/0hkS;->{f}:LX/0fKx;' in text: fms.append(f)
+                  if fms: field_consumers.append((cls,sig,p,b,fms))
+
+          def categories(text):
+              low=text.lower(); c=[]
+              if 'lx/03u7;' in low: c.append('REST_BUILDER')
+              if 'graphqlcallinput' in low or 'pandographqlrequest' in low or 'iggraphql' in low: c.append('GRAPHQL')
+              if any(x in low for x in ['tigon','requestinterceptor','http']): c.append('NETWORK_INFRA')
+              if 'sharedpreferences' in low: c.append('PREFS')
+              if 'lx/00vy;' in low or 'lx/03tz;' in low: c.append('STATIC_ATTR_EVENT')
+              if 'markerannotate' in low: c.append('QPL')
+              if 'lx/00vv;' in low: c.append('EVENT_LOGGER')
+              if 'java/util/map;->put' in low or 'hashmap' in low or 'linkedhashmap' in low: c.append('MAP')
+              return c
+
+          O=['Instagram 439 HDR Persistent Device Classification R19n','========================================================','',
+             f'files={file_count} methods={method_count} targeted={len(targeted)} callers={len(callers)}',
+             '', '===== 0hkS KEY -> FIELD MAP (HDR/codec/display subset) =====']
+          for k,v in sorted(hdr_fields.items()): O.append(f'{k} -> {v}')
+          O += ['',f'RELEVANT_FIELDS={sorted(relevant_fields)}','']
+
+          # Print concise targeted methods first; full body only if network-ish or direct key method.
+          O += ['===== CAPABILITY / OWNER METHODS =====','']
+          for cls,sig,p,b,hs,owner,seg,hkref,uiyref in targeted:
+              text='\n'.join(b); cats=categories(text)
+              if not (hs or cls in owner_classes or seg): continue
+              strings=[m.group(2) for l in b if (m:=str_re.match(l))]
+              O += [f'--- {cls} {sig}',f'FILE={p}',f'CAPS={hs}',f'CATEGORIES={cats}',f'STRINGS={strings[:100]}']
+              # Avoid dumping huge 0hkS clinit; show full only for meaningful sink candidates.
+              if any(x in cats for x in ['REST_BUILDER','GRAPHQL','NETWORK_INFRA','PREFS']) or hs or cls in {'LX/0Uiy;','LX/0ece;','LX/0hld;','LX/0hqj;'}:
+                  if len(b)<=900: O += b
+                  else: O += b[:450]+['...[BODY_TRUNCATED]...']+b[-200:]
+              O += ['']
+
+          O += [f'===== EXACT RELEVANT 0hkS FIELD CONSUMERS ({len(field_consumers)}) =====','']
+          for cls,sig,p,b,fms in field_consumers:
+              text='\n'.join(b); cats=categories(text)
+              O += [f'--- {cls} {sig}',f'FILE={p}',f'FIELDS={fms}',f'CATEGORIES={cats}']
+              for i,l in enumerate(b):
+                  if any(f'LX/0hkS;->{f}:' in l for f in fms):
+                      O += [f'REF_AT={i}']+[f'{j:04d}: {b[j]}' for j in range(max(0,i-35),min(len(b),i+35))]
+              O += ['']
+
+          # Only output callers that are network/prefs/event-ish or call high-value seeds.
+          O += [f'===== ONE-HOP CALLERS OF CAPABILITY SEEDS ({len(callers)}) =====','']
+          for cls,sig,p,b,matched in callers:
+              text='\n'.join(b); cats=categories(text)
+              high=any(k[0] in {'LX/0Uiy;','LX/0hld;','LX/0hqj;','LX/0ece;'} for _,k in matched)
+              if not (cats or high): continue
+              O += [f'--- {cls} {sig}',f'FILE={p}',f'MATCHES={[k for _,k in matched]}',f'CATEGORIES={cats}']
+              strings=[m.group(2) for l in b if (m:=str_re.match(l))]
+              O += [f'STRINGS={strings[:120]}']
+              for needle,key in matched:
+                  for i,l in enumerate(b):
+                      if needle in l:
+                          O += [f'CALL_AT={i}']+[f'{j:04d}: {b[j]}' for j in range(max(0,i-45),min(len(b),i+35))]
+              O += ['']
+
+          OUT.write_text('\n'.join(O),encoding='utf-8')
+          print('\n'.join(O[:12000])); print('REPORT_BYTES',OUT.stat().st_size)
+          PY
+
+      - name: Commit R19n report
+        run: |
+          set -euo pipefail
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add research/generated/instagram_439_hdr_persistent_classification_r19n.txt
+          if ! git diff --cached --quiet; then
+            git commit -m 'Add persistent HDR device classification trace R19n'
+            git pull --rebase origin main
+            git push origin HEAD:main
+          fi
