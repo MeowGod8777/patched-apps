@@ -1,0 +1,75 @@
+Instagram 439 HDR R5 owner/caller index
+=======================================
+METHODS_TOTAL=179082
+OWNER_COUNT=3
+
+OWNER|1|score=1200|file=work/dis/classes17/X/09z5.smali|sig=LX/09z5;->A0S(Landroid/net/Uri;Lorg/xmlpull/v1/XmlPullParser;)LX/08rn;|fields=A02,A03,A04,A05,A06,A07,A08,A09,A0A,A0B,A0C,A0D,A0E,A0F,A0G,A0H,A0I,A0J,A0K,A0L,A0M,A0N,A0O|new08tc=1|new08td=1|sem=10|strings=profiles ; , ; urn:dvb:dash:profile:dvb-dash: ; availabilityStartTime ; mediaPresentationDuration ; minBufferTime ; type ; dynamic ; minimumUpdatePeriod ; timeShiftBufferDepth ; suggestedPresentationDelay ; publishTime ; availabilityEndTime ; firstAvTimeMs ; currentServerTimeMs ; lastVideoFrameTs ; publishFrameTime ; FBWasLive ; true ; FBIsLiveTemplated ; FBMS ; usingASRCaptions ; 0 ; 1 ; loapStreamId ; loapStreamType ; validationErrors ;  ; FBManifestIdentifier ; FBTagsetUsed ; FBPacingRate ; FBDeliveryExperimentName ; FBDeliveryExperimentGroup ; FBManifestTimestamp ; BaseURL ; MPD ; \n ; Before filterPeriod() for  ; -> ; filterPeriod() for  ; Finish filterPeriod() for  ; Skip filterPeriod(
+CALLER|owner=1|n=1|file=work/dis/classes2/X/08oh.smali|sig=LX/08oh;->A0S(Landroid/net/Uri;Lorg/xmlpull/v1/XmlPullParser;)LX/08rn;|sem=0|strings=
+CALLER|owner=1|n=2|file=work/dis/classes17/X/09z5.smali|sig=LX/09z5;->A0R(Landroid/net/Uri;Ljava/io/InputStream;)LX/08rn;|sem=0|strings=MPD ; parse: ; ms;filter: ; ms; ; ;pool: ; / ; input does not contain a valid media presentation description
+OWNER|2|score=170|file=work/dis/classes13/X/00wK.smali|sig=LX/00wK;->BFB(LX/03oR;)V|fields=A04,A06,A07,A09,A0A|new08tc=1|new08td=1|sem=0|strings=
+OWNER|3|score=110|file=work/dis/classes17/X/0Heu.smali|sig=LX/0Heu;->BD7(LX/08tp;)LX/08tp;|fields=A0D,A0E|new08tc=1|new08td=1|sem=0|strings=
+
+FIELD_WRITE_INDEX
+FIELD|A02:Ljava/lang/String;|writers=1|LX/09z5;->A0S(Landroid/net/Uri;Lorg/xmlpull/v1/XmlPullParser;)LX/08rn;
+FIELD|A03:Ljava/lang/String;|writers=1|LX/09z5;->A0S(Landroid/net/Uri;Lorg/xmlpull/v1/XmlPullParser;)LX/08rn;
+FIELD|A04:Ljava/lang/String;|writers=2|LX/00wK;->BFB(LX/03oR;)V ; LX/09z5;->A0S(Landroid/net/Uri;Lorg/xmlpull/v1/XmlPullParser;)LX/08rn;
+FIELD|A05:Ljava/lang/String;|writers=1|LX/09z5;->A0S(Landroid/net/Uri;Lorg/xmlpull/v1/XmlPullParser;)LX/08rn;
+FIELD|A06:Ljava/lang/String;|writers=2|LX/00wK;->BFB(LX/03oR;)V ; LX/09z5;->A0S(Landroid/net/Uri;Lorg/xmlpull/v1/XmlPullParser;)LX/08rn;
+FIELD|A07:Ljava/lang/String;|writers=2|LX/00wK;->BFB(LX/03oR;)V ; LX/09z5;->A0S(Landroid/net/Uri;Lorg/xmlpull/v1/XmlPullParser;)LX/08rn;
+FIELD|A08:Ljava/lang/String;|writers=1|LX/09z5;->A0S(Landroid/net/Uri;Lorg/xmlpull/v1/XmlPullParser;)LX/08rn;
+FIELD|A09:Ljava/lang/String;|writers=2|LX/00wK;->BFB(LX/03oR;)V ; LX/09z5;->A0S(Landroid/net/Uri;Lorg/xmlpull/v1/XmlPullParser;)LX/08rn;
+FIELD|A0A:Ljava/lang/String;|writers=2|LX/00wK;->BFB(LX/03oR;)V ; LX/09z5;->A0S(Landroid/net/Uri;Lorg/xmlpull/v1/XmlPullParser;)LX/08rn;
+FIELD|A0B:Ljava/lang/String;|writers=1|LX/09z5;->A0S(Landroid/net/Uri;Lorg/xmlpull/v1/XmlPullParser;)LX/08rn;
+FIELD|A0C:Ljava/lang/String;|writers=1|LX/09z5;->A0S(Landroid/net/Uri;Lorg/xmlpull/v1/XmlPullParser;)LX/08rn;
+FIELD|A0D:Z|writers=2|LX/09z5;->A0S(Landroid/net/Uri;Lorg/xmlpull/v1/XmlPullParser;)LX/08rn; ; LX/0Heu;->BD7(LX/08tp;)LX/08tp;
+FIELD|A0E:Z|writers=2|LX/09z5;->A0S(Landroid/net/Uri;Lorg/xmlpull/v1/XmlPullParser;)LX/08rn; ; LX/0Heu;->BD7(LX/08tp;)LX/08tp;
+FIELD|A0F:Z|writers=1|LX/09z5;->A0S(Landroid/net/Uri;Lorg/xmlpull/v1/XmlPullParser;)LX/08rn;
+FIELD|A0G:Z|writers=1|LX/09z5;->A0S(Landroid/net/Uri;Lorg/xmlpull/v1/XmlPullParser;)LX/08rn;
+FIELD|A0H:Z|writers=1|LX/09z5;->A0S(Landroid/net/Uri;Lorg/xmlpull/v1/XmlPullParser;)LX/08rn;
+FIELD|A0I:Z|writers=1|LX/09z5;->A0S(Landroid/net/Uri;Lorg/xmlpull/v1/XmlPullParser;)LX/08rn;
+FIELD|A0J:Z|writers=1|LX/09z5;->A0S(Landroid/net/Uri;Lorg/xmlpull/v1/XmlPullParser;)LX/08rn;
+FIELD|A0K:Z|writers=1|LX/09z5;->A0S(Landroid/net/Uri;Lorg/xmlpull/v1/XmlPullParser;)LX/08rn;
+FIELD|A0L:Z|writers=1|LX/09z5;->A0S(Landroid/net/Uri;Lorg/xmlpull/v1/XmlPullParser;)LX/08rn;
+FIELD|A0M:Z|writers=1|LX/09z5;->A0S(Landroid/net/Uri;Lorg/xmlpull/v1/XmlPullParser;)LX/08rn;
+FIELD|A0N:Z|writers=1|LX/09z5;->A0S(Landroid/net/Uri;Lorg/xmlpull/v1/XmlPullParser;)LX/08rn;
+FIELD|A0O:Z|writers=1|LX/09z5;->A0S(Landroid/net/Uri;Lorg/xmlpull/v1/XmlPullParser;)LX/08rn;
+
+IMMUTABLE_READERS
+READER|1|file=work/dis/classes16/X/0GAI.smali|sig=LX/0GAI;->run()V|fields=A0A|sem=8|strings=DownloadExecutor ; Failed to parse manifest ; video: %s manifest parsed, videoReps=%d audioReps=%d ; No video representations found ; No video representation selected ; video: %s selected video bitrate=%d, audio bitrate=%s ; none ; manifest_parse_failed_after_refresh ; Failed to parse refreshed manifest ; reselect_failed_after_refresh ; Refreshed manifest has no selectable video representation ; Audio init fetch failed:  ; video: %s total download size=%d bytes (video=%d, audio=%d) ; Failed to download video track ; video: %s video track complete, bytes=%d ; Failed to download audio track ; video: %s audio track complete, bytes=%d ; video: %s download completed, totalBytes=%d ; still_expired
+READER|2|file=work/dis/classes17/X/0A40.smali|sig=LX/0A40;->A03(LX/08rn;ZZ)V|fields=A0A|sem=4|strings=Exo2DashLiveManifestFetcher ; Process single manifest, uri=%s ; video/ ; audio/ ; video/av01 ; Using align prefetch: %d
+READER|3|file=work/dis/classes16/X/0A5J.smali|sig=LX/0A5J;->A06(LX/0A5J;LX/08lb;LX/096x;Ljava/util/concurrent/atomic/AtomicBoolean;I)LX/0cMQ;|fields=A0A|sem=2|strings=representation.initializationUri is null ; representation.cacheKey is null ; chunkExtractorFactory.createProgressiveMediaExtractor returned null ;  ; Init chunk loaded but extractor returned no ChunkIndex ; DownloadExecutor ; Init 403 (URL likely expired) on %s attempt %d/%d ; HTTP_ ; x-fb-rlr ; /reason= ; _ ; /oe_status= ; expired ; valid ; no_oe_param ; Failed to load init chunk for %s ; Retrying init chunk for %s (attempt %d/%d): %s ; Cancelled during init retry backoff ; _T
+READER|4|file=work/dis/classes2/X/07nr.smali|sig=LX/07nr;->B9b(LX/03oR;LX/00LY;LX/00KT;Ljava/util/Map;[LX/03oR;II)LX/00Pd;|fields=A03,A04,A06,A0A,A0B|sem=2|strings= ; bad ; great ; good ; %.4f ; No formats provided
+READER|5|file=work/dis/classes2/X/08oh.smali|sig=LX/08oh;->A0b(Ljava/util/List;)Ljava/util/List;|fields=A0E|sem=2|strings=av01
+READER|6|file=work/dis/classes17/X/09z5.smali|sig=LX/09z5;->A0I(Ljava/lang/StringBuilder;Ljava/util/List;)Ljava/lang/String;|fields=A0A,A0E|sem=1|strings= ; VideoId:  ; \n ; ++++++++++++++++++++++++++++++++++++++++\n ; Is MCM:  ; Adaptation set  ;   [ ; ] ; , ; x ; ,aoai:  ; bps\n ; ----------------------------------------\n ; %d%s ; +
+READER|7|file=work/dis/classes2/X/07xo.smali|sig=LX/07xo;->A0F(LX/09tr;LX/00QO;Lcom/facebook/exoplayer/monitor/VpsEventCallback;LX/09tl;LX/08le;LX/08mA;LX/096x;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/util/concurrent/atomic/AtomicReference;Ljava/util/concurrent/atomic/AtomicReference;IIIJJZZZZ)V|fields=A0A|sem=1|strings=UnifiedPrefetchManager.scheduleVodInitAndFirstSegmentToPrefetch ; UnifiedPrefetchManager ; video: %s representation id: %s, width: %d from origin %s and suborigin %s and source(tag) %s is bei ;  ; video prefetch: %s url: %s %d
+READER|8|file=work/dis/classes12/X/0XQ8.smali|sig=LX/0XQ8;->BD7(LX/08tp;)LX/08tp;|fields=A0E|sem=0|strings=
+READER|9|file=work/dis/classes12/X/0jsA.smali|sig=LX/0jsA;->B9b(LX/03oR;LX/00LY;LX/00KT;Ljava/util/Map;[LX/03oR;II)LX/00Pd;|fields=A05|sem=0|strings=
+READER|10|file=work/dis/classes12/X/0mQG.smali|sig=LX/0mQG;->A00(LX/0IrM;)I|fields=A0A|sem=0|strings= ; The uri must be set. ; X-FB-Video-Livehead
+READER|11|file=work/dis/classes13/X/00MF.smali|sig=LX/00MF;->A01(JZZ)LX/00MJ;|fields=A0D|sem=0|strings=force disable ull ; is_eligible_for_boost ; , ; : ; 
+READER|12|file=work/dis/classes13/X/00SR.smali|sig=LX/00SR;->A00(Ljava/lang/String;)LX/00gF;|fields=A05|sem=0|strings=
+READER|13|file=work/dis/classes13/X/00oK.smali|sig=LX/00oK;->Acx(LX/00oV;)Z|fields=A0A|sem=0|strings=continueLoading ; Loading next chunk, playbackPositionUs %d, loadPositionUs %d, bufferedDurationUs %d interrupted: %b ; HeroAdaptiveTrackSelection ; video ; null ; DefaultDashChunkSource ; LaneSwitch: mLastBlockedTrackIndex=%d, trackSelection.getSelectedIndex()=%d, abrDecisionReason=%s, s ; BlockListTrack:[abrDecisionReason: %s] ;  ; Using latest %d segments from total of %d segments ; chk_dur ; The uri must be set.
+READER|14|file=work/dis/classes13/X/00wK.smali|sig=LX/00wK;->BFB(LX/03oR;)V|fields=A05,A07,A08,A0A,A0B|sem=0|strings=
+READER|15|file=work/dis/classes13/X/03oL.smali|sig=LX/03oL;->A07(Landroid/content/Context;Lcom/instagram/common/session/UserSession;)Ljava/lang/String;|fields=A05|sem=0|strings=
+READER|16|file=work/dis/classes16/X/0A5J.smali|sig=LX/0A5J;->A07(LX/00xE;LX/0A5J;LX/087h;LX/08lb;LX/096x;Ljava/util/concurrent/atomic/AtomicBoolean;IZ)LX/0KwR;|fields=A0A|sem=0|strings=DownloadExecutor ;  ; Retrying chunk %d/%d for videoId=%s (attempt %d/%d): %s ; Failed to download track for videoId=%s
+READER|17|file=work/dis/classes16/X/0A5J.smali|sig=LX/0A5J;->A0C(LX/00QO;LX/0A5J;LX/08lb;LX/096x;LX/096x;Ljava/util/List;Ljava/util/List;IZ)V|fields=A0A|sem=0|strings=
+READER|18|file=work/dis/classes17/X/07EO.smali|sig=LX/07EO;->B8Y(LX/03oR;)V|fields=A0A|sem=0|strings=endAbrDecision: abrDecision is null ; default
+READER|19|file=work/dis/classes17/X/07ER.smali|sig=LX/07ER;->A00(LX/03oR;LX/06vt;LX/00SL;Lcom/facebook/exoplayer/monitor/VpsEventCallback;Ljava/lang/String;JZZZZ)V|fields=A05,A07,A08,A09,A0A,A0B,A0E,A0F,A0G,A0H,A0I,A0J,A0M,A0N|sem=0|strings=default ; UNKNOWN ; 
+READER|20|file=work/dis/classes2/X/07my.smali|sig=LX/07my;->A05()Ljava/util/List;|fields=A0A|sem=0|strings=
+READER|21|file=work/dis/classes2/X/07my.smali|sig=LX/07my;->A06(Ljava/lang/String;)V|fields=A0A|sem=0|strings=
+READER|22|file=work/dis/classes2/X/07my.smali|sig=LX/07my;->BDv(LX/00rc;LX/06ip;LX/00rY;Ljava/lang/Object;Ljava/util/Map;[LX/03oR;FJJJ)V|fields=A0E,A0I,A0J|sem=0|strings=video/mp4 ; inline ;  ; initializeCachedInitSegments ; CachedSegmentManager ; format missing id -- skipping ; initSeg ; Failed to load initialization chunk ; The uri must be set. ; Exo2DashChunkSourceAccessor ; format not valid -- skipping ; StitchAbrEvaluator ; completed loading init segments for video: %s
+READER|23|file=work/dis/classes2/X/07nd.smali|sig=LX/07nd;->A02(Ljava/lang/String;Ljava/util/ArrayList;[LX/03oR;)I|fields=A0F,A0I,A0J|sem=0|strings=inline
+READER|24|file=work/dis/classes2/X/07nf.smali|sig=LX/07nf;->A01(LX/03oR;DD)V|fields=A0A|sem=0|strings=
+READER|25|file=work/dis/classes2/X/07nf.smali|sig=LX/07nf;->B9b(LX/03oR;LX/00LY;LX/00KT;Ljava/util/Map;[LX/03oR;II)LX/00Pd;|fields=A0A|sem=0|strings=
+READER|26|file=work/dis/classes2/X/07no.smali|sig=LX/07no;->A01(LX/03oR;)Ljava/lang/String;|fields=A0A|sem=0|strings=p
+READER|27|file=work/dis/classes2/X/07xo.smali|sig=LX/07xo;->A05(LX/00QO;LX/00SG;LX/00SF;LX/07xo;LX/096x;LX/096x;Ljava/lang/String;Ljava/util/List;Ljava/util/List;II)V|fields=A0A|sem=0|strings=UnifiedPrefetchManager ; recordAbrDecision: createPrefetchInfo returned null, cannot record ABR Decision ; 
+
+SEMANTIC_METADATA_METHODS
+SEM|1|file=work/dis/classes17/X/09z5.smali|sig=LX/09z5;->A0S(Landroid/net/Uri;Lorg/xmlpull/v1/XmlPullParser;)LX/08rn;|sem=10|strings=profiles ; , ; urn:dvb:dash:profile:dvb-dash: ; availabilityStartTime ; mediaPresentationDuration ; minBufferTime ; type ; dynamic ; minimumUpdatePeriod ; timeShiftBufferDepth ; suggestedPresentationDelay ; publishTime ; availabilityEndTime ; firstAvTimeMs ; currentServerTimeMs ; lastVideoFrameTs ; publishFrameTime ; FBWasLive ; true ; FBIsLiveTemplated ; FBMS ; usingASRCaptions ; 0 ; 1 ; loapStreamId ; loapStreamType ; validationErrors ;  ; FBManifestIdentifier ; FBTagsetUsed ; FBPacingRate ; FBDeliveryExperimentName ; FBDeliveryExperimentGroup ; FBManifestTimestamp ; BaseURL ; MPD ; \n ; Before filterPeriod() for  ; -> ; filterPeriod() for  ; Finish filterPeriod() for  ; Skip filterPeriod(
+SEM|2|file=work/dis/classes16/X/0GAI.smali|sig=LX/0GAI;->run()V|sem=8|strings=DownloadExecutor ; Failed to parse manifest ; video: %s manifest parsed, videoReps=%d audioReps=%d ; No video representations found ; No video representation selected ; video: %s selected video bitrate=%d, audio bitrate=%s ; none ; manifest_parse_failed_after_refresh ; Failed to parse refreshed manifest ; reselect_failed_after_refresh ; Refreshed manifest has no selectable video representation ; Audio init fetch failed:  ; video: %s total download size=%d bytes (video=%d, audio=%d) ; Failed to download video track ; video: %s video track complete, bytes=%d ; Failed to download audio track ; video: %s audio track complete, bytes=%d ; video: %s download completed, totalBytes=%d ; still_expired
+SEM|3|file=work/dis/classes17/X/0A40.smali|sig=LX/0A40;->A03(LX/08rn;ZZ)V|sem=4|strings=Exo2DashLiveManifestFetcher ; Process single manifest, uri=%s ; video/ ; audio/ ; video/av01 ; Using align prefetch: %d
+SEM|4|file=work/dis/classes13/X/00pQ.smali|sig=LX/00pQ;->A07(Ljava/util/HashMap;)V|sem=2|strings=manifest ; null ; dynamic ; manifest_type ; static ; end_numbers ; bitrates ; max_bandwidths
+SEM|5|file=work/dis/classes16/X/0A5J.smali|sig=LX/0A5J;->A06(LX/0A5J;LX/08lb;LX/096x;Ljava/util/concurrent/atomic/AtomicBoolean;I)LX/0cMQ;|sem=2|strings=representation.initializationUri is null ; representation.cacheKey is null ; chunkExtractorFactory.createProgressiveMediaExtractor returned null ;  ; Init chunk loaded but extractor returned no ChunkIndex ; DownloadExecutor ; Init 403 (URL likely expired) on %s attempt %d/%d ; HTTP_ ; x-fb-rlr ; /reason= ; _ ; /oe_status= ; expired ; valid ; no_oe_param ; Failed to load init chunk for %s ; Retrying init chunk for %s (attempt %d/%d): %s ; Cancelled during init retry backoff ; _T
+SEM|6|file=work/dis/classes2/X/07nr.smali|sig=LX/07nr;->B9b(LX/03oR;LX/00LY;LX/00KT;Ljava/util/Map;[LX/03oR;II)LX/00Pd;|sem=2|strings= ; bad ; great ; good ; %.4f ; No formats provided
+SEM|7|file=work/dis/classes2/X/08oh.smali|sig=LX/08oh;->A0b(Ljava/util/List;)Ljava/util/List;|sem=2|strings=av01
+SEM|8|file=work/dis/classes17/X/09z5.smali|sig=LX/09z5;->A0I(Ljava/lang/StringBuilder;Ljava/util/List;)Ljava/lang/String;|sem=1|strings= ; VideoId:  ; \n ; ++++++++++++++++++++++++++++++++++++++++\n ; Is MCM:  ; Adaptation set  ;   [ ; ] ; , ; x ; ,aoai:  ; bps\n ; ----------------------------------------\n ; %d%s ; +
+SEM|9|file=work/dis/classes2/X/07xo.smali|sig=LX/07xo;->A0F(LX/09tr;LX/00QO;Lcom/facebook/exoplayer/monitor/VpsEventCallback;LX/09tl;LX/08le;LX/08mA;LX/096x;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/util/concurrent/atomic/AtomicReference;Ljava/util/concurrent/atomic/AtomicReference;IIIJJZZZZ)V|sem=1|strings=UnifiedPrefetchManager.scheduleVodInitAndFirstSegmentToPrefetch ; UnifiedPrefetchManager ; video: %s representation id: %s, width: %d from origin %s and suborigin %s and source(tag) %s is bei ;  ; video prefetch: %s url: %s %d
