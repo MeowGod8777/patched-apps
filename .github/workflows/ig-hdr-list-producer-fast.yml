@@ -1,0 +1,69 @@
+name: IG HDR List Producer Fast
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - .github/workflows/ig-hdr-list-producer-fast.yml
+
+permissions:
+  contents: write
+
+jobs:
+  probe:
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    env:
+      APK_NAME: instagram-piko-v439.0.0.37.89-arm64-v8a.apk
+      APK_SHA256: 4015b171ac59f3e7172134d194ec2dcf701f64c3339f127c19d7a04c13d529c8
+    steps:
+      - uses: actions/checkout@v6
+      - name: Trace classes13 only
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          set -euo pipefail
+          mkdir -p work/smali research/generated
+          gh release download 8 --pattern "$APK_NAME" --dir work
+          echo "$APK_SHA256  work/$APK_NAME" | sha256sum -c -
+          sudo apt-get update -qq && sudo apt-get install -y -qq smali
+          unzip -p "work/$APK_NAME" classes13.dex > work/classes13.dex
+          baksmali d work/classes13.dex -o work/smali
+          python3 - <<'PY'
+          from pathlib import Path
+          out=[]
+          root=Path('work/smali')
+          def split_methods(t):
+              ls=t.splitlines(); ss=[i for i,l in enumerate(ls) if l.startswith('.method')]
+              for k,s in enumerate(ss):
+                  e=ss[k+1] if k+1<len(ss) else len(ls); yield ls[s:e]
+          for rel in ['X/08ur.smali','X/08lb.smali','X/08xk.smali','X/08td.smali']:
+              p=root/rel; out.append('===== '+rel+' =====')
+              if p.exists():
+                  for l in p.read_text(errors='replace').splitlines():
+                      if l.startswith('.field') or l.startswith('.method public constructor'):
+                          out.append(l)
+              out.append('')
+          needles=['LX/08ur;->A00:Ljava/util/List;','LX/08ur;->A01:Ljava/util/List;','new-instance v','LX/08ur;-><init>']
+          for p in root.rglob('*.smali'):
+              t=p.read_text(errors='replace')
+              if 'LX/08ur;->A00:Ljava/util/List;' not in t and 'LX/08ur;->A01:Ljava/util/List;' not in t and 'LX/08ur;-><init>' not in t:
+                  continue
+              for m in split_methods(t):
+                  b='\n'.join(m)
+                  if 'LX/08ur;->A00:Ljava/util/List;' not in b and 'LX/08ur;->A01:Ljava/util/List;' not in b and 'LX/08ur;-><init>' not in b: continue
+                  out.append(f'===== {p.relative_to(root)} :: {m[0]} =====')
+                  out.extend(m)
+                  out.append('')
+          Path('research/generated/instagram_439_hdr_list_producer_fast.txt').write_text('\n'.join(out))
+          print('\n'.join(out)[:180000])
+          PY
+      - name: Commit
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add research/generated/instagram_439_hdr_list_producer_fast.txt
+          git commit -m 'Fast trace Instagram DASH list producer' || true
+          git pull --rebase origin main
+          git push origin HEAD:main
