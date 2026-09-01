@@ -1,0 +1,155 @@
+name: IG 439 HDR Clips Route Inventory R19g
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - .github/workflows/ig-hdr-clips-route-inventory-r19g.yml
+
+permissions:
+  contents: write
+
+jobs:
+  trace:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    env:
+      APK_NAME: instagram-piko-v439.0.0.37.89-arm64-v8a.apk
+      APK_SHA256: 4015b171ac59f3e7172134d194ec2dcf701f64c3339f127c19d7a04c13d529c8
+    steps:
+      - uses: actions/checkout@v6
+        with: {fetch-depth: 0}
+      - uses: actions/setup-java@v5
+        with:
+          distribution: zulu
+          java-version: '21'
+      - name: Fetch exact APK and disassemble dexes containing clips routes
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          set -euo pipefail
+          mkdir -p work/apk work/smali research/generated
+          gh release download 8 --pattern "$APK_NAME" --dir work
+          echo "$APK_SHA256  work/$APK_NAME" | sha256sum -c -
+          gh release download 3.0.10 --repo baksmali/smali --pattern 'baksmali-3.0.10-fat.jar' --dir work
+          unzip -q "work/$APK_NAME" 'classes*.dex' -d work/apk
+          python3 - <<'PY'
+          from pathlib import Path
+          import subprocess
+          hit=[]
+          for p in sorted(Path('work/apk').glob('classes*.dex')):
+            s=subprocess.run(['strings','-a',str(p)],capture_output=True,text=True,errors='replace').stdout.lower()
+            if 'clips/' in s or 'clips_viewer_' in s or 'clips_fetch' in s:
+              hit.append(p.name)
+          Path('work/hitdex.txt').write_text('\n'.join(hit)+'\n')
+          print('HITDEX',hit)
+          PY
+          while read d; do
+            [ -n "$d" ] || continue
+            java -jar work/baksmali-3.0.10-fat.jar d "work/apk/$d" -o "work/smali/${d%.dex}" >/dev/null &
+          done < work/hitdex.txt
+          wait
+
+      - name: Inventory exact Clips HTTP and GraphQL builders
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          from pathlib import Path
+          import re
+          ROOT=Path('work/smali'); OUT=Path('research/generated/instagram_439_hdr_clips_route_inventory_r19g.txt')
+          cls_re=re.compile(r'^\.class\s+.*\s+(L[^;]+;)$')
+          meth_re=re.compile(r'^\.method.*\s([^\s(]+)\(([^)]*)\)(\S+)$')
+          str_re=re.compile(r'^\s*const-string(?:/jumbo)?\s+([^,]+),\s+"(.*)"')
+          inv_re=re.compile(r'(L[^;]+;)->([^\s(]+)\(([^)]*)\)(\S+)')
+          route_re=re.compile(r'(?i)(?:^|/)(clips(?:/[A-Za-z0-9_.{}-]+)+/?)')
+
+          methods=[]
+          for p in ROOT.rglob('*.smali'):
+            ls=p.read_text(errors='replace').splitlines(); cls=None
+            for x in ls[:50]:
+              m=cls_re.match(x)
+              if m: cls=m.group(1); break
+            if not cls: continue
+            i=0
+            while i<len(ls):
+              if not ls[i].startswith('.method'): i+=1; continue
+              s=i; sig=ls[i]; i+=1
+              while i<len(ls) and not ls[i].startswith('.end method'): i+=1
+              e=min(i,len(ls)-1); b=ls[s:e+1]
+              methods.append((cls,sig,p,b))
+              i+=1
+
+          def litpairs(b):
+            o=[]
+            for i,l in enumerate(b):
+              m=str_re.match(l)
+              if m:o.append((i,m.group(1),m.group(2)))
+            return o
+          def invs(b):
+            o=[]
+            for i,l in enumerate(b):
+              if 'invoke-' not in l: continue
+              m=inv_re.search(l)
+              if m:o.append((i,m.group(1),m.group(2),m.group(3),m.group(4),l.strip()))
+            return o
+
+          rows=[]
+          for cls,sig,p,b in methods:
+            lp=litpairs(b); iv=invs(b); low='\n'.join(b).lower()
+            routes=[]
+            for i,r,v in lp:
+              if 'clips/' in v.lower(): routes.append(v)
+            contexts=[v for _,_,v in lp if any(t in v.lower() for t in ('clips_viewer_','clips_fetch','reels_viewer_'))]
+            gql=[v for _,_,v in lp if 'clips' in v.lower() and any(t in v.lower() for t in ('query','graphql','viewer','timeline','fetch','discover','feed'))]
+            reqrefs=[q for q in iv if q[1] in ('LX/03u7;','LX/02pu;','LX/0AMH;','Lcom/facebook/graphql/calls/GraphQlCallInput;','LX/05yb;')]
+            route_assign=[]
+            for i,r,v in lp:
+              if 'clips/' not in v.lower(): continue
+              win='\n'.join(b[i:min(len(b),i+12)])
+              if 'LX/03u7;->A0G:Ljava/lang/String;' in win:
+                route_assign.append(v)
+            if routes or contexts or gql:
+              score=50*len(route_assign)+20*len(routes)+12*len(contexts)+8*len(gql)+4*len(reqrefs)
+              rows.append((score,cls,sig,p,b,routes,route_assign,contexts,gql,reqrefs,lp,iv))
+
+          rows.sort(key=lambda x:(-x[0],x[1],x[2]))
+          O=['Instagram 439 HDR short-form Clips route inventory R19g','====================================================','',f'candidates={len(rows)}','']
+          for score,cls,sig,p,b,routes,assigned,ctx,gql,reqrefs,lp,iv in rows:
+            if score<20: continue
+            O += [f'===== SCORE {score} {cls} {sig} =====',f'FILE={p}',f'ROUTES={routes}',f'ASSIGNED_HTTP_ROUTES={assigned}',f'CONTEXTS={ctx}',f'GQL_OR_OP_STRINGS={gql}',f'REQUEST_REFS={[q[1:5] for q in reqrefs]}','']
+            # request-write windows and route windows
+            marks=set()
+            for i,r,v in lp:
+              if 'clips/' in v.lower() or 'clips_viewer_' in v.lower() or v.lower()=='clips_fetch': marks.add(i)
+            for i,own,name,args,ret,line in iv:
+              if own=='LX/03u7;' and name in ('AMu','AOA','A0F','A0G','A0C','AOQ','A07'): marks.add(i)
+              if own=='Lcom/facebook/graphql/calls/GraphQlCallInput;': marks.add(i)
+            for i in sorted(marks):
+              O += [f'@{i}']+b[max(0,i-7):min(len(b),i+8)]+['']
+            if len(b)<=450 and (assigned or reqrefs): O += ['-- FULL BODY --']+b+['']
+
+          # Unique route summary.
+          route_map={}
+          for row in rows:
+            score,cls,sig,p,b,routes,assigned,ctx,gql,reqrefs,lp,iv=row
+            for r in routes: route_map.setdefault(r,[]).append((cls,sig,bool(assigned and r in assigned)))
+          O += ['===== UNIQUE CLIPS ROUTES =====','']
+          for r,owners in sorted(route_map.items()):
+            O += [f'{r} :: {owners}']
+
+          text='\n'.join(O); OUT.write_text(text,encoding='utf-8')
+          print(text[:500000]); print('bytes',OUT.stat().st_size,'routes',len(route_map))
+          PY
+
+      - name: Commit R19g report
+        run: |
+          set -euo pipefail
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add research/generated/instagram_439_hdr_clips_route_inventory_r19g.txt
+          if ! git diff --cached --quiet; then
+            git commit -m 'Add exact short-form Clips route inventory R19g'
+            git pull --rebase origin main
+            git push origin HEAD:main
+          fi
