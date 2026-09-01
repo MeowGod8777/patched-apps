@@ -1,0 +1,216 @@
+name: IG 439 HDR R5 Constructor Callers
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - .github/workflows/ig-hdr-r5-constructor-callers.yml
+
+permissions:
+  contents: write
+
+jobs:
+  trace:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    env:
+      APK_NAME: instagram-piko-v439.0.0.37.89-arm64-v8a.apk
+      APK_SHA256: 4015b171ac59f3e7172134d194ec2dcf701f64c3339f127c19d7a04c13d529c8
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-java@v5
+        with:
+          distribution: zulu
+          java-version: '21'
+
+      - name: Fetch exact R8 and tools
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          set -euo pipefail
+          mkdir -p work/dex work/dis research/generated
+          gh release download 8 --pattern "$APK_NAME" --dir work
+          echo "$APK_SHA256  work/$APK_NAME" | sha256sum -c -
+          unzip -j "work/$APK_NAME" 'classes*.dex' -d work/dex
+          gh release download 3.0.10 --repo baksmali/smali --pattern 'baksmali-3.0.10-fat.jar' --dir work
+
+      - name: Disassemble only metadata-reference DEXes
+        run: |
+          set -euo pipefail
+          : > work/targets.txt
+          for d in work/dex/classes*.dex; do
+            if grep -a -q -E 'LX/08td;|LX/08tc;' "$d"; then echo "$d" >> work/targets.txt; fi
+          done
+          cat work/targets.txt
+          test -s work/targets.txt
+          while read -r d; do
+            b="$(basename "$d" .dex)"
+            mkdir -p "work/dis/$b"
+            java -jar work/baksmali-3.0.10-fat.jar d "$d" -o "work/dis/$b"
+          done < work/targets.txt
+
+      - name: Extract only builder owners and their callers
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          from pathlib import Path
+          import re
+          from collections import defaultdict
+
+          files=list(Path('work/dis').glob('classes*/X/*.smali'))
+          methods=[]
+          by_sig={}
+
+          method_head_re=re.compile(r'^\.method\s+.*?\s([^\s(]+)\(([^)]*)\)(\S+)$')
+          class_re=re.compile(r'^\.class\s+.*?\s(LX/[^;]+;)$',re.M)
+          invoke_re=re.compile(r'invoke-[^\s]+\s+\{[^}]*\},\s+(LX/[^;]+;)->([^\s(]+)\(([^)]*)\)(\S+)')
+
+          for p in files:
+            txt=p.read_text(errors='replace')
+            cm=class_re.search(txt)
+            if not cm: continue
+            cls=cm.group(1)
+            ls=txt.splitlines(); s=None; head=None
+            for i,l in enumerate(ls):
+              if l.startswith('.method'):
+                s=i; head=l
+              elif l.startswith('.end method') and s is not None:
+                block='\n'.join(ls[s:i+1])
+                mh=method_head_re.match(head)
+                if mh:
+                  name,args,ret=mh.groups()
+                  sig=f'{cls}->{name}({args}){ret}'
+                  rec={'p':p,'cls':cls,'head':head,'sig':sig,'block':block}
+                  methods.append(rec); by_sig[sig]=rec
+                s=None; head=None
+
+          callers=defaultdict(list)
+          for m in methods:
+            for cls,name,args,ret in invoke_re.findall(m['block']):
+              callers[f'{cls}->{name}({args}){ret}'].append(m)
+
+          def strings(block):
+            vals=[]
+            for q in re.findall(r'const-string(?:/jumbo)?\s+[^,]+,\s+"(.*?)"',block):
+              vals.append(q)
+            return vals
+
+          def refs_meta(block):
+            return 'LX/08tc;' in block or 'LX/08td;' in block
+
+          def is_owner(m):
+            b=m['block']
+            if m['cls'] in ('LX/08tc;','LX/08td;'): return False
+            return any(x in b for x in (
+              'new-instance',
+              'LX/08tc;-><init>()V',
+              'LX/08tc;-><init>(LX/08td;)V',
+              'LX/08td;-><init>(LX/08tc;)V',
+              'LX/08tc;->A0D:Z','LX/08tc;->A0E:Z','LX/08tc;->A0F:Z',
+              'LX/08tc;->A0G:Z','LX/08tc;->A0H:Z','LX/08tc;->A0I:Z',
+              'LX/08tc;->A0J:Z','LX/08tc;->A0K:Z','LX/08tc;->A0L:Z',
+              'LX/08tc;->A0M:Z','LX/08tc;->A0N:Z','LX/08tc;->A0O:Z',
+              'LX/08tc;->A02:Ljava/lang/String;','LX/08tc;->A03:Ljava/lang/String;',
+              'LX/08tc;->A04:Ljava/lang/String;','LX/08tc;->A05:Ljava/lang/String;',
+              'LX/08tc;->A06:Ljava/lang/String;','LX/08tc;->A07:Ljava/lang/String;',
+              'LX/08tc;->A08:Ljava/lang/String;','LX/08tc;->A09:Ljava/lang/String;',
+              'LX/08tc;->A0A:Ljava/lang/String;','LX/08tc;->A0B:Ljava/lang/String;',
+              'LX/08tc;->A0C:Ljava/lang/String;'
+            )) and refs_meta(b)
+
+          owners=[m for m in methods if is_owner(m)]
+          # de-dup / rank owners by direct builder writes + useful strings
+          scored=[]
+          semantic=('hdr','hlg','st2084','pq','bt2020','color','transfer','bitdepth','bit_depth',
+                    'representation','manifest','adaptation','supplemental','essential','schemeiduri',
+                    'role','codec','av01','video/av01','hevc','vp9','dolby')
+          for m in owners:
+            b=m['block']; low=b.lower()
+            writes=len(re.findall(r'iput-(?:boolean|object|\w+)\s+[^\n]+LX/08tc;->',b))
+            ctor=b.count('LX/08td;-><init>(LX/08tc;)V')+b.count('LX/08tc;-><init>()V')
+            ss=strings(b)
+            sem=sum(low.count(x) for x in semantic)
+            score=writes*20+ctor*30+sem*15+min(len(ss),20)
+            scored.append((score,writes,sem,m,ss))
+          scored.sort(key=lambda x:(-x[0],str(x[3]['p']),x[3]['sig']))
+
+          out=[
+            'Instagram 439 HDR R5 compact representation-builder trace',
+            '=========================================================',
+            f'METHODS_TOTAL={len(methods)}',
+            f'BUILDER_OWNER_COUNT={len(scored)}',
+            '',
+          ]
+
+          # Complete field-write index: tells us which methods assign each metadata bit/string.
+          field_pat=re.compile(r'(?:iput-[^\s]+)\s+[^\n]*LX/08tc;->([A-Za-z0-9_$]+):([^\s]+)')
+          index=defaultdict(list)
+          for score,writes,sem,m,ss in scored:
+            for f,t in field_pat.findall(m['block']):
+              index[(f,t)].append(m['sig'])
+          out.append('===== BUILDER FIELD WRITE INDEX =====')
+          for (f,t),sigs in sorted(index.items()):
+            out.append(f'{f}:{t} writers={len(set(sigs))} :: ' + ' ; '.join(sorted(set(sigs))))
+          out.append('')
+
+          # Top owners, full method body, plus one caller layer and caller strings.
+          for rank,(score,writes,sem,m,ss) in enumerate(scored[:30],1):
+            out.append(f'===== OWNER #{rank} SCORE={score} WRITES={writes} SEM={sem} =====')
+            out.append(f'FILE={m["p"]}')
+            out.append(f'SIG={m["sig"]}')
+            out.append('STRINGS=' + repr(ss))
+            out.extend(m['block'].splitlines())
+            out.append('')
+            cs=callers.get(m['sig'],[])
+            out.append(f'CALLER_COUNT={len(cs)}')
+            for ci,c in enumerate(cs[:12],1):
+              css=strings(c['block'])
+              clow=c['block'].lower()
+              csem=sum(clow.count(x) for x in semantic)
+              out.append(f'--- CALLER {ci} SEM={csem} FILE={c["p"]} SIG={c["sig"]} STRINGS={repr(css)} ---')
+              # full caller only when it has semantic strings or is small; otherwise retain a compact invocation window
+              lines=c['block'].splitlines()
+              if csem or len(lines)<=260:
+                out.extend(lines[:600])
+              else:
+                hit=next((i for i,l in enumerate(lines) if m['cls'] in l or m['sig'].split('->',1)[1].split('(',1)[0] in l),0)
+                a=max(0,hit-80); z=min(len(lines),hit+120)
+                out.extend(lines[a:z])
+              out.append('')
+
+          # Methods that read immutable metadata AND contain track/manifest/role/HDR semantics.
+          readers=[]
+          for m in methods:
+            if m['cls'] in ('LX/08tc;','LX/08td;'): continue
+            b=m['block']; low=b.lower()
+            if 'LX/08td;->' not in b: continue
+            sem=sum(low.count(x) for x in semantic)
+            if sem or any(k in b for k in ('LX/03oR;','A0V:Ljava/lang/Object;')):
+              readers.append((sem,m,strings(b)))
+          readers.sort(key=lambda x:(-x[0],str(x[1]['p']),x[1]['sig']))
+          out.append(f'===== IMMUTABLE METADATA READERS COUNT={len(readers)} =====')
+          for rank,(sem,m,ss) in enumerate(readers[:40],1):
+            out.append(f'--- READER {rank} SEM={sem} FILE={m["p"]} SIG={m["sig"]} STRINGS={repr(ss)} ---')
+            out.extend(m['block'].splitlines()[:700])
+            out.append('')
+
+          path=Path('research/generated/instagram_439_hdr_r5_constructor_callers.txt')
+          path.write_text('\n'.join(out)+'\n',encoding='utf-8')
+          print(f'REPORT_BYTES={path.stat().st_size} OWNER_COUNT={len(scored)}')
+          print(path.read_text()[:180000])
+          if not scored or path.stat().st_size < 5000:
+            raise SystemExit('compact constructor trace unexpectedly empty')
+          PY
+
+      - name: Commit compact report
+        run: |
+          set -euo pipefail
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add research/generated/instagram_439_hdr_r5_constructor_callers.txt
+          if ! git diff --cached --quiet; then git commit -m 'Trace Instagram 439 HDR metadata constructor callers'; fi
+          git pull --rebase origin main
+          git push origin HEAD:main
