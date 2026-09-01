@@ -1,0 +1,3607 @@
+===== X/08ur.smali =====
+
+===== X/08lb.smali =====
+
+===== X/08xk.smali =====
+
+===== X/08td.smali =====
+
+===== X/00NW.smali :: .method public final CYd(LX/00kX;)LX/00lx; =====
+.method public final CYd(LX/00kX;)LX/00lx;
+    .registers 77
+
+    move-object/from16 v2, p1
+
+    iget-object v3, v2, LX/00kX;->A04:LX/08xk;
+
+    iget-object v8, v3, LX/08xk;->A0L:LX/08lb;
+
+    iget-object v0, v8, LX/08lb;->A07:Landroid/net/Uri;
+
+    invoke-static {v0}, LX/00bP;->A01(Landroid/net/Uri;)Z
+
+    move-result v1
+
+    const-string v22, "HeroExo2VodInitHelper"
+
+    const/16 v21, 0x0
+
+    move-object/from16 v0, p0
+
+    if-nez v1, :cond_1dd
+
+    iget-object v7, v0, LX/00NW;->A0F:Lcom/facebook/video/heroplayer/setting/HeroPlayerSetting;
+
+    invoke-virtual {v8}, LX/08lb;->A05()Z
+
+    move-result v1
+
+    if-eqz v1, :cond_27
+
+    const-string/jumbo v1, "system_decoder"
+
+    invoke-static {v1}, Landroid/text/TextUtils;->isEmpty(Ljava/lang/CharSequence;)Z
+
+    move-result v1
+
+    xor-int/lit8 v1, v1, 0x1
+
+    if-eqz v1, :cond_1dd
+
+    :cond_27
+    invoke-virtual {v8}, LX/08lb;->A03()Z
+
+    move-result v1
+
+    if-eqz v1, :cond_31
+
+    iget-boolean v1, v2, LX/00kX;->A0A:Z
+
+    if-nez v1, :cond_1dd
+
+    :cond_31
+    iget-boolean v1, v2, LX/00kX;->A0B:Z
+
+    if-nez v1, :cond_1dd
+
+    iget-object v4, v8, LX/08lb;->A09:LX/08ks;
+
+    sget-object v1, LX/08ks;->A02:LX/08ks;
+
+    if-eq v4, v1, :cond_452
+
+    iget-object v1, v8, LX/08lb;->A0C:Ljava/lang/String;
+
+    if-eqz v1, :cond_1dd
+
+    iget-object v5, v2, LX/00kX;->A08:Lcom/google/common/base/Supplier;
+
+    iget-object v1, v2, LX/00kX;->A01:LX/00lO;
+
+    move-object/from16 v20, v1
+
+    iget-object v4, v2, LX/00kX;->A07:LX/08rn;
+
+    iget-object v9, v2, LX/00kX;->A06:Lcom/facebook/video/heroplayer/service/heroexoplayer2/HeroExoPlayer2EventListener;
+
+    const/16 v53, 0x0
+
+    if-eqz v4, :cond_1dd
+
+    new-instance v14, LX/00kY;
+
+    invoke-direct {v14}, Ljava/lang/Object;-><init>()V
+
+    invoke-interface {v5}, Lcom/google/common/base/Supplier;->get()Ljava/lang/Object;
+
+    move-result-object v1
+
+    if-eqz v1, :cond_44e
+
+    invoke-interface {v5}, Lcom/google/common/base/Supplier;->get()Ljava/lang/Object;
+
+    move-result-object v1
+
+    check-cast v1, Ljava/lang/Number;
+
+    invoke-virtual {v1}, Ljava/lang/Number;->longValue()J
+
+    move-result-wide v5
+
+    :goto_62
+    iput-wide v5, v14, LX/00kY;->A00:J
+
+    iget-object v1, v0, LX/00NW;->A05:Lcom/facebook/video/heroplayer/service/ServiceEventCallbackImpl;
+
+    move-object/from16 v57, v1
+
+    iget-object v12, v3, LX/08xk;->A0L:LX/08lb;
+
+    iget-object v1, v12, LX/08lb;->A0N:Ljava/lang/String;
+
+    move-object/from16 v56, v1
+
+    new-instance v19, LX/00lC;
+
+    move-object/from16 v5, v19
+
+    move-object/from16 v1, v57
+
+    invoke-direct {v5, v1}, LX/00lC;-><init>(Lcom/facebook/exoplayer/monitor/VpsEventCallback;)V
+
+    iget-object v1, v0, LX/00NW;->A0E:LX/00NZ;
+
+    move-object/from16 v16, v1
+
+    const/16 v1, 0xb
+
+    new-instance v10, LX/07nX;
+
+    invoke-direct {v10, v14, v1}, LX/07nX;-><init>(Ljava/lang/Object;I)V
+
+    sget-object v26, LX/08pu;->A06:LX/08pu;
+
+    iget-object v6, v0, LX/00NW;->A01:LX/09tr;
+
+    iget-object v1, v0, LX/00NW;->A0K:Ljava/util/concurrent/atomic/AtomicBoolean;
+
+    move-object v13, v1
+
+    iget-object v5, v0, LX/00NW;->A0J:Ljava/util/concurrent/atomic/AtomicBoolean;
+
+    iget-object v1, v0, LX/00NW;->A0I:Ljava/util/concurrent/atomic/AtomicBoolean;
+
+    sget-object v31, LX/000A;->A00:Ljava/lang/Integer;
+
+    new-instance v18, LX/00lD;
+
+    move-object/from16 v23, v18
+
+    move-object/from16 v24, v53
+
+    move-object/from16 v25, v6
+
+    move-object/from16 v27, v3
+
+    move-object/from16 v28, v16
+
+    move-object/from16 v29, v4
+
+    move-object/from16 v30, v10
+
+    move-object/from16 v32, v13
+
+    move-object/from16 v33, v5
+
+    move-object/from16 v34, v1
+
+    invoke-direct/range {v23 .. v34}, LX/00lD;-><init>(LX/08MV;LX/09tr;LX/08pu;LX/08xk;LX/00NZ;LX/08rn;Lcom/google/common/base/Supplier;Ljava/lang/Integer;Ljava/util/concurrent/atomic/AtomicBoolean;Ljava/util/concurrent/atomic/AtomicBoolean;Ljava/util/concurrent/atomic/AtomicBoolean;)V
+
+    iget-object v6, v3, LX/08xk;->A0G:LX/09tl;
+
+    if-eqz v6, :cond_b0
+
+    move-object/from16 v10, v18
+
+    iput-object v6, v10, LX/00lD;->A00:LX/09tl;
+
+    :cond_b0
+    const/16 v11, 0xc
+
+    new-instance v10, LX/07nX;
+
+    invoke-direct {v10, v14, v11}, LX/07nX;-><init>(Ljava/lang/Object;I)V
+
+    sget-object v26, LX/08pu;->A03:LX/08pu;
+
+    new-instance v15, LX/00lD;
+
+    move-object/from16 v23, v15
+
+    move-object/from16 v25, v53
+
+    move-object/from16 v30, v10
+
+    invoke-direct/range {v23 .. v34}, LX/00lD;-><init>(LX/08MV;LX/09tr;LX/08pu;LX/08xk;LX/00NZ;LX/08rn;Lcom/google/common/base/Supplier;Ljava/lang/Integer;Ljava/util/concurrent/atomic/AtomicBoolean;Ljava/util/concurrent/atomic/AtomicBoolean;Ljava/util/concurrent/atomic/AtomicBoolean;)V
+
+    if-eqz v6, :cond_c8
+
+    iput-object v6, v15, LX/00lD;->A00:LX/09tl;
+
+    :cond_c8
+    const/16 v11, 0x9
+
+    new-instance v10, LX/07nX;
+
+    invoke-direct {v10, v14, v11}, LX/07nX;-><init>(Ljava/lang/Object;I)V
+
+    sget-object v26, LX/08pu;->A05:LX/08pu;
+
+    new-instance v11, LX/00lD;
+
+    move-object/from16 v23, v11
+
+    move-object/from16 v30, v10
+
+    invoke-direct/range {v23 .. v34}, LX/00lD;-><init>(LX/08MV;LX/09tr;LX/08pu;LX/08xk;LX/00NZ;LX/08rn;Lcom/google/common/base/Supplier;Ljava/lang/Integer;Ljava/util/concurrent/atomic/AtomicBoolean;Ljava/util/concurrent/atomic/AtomicBoolean;Ljava/util/concurrent/atomic/AtomicBoolean;)V
+
+    if-eqz v6, :cond_de
+
+    iput-object v6, v11, LX/00lD;->A00:LX/09tl;
+
+    :cond_de
+    iget-object v1, v0, LX/00NW;->A0D:LX/06vh;
+
+    move-object/from16 v54, v1
+
+    iget-object v5, v3, LX/08xk;->A0R:Ljava/lang/String;
+
+    new-instance v17, LX/00lH;
+
+    move-object/from16 v1, v17
+
+    invoke-direct {v1, v5}, LX/00lH;-><init>(Ljava/lang/String;)V
+
+    iget-object v5, v7, Lcom/facebook/video/heroplayer/setting/HeroPlayerSetting;->A1K:LX/05xA;
+
+    iget-boolean v1, v5, LX/05xA;->A0N:Z
+
+    if-nez v1, :cond_fb
+
+    new-instance v1, LX/05wx;
+
+    invoke-direct {v1}, LX/05wx;-><init>()V
+
+    new-instance v5, LX/05xA;
+
+    invoke-direct {v5, v1}, LX/05xA;-><init>(LX/05wx;)V
+
+    :cond_fb
+    const/16 v16, 0x1
+
+    iget-object v1, v7, Lcom/facebook/video/heroplayer/setting/HeroPlayerSetting;->A1R:LX/05xw;
+
+    iget-boolean v6, v1, LX/05xw;->A32:Z
+
+    move/from16 v40, v6
+
+    sget-object v26, LX/05wv;->A00:LX/05wv;
+
+    new-instance v25, LX/05ww;
+
+    invoke-direct/range {v25 .. v25}, Ljava/lang/Object;-><init>()V
+
+    iget-boolean v6, v7, Lcom/facebook/video/heroplayer/setting/HeroPlayerSetting;->A1w:Z
+
+    move/from16 v43, v6
+
+    iget-boolean v6, v1, LX/05xw;->A93:Z
+
+    move/from16 v44, v6
+
+    iget-object v6, v7, Lcom/facebook/video/heroplayer/setting/HeroPlayerSetting;->A01:LX/05wm;
+
+    if-eqz v6, :cond_44b
+
+    iget-boolean v6, v6, LX/05wm;->A0G:Z
+
+    :goto_118
+    iget-boolean v10, v7, Lcom/facebook/video/heroplayer/setting/HeroPlayerSetting;->A2F:Z
+
+    move/from16 v46, v10
+
+    iget-boolean v10, v1, LX/05xw;->A4r:Z
+
+    move/from16 v24, v10
+
+    iget-boolean v10, v3, LX/08xk;->A0g:Z
+
+    const/16 v48, 0x0
+
+    if-eqz v10, :cond_128
+
+    const/16 v48, 0x1
+
+    :cond_128
+    iget-boolean v13, v1, LX/05xw;->A8M:Z
+
+    iget-boolean v10, v1, LX/05xw;->A63:Z
+
+    invoke-virtual {v0, v3}, LX/00NW;->D7e(LX/08xk;)LX/00PK;
+
+    move-result-object v27
+
+    const-wide/16 v69, 0x0
+
+    const/16 v28, -0x1
+
+    new-instance v23, LX/00lI;
+
+    move/from16 v29, v28
+
+    move/from16 v30, v21
+
+    move/from16 v31, v28
+
+    move/from16 v32, v21
+
+    move/from16 v33, v21
+
+    move/from16 v34, v21
+
+    move/from16 v35, v28
+
+    move/from16 v36, v21
+
+    move/from16 v37, v21
+
+    move/from16 v38, v16
+
+    move/from16 v39, v21
+
+    move/from16 v41, v21
+
+    move/from16 v42, v21
+
+    move/from16 v45, v6
+
+    move/from16 v47, v24
+
+    move/from16 v49, v48
+
+    move/from16 v50, v21
+
+    move/from16 v51, v13
+
+    move/from16 v52, v10
+
+    move-object/from16 v24, v5
+
+    invoke-direct/range {v23 .. v52}, LX/00lI;-><init>(LX/05xA;LX/05ww;LX/05wv;LX/00PK;IIIIIIIIZZZZZZZZZZZZZZZZZ)V
+
+    iget-boolean v5, v1, LX/05xw;->A5y:Z
+
+    const/4 v6, 0x0
+
+    if-eqz v5, :cond_167
+
+    const/4 v6, 0x3
+
+    :cond_167
+    iget-object v5, v0, LX/00NW;->A04:LX/03p8;
+
+    invoke-virtual {v5}, LX/03p8;->A0F()LX/03pI;
+
+    move-result-object v5
+
+    iput-object v9, v5, LX/03pI;->A01:LX/07sv;
+
+    invoke-virtual {v5, v3}, LX/03pI;->A00(LX/08xk;)V
+
+    iget-boolean v9, v1, LX/05xw;->A8p:Z
+
+    iput-boolean v9, v5, LX/03pI;->A02:Z
+
+    iput v6, v5, LX/03pI;->A00:I
+
+    iget-object v6, v0, LX/00NW;->A0C:LX/06vo;
+
+    iget-object v9, v0, LX/00NW;->A03:LX/00ND;
+
+    move-object/from16 v41, v9
+
+    new-instance v31, LX/00lJ;
+
+    invoke-direct/range {v31 .. v31}, Ljava/lang/Object;-><init>()V
+
+    new-instance v24, LX/00lK;
+
+    move-object/from16 v25, v11
+
+    move-object/from16 v26, v18
+
+    move-object/from16 v27, v15
+
+    move-object/from16 v28, v53
+
+    move-object/from16 v29, v53
+
+    move-object/from16 v30, v5
+
+    move-object/from16 v32, v19
+
+    move-object/from16 v33, v6
+
+    move-object/from16 v34, v9
+
+    move-object/from16 v35, v53
+
+    move-object/from16 v36, v53
+
+    move-object/from16 v37, v17
+
+    move-object/from16 v38, v54
+
+    move/from16 v40, v21
+
+    invoke-direct/range {v24 .. v40}, LX/00lK;-><init>(LX/073y;LX/073y;LX/073y;LX/073y;LX/09pj;LX/09gB;LX/00lJ;LX/00lC;LX/06vo;LX/00ND;LX/00Mp;LX/00MS;LX/00lH;LX/06vh;IZ)V
+
+    new-instance v29, LX/00lN;
+
+    invoke-direct/range {v29 .. v29}, Ljava/lang/Object;-><init>()V
+
+    if-nez v20, :cond_1ad
+
+    sget-object v20, LX/00lO;->A00:LX/00lO;
+
+    :cond_1ad
+    const/16 v32, 0x3
+
+    iget-boolean v13, v1, LX/05xw;->A6b:Z
+
+    iget-wide v5, v1, LX/05xw;->A0q:J
+
+    long-to-int v11, v5
+
+    iget-wide v5, v1, LX/05xw;->A0n:J
+
+    long-to-int v10, v5
+
+    iget-wide v5, v1, LX/05xw;->A1e:J
+
+    long-to-int v9, v5
+
+    new-instance v30, LX/00lQ;
+
+    move/from16 v31, v13
+
+    move/from16 v33, v11
+
+    move/from16 v34, v10
+
+    move/from16 v35, v9
+
+    invoke-direct/range {v30 .. v35}, LX/00lQ;-><init>(ZIIII)V
+
+    iget-boolean v5, v4, LX/08rn;->A0S:Z
+
+    if-eqz v5, :cond_242
+
+    const-string v10, "MANIFEST"
+
+    const-string v9, "DYNAMIC_MANIFEST_FOR_VOD"
+
+    const-string v5, "Trying to play VOD with dynamic manifest"
+
+    :goto_1d1
+    new-instance v4, LX/00kW;
+
+    move-object/from16 v1, v56
+
+    invoke-direct {v4, v1, v10, v9, v5}, LX/00kW;-><init>(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)V
+
+    move-object/from16 v1, v57
+
+    invoke-virtual {v1, v4}, Lcom/facebook/video/heroplayer/service/ServiceEventCallbackImpl;->callback(LX/03p5;)V
+
+    :cond_1dd
+    iget-object v1, v0, LX/00NW;->A0F:Lcom/facebook/video/heroplayer/setting/HeroPlayerSetting;
+
+    iget-object v1, v1, Lcom/facebook/video/heroplayer/setting/HeroPlayerSetting;->A1R:LX/05xw;
+
+    iget-boolean v1, v1, LX/05xw;->A5P:Z
+
+    if-eqz v1, :cond_218
+
+    iget-object v1, v8, LX/08lb;->A07:Landroid/net/Uri;
+
+    if-nez v1, :cond_218
+
+    iget-object v4, v8, LX/08lb;->A09:LX/08ks;
+
+    sget-object v1, LX/08ks;->A01:LX/08ks;
+
+    if-eq v4, v1, :cond_218
+
+    iget-object v12, v0, LX/00NW;->A05:Lcom/facebook/video/heroplayer/service/ServiceEventCallbackImpl;
+
+    iget-object v11, v8, LX/08lb;->A0N:Ljava/lang/String;
+
+    const-string v10, "MANIFEST"
+
+    const-string v9, "NULL_MEDIA_SOURCE"
+
+    const-string v13, "DASH media source creation failed and no progressive fallback URI available. manifestContent="
+
+    iget-object v1, v8, LX/08lb;->A0C:Ljava/lang/String;
+
+    const-string/jumbo v7, "non-null"
+
+    const-string/jumbo v6, "null"
+
+    move-object v5, v6
+
+    if-eqz v1, :cond_205
+
+    move-object v5, v7
+
+    :cond_205
+    const-string v4, ", inlineDashManifest="
+
+    iget-object v1, v2, LX/00kX;->A07:LX/08rn;
+
+    if-nez v1, :cond_20c
+
+    move-object v7, v6
+
+    :cond_20c
+    invoke-static {v13, v5, v4, v7}, LX/002b;->A19(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)Ljava/lang/String;
+
+    move-result-object v4
+
+    new-instance v1, LX/00kW;
+
+    invoke-direct {v1, v11, v10, v9, v4}, LX/00kW;-><init>(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)V
+
+    invoke-virtual {v12, v1}, Lcom/facebook/video/heroplayer/service/ServiceEventCallbackImpl;->callback(LX/03p5;)V
+
+    :cond_218
+    iget-object v5, v2, LX/00kX;->A08:Lcom/google/common/base/Supplier;
+
+    iget-object v4, v2, LX/00kX;->A01:LX/00lO;
+
+    iget-object v1, v2, LX/00kX;->A06:Lcom/facebook/video/heroplayer/service/heroexoplayer2/HeroExoPlayer2EventListener;
+
+    invoke-direct {v0, v4, v3, v1, v5}, LX/00NW;->A03(LX/00lO;LX/08xk;Lcom/facebook/video/heroplayer/service/heroexoplayer2/HeroExoPlayer2EventListener;Lcom/google/common/base/Supplier;)LX/00lx;
+
+    move-result-object v51
+
+    invoke-virtual {v8}, LX/08lb;->A03()Z
+
+    move-result v1
+
+    if-eqz v1, :cond_241
+
+    move/from16 v1, v21
+
+    new-array v2, v1, [Ljava/lang/Object;
+
+    const-string v4, "AV1 decoding falls back to progressive"
+
+    move-object/from16 v1, v22
+
+    invoke-static {v1, v4, v2}, LX/06ul;->A01(Ljava/lang/String;Ljava/lang/String;[Ljava/lang/Object;)V
+
+    iget-object v3, v0, LX/00NW;->A05:Lcom/facebook/video/heroplayer/service/ServiceEventCallbackImpl;
+
+    iget-object v2, v8, LX/08lb;->A0N:Ljava/lang/String;
+
+    const-string v1, "AV1_INSTANTIATION"
+
+    new-instance v0, LX/00kW;
+
+    invoke-direct {v0, v2, v1, v1, v4}, LX/00kW;-><init>(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)V
+
+    invoke-virtual {v3, v0}, Lcom/facebook/video/heroplayer/service/ServiceEventCallbackImpl;->callback(LX/03p5;)V
+
+    :cond_241
+    return-object v51
+
+    :cond_242
+    iget v5, v12, LX/08lb;->A02:I
+
+    if-eqz v5, :cond_261
+
+    invoke-static {v4, v5}, LX/08rl;->A05(LX/08rn;I)Z
+
+    move-result v6
+
+    if-nez v6, :cond_261
+
+    invoke-static {v4}, LX/08rl;->A03(LX/08rn;)Ljava/lang/String;
+
+    move-result-object v7
+
+    const-string v10, "MANIFEST"
+
+    const-string v9, "ROLE_FLAG_NOT_IN_MANIFEST"
+
+    const-string/jumbo v6, "requested roleFlags "
+
+    const-string v4, " not present in DASH manifest; availableRoleFlags=["
+
+    const-string v1, "]"
+
+    invoke-static {v5, v6, v4, v7, v1}, LX/002b;->A09(ILjava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)Ljava/lang/String;
+
+    move-result-object v5
+
+    goto/16 :goto_1d1
+
+    :cond_261
+    const-string v2, "application/dash+xml"
+
+    iget-boolean v1, v1, LX/05xw;->A5p:Z
+
+    if-eqz v1, :cond_30a
+
+    invoke-static {v3, v7}, LX/08xk;->A00(LX/08xk;Lcom/facebook/video/heroplayer/setting/HeroPlayerSetting;)Ljava/lang/String;
+
+    move-result-object v5
+
+    new-instance v1, LX/00dQ;
+
+    invoke-direct {v1}, LX/00dQ;-><init>()V
+
+    sget-object v6, Landroid/net/Uri;->EMPTY:Landroid/net/Uri;
+
+    iput-object v6, v1, LX/00dQ;->A01:Landroid/net/Uri;
+
+    iput-object v2, v1, LX/00dQ;->A0B:Ljava/lang/String;
+
+    invoke-virtual {v1, v5}, LX/00dQ;->A01(Ljava/lang/String;)V
+
+    invoke-virtual {v1}, LX/00dQ;->A00()LX/00dO;
+
+    move-result-object v5
+
+    const-wide/16 v39, -0x1
+
+    new-instance v1, LX/00dQ;
+
+    invoke-direct {v1, v5}, LX/00dQ;-><init>(LX/00dO;)V
+
+    iput-object v2, v1, LX/00dQ;->A0B:Ljava/lang/String;
+
+    iget-object v2, v5, LX/00dO;->A03:LX/00dX;
+
+    if-nez v2, :cond_28c
+
+    iput-object v6, v1, LX/00dQ;->A01:Landroid/net/Uri;
+
+    :cond_28c
+    invoke-virtual {v1}, LX/00dQ;->A00()LX/00dO;
+
+    move-result-object v26
+
+    new-instance v13, LX/00lR;
+
+    move-object/from16 v25, v13
+
+    move-object/from16 v27, v53
+
+    move-object/from16 v28, v20
+
+    move-object/from16 v31, v53
+
+    move-object/from16 v32, v19
+
+    move-object/from16 v33, v53
+
+    move-object/from16 v34, v41
+
+    move-object/from16 v35, v23
+
+    move-object/from16 v36, v17
+
+    move-object/from16 v37, v24
+
+    move-object/from16 v38, v4
+
+    invoke-direct/range {v25 .. v40}, LX/00lR;-><init>(LX/00dO;LX/073y;LX/00lO;LX/09fZ;LX/09of;LX/0nIC;LX/00lC;LX/06vo;LX/00ND;LX/00lI;LX/00lH;LX/09dY;LX/08rn;J)V
+
+    :goto_2ab
+    const/4 v2, 0x0
+
+    iget-object v6, v4, LX/08rn;->A0R:Ljava/util/List;
+
+    invoke-interface {v6}, Ljava/util/List;->size()I
+
+    move-result v5
+
+    move/from16 v1, v16
+
+    if-lt v5, v1, :cond_37a
+
+    move/from16 v1, v21
+
+    invoke-interface {v6, v1}, Ljava/util/List;->get(I)Ljava/lang/Object;
+
+    move-result-object v1
+
+    check-cast v1, LX/08tp;
+
+    new-instance v6, Ljava/util/ArrayList;
+
+    invoke-direct {v6}, Ljava/util/ArrayList;-><init>()V
+
+    new-instance v5, Ljava/util/ArrayList;
+
+    invoke-direct {v5}, Ljava/util/ArrayList;-><init>()V
+
+    iget-object v1, v1, LX/08tp;->A03:Ljava/util/List;
+
+    invoke-interface {v1}, Ljava/util/List;->iterator()Ljava/util/Iterator;
+
+    move-result-object v10
+
+    :cond_2ce
+    invoke-interface {v10}, Ljava/util/Iterator;->hasNext()Z
+
+    move-result v1
+
+    if-eqz v1, :cond_34d
+
+    invoke-interface {v10}, Ljava/util/Iterator;->next()Ljava/lang/Object;
+
+    move-result-object v9
+
+    check-cast v9, LX/08ti;
+
+    iget v7, v9, LX/08ti;->A06:I
+
+    const/4 v1, 0x1
+
+    if-eq v7, v1, :cond_2f6
+
+    const/4 v1, 0x2
+
+    if-ne v7, v1, :cond_2ce
+
+    iget-object v1, v9, LX/08ti;->A0E:Ljava/util/List;
+
+    invoke-interface {v1}, Ljava/util/List;->iterator()Ljava/util/Iterator;
+
+    move-result-object v7
+
+    :goto_2e8
+    invoke-interface {v7}, Ljava/util/Iterator;->hasNext()Z
+
+    move-result v1
+
+    if-eqz v1, :cond_2ce
+
+    invoke-interface {v7}, Ljava/util/Iterator;->next()Ljava/lang/Object;
+
+    move-result-object v1
+
+    invoke-virtual {v6, v1}, Ljava/util/AbstractCollection;->add(Ljava/lang/Object;)Z
+
+    goto :goto_2e8
+
+    :cond_2f6
+    iget-object v1, v9, LX/08ti;->A0E:Ljava/util/List;
+
+    invoke-interface {v1}, Ljava/util/List;->iterator()Ljava/util/Iterator;
+
+    move-result-object v7
+
+    :goto_2fc
+    invoke-interface {v7}, Ljava/util/Iterator;->hasNext()Z
+
+    move-result v1
+
+    if-eqz v1, :cond_2ce
+
+    invoke-interface {v7}, Ljava/util/Iterator;->next()Ljava/lang/Object;
+
+    move-result-object v1
+
+    invoke-virtual {v5, v1}, Ljava/util/AbstractCollection;->add(Ljava/lang/Object;)Z
+
+    goto :goto_2fc
+
+    :cond_30a
+    new-instance v5, LX/00dQ;
+
+    invoke-direct {v5}, LX/00dQ;-><init>()V
+
+    sget-object v6, Landroid/net/Uri;->EMPTY:Landroid/net/Uri;
+
+    iput-object v6, v5, LX/00dQ;->A01:Landroid/net/Uri;
+
+    const-string v1, "DashMediaSource"
+
+    iput-object v1, v5, LX/00dQ;->A0A:Ljava/lang/String;
+
+    iput-object v2, v5, LX/00dQ;->A0B:Ljava/lang/String;
+
+    invoke-virtual {v5}, LX/00dQ;->A00()LX/00dO;
+
+    move-result-object v5
+
+    const-wide/16 v39, -0x1
+
+    new-instance v1, LX/00dQ;
+
+    invoke-direct {v1, v5}, LX/00dQ;-><init>(LX/00dO;)V
+
+    iput-object v2, v1, LX/00dQ;->A0B:Ljava/lang/String;
+
+    iget-object v2, v5, LX/00dO;->A03:LX/00dX;
+
+    if-nez v2, :cond_32c
+
+    iput-object v6, v1, LX/00dQ;->A01:Landroid/net/Uri;
+
+    :cond_32c
+    invoke-virtual {v1}, LX/00dQ;->A00()LX/00dO;
+
+    move-result-object v26
+
+    new-instance v13, LX/00lR;
+
+    move-object/from16 v25, v13
+
+    move-object/from16 v27, v53
+
+    move-object/from16 v28, v20
+
+    move-object/from16 v31, v53
+
+    move-object/from16 v32, v19
+
+    move-object/from16 v33, v53
+
+    move-object/from16 v34, v41
+
+    move-object/from16 v35, v23
+
+    move-object/from16 v36, v17
+
+    move-object/from16 v37, v24
+
+    move-object/from16 v38, v4
+
+    invoke-direct/range {v25 .. v40}, LX/00lR;-><init>(LX/00dO;LX/073y;LX/00lO;LX/09fZ;LX/09of;LX/0nIC;LX/00lC;LX/06vo;LX/00ND;LX/00lI;LX/00lH;LX/09dY;LX/08rn;J)V
+
+    goto/16 :goto_2ab
+
+    :cond_34d
+    new-instance v9, Ljava/util/ArrayList;
+
+    invoke-direct {v9}, Ljava/util/ArrayList;-><init>()V
+
+    new-instance v7, Ljava/util/ArrayList;
+
+    invoke-direct {v7}, Ljava/util/ArrayList;-><init>()V
+
+    invoke-virtual {v9}, Ljava/util/AbstractCollection;->isEmpty()Z
+
+    move-result v1
+
+    if-nez v1, :cond_35e
+
+    move-object v6, v9
+
+    :cond_35e
+    invoke-virtual {v7}, Ljava/util/AbstractCollection;->isEmpty()Z
+
+    move-result v1
+
+    if-nez v1, :cond_365
+
+    move-object v5, v7
+
+    :cond_365
+    invoke-virtual {v6}, Ljava/util/AbstractCollection;->isEmpty()Z
+
+    invoke-virtual {v6}, Ljava/util/AbstractCollection;->isEmpty()Z
+
+    move-result v1
+
+    if-eqz v1, :cond_36f
+
+    const/4 v6, 0x0
+
+    :cond_36f
+    invoke-virtual {v5}, Ljava/util/AbstractCollection;->isEmpty()Z
+
+    move-result v1
+
+    if-eqz v1, :cond_376
+
+    const/4 v5, 0x0
+
+    :cond_376
+    if-nez v6, :cond_437
+
+    if-nez v5, :cond_437
+
+    :cond_37a
+    :goto_37a
+    const/4 v15, 0x0
+
+    :cond_37b
+    iget v11, v3, LX/08xk;->A09:I
+
+    sget-object v55, LX/000A;->A01:Ljava/lang/Integer;
+
+    invoke-virtual/range {v55 .. v55}, Ljava/lang/Number;->intValue()I
+
+    move-result v1
+
+    if-eqz v1, :cond_434
+
+    const/4 v10, 0x1
+
+    :goto_386
+    if-eq v11, v10, :cond_3a2
+
+    if-nez v16, :cond_42d
+
+    if-eqz v15, :cond_3a2
+
+    const-string v9, "all dash representation filtered out"
+
+    sget-object v1, LX/01Ak;->A04:LX/01Ak;
+
+    :goto_390
+    const-string v7, "MANIFEST"
+
+    invoke-virtual {v1}, Ljava/lang/Enum;->name()Ljava/lang/String;
+
+    move-result-object v6
+
+    new-instance v5, LX/00kW;
+
+    move-object/from16 v1, v56
+
+    invoke-direct {v5, v1, v7, v6, v9}, LX/00kW;-><init>(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)V
+
+    move-object/from16 v1, v57
+
+    invoke-virtual {v1, v5}, Lcom/facebook/video/heroplayer/service/ServiceEventCallbackImpl;->callback(LX/03p5;)V
+
+    :cond_3a2
+    if-eq v10, v11, :cond_3a9
+
+    if-nez v16, :cond_3a9
+
+    const/4 v6, 0x0
+
+    if-eqz v15, :cond_3aa
+
+    :cond_3a9
+    const/4 v6, 0x1
+
+    :cond_3aa
+    iget-object v1, v12, LX/08lb;->A06:Landroid/net/Uri;
+
+    if-nez v1, :cond_3b2
+
+    iget-object v1, v12, LX/08lb;->A0O:Ljava/util/List;
+
+    if-eqz v1, :cond_3bd
+
+    :cond_3b2
+    const/16 v5, 0xa
+
+    new-instance v1, LX/07nX;
+
+    invoke-direct {v1, v14, v5}, LX/07nX;-><init>(Ljava/lang/Object;I)V
+
+    invoke-direct {v0, v13, v3, v1}, LX/00NW;->A00(LX/0Cmz;LX/08xk;Lcom/google/common/base/Supplier;)LX/0Cmz;
+
+    move-result-object v13
+
+    :cond_3bd
+    if-nez v6, :cond_425
+
+    if-eqz v2, :cond_425
+
+    iget-object v0, v2, LX/08ur;->A01:Ljava/util/List;
+
+    if-eqz v0, :cond_425
+
+    invoke-interface {v0}, Ljava/util/List;->size()I
+
+    move-result v59
+
+    :goto_3c9
+    iget-object v0, v2, LX/08ur;->A00:Ljava/util/List;
+
+    if-eqz v0, :cond_42a
+
+    invoke-interface {v0}, Ljava/util/List;->size()I
+
+    move-result v60
+
+    :goto_3d1
+    iget-boolean v0, v4, LX/08rn;->A0V:Z
+
+    if-eqz v0, :cond_41a
+
+    iget-wide v11, v4, LX/08rn;->A0C:J
+
+    iget-wide v9, v4, LX/08rn;->A08:J
+
+    iget-wide v5, v4, LX/08rn;->A06:J
+
+    iget-wide v0, v4, LX/08rn;->A09:J
+
+    const/16 v71, 0x1
+
+    :goto_3df
+    iget-boolean v3, v4, LX/08rn;->A0W:Z
+
+    const/16 v72, 0x0
+
+    if-eqz v3, :cond_3e7
+
+    const/16 v72, 0x1
+
+    :cond_3e7
+    invoke-static {v2}, Lcom/facebook/video/heroplayer/service/heroexoplayer2/HeroExoPlayer2InitHelper;->A04(LX/08ur;)Ljava/lang/String;
+
+    move-result-object v56
+
+    iget-object v3, v4, LX/08rn;->A0L:Ljava/lang/String;
+
+    iget-object v2, v4, LX/08rn;->A0P:Ljava/lang/String;
+
+    new-instance v51, LX/00lx;
+
+    move-object/from16 v52, v13
+
+    move-object/from16 v54, v14
+
+    move-object/from16 v57, v3
+
+    move-object/from16 v58, v2
+
+    move-wide/from16 v61, v11
+
+    move-wide/from16 v63, v9
+
+    move-wide/from16 v65, v5
+
+    move-wide/from16 v67, v0
+
+    move/from16 v73, v21
+
+    move/from16 v74, v21
+
+    invoke-direct/range {v51 .. v74}, LX/00lx;-><init>(LX/0Cmz;LX/0A40;LX/00kY;Ljava/lang/Integer;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;IIJJJJJZZZZ)V
+
+    invoke-virtual {v8}, LX/08lb;->A03()Z
+
+    move-result v0
+
+    if-eqz v0, :cond_241
+
+    const-string v2, "AV1 decoding using dash media source"
+
+    move/from16 v0, v21
+
+    new-array v1, v0, [Ljava/lang/Object;
+
+    move-object/from16 v0, v22
+
+    invoke-static {v0, v2, v1}, LX/06ul;->A01(Ljava/lang/String;Ljava/lang/String;[Ljava/lang/Object;)V
+
+    return-object v51
+
+    :cond_41a
+    const-wide/16 v11, 0x0
+
+    const-wide/16 v9, 0x0
+
+    const-wide/16 v5, 0x0
+
+    const-wide/16 v0, 0x0
+
+    const/16 v71, 0x0
+
+    goto :goto_3df
+
+    :cond_425
+    const/16 v59, 0x0
+
+    if-eqz v2, :cond_42a
+
+    goto :goto_3c9
+
+    :cond_42a
+    const/16 v60, 0x0
+
+    goto :goto_3d1
+
+    :cond_42d
+    const-string/jumbo v9, "no valid dash representations"
+
+    sget-object v1, LX/01Ak;->A1G:LX/01Ak;
+
+    goto/16 :goto_390
+
+    :cond_434
+    const/4 v10, 0x0
+
+    goto/16 :goto_386
+
+    :cond_437
+    new-instance v2, LX/08ur;
+
+    invoke-direct {v2, v6, v5}, LX/08ur;-><init>(Ljava/util/List;Ljava/util/List;)V
+
+    iget-object v1, v2, LX/08ur;->A01:Ljava/util/List;
+
+    if-eqz v1, :cond_37a
+
+    const/16 v16, 0x0
+
+    invoke-interface {v1}, Ljava/util/List;->isEmpty()Z
+
+    move-result v1
+
+    const/4 v15, 0x1
+
+    if-nez v1, :cond_37b
+
+    goto/16 :goto_37a
+
+    :cond_44b
+    const/4 v6, 0x0
+
+    goto/16 :goto_118
+
+    :cond_44e
+    const-wide/16 v5, 0x0
+
+    goto/16 :goto_62
+
+    :cond_452
+    invoke-static/range {v21 .. v21}, LX/07pt;->A05(Z)V
+
+    invoke-static {}, LX/0002;->createAndThrow()LX/0002;
+
+    move-result-object v0
+
+    throw v0
+.end method
+
+
+===== X/03oL.smali :: .method public final A02()Ljava/lang/Double; =====
+.method public final A02()Ljava/lang/Double;
+    .registers 20
+
+    move-object/from16 v7, p0
+
+    iget-object v8, v7, LX/03oL;->A03:Ljava/lang/Double;
+
+    if-nez v8, :cond_5a
+
+    invoke-virtual {v7}, LX/03oL;->A0D()Z
+
+    move-result v0
+
+    const/4 v8, 0x0
+
+    if-eqz v0, :cond_5a
+
+    iget-object v2, v7, LX/03oL;->A0h:Landroid/net/Uri;
+
+    if-eqz v2, :cond_5a
+
+    new-instance v1, LX/08oh;
+
+    invoke-direct {v1}, LX/08oh;-><init>()V
+
+    invoke-virtual {v7}, LX/03oL;->A06()Ljava/lang/String;
+
+    move-result-object v0
+
+    invoke-static {v2, v1, v0}, LX/08rl;->A02(Landroid/net/Uri;LX/09z5;Ljava/lang/String;)LX/08rn;
+
+    move-result-object v11
+
+    if-eqz v11, :cond_5a
+
+    sget-object v13, LX/08ui;->A00:LX/08ui;
+
+    sget-object v10, LX/0kWM;->A00:LX/0kWM;
+
+    sget-object v9, LX/0kTL;->A00:LX/0kTL;
+
+    const/4 v15, 0x0
+
+    const/4 v14, 0x1
+
+    move-object v12, v8
+
+    move/from16 v16, v15
+
+    move/from16 v17, v15
+
+    move/from16 v18, v15
+
+    invoke-static/range {v8 .. v18}, LX/08rl;->A01(Landroid/content/Context;LX/0nLb;LX/0nLi;LX/08rn;Ljava/util/ArrayList;LX/08ui;ZZZZZ)LX/08ur;
+
+    move-result-object v0
+
+    if-eqz v0, :cond_5a
+
+    iget-object v0, v0, LX/08ur;->A01:Ljava/util/List;
+
+    if-eqz v0, :cond_5a
+
+    invoke-static {v0, v15}, LX/04k4;->A18(Ljava/util/List;I)Ljava/lang/Object;
+
+    move-result-object v0
+
+    check-cast v0, LX/096x;
+
+    if-eqz v0, :cond_5a
+
+    iget-object v1, v0, LX/096x;->A03:LX/03oR;
+
+    iget v0, v1, LX/03oR;->A0Q:I
+
+    int-to-double v5, v0
+
+    iget v0, v1, LX/03oR;->A0D:I
+
+    int-to-double v3, v0
+
+    const-wide/16 v1, 0x0
+
+    cmpl-double v0, v5, v1
+
+    if-lez v0, :cond_5a
+
+    cmpl-double v0, v3, v1
+
+    if-lez v0, :cond_5a
+
+    div-double/2addr v5, v3
+
+    invoke-static {v5, v6}, Ljava/lang/Double;->valueOf(D)Ljava/lang/Double;
+
+    move-result-object v8
+
+    iput-object v8, v7, LX/03oL;->A03:Ljava/lang/Double;
+
+    :cond_5a
+    return-object v8
+.end method
+
+
+===== X/03oL.smali :: .method public final A03(Landroid/content/Context;Z)Ljava/lang/Double; =====
+.method public final A03(Landroid/content/Context;Z)Ljava/lang/Double;
+    .registers 11
+
+    iget-object v0, p0, LX/03oL;->A03:Ljava/lang/Double;
+
+    if-nez v0, :cond_a6
+
+    const/4 v1, 0x0
+
+    const/4 v7, 0x0
+
+    invoke-static {p1, v1, p0, p2}, LX/03oL;->A00(Landroid/content/Context;Lcom/instagram/common/session/UserSession;LX/03oL;Z)LX/08ur;
+
+    move-result-object v0
+
+    if-eqz v0, :cond_47
+
+    iget-object v2, v0, LX/08ur;->A01:Ljava/util/List;
+
+    if-eqz v2, :cond_47
+
+    invoke-static {v2}, LX/04k0;->A0E(Ljava/lang/Iterable;)I
+
+    move-result v0
+
+    new-instance v3, Ljava/util/ArrayList;
+
+    invoke-direct {v3, v0}, Ljava/util/ArrayList;-><init>(I)V
+
+    invoke-interface {v2}, Ljava/util/List;->iterator()Ljava/util/Iterator;
+
+    move-result-object v2
+
+    :goto_1d
+    invoke-interface {v2}, Ljava/util/Iterator;->hasNext()Z
+
+    move-result v0
+
+    if-eqz v0, :cond_35
+
+    invoke-interface {v2}, Ljava/util/Iterator;->next()Ljava/lang/Object;
+
+    move-result-object v0
+
+    check-cast v0, LX/096x;
+
+    iget-object v0, v0, LX/096x;->A03:LX/03oR;
+
+    iget v0, v0, LX/03oR;->A0Q:I
+
+    invoke-static {v0}, Ljava/lang/Integer;->valueOf(I)Ljava/lang/Integer;
+
+    move-result-object v0
+
+    invoke-virtual {v3, v0}, Ljava/util/AbstractCollection;->add(Ljava/lang/Object;)Z
+
+    goto :goto_1d
+
+    :cond_35
+    invoke-static {v3}, LX/04k4;->A13(Ljava/util/List;)Ljava/lang/Object;
+
+    move-result-object v0
+
+    check-cast v0, Ljava/lang/Number;
+
+    if-eqz v0, :cond_47
+
+    invoke-virtual {v0}, Ljava/lang/Number;->intValue()I
+
+    move-result v0
+
+    int-to-double v2, v0
+
+    invoke-static {v2, v3}, Ljava/lang/Double;->valueOf(D)Ljava/lang/Double;
+
+    move-result-object v4
+
+    goto :goto_48
+
+    :cond_47
+    move-object v4, v1
+
+    :goto_48
+    invoke-static {p1, v1, p0, p2}, LX/03oL;->A00(Landroid/content/Context;Lcom/instagram/common/session/UserSession;LX/03oL;Z)LX/08ur;
+
+    move-result-object v0
+
+    if-eqz v0, :cond_88
+
+    iget-object v2, v0, LX/08ur;->A01:Ljava/util/List;
+
+    if-eqz v2, :cond_88
+
+    invoke-static {v2}, LX/04k0;->A0E(Ljava/lang/Iterable;)I
+
+    move-result v0
+
+    new-instance v3, Ljava/util/ArrayList;
+
+    invoke-direct {v3, v0}, Ljava/util/ArrayList;-><init>(I)V
+
+    invoke-interface {v2}, Ljava/util/List;->iterator()Ljava/util/Iterator;
+
+    move-result-object v2
+
+    :goto_5f
+    invoke-interface {v2}, Ljava/util/Iterator;->hasNext()Z
+
+    move-result v0
+
+    if-eqz v0, :cond_77
+
+    invoke-interface {v2}, Ljava/util/Iterator;->next()Ljava/lang/Object;
+
+    move-result-object v0
+
+    check-cast v0, LX/096x;
+
+    iget-object v0, v0, LX/096x;->A03:LX/03oR;
+
+    iget v0, v0, LX/03oR;->A0D:I
+
+    invoke-static {v0}, Ljava/lang/Integer;->valueOf(I)Ljava/lang/Integer;
+
+    move-result-object v0
+
+    invoke-virtual {v3, v0}, Ljava/util/AbstractCollection;->add(Ljava/lang/Object;)Z
+
+    goto :goto_5f
+
+    :cond_77
+    invoke-static {v3}, LX/04k4;->A13(Ljava/util/List;)Ljava/lang/Object;
+
+    move-result-object v0
+
+    check-cast v0, Ljava/lang/Number;
+
+    if-eqz v0, :cond_88
+
+    invoke-virtual {v0}, Ljava/lang/Number;->intValue()I
+
+    move-result v0
+
+    int-to-double v0, v0
+
+    invoke-static {v0, v1}, Ljava/lang/Double;->valueOf(D)Ljava/lang/Double;
+
+    move-result-object v1
+
+    :cond_88
+    if-eqz v4, :cond_a3
+
+    if-eqz v1, :cond_a3
+
+    invoke-virtual {v4}, Ljava/lang/Number;->doubleValue()D
+
+    move-result-wide v5
+
+    const-wide/16 v3, 0x0
+
+    cmpl-double v0, v5, v3
+
+    if-lez v0, :cond_a3
+
+    invoke-virtual {v1}, Ljava/lang/Number;->doubleValue()D
+
+    move-result-wide v1
+
+    cmpl-double v0, v1, v3
+
+    if-lez v0, :cond_a3
+
+    div-double/2addr v5, v1
+
+    invoke-static {v5, v6}, Ljava/lang/Double;->valueOf(D)Ljava/lang/Double;
+
+    move-result-object v7
+
+    :cond_a3
+    iput-object v7, p0, LX/03oL;->A03:Ljava/lang/Double;
+
+    return-object v7
+
+    :cond_a6
+    return-object v0
+.end method
+
+
+===== X/03oL.smali :: .method public final A07(Landroid/content/Context;Lcom/instagram/common/session/UserSession;)Ljava/lang/String; =====
+.method public final A07(Landroid/content/Context;Lcom/instagram/common/session/UserSession;)Ljava/lang/String;
+    .registers 4
+
+    invoke-virtual {p0}, LX/03oL;->A0D()Z
+
+    move-result v0
+
+    if-eqz v0, :cond_27
+
+    iget-object v0, p0, LX/03oL;->A04:Ljava/lang/String;
+
+    if-nez v0, :cond_27
+
+    const/4 v0, 0x0
+
+    invoke-static {p1, p2, p0, v0}, LX/03oL;->A00(Landroid/content/Context;Lcom/instagram/common/session/UserSession;LX/03oL;Z)LX/08ur;
+
+    move-result-object v0
+
+    if-eqz v0, :cond_2a
+
+    iget-object v0, v0, LX/08ur;->A01:Ljava/util/List;
+
+    if-eqz v0, :cond_2a
+
+    invoke-static {v0}, LX/04k4;->A12(Ljava/util/List;)Ljava/lang/Object;
+
+    move-result-object v0
+
+    check-cast v0, LX/096x;
+
+    if-eqz v0, :cond_2a
+
+    iget-object v0, v0, LX/096x;->A03:LX/03oR;
+
+    invoke-static {v0}, LX/08td;->A00(LX/03oR;)LX/08td;
+
+    move-result-object v0
+
+    iget-object v0, v0, LX/08td;->A05:Ljava/lang/String;
+
+    :goto_25
+    iput-object v0, p0, LX/03oL;->A04:Ljava/lang/String;
+
+    :cond_27
+    iget-object v0, p0, LX/03oL;->A04:Ljava/lang/String;
+
+    return-object v0
+
+    :cond_2a
+    const/4 v0, 0x0
+
+    goto :goto_25
+.end method
+
+
+===== X/03oL.smali :: .method public final A08(Landroid/content/Context;Lcom/instagram/common/session/UserSession;)Ljava/lang/String; =====
+.method public final A08(Landroid/content/Context;Lcom/instagram/common/session/UserSession;)Ljava/lang/String;
+    .registers 6
+
+    invoke-virtual {p0}, LX/03oL;->A0D()Z
+
+    move-result v0
+
+    if-eqz v0, :cond_4c
+
+    iget-object v0, p0, LX/03oL;->A05:Ljava/lang/String;
+
+    if-nez v0, :cond_4c
+
+    const/4 v0, 0x0
+
+    invoke-static {p1, p2, p0, v0}, LX/03oL;->A00(Landroid/content/Context;Lcom/instagram/common/session/UserSession;LX/03oL;Z)LX/08ur;
+
+    move-result-object v0
+
+    if-eqz v0, :cond_4f
+
+    iget-object v1, v0, LX/08ur;->A01:Ljava/util/List;
+
+    if-eqz v1, :cond_4f
+
+    invoke-static {v1}, LX/04k0;->A0E(Ljava/lang/Iterable;)I
+
+    move-result v0
+
+    new-instance v2, Ljava/util/ArrayList;
+
+    invoke-direct {v2, v0}, Ljava/util/ArrayList;-><init>(I)V
+
+    invoke-interface {v1}, Ljava/util/List;->iterator()Ljava/util/Iterator;
+
+    move-result-object v1
+
+    :goto_22
+    invoke-interface {v1}, Ljava/util/Iterator;->hasNext()Z
+
+    move-result v0
+
+    if-eqz v0, :cond_3a
+
+    invoke-interface {v1}, Ljava/util/Iterator;->next()Ljava/lang/Object;
+
+    move-result-object v0
+
+    check-cast v0, LX/096x;
+
+    iget-object v0, v0, LX/096x;->A03:LX/03oR;
+
+    iget-object v0, v0, LX/03oR;->A0W:Ljava/lang/String;
+
+    invoke-static {v0}, Ljava/lang/String;->valueOf(Ljava/lang/Object;)Ljava/lang/String;
+
+    move-result-object v0
+
+    invoke-virtual {v2, v0}, Ljava/util/AbstractCollection;->add(Ljava/lang/Object;)Z
+
+    goto :goto_22
+
+    :cond_3a
+    invoke-static {v2}, LX/04k4;->A1Z(Ljava/lang/Iterable;)Ljava/util/Set;
+
+    move-result-object v0
+
+    invoke-static {v0}, LX/04k4;->A1O(Ljava/lang/Iterable;)Ljava/util/List;
+
+    move-result-object v0
+
+    if-eqz v0, :cond_4f
+
+    invoke-static {v0}, LX/04k4;->A12(Ljava/util/List;)Ljava/lang/Object;
+
+    move-result-object v0
+
+    check-cast v0, Ljava/lang/String;
+
+    :goto_4a
+    iput-object v0, p0, LX/03oL;->A05:Ljava/lang/String;
+
+    :cond_4c
+    iget-object v0, p0, LX/03oL;->A05:Ljava/lang/String;
+
+    return-object v0
+
+    :cond_4f
+    const/4 v0, 0x0
+
+    goto :goto_4a
+.end method
+
+
+===== X/08wF.smali :: .method public static A00(LX/08xk;LX/08ur;LX/08wF;)J =====
+.method public static A00(LX/08xk;LX/08ur;LX/08wF;)J
+    .registers 10
+
+    const/4 v6, 0x0
+
+    if-eqz p1, :cond_45
+
+    iget-object v0, p2, LX/08wF;->A01:LX/07hk;
+
+    invoke-virtual {v0}, LX/07hk;->A01()Lcom/facebook/exoplayer/bandwidthestimator/estimate/VideoBandwidthEstimate;
+
+    move-result-object v2
+
+    const/16 v1, 0x4b
+
+    iget-object v0, p0, LX/08xk;->A0L:LX/08lb;
+
+    iget-object v0, v0, LX/08lb;->A07:Landroid/net/Uri;
+
+    if-eqz v0, :cond_3d
+
+    invoke-virtual {v0}, Landroid/net/Uri;->getHost()Ljava/lang/String;
+
+    move-result-object v0
+
+    :goto_15
+    invoke-virtual {v2, v1, v0}, Lcom/facebook/exoplayer/bandwidthestimator/estimate/VideoBandwidthEstimate;->getEstimatedThroughput(ILjava/lang/String;)J
+
+    move-result-wide v0
+
+    long-to-float v5, v0
+
+    const/high16 v0, 0x3f000000    # 0.5f
+
+    mul-float/2addr v5, v0
+
+    iget-object v0, p1, LX/08ur;->A01:Ljava/util/List;
+
+    const-wide/16 v2, -0x1
+
+    if-eqz v0, :cond_3f
+
+    invoke-interface {v0}, Ljava/util/List;->iterator()Ljava/util/Iterator;
+
+    move-result-object v4
+
+    :goto_27
+    invoke-interface {v4}, Ljava/util/Iterator;->hasNext()Z
+
+    move-result v0
+
+    if-eqz v0, :cond_3f
+
+    invoke-interface {v4}, Ljava/util/Iterator;->next()Ljava/lang/Object;
+
+    move-result-object v0
+
+    check-cast v0, LX/096x;
+
+    iget-object v0, v0, LX/096x;->A03:LX/03oR;
+
+    iget v0, v0, LX/03oR;->A05:I
+
+    int-to-long v0, v0
+
+    invoke-static {v2, v3, v0, v1}, Ljava/lang/Math;->max(JJ)J
+
+    move-result-wide v2
+
+    goto :goto_27
+
+    :cond_3d
+    const/4 v0, 0x0
+
+    goto :goto_15
+
+    :cond_3f
+    long-to-float v0, v2
+
+    cmpl-float v0, v5, v0
+
+    if-ltz v0, :cond_45
+
+    const/4 v6, 0x1
+
+    :cond_45
+    iget-object v1, p0, LX/08xk;->A0L:LX/08lb;
+
+    iget-boolean v0, v1, LX/08lb;->A0U:Z
+
+    if-eqz v0, :cond_50
+
+    if-eqz v6, :cond_50
+
+    const-wide/16 v0, 0x0
+
+    return-wide v0
+
+    :cond_50
+    iget-object v0, p2, LX/08wF;->A0L:Lcom/facebook/video/heroplayer/setting/HeroPlayerSetting;
+
+    iget v0, v0, Lcom/facebook/video/heroplayer/setting/HeroPlayerSetting;->A0U:I
+
+    int-to-long v5, v0
+
+    iget-wide v3, v1, LX/08lb;->A04:J
+
+    const-wide/16 v1, 0x0
+
+    cmp-long v0, v3, v1
+
+    if-lez v0, :cond_61
+
+    invoke-static {v3, v4, v5, v6}, Ljava/lang/Math;->max(JJ)J
+
+    move-result-wide v5
+
+    :cond_61
+    long-to-int v0, v5
+
+    int-to-long v0, v0
+
+    return-wide v0
+.end method
+
+
+# virtual methods
+
+===== X/08wF.smali :: .method public final CYd(LX/00kX;)LX/00lx; =====
+.method public final CYd(LX/00kX;)LX/00lx;
+    .registers 102
+
+    new-instance v16, LX/00kY;
+
+    invoke-direct/range {v16 .. v16}, Ljava/lang/Object;-><init>()V
+
+    move-object/from16 v99, p1
+
+    move-object/from16 v0, v99
+
+    iget-object v1, v0, LX/00kX;->A08:Lcom/google/common/base/Supplier;
+
+    invoke-interface {v1}, Lcom/google/common/base/Supplier;->get()Ljava/lang/Object;
+
+    move-result-object v0
+
+    if-eqz v0, :cond_45d
+
+    invoke-interface {v1}, Lcom/google/common/base/Supplier;->get()Ljava/lang/Object;
+
+    move-result-object v0
+
+    invoke-static {v0}, LX/000H;->A07(Ljava/lang/Object;)J
+
+    move-result-wide v1
+
+    :goto_19
+    move-object/from16 v0, v16
+
+    iput-wide v1, v0, LX/00kY;->A00:J
+
+    move-object/from16 v0, v99
+
+    iget-object v1, v0, LX/00kX;->A07:LX/08rn;
+
+    iget-object v5, v0, LX/00kX;->A04:LX/08xk;
+
+    const/16 v18, 0x3
+
+    new-instance v14, LX/0kjD;
+
+    move-object/from16 v2, v16
+
+    move/from16 v0, v18
+
+    invoke-direct {v14, v2, v0}, LX/0kjD;-><init>(Ljava/lang/Object;I)V
+
+    move-object/from16 v0, v99
+
+    iget-object v15, v0, LX/00kX;->A09:LX/08ui;
+
+    move-object/from16 v3, p0
+
+    iget-object v0, v3, LX/08wF;->A0L:Lcom/facebook/video/heroplayer/setting/HeroPlayerSetting;
+
+    iget-object v2, v3, LX/08wF;->A0D:LX/07ej;
+
+    iget-object v12, v3, LX/08wF;->A0N:Ljava/util/Map;
+
+    invoke-virtual {v2, v0, v12}, LX/07ej;->A00(Lcom/facebook/video/heroplayer/setting/HeroPlayerSetting;Ljava/util/Map;)V
+
+    iget-object v13, v5, LX/08xk;->A0L:LX/08lb;
+
+    iget-object v11, v13, LX/08lb;->A0N:Ljava/lang/String;
+
+    iget-object v4, v2, LX/07ej;->A03:Ljava/util/concurrent/atomic/AtomicReference;
+
+    move-object/from16 v40, v4
+
+    invoke-virtual/range {v40 .. v40}, Ljava/util/concurrent/atomic/AtomicReference;->get()Ljava/lang/Object;
+
+    move-result-object v6
+
+    invoke-static {v6}, LX/04oM;->A08(Ljava/lang/Object;)V
+
+    check-cast v6, Landroid/util/LruCache;
+
+    const v4, 0x1b95052c
+
+    invoke-static {v6, v11, v4}, LX/03o0;->A00(Landroid/util/LruCache;Ljava/lang/Object;I)Ljava/lang/Object;
+
+    move-result-object v4
+
+    check-cast v4, LX/0Irx;
+
+    instance-of v6, v4, LX/0A40;
+
+    if-eqz v6, :cond_384
+
+    check-cast v4, LX/0A40;
+
+    iget-boolean v6, v4, LX/0Irx;->A0L:Z
+
+    if-eqz v6, :cond_388
+
+    iget-object v7, v4, LX/0Irx;->A0K:Ljava/lang/Integer;
+
+    sget-object v6, LX/000A;->A00:Ljava/lang/Integer;
+
+    if-ne v7, v6, :cond_6b
+
+    iget-object v6, v4, LX/0Irx;->A0C:LX/0Jtc;
+
+    if-eqz v6, :cond_71
+
+    :cond_6b
+    iget-object v7, v4, LX/0Irx;->A0K:Ljava/lang/Integer;
+
+    sget-object v6, LX/000A;->A01:Ljava/lang/Integer;
+
+    if-ne v7, v6, :cond_388
+
+    :cond_71
+    const/4 v9, 0x0
+
+    iput-boolean v9, v4, LX/0Irx;->A0L:Z
+
+    iget-object v8, v13, LX/08lb;->A0D:Ljava/lang/String;
+
+    invoke-static {v8}, Landroid/text/TextUtils;->isEmpty(Ljava/lang/CharSequence;)Z
+
+    move-result v6
+
+    if-nez v6, :cond_87
+
+    iget-object v7, v13, LX/08lb;->A0E:Ljava/lang/String;
+
+    iget-object v6, v4, LX/0Irx;->A08:LX/00TI;
+
+    invoke-static {v8, v9}, LX/04l9;->A0j(Ljava/lang/Object;I)V
+
+    iput-object v8, v6, LX/00TI;->A0d:Ljava/lang/String;
+
+    iput-object v7, v6, LX/00TI;->A0e:Ljava/lang/String;
+
+    :cond_87
+    :goto_87
+    const/16 v54, 0x0
+
+    iget-object v6, v3, LX/08wF;->A0I:Lcom/facebook/video/heroplayer/service/ServiceEventCallbackImpl;
+
+    move-object/from16 v56, v6
+
+    iget-object v8, v5, LX/08xk;->A0L:LX/08lb;
+
+    iget-object v6, v8, LX/08lb;->A0N:Ljava/lang/String;
+
+    move-object/from16 v98, v6
+
+    new-instance v21, LX/00lC;
+
+    move-object/from16 v7, v21
+
+    move-object/from16 v6, v56
+
+    invoke-direct {v7, v6}, LX/00lC;-><init>(Lcom/facebook/exoplayer/monitor/VpsEventCallback;)V
+
+    iget-object v6, v3, LX/08wF;->A0J:LX/00NZ;
+
+    move-object/from16 v97, v6
+
+    const/4 v7, 0x4
+
+    new-instance v10, LX/0kjD;
+
+    move-object/from16 v6, v16
+
+    invoke-direct {v10, v6, v7}, LX/0kjD;-><init>(Ljava/lang/Object;I)V
+
+    sget-object v26, LX/08pu;->A0B:LX/08pu;
+
+    iget-object v7, v2, LX/07ej;->A01:LX/07em;
+
+    iget-object v6, v3, LX/08wF;->A01:LX/07hk;
+
+    iget-object v2, v3, LX/08wF;->A06:LX/09tr;
+
+    iget-object v9, v3, LX/08wF;->A0O:Ljava/util/concurrent/atomic/AtomicBoolean;
+
+    move-object/from16 v69, v9
+
+    iget-object v9, v3, LX/08wF;->A0P:Ljava/util/concurrent/atomic/AtomicBoolean;
+
+    move-object/from16 v68, v9
+
+    new-instance v82, LX/08uW;
+
+    move-object/from16 v22, v82
+
+    move-object/from16 v23, v6
+
+    move-object/from16 v24, v2
+
+    move-object/from16 v25, v7
+
+    move-object/from16 v27, v5
+
+    move-object/from16 v28, v97
+
+    move-object/from16 v29, v1
+
+    move-object/from16 v30, v10
+
+    move-object/from16 v31, v69
+
+    move-object/from16 v32, v9
+
+    invoke-direct/range {v22 .. v32}, LX/08uW;-><init>(LX/09tr;LX/09tr;LX/07em;LX/08pu;LX/08xk;LX/00NZ;LX/08rn;Lcom/google/common/base/Supplier;Ljava/util/concurrent/atomic/AtomicBoolean;Ljava/util/concurrent/atomic/AtomicBoolean;)V
+
+    const/4 v11, 0x5
+
+    new-instance v10, LX/0kjD;
+
+    move-object/from16 v9, v16
+
+    invoke-direct {v10, v9, v11}, LX/0kjD;-><init>(Ljava/lang/Object;I)V
+
+    sget-object v26, LX/08pu;->A08:LX/08pu;
+
+    new-instance v84, LX/08uW;
+
+    move-object/from16 v22, v84
+
+    move-object/from16 v23, v54
+
+    move-object/from16 v24, v54
+
+    move-object/from16 v30, v10
+
+    invoke-direct/range {v22 .. v32}, LX/08uW;-><init>(LX/09tr;LX/09tr;LX/07em;LX/08pu;LX/08xk;LX/00NZ;LX/08rn;Lcom/google/common/base/Supplier;Ljava/util/concurrent/atomic/AtomicBoolean;Ljava/util/concurrent/atomic/AtomicBoolean;)V
+
+    const/4 v11, 0x6
+
+    new-instance v9, LX/0kjD;
+
+    move-object/from16 v10, v16
+
+    invoke-direct {v9, v10, v11}, LX/0kjD;-><init>(Ljava/lang/Object;I)V
+
+    sget-object v26, LX/08pu;->A07:LX/08pu;
+
+    new-instance v83, LX/08uW;
+
+    move-object/from16 v22, v83
+
+    move-object/from16 v30, v9
+
+    invoke-direct/range {v22 .. v32}, LX/08uW;-><init>(LX/09tr;LX/09tr;LX/07em;LX/08pu;LX/08xk;LX/00NZ;LX/08rn;Lcom/google/common/base/Supplier;Ljava/util/concurrent/atomic/AtomicBoolean;Ljava/util/concurrent/atomic/AtomicBoolean;)V
+
+    const/4 v10, 0x7
+
+    new-instance v9, LX/0kjD;
+
+    move-object/from16 v11, v16
+
+    invoke-direct {v9, v11, v10}, LX/0kjD;-><init>(Ljava/lang/Object;I)V
+
+    sget-object v26, LX/08pu;->A05:LX/08pu;
+
+    new-instance v81, LX/08uW;
+
+    move-object/from16 v22, v81
+
+    move-object/from16 v23, v6
+
+    move-object/from16 v24, v2
+
+    move-object/from16 v30, v9
+
+    invoke-direct/range {v22 .. v32}, LX/08uW;-><init>(LX/09tr;LX/09tr;LX/07em;LX/08pu;LX/08xk;LX/00NZ;LX/08rn;Lcom/google/common/base/Supplier;Ljava/util/concurrent/atomic/AtomicBoolean;Ljava/util/concurrent/atomic/AtomicBoolean;)V
+
+    iget-object v6, v5, LX/08xk;->A0R:Ljava/lang/String;
+
+    const/16 v23, 0x1
+
+    new-instance v22, LX/00lH;
+
+    move-object/from16 v2, v22
+
+    invoke-direct {v2, v6}, LX/00lH;-><init>(Ljava/lang/String;)V
+
+    move-object/from16 v2, v99
+
+    iget-object v2, v2, LX/00kX;->A03:LX/00MS;
+
+    move-object/from16 v17, v2
+
+    if-eqz v2, :cond_129
+
+    move/from16 v6, v23
+
+    iput-boolean v6, v2, LX/00MS;->A00:Z
+
+    :cond_129
+    iget-boolean v2, v0, Lcom/facebook/video/heroplayer/setting/HeroPlayerSetting;->A3X:Z
+
+    move/from16 v38, v2
+
+    iget-wide v6, v5, LX/08xk;->A0C:J
+
+    const-wide/16 v12, 0x0
+
+    cmp-long v2, v6, v12
+
+    if-gtz v2, :cond_137
+
+    iget-wide v6, v8, LX/08lb;->A04:J
+
+    :cond_137
+    long-to-int v2, v6
+
+    move/from16 v55, v2
+
+    iget-wide v6, v5, LX/08xk;->A0D:J
+
+    cmp-long v2, v6, v12
+
+    if-gtz v2, :cond_142
+
+    iget-wide v6, v8, LX/08lb;->A05:J
+
+    :cond_142
+    long-to-int v2, v6
+
+    move/from16 v30, v2
+
+    iget v2, v0, Lcom/facebook/video/heroplayer/setting/HeroPlayerSetting;->A0e:I
+
+    move/from16 v31, v2
+
+    iget v2, v0, Lcom/facebook/video/heroplayer/setting/HeroPlayerSetting;->A0c:I
+
+    move/from16 v32, v2
+
+    iget v2, v0, Lcom/facebook/video/heroplayer/setting/HeroPlayerSetting;->A0b:I
+
+    move/from16 v33, v2
+
+    iget v2, v0, Lcom/facebook/video/heroplayer/setting/HeroPlayerSetting;->A0m:I
+
+    move/from16 v34, v2
+
+    iget-boolean v2, v0, Lcom/facebook/video/heroplayer/setting/HeroPlayerSetting;->A3N:Z
+
+    move/from16 v40, v2
+
+    iget-boolean v2, v0, Lcom/facebook/video/heroplayer/setting/HeroPlayerSetting;->A1y:Z
+
+    move/from16 v42, v2
+
+    iget-object v2, v0, Lcom/facebook/video/heroplayer/setting/HeroPlayerSetting;->A1M:LX/05wv;
+
+    move-object/from16 v29, v2
+
+    iget-object v2, v0, Lcom/facebook/video/heroplayer/setting/HeroPlayerSetting;->A1L:LX/05ww;
+
+    move-object/from16 v27, v2
+
+    iget-object v14, v0, Lcom/facebook/video/heroplayer/setting/HeroPlayerSetting;->A1K:LX/05xA;
+
+    iget-boolean v2, v0, Lcom/facebook/video/heroplayer/setting/HeroPlayerSetting;->A3q:Z
+
+    move/from16 v26, v2
+
+    iget-object v2, v0, Lcom/facebook/video/heroplayer/setting/HeroPlayerSetting;->A1Q:Lcom/facebook/video/heroplayer/setting/FbAutogeneratedSettings;
+
+    iget v2, v2, Lcom/facebook/video/heroplayer/setting/FbAutogeneratedSettings;->maxAllowed503RetryCount:I
+
+    move/from16 v25, v2
+
+    iget-object v6, v0, Lcom/facebook/video/heroplayer/setting/HeroPlayerSetting;->A1R:LX/05xw;
+
+    iget-boolean v2, v6, LX/05xw;->A92:Z
+
+    move/from16 v20, v2
+
+    iget-object v2, v0, Lcom/facebook/video/heroplayer/setting/HeroPlayerSetting;->A01:LX/05wm;
+
+    if-eqz v2, :cond_381
+
+    iget-boolean v2, v2, LX/05wm;->A0G:Z
+
+    :goto_17d
+    iget-boolean v7, v0, Lcom/facebook/video/heroplayer/setting/HeroPlayerSetting;->A2F:Z
+
+    move/from16 v19, v7
+
+    iget-boolean v11, v6, LX/05xw;->A4r:Z
+
+    iget-boolean v7, v5, LX/08xk;->A0g:Z
+
+    invoke-static {v7}, LX/000H;->A0h(I)Z
+
+    move-result v49
+
+    iget-boolean v10, v6, LX/05xw;->A8k:Z
+
+    iget-boolean v9, v6, LX/05xw;->A8M:Z
+
+    iget-boolean v7, v6, LX/05xw;->A63:Z
+
+    invoke-virtual {v3, v5}, LX/08wF;->D7e(LX/08xk;)LX/00PK;
+
+    move-result-object v28
+
+    const/4 v15, 0x0
+
+    new-instance v24, LX/00lI;
+
+    move/from16 v35, v18
+
+    move/from16 v36, v25
+
+    move/from16 v37, v23
+
+    move/from16 v39, v23
+
+    move/from16 v41, v15
+
+    move/from16 v43, v26
+
+    move/from16 v44, v15
+
+    move/from16 v45, v20
+
+    move/from16 v46, v2
+
+    move/from16 v47, v19
+
+    move/from16 v48, v11
+
+    move/from16 v50, v49
+
+    move/from16 v51, v10
+
+    move/from16 v52, v9
+
+    move/from16 v53, v7
+
+    move-object/from16 v25, v14
+
+    move-object/from16 v26, v27
+
+    move-object/from16 v27, v29
+
+    move/from16 v29, v55
+
+    invoke-direct/range {v24 .. v53}, LX/00lI;-><init>(LX/05xA;LX/05ww;LX/05wv;LX/00PK;IIIIIIIIZZZZZZZZZZZZZZZZZ)V
+
+    const/16 v7, 0x8
+
+    new-instance v11, LX/0kjD;
+
+    move-object/from16 v2, v16
+
+    invoke-direct {v11, v2, v7}, LX/0kjD;-><init>(Ljava/lang/Object;I)V
+
+    iget-object v2, v8, LX/08lb;->A0D:Ljava/lang/String;
+
+    move-object/from16 v18, v2
+
+    iget-object v2, v8, LX/08lb;->A0E:Ljava/lang/String;
+
+    move-object v14, v2
+
+    iget-object v10, v5, LX/08xk;->A0J:LX/07eu;
+
+    iget-object v9, v8, LX/08lb;->A08:LX/07ev;
+
+    iget-boolean v7, v8, LX/08lb;->A0U:Z
+
+    if-eqz v1, :cond_37d
+
+    iget-object v2, v1, LX/08rn;->A0K:Ljava/lang/String;
+
+    :goto_1d9
+    new-instance v59, LX/00SW;
+
+    move-object/from16 v60, v10
+
+    move-object/from16 v61, v9
+
+    move-object/from16 v62, v98
+
+    move-object/from16 v63, v18
+
+    move-object/from16 v64, v14
+
+    move-object/from16 v65, v2
+
+    move/from16 v66, v7
+
+    move/from16 v67, v15
+
+    invoke-direct/range {v59 .. v67}, LX/00SW;-><init>(LX/07eu;LX/07ev;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;ZZ)V
+
+    iget-object v2, v5, LX/08xk;->A0Q:Ljava/lang/String;
+
+    move-object/from16 v20, v2
+
+    iget v2, v5, LX/08xk;->A08:I
+
+    move/from16 v19, v2
+
+    sget-object v2, LX/03Vf;->A00:LX/03Vf;
+
+    invoke-virtual {v2}, LX/03Vf;->A02()Ljava/lang/String;
+
+    move-result-object v64
+
+    new-instance v9, Ljava/util/concurrent/atomic/AtomicBoolean;
+
+    invoke-direct {v9, v15}, Ljava/util/concurrent/atomic/AtomicBoolean;-><init>(Z)V
+
+    sget-object v57, LX/08pu;->A09:LX/08pu;
+
+    if-eqz v1, :cond_20b
+
+    iget-boolean v2, v1, LX/08rn;->A0V:Z
+
+    const/16 v74, 0x1
+
+    if-nez v2, :cond_20f
+
+    :cond_20b
+    const/16 v74, 0x0
+
+    if-eqz v1, :cond_215
+
+    :cond_20f
+    iget-boolean v2, v1, LX/08rn;->A0W:Z
+
+    const/16 v75, 0x1
+
+    if-nez v2, :cond_219
+
+    :cond_215
+    const/16 v75, 0x0
+
+    if-eqz v1, :cond_21f
+
+    :cond_219
+    iget-boolean v2, v1, LX/08rn;->A0X:Z
+
+    const/16 v76, 0x1
+
+    if-nez v2, :cond_223
+
+    :cond_21f
+    const/16 v76, 0x0
+
+    if-eqz v1, :cond_229
+
+    :cond_223
+    iget-boolean v2, v1, LX/08rn;->A0S:Z
+
+    const/16 v77, 0x1
+
+    if-nez v2, :cond_22b
+
+    :cond_229
+    const/16 v77, 0x0
+
+    :cond_22b
+    iget-boolean v2, v0, Lcom/facebook/video/heroplayer/setting/HeroPlayerSetting;->A3D:Z
+
+    move/from16 v18, v2
+
+    if-eqz v1, :cond_37a
+
+    iget-object v2, v1, LX/08rn;->A0R:Ljava/util/List;
+
+    invoke-interface {v2}, Ljava/util/List;->size()I
+
+    move-result v7
+
+    if-lez v7, :cond_37a
+
+    invoke-interface {v2, v15}, Ljava/util/List;->get(I)Ljava/lang/Object;
+
+    move-result-object v2
+
+    check-cast v2, LX/08tp;
+
+    iget-object v2, v2, LX/08tp;->A03:Ljava/util/List;
+
+    invoke-interface {v2, v15}, Ljava/util/List;->get(I)Ljava/lang/Object;
+
+    move-result-object v2
+
+    check-cast v2, LX/08ti;
+
+    iget-object v2, v2, LX/08ti;->A0E:Ljava/util/List;
+
+    invoke-interface {v2, v15}, Ljava/util/List;->get(I)Ljava/lang/Object;
+
+    move-result-object v2
+
+    check-cast v2, LX/096x;
+
+    iget-object v2, v2, LX/096x;->A03:LX/03oR;
+
+    iget-object v7, v2, LX/03oR;->A0W:Ljava/lang/String;
+
+    :goto_253
+    iget-object v2, v5, LX/08xk;->A0R:Ljava/lang/String;
+
+    move-object v14, v2
+
+    iget-object v2, v3, LX/08wF;->A02:LX/00ND;
+
+    move-object/from16 v48, v2
+
+    iget-boolean v10, v5, LX/08xk;->A0i:Z
+
+    const-string v63, ""
+
+    new-instance v2, LX/00TI;
+
+    move-object/from16 v53, v2
+
+    move-object/from16 v55, v54
+
+    move-object/from16 v58, v48
+
+    move-object/from16 v60, v54
+
+    move-object/from16 v61, v11
+
+    move-object/from16 v62, v20
+
+    move-object/from16 v65, v7
+
+    move-object/from16 v66, v14
+
+    move-object/from16 v67, v69
+
+    move-object/from16 v69, v9
+
+    move/from16 v70, v19
+
+    move/from16 v71, v15
+
+    move/from16 v72, v15
+
+    move/from16 v73, v15
+
+    move/from16 v78, v15
+
+    move/from16 v79, v18
+
+    move/from16 v80, v10
+
+    invoke-direct/range {v53 .. v80}, LX/00TI;-><init>(LX/09tr;LX/09tr;Lcom/facebook/exoplayer/monitor/VpsEventCallback;LX/08pu;LX/00ND;LX/00SW;LX/06vA;Lcom/google/common/base/Supplier;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/util/concurrent/atomic/AtomicBoolean;Ljava/util/concurrent/atomic/AtomicBoolean;Ljava/util/concurrent/atomic/AtomicBoolean;IZZZZZZZZZZ)V
+
+    iget-boolean v7, v0, Lcom/facebook/video/heroplayer/setting/HeroPlayerSetting;->A3r:Z
+
+    iput-boolean v7, v2, LX/00TI;->A0s:Z
+
+    new-instance v9, LX/0ilW;
+
+    invoke-direct {v9}, Ljava/lang/Object;-><init>()V
+
+    iput-object v2, v9, LX/0ilW;->A01:LX/00TI;
+
+    sput v15, Lredex/$StoreFenceHelper;->DUMMY_VOLATILE:I
+
+    move-object/from16 v2, v99
+
+    iget-object v2, v2, LX/00kX;->A06:Lcom/facebook/video/heroplayer/service/heroexoplayer2/HeroExoPlayer2EventListener;
+
+    iput-object v9, v2, Lcom/facebook/video/heroplayer/service/heroexoplayer2/HeroExoPlayer2EventListener;->mManifestTransferEventTracker:LX/0ilW;
+
+    if-eqz v1, :cond_376
+
+    iget-object v7, v1, LX/08rn;->A0K:Ljava/lang/String;
+
+    move-object/from16 v18, v7
+
+    :goto_29e
+    iget-object v7, v3, LX/08wF;->A03:LX/03p8;
+
+    invoke-virtual {v7}, LX/03p8;->A0F()LX/03pI;
+
+    move-result-object v7
+
+    iput-object v2, v7, LX/03pI;->A01:LX/07sv;
+
+    invoke-virtual {v7, v5}, LX/03pI;->A00(LX/08xk;)V
+
+    iget-boolean v2, v6, LX/05xw;->A8p:Z
+
+    iput-boolean v2, v7, LX/03pI;->A02:Z
+
+    iget-object v11, v3, LX/08wF;->A0H:LX/06vh;
+
+    move-object/from16 v2, v99
+
+    iget-object v10, v2, LX/00kX;->A02:LX/00Mp;
+
+    iget-object v2, v3, LX/08wF;->A0F:LX/06vo;
+
+    move-object/from16 v45, v2
+
+    new-instance v87, LX/00lJ;
+
+    invoke-direct/range {v87 .. v87}, Ljava/lang/Object;-><init>()V
+
+    move-object/from16 v2, v99
+
+    iget-object v2, v2, LX/00kX;->A00:LX/09pj;
+
+    const/16 v95, -0x1
+
+    new-instance v80, LX/00lK;
+
+    move-object/from16 v85, v2
+
+    move-object/from16 v86, v7
+
+    move-object/from16 v88, v21
+
+    move-object/from16 v89, v45
+
+    move-object/from16 v90, v48
+
+    move-object/from16 v91, v10
+
+    move-object/from16 v92, v17
+
+    move-object/from16 v93, v22
+
+    move-object/from16 v94, v11
+
+    move/from16 v96, v23
+
+    invoke-direct/range {v80 .. v96}, LX/00lK;-><init>(LX/073y;LX/073y;LX/073y;LX/073y;LX/09pj;LX/09gB;LX/00lJ;LX/00lC;LX/06vo;LX/00ND;LX/00Mp;LX/00MS;LX/00lH;LX/06vh;IZ)V
+
+    iget-object v2, v8, LX/08lb;->A0D:Ljava/lang/String;
+
+    move-object/from16 v17, v2
+
+    iget-object v14, v8, LX/08lb;->A0E:Ljava/lang/String;
+
+    iget-object v11, v5, LX/08xk;->A0J:LX/07eu;
+
+    iget-object v7, v8, LX/08lb;->A08:LX/07ev;
+
+    iget-boolean v2, v8, LX/08lb;->A0U:Z
+
+    new-instance v10, LX/00SW;
+
+    move-object/from16 v25, v10
+
+    move-object/from16 v26, v11
+
+    move-object/from16 v27, v7
+
+    move-object/from16 v28, v98
+
+    move-object/from16 v29, v17
+
+    move-object/from16 v30, v14
+
+    move-object/from16 v31, v18
+
+    move/from16 v32, v2
+
+    move/from16 v33, v15
+
+    invoke-direct/range {v25 .. v33}, LX/00SW;-><init>(LX/07eu;LX/07ev;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;ZZ)V
+
+    move-object/from16 v2, v97
+
+    iget-object v2, v2, LX/00NZ;->A05:Lcom/facebook/video/heroplayer/setting/HeroPlayerSetting;
+
+    iget-object v7, v2, Lcom/facebook/video/heroplayer/setting/HeroPlayerSetting;->A1a:Ljava/lang/String;
+
+    new-instance v20, LX/0ilS;
+
+    move-object/from16 v2, v20
+
+    invoke-direct {v2, v10, v9, v7}, LX/0ilS;-><init>(LX/00SW;LX/0ilW;Ljava/lang/String;)V
+
+    move-object/from16 v2, v99
+
+    iget-object v2, v2, LX/00kX;->A01:LX/00lO;
+
+    move-object/from16 v19, v2
+
+    new-instance v36, LX/00lN;
+
+    invoke-direct/range {v36 .. v36}, Ljava/lang/Object;-><init>()V
+
+    if-nez v2, :cond_31a
+
+    sget-object v19, LX/00lO;->A00:LX/00lO;
+
+    :cond_31a
+    if-eqz v1, :cond_461
+
+    iget-object v9, v1, LX/08rn;->A0R:Ljava/util/List;
+
+    invoke-interface {v9}, Ljava/util/List;->size()I
+
+    move-result v7
+
+    move/from16 v2, v23
+
+    if-lt v7, v2, :cond_492
+
+    invoke-interface {v9, v15}, Ljava/util/List;->get(I)Ljava/lang/Object;
+
+    move-result-object v2
+
+    check-cast v2, LX/08tp;
+
+    invoke-static {}, LX/000H;->A0U()Ljava/util/ArrayList;
+
+    move-result-object v10
+
+    invoke-static {}, LX/000H;->A0U()Ljava/util/ArrayList;
+
+    move-result-object v9
+
+    iget-object v2, v2, LX/08tp;->A03:Ljava/util/List;
+
+    invoke-interface {v2}, Ljava/util/List;->iterator()Ljava/util/Iterator;
+
+    move-result-object v14
+
+    :cond_33a
+    invoke-interface {v14}, Ljava/util/Iterator;->hasNext()Z
+
+    move-result v2
+
+    if-eqz v2, :cond_467
+
+    invoke-interface {v14}, Ljava/util/Iterator;->next()Ljava/lang/Object;
+
+    move-result-object v7
+
+    check-cast v7, LX/08ti;
+
+    iget v2, v7, LX/08ti;->A06:I
+
+    const/4 v11, 0x1
+
+    if-eq v2, v11, :cond_362
+
+    const/4 v11, 0x2
+
+    if-ne v2, v11, :cond_33a
+
+    iget-object v2, v7, LX/08ti;->A0E:Ljava/util/List;
+
+    invoke-interface {v2}, Ljava/util/List;->iterator()Ljava/util/Iterator;
+
+    move-result-object v7
+
+    :goto_354
+    invoke-interface {v7}, Ljava/util/Iterator;->hasNext()Z
+
+    move-result v2
+
+    if-eqz v2, :cond_33a
+
+    invoke-interface {v7}, Ljava/util/Iterator;->next()Ljava/lang/Object;
+
+    move-result-object v2
+
+    invoke-virtual {v10, v2}, Ljava/util/AbstractCollection;->add(Ljava/lang/Object;)Z
+
+    goto :goto_354
+
+    :cond_362
+    iget-object v2, v7, LX/08ti;->A0E:Ljava/util/List;
+
+    invoke-interface {v2}, Ljava/util/List;->iterator()Ljava/util/Iterator;
+
+    move-result-object v7
+
+    :goto_368
+    invoke-interface {v7}, Ljava/util/Iterator;->hasNext()Z
+
+    move-result v2
+
+    if-eqz v2, :cond_33a
+
+    invoke-interface {v7}, Ljava/util/Iterator;->next()Ljava/lang/Object;
+
+    move-result-object v2
+
+    invoke-virtual {v9, v2}, Ljava/util/AbstractCollection;->add(Ljava/lang/Object;)Z
+
+    goto :goto_368
+
+    :cond_376
+    move-object/from16 v18, v54
+
+    goto/16 :goto_29e
+
+    :cond_37a
+    const/4 v7, 0x0
+
+    goto/16 :goto_253
+
+    :cond_37d
+    const-string v2, ""
+
+    goto/16 :goto_1d9
+
+    :cond_381
+    const/4 v2, 0x0
+
+    goto/16 :goto_17d
+
+    :cond_384
+    move-object v8, v1
+
+    if-eqz v1, :cond_3ad
+
+    goto :goto_3a1
+
+    :cond_388
+    iget-object v8, v4, LX/0A40;->A01:LX/08rn;
+
+    if-eqz v8, :cond_384
+
+    if-eqz v1, :cond_396
+
+    iget-wide v9, v1, LX/08rn;->A04:J
+
+    iget-wide v6, v8, LX/08rn;->A04:J
+
+    cmp-long v4, v9, v6
+
+    if-gez v4, :cond_384
+
+    :cond_396
+    filled-new-array {v11}, [Ljava/lang/Object;
+
+    move-result-object v7
+
+    const-string v6, "HeroExo2LiveInitHelper"
+
+    const-string v4, "Creating new fetcher with existing manifest from prev fetcher: %s"
+
+    invoke-static {v6, v4, v7}, LX/06ul;->A01(Ljava/lang/String;Ljava/lang/String;[Ljava/lang/Object;)V
+
+    :goto_3a1
+    iget-object v6, v3, LX/08wF;->A01:LX/07hk;
+
+    iget-object v4, v13, LX/08lb;->A07:Landroid/net/Uri;
+
+    if-eqz v4, :cond_3aa
+
+    invoke-virtual {v4}, Landroid/net/Uri;->getHost()Ljava/lang/String;
+
+    :cond_3aa
+    invoke-static {v6}, LX/04l9;->A0Z(Ljava/lang/Object;)V
+
+    :cond_3ad
+    const/4 v9, 0x0
+
+    iget-object v4, v3, LX/08wF;->A0A:Landroid/content/Context;
+
+    move-object/from16 v35, v4
+
+    iget-boolean v7, v0, Lcom/facebook/video/heroplayer/setting/HeroPlayerSetting;->A3b:Z
+
+    new-instance v6, LX/0kVO;
+
+    invoke-direct {v6, v5, v3}, LX/0kVO;-><init>(LX/08xk;LX/08wF;)V
+
+    new-instance v4, LX/0kRz;
+
+    invoke-direct {v4, v5, v3}, LX/0kRz;-><init>(LX/08xk;LX/08wF;)V
+
+    const/16 v23, 0x0
+
+    move/from16 v27, v9
+
+    move/from16 v28, v9
+
+    move/from16 v29, v9
+
+    move-object/from16 v19, v35
+
+    move-object/from16 v20, v4
+
+    move-object/from16 v21, v6
+
+    move-object/from16 v22, v8
+
+    move-object/from16 v24, v15
+
+    move/from16 v25, v9
+
+    move/from16 v26, v7
+
+    invoke-static/range {v19 .. v29}, LX/08rl;->A01(Landroid/content/Context;LX/0nLb;LX/0nLi;LX/08rn;Ljava/util/ArrayList;LX/08ui;ZZZZZ)LX/08ur;
+
+    move-result-object v10
+
+    iget-object v4, v13, LX/08lb;->A07:Landroid/net/Uri;
+
+    move-object/from16 v21, v4
+
+    iget-object v4, v3, LX/08wF;->A00:Landroid/os/Handler;
+
+    move-object/from16 v22, v4
+
+    iget-object v4, v13, LX/08lb;->A0D:Ljava/lang/String;
+
+    move-object/from16 v17, v4
+
+    iget-object v15, v13, LX/08lb;->A0E:Ljava/lang/String;
+
+    iget-object v7, v5, LX/08xk;->A0J:LX/07eu;
+
+    iget-object v6, v13, LX/08lb;->A08:LX/07ev;
+
+    iget-boolean v13, v13, LX/08lb;->A0U:Z
+
+    if-eqz v8, :cond_45a
+
+    iget-object v4, v8, LX/08rn;->A0K:Ljava/lang/String;
+
+    :goto_3f0
+    new-instance v26, LX/00SW;
+
+    move-object/from16 v28, v6
+
+    move-object/from16 v29, v11
+
+    move-object/from16 v30, v17
+
+    move-object/from16 v31, v15
+
+    move-object/from16 v32, v4
+
+    move/from16 v33, v13
+
+    move/from16 v34, v9
+
+    move-object/from16 v27, v7
+
+    invoke-direct/range {v26 .. v34}, LX/00SW;-><init>(LX/07eu;LX/07ev;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;ZZ)V
+
+    iget-object v4, v2, LX/07ej;->A02:LX/07eo;
+
+    move-object/from16 v27, v4
+
+    iget-object v4, v3, LX/08wF;->A0I:Lcom/facebook/video/heroplayer/service/ServiceEventCallbackImpl;
+
+    move-object/from16 v25, v4
+
+    iget-object v4, v2, LX/07ej;->A01:LX/07em;
+
+    move-object/from16 v17, v4
+
+    iget-object v15, v3, LX/08wF;->A0O:Ljava/util/concurrent/atomic/AtomicBoolean;
+
+    iget-object v13, v3, LX/08wF;->A0P:Ljava/util/concurrent/atomic/AtomicBoolean;
+
+    invoke-static {v5, v10, v3}, LX/08wF;->A00(LX/08xk;LX/08ur;LX/08wF;)J
+
+    move-result-wide v6
+
+    long-to-int v10, v6
+
+    iget-object v6, v3, LX/08wF;->A0C:LX/0A3G;
+
+    iget-boolean v4, v5, LX/08xk;->A0g:Z
+
+    if-eqz v4, :cond_455
+
+    const-string v32, "image/png"
+
+    const/16 v37, 0x3e8
+
+    :goto_424
+    const-string v31, ""
+
+    new-instance v4, LX/0A40;
+
+    move-object/from16 v19, v4
+
+    move-object/from16 v20, v35
+
+    move-object/from16 v23, v17
+
+    move-object/from16 v24, v6
+
+    move-object/from16 v28, v0
+
+    move-object/from16 v29, v8
+
+    move-object/from16 v30, v14
+
+    move-object/from16 v33, v12
+
+    move-object/from16 v34, v15
+
+    move-object/from16 v35, v13
+
+    move/from16 v36, v10
+
+    move/from16 v38, v9
+
+    move/from16 v39, v9
+
+    invoke-direct/range {v19 .. v39}, LX/0A40;-><init>(Landroid/content/Context;Landroid/net/Uri;Landroid/os/Handler;LX/07em;LX/0A3G;Lcom/facebook/exoplayer/monitor/VpsEventCallback;LX/00SW;LX/07eo;Lcom/facebook/video/heroplayer/setting/HeroPlayerSetting;LX/08rn;Lcom/google/common/base/Supplier;Ljava/lang/String;Ljava/lang/String;Ljava/util/Map;Ljava/util/concurrent/atomic/AtomicBoolean;Ljava/util/concurrent/atomic/AtomicBoolean;IIZZ)V
+
+    invoke-virtual/range {v40 .. v40}, Ljava/util/concurrent/atomic/AtomicReference;->get()Ljava/lang/Object;
+
+    move-result-object v6
+
+    invoke-static {v6}, LX/04oM;->A08(Ljava/lang/Object;)V
+
+    check-cast v6, Landroid/util/LruCache;
+
+    invoke-virtual {v6, v11, v4}, Landroid/util/LruCache;->put(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;
+
+    iput-boolean v9, v4, LX/0Irx;->A0L:Z
+
+    goto/16 :goto_87
+
+    :cond_455
+    const/16 v32, 0x0
+
+    const/16 v37, -0x1
+
+    goto :goto_424
+
+    :cond_45a
+    const-string v4, ""
+
+    goto :goto_3f0
+
+    :cond_45d
+    const-wide/16 v1, 0x0
+
+    goto/16 :goto_19
+
+    :cond_461
+    const/4 v14, 0x0
+
+    const/16 v30, 0x0
+
+    const/16 v31, 0x0
+
+    goto :goto_4b7
+
+    :cond_467
+    invoke-static {}, LX/000H;->A0U()Ljava/util/ArrayList;
+
+    move-result-object v11
+
+    invoke-static {}, LX/000H;->A0U()Ljava/util/ArrayList;
+
+    move-result-object v7
+
+    invoke-virtual {v11}, Ljava/util/AbstractCollection;->isEmpty()Z
+
+    move-result v2
+
+    if-nez v2, :cond_476
+
+    move-object v10, v11
+
+    :cond_476
+    invoke-virtual {v7}, Ljava/util/AbstractCollection;->isEmpty()Z
+
+    move-result v2
+
+    if-nez v2, :cond_47d
+
+    move-object v9, v7
+
+    :cond_47d
+    invoke-virtual {v10}, Ljava/util/AbstractCollection;->isEmpty()Z
+
+    invoke-virtual {v10}, Ljava/util/AbstractCollection;->isEmpty()Z
+
+    move-result v2
+
+    if-eqz v2, :cond_487
+
+    const/4 v10, 0x0
+
+    :cond_487
+    invoke-virtual {v9}, Ljava/util/AbstractCollection;->isEmpty()Z
+
+    move-result v2
+
+    if-eqz v2, :cond_48e
+
+    const/4 v9, 0x0
+
+    :cond_48e
+    if-nez v10, :cond_61d
+
+    if-nez v9, :cond_61d
+
+    :cond_492
+    move-object/from16 v14, v54
+
+    :cond_494
+    iget-object v7, v14, LX/08ur;->A01:Ljava/util/List;
+
+    invoke-interface {v7}, Ljava/util/List;->size()I
+
+    move-result v30
+
+    :goto_49a
+    iget-object v2, v14, LX/08ur;->A00:Ljava/util/List;
+
+    if-nez v2, :cond_617
+
+    const/16 v31, 0x0
+
+    :goto_4a0
+    if-lez v30, :cond_5f6
+
+    iget-boolean v2, v1, LX/08rn;->A0X:Z
+
+    if-eqz v2, :cond_4b7
+
+    invoke-interface {v7, v15}, Ljava/util/List;->get(I)Ljava/lang/Object;
+
+    move-result-object v2
+
+    check-cast v2, LX/096x;
+
+    instance-of v7, v2, LX/00mE;
+
+    if-eqz v7, :cond_4b7
+
+    check-cast v2, LX/00mE;
+
+    const-wide/16 v9, -0x1
+
+    invoke-virtual {v2, v9, v10}, LX/00mE;->DB6(J)J
+
+    :cond_4b7
+    :goto_4b7
+    invoke-static {v5, v14, v3}, LX/08wF;->A00(LX/08xk;LX/08ur;LX/08wF;)J
+
+    move-result-wide v46
+
+    iget v2, v0, Lcom/facebook/video/heroplayer/setting/HeroPlayerSetting;->A0X:I
+
+    move/from16 v25, v2
+
+    iget-boolean v2, v6, LX/05xw;->A6b:Z
+
+    move/from16 v18, v2
+
+    iget-wide v9, v6, LX/05xw;->A0q:J
+
+    long-to-int v2, v9
+
+    move/from16 v17, v2
+
+    iget-wide v9, v6, LX/05xw;->A0n:J
+
+    long-to-int v11, v9
+
+    iget-wide v6, v6, LX/05xw;->A1e:J
+
+    long-to-int v2, v6
+
+    new-instance v37, LX/00lQ;
+
+    move/from16 v42, v2
+
+    move/from16 v38, v18
+
+    move/from16 v39, v25
+
+    move/from16 v40, v17
+
+    move/from16 v41, v11
+
+    invoke-direct/range {v37 .. v42}, LX/00lQ;-><init>(ZIIII)V
+
+    iget-object v6, v3, LX/08wF;->A0A:Landroid/content/Context;
+
+    iget-boolean v2, v5, LX/08xk;->A0g:Z
+
+    move/from16 v18, v2
+
+    if-eqz v2, :cond_5f0
+
+    const-string v42, "image/png"
+
+    const/16 v43, 0x3e8
+
+    :goto_4e9
+    new-instance v11, LX/08oh;
+
+    move-object/from16 v38, v11
+
+    move-object/from16 v39, v6
+
+    move-object/from16 v40, v0
+
+    move-object/from16 v41, v98
+
+    move/from16 v44, v23
+
+    invoke-direct/range {v38 .. v44}, LX/08oh;-><init>(Landroid/content/Context;Lcom/facebook/video/heroplayer/setting/HeroPlayerSetting;Ljava/lang/String;Ljava/lang/String;IZ)V
+
+    iget-wide v6, v0, Lcom/facebook/video/heroplayer/setting/HeroPlayerSetting;->A13:J
+
+    const/16 v17, 0x0
+
+    cmp-long v2, v6, v12
+
+    if-gtz v2, :cond_56b
+
+    iget-wide v9, v0, Lcom/facebook/video/heroplayer/setting/HeroPlayerSetting;->A0z:J
+
+    cmp-long v2, v9, v12
+
+    if-gtz v2, :cond_56b
+
+    iget-wide v9, v0, Lcom/facebook/video/heroplayer/setting/HeroPlayerSetting;->A0y:J
+
+    cmp-long v2, v9, v12
+
+    if-gtz v2, :cond_56b
+
+    iget v2, v0, Lcom/facebook/video/heroplayer/setting/HeroPlayerSetting;->A05:F
+
+    cmpl-float v2, v2, v17
+
+    if-gtz v2, :cond_56b
+
+    iget v2, v0, Lcom/facebook/video/heroplayer/setting/HeroPlayerSetting;->A04:F
+
+    cmpl-float v2, v2, v17
+
+    if-gtz v2, :cond_56b
+
+    iget-object v0, v8, LX/08lb;->A07:Landroid/net/Uri;
+
+    sget-object v2, LX/00lR;->$redex_init_class:LX/00lR;
+
+    new-instance v2, LX/00dQ;
+
+    invoke-direct {v2}, LX/00dQ;-><init>()V
+
+    iput-object v0, v2, LX/00dQ;->A01:Landroid/net/Uri;
+
+    const-string v0, "DashMediaSource"
+
+    iput-object v0, v2, LX/00dQ;->A0A:Ljava/lang/String;
+
+    const-string v0, "application/dash+xml"
+
+    iput-object v0, v2, LX/00dQ;->A0B:Ljava/lang/String;
+
+    invoke-virtual {v2}, LX/00dQ;->A00()LX/00dO;
+
+    move-result-object v33
+
+    new-instance v23, LX/00lR;
+
+    move-object/from16 v32, v23
+
+    move-object/from16 v34, v20
+
+    move-object/from16 v35, v19
+
+    move-object/from16 v39, v21
+
+    move-object/from16 v40, v45
+
+    move-object/from16 v41, v48
+
+    move-object/from16 v42, v24
+
+    move-object/from16 v43, v22
+
+    move-object/from16 v44, v80
+
+    move-object/from16 v45, v54
+
+    invoke-direct/range {v32 .. v47}, LX/00lR;-><init>(LX/00dO;LX/073y;LX/00lO;LX/09fZ;LX/09of;LX/0nIC;LX/00lC;LX/06vo;LX/00ND;LX/00lI;LX/00lH;LX/09dY;LX/08rn;J)V
+
+    :goto_548
+    invoke-static/range {v18 .. v18}, LX/000H;->A0h(I)Z
+
+    move-result v2
+
+    move-object/from16 v0, v99
+
+    iget-object v0, v0, LX/00kX;->A05:LX/00kU;
+
+    if-nez v2, :cond_555
+
+    const/4 v12, 0x1
+
+    if-eqz v1, :cond_556
+
+    :cond_555
+    const/4 v12, 0x0
+
+    :cond_556
+    new-instance v6, LX/08wH;
+
+    move-object v7, v5
+
+    move-object v8, v0
+
+    move-object v9, v14
+
+    move-object v10, v3
+
+    move-object/from16 v11, v23
+
+    invoke-direct/range {v6 .. v12}, LX/08wH;-><init>(LX/08xk;LX/00kU;LX/08ur;LX/08wF;LX/00lR;Z)V
+
+    iget-object v0, v4, LX/0Irx;->A0H:Ljava/util/concurrent/atomic/AtomicInteger;
+
+    invoke-virtual {v0, v15}, Ljava/util/concurrent/atomic/AtomicInteger;->set(I)V
+
+    iget-object v3, v4, LX/0Irx;->A0E:Ljava/lang/Object;
+
+    monitor-enter v3
+
+    goto/16 :goto_62a
+
+    :cond_56b
+    new-instance v2, LX/00dT;
+
+    invoke-direct {v2}, LX/00dT;-><init>()V
+
+    cmp-long v9, v6, v12
+
+    if-lez v9, :cond_576
+
+    iput-wide v6, v2, LX/00dT;->A04:J
+
+    :cond_576
+    iget-wide v6, v0, Lcom/facebook/video/heroplayer/setting/HeroPlayerSetting;->A0z:J
+
+    cmp-long v9, v6, v12
+
+    if-lez v9, :cond_57e
+
+    iput-wide v6, v2, LX/00dT;->A03:J
+
+    :cond_57e
+    iget-wide v6, v0, Lcom/facebook/video/heroplayer/setting/HeroPlayerSetting;->A0y:J
+
+    cmp-long v9, v6, v12
+
+    if-lez v9, :cond_586
+
+    iput-wide v6, v2, LX/00dT;->A02:J
+
+    :cond_586
+    iget v6, v0, Lcom/facebook/video/heroplayer/setting/HeroPlayerSetting;->A05:F
+
+    cmpl-float v7, v6, v17
+
+    if-lez v7, :cond_58e
+
+    iput v6, v2, LX/00dT;->A01:F
+
+    :cond_58e
+    iget v0, v0, Lcom/facebook/video/heroplayer/setting/HeroPlayerSetting;->A04:F
+
+    cmpl-float v6, v0, v17
+
+    if-lez v6, :cond_596
+
+    iput v0, v2, LX/00dT;->A00:F
+
+    :cond_596
+    new-instance v0, LX/00dQ;
+
+    invoke-direct {v0}, LX/00dQ;-><init>()V
+
+    iget-object v6, v8, LX/08lb;->A07:Landroid/net/Uri;
+
+    iput-object v6, v0, LX/00dQ;->A01:Landroid/net/Uri;
+
+    const-string v6, "DashMediaSource"
+
+    iput-object v6, v0, LX/00dQ;->A0A:Ljava/lang/String;
+
+    const-string v6, "application/dash+xml"
+
+    iput-object v6, v0, LX/00dQ;->A0B:Ljava/lang/String;
+
+    new-instance v6, LX/00dZ;
+
+    invoke-direct {v6, v2}, LX/00dZ;-><init>(LX/00dT;)V
+
+    new-instance v2, LX/00dT;
+
+    invoke-direct {v2, v6}, LX/00dT;-><init>(LX/00dZ;)V
+
+    iput-object v2, v0, LX/00dQ;->A04:LX/00dT;
+
+    invoke-virtual {v0}, LX/00dQ;->A00()LX/00dO;
+
+    move-result-object v6
+
+    iget-object v0, v6, LX/00dO;->A03:LX/00dX;
+
+    invoke-static {v0}, LX/07pt;->A01(Ljava/lang/Object;)V
+
+    iget-object v2, v0, LX/00dX;->A07:Ljava/util/List;
+
+    invoke-interface {v2}, Ljava/util/List;->isEmpty()Z
+
+    move-result v0
+
+    if-nez v0, :cond_5ee
+
+    new-instance v0, LX/0izr;
+
+    invoke-direct {v0}, Ljava/lang/Object;-><init>()V
+
+    iput-object v11, v0, LX/0izr;->A00:LX/0nIC;
+
+    iput-object v2, v0, LX/0izr;->A01:Ljava/util/List;
+
+    sput v15, Lredex/$StoreFenceHelper;->DUMMY_VOLATILE:I
+
+    :goto_5cf
+    new-instance v23, LX/00lR;
+
+    move-object/from16 v32, v23
+
+    move-object/from16 v33, v6
+
+    move-object/from16 v34, v20
+
+    move-object/from16 v35, v19
+
+    move-object/from16 v38, v0
+
+    move-object/from16 v39, v21
+
+    move-object/from16 v40, v45
+
+    move-object/from16 v41, v48
+
+    move-object/from16 v42, v24
+
+    move-object/from16 v43, v22
+
+    move-object/from16 v44, v80
+
+    move-object/from16 v45, v54
+
+    invoke-direct/range {v32 .. v47}, LX/00lR;-><init>(LX/00dO;LX/073y;LX/00lO;LX/09fZ;LX/09of;LX/0nIC;LX/00lC;LX/06vo;LX/00ND;LX/00lI;LX/00lH;LX/09dY;LX/08rn;J)V
+
+    goto/16 :goto_548
+
+    :cond_5ee
+    move-object v0, v11
+
+    goto :goto_5cf
+
+    :cond_5f0
+    const/16 v42, 0x0
+
+    const/16 v43, -0x1
+
+    goto/16 :goto_4e9
+
+    :cond_5f6
+    if-nez v30, :cond_4b7
+
+    filled-new-array/range {v98 .. v98}, [Ljava/lang/Object;
+
+    move-result-object v9
+
+    const-string v7, "HeroExo2LiveInitHelper"
+
+    const-string v2, "No valid video representation found for live video %s"
+
+    invoke-static {v7, v2, v9}, LX/06ul;->A02(Ljava/lang/String;Ljava/lang/String;[Ljava/lang/Object;)V
+
+    const-string v11, "MANIFEST"
+
+    const-string v10, "NO_VALID_VIDEO_REPRESENTATION"
+
+    const-string v9, "No valid video representation found for live video"
+
+    new-instance v7, LX/00kW;
+
+    move-object/from16 v2, v98
+
+    invoke-direct {v7, v2, v11, v10, v9}, LX/00kW;-><init>(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)V
+
+    move-object/from16 v2, v56
+
+    invoke-virtual {v2, v7}, Lcom/facebook/video/heroplayer/service/ServiceEventCallbackImpl;->callback(LX/03p5;)V
+
+    goto/16 :goto_4b7
+
+    :cond_617
+    invoke-interface {v2}, Ljava/util/List;->size()I
+
+    move-result v31
+
+    goto/16 :goto_4a0
+
+    :cond_61d
+    new-instance v14, LX/08ur;
+
+    invoke-direct {v14, v10, v9}, LX/08ur;-><init>(Ljava/util/List;Ljava/util/List;)V
+
+    iget-object v7, v14, LX/08ur;->A01:Ljava/util/List;
+
+    if-nez v7, :cond_494
+
+    const/16 v30, 0x0
+
+    goto/16 :goto_49a
+
+    :goto_62a
+    :try_start_62a
+    iget-object v2, v4, LX/0Irx;->A0K:Ljava/lang/Integer;
+
+    sget-object v0, LX/000A;->A00:Ljava/lang/Integer;
+
+    if-ne v2, v0, :cond_634
+
+    iput-object v6, v4, LX/0Irx;->A0C:LX/0Jtc;
+
+    monitor-exit v3
+
+    goto :goto_640
+
+    :cond_634
+    monitor-exit v3
+    :try_end_635
+    .catchall {:try_start_62a .. :try_end_635} :catchall_6a0
+
+    iget-object v2, v4, LX/0Irx;->A0K:Ljava/lang/Integer;
+
+    sget-object v0, LX/000A;->A01:Ljava/lang/Integer;
+
+    if-ne v2, v0, :cond_69a
+
+    iget-object v0, v4, LX/0A40;->A01:LX/08rn;
+
+    invoke-virtual {v6, v0}, LX/08wH;->FqD(Ljava/lang/Object;)V
+
+    :goto_640
+    sget-object v26, LX/000A;->A0C:Ljava/lang/Integer;
+
+    if-nez v1, :cond_689
+
+    const-wide/16 v9, 0x0
+
+    const-wide/16 v7, 0x0
+
+    const-wide/16 v5, 0x0
+
+    const-wide/16 v2, 0x0
+
+    const-wide/16 v40, 0x0
+
+    const/4 v12, 0x0
+
+    const/4 v11, 0x0
+
+    :goto_650
+    invoke-static {v14}, Lcom/facebook/video/heroplayer/service/heroexoplayer2/HeroExoPlayer2InitHelper;->A04(LX/08ur;)Ljava/lang/String;
+
+    move-result-object v27
+
+    if-eqz v1, :cond_65a
+
+    iget-object v15, v1, LX/08rn;->A0L:Ljava/lang/String;
+
+    if-nez v15, :cond_680
+
+    :cond_65a
+    move-object/from16 v15, v63
+
+    if-nez v1, :cond_680
+
+    const/4 v13, 0x0
+
+    const/4 v14, 0x1
+
+    :goto_660
+    move-object/from16 v0, v63
+
+    :cond_662
+    new-instance v22, LX/00lx;
+
+    move-object/from16 v24, v4
+
+    move-object/from16 v25, v16
+
+    move-object/from16 v28, v15
+
+    move-object/from16 v29, v0
+
+    move-wide/from16 v32, v9
+
+    move-wide/from16 v34, v7
+
+    move-wide/from16 v36, v5
+
+    move-wide/from16 v38, v2
+
+    move/from16 v42, v12
+
+    move/from16 v43, v11
+
+    move/from16 v44, v13
+
+    move/from16 v45, v14
+
+    invoke-direct/range {v22 .. v45}, LX/00lx;-><init>(LX/0Cmz;LX/0A40;LX/00kY;Ljava/lang/Integer;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;IIJJJJJZZZZ)V
+
+    return-object v22
+
+    :cond_680
+    iget-boolean v13, v1, LX/08rn;->A0X:Z
+
+    iget-boolean v14, v1, LX/08rn;->A0S:Z
+
+    iget-object v0, v1, LX/08rn;->A0P:Ljava/lang/String;
+
+    if-nez v0, :cond_662
+
+    goto :goto_660
+
+    :cond_689
+    iget-wide v9, v1, LX/08rn;->A0C:J
+
+    iget-wide v7, v1, LX/08rn;->A08:J
+
+    iget-wide v5, v1, LX/08rn;->A06:J
+
+    iget-wide v2, v1, LX/08rn;->A09:J
+
+    invoke-static {}, Landroid/os/SystemClock;->elapsedRealtime()J
+
+    move-result-wide v40
+
+    iget-boolean v12, v1, LX/08rn;->A0T:Z
+
+    iget-boolean v11, v1, LX/08rn;->A0W:Z
+
+    goto :goto_650
+
+    :cond_69a
+    iput-object v6, v4, LX/0Irx;->A0C:LX/0Jtc;
+
+    invoke-virtual {v4, v15}, LX/0Irx;->A02(Z)V
+
+    goto :goto_640
+
+    :catchall_6a0
+    :try_start_6a0
+    move-exception v0
+
+    monitor-exit v3
+    :try_end_6a2
+    .catchall {:try_start_6a0 .. :try_end_6a2} :catchall_6a0
+
+    throw v0
+.end method
+
+
+===== com/facebook/video/heroplayer/service/heroexoplayer2/HeroExoPlayer2InitHelper.smali :: .method public static A04(LX/08ur;)Ljava/lang/String; =====
+.method public static A04(LX/08ur;)Ljava/lang/String;
+    .registers 6
+
+    if-eqz p0, :cond_48
+
+    iget-object p0, p0, LX/08ur;->A01:Ljava/util/List;
+
+    if-eqz p0, :cond_48
+
+    invoke-interface {p0}, Ljava/util/List;->isEmpty()Z
+
+    move-result v0
+
+    if-nez v0, :cond_48
+
+    invoke-interface {p0}, Ljava/util/List;->size()I
+
+    move-result v4
+
+    new-array v3, v4, [I
+
+    const/4 v2, 0x0
+
+    const/4 v1, 0x0
+
+    :goto_14
+    if-ge v1, v4, :cond_25
+
+    invoke-interface {p0, v1}, Ljava/util/List;->get(I)Ljava/lang/Object;
+
+    move-result-object v0
+
+    check-cast v0, LX/096x;
+
+    iget-object v0, v0, LX/096x;->A03:LX/03oR;
+
+    iget v0, v0, LX/03oR;->A05:I
+
+    aput v0, v3, v1
+
+    add-int/lit8 v1, v1, 0x1
+
+    goto :goto_14
+
+    :cond_25
+    invoke-static {v3}, Ljava/util/Arrays;->sort([I)V
+
+    new-instance v1, Ljava/lang/StringBuilder;
+
+    invoke-direct {v1}, Ljava/lang/StringBuilder;-><init>()V
+
+    :goto_2d
+    add-int/lit8 v0, v4, -0x1
+
+    if-ge v2, v0, :cond_3e
+
+    aget v0, v3, v2
+
+    invoke-virtual {v1, v0}, Ljava/lang/StringBuilder;->append(I)Ljava/lang/StringBuilder;
+
+    const-string v0, ":"
+
+    invoke-virtual {v1, v0}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+
+    add-int/lit8 v2, v2, 0x1
+
+    goto :goto_2d
+
+    :cond_3e
+    aget v0, v3, v0
+
+    invoke-virtual {v1, v0}, Ljava/lang/StringBuilder;->append(I)Ljava/lang/StringBuilder;
+
+    invoke-virtual {v1}, Ljava/lang/Object;->toString()Ljava/lang/String;
+
+    move-result-object v0
+
+    return-object v0
+
+    :cond_48
+    const-string v0, ""
+
+    return-object v0
+.end method
+
