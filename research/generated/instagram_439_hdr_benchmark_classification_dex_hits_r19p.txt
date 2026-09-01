@@ -1,0 +1,19 @@
+classes10.dex: performance_class, device_performance, classification
+classes12.dex: com.facebook.devicesegmentation, classification, av1
+classes13.dex: ig_device_perf_benchmark, preference_logged_performance_benchmarks, PerfMetricRunnerJni, classification, benchmark_median, benchmark_arithmeticmean, av1, 10bit
+classes14.dex: device_segment, av1
+classes15.dex: classification, av1
+classes16.dex: classification, av1
+classes17.dex: classification, av1
+classes18.dex: classification, av1
+classes19.dex: classification, av1, 10bit
+classes2.dex: classification, av1
+classes20.dex: classification
+classes21.dex: classification
+classes3.dex: classification
+classes4.dex: classification, key_display_hdr_supported, key_video_decoder_hdr_supported, av1
+classes5.dex: av1
+classes6.dex: av1
+classes7.dex: performance_class
+classes8.dex: performance_class, av1, 10bit
+classes9.dex: classification, av1
