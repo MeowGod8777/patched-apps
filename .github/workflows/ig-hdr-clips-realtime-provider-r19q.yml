@@ -1,0 +1,75 @@
+name: IG 439 HDR Clips Realtime Provider R19q
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - .github/workflows/ig-hdr-clips-realtime-provider-r19q.yml
+
+permissions:
+  contents: write
+
+jobs:
+  trace:
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    env:
+      APK_NAME: instagram-piko-v439.0.0.37.89-arm64-v8a.apk
+      APK_SHA256: 4015b171ac59f3e7172134d194ec2dcf701f64c3339f127c19d7a04c13d529c8
+    steps:
+      - uses: actions/checkout@v6
+        with: {fetch-depth: 0}
+      - uses: actions/setup-java@v5
+        with: {distribution: zulu, java-version: '21'}
+      - name: Extract exact Clips realtime provider
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          set -euo pipefail
+          mkdir -p work/apk work/smali research/generated
+          gh release download 8 --pattern "$APK_NAME" --dir work
+          echo "$APK_SHA256  work/$APK_NAME" | sha256sum -c -
+          gh release download 3.0.10 --repo baksmali/smali --pattern 'baksmali-3.0.10-fat.jar' --dir work
+          unzip -q "work/$APK_NAME" classes17.dex -d work/apk
+          java -jar work/baksmali-3.0.10-fat.jar d work/apk/classes17.dex -o work/smali >/dev/null
+          python3 - <<'PY'
+          from pathlib import Path
+          import re
+          p=Path('work/smali/X/04GW.smali')
+          ls=p.read_text(errors='replace').splitlines()
+          O=['Instagram 439 Clips realtime provider R19q','======================================','',f'===== FULL 04GW FILE={p} =====']+ls+['']
+          # Summarize BBr direct callees, strings and fields.
+          i=0; callees=[]
+          while i<len(ls):
+              if ls[i].startswith('.method') and ' BBr(' in ls[i]:
+                  s=i; i+=1
+                  while i<len(ls) and not ls[i].startswith('.end method'): i+=1
+                  b=ls[s:i+1]; t='\n'.join(b)
+                  lits=re.findall(r'const-string(?:/jumbo)?\s+[^,]+,\s+"(.*)"',t)
+                  calls=re.findall(r'invoke-\S+ \{[^}]*\}, (L[^;]+;)->([^\(]+)\(([^)]*)\)(\S+)',t)
+                  O += ['===== BBr SUMMARY =====',f'LITERALS={lits}',f'CALLS={calls}','']
+                  callees=calls
+              i+=1
+          # Dump same-dex classes directly called by BBr when their class files exist and are not framework classes.
+          seen=set()
+          for cls,method,args,ret in callees:
+              if not cls.startswith('LX/'): continue
+              rel=cls[1:-1]+'.smali'
+              q=Path('work/smali')/rel
+              if q.exists() and str(q) not in seen:
+                  seen.add(str(q)); O += [f'===== DIRECT CALLEE CLASS {cls} FILE={q} =====']+q.read_text(errors='replace').splitlines()+['']
+          Path('research/generated/instagram_439_hdr_clips_realtime_provider_r19q.txt').write_text('\n'.join(O),encoding='utf-8')
+          print('\n'.join(O[:15000]))
+          PY
+      - name: Commit R19q report
+        run: |
+          set -euo pipefail
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add research/generated/instagram_439_hdr_clips_realtime_provider_r19q.txt
+          if ! git diff --cached --quiet; then
+            git commit -m 'Add exact Clips realtime signal provider trace R19q'
+            git pull --rebase origin main
+            git push origin HEAD:main
+          fi
