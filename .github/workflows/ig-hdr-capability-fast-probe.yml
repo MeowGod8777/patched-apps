@@ -1,0 +1,82 @@
+name: IG 439 HDR Capability Fast Probe
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - .github/workflows/ig-hdr-capability-fast-probe.yml
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  probe:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    env:
+      APK_NAME: instagram-piko-v439.0.0.37.89-arm64-v8a.apk
+      APK_SHA256: 4015b171ac59f3e7172134d194ec2dcf701f64c3339f127c19d7a04c13d529c8
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+
+      - name: Download exact Release 8 APK
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          mkdir -p work/dex work/dis research/generated
+          gh release download 8 --pattern "$APK_NAME" --dir work
+          echo "$APK_SHA256  work/$APK_NAME" | sha256sum -c -
+          unzip -j "work/$APK_NAME" 'classes*.dex' -d work/dex
+
+      - name: Find dexdump
+        run: |
+          DEXDUMP="$(find "$ANDROID_HOME/build-tools" -type f -name dexdump | sort -V | tail -1)"
+          test -n "$DEXDUMP"
+          echo "DEXDUMP=$DEXDUMP" >> "$GITHUB_ENV"
+
+      - name: Disassemble only capability DEX files
+        shell: bash
+        run: |
+          REPORT=research/generated/instagram_439_hdr_capability_fast_probe.txt
+          : > "$REPORT"
+          {
+            echo "Instagram 439 HDR capability fast probe"
+            echo "========================================"
+            echo "APK SHA256: $APK_SHA256"
+            echo "Runtime anchor: V2329A selected video/av01 profile=1 (AV1 Main8), 720x1280@60; output BT.709 SDR."
+            echo
+          } >> "$REPORT"
+
+          terms='MediaCodecInfo|MediaCodecList|CodecCapabilities|CodecProfileLevel|getCapabilitiesForType|isFormatSupported|HdrCapabilities|getHdrCapabilities|HDR_TYPE_HDR10|HDR_TYPE_HLG|video/av01|COLOR_FormatYUVP010'
+
+          for d in work/dex/classes*.dex; do
+            if strings "$d" | grep -Eq "$terms"; then
+              b="$(basename "$d" .dex)"
+              echo "Disassembling $b" >&2
+              "$DEXDUMP" -d -f -h "$d" > "work/dis/$b.txt"
+            fi
+          done
+
+          {
+            echo "===== API REFERENCES WITH METHOD CONTEXT ====="
+            grep -Hn -B 45 -A 80 -E 'MediaCodecInfo|MediaCodecList|CodecCapabilities|CodecProfileLevel|getCapabilitiesForType|isFormatSupported|HdrCapabilities|getHdrCapabilities|HDR_TYPE_HDR10|HDR_TYPE_HLG|video/av01|COLOR_FormatYUVP010' work/dis/*.txt || true
+            echo
+            echo "===== RELEVANT STRING INDEX ====="
+            grep -Hn -Ei 'hdr|10.?bit|av1|codec.?cap|device.?cap|playback.?cap|performance.?score|rendition|representation|adaptation|manifest|encoding.?tag|superwhite' work/dis/*.txt | head -n 12000 || true
+          } >> "$REPORT"
+
+          sed -n '1,900p' "$REPORT"
+
+      - name: Commit report
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add research/generated/instagram_439_hdr_capability_fast_probe.txt
+          if ! git diff --cached --quiet; then
+            git commit -m "Add Instagram 439 HDR capability fast report"
+          fi
+          git pull --rebase origin main
+          git push origin HEAD:main
