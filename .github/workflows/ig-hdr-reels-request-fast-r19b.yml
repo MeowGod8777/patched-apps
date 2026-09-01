@@ -1,0 +1,131 @@
+name: IG 439 HDR Reels Request Fast R19b
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - .github/workflows/ig-hdr-reels-request-fast-r19b.yml
+
+permissions:
+  contents: write
+
+jobs:
+  trace:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    env:
+      APK_NAME: instagram-piko-v439.0.0.37.89-arm64-v8a.apk
+      APK_SHA256: 4015b171ac59f3e7172134d194ec2dcf701f64c3339f127c19d7a04c13d529c8
+    steps:
+      - uses: actions/checkout@v6
+        with: {fetch-depth: 0}
+      - uses: actions/setup-java@v5
+        with:
+          distribution: zulu
+          java-version: '21'
+      - name: Find operation dexes and disassemble only hits
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          set -euo pipefail
+          mkdir -p work/apk work/smali research/generated
+          gh release download 8 --pattern "$APK_NAME" --dir work
+          echo "$APK_SHA256  work/$APK_NAME" | sha256sum -c -
+          gh release download 3.0.10 --repo baksmali/smali --pattern 'baksmali-3.0.10-fat.jar' --dir work
+          unzip -q "work/$APK_NAME" 'classes*.dex' -d work/apk
+          python3 - <<'PY'
+          from pathlib import Path
+          import subprocess
+          toks=['video_dash_manifest','clips_viewer_feed_timeline','clips_viewer_reel_feed_timeline','reel_feed_timeline',
+                'clips_viewer','clips_fetch','clips/items','clips/feed','reels/feed','feed/reels','clips_viewer_homecoming_fyp',
+                'GraphQlCallInput','media_delivery','media_codec','hdr','is_dash_eligible']
+          lines=[]; hit=set()
+          for p in sorted(Path('work/apk').glob('classes*.dex')):
+            s=subprocess.run(['strings','-a',str(p)],capture_output=True,text=True,errors='replace').stdout
+            hs=[t for t in toks if t.lower() in s.lower()]
+            if hs:
+              lines.append(f'{p.name}: '+', '.join(hs))
+              if any(t in hs for t in ['video_dash_manifest','clips_viewer_feed_timeline','clips_viewer_reel_feed_timeline','reel_feed_timeline','clips_viewer','clips_fetch','clips/items','clips/feed','reels/feed','feed/reels','clips_viewer_homecoming_fyp']):
+                hit.add(p.name)
+          Path('work/hitdex.txt').write_text('\n'.join(sorted(hit))+'\n')
+          Path('research/generated/instagram_439_hdr_reels_request_dex_hits_r19b.txt').write_text('\n'.join(lines)+'\n')
+          print('\n'.join(lines)); print('HITDEX',sorted(hit))
+          PY
+          while read d; do
+            [ -n "$d" ] || continue
+            n="${d%.dex}"
+            java -jar work/baksmali-3.0.10-fat.jar d "work/apk/$d" -o "work/smali/$n" >/dev/null &
+          done < work/hitdex.txt
+          wait
+
+      - name: Extract exact clips/reels request methods
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          from pathlib import Path
+          import re
+          root=Path('work/smali'); out=Path('research/generated/instagram_439_hdr_reels_request_fast_r19b.txt')
+          cr=re.compile(r'^\.class\s+.*\s+(L[^;]+;)$')
+          sr=re.compile(r'^\s*const-string(?:/jumbo)?\s+[^,]+,\s+"(.*)"')
+          ops=('clips_viewer_feed_timeline','clips_viewer_reel_feed_timeline','reel_feed_timeline','clips_viewer',
+               'clips_fetch','clips/items','clips/feed','reels/feed','feed/reels','clips_viewer_homecoming_fyp')
+          fields=('hdr','codec','av1','hevc','vp9','dash','manifest','capabil','device','performance','quality','delivery','playback',
+                  'bandwidth','resolution','network','screen','media','video')
+          req=('GraphQlCallInput','doc_id','query_id','query_hash','variables','signed_body','LX/03u7;','LX/03ci;','/api/v1/','/api/v2/','AMu(')
+          O=['Instagram 439 HDR Reels request fast R19b','========================================','']
+          rows=[]
+          for p in root.rglob('*.smali'):
+            ls=p.read_text(errors='replace').splitlines(); cls='?'
+            for x in ls[:40]:
+              m=cr.match(x)
+              if m: cls=m.group(1); break
+            i=0
+            while i<len(ls):
+              if not ls[i].startswith('.method'): i+=1; continue
+              s=i; i+=1
+              while i<len(ls) and not ls[i].startswith('.end method'): i+=1
+              e=min(i,len(ls)-1); b=ls[s:e+1]; text='\n'.join(b); low=text.lower()
+              oh=[k for k in ops if k.lower() in low]
+              if oh:
+                fh=[k for k in fields if k in low]; rh=[k for k in req if k.lower() in low]
+                score=len(oh)*8+len(fh)*3+len(rh)*4
+                rows.append((-score,cls,ls[s],str(p),oh,fh,rh,b))
+              i+=1
+          for ns,cls,sig,p,oh,fh,rh,b in sorted(rows,key=lambda x:(x[0],x[1],x[2])):
+            O += [f'===== score={-ns} {cls} {sig} =====',f'FILE: {p}',f'OPS={oh}',f'FIELDS={fh}',f'REQ={rh}']+b+['']
+          # Also list methods in these same classes that contain likely request-field strings.
+          classes={r[1] for r in rows}
+          O += ['===== SAME-CLASS REQUEST/HDR FIELD METHODS =====','']
+          for p in root.rglob('*.smali'):
+            ls=p.read_text(errors='replace').splitlines(); cls='?'
+            for x in ls[:40]:
+              m=cr.match(x)
+              if m: cls=m.group(1); break
+            if cls not in classes: continue
+            i=0
+            while i<len(ls):
+              if not ls[i].startswith('.method'): i+=1; continue
+              s=i; i+=1
+              while i<len(ls) and not ls[i].startswith('.end method'): i+=1
+              e=min(i,len(ls)-1); b=ls[s:e+1]; low='\n'.join(b).lower()
+              fh=[k for k in fields if k in low]; rh=[k for k in req if k.lower() in low]
+              if fh and rh:
+                O += [f'--- {cls} {ls[s]} FILE={p} FIELDS={fh} REQ={rh} ---']+b+['']
+              i+=1
+          text='\n'.join(O)
+          if len(text)>980000: text=text[:980000]+'\n[TRUNCATED]\n'
+          out.write_text(text,encoding='utf-8')
+          print(text[:300000]); print('rows',len(rows),'bytes',out.stat().st_size)
+          PY
+      - name: Commit reports
+        run: |
+          set -euo pipefail
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add research/generated/instagram_439_hdr_reels_request_dex_hits_r19b.txt research/generated/instagram_439_hdr_reels_request_fast_r19b.txt
+          if ! git diff --cached --quiet; then
+            git commit -m 'Add fast exact Instagram Reels request trace R19b'
+            git pull --rebase origin main
+            git push origin HEAD:main
+          fi
