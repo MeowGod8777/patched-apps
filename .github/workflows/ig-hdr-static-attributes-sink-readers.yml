@@ -1,0 +1,193 @@
+name: IG 439 HDR Static Attribute Sink Readers
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - .github/workflows/ig-hdr-static-attributes-sink-readers.yml
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  probe:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    env:
+      APK_NAME: instagram-piko-v439.0.0.37.89-arm64-v8a.apk
+      APK_SHA256: 4015b171ac59f3e7172134d194ec2dcf701f64c3339f127c19d7a04c13d529c8
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+      - name: Download and disassemble exact R8
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          mkdir -p work/dex work/dis research/generated
+          gh release download 8 --pattern "$APK_NAME" --dir work
+          echo "$APK_SHA256  work/$APK_NAME" | sha256sum -c -
+          unzip -j "work/$APK_NAME" 'classes*.dex' -d work/dex
+          DEXDUMP="$(find "$ANDROID_HOME/build-tools" -type f -name dexdump | sort -V | tail -1)"
+          for d in work/dex/classes*.dex; do
+            b="$(basename "$d" .dex)"
+            "$DEXDUMP" -d -f -h "$d" > "work/dis/$b.txt"
+          done
+
+      - name: Extract exact sinks and readers
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          import re
+
+          files = sorted(Path('work/dis').glob('classes*.txt'))
+          report=[]
+          report += [
+            'Instagram 439 static-attribute sink + playback reader trace',
+            '===========================================================',
+            'APK SHA256: 4015b171ac59f3e7172134d194ec2dcf701f64c3339f127c19d7a04c13d529c8',
+            ''
+          ]
+
+          mstart_re=re.compile(r'\|\[[0-9a-f]+\]\s+([^\s]+\.[^:]+):')
+          cdesc_re=re.compile(r"Class descriptor  : '([^']+)'" )
+
+          def methods(lines):
+            starts=[i for i,l in enumerate(lines) if mstart_re.search(l)]
+            for j,s in enumerate(starts):
+              e=starts[j+1] if j+1<len(starts) else len(lines)
+              yield s,e,lines[s:e]
+
+          allm=[]
+          texts={}
+          for p in files:
+            lines=p.read_text(errors='replace').splitlines()
+            texts[p.name]=lines
+            for s,e,b in methods(lines):
+              allm.append((p,s,e,b))
+
+          def header(b): return b[0].strip() if b else ''
+          def semantic(b):
+            keep=[]
+            for l in b:
+              if any(t in l for t in (
+                'const-string','invoke-','iget-','iput-','sget-','sput-',
+                'new-instance','check-cast','return-','throw','if-eq','if-ne','goto'
+              )):
+                keep.append(l.rstrip())
+            return keep
+
+          # 1. Full semantic tail of X.0Uiy.run — tells whether event is committed/logged.
+          for p,s,e,b in allm:
+            if 'X.0Uiy.run:()V' in header(b):
+              sem=semantic(b)
+              report += [f'===== X.0Uiy.run semantic tail :: {p.name}:{s+1}-{e} =====']
+              report += sem[-220:]
+              report += ['']
+
+          # 2. Exact definitions around event-builder chain.
+          targets=(
+            'X.0020.A1Z:(LX/00vy;)Z',
+            'X.02tU.AKx:(Ljava/lang/String;)LX/00vv;',
+            'X.03Tz.<init>:(LX/00vv;I)V',
+          )
+          for tgt in targets:
+            found=0
+            report += [f'===== definition: {tgt} =====']
+            for p,s,e,b in allm:
+              if tgt in header(b):
+                report += [f'FILE {p.name}:{s+1}-{e}'] + semantic(b)[:350] + ['']
+                found+=1
+            if not found: report += ['NOT FOUND','']
+
+          # 3. Class identity / inheritance for event objects.
+          for desc in ('LX/03Tz;','LX/00vy;','LX/00vv;','LX/02tU;'):
+            report += [f'===== class identity {desc} =====']
+            found=False
+            for p in files:
+              lines=texts[p.name]
+              for i,l in enumerate(lines):
+                if f"Class descriptor  : '{desc}'" in l:
+                  found=True
+                  lo=max(0,i-8); hi=min(len(lines),i+115)
+                  for x in lines[lo:hi]:
+                    if any(t in x for t in (
+                      'Class descriptor','Access flags','Superclass','Interfaces',
+                      "name          : '","type          : '",'const-string','invoke-','iput-','iget-'
+                    )):
+                      report.append(f'{p.name}: {x.rstrip()}')
+                  break
+              if found: break
+            if not found: report.append('NOT FOUND')
+            report.append('')
+
+          # 4. Exact event-name construction and callers of X.0ece.A00.
+          report += ['===== ig_device_static_attributes construction / X.0ece.A00 callers =====']
+          for p,s,e,b in allm:
+            body='\n'.join(b)
+            if 'ig_device_static_attributes' in body or ('LX/0ece;.A00:' in body and 'X.0ece.A00:' not in header(b)):
+              report += [f'--- {p.name}:{s+1}-{e} :: {header(b)}'] + semantic(b)[:260] + ['']
+
+          # 5. Direct readers of the three enum/static key fields and generic bool getter.
+          fields=(
+            'LX/0hkS;.A39:LX/0hkS;',
+            'LX/0hkS;.A2u:LX/0hkS;',
+            'LX/0hkS;.A2t:LX/0hkS;',
+          )
+          getter='LX/0hTo;.A01:(Landroid/content/SharedPreferences;LX/0fKx;)Z'
+          report += ['===== direct capability-pref consumers =====']
+          hits=0
+          for p,s,e,b in allm:
+            body='\n'.join(b)
+            h=header(b)
+            reasons=[f for f in fields if f in body]
+            if getter in body and 'X.0hTo.A01:' not in h:
+              reasons.append('generic_bool_getter')
+            if reasons:
+              hits+=1
+              report += [f'--- {p.name}:{s+1}-{e} :: {h}', 'MATCH=' + ','.join(reasons)]
+              report += semantic(b)[:320] + ['']
+          report += [f'DIRECT_READER_METHOD_COUNT={hits}','']
+
+          # 6. Search exact raw pref strings outside collector/serializer; any occurrence is informative.
+          raws=('video_decoder_hdr_supported','video_av1_hardware_decoder_supported','video_av1_hardware_decoder_max_instances')
+          report += ['===== raw capability string owners =====']
+          owners=0
+          for p,s,e,b in allm:
+            body='\n'.join(b)
+            which=[x for x in raws if x in body]
+            if which:
+              owners+=1
+              report += [f'--- {p.name}:{s+1}-{e} :: {header(b)}','MATCH='+','.join(which)] + semantic(b)[:240] + ['']
+          report += [f'RAW_STRING_OWNER_METHOD_COUNT={owners}','']
+
+          # 7. Network/request/telemetry semantic clues inside only methods already touching event objects.
+          clue_re=re.compile(r'(?i)(falco|analytics|telemetry|event|logger|logging|request|graphql|network|upload|device.classif|static.attributes)')
+          report += ['===== semantic clues in X.03Tz / X.00vy / X.00vv / X.02tU methods =====']
+          cluehits=0
+          for p,s,e,b in allm:
+            body='\n'.join(b)
+            if any(x in body for x in ('LX/03Tz;','LX/00vy;','LX/00vv;','LX/02tU;')) and clue_re.search(body):
+              sem=[l for l in semantic(b) if clue_re.search(l)]
+              if sem:
+                cluehits+=1
+                report += [f'--- {p.name}:{s+1}-{e} :: {header(b)}'] + sem[:100] + ['']
+                if cluehits>=80: break
+          report += [f'SEMANTIC_CLUE_METHOD_COUNT_SHOWN={cluehits}','']
+
+          out=Path('research/generated/instagram_439_hdr_static_attributes_sink_readers.txt')
+          out.write_text('\n'.join(report)+'\n',encoding='utf-8')
+          print(out.read_text()[:220000])
+          PY
+
+      - name: Commit report
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add research/generated/instagram_439_hdr_static_attributes_sink_readers.txt
+          if ! git diff --cached --quiet; then
+            git commit -m "Trace Instagram 439 static attribute sinks and readers"
+          fi
+          git pull --rebase origin main
+          git push origin HEAD:main
