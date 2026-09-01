@@ -1,0 +1,143 @@
+name: IG 439 HDR Accept Hint Map R19g
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - .github/workflows/ig-hdr-accept-hint-map-r19g.yml
+
+permissions:
+  contents: write
+
+jobs:
+  trace:
+    runs-on: ubuntu-latest
+    timeout-minutes: 18
+    env:
+      APK_NAME: instagram-piko-v439.0.0.37.89-arm64-v8a.apk
+      APK_SHA256: 4015b171ac59f3e7172134d194ec2dcf701f64c3339f127c19d7a04c13d529c8
+    steps:
+      - uses: actions/checkout@v6
+        with: {fetch-depth: 0}
+      - uses: actions/setup-java@v5
+        with:
+          distribution: zulu
+          java-version: '21'
+
+      - name: Fetch exact APK and focused dexes
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          set -euo pipefail
+          mkdir -p work/apk work/smali research/generated
+          gh release download 8 --pattern "$APK_NAME" --dir work
+          echo "$APK_SHA256  work/$APK_NAME" | sha256sum -c -
+          gh release download 3.0.10 --repo baksmali/smali --pattern 'baksmali-3.0.10-fat.jar' --dir work
+          unzip -q "work/$APK_NAME" 'classes*.dex' -d work/apk
+          python3 - <<'PY'
+          from pathlib import Path
+          import subprocess
+          needles=['LX/02qh;','LX/01Jw;','LX/01Jv;','LX/0ASB;','X-IG-Accept-Hint','ClipsViewerStreamingPrefetchRequestParams','clips_viewer_prefetcher_']
+          hit=[]; lines=[]
+          for p in sorted(Path('work/apk').glob('classes*.dex')):
+              s=subprocess.run(['strings','-a',str(p)],capture_output=True,text=True,errors='replace').stdout
+              hs=[n for n in needles if n in s]
+              if hs:
+                  hit.append(p.name); lines.append(f'{p.name}: {hs}')
+          Path('work/hitdex.txt').write_text('\n'.join(hit)+'\n')
+          Path('research/generated/instagram_439_hdr_accept_hint_map_dex_hits_r19g.txt').write_text('\n'.join(lines)+'\n')
+          print('\n'.join(lines)); print('HITDEX',hit)
+          PY
+          while read d; do
+            [ -n "$d" ] || continue
+            n="${d%.dex}"
+            java -jar work/baksmali-3.0.10-fat.jar d "work/apk/$d" -o "work/smali/$n" >/dev/null &
+          done < work/hitdex.txt
+          wait
+
+      - name: Resolve map, A06 args, carrier builders
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          from pathlib import Path
+          import re
+          ROOT=Path('work/smali')
+          OUT=Path('research/generated/instagram_439_hdr_accept_hint_map_r19g.txt')
+          cr=re.compile(r'^\.class\s+.*\s+(L[^;]+;)$')
+          methods=[]; classes={}
+          for p in ROOT.rglob('*.smali'):
+              ls=p.read_text(errors='replace').splitlines(); cls='?'
+              for x in ls[:60]:
+                  m=cr.match(x)
+                  if m: cls=m.group(1); break
+              classes[cls]=(p,ls)
+              i=0
+              while i<len(ls):
+                  if not ls[i].startswith('.method'):
+                      i+=1; continue
+                  s=i; sig=ls[i]; i+=1
+                  while i<len(ls) and not ls[i].startswith('.end method'):
+                      i+=1
+                  e=min(i,len(ls)-1); methods.append((cls,sig,p,ls[s:e+1])); i+=1
+
+          O=['Instagram 439 HDR Accept-Hint map R19g','========================================','']
+
+          # Full mapping helper.
+          for target in ['LX/02qh;','LX/0ASB;']:
+              O += [f'===== FULL CLASS {target} =====']
+              if target not in classes:
+                  O += ['NOT_FOUND','']; continue
+              p,ls=classes[target]
+              O += [f'FILE={p}']+ls+['']
+
+          # High-value prefetch methods.
+          for cls,sig,p,b in methods:
+              if cls=='LX/01Jw;' and (' A06(' in sig or ' A07(' in sig or '<init>' in sig):
+                  O += [f'===== {cls} {sig} =====',f'FILE={p}']+b+['']
+              if cls=='LX/01Jv;' and ' A03(' in sig:
+                  O += [f'===== {cls} {sig} =====',f'FILE={p}']+b+['']
+
+          # All uses of 02qh.A00 and exact source Integer where simple.
+          needle='LX/02qh;->A00(Ljava/lang/Integer;)Ljava/lang/String;'
+          O += ['===== ALL 02qh.A00 CALLERS =====','']
+          for cls,sig,p,b in methods:
+              for idx,l in enumerate(b):
+                  if needle not in l: continue
+                  O += [f'--- {cls} {sig}',f'FILE={p}',f'INDEX={idx}']
+                  lo=max(0,idx-30); hi=min(len(b),idx+15)
+                  O += [f'{j:04d}: {b[j]}' for j in range(lo,hi)] + ['']
+
+          # Constructors / factories of 0ASB.
+          O += ['===== 0ASB CONSTRUCTION SITES =====','']
+          for cls,sig,p,b in methods:
+              text='\n'.join(b)
+              if 'LX/0ASB;-><init>' in text or 'new-instance' in text and 'LX/0ASB;' in text:
+                  O += [f'--- {cls} {sig}',f'FILE={p}']+b+['']
+
+          # Exact register provenance around high-value A06 invoke in 01Jw.
+          callneedle='Lcom/instagram/clips/api/ClipsApiUtilHelper;->A06(Lcom/instagram/common/session/UserSession;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;I)LX/02ue;'
+          O += ['===== 01Jw -> ClipsApiUtilHelper.A06 REGISTER SLICE =====','']
+          for cls,sig,p,b in methods:
+              if cls!='LX/01Jw;' or ' A06(' not in sig: continue
+              for idx,l in enumerate(b):
+                  if callneedle in l:
+                      lo=max(0,idx-95); hi=min(len(b),idx+20)
+                      O += [f'INVOKE={l}',f'INDEX={idx}']+[f'{j:04d}: {b[j]}' for j in range(lo,hi)]+['']
+
+          OUT.write_text('\n'.join(O),encoding='utf-8')
+          print('\n'.join(O[:9000]))
+          print('bytes',OUT.stat().st_size)
+          PY
+
+      - name: Commit R19g reports
+        run: |
+          set -euo pipefail
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add research/generated/instagram_439_hdr_accept_hint_map_dex_hits_r19g.txt research/generated/instagram_439_hdr_accept_hint_map_r19g.txt
+          if ! git diff --cached --quiet; then
+            git commit -m 'Add Accept-Hint mapping and streaming arg trace R19g'
+            git pull --rebase origin main
+            git push origin HEAD:main
+          fi
