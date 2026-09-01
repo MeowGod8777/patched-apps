@@ -40,6 +40,7 @@ jobs:
           done
       - name: Trace proprietary benchmark and score flow
         run: |
+          set -euo pipefail
           python3 - <<'PY'
           from pathlib import Path
           import re, collections
@@ -83,7 +84,7 @@ jobs:
               if (x.startswith('.method') or x.startswith('.end method') or 'const-string' in x or 'invoke-' in x or 'sget-' in x or 'iget-' in x or 'iput-' in x or 'sput-' in x or 'return-' in x or 'if-' in x or 'move-result' in x or 'sharedpreferences' in l or 'graphql' in l or 'http' in l): out.append(x)
             return out[:260]
           def emit(O,m,label):
-            O += [f'===== {label} {m} =====','FILE: '+M[m]['file'],'STRINGS: '+' | '.join(dict.fromkeys(M[m]['strings'])),'CALLERS: '+' | '.join(sorted(C.get(m,()))[:30]),'CALLEES: '+' | '.join(dict.fromkeys(M[m]['invokes'])[:40])]
+            O += [f'===== {label} {m} =====','FILE: '+M[m]['file'],'STRINGS: '+' | '.join(dict.fromkeys(M[m]['strings'])),'CALLERS: '+' | '.join(sorted(C.get(m,()))[:30]),'CALLEES: '+' | '.join(list(dict.fromkeys(M[m]['invokes']))[:40])]
             O += short(m); O.append('')
           def rev(starts,d=5):
             D={x:0 for x in starts}; q=collections.deque(starts)
@@ -105,7 +106,6 @@ jobs:
           for m in seeds: emit(O,m,'BENCHMARK_SEED')
           for m in mpc: emit(O,m,'MPC_READER')
           for m in perf: emit(O,m,'PERFPOINT_CALLER')
-          # caller trees around proprietary benchmark seeds
           R=rev(seeds,5); F=fwd(seeds,5)
           O += ['===== BENCHMARK CALLER TREE <=5 =====']
           for m,d in sorted(R.items(),key=lambda x:(x[1],x[0]))[:500]:
@@ -113,11 +113,10 @@ jobs:
           O += ['','===== BENCHMARK CALLEE TREE <=5 =====']
           for m,d in sorted(F.items(),key=lambda x:(x[1],x[0]))[:500]:
             O.append(f'DOWN d={d} {m} STRINGS='+' | '.join(dict.fromkeys(M[m]['strings'])))
-          # intersections with network/request methods
           NR=rev(net,5); NF=fwd(net,5)
           O += ['','===== BENCHMARK ↔ NETWORK INTERSECTIONS <=5 HOPS =====']
           hits=[]
-          for m in set(M):
+          for m in M:
             bd=min(R.get(m,99),F.get(m,99)); nd=min(NR.get(m,99),NF.get(m,99))
             if bd<=5 and nd<=5: hits.append((bd+nd,bd,nd,m))
           for total,bd,nd,m in sorted(hits)[:500]:
