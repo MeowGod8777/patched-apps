@@ -1,0 +1,169 @@
+name: IG 439 HDR ExtraHeaders Persistent R19k
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - .github/workflows/ig-hdr-extraheaders-persistent-r19k.yml
+
+permissions:
+  contents: write
+
+jobs:
+  trace:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    env:
+      APK_NAME: instagram-piko-v439.0.0.37.89-arm64-v8a.apk
+      APK_SHA256: 4015b171ac59f3e7172134d194ec2dcf701f64c3339f127c19d7a04c13d529c8
+    steps:
+      - uses: actions/checkout@v6
+        with: {fetch-depth: 0}
+      - uses: actions/setup-java@v5
+        with:
+          distribution: zulu
+          java-version: '21'
+      - name: Fetch APK and select evidence dexes
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          set -euo pipefail
+          mkdir -p work/apk work/smali research/generated
+          gh release download 8 --pattern "$APK_NAME" --dir work
+          echo "$APK_SHA256  work/$APK_NAME" | sha256sum -c -
+          gh release download 3.0.10 --repo baksmali/smali --pattern 'baksmali-3.0.10-fat.jar' --dir work
+          unzip -q "work/$APK_NAME" 'classes*.dex' -d work/apk
+          python3 - <<'PY'
+          from pathlib import Path
+          import subprocess
+          toks=['LX/04qU;','LX/0Uiy;','com.facebook.devicesegmentation','devicesegmentation',
+                'key_display_hdr_supported','key_video_decoder_hdr_supported','display_hdr_supported',
+                'video_decoder_hdr_supported','supported_display_hdr_types','hdr_supported_types']
+          hit=set(); lines=[]
+          for p in sorted(Path('work/apk').glob('classes*.dex')):
+              s=subprocess.run(['strings','-a',str(p)],capture_output=True,text=True,errors='replace').stdout
+              hs=[t for t in toks if t.lower() in s.lower()]
+              if hs:
+                  hit.add(p.name); lines.append(f'{p.name}: '+', '.join(hs))
+          Path('work/hitdex.txt').write_text('\n'.join(sorted(hit))+'\n')
+          Path('research/generated/instagram_439_hdr_extraheaders_persistent_dex_hits_r19k.txt').write_text('\n'.join(lines)+'\n')
+          print('\n'.join(lines)); print('HITDEX',sorted(hit))
+          PY
+          while read d; do
+            [ -n "$d" ] || continue
+            n="${d%.dex}"
+            java -jar work/baksmali-3.0.10-fat.jar d "work/apk/$d" -o "work/smali/$n" >/dev/null &
+          done < work/hitdex.txt
+          wait
+
+      - name: Trace extra headers and persistent classification
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          from pathlib import Path
+          import re
+          ROOT=Path('work/smali')
+          OUT=Path('research/generated/instagram_439_hdr_extraheaders_persistent_r19k.txt')
+          cls_re=re.compile(r'^\.class\s+.*\s+(L[^;]+;)$')
+          str_re=re.compile(r'^\s*const-string(?:/jumbo)?\s+([^,]+),\s+"(.*)"')
+          invoke_re=re.compile(r'(L[^;]+;)->([^\s(]+)\(([^)]*)\)(\S+)')
+          methods=[]
+          classes={}
+          for p in ROOT.rglob('*.smali'):
+              ls=p.read_text(errors='replace').splitlines(); cls='?'
+              for x in ls[:60]:
+                  m=cls_re.match(x)
+                  if m: cls=m.group(1); break
+              classes[cls]=(p,ls)
+              i=0
+              while i<len(ls):
+                  if not ls[i].startswith('.method'): i+=1; continue
+                  s=i; sig=ls[i]; i+=1
+                  while i<len(ls) and not ls[i].startswith('.end method'): i+=1
+                  e=min(i,len(ls)-1); methods.append((cls,sig,p,ls[s:e+1])); i+=1
+
+          O=['Instagram 439 HDR Extra Headers + Persistent Classification R19k','===============================================================','']
+
+          # A. 04qU class semantics and all constructor/callsite producers.
+          if 'LX/04qU;' in classes:
+              p,ls=classes['LX/04qU;']
+              O += ['===== LX/04qU FULL CLASS =====',f'FILE={p}']+ls+['']
+          refs=[]
+          for cls,sig,p,b in methods:
+              text='\n'.join(b)
+              if 'LX/04qU;' in text:
+                  refs.append((cls,sig,p,b))
+          O += [f'===== LX/04qU METHOD REFS ({len(refs)}) =====','']
+          for cls,sig,p,b in refs:
+              O += [f'--- {cls} {sig}',f'FILE={p}']
+              ss=[m.group(2) for l in b if (m:=str_re.match(l))]
+              O += [f'STRINGS={ss}']
+              for i,l in enumerate(b):
+                  if 'LX/04qU;' in l:
+                      O += [f'REF_AT={i}']+[f'{j:04d}: {b[j]}' for j in range(max(0,i-45),min(len(b),i+28))]
+              O += ['']
+
+          # B. 0Uiy / static attributes owner and scheduling context.
+          refs=[]
+          for cls,sig,p,b in methods:
+              text='\n'.join(b)
+              if 'LX/0Uiy;' in text and cls!='LX/0Uiy;': refs.append((cls,sig,p,b))
+          O += [f'===== LX/0Uiy EXTERNAL REFS ({len(refs)}) =====','']
+          for cls,sig,p,b in refs:
+              O += [f'--- {cls} {sig}',f'FILE={p}']
+              ss=[m.group(2) for l in b if (m:=str_re.match(l))]
+              O += [f'STRINGS={ss}']
+              for i,l in enumerate(b):
+                  if 'LX/0Uiy;' in l:
+                      O += [f'REF_AT={i}']+[f'{j:04d}: {b[j]}' for j in range(max(0,i-55),min(len(b),i+35))]
+              O += ['']
+
+          # C. Device-segmentation prefs readers/writers with any network/request references.
+          seg=[]
+          for cls,sig,p,b in methods:
+              low='\n'.join(b).lower()
+              if 'devicesegmentation' in low or 'com.facebook.devicesegmentation' in low:
+                  seg.append((cls,sig,p,b))
+          O += [f'===== DEVICESEGMENTATION METHODS ({len(seg)}) =====','']
+          for cls,sig,p,b in seg:
+              text='\n'.join(b); low=text.lower()
+              net=any(x in low for x in ['lx/03u7;','graphql','http','/api/v1/','/api/v2/','pando','tigon','request'])
+              O += [f'--- {cls} {sig} NETWORKISH={net}',f'FILE={p}']
+              ss=[m.group(2) for l in b if (m:=str_re.match(l))]
+              O += [f'STRINGS={ss}']+b+['']
+
+          # D. Capability-key methods and classify sink type.
+          caps=('key_display_hdr_supported','key_video_decoder_hdr_supported','display_hdr_supported',
+                'video_decoder_hdr_supported','supported_display_hdr_types','hdr_supported_types')
+          caprows=[]
+          for cls,sig,p,b in methods:
+              low='\n'.join(b).lower(); hs=[c for c in caps if c in low]
+              if not hs: continue
+              netrefs=[]
+              for l in b:
+                  if 'invoke-' in l:
+                      m=invoke_re.search(l)
+                      if m and any(x in (m.group(1)+m.group(2)).lower() for x in ['03u7','graphql','pando','tigon','request','http']):
+                          netrefs.append(m.groups())
+              logger=any(x in low for x in ['00vy;','03tz;','markerannotate','quicklog','event','logging'])
+              caprows.append((cls,sig,p,b,hs,netrefs,logger))
+          O += [f'===== CAPABILITY KEY METHODS ({len(caprows)}) =====','']
+          for cls,sig,p,b,hs,netrefs,logger in caprows:
+              O += [f'--- {cls} {sig}',f'FILE={p}',f'CAPS={hs}',f'NETWORK_REFS={netrefs}',f'LOGGERISH={logger}']+b+['']
+
+          OUT.write_text('\n'.join(O),encoding='utf-8')
+          print('\n'.join(O[:12000])); print('bytes',OUT.stat().st_size)
+          PY
+
+      - name: Commit R19k reports
+        run: |
+          set -euo pipefail
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add research/generated/instagram_439_hdr_extraheaders_persistent_dex_hits_r19k.txt research/generated/instagram_439_hdr_extraheaders_persistent_r19k.txt
+          if ! git diff --cached --quiet; then
+            git commit -m 'Add extra headers and persistent classification trace R19k'
+            git pull --rebase origin main
+            git push origin HEAD:main
+          fi
