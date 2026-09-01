@@ -1,0 +1,158 @@
+name: IG 439 HDR Gate Compact R15
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths: [.github/workflows/ig-hdr-gate-compact-r15.yml]
+
+permissions:
+  contents: write
+
+jobs:
+  trace:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    env:
+      APK_NAME: instagram-piko-v439.0.0.37.89-arm64-v8a.apk
+      APK_SHA256: 4015b171ac59f3e7172134d194ec2dcf701f64c3339f127c19d7a04c13d529c8
+    steps:
+      - uses: actions/checkout@v6
+        with: {fetch-depth: 0}
+      - uses: actions/setup-java@v5
+        with:
+          distribution: zulu
+          java-version: '21'
+      - name: Prepare exact smali
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          set -euo pipefail
+          mkdir -p work/apk work/smali research/generated
+          gh release download 8 --pattern "$APK_NAME" --dir work
+          echo "$APK_SHA256  work/$APK_NAME" | sha256sum -c -
+          gh release download 3.0.10 --repo baksmali/smali --pattern 'baksmali-3.0.10-fat.jar' --dir work
+          unzip -q "work/$APK_NAME" 'classes*.dex' -d work/apk
+          for d in work/apk/classes*.dex; do
+            n="$(basename "$d" .dex)"
+            java -jar work/baksmali-3.0.10-fat.jar d "$d" -o "work/smali/$n" >/dev/null
+          done
+
+      - name: Compact exact gate trace
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          from pathlib import Path
+          import re, collections
+          ROOT=Path('work/smali'); OUT=Path('research/generated/instagram_439_hdr_gate_compact_r15.txt')
+          cr=re.compile(r'^\.class\s+.*\s+(L[^;]+;)$')
+          mr=re.compile(r'^\.method\s+.*?([^\s]+\([^)]*\).+)$')
+          ir=re.compile(r'invoke-[^\s]+\s+\{[^}]*\},\s+(L[^;]+;->[^\s]+)')
+          sr=re.compile(r'^\s*const-string(?:/jumbo)?\s+[^,]+,\s+"(.*)"')
+          M={}; C=collections.defaultdict(set)
+          for p in ROOT.rglob('*.smali'):
+            ls=p.read_text(errors='replace').splitlines(); cls=None
+            for x in ls[:30]:
+              z=cr.match(x)
+              if z: cls=z.group(1); break
+            if not cls: continue
+            i=0
+            while i<len(ls):
+              z=mr.match(ls[i])
+              if not z: i+=1; continue
+              ref=cls+'->'+z.group(1); s=i; i+=1
+              while i<len(ls) and not ls[i].startswith('.end method'): i+=1
+              b=ls[s:min(i+1,len(ls))]; inv=[]; ss=[]
+              for x in b:
+                q=ir.search(x)
+                if q: inv.append(q.group(1))
+                q=sr.match(x)
+                if q: ss.append(q.group(1))
+              M[ref]={'file':str(p),'body':b,'invokes':inv,'strings':ss}
+              for n in inv: C[n].add(ref)
+              i+=1
+          def body(m): return '\n'.join(M[m]['body'])
+          def emit(O,m,label):
+            d=M[m]
+            O += [f'===== {label} {m} =====','FILE: '+d['file'],
+                  'STRINGS: '+' | '.join(dict.fromkeys(d['strings'])),
+                  'CALLERS: '+' | '.join(sorted(C.get(m,()))[:50]),
+                  'CALLEES: '+' | '.join(list(dict.fromkeys(d['invokes']))[:70])]
+            O += d['body']; O.append('')
+          # Exact producers / readers. Only these methods, not whole classes.
+          exact=[]
+          prefixes=('LX/02rk;->','LX/02xS;->','LX/03Lk;->','LX/0hCN;->','LX/0kr3;->','LX/0hkS;->','LX/0hTo;->')
+          terms=('device_capabilities','display_hdr_supported','supported_display_hdr_types','hdr_supported_types',
+                 'is_av1_hdr_supported','is_hevc_hdr_supported','video_decoder_hdr_supported','key_display_hdr_supported',
+                 'key_video_decoder_hdr_supported','X-IG-Capabilities','User-Agent')
+          for m in M:
+            t=body(m)
+            if m.startswith(prefixes) or any(x in t for x in terms): exact.append(m)
+          # Restrict very large generic methods unless they contain a target literal / known producer call.
+          exact2=[]
+          for m in exact:
+            t=body(m)
+            known=m.startswith(('LX/02rk;->','LX/02xS;->','LX/03Lk;->','LX/0hCN;->','LX/0kr3;->','LX/0hTo;->'))
+            if known or any(x in t for x in terms): exact2.append(m)
+          # Identify capability and Reels seed sets.
+          cap=set(); reels=set()
+          cap_needles=('device_capabilities','display_hdr_supported','is_av1_hdr_supported','is_hevc_hdr_supported','video_decoder_hdr_supported',
+                       'LX/03Lk;->A01(','LX/0hkS;->A2Z','LX/0hTo;->A01(','LX/02xS;->A00(','LX/02rk;->A00()Ljava/lang/String;')
+          reel_needles=('clips_viewer_feed_timeline','clips_viewer_reel_feed_timeline','reel_feed_timeline','clips_viewer_homecoming_fyp',
+                        'clips_viewer_reel','clips_fetch','starting_clips_media_id','ig_reels_consumption','video_dash_manifest','dash_manifest')
+          for m in M:
+            t=body(m)
+            if any(x in t for x in cap_needles): cap.add(m)
+            if any(x in t for x in reel_needles): reels.add(m)
+          def bfs(starts, rev=False, md=6):
+            D={x:0 for x in starts}; q=collections.deque(starts)
+            while q:
+              x=q.popleft(); d=D[x]
+              if d>=md: continue
+              ns=C.get(x,()) if rev else M[x]['invokes']
+              for n in ns:
+                if n in M and n not in D: D[n]=d+1; q.append(n)
+            return D
+          cf=bfs(cap); crv=bfs(cap,True); rf=bfs(reels); rrv=bfs(reels,True)
+          bridges=[]
+          for m in M:
+            cd=min(cf.get(m,99),crv.get(m,99)); rd=min(rf.get(m,99),rrv.get(m,99))
+            if cd<=6 and rd<=6: bridges.append((cd+rd,cd,rd,m))
+          O=['Instagram 439 HDR gate compact R15','==================================',
+             f'methods={len(M)} exact={len(exact2)} cap={len(cap)} reels={len(reels)} bridges={len(bridges)}','']
+          O += ['===== A. EXACT PRODUCERS / READERS =====','']
+          # Put high-value small methods first.
+          pri=lambda m:(0 if m.startswith('LX/02xS;->') else 1 if m.startswith('LX/03Lk;->') else 2 if m.startswith('LX/0hTo;->') else 3 if m.startswith('LX/0hCN;->') else 4, len(M[m]['body']), m)
+          for m in sorted(set(exact2), key=pri)[:120]: emit(O,m,'EXACT')
+          O += ['===== B. SHORTEST CAPABILITY <-> REELS BRIDGES =====','']
+          for total,cd,rd,m in sorted(bridges)[:250]:
+            O += [f'BRIDGE total={total} cap={cd} reels={rd} {m}',
+                  '  STRINGS: '+' | '.join(dict.fromkeys(M[m]['strings'])),
+                  '  CALLERS: '+' | '.join(sorted(C.get(m,()))[:25]),
+                  '  CALLEES: '+' | '.join(list(dict.fromkeys(M[m]['invokes']))[:25])]
+          O += ['', '===== C. TOP BRIDGE BODIES =====','']
+          seen=set(); n=0
+          for total,cd,rd,m in sorted(bridges):
+            if m in seen: continue
+            # Bodies only for very short bridges, and favor network/request/reels/cap terms.
+            t=body(m).lower(); useful=any(x in t for x in ('graphql','request','feed','clips','reel','device_capabilities','user-agent','hdr'))
+            if total<=3 and useful:
+              emit(O,m,f'BRIDGE_BODY total={total} cap={cd} reels={rd}'); seen.add(m); n+=1
+              if n>=45: break
+          text='\n'.join(O)
+          if len(text)>850000: text=text[:850000]+'\n[TRUNCATED 850KB]\n'
+          OUT.write_text(text,encoding='utf-8')
+          print(f'bytes={OUT.stat().st_size} exact={len(exact2)} bridges={len(bridges)} bridge_bodies={n}')
+          print(text[:250000])
+          PY
+      - name: Commit report
+        run: |
+          set -euo pipefail
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add research/generated/instagram_439_hdr_gate_compact_r15.txt
+          if ! git diff --cached --quiet; then
+            git commit -m 'Add compact Instagram HDR request gate trace R15'
+            git pull --rebase origin main
+            git push origin HEAD:main
+          fi
