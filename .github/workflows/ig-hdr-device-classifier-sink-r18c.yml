@@ -1,0 +1,132 @@
+name: IG 439 HDR Device Classifier Sink R18c
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - .github/workflows/ig-hdr-device-classifier-sink-r18c.yml
+
+permissions:
+  contents: write
+
+jobs:
+  trace:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    env:
+      APK_NAME: instagram-piko-v439.0.0.37.89-arm64-v8a.apk
+      APK_SHA256: 4015b171ac59f3e7172134d194ec2dcf701f64c3339f127c19d7a04c13d529c8
+    steps:
+      - uses: actions/checkout@v6
+        with: {fetch-depth: 0}
+      - uses: actions/setup-java@v5
+        with:
+          distribution: zulu
+          java-version: '21'
+      - name: Prepare exact smali
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          set -euo pipefail
+          mkdir -p work/apk work/smali research/generated
+          gh release download 8 --pattern "$APK_NAME" --dir work
+          echo "$APK_SHA256  work/$APK_NAME" | sha256sum -c -
+          gh release download 3.0.10 --repo baksmali/smali --pattern 'baksmali-3.0.10-fat.jar' --dir work
+          unzip -q "work/$APK_NAME" 'classes*.dex' -d work/apk
+          for d in work/apk/classes*.dex; do
+            n="$(basename "$d" .dex)"
+            java -jar work/baksmali-3.0.10-fat.jar d "$d" -o "work/smali/$n" >/dev/null &
+          done
+          wait
+
+      - name: Trace exact feed header order and device classifier sink
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          from pathlib import Path
+          import re
+          root=Path('work/smali'); out=Path('research/generated/instagram_439_hdr_device_classifier_sink_r18c.txt')
+          O=['Instagram 439 HDR device-classifier sink R18c','==============================================','']
+          def cls_of(ls):
+            for x in ls[:40]:
+              m=re.match(r'^\.class\s+.*\s+(L[^;]+;)$',x)
+              if m:return m.group(1)
+            return '?'
+          bycls={}
+          for p in root.rglob('*.smali'):
+            ls=p.read_text(errors='replace').splitlines(); c=cls_of(ls)
+            if c in ('LX/08zY;','LX/0lAl;'): bycls[c]=(p,ls)
+          for c in ('LX/08zY;','LX/0lAl;'):
+            O += [f'===== FULL CLASS {c} =====']
+            if c in bycls:
+              p,ls=bycls[c]; O += ['FILE: '+str(p)]+ls+['']
+            else: O += ['NOT_FOUND','']
+
+          # All direct class references to the classifier runnable, grouped by containing method.
+          O += ['===== ALL LX/0lAl CLASS REFERENCES =====','']
+          needle='LX/0lAl;'
+          for p in root.rglob('*.smali'):
+            ls=p.read_text(errors='replace').splitlines()
+            if not any(needle in x for x in ls): continue
+            c=cls_of(ls); i=0
+            while i<len(ls):
+              if not ls[i].startswith('.method'): i+=1; continue
+              s=i; i+=1
+              while i<len(ls) and not ls[i].startswith('.end method'): i+=1
+              e=min(i,len(ls)-1); b=ls[s:e+1]
+              if any(needle in x for x in b): O += [f'--- {c} {ls[s]} FILE={p} ---']+b+['']
+              i+=1
+
+          # Methods that consume the characteristic collected-map keys, near an actual network/logging sink.
+          keys=('client_device_model','device_brand','chipset_platform','performance_class','media_codec_info','profile_levels','ram_class_v2')
+          O += ['===== METHODS SHARING DEVICE-CLASSIFIER KEYS =====','']
+          for p in root.rglob('*.smali'):
+            ls=p.read_text(errors='replace').splitlines(); hits=[k for k in keys if any(('"'+k+'"') in x for x in ls)]
+            if not hits: continue
+            c=cls_of(ls); O += [f'CLASS {c} FILE={p} KEYS={",".join(hits)}']
+            # print only methods containing any key
+            i=0
+            while i<len(ls):
+              if not ls[i].startswith('.method'): i+=1; continue
+              s=i; i+=1
+              while i<len(ls) and not ls[i].startswith('.end method'): i+=1
+              e=min(i,len(ls)-1); b=ls[s:e+1]
+              hh=[k for k in keys if any(('"'+k+'"') in x for x in b)]
+              if hh: O += [f'--- {ls[s]} KEYS={",".join(hh)} ---']+b+['']
+              i+=1
+
+          # Exact methods that mention generic device-info endpoints/events + network request calls.
+          O += ['===== DEVICE INFO / CLASSIFICATION OUTBOUND CANDIDATES =====','']
+          sem=('device_info','device_model','device_name','year_class','media_codec_info','client_device_model','device_capabilities','static_attributes','mobileconfig')
+          net=('LX/03u7;','LX/03ci;','LX/02qb;','GraphQlCallInput','/api/v1/','/api/v2/','AMu(','signed_body','network')
+          for p in root.rglob('*.smali'):
+            ls=p.read_text(errors='replace').splitlines(); c=cls_of(ls); i=0
+            while i<len(ls):
+              if not ls[i].startswith('.method'): i+=1; continue
+              s=i; i+=1
+              while i<len(ls) and not ls[i].startswith('.end method'): i+=1
+              e=min(i,len(ls)-1); b=ls[s:e+1]; t='\n'.join(b).lower()
+              sh=[x for x in sem if x in t]
+              nh=[x for x in net if x.lower() in t]
+              if sh and nh:
+                O += [f'--- {c} {ls[s]} FILE={p} SEM={sh} NET={nh} ---']+b+['']
+              i+=1
+
+          text='\n'.join(O)
+          if len(text)>990000: text=text[:990000]+'\n[TRUNCATED]\n'
+          out.write_text(text,encoding='utf-8')
+          print(text[:280000]); print('bytes',out.stat().st_size)
+          PY
+
+      - name: Commit report
+        run: |
+          set -euo pipefail
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add research/generated/instagram_439_hdr_device_classifier_sink_r18c.txt
+          if ! git diff --cached --quiet; then
+            git commit -m 'Add Instagram device classifier sink trace R18c'
+            git pull --rebase origin main
+            git push origin HEAD:main
+          fi
