@@ -1,15 +1,11 @@
 name: IG 439 HDR Persistent Classification R19k
-
 on:
   workflow_dispatch:
   push:
     branches: [main]
-    paths:
-      - .github/workflows/ig-hdr-persistent-classification-r19k.yml
-
+    paths: [.github/workflows/ig-hdr-persistent-classification-r19k.yml]
 permissions:
   contents: write
-
 jobs:
   trace:
     runs-on: ubuntu-latest
@@ -21,10 +17,8 @@ jobs:
       - uses: actions/checkout@v6
         with: {fetch-depth: 0}
       - uses: actions/setup-java@v5
-        with:
-          distribution: zulu
-          java-version: '21'
-      - name: Fetch exact APK and disassemble HDR classification hit dexes
+        with: {distribution: zulu, java-version: '21'}
+      - name: Fetch exact APK and disassemble classification hit dexes
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
@@ -37,147 +31,81 @@ jobs:
           python3 - <<'PY'
           from pathlib import Path
           import subprocess
-          needles=[
-            'key_display_hdr_supported','key_video_decoder_hdr_supported','display_hdr_supported','video_decoder_hdr_supported',
-            'is_av1_hdr_supported','is_hevc_hdr_supported','hdr_supported_types','supported_display_hdr_types',
-            'com.facebook.devicesegmentation','ig_device_static_attributes','android_media_codec_info',
-            'LX/0Uiy;','LX/03Tz;','LX/00vy;','LX/0hkS;','LX/0hld;'
-          ]
+          ns=['key_display_hdr_supported','key_video_decoder_hdr_supported','display_hdr_supported','video_decoder_hdr_supported','is_av1_hdr_supported','is_hevc_hdr_supported','hdr_supported_types','supported_display_hdr_types','com.facebook.devicesegmentation','ig_device_static_attributes','LX/0Uiy;','LX/03Tz;','LX/00vy;','LX/0hkS;','LX/0hld;']
           hit=[]; rows=[]
           for p in sorted(Path('work/apk').glob('classes*.dex')):
             s=subprocess.run(['strings','-a',str(p)],capture_output=True,text=True,errors='replace').stdout
-            hs=[n for n in needles if n.lower() in s.lower()]
-            if hs:
-              hit.append(p.name); rows.append(f'{p.name}: '+', '.join(hs))
-          Path('work/hitdex.txt').write_text('\n'.join(hit)+'\n')
-          Path('research/generated/instagram_439_hdr_persistent_classification_dex_hits_r19k.txt').write_text('\n'.join(rows)+'\n')
-          print('\n'.join(rows)); print('HITDEX',hit)
+            hs=[n for n in ns if n.lower() in s.lower()]
+            if hs: hit.append(p.name); rows.append(f'{p.name}: '+', '.join(hs))
+          Path('work/hitdex.txt').write_text('\n'.join(hit)+'\n'); Path('research/generated/instagram_439_hdr_persistent_classification_dex_hits_r19k.txt').write_text('\n'.join(rows)+'\n'); print('\n'.join(rows))
           PY
-          while read d; do
-            [ -n "$d" ] || continue
-            n="${d%.dex}"
-            java -jar work/baksmali-3.0.10-fat.jar d "work/apk/$d" -o "work/smali/$n" >/dev/null &
-          done < work/hitdex.txt
+          while read d; do [ -n "$d" ] && java -jar work/baksmali-3.0.10-fat.jar d "work/apk/$d" -o "work/smali/${d%.dex}" >/dev/null & done < work/hitdex.txt
           wait
-      - name: Trace HDR static attributes and device segmentation sinks
+      - name: Trace HDR classification sinks and segmentation persistence
         run: |
-          set -euo pipefail
           python3 - <<'PY'
           from pathlib import Path
           import re
-          ROOT=Path('work/smali')
-          OUT=Path('research/generated/instagram_439_hdr_persistent_classification_r19k.txt')
-          cr=re.compile(r'^\.class\s+.*\s+(L[^;]+;)$')
-          sr=re.compile(r'^\s*const-string(?:/jumbo)?\s+([^,]+),\s+"(.*)"')
-          invr=re.compile(r'(L[^;]+;)->([^\s(]+)\(([^)]*)\)(\S+)')
-          methods=[]; classes={}
-          for p in ROOT.rglob('*.smali'):
-            ls=p.read_text(errors='replace').splitlines(); cls='?'
-            for x in ls[:60]:
+          root=Path('work/smali'); out=Path('research/generated/instagram_439_hdr_persistent_classification_r19k.txt')
+          cr=re.compile(r'^\.class\s+.*\s+(L[^;]+;)$'); sr=re.compile(r'^\s*const-string(?:/jumbo)?\s+([^,]+),\s+"(.*)"')
+          ms=[]
+          for p in root.rglob('*.smali'):
+            ls=p.read_text(errors='replace').splitlines(); c='?'
+            for x in ls[:50]:
               m=cr.match(x)
-              if m: cls=m.group(1); break
-            classes[cls]=(p,ls)
+              if m: c=m.group(1); break
             i=0
             while i<len(ls):
               if not ls[i].startswith('.method'): i+=1; continue
               s=i; sig=ls[i]; i+=1
               while i<len(ls) and not ls[i].startswith('.end method'): i+=1
-              e=min(i,len(ls)-1); methods.append((cls,sig,p,ls[s:e+1])); i+=1
-
-          O=['Instagram 439 HDR persistent device classification R19k','===================================================','']
-          targets=('LX/0Uiy;','LX/03Tz;','LX/00vy;','LX/0hkS;','LX/0hld;')
-          for t in targets:
-            O += [f'===== FULL CLASS {t} =====']
-            if t in classes:
-              p,ls=classes[t]; O += [f'FILE={p}']+ls+['']
-            else: O += ['NOT_FOUND','']
-
-          hdrkeys=('key_display_hdr_supported','key_video_decoder_hdr_supported','display_hdr_supported','video_decoder_hdr_supported',
-                   'is_av1_hdr_supported','is_hevc_hdr_supported','hdr_supported_types','supported_display_hdr_types')
-          O += ['===== EXACT HDR KEY OWNER METHODS =====','']
+              ms.append((c,sig,p,ls[s:min(i,len(ls)-1)+1])); i+=1
+          keys=('key_display_hdr_supported','key_video_decoder_hdr_supported','display_hdr_supported','video_decoder_hdr_supported','is_av1_hdr_supported','is_hevc_hdr_supported','hdr_supported_types','supported_display_hdr_types')
+          O=['Instagram 439 HDR persistent classification R19k','=============================================','']
           owners=[]
-          for cls,sig,p,b in methods:
+          for c,sig,p,b in ms:
+            low='\n'.join(b).lower(); hs=[k for k in keys if k in low]
+            if hs:
+              owners.append((c,sig,p,b,hs)); O += [f'===== HDR_OWNER {c} {sig} =====',f'FILE={p}',f'KEYS={hs}']+b+['']
+          O += ['===== CALLERS OF HDR OWNERS =====','']
+          for oc,osig,op,ob,hs in owners:
+            m=re.search(r'\s([^\s(]+)\(([^)]*)\)(\S+)$',osig)
+            if not m: continue
+            needle=f'{oc}->{m.group(1)}({m.group(2)}){m.group(3)}'
+            for c,sig,p,b in ms:
+              if needle in '\n'.join(b): O += [f'OWNER={needle}',f'CALLER={c} {sig}',f'FILE={p}']+b+['']
+          O += ['===== DEVICE SEGMENTATION METHODS =====','']
+          for c,sig,p,b in ms:
+            t='\n'.join(b); low=t.lower()
+            if 'devicesegmentation' not in low and 'lx/0hks;' not in low and 'lx/0hld;' not in low: continue
+            tags=[x for x in ('getSharedPreferences','getString','getBoolean','putString','putBoolean','putInt','putLong','apply','commit') if x.lower() in low]
+            if 'lx/03u7;->' in low or 'graphqlcallinput' in low or '/api/' in low: tags.append('NETWORK')
+            O += [f'--- {c} {sig}',f'FILE={p}',f'TAGS={tags}']+b+['']
+          O += ['===== CLASSIFICATION PREF WRITERS =====','']
+          for c,sig,p,b in ms:
             low='\n'.join(b).lower()
-            hits=[k for k in hdrkeys if k in low]
-            if hits:
-              owners.append((cls,sig,p,b,hits))
-          for cls,sig,p,b,hits in owners:
-            invokes=[]; vals=[]
-            for l in b:
-              sm=sr.match(l)
-              if sm: vals.append(sm.group(2))
-              if 'invoke-' in l:
-                im=invr.search(l)
-                if im: invokes.append(im.groups())
-            O += [f'--- {cls} {sig}',f'FILE={p}',f'HDR_KEYS={hits}',f'STRINGS={vals}',f'INVOKES={invokes}']+b+['']
-
-          # Direct callers of HDR-key owner methods.
-          owner_keys=[]
-          for cls,sig,p,b,hits in owners:
-            m=re.search(r'\s([^\s(]+)\(([^)]*)\)(\S+)$',sig)
-            if m: owner_keys.append((cls,m.group(1),m.group(2),m.group(3)))
-          O += ['===== DIRECT CALLERS OF HDR KEY OWNERS =====','']
-          for k in owner_keys:
-            needle=f'{k[0]}->{k[1]}({k[2]}){k[3]}'
-            for cls,sig,p,b in methods:
-              if needle in '\n'.join(b):
-                O += [f'OWNER={k}',f'CALLER={cls} {sig}',f'FILE={p}']+b+['']
-
-          # Device segmentation references: distinguish readers/writers/network/bootstrap.
-          O += ['===== DEVICE SEGMENTATION REFERENCES =====','']
-          for cls,sig,p,b in methods:
-            text='\n'.join(b); low=text.lower()
-            if 'devicesegmentation' not in low and 'lx/0hks;' not in low and 'lx/0hld;' not in low:
-              continue
-            tags=[]
-            for x in ('getSharedPreferences','getString','getBoolean','putString','putBoolean','putInt','putLong','remove','apply','commit'):
-              if x.lower() in low: tags.append(x)
-            if 'LX/03u7;->' in text or 'GraphQlCallInput' in text or '/api/' in low: tags.append('NETWORK_REQUEST')
+            if 'sharedpreferences$editor;->put' not in low: continue
             vals=[]
             for l in b:
-              sm=sr.match(l)
-              if sm: vals.append(sm.group(2))
-            O += [f'--- {cls} {sig}',f'FILE={p}',f'TAGS={tags}',f'STRINGS={vals}']+b+['']
-
-          # Writers to SharedPreferences anywhere in hit dexes that mention segmentation classes nearby.
-          O += ['===== SHARED PREF WRITERS WITH CLASSIFICATION CONTEXT =====','']
-          for cls,sig,p,b in methods:
-            text='\n'.join(b); low=text.lower()
-            if not any(x in low for x in ('sharedpreferences$editor;->put','sharedpreferences$editor;->remove','sharedpreferences$editor;->apply','sharedpreferences$editor;->commit')):
-              continue
-            vals=[]
-            for l in b:
-              sm=sr.match(l)
-              if sm and any(k in sm.group(2).lower() for k in ('device','segment','class','hdr','codec','display','performance','capab')): vals.append(sm.group(2))
-            if vals or '0hks' in low or '0hld' in low:
-              O += [f'--- {cls} {sig}',f'FILE={p}',f'KEY_STRINGS={vals}']+b+['']
-
-          # Server-facing / event sinks reachable in the same classes as HDR serializers.
-          owner_classes={x[0] for x in owners}|set(targets)
-          O += ['===== OWNER-CLASS SINK METHODS =====','']
-          for cls,sig,p,b in methods:
-            if cls not in owner_classes: continue
-            text='\n'.join(b); low=text.lower()
-            sink=[]
-            if 'LX/03u7;->' in text: sink.append('REST_BUILDER')
-            if 'GraphQlCallInput' in text: sink.append('GRAPHQL')
-            if 'markerAnnotate' in text or 'markerPoint' in text: sink.append('QPL')
-            if 'LX/00vv;' in text or 'LX/00vy;' in text: sink.append('EVENT_LOGGER')
-            if '/api/' in low: sink.append('API_LITERAL')
-            if sink:
-              O += [f'--- {cls} {sig}',f'FILE={p}',f'SINKS={sink}']+b+['']
-
-          OUT.write_text('\n'.join(O),encoding='utf-8')
-          print('\n'.join(O[:12000])); print('bytes',OUT.stat().st_size,'owners',len(owners))
+              m=sr.match(l)
+              if m and any(k in m.group(2).lower() for k in ('device','segment','class','hdr','codec','display','performance','capab')): vals.append(m.group(2))
+            if vals or '0hks' in low or '0hld' in low: O += [f'--- {c} {sig}',f'FILE={p}',f'KEYS={vals}']+b+['']
+          O += ['===== HDR OWNER SINK SUMMARY =====','']
+          ocs={x[0] for x in owners}|{'LX/0Uiy;','LX/03Tz;','LX/00vy;'}
+          for c,sig,p,b in ms:
+            if c not in ocs: continue
+            t='\n'.join(b); sink=[]
+            if 'LX/03u7;->' in t: sink.append('REST')
+            if 'GraphQlCallInput' in t: sink.append('GRAPHQL')
+            if 'markerAnnotate' in t: sink.append('QPL')
+            if 'LX/00vv;' in t or 'LX/00vy;' in t: sink.append('EVENT')
+            if sink: O += [f'{c} {sig} SINKS={sink}',f'FILE={p}']+b+['']
+          out.write_text('\n'.join(O),encoding='utf-8'); print('\n'.join(O[:10000])); print('owners',len(owners),'bytes',out.stat().st_size)
           PY
       - name: Commit R19k reports
         run: |
           set -euo pipefail
-          git config user.name 'github-actions[bot]'
-          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
-          git add research/generated/instagram_439_hdr_persistent_classification_dex_hits_r19k.txt research/generated/instagram_439_hdr_persistent_classification_r19k.txt
-          if ! git diff --cached --quiet; then
-            git commit -m 'Add Instagram HDR persistent classification trace R19k'
-            git pull --rebase origin main
-            git push origin HEAD:main
-          fi
+          git config user.name github-actions[bot]
+          git config user.email 41898282+github-actions[bot]@users.noreply.github.com
+          git add research/generated/instagram_439_hdr_persistent_classification_*.txt
+          if ! git diff --cached --quiet; then git commit -m 'Add Instagram HDR persistent classification trace R19k'; git pull --rebase origin main; git push origin HEAD:main; fi
