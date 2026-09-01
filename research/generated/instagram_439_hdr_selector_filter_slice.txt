@@ -1,0 +1,265 @@
+
+    :cond_34d
+    new-instance v9, Ljava/util/ArrayList;
+
+    invoke-direct {v9}, Ljava/util/ArrayList;-><init>()V
+
+    new-instance v7, Ljava/util/ArrayList;
+
+    invoke-direct {v7}, Ljava/util/ArrayList;-><init>()V
+
+    invoke-virtual {v9}, Ljava/util/AbstractCollection;->isEmpty()Z
+
+    move-result v1
+
+    if-nez v1, :cond_35e
+
+    move-object v6, v9
+
+    :cond_35e
+    invoke-virtual {v7}, Ljava/util/AbstractCollection;->isEmpty()Z
+
+    move-result v1
+
+    if-nez v1, :cond_365
+
+    move-object v5, v7
+
+    :cond_365
+    invoke-virtual {v6}, Ljava/util/AbstractCollection;->isEmpty()Z
+
+    invoke-virtual {v6}, Ljava/util/AbstractCollection;->isEmpty()Z
+
+    move-result v1
+
+    if-eqz v1, :cond_36f
+
+    const/4 v6, 0x0
+
+    :cond_36f
+    invoke-virtual {v5}, Ljava/util/AbstractCollection;->isEmpty()Z
+
+    move-result v1
+
+    if-eqz v1, :cond_376
+
+    const/4 v5, 0x0
+
+    :cond_376
+    if-nez v6, :cond_437
+
+    if-nez v5, :cond_437
+
+    :cond_37a
+    :goto_37a
+    const/4 v15, 0x0
+
+    :cond_37b
+    iget v11, v3, LX/08xk;->A09:I
+
+    sget-object v55, LX/000A;->A01:Ljava/lang/Integer;
+
+    invoke-virtual/range {v55 .. v55}, Ljava/lang/Number;->intValue()I
+
+    move-result v1
+
+    if-eqz v1, :cond_434
+
+    const/4 v10, 0x1
+
+    :goto_386
+    if-eq v11, v10, :cond_3a2
+
+    if-nez v16, :cond_42d
+
+    if-eqz v15, :cond_3a2
+
+    const-string v9, "all dash representation filtered out"
+
+    sget-object v1, LX/01Ak;->A04:LX/01Ak;
+
+    :goto_390
+    const-string v7, "MANIFEST"
+
+    invoke-virtual {v1}, Ljava/lang/Enum;->name()Ljava/lang/String;
+
+    move-result-object v6
+
+    new-instance v5, LX/00kW;
+
+    move-object/from16 v1, v56
+
+    invoke-direct {v5, v1, v7, v6, v9}, LX/00kW;-><init>(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)V
+
+    move-object/from16 v1, v57
+
+    invoke-virtual {v1, v5}, Lcom/facebook/video/heroplayer/service/ServiceEventCallbackImpl;->callback(LX/03p5;)V
+
+    :cond_3a2
+    if-eq v10, v11, :cond_3a9
+
+    if-nez v16, :cond_3a9
+
+    const/4 v6, 0x0
+
+    if-eqz v15, :cond_3aa
+
+    :cond_3a9
+    const/4 v6, 0x1
+
+    :cond_3aa
+    iget-object v1, v12, LX/08lb;->A06:Landroid/net/Uri;
+
+    if-nez v1, :cond_3b2
+
+    iget-object v1, v12, LX/08lb;->A0O:Ljava/util/List;
+
+    if-eqz v1, :cond_3bd
+
+    :cond_3b2
+    const/16 v5, 0xa
+
+    new-instance v1, LX/07nX;
+
+    invoke-direct {v1, v14, v5}, LX/07nX;-><init>(Ljava/lang/Object;I)V
+
+    invoke-direct {v0, v13, v3, v1}, LX/00NW;->A00(LX/0Cmz;LX/08xk;Lcom/google/common/base/Supplier;)LX/0Cmz;
+
+    move-result-object v13
+
+    :cond_3bd
+    if-nez v6, :cond_425
+
+    if-eqz v2, :cond_425
+
+    iget-object v0, v2, LX/08ur;->A01:Ljava/util/List;
+
+    if-eqz v0, :cond_425
+
+    invoke-interface {v0}, Ljava/util/List;->size()I
+
+    move-result v59
+
+    :goto_3c9
+    iget-object v0, v2, LX/08ur;->A00:Ljava/util/List;
+
+    if-eqz v0, :cond_42a
+
+    invoke-interface {v0}, Ljava/util/List;->size()I
+
+    move-result v60
+
+    :goto_3d1
+    iget-boolean v0, v4, LX/08rn;->A0V:Z
+
+    if-eqz v0, :cond_41a
+
+    iget-wide v11, v4, LX/08rn;->A0C:J
+
+    iget-wide v9, v4, LX/08rn;->A08:J
+
+    iget-wide v5, v4, LX/08rn;->A06:J
+
+    iget-wide v0, v4, LX/08rn;->A09:J
+
+    const/16 v71, 0x1
+
+    :goto_3df
+    iget-boolean v3, v4, LX/08rn;->A0W:Z
+
+    const/16 v72, 0x0
+
+    if-eqz v3, :cond_3e7
+
+    const/16 v72, 0x1
+
+    :cond_3e7
+    invoke-static {v2}, Lcom/facebook/video/heroplayer/service/heroexoplayer2/HeroExoPlayer2InitHelper;->A04(LX/08ur;)Ljava/lang/String;
+
+    move-result-object v56
+
+    iget-object v3, v4, LX/08rn;->A0L:Ljava/lang/String;
+
+    iget-object v2, v4, LX/08rn;->A0P:Ljava/lang/String;
+
+    new-instance v51, LX/00lx;
+
+    move-object/from16 v52, v13
+
+    move-object/from16 v54, v14
+
+    move-object/from16 v57, v3
+
+    move-object/from16 v58, v2
+
+    move-wide/from16 v61, v11
+
+    move-wide/from16 v63, v9
+
+    move-wide/from16 v65, v5
+
+    move-wide/from16 v67, v0
+
+    move/from16 v73, v21
+
+    move/from16 v74, v21
+
+    invoke-direct/range {v51 .. v74}, LX/00lx;-><init>(LX/0Cmz;LX/0A40;LX/00kY;Ljava/lang/Integer;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;IIJJJJJZZZZ)V
+
+    invoke-virtual {v8}, LX/08lb;->A03()Z
+
+    move-result v0
+
+    if-eqz v0, :cond_241
+
+    const-string v2, "AV1 decoding using dash media source"
+
+    move/from16 v0, v21
+
+    new-array v1, v0, [Ljava/lang/Object;
+
+    move-object/from16 v0, v22
+
+    invoke-static {v0, v2, v1}, LX/06ul;->A01(Ljava/lang/String;Ljava/lang/String;[Ljava/lang/Object;)V
+
+    return-object v51
+
+    :cond_41a
+    const-wide/16 v11, 0x0
+
+    const-wide/16 v9, 0x0
+
+    const-wide/16 v5, 0x0
+
+    const-wide/16 v0, 0x0
+
+    const/16 v71, 0x0
+
+    goto :goto_3df
+
+    :cond_425
+    const/16 v59, 0x0
+
+    if-eqz v2, :cond_42a
+
+    goto :goto_3c9
+
+    :cond_42a
+    const/16 v60, 0x0
+
+    goto :goto_3d1
+
+    :cond_42d
+    const-string/jumbo v9, "no valid dash representations"
+
+    sget-object v1, LX/01Ak;->A1G:LX/01Ak;
+
+    goto/16 :goto_390
+
+    :cond_434
+    const/4 v10, 0x0
+
+    goto/16 :goto_386
+
+    :cond_437
+
