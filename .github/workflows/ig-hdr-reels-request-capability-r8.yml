@@ -1,0 +1,90 @@
+name: IG 439 Reels Request Capability R8
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - .github/workflows/ig-hdr-reels-request-capability-r8.yml
+
+permissions:
+  contents: write
+
+jobs:
+  trace:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    env:
+      APK_NAME: instagram-piko-v439.0.0.37.89-arm64-v8a.apk
+      APK_SHA256: 4015b171ac59f3e7172134d194ec2dcf701f64c3339f127c19d7a04c13d529c8
+    steps:
+      - uses: actions/checkout@v6
+        with: {fetch-depth: 0}
+      - name: Download and dexdump exact APK
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          set -euo pipefail
+          mkdir -p work/dex work/dis research/generated
+          gh release download 8 --pattern "$APK_NAME" --dir work
+          echo "$APK_SHA256  work/$APK_NAME" | sha256sum -c -
+          unzip -j "work/$APK_NAME" 'classes*.dex' -d work/dex
+          DEXDUMP="$(find "$ANDROID_HOME/build-tools" -type f -name dexdump | sort -V | tail -1)"
+          for d in work/dex/classes*.dex; do "$DEXDUMP" -d -f -h "$d" > "work/dis/$(basename "$d" .dex).txt"; done
+      - name: Extract request-builder methods with media capability signals
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          from pathlib import Path
+          import re
+          OUT=Path('research/generated/instagram_439_reels_request_capability_r8.txt')
+          request_terms=[
+            'GraphQlCallInput','LX/05xm;','LX/00K8;','api/v1','feed/reels','reels_media',
+            'media_info','clips','reels','graphql','doc_id','query_hash','variables'
+          ]
+          cap_terms=[
+            'manifest_capabilities','device_capabilities','supported_codecs','codec_capabilities',
+            'video_codec','av1','hevc','hdr','mixed_codec_manifest','device_tier','device_class',
+            'device_score','quality','bandwidth','playback','dash','media_capabilities'
+          ]
+          endpoint_terms=['feed/reels','reels_media','media_info','clips','reels']
+          out=['Instagram 439 Reels request/capability R8','==========================================','']
+          count=0
+          for p in sorted(Path('work/dis').glob('classes*.txt')):
+            ls=p.read_text(errors='ignore').splitlines()
+            starts=[]
+            for i,l in enumerate(ls):
+              if '|[' in l and re.search(r'\]\s+[^\s]+\.[^\s]+:',l): starts.append(i)
+            for n,s in enumerate(starts):
+              e=starts[n+1] if n+1<len(starts) else min(len(ls),s+4000)
+              block=ls[s:e]
+              blob='\n'.join(block)
+              low=blob.lower()
+              req=[x for x in request_terms if x.lower() in low]
+              cap=[x for x in cap_terms if x.lower() in low]
+              eps=[x for x in endpoint_terms if x.lower() in low]
+              # High-value only: request construction plus a capability/media signal.
+              if req and cap and ('graphqlcallinput' in low or 'lx/05xm;' in low or 'api/v1' in low or eps):
+                count+=1
+                out += [f'===== {p.name}:{s+1} req={req} cap={cap} endpoints={eps} =====',block[0]]
+                # keep only useful neighborhood; whole method capped to 1000 lines
+                idx=[i for i,l in enumerate(block) if any(t.lower() in l.lower() for t in req+cap+eps)]
+                if idx:
+                  a=max(0,min(idx)-120); z=min(len(block),max(idx)+180,1000)
+                  out.extend(block[a:z])
+                out.append('')
+          out.insert(3,f'matched_methods={count}')
+          OUT.write_text('\n'.join(out)[:900000])
+          print('matched',count,'bytes',OUT.stat().st_size)
+          PY
+          wc -c research/generated/instagram_439_reels_request_capability_r8.txt
+          sed -n '1,1000p' research/generated/instagram_439_reels_request_capability_r8.txt
+      - name: Commit report
+        run: |
+          set -euo pipefail
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add research/generated/instagram_439_reels_request_capability_r8.txt
+          if ! git diff --cached --quiet; then git commit -m 'Add Instagram 439 Reels request capability trace'; fi
+          git pull --rebase origin main
+          git push origin HEAD:main
