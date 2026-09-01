@@ -1,0 +1,155 @@
+name: IG 439 HDR Request Dataflow R7
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - .github/workflows/ig-hdr-request-dataflow-r7.yml
+
+permissions:
+  contents: write
+
+jobs:
+  trace:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    env:
+      APK_NAME: instagram-piko-v439.0.0.37.89-arm64-v8a.apk
+      APK_SHA256: 4015b171ac59f3e7172134d194ec2dcf701f64c3339f127c19d7a04c13d529c8
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+      - name: Download exact APK and dexdump
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          set -euo pipefail
+          mkdir -p work/dex work/dis research/generated
+          gh release download 8 --pattern "$APK_NAME" --dir work
+          echo "$APK_SHA256  work/$APK_NAME" | sha256sum -c -
+          unzip -j "work/$APK_NAME" 'classes*.dex' -d work/dex
+          DEXDUMP="$(find "$ANDROID_HOME/build-tools" -type f -name dexdump | sort -V | tail -1)"
+          for d in work/dex/classes*.dex; do
+            b="$(basename "$d" .dex)"
+            "$DEXDUMP" -d -f -h "$d" > "work/dis/$b.txt"
+          done
+
+      - name: Build exact field and caller graph
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          from pathlib import Path
+          import re
+
+          files=list(Path('work/dis').glob('classes*.txt'))
+          texts={str(p):p.read_text(errors='ignore').splitlines() for p in files}
+          targets=[
+            'display_hdr_supported','supported_display_hdr_types','hdr_supported_types',
+            'is_av1_hdr_supported','is_hevc_hdr_supported','key_display_hdr_supported',
+            'key_video_decoder_hdr_supported','video_decoder_hdr_supported','device_capabilities'
+          ]
+          network_terms=[
+            'graphql','reels','clips','media_info','media_id','feed/reels','api/v1','request',
+            'query_hash','doc_id','variables','params','headers','user-agent','capabilities',
+            'video_dash_manifest','manifest'
+          ]
+
+          method_re=re.compile(r'^\s*\|\[[0-9a-f]+\]\s+([^:]+\.[^:]+):\((.*?)$')
+          class_method_re=re.compile(r'^\s*\|\[[0-9a-f]+\]\s+(X\.[^:]+):')
+          field_ref_re=re.compile(r'L(X/[0-9A-Za-z_$]+);\.([A-Za-z0-9_$]+):')
+
+          # collect method blocks using dexdump instruction header boundaries
+          blocks=[]
+          for fn,ls in texts.items():
+            starts=[]
+            for i,l in enumerate(ls):
+              if '|[' in l and re.search(r'\]\s+[^\s]+\.[^\s]+:',l): starts.append(i)
+            for n,s in enumerate(starts):
+              e=starts[n+1] if n+1<len(starts) else min(len(ls),s+5000)
+              head=ls[s]
+              blocks.append((fn,s,e,head,ls[s:e]))
+
+          target_blocks=[]
+          target_fields=set()
+          for b in blocks:
+            blob='\n'.join(b[4])
+            hits=[t for t in targets if t.lower() in blob.lower()]
+            if hits:
+              target_blocks.append((b,hits))
+              for m in field_ref_re.finditer(blob):
+                target_fields.add((m.group(1),m.group(2)))
+
+          # Known registry field aliases from exact report / class init.
+          target_fields.add(('X/0hkS','A2Z'))
+
+          caller_blocks=[]
+          for b in blocks:
+            blob='\n'.join(b[4])
+            refs=[]
+            for cls,fld in target_fields:
+              pat=f'L{cls};.{fld}:'
+              if pat in blob:
+                refs.append((cls,fld))
+            if refs:
+              caller_blocks.append((b,refs,[t for t in network_terms if t.lower() in blob.lower()]))
+
+          out=[]
+          out += ['Instagram 439 HDR request dataflow R7','========================================','']
+          out += ['GOAL: distinguish telemetry/static classifier fields from values that enter Reel/media request construction.','']
+          out += ['===== TARGET OWNER METHODS =====']
+          for (fn,s,e,head,ls),hits in target_blocks:
+            out += [f'\n### {fn}:{s+1} hits={hits}', head]
+            # include only local windows around target lines
+            idxs=[i for i,l in enumerate(ls) if any(t.lower() in l.lower() for t in targets)]
+            shown=set()
+            for i in idxs:
+              a=max(0,i-35); z=min(len(ls),i+55)
+              key=(a,z)
+              if key in shown: continue
+              shown.add(key)
+              out.extend(ls[a:z])
+
+          out += ['','===== DISCOVERED FIELD REFERENCES =====']
+          for x in sorted(target_fields): out.append(f'L{x[0]};.{x[1]}')
+
+          out += ['','===== METHODS READING TARGET FIELDS =====']
+          ranked=sorted(caller_blocks,key=lambda x:(0 if x[2] else 1, x[0][0],x[0][1]))
+          for (fn,s,e,head,ls),refs,net in ranked:
+            out += [f'\n### {fn}:{s+1} refs={refs} network_terms={net}',head]
+            # show field ref ±90 lines, wide enough to expose request builder calls/strings
+            idxs=[i for i,l in enumerate(ls) if any(f'L{c};.{f}:' in l for c,f in refs)]
+            for i in idxs[:8]:
+              out.extend(ls[max(0,i-90):min(len(ls),i+130)])
+
+          out += ['','===== NETWORK/CAPABILITY CO-OCCURRENCE METHODS =====']
+          for b in blocks:
+            blob='\n'.join(b[4]); low=blob.lower()
+            hdr=[t for t in targets if t in low]
+            net=[t for t in network_terms if t in low]
+            if hdr and net:
+              fn,s,e,head,ls=b
+              out += [f'\n### {fn}:{s+1} hdr={hdr} net={net}',head]
+              idxs=[i for i,l in enumerate(ls) if any(t in l.lower() for t in hdr+net)]
+              if idxs:
+                a=max(0,min(idxs)-100); z=min(len(ls),max(idxs)+140)
+                out.extend(ls[a:z])
+
+          # Hard cap but keep much larger than old exact report.
+          data='\n'.join(out)
+          Path('research/generated/instagram_439_hdr_request_dataflow_r7.txt').write_text(data[:900000])
+          print('target owner blocks',len(target_blocks),'field refs',len(target_fields),'caller blocks',len(caller_blocks))
+          PY
+          wc -c research/generated/instagram_439_hdr_request_dataflow_r7.txt
+          sed -n '1,800p' research/generated/instagram_439_hdr_request_dataflow_r7.txt
+
+      - name: Commit R7 dataflow report
+        run: |
+          set -euo pipefail
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898242+github-actions[bot]@users.noreply.github.com'
+          git add research/generated/instagram_439_hdr_request_dataflow_r7.txt
+          if ! git diff --cached --quiet; then git commit -m 'Add Instagram 439 HDR request dataflow R7'; fi
+          git pull --rebase origin main
+          git push origin HEAD:main
