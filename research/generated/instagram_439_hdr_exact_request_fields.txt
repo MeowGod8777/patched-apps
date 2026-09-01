@@ -1,0 +1,1484 @@
+Instagram 439 exact HDR request-field trace
+===========================================
+
+work/dis/classes12.txt-1308000-      name          : 'A3S'
+work/dis/classes12.txt-1308001-      type          : 'LX/0fKx;'
+work/dis/classes12.txt-1308002-      access        : 0x0019 (PUBLIC STATIC FINAL)
+work/dis/classes12.txt-1308003-    #208              : (in LX/0hkS;)
+work/dis/classes12.txt-1308004-      name          : 'A3T'
+work/dis/classes12.txt-1308005-      type          : 'LX/0fKx;'
+work/dis/classes12.txt-1308006-      access        : 0x0019 (PUBLIC STATIC FINAL)
+work/dis/classes12.txt-1308007-    #209              : (in LX/0hkS;)
+work/dis/classes12.txt-1308008-      name          : 'A3U'
+work/dis/classes12.txt-1308009-      type          : 'LX/0fKx;'
+work/dis/classes12.txt-1308010-      access        : 0x0019 (PUBLIC STATIC FINAL)
+work/dis/classes12.txt-1308011-    #210              : (in LX/0hkS;)
+work/dis/classes12.txt-1308012-      name          : 'A3V'
+work/dis/classes12.txt-1308013-      type          : '[LX/0fKx;'
+work/dis/classes12.txt-1308014-      access        : 0x0019 (PUBLIC STATIC FINAL)
+work/dis/classes12.txt-1308015-    #211              : (in LX/0hkS;)
+work/dis/classes12.txt-1308016-      name          : 'A3W'
+work/dis/classes12.txt-1308017-      type          : 'LX/0hkS;'
+work/dis/classes12.txt-1308018-      access        : 0x0049 (PUBLIC STATIC VOLATILE)
+work/dis/classes12.txt-1308019-  Instance fields   -
+work/dis/classes12.txt-1308020-    #0              : (in LX/0hkS;)
+work/dis/classes12.txt-1308021-      name          : 'A00'
+work/dis/classes12.txt-1308022-      type          : 'Landroid/content/SharedPreferences;'
+work/dis/classes12.txt-1308023-      access        : 0x0001 (PUBLIC)
+work/dis/classes12.txt-1308024-    #1              : (in LX/0hkS;)
+work/dis/classes12.txt-1308025-      name          : 'A01'
+work/dis/classes12.txt-1308026-      type          : 'Landroid/content/pm/PackageManager;'
+work/dis/classes12.txt-1308027-      access        : 0x0001 (PUBLIC)
+work/dis/classes12.txt-1308028-    #2              : (in LX/0hkS;)
+work/dis/classes12.txt-1308029-      name          : 'A02'
+work/dis/classes12.txt-1308030-      type          : 'Landroid/os/Handler$Callback;'
+work/dis/classes12.txt-1308031-      access        : 0x0001 (PUBLIC)
+work/dis/classes12.txt-1308032-    #3              : (in LX/0hkS;)
+work/dis/classes12.txt-1308033-      name          : 'A03'
+work/dis/classes12.txt-1308034-      type          : 'Landroid/os/Handler;'
+work/dis/classes12.txt-1308035-      access        : 0x0001 (PUBLIC)
+work/dis/classes12.txt-1308036-    #4              : (in LX/0hkS;)
+work/dis/classes12.txt-1308037-      name          : 'A04'
+work/dis/classes12.txt-1308038-      type          : 'Landroid/os/Handler;'
+work/dis/classes12.txt-1308039-      access        : 0x0001 (PUBLIC)
+work/dis/classes12.txt-1308040-    #5              : (in LX/0hkS;)
+work/dis/classes12.txt-1308041-      name          : 'A05'
+work/dis/classes12.txt-1308042-      type          : 'Landroid/os/HandlerThread;'
+work/dis/classes12.txt-1308043-      access        : 0x0001 (PUBLIC)
+work/dis/classes12.txt-1308044-    #6              : (in LX/0hkS;)
+work/dis/classes12.txt-1308045-      name          : 'A06'
+work/dis/classes12.txt-1308046-      type          : 'Ljava/lang/ref/WeakReference;'
+work/dis/classes12.txt-1308047-      access        : 0x0001 (PUBLIC)
+work/dis/classes12.txt-1308048-  Direct methods    -
+work/dis/classes12.txt-1308049-    #0              : (in LX/0hkS;)
+work/dis/classes12.txt-1308050-      name          : '<clinit>'
+work/dis/classes12.txt-1308051-      type          : '()V'
+work/dis/classes12.txt-1308052-      access        : 0x10009 (PUBLIC STATIC CONSTRUCTOR)
+work/dis/classes12.txt-1308053-      method_idx    : 36853
+work/dis/classes12.txt-1308054-      code          -
+work/dis/classes12.txt-1308055-      registers     : 239
+work/dis/classes12.txt-1308056-      ins           : 0
+work/dis/classes12.txt-1308057-      outs          : 5
+work/dis/classes12.txt-1308058-      insns size    : 3194 16-bit code units
+work/dis/classes12.txt-1308059-24a480:                                        |[24a480] X.0hkS.<clinit>:()V
+work/dis/classes12.txt-1308060-24a490: 1a02 b395                              |0000: const-string v2, "ram_total_kb" // string@95b3
+work/dis/classes12.txt-1308061-24a494: 1201                                   |0002: const/4 v1, #int 0 // #0
+work/dis/classes12.txt-1308062-24a496: 22cf 2e26                              |0003: new-instance v207, LX/0fKx; // type@262e
+work/dis/classes12.txt-1308063-24a49a: 0800 cf00                              |0005: move-object/from16 v0, v207
+work/dis/classes12.txt-1308064-24a49e: 7030 ae86 1002                         |0007: invoke-direct {v0, v1, v2}, LX/0fKx;.<init>:(ILjava/lang/String;)V // method@86ae
+work/dis/classes12.txt-1308065-24a4a4: 69cf 4e55                              |000a: sput-object v207, LX/0hkS;.A2s:LX/0fKx; // field@554e
+work/dis/classes12.txt-1308066-24a4a8: 1a02 007e                              |000c: const-string v2, "cpu_num_cores" // string@7e00
+work/dis/classes12.txt-1308067-24a4ac: 1211                                   |000e: const/4 v1, #int 1 // #1
+work/dis/classes12.txt-1308068-24a4ae: 22ce 2e26                              |000f: new-instance v206, LX/0fKx; // type@262e
+work/dis/classes12.txt-1308069-24a4b2: 0800 ce00                              |0011: move-object/from16 v0, v206
+work/dis/classes12.txt-1308070-24a4b6: 7030 ae86 1002                         |0013: invoke-direct {v0, v1, v2}, LX/0fKx;.<init>:(ILjava/lang/String;)V // method@86ae
+work/dis/classes12.txt-1308071-24a4bc: 69ce 3a55                              |0016: sput-object v206, LX/0hkS;.A2Y:LX/0fKx; // field@553a
+work/dis/classes12.txt-1308072-24a4c0: 1a02 ff7d                              |0018: const-string v2, "cpu_max_frequency_mhz" // string@7dff
+work/dis/classes12.txt-1308073-24a4c4: 1221                                   |001a: const/4 v1, #int 2 // #2
+work/dis/classes12.txt-1308074-24a4c6: 22cc 2e26                              |001b: new-instance v204, LX/0fKx; // type@262e
+work/dis/classes12.txt-1308075-24a4ca: 0800 cc00                              |001d: move-object/from16 v0, v204
+work/dis/classes12.txt-1308076-24a4ce: 7030 ae86 1002                         |001f: invoke-direct {v0, v1, v2}, LX/0fKx;.<init>:(ILjava/lang/String;)V // method@86ae
+work/dis/classes12.txt-1308077-24a4d4: 69cc 3955                              |0022: sput-object v204, LX/0hkS;.A2X:LX/0fKx; // field@5539
+work/dis/classes12.txt-1308078-24a4d8: 1a02 a67f                              |0024: const-string v2, "display_size_pixels" // string@7fa6
+work/dis/classes12.txt-1308079-24a4dc: 1231                                   |0026: const/4 v1, #int 3 // #3
+work/dis/classes12.txt-1308080-24a4de: 22cb 2e26                              |0027: new-instance v203, LX/0fKx; // type@262e
+work/dis/classes12.txt-1308081-24a4e2: 0800 cb00                              |0029: move-object/from16 v0, v203
+work/dis/classes12.txt-1308082-24a4e6: 7030 ae86 1002                         |002b: invoke-direct {v0, v1, v2}, LX/0fKx;.<init>:(ILjava/lang/String;)V // method@86ae
+work/dis/classes12.txt-1308083-24a4ec: 69cb 3d55                              |002e: sput-object v203, LX/0hkS;.A2b:LX/0fKx; // field@553d
+work/dis/classes12.txt-1308084-24a4f0: 1a02 a27f                              |0030: const-string v2, "display_max_refresh_rate_fps" // string@7fa2
+work/dis/classes12.txt-1308085-24a4f4: 1241                                   |0032: const/4 v1, #int 4 // #4
+work/dis/classes12.txt-1308086-24a4f6: 22c9 2e26                              |0033: new-instance v201, LX/0fKx; // type@262e
+work/dis/classes12.txt-1308087-24a4fa: 0800 c900                              |0035: move-object/from16 v0, v201
+work/dis/classes12.txt-1308088-24a4fe: 7030 ae86 1002                         |0037: invoke-direct {v0, v1, v2}, LX/0fKx;.<init>:(ILjava/lang/String;)V // method@86ae
+work/dis/classes12.txt-1308089-24a504: 69c9 3c55                              |003a: sput-object v201, LX/0hkS;.A2a:LX/0fKx; // field@553c
+work/dis/classes12.txt:1308090:24a508: 1a02 9f7f                              |003c: const-string v2, "display_hdr_supported" // string@7f9f
+work/dis/classes12.txt-1308091-24a50c: 1251                                   |003e: const/4 v1, #int 5 // #5
+work/dis/classes12.txt-1308092-24a50e: 22c8 2e26                              |003f: new-instance v200, LX/0fKx; // type@262e
+work/dis/classes12.txt-1308093-24a512: 0800 c800                              |0041: move-object/from16 v0, v200
+work/dis/classes12.txt-1308094-24a516: 7030 ae86 1002                         |0043: invoke-direct {v0, v1, v2}, LX/0fKx;.<init>:(ILjava/lang/String;)V // method@86ae
+work/dis/classes12.txt-1308095-24a51c: 69c8 3b55                              |0046: sput-object v200, LX/0hkS;.A2Z:LX/0fKx; // field@553b
+work/dis/classes12.txt-1308096-24a520: 1a02 ac7f                              |0048: const-string v2, "display_wide_colour_gamut_supported" // string@7fac
+work/dis/classes12.txt-1308097-24a524: 1261                                   |004a: const/4 v1, #int 6 // #6
+work/dis/classes12.txt-1308098-24a526: 22c6 2e26                              |004b: new-instance v198, LX/0fKx; // type@262e
+work/dis/classes12.txt-1308099-24a52a: 0800 c600                              |004d: move-object/from16 v0, v198
+work/dis/classes12.txt-1308100-24a52e: 7030 ae86 1002                         |004f: invoke-direct {v0, v1, v2}, LX/0fKx;.<init>:(ILjava/lang/String;)V // method@86ae
+work/dis/classes12.txt-1308101-24a534: 69c6 3e55                              |0052: sput-object v198, LX/0hkS;.A2c:LX/0fKx; // field@553e
+work/dis/classes12.txt-1308102-24a538: 1a02 557b                              |0054: const-string v2, "camera_back_facing_present" // string@7b55
+work/dis/classes12.txt-1308103-24a53c: 1271                                   |0056: const/4 v1, #int 7 // #7
+work/dis/classes12.txt-1308104-24a53e: 22c5 2e26                              |0057: new-instance v197, LX/0fKx; // type@262e
+work/dis/classes12.txt-1308105-24a542: 0800 c500                              |0059: move-object/from16 v0, v197
+work/dis/classes12.txt-1308106-24a546: 7030 ae86 1002                         |005b: invoke-direct {v0, v1, v2}, LX/0fKx;.<init>:(ILjava/lang/String;)V // method@86ae
+work/dis/classes12.txt-1308107-24a54c: 69c5 b654                              |005e: sput-object v197, LX/0hkS;.A0Q:LX/0fKx; // field@54b6
+work/dis/classes12.txt-1308108-24a550: 1a02 9c7b                              |0060: const-string v2, "camera_front_facing_present" // string@7b9c
+work/dis/classes12.txt-1308109-24a554: 1301 0800                              |0062: const/16 v1, #int 8 // #8
+work/dis/classes12.txt-1308110-24a558: 22c3 2e26                              |0064: new-instance v195, LX/0fKx; // type@262e
+work/dis/classes12.txt-1308111-24a55c: 0800 c300                              |0066: move-object/from16 v0, v195
+work/dis/classes12.txt-1308112-24a560: 7030 ae86 1002                         |0068: invoke-direct {v0, v1, v2}, LX/0fKx;.<init>:(ILjava/lang/String;)V // method@86ae
+work/dis/classes12.txt-1308113-24a566: 69c3 fd54                              |006b: sput-object v195, LX/0hkS;.A1Z:LX/0fKx; // field@54fd
+work/dis/classes12.txt-1308114-24a56a: 1a02 467b                              |006d: const-string v2, "camera_autofocus_supported" // string@7b46
+work/dis/classes12.txt-1308115-24a56e: 1301 0900                              |006f: const/16 v1, #int 9 // #9
+work/dis/classes12.txt-1308116-24a572: 22c2 2e26                              |0071: new-instance v194, LX/0fKx; // type@262e
+work/dis/classes12.txt-1308117-24a576: 0800 c200                              |0073: move-object/from16 v0, v194
+work/dis/classes12.txt-1308118-24a57a: 7030 ae86 1002                         |0075: invoke-direct {v0, v1, v2}, LX/0fKx;.<init>:(ILjava/lang/String;)V // method@86ae
+work/dis/classes12.txt-1308119-24a580: 69c2 a754                              |0078: sput-object v194, LX/0hkS;.A0B:LX/0fKx; // field@54a7
+work/dis/classes12.txt-1308120-24a584: 1a02 da7b                              |007a: const-string v2, "camera_motion_tracking_supported" // string@7bda
+work/dis/classes12.txt-1308121-24a588: 1301 0a00                              |007c: const/16 v1, #int 10 // #a
+work/dis/classes12.txt-1308122-24a58c: 22c0 2e26                              |007e: new-instance v192, LX/0fKx; // type@262e
+work/dis/classes12.txt-1308123-24a590: 0800 c000                              |0080: move-object/from16 v0, v192
+work/dis/classes12.txt-1308124-24a594: 7030 ae86 1002                         |0082: invoke-direct {v0, v1, v2}, LX/0fKx;.<init>:(ILjava/lang/String;)V // method@86ae
+work/dis/classes12.txt-1308125-24a59a: 69c0 3755                              |0085: sput-object v192, LX/0hkS;.A2V:LX/0fKx; // field@5537
+work/dis/classes12.txt-1308126-24a59e: 1a02 8d7b                              |0087: const-string v2, "camera_flash_supported" // string@7b8d
+work/dis/classes12.txt-1308127-24a5a2: 1301 0b00                              |0089: const/16 v1, #int 11 // #b
+work/dis/classes12.txt-1308128-24a5a6: 22bf 2e26                              |008b: new-instance v191, LX/0fKx; // type@262e
+work/dis/classes12.txt-1308129-24a5aa: 0800 bf00                              |008d: move-object/from16 v0, v191
+work/dis/classes12.txt-1308130-24a5ae: 7030 ae86 1002                         |008f: invoke-direct {v0, v1, v2}, LX/0fKx;.<init>:(ILjava/lang/String;)V // method@86ae
+work/dis/classes12.txt-1308131-24a5b4: 69bf ee54                              |0092: sput-object v191, LX/0hkS;.A1K:LX/0fKx; // field@54ee
+work/dis/classes12.txt-1308132-24a5b8: 1a02 d47b                              |0094: const-string v2, "camera_is_full_hardware_level" // string@7bd4
+work/dis/classes12.txt-1308133-24a5bc: 1301 0c00                              |0096: const/16 v1, #int 12 // #c
+work/dis/classes12.txt-1308134-24a5c0: 22bc 2e26                              |0098: new-instance v188, LX/0fKx; // type@262e
+work/dis/classes12.txt-1308135-24a5c4: 0800 bc00                              |009a: move-object/from16 v0, v188
+work/dis/classes12.txt-1308136-24a5c8: 7030 ae86 1002                         |009c: invoke-direct {v0, v1, v2}, LX/0fKx;.<init>:(ILjava/lang/String;)V // method@86ae
+work/dis/classes12.txt-1308137-24a5ce: 69bc 3455                              |009f: sput-object v188, LX/0hkS;.A2S:LX/0fKx; // field@5534
+work/dis/classes12.txt-1308138-24a5d2: 1a01 8c7b                              |00a1: const-string v1, "camera_concurrent_capture_supported" // string@7b8c
+work/dis/classes12.txt-1308139-24a5d6: 1300 0d00                              |00a3: const/16 v0, #int 13 // #d
+work/dis/classes12.txt-1308140-24a5da: 22b9 2e26                              |00a5: new-instance v185, LX/0fKx; // type@262e
+work/dis/classes12.txt-1308141-24a5de: 0802 b900                              |00a7: move-object/from16 v2, v185
+work/dis/classes12.txt-1308142-24a5e2: 7030 ae86 0201                         |00a9: invoke-direct {v2, v0, v1}, LX/0fKx;.<init>:(ILjava/lang/String;)V // method@86ae
+work/dis/classes12.txt-1308143-24a5e8: 69b9 ed54                              |00ac: sput-object v185, LX/0hkS;.A1J:LX/0fKx; // field@54ed
+work/dis/classes12.txt-1308144-24a5ec: 1a01 d87b                              |00ae: const-string v1, "camera_manual_post_processing_supported" // string@7bd8
+work/dis/classes12.txt-1308145-24a5f0: 1300 0e00                              |00b0: const/16 v0, #int 14 // #e
+work/dis/classes12.txt-1308146-24a5f4: 221d 2e26                              |00b2: new-instance v29, LX/0fKx; // type@262e
+work/dis/classes12.txt-1308147-24a5f8: 0802 1d00                              |00b4: move-object/from16 v2, v29
+work/dis/classes12.txt-1308148-24a5fc: 7030 ae86 0201                         |00b6: invoke-direct {v2, v0, v1}, LX/0fKx;.<init>:(ILjava/lang/String;)V // method@86ae
+work/dis/classes12.txt-1308149-24a602: 691d 3555                              |00b9: sput-object v29, LX/0hkS;.A2T:LX/0fKx; // field@5535
+work/dis/classes12.txt-1308150-24a606: 1a01 d97b                              |00bb: const-string v1, "camera_manual_sensor_supported" // string@7bd9
+work/dis/classes12.txt-1308151-24a60a: 1300 0f00                              |00bd: const/16 v0, #int 15 // #f
+work/dis/classes12.txt-1308152-24a60e: 221c 2e26                              |00bf: new-instance v28, LX/0fKx; // type@262e
+work/dis/classes12.txt-1308153-24a612: 0802 1c00                              |00c1: move-object/from16 v2, v28
+work/dis/classes12.txt-1308154-24a616: 7030 ae86 0201                         |00c3: invoke-direct {v2, v0, v1}, LX/0fKx;.<init>:(ILjava/lang/String;)V // method@86ae
+work/dis/classes12.txt-1308155-24a61c: 691c 3655                              |00c6: sput-object v28, LX/0hkS;.A2U:LX/0fKx; // field@5536
+work/dis/classes12.txt-1308156-24a620: 1a01 db7b                              |00c8: const-string v1, "camera_raw_image_capture_supported" // string@7bdb
+work/dis/classes12.txt-1308157-24a624: 1300 1000                              |00ca: const/16 v0, #int 16 // #10
+work/dis/classes12.txt-1308158-24a628: 221b 2e26                              |00cc: new-instance v27, LX/0fKx; // type@262e
+work/dis/classes12.txt-1308159-24a62c: 0802 1b00                              |00ce: move-object/from16 v2, v27
+work/dis/classes12.txt-1308160-24a630: 7030 ae86 0201                         |00d0: invoke-direct {v2, v0, v1}, LX/0fKx;.<init>:(ILjava/lang/String;)V // method@86ae
+work/dis/classes12.txt-1308161-24a636: 691b 3855                              |00d3: sput-object v27, LX/0hkS;.A2W:LX/0fKx; // field@5538
+work/dis/classes12.txt-1308162-24a63a: 1a01 b579                              |00d5: const-string v1, "audio_is_low_latency" // string@79b5
+work/dis/classes12.txt-1308163-24a63e: 1300 1100                              |00d7: const/16 v0, #int 17 // #11
+work/dis/classes12.txt-1308164-24a642: 221a 2e26                              |00d9: new-instance v26, LX/0fKx; // type@262e
+work/dis/classes12.txt-1308165-24a646: 0802 1a00                              |00db: move-object/from16 v2, v26
+work/dis/classes12.txt-1308166-24a64a: 7030 ae86 0201                         |00dd: invoke-direct {v2, v0, v1}, LX/0fKx;.<init>:(ILjava/lang/String;)V // method@86ae
+work/dis/classes12.txt-1308167-24a650: 691a a354                              |00e0: sput-object v26, LX/0hkS;.A07:LX/0fKx; // field@54a3
+work/dis/classes12.txt-1308168-24a654: 1a01 b679                              |00e2: const-string v1, "audio_is_pro_level" // string@79b6
+work/dis/classes12.txt-1308169-24a658: 1300 1200                              |00e4: const/16 v0, #int 18 // #12
+work/dis/classes12.txt-1308170-24a65c: 2219 2e26                              |00e6: new-instance v25, LX/0fKx; // type@262e
+work/dis/classes12.txt-1308171-24a660: 0802 1900                              |00e8: move-object/from16 v2, v25
+work/dis/classes12.txt-1308172-24a664: 7030 ae86 0201                         |00ea: invoke-direct {v2, v0, v1}, LX/0fKx;.<init>:(ILjava/lang/String;)V // method@86ae
+work/dis/classes12.txt-1308173-24a66a: 6919 a454                              |00ed: sput-object v25, LX/0hkS;.A08:LX/0fKx; // field@54a4
+work/dis/classes12.txt-1308174-24a66e: 1a01 ba79                              |00ef: const-string v1, "audio_midi_api_supported" // string@79ba
+work/dis/classes12.txt-1308175-24a672: 1300 1300                              |00f1: const/16 v0, #int 19 // #13
+work/dis/classes12.txt-1308176-24a676: 2218 2e26                              |00f3: new-instance v24, LX/0fKx; // type@262e
+work/dis/classes12.txt-1308177-24a67a: 0802 1800                              |00f5: move-object/from16 v2, v24
+work/dis/classes12.txt-1308178-24a67e: 7030 ae86 0201                         |00f7: invoke-direct {v2, v0, v1}, LX/0fKx;.<init>:(ILjava/lang/String;)V // method@86ae
+work/dis/classes12.txt-1308179-24a684: 6918 a654                              |00fa: sput-object v24, LX/0hkS;.A0A:LX/0fKx; // field@54a6
+work/dis/classes12.txt-1308180-24a688: 1a01 b979                              |00fc: const-string v1, "audio_microphone_present" // string@79b9
+work/dis/classes12.txt-1308181-24a68c: 1300 1400                              |00fe: const/16 v0, #int 20 // #14
+work/dis/classes12.txt-1308182-24a690: 2217 2e26                              |0100: new-instance v23, LX/0fKx; // type@262e
+work/dis/classes12.txt-1308183-24a694: 0802 1700                              |0102: move-object/from16 v2, v23
+work/dis/classes12.txt-1308184-24a698: 7030 ae86 0201                         |0104: invoke-direct {v2, v0, v1}, LX/0fKx;.<init>:(ILjava/lang/String;)V // method@86ae
+work/dis/classes12.txt-1308185-24a69e: 6917 a554                              |0107: sput-object v23, LX/0hkS;.A09:LX/0fKx; // field@54a5
+work/dis/classes12.txt-1308186-24a6a2: 1a01 e092                              |0109: const-string v1, "opengles_deqp_test_date" // string@92e0
+work/dis/classes12.txt-1308187-24a6a6: 1300 1500                              |010b: const/16 v0, #int 21 // #15
+work/dis/classes12.txt-1308188-24a6aa: 2216 2e26                              |010d: new-instance v22, LX/0fKx; // type@262e
+work/dis/classes12.txt-1308189-24a6ae: 0802 1600                              |010f: move-object/from16 v2, v22
+work/dis/classes12.txt-1308190-24a6b2: 7030 ae86 0201                         |0111: invoke-direct {v2, v0, v1}, LX/0fKx;.<init>:(ILjava/lang/String;)V // method@86ae
+work/dis/classes12.txt-1308191-24a6b8: 6916 4055                              |0114: sput-object v22, LX/0hkS;.A2e:LX/0fKx; // field@5540
+work/dis/classes12.txt-1308192-24a6bc: 1301 1600                              |0116: const/16 v1, #int 22 // #16
+work/dis/classes12.txt-1308193-24a6c0: 1a00 df92                              |0118: const-string v0, "opengles_android_extension_pack_supported" // string@92df
+work/dis/classes12.txt-1308194-24a6c4: 2215 2e26                              |011a: new-instance v21, LX/0fKx; // type@262e
+work/dis/classes12.txt-1308195-24a6c8: 0802 1500                              |011c: move-object/from16 v2, v21
+work/dis/classes12.txt-1308196-24a6cc: 7030 ae86 1200                         |011e: invoke-direct {v2, v1, v0}, LX/0fKx;.<init>:(ILjava/lang/String;)V // method@86ae
+work/dis/classes12.txt-1308197-24a6d2: 6915 3f55                              |0121: sput-object v21, LX/0hkS;.A2d:LX/0fKx; // field@553f
+work/dis/classes12.txt-1308198-24a6d6: 1301 1700                              |0123: const/16 v1, #int 23 // #17
+work/dis/classes12.txt-1308199-24a6da: 1a00 94a1                              |0125: const-string v0, "vulkan_deqp_test_date" // string@a194
+work/dis/classes12.txt-1308200-24a6de: 2214 2e26                              |0127: new-instance v20, LX/0fKx; // type@262e
+work/dis/classes12.txt-1308201-24a6e2: 0802 1400                              |0129: move-object/from16 v2, v20
+work/dis/classes12.txt-1308202-24a6e6: 7030 ae86 1200                         |012b: invoke-direct {v2, v1, v0}, LX/0fKx;.<init>:(ILjava/lang/String;)V // method@86ae
+work/dis/classes12.txt-1308203-24a6ec: 6914 7155                              |012e: sput-object v20, LX/0hkS;.A3R:LX/0fKx; // field@5571
+work/dis/classes12.txt-1308204-24a6f0: 1301 1800                              |0130: const/16 v1, #int 24 // #18
+work/dis/classes12.txt-1308205-24a6f4: 1a00 95a1                              |0132: const-string v0, "vulkan_hardware_compute_supported" // string@a195
+work/dis/classes12.txt-1308206-24a6f8: 2204 2e26                              |0134: new-instance v4, LX/0fKx; // type@262e
+work/dis/classes12.txt-1308207-24a6fc: 7030 ae86 1400                         |0136: invoke-direct {v4, v1, v0}, LX/0fKx;.<init>:(ILjava/lang/String;)V // method@86ae
+work/dis/classes12.txt-1308208-24a702: 6904 7255                              |0139: sput-object v4, LX/0hkS;.A3S:LX/0fKx; // field@5572
+work/dis/classes12.txt-1308209-24a706: 1301 1900                              |013b: const/16 v1, #int 25 // #19
+work/dis/classes12.txt-1308210-24a70a: 1a00 96a1                              |013d: const-string v0, "vulkan_hardware_level" // string@a196
+work/dis/classes12.txt-1308211-24a70e: 2203 2e26                              |013f: new-instance v3, LX/0fKx; // type@262e
+work/dis/classes12.txt-1308212-24a712: 7030 ae86 1300                         |0141: invoke-direct {v3, v1, v0}, LX/0fKx;.<init>:(ILjava/lang/String;)V // method@86ae
+work/dis/classes12.txt-1308213-24a718: 6903 7355                              |0144: sput-object v3, LX/0hkS;.A3T:LX/0fKx; // field@5573
+work/dis/classes12.txt-1308214-24a71c: 1301 1a00                              |0146: const/16 v1, #int 26 // #1a
+work/dis/classes12.txt-1308215-24a720: 1a00 97a1                              |0148: const-string v0, "vulkan_hardware_version" // string@a197
+work/dis/classes12.txt-1308216-24a724: 2202 2e26                              |014a: new-instance v2, LX/0fKx; // type@262e
+work/dis/classes12.txt-1308217-24a728: 7030 ae86 1200                         |014c: invoke-direct {v2, v1, v0}, LX/0fKx;.<init>:(ILjava/lang/String;)V // method@86ae
+work/dis/classes12.txt-1308218-24a72e: 6902 7455                              |014f: sput-object v2, LX/0hkS;.A3U:LX/0fKx; // field@5574
+work/dis/classes12.txt-1308219-24a732: 1305 1b00                              |0151: const/16 v5, #int 27 // #1b
+work/dis/classes12.txt-1308220-24a736: 1a01 eb92                              |0153: const-string v1, "opengles_renderer" // string@92eb
+work/dis/classes12.txt-1308221-24a73a: 22bb 2e26                              |0155: new-instance v187, LX/0fKx; // type@262e
+work/dis/classes12.txt-1308222-24a73e: 0800 bb00                              |0157: move-object/from16 v0, v187
+work/dis/classes12.txt-1308223-24a742: 7030 ae86 5001                         |0159: invoke-direct {v0, v5, v1}, LX/0fKx;.<init>:(ILjava/lang/String;)V // method@86ae
+work/dis/classes12.txt-1308224-24a748: 69bb 4b55                              |015c: sput-object v187, LX/0hkS;.A2p:LX/0fKx; // field@554b
+work/dis/classes12.txt-1308225-24a74c: 1301 1c00                              |015e: const/16 v1, #int 28 // #1c
+work/dis/classes12.txt-1308226-24a750: 1a00 ec92                              |0160: const-string v0, "opengles_vendor" // string@92ec
+work/dis/classes12.txt-1308227-24a754: 22b8 2e26                              |0162: new-instance v184, LX/0fKx; // type@262e
+work/dis/classes12.txt-1308228-24a758: 0805 b800                              |0164: move-object/from16 v5, v184
+work/dis/classes12.txt-1308229-24a75c: 7030 ae86 1500                         |0166: invoke-direct {v5, v1, v0}, LX/0fKx;.<init>:(ILjava/lang/String;)V // method@86ae
+work/dis/classes12.txt-1308230-24a762: 69b8 4c55                              |0169: sput-object v184, LX/0hkS;.A2q:LX/0fKx; // field@554c
+--
+work/dis/classes18.txt-327526-438748: 1202                                   |0004: const/4 v2, #int 0 // #0
+work/dis/classes18.txt-327527-43874a: 1201                                   |0005: const/4 v1, #int 0 // #0
+work/dis/classes18.txt-327528-43874c: 2200 5056                              |0006: new-instance v0, LX/0Iq2; // type@5650
+work/dis/classes18.txt-327529-438750: 7040 8295 5012                         |0008: invoke-direct {v0, v5, v2, v1}, LX/0Iq2;.<init>:(Ljava/lang/Object;LX/09oa;I)V // method@9582
+work/dis/classes18.txt-327530-438756: 7130 1b17 0304                         |000b: invoke-static {v3, v0, v4}, LX/02ry;.A05:(LX/09qb;LX/0nvI;LX/0kkn;)V // method@171b
+work/dis/classes18.txt-327531-43875c: 0e00                                   |000e: return-void
+work/dis/classes18.txt-327532-      catches       : (none)
+work/dis/classes18.txt-327533-      positions     :
+work/dis/classes18.txt-327534-      locals        :
+work/dis/classes18.txt-327535-
+work/dis/classes18.txt-327536-  source_file_idx   : 0 ()
+work/dis/classes18.txt-327537-
+work/dis/classes18.txt-327538-Class #1572 header:
+work/dis/classes18.txt-327539-class_idx           : 6960
+work/dis/classes18.txt-327540-access_flags        : 1025 (0x0401)
+work/dis/classes18.txt-327541-superclass_idx      : 33229
+work/dis/classes18.txt-327542-interfaces_off      : 0 (0x000000)
+work/dis/classes18.txt-327543-source_file_idx     : 0
+work/dis/classes18.txt-327544-annotations_off     : 0 (0x000000)
+work/dis/classes18.txt-327545-class_data_off      : 8818617 (0x868fb9)
+work/dis/classes18.txt-327546-static_fields_size  : 0
+work/dis/classes18.txt-327547-instance_fields_size: 0
+work/dis/classes18.txt-327548-direct_methods_size : 2
+work/dis/classes18.txt-327549-virtual_methods_size: 0
+work/dis/classes18.txt-327550-
+work/dis/classes18.txt-327551-Class #1572            -
+work/dis/classes18.txt-327552-  Class descriptor  : 'LX/054F;'
+work/dis/classes18.txt-327553-  Access flags      : 0x0401 (PUBLIC ABSTRACT)
+work/dis/classes18.txt-327554-  Superclass        : 'Ljava/lang/Object;'
+work/dis/classes18.txt-327555-  Interfaces        -
+work/dis/classes18.txt-327556-  Static fields     -
+work/dis/classes18.txt-327557-  Instance fields   -
+work/dis/classes18.txt-327558-  Direct methods    -
+work/dis/classes18.txt-327559-    #0              : (in LX/054F;)
+work/dis/classes18.txt-327560-      name          : 'A00'
+work/dis/classes18.txt-327561-      type          : '(Lcom/instagram/common/session/UserSession;J)Z'
+work/dis/classes18.txt-327562-      access        : 0x0019 (PUBLIC STATIC FINAL)
+work/dis/classes18.txt-327563-      method_idx    : 11400
+work/dis/classes18.txt-327564-      code          -
+work/dis/classes18.txt-327565-      registers     : 64
+work/dis/classes18.txt-327566-      ins           : 3
+work/dis/classes18.txt-327567-      outs          : 13
+work/dis/classes18.txt-327568-      insns size    : 1172 16-bit code units
+work/dis/classes18.txt-327569-438760:                                        |[438760] X.054F.A00:(Lcom/instagram/common/session/UserSession;J)Z
+work/dis/classes18.txt-327570-438770: 1204                                   |0000: const/4 v4, #int 0 // #0
+work/dis/classes18.txt-327571-438772: 7701 eb16 3d00                         |0001: invoke-static/range {v61}, LX/02qP;.A01:(LX/04BG;)LX/00AT; // method@16eb
+work/dis/classes18.txt-327572-438778: 0c02                                   |0004: move-result-object v2
+work/dis/classes18.txt-327573-43877a: 1800 8902 1200 e300 8100               |0005: const-wide v0, #double 3.02672e-306 // #008100e300120289
+work/dis/classes18.txt-327574-438784: 1f02 8e79                              |000a: check-cast v2, Lcom/facebook/mobileconfig/factory/MobileConfigUnsafeContext; // type@798e
+work/dis/classes18.txt-327575-438788: 7230 d8df 0201                         |000c: invoke-interface {v2, v0, v1}, Lcom/facebook/mobileconfig/factory/MobileConfigUnsafeContext;.BTb:(J)Z // method@dfd8
+work/dis/classes18.txt-327576-43878e: 0a03                                   |000f: move-result v3
+work/dis/classes18.txt-327577-438790: 7701 eb16 3d00                         |0010: invoke-static/range {v61}, LX/02qP;.A01:(LX/04BG;)LX/00AT; // method@16eb
+work/dis/classes18.txt-327578-438796: 0c02                                   |0013: move-result-object v2
+work/dis/classes18.txt-327579-438798: 1800 9f02 3100 e300 8100               |0014: const-wide v0, #double 3.02672e-306 // #008100e30031029f
+work/dis/classes18.txt-327580-4387a2: 1f02 8e79                              |0019: check-cast v2, Lcom/facebook/mobileconfig/factory/MobileConfigUnsafeContext; // type@798e
+work/dis/classes18.txt-327581-4387a6: 7230 d8df 0201                         |001b: invoke-interface {v2, v0, v1}, Lcom/facebook/mobileconfig/factory/MobileConfigUnsafeContext;.BTb:(J)Z // method@dfd8
+work/dis/classes18.txt-327582-4387ac: 0a00                                   |001e: move-result v0
+work/dis/classes18.txt-327583-4387ae: 3800 1200                              |001f: if-eqz v0, 0031 // +0012
+work/dis/classes18.txt-327584-4387b2: 6206 da28                              |0021: sget-object v6, LX/054G;.A00:LX/054G; // field@28da
+work/dis/classes18.txt-327585-4387b6: 1205                                   |0023: const/4 v5, #int 0 // #0
+work/dis/classes18.txt-327586-4387b8: 1300 0202                              |0024: const/16 v0, #int 514 // #202
+work/dis/classes18.txt-327587-4387bc: 7110 1269 0000                         |0026: invoke-static {v0}, LX/0C0q;.A00:(I)Ljava/lang/String; // method@6912
+work/dis/classes18.txt-327588-4387c2: 0c08                                   |0029: move-result-object v8
+work/dis/classes18.txt-327589-4387c4: 121a                                   |002a: const/4 v10, #int 1 // #1
+work/dis/classes18.txt-327590-4387c6: 0807 3d00                              |002b: move-object/from16 v7, v61
+work/dis/classes18.txt-327591-4387ca: 0759                                   |002d: move-object v9, v5
+work/dis/classes18.txt-327592-4387cc: 7706 b239 0500                         |002e: invoke-static/range {v5, v6, v7, v8, v9, v10}, LX/06XD;.A00:(LX/0Puw;LX/0mjZ;Lcom/instagram/common/session/UserSession;Ljava/lang/String;Ljava/util/concurrent/Executor;Z)V // method@39b2
+work/dis/classes18.txt-327593-4387d2: 133b 0100                              |0031: const/16 v59, #int 1 // #1
+work/dis/classes18.txt-327594-4387d6: 1206                                   |0033: const/4 v6, #int 0 // #0
+work/dis/classes18.txt-327595-4387d8: 0539 3e00                              |0034: move-wide/from16 v57, v62
+work/dis/classes18.txt-327596-4387dc: 3803 3404                              |0036: if-eqz v3, 046a // +0434
+work/dis/classes18.txt-327597-4387e0: 1300 4900                              |0038: const/16 v0, #int 73 // #49
+work/dis/classes18.txt-327598-4387e4: 2300 1383                              |003a: new-array v0, v0, [LX/04oE; // type@8313
+work/dis/classes18.txt-327599-4387e8: 083c 0000                              |003c: move-object/from16 v60, v0
+work/dis/classes18.txt-327600-4387ec: 1a01 86d3                              |003e: const-string v1, "ad_media_id" // string@d386
+work/dis/classes18.txt-327601-4387f0: 221d 381a                              |0040: new-instance v29, LX/04oE; // type@1a38
+work/dis/classes18.txt-327602-4387f4: 0800 1d00                              |0042: move-object/from16 v0, v29
+work/dis/classes18.txt-327603-4387f8: 7030 6c2b 1006                         |0044: invoke-direct {v0, v1, v6}, LX/04oE;.<init>:(Ljava/lang/Object;Ljava/lang/Object;)V // method@2b6c
+work/dis/classes18.txt-327604-4387fe: 1300 aa00                              |0047: const/16 v0, #int 170 // #aa
+work/dis/classes18.txt-327605-438802: 7110 0000 0000                         |0049: invoke-static {v0}, LX/0000;.A00:(I)Ljava/lang/String; // method@0000
+work/dis/classes18.txt-327606-438808: 0c01                                   |004c: move-result-object v1
+work/dis/classes18.txt-327607-43880a: 221c 381a                              |004d: new-instance v28, LX/04oE; // type@1a38
+work/dis/classes18.txt-327608-43880e: 0800 1c00                              |004f: move-object/from16 v0, v28
+work/dis/classes18.txt-327609-438812: 7030 6c2b 1006                         |0051: invoke-direct {v0, v1, v6}, LX/04oE;.<init>:(Ljava/lang/Object;Ljava/lang/Object;)V // method@2b6c
+work/dis/classes18.txt-327610-438818: 1300 c000                              |0054: const/16 v0, #int 192 // #c0
+work/dis/classes18.txt-327611-43881c: 7110 1269 0000                         |0056: invoke-static {v0}, LX/0C0q;.A00:(I)Ljava/lang/String; // method@6912
+work/dis/classes18.txt-327612-438822: 0c01                                   |0059: move-result-object v1
+work/dis/classes18.txt-327613-438824: 221b 381a                              |005a: new-instance v27, LX/04oE; // type@1a38
+work/dis/classes18.txt-327614-438828: 0800 1b00                              |005c: move-object/from16 v0, v27
+work/dis/classes18.txt-327615-43882c: 7030 6c2b 1006                         |005e: invoke-direct {v0, v1, v6}, LX/04oE;.<init>:(Ljava/lang/Object;Ljava/lang/Object;)V // method@2b6c
+work/dis/classes18.txt:327616:438832: 1a01 31e0                              |0061: const-string v1, "device_capabilities" // string@e031
+work/dis/classes18.txt-327617-438836: 221a 381a                              |0063: new-instance v26, LX/04oE; // type@1a38
+work/dis/classes18.txt-327618-43883a: 0800 1a00                              |0065: move-object/from16 v0, v26
+work/dis/classes18.txt-327619-43883e: 7030 6c2b 1006                         |0067: invoke-direct {v0, v1, v6}, LX/04oE;.<init>:(Ljava/lang/Object;Ljava/lang/Object;)V // method@2b6c
+work/dis/classes18.txt-327620-438844: 1300 0d02                              |006a: const/16 v0, #int 525 // #20d
+work/dis/classes18.txt-327621-438848: 7110 1269 0000                         |006c: invoke-static {v0}, LX/0C0q;.A00:(I)Ljava/lang/String; // method@6912
+work/dis/classes18.txt-327622-43884e: 0c01                                   |006f: move-result-object v1
+work/dis/classes18.txt-327623-438850: 2219 381a                              |0070: new-instance v25, LX/04oE; // type@1a38
+work/dis/classes18.txt-327624-438854: 0800 1900                              |0072: move-object/from16 v0, v25
+work/dis/classes18.txt-327625-438858: 7030 6c2b 1006                         |0074: invoke-direct {v0, v1, v6}, LX/04oE;.<init>:(Ljava/lang/Object;Ljava/lang/Object;)V // method@2b6c
+work/dis/classes18.txt-327626-43885e: 1a01 82e2                              |0077: const-string v1, "entry_point_qpl_instance_id" // string@e282
+work/dis/classes18.txt-327627-438862: 2218 381a                              |0079: new-instance v24, LX/04oE; // type@1a38
+work/dis/classes18.txt-327628-438866: 0800 1800                              |007b: move-object/from16 v0, v24
+work/dis/classes18.txt-327629-43886a: 7030 6c2b 1006                         |007d: invoke-direct {v0, v1, v6}, LX/04oE;.<init>:(Ljava/lang/Object;Ljava/lang/Object;)V // method@2b6c
+work/dis/classes18.txt-327630-438870: 1a01 83e2                              |0080: const-string v1, "entry_point_qpl_marker_id" // string@e283
+work/dis/classes18.txt-327631-438874: 2217 381a                              |0082: new-instance v23, LX/04oE; // type@1a38
+work/dis/classes18.txt-327632-438878: 0800 1700                              |0084: move-object/from16 v0, v23
+work/dis/classes18.txt-327633-43887c: 7030 6c2b 1006                         |0086: invoke-direct {v0, v1, v6}, LX/04oE;.<init>:(Ljava/lang/Object;Ljava/lang/Object;)V // method@2b6c
+work/dis/classes18.txt-327634-438882: 1300 1d00                              |0089: const/16 v0, #int 29 // #1d
+work/dis/classes18.txt-327635-438886: 7110 1269 0000                         |008b: invoke-static {v0}, LX/0C0q;.A00:(I)Ljava/lang/String; // method@6912
+work/dis/classes18.txt-327636-43888c: 0c01                                   |008e: move-result-object v1
+work/dis/classes18.txt-327637-43888e: 2216 381a                              |008f: new-instance v22, LX/04oE; // type@1a38
+work/dis/classes18.txt-327638-438892: 0800 1600                              |0091: move-object/from16 v0, v22
+work/dis/classes18.txt-327639-438896: 7030 6c2b 1006                         |0093: invoke-direct {v0, v1, v6}, LX/04oE;.<init>:(Ljava/lang/Object;Ljava/lang/Object;)V // method@2b6c
+work/dis/classes18.txt-327640-43889c: 1300 3a02                              |0096: const/16 v0, #int 570 // #23a
+work/dis/classes18.txt-327641-4388a0: 7110 1269 0000                         |0098: invoke-static {v0}, LX/0C0q;.A00:(I)Ljava/lang/String; // method@6912
+work/dis/classes18.txt-327642-4388a6: 0c01                                   |009b: move-result-object v1
+work/dis/classes18.txt-327643-4388a8: 2215 381a                              |009c: new-instance v21, LX/04oE; // type@1a38
+work/dis/classes18.txt-327644-4388ac: 0800 1500                              |009e: move-object/from16 v0, v21
+work/dis/classes18.txt-327645-4388b0: 7030 6c2b 1006                         |00a0: invoke-direct {v0, v1, v6}, LX/04oE;.<init>:(Ljava/lang/Object;Ljava/lang/Object;)V // method@2b6c
+work/dis/classes18.txt-327646-4388b6: 1300 4002                              |00a3: const/16 v0, #int 576 // #240
+work/dis/classes18.txt-327647-4388ba: 7110 1269 0000                         |00a5: invoke-static {v0}, LX/0C0q;.A00:(I)Ljava/lang/String; // method@6912
+work/dis/classes18.txt-327648-4388c0: 0c01                                   |00a8: move-result-object v1
+work/dis/classes18.txt-327649-4388c2: 2214 381a                              |00a9: new-instance v20, LX/04oE; // type@1a38
+work/dis/classes18.txt-327650-4388c6: 0800 1400                              |00ab: move-object/from16 v0, v20
+work/dis/classes18.txt-327651-4388ca: 7030 6c2b 1006                         |00ad: invoke-direct {v0, v1, v6}, LX/04oE;.<init>:(Ljava/lang/Object;Ljava/lang/Object;)V // method@2b6c
+work/dis/classes18.txt-327652-4388d0: 1300 6905                              |00b0: const/16 v0, #int 1385 // #569
+work/dis/classes18.txt-327653-4388d4: 7110 2101 0000                         |00b2: invoke-static {v0}, LX/0055;.A00:(I)Ljava/lang/String; // method@0121
+work/dis/classes18.txt-327654-4388da: 0c01                                   |00b5: move-result-object v1
+work/dis/classes18.txt-327655-4388dc: 2213 381a                              |00b6: new-instance v19, LX/04oE; // type@1a38
+work/dis/classes18.txt-327656-4388e0: 0800 1300                              |00b8: move-object/from16 v0, v19
+work/dis/classes18.txt-327657-4388e4: 7030 6c2b 1006                         |00ba: invoke-direct {v0, v1, v6}, LX/04oE;.<init>:(Ljava/lang/Object;Ljava/lang/Object;)V // method@2b6c
+work/dis/classes18.txt-327658-4388ea: 1300 7202                              |00bd: const/16 v0, #int 626 // #272
+work/dis/classes18.txt-327659-4388ee: 7110 1269 0000                         |00bf: invoke-static {v0}, LX/0C0q;.A00:(I)Ljava/lang/String; // method@6912
+work/dis/classes18.txt-327660-4388f4: 0c01                                   |00c2: move-result-object v1
+work/dis/classes18.txt-327661-4388f6: 2212 381a                              |00c3: new-instance v18, LX/04oE; // type@1a38
+work/dis/classes18.txt-327662-4388fa: 0800 1200                              |00c5: move-object/from16 v0, v18
+work/dis/classes18.txt-327663-4388fe: 7030 6c2b 1006                         |00c7: invoke-direct {v0, v1, v6}, LX/04oE;.<init>:(Ljava/lang/Object;Ljava/lang/Object;)V // method@2b6c
+work/dis/classes18.txt-327664-438904: 1a01 77f0                              |00ca: const-string v1, "is_invalid_traffic_from_dawpt" // string@f077
+work/dis/classes18.txt-327665-438908: 2211 381a                              |00cc: new-instance v17, LX/04oE; // type@1a38
+work/dis/classes18.txt-327666-43890c: 0800 1100                              |00ce: move-object/from16 v0, v17
+work/dis/classes18.txt-327667-438910: 7030 6c2b 1006                         |00d0: invoke-direct {v0, v1, v6}, LX/04oE;.<init>:(Ljava/lang/Object;Ljava/lang/Object;)V // method@2b6c
+work/dis/classes18.txt-327668-438916: 1300 7a02                              |00d3: const/16 v0, #int 634 // #27a
+work/dis/classes18.txt-327669-43891a: 7110 1269 0000                         |00d5: invoke-static {v0}, LX/0C0q;.A00:(I)Ljava/lang/String; // method@6912
+work/dis/classes18.txt-327670-438920: 0c01                                   |00d8: move-result-object v1
+work/dis/classes18.txt-327671-438922: 2210 381a                              |00d9: new-instance v16, LX/04oE; // type@1a38
+work/dis/classes18.txt-327672-438926: 0800 1000                              |00db: move-object/from16 v0, v16
+work/dis/classes18.txt-327673-43892a: 7030 6c2b 1006                         |00dd: invoke-direct {v0, v1, v6}, LX/04oE;.<init>:(Ljava/lang/Object;Ljava/lang/Object;)V // method@2b6c
+work/dis/classes18.txt-327674-438930: 1300 7b02                              |00e0: const/16 v0, #int 635 // #27b
+work/dis/classes18.txt-327675-438934: 7110 1269 0000                         |00e2: invoke-static {v0}, LX/0C0q;.A00:(I)Ljava/lang/String; // method@6912
+work/dis/classes18.txt-327676-43893a: 0c00                                   |00e5: move-result-object v0
+work/dis/classes18.txt-327677-43893c: 220f 381a                              |00e6: new-instance v15, LX/04oE; // type@1a38
+work/dis/classes18.txt-327678-438940: 7030 6c2b 0f06                         |00e8: invoke-direct {v15, v0, v6}, LX/04oE;.<init>:(Ljava/lang/Object;Ljava/lang/Object;)V // method@2b6c
+work/dis/classes18.txt-327679-438946: 1a00 79f0                              |00eb: const-string v0, "is_item_sold_out" // string@f079
+work/dis/classes18.txt-327680-43894a: 220e 381a                              |00ed: new-instance v14, LX/04oE; // type@1a38
+work/dis/classes18.txt-327681-43894e: 7030 6c2b 0e06                         |00ef: invoke-direct {v14, v0, v6}, LX/04oE;.<init>:(Ljava/lang/Object;Ljava/lang/Object;)V // method@2b6c
+work/dis/classes18.txt-327682-438954: 1a00 b3f0                              |00f2: const-string v0, "is_product_liked" // string@f0b3
+work/dis/classes18.txt-327683-438958: 220d 381a                              |00f4: new-instance v13, LX/04oE; // type@1a38
+work/dis/classes18.txt-327684-43895c: 7030 6c2b 0d06                         |00f6: invoke-direct {v13, v0, v6}, LX/04oE;.<init>:(Ljava/lang/Object;Ljava/lang/Object;)V // method@2b6c
+work/dis/classes18.txt-327685-438962: 1a00 b4f0                              |00f9: const-string v0, "is_product_saved" // string@f0b4
+work/dis/classes18.txt-327686-438966: 220c 381a                              |00fb: new-instance v12, LX/04oE; // type@1a38
+work/dis/classes18.txt-327687-43896a: 7030 6c2b 0c06                         |00fd: invoke-direct {v12, v0, v6}, LX/04oE;.<init>:(Ljava/lang/Object;Ljava/lang/Object;)V // method@2b6c
+work/dis/classes18.txt-327688-438970: 1300 7f02                              |0100: const/16 v0, #int 639 // #27f
+work/dis/classes18.txt-327689-438974: 7110 1269 0000                         |0102: invoke-static {v0}, LX/0C0q;.A00:(I)Ljava/lang/String; // method@6912
+work/dis/classes18.txt-327690-43897a: 0c00                                   |0105: move-result-object v0
+work/dis/classes18.txt-327691-43897c: 220b 381a                              |0106: new-instance v11, LX/04oE; // type@1a38
+work/dis/classes18.txt-327692-438980: 7030 6c2b 0b06                         |0108: invoke-direct {v11, v0, v6}, LX/04oE;.<init>:(Ljava/lang/Object;Ljava/lang/Object;)V // method@2b6c
+work/dis/classes18.txt-327693-438986: 1300 8102                              |010b: const/16 v0, #int 641 // #281
+work/dis/classes18.txt-327694-43898a: 7110 1269 0000                         |010d: invoke-static {v0}, LX/0C0q;.A00:(I)Ljava/lang/String; // method@6912
+work/dis/classes18.txt-327695-438990: 0c00                                   |0110: move-result-object v0
+work/dis/classes18.txt-327696-438992: 220a 381a                              |0111: new-instance v10, LX/04oE; // type@1a38
+work/dis/classes18.txt-327697-438996: 7030 6c2b 0a06                         |0113: invoke-direct {v10, v0, v6}, LX/04oE;.<init>:(Ljava/lang/Object;Ljava/lang/Object;)V // method@2b6c
+work/dis/classes18.txt-327698-43899c: 1300 8202                              |0116: const/16 v0, #int 642 // #282
+work/dis/classes18.txt-327699-4389a0: 7110 1269 0000                         |0118: invoke-static {v0}, LX/0C0q;.A00:(I)Ljava/lang/String; // method@6912
+work/dis/classes18.txt-327700-4389a6: 0c00                                   |011b: move-result-object v0
+work/dis/classes18.txt-327701-4389a8: 2209 381a                              |011c: new-instance v9, LX/04oE; // type@1a38
+work/dis/classes18.txt-327702-4389ac: 7030 6c2b 0906                         |011e: invoke-direct {v9, v0, v6}, LX/04oE;.<init>:(Ljava/lang/Object;Ljava/lang/Object;)V // method@2b6c
+work/dis/classes18.txt-327703-4389b2: 1a00 8ef1                              |0121: const-string v0, "launch_date" // string@f18e
+work/dis/classes18.txt-327704-4389b6: 2208 381a                              |0123: new-instance v8, LX/04oE; // type@1a38
+work/dis/classes18.txt-327705-4389ba: 7030 6c2b 0806                         |0125: invoke-direct {v8, v0, v6}, LX/04oE;.<init>:(Ljava/lang/Object;Ljava/lang/Object;)V // method@2b6c
+work/dis/classes18.txt-327706-4389c0: 1300 1200                              |0128: const/16 v0, #int 18 // #12
+work/dis/classes18.txt-327707-4389c4: 7110 9062 0000                         |012a: invoke-static {v0}, LX/0BQ3;.A00:(I)Ljava/lang/String; // method@6290
+work/dis/classes18.txt-327708-4389ca: 0c00                                   |012d: move-result-object v0
+work/dis/classes18.txt-327709-4389cc: 2207 381a                              |012e: new-instance v7, LX/04oE; // type@1a38
+work/dis/classes18.txt-327710-4389d0: 7030 6c2b 0706                         |0130: invoke-direct {v7, v0, v6}, LX/04oE;.<init>:(Ljava/lang/Object;Ljava/lang/Object;)V // method@2b6c
+work/dis/classes18.txt-327711-4389d6: 1a00 86f3                              |0133: const-string v0, "m_pk" // string@f386
+work/dis/classes18.txt-327712-4389da: 2205 381a                              |0135: new-instance v5, LX/04oE; // type@1a38
+work/dis/classes18.txt-327713-4389de: 7030 6c2b 0506                         |0137: invoke-direct {v5, v0, v6}, LX/04oE;.<init>:(Ljava/lang/Object;Ljava/lang/Object;)V // method@2b6c
+work/dis/classes18.txt-327714-4389e4: 1300 9b02                              |013a: const/16 v0, #int 667 // #29b
+work/dis/classes18.txt-327715-4389e8: 7110 1269 0000                         |013c: invoke-static {v0}, LX/0C0q;.A00:(I)Ljava/lang/String; // method@6912
+work/dis/classes18.txt-327716-4389ee: 0c00                                   |013f: move-result-object v0
+work/dis/classes18.txt-327717-4389f0: 2203 381a                              |0140: new-instance v3, LX/04oE; // type@1a38
+work/dis/classes18.txt-327718-4389f4: 7030 6c2b 0306                         |0142: invoke-direct {v3, v0, v6}, LX/04oE;.<init>:(Ljava/lang/Object;Ljava/lang/Object;)V // method@2b6c
+work/dis/classes18.txt-327719-4389fa: 1a00 87f3                              |0145: const-string v0, "m_t" // string@f387
+work/dis/classes18.txt-327720-4389fe: 2202 381a                              |0147: new-instance v2, LX/04oE; // type@1a38
+work/dis/classes18.txt-327721-438a02: 7030 6c2b 0206                         |0149: invoke-direct {v2, v0, v6}, LX/04oE;.<init>:(Ljava/lang/Object;Ljava/lang/Object;)V // method@2b6c
+work/dis/classes18.txt-327722-438a08: 1a01 c9f3                              |014c: const-string v1, "marketplace_tracking" // string@f3c9
+work/dis/classes18.txt-327723-438a0c: 2200 381a                              |014e: new-instance v0, LX/04oE; // type@1a38
+work/dis/classes18.txt-327724-438a10: 7030 6c2b 1006                         |0150: invoke-direct {v0, v1, v6}, LX/04oE;.<init>:(Ljava/lang/Object;Ljava/lang/Object;)V // method@2b6c
+work/dis/classes18.txt-327725-438a16: 0829 1100                              |0153: move-object/from16 v41, v17
+work/dis/classes18.txt-327726-438a1a: 082a 1000                              |0155: move-object/from16 v42, v16
+work/dis/classes18.txt-327727-438a1e: 082b 0f00                              |0157: move-object/from16 v43, v15
+work/dis/classes18.txt-327728-438a22: 082c 0e00                              |0159: move-object/from16 v44, v14
+work/dis/classes18.txt-327729-438a26: 082d 0d00                              |015b: move-object/from16 v45, v13
+work/dis/classes18.txt-327730-438a2a: 082e 0c00                              |015d: move-object/from16 v46, v12
+work/dis/classes18.txt-327731-438a2e: 082f 0b00                              |015f: move-object/from16 v47, v11
+work/dis/classes18.txt-327732-438a32: 0830 0a00                              |0161: move-object/from16 v48, v10
+work/dis/classes18.txt-327733-438a36: 0831 0900                              |0163: move-object/from16 v49, v9
+work/dis/classes18.txt-327734-438a3a: 0832 0800                              |0165: move-object/from16 v50, v8
+work/dis/classes18.txt-327735-438a3e: 0833 0700                              |0167: move-object/from16 v51, v7
+work/dis/classes18.txt-327736-438a42: 0834 0500                              |0169: move-object/from16 v52, v5
+work/dis/classes18.txt-327737-438a46: 0835 0300                              |016b: move-object/from16 v53, v3
+work/dis/classes18.txt-327738-438a4a: 0836 0200                              |016d: move-object/from16 v54, v2
+work/dis/classes18.txt-327739-438a4e: 0837 0000                              |016f: move-object/from16 v55, v0
+work/dis/classes18.txt-327740-438a52: 081e 1c00                              |0171: move-object/from16 v30, v28
+work/dis/classes18.txt-327741-438a56: 081f 1b00                              |0173: move-object/from16 v31, v27
+work/dis/classes18.txt-327742-438a5a: 0820 1a00                              |0175: move-object/from16 v32, v26
+work/dis/classes18.txt-327743-438a5e: 0821 1900                              |0177: move-object/from16 v33, v25
+work/dis/classes18.txt-327744-438a62: 0822 1800                              |0179: move-object/from16 v34, v24
+work/dis/classes18.txt-327745-438a66: 0823 1700                              |017b: move-object/from16 v35, v23
+work/dis/classes18.txt-327746-438a6a: 0824 1600                              |017d: move-object/from16 v36, v22
+work/dis/classes18.txt-327747-438a6e: 0825 1500                              |017f: move-object/from16 v37, v21
+work/dis/classes18.txt-327748-438a72: 0826 1400                              |0181: move-object/from16 v38, v20
+work/dis/classes18.txt-327749-438a76: 0827 1300                              |0183: move-object/from16 v39, v19
+work/dis/classes18.txt-327750-438a7a: 0828 1200                              |0185: move-object/from16 v40, v18
+work/dis/classes18.txt-327751-438a7e: 251b 1383 1d00                         |0187: filled-new-array/range {v29, v30, v31, v32, v33, v34, v35, v36, v37, v38, v39, v40, v41, v42, v43, v44, v45, v46, v47, v48, v49, v50, v51, v52, v53, v54, v55}, [LX/04oE; // type@8313
+work/dis/classes18.txt-327752-438a84: 0c01                                   |018a: move-result-object v1
+work/dis/classes18.txt-327753-438a86: 130e 1b00                              |018b: const/16 v14, #int 27 // #1b
+work/dis/classes18.txt-327754-438a8a: 0800 3c00                              |018d: move-object/from16 v0, v60
+work/dis/classes18.txt-327755-438a8e: 715e 56fd 4140                         |018f: invoke-static {v1, v4, v0, v4, v14}, Ljava/lang/System;.arraycopy:(Ljava/lang/Object;ILjava/lang/Object;II)V // method@fd56
+work/dis/classes18.txt-327756-438a94: 1300 a102                              |0192: const/16 v0, #int 673 // #2a1
+--
+work/dis/classes18.txt-769450-      positions     :
+work/dis/classes18.txt-769451-      locals        :
+work/dis/classes18.txt-769452-
+work/dis/classes18.txt-769453-    #3              : (in Lcom/instagram/ar/core/effectcollection/EffectCollectionService;)
+work/dis/classes18.txt-769454-      name          : 'A02'
+work/dis/classes18.txt-769455-      type          : '(Lcom/instagram/ar/core/effectcollection/EffectCollectionService;LX/0Lwa;LX/09oa;)Ljava/lang/Object;'
+work/dis/classes18.txt-769456-      access        : 0x0019 (PUBLIC STATIC FINAL)
+work/dis/classes18.txt-769457-      method_idx    : 60144
+work/dis/classes18.txt-769458-      code          -
+work/dis/classes18.txt-769459-      registers     : 22
+work/dis/classes18.txt-769460-      ins           : 3
+work/dis/classes18.txt-769461-      outs          : 5
+work/dis/classes18.txt-769462-      insns size    : 487 16-bit code units
+work/dis/classes18.txt-769463-5260c4:                                        |[5260c4] com.instagram.ar.core.effectcollection.EffectCollectionService.A02:(Lcom/instagram/ar/core/effectcollection/EffectCollectionService;LX/0Lwa;LX/09oa;)Ljava/lang/Object;
+work/dis/classes18.txt-769464-5260d4: 1238                                   |0000: const/4 v8, #int 3 // #3
+work/dis/classes18.txt-769465-5260d6: 0803 1500                              |0001: move-object/from16 v3, v21
+work/dis/classes18.txt-769466-5260da: 2030 5956                              |0003: instance-of v0, v3, LX/0IqU; // type@5659
+work/dis/classes18.txt-769467-5260de: 0805 1300                              |0005: move-object/from16 v5, v19
+work/dis/classes18.txt-769468-5260e2: 3800 2700                              |0007: if-eqz v0, 002e // +0027
+work/dis/classes18.txt-769469-5260e6: 0737                                   |0009: move-object v7, v3
+work/dis/classes18.txt-769470-5260e8: 1f07 5956                              |000a: check-cast v7, LX/0IqU; // type@5659
+work/dis/classes18.txt-769471-5260ec: 5270 c08b                              |000c: iget v0, v7, LX/0IqU;.$t:I // field@8bc0
+work/dis/classes18.txt-769472-5260f0: 3380 2000                              |000e: if-ne v0, v8, 002e // +0020
+work/dis/classes18.txt-769473-5260f4: 5272 c18b                              |0010: iget v2, v7, LX/0IqU;.A00:I // field@8bc1
+work/dis/classes18.txt-769474-5260f8: 1501 0080                              |0012: const/high16 v1, #int -2147483648 // #8000
+work/dis/classes18.txt-769475-5260fc: 9500 0201                              |0014: and-int v0, v2, v1
+work/dis/classes18.txt-769476-526100: 3800 1800                              |0016: if-eqz v0, 002e // +0018
+work/dis/classes18.txt-769477-526104: b112                                   |0018: sub-int/2addr v2, v1
+work/dis/classes18.txt-769478-526106: 5972 c18b                              |0019: iput v2, v7, LX/0IqU;.A00:I // field@8bc1
+work/dis/classes18.txt-769479-52610a: 5473 c38b                              |001b: iget-object v3, v7, LX/0IqU;.A02:Ljava/lang/Object; // field@8bc3
+work/dis/classes18.txt-769480-52610e: 6206 3a14                              |001d: sget-object v6, LX/02sJ;.A02:LX/02sJ; // field@143a
+work/dis/classes18.txt-769481-526112: 5271 c18b                              |001f: iget v1, v7, LX/0IqU;.A00:I // field@8bc1
+work/dis/classes18.txt-769482-526116: 1214                                   |0021: const/4 v4, #int 1 // #1
+work/dis/classes18.txt-769483-526118: 3801 1200                              |0022: if-eqz v1, 0034 // +0012
+work/dis/classes18.txt-769484-52611c: 3241 b201                              |0024: if-eq v1, v4, 01d6 // +01b2
+work/dis/classes18.txt-769485-526120: 1a01 39da                              |0026: const-string v1, "call to 'resume' before 'invoke' with coroutine" // string@da39
+work/dis/classes18.txt-769486-526124: 2200 bd81                              |0028: new-instance v0, Ljava/lang/IllegalStateException; // type@81bd
+work/dis/classes18.txt-769487-526128: 7020 c5fc 1000                         |002a: invoke-direct {v0, v1}, Ljava/lang/IllegalStateException;.<init>:(Ljava/lang/String;)V // method@fcc5
+work/dis/classes18.txt-769488-52612e: 2700                                   |002d: throw v0
+work/dis/classes18.txt-769489-526130: 2207 5956                              |002e: new-instance v7, LX/0IqU; // type@5659
+work/dis/classes18.txt-769490-526134: 7040 9e95 5783                         |0030: invoke-direct {v7, v5, v3, v8}, LX/0IqU;.<init>:(Ljava/lang/Object;LX/09oa;I)V // method@959e
+work/dis/classes18.txt-769491-52613a: 28e8                                   |0033: goto 001b // -0018
+work/dis/classes18.txt-769492-52613c: 7110 7917 0300                         |0034: invoke-static {v3}, LX/02uJ;.A01:(Ljava/lang/Object;)V // method@1779
+work/dis/classes18.txt-769493-526142: 7100 1102 0000                         |0037: invoke-static {}, LX/00Gs;.A01:()LX/00Gs; // method@0211
+work/dis/classes18.txt-769494-526148: 0c00                                   |003a: move-result-object v0
+work/dis/classes18.txt-769495-52614a: 6e10 1302 0000                         |003b: invoke-virtual {v0}, LX/00Gs;.A0B:()Z // method@0213
+work/dis/classes18.txt-769496-526150: 0a00                                   |003e: move-result v0
+work/dis/classes18.txt-769497-526152: df00 0001                              |003f: xor-int/lit8 v0, v0, #int 1 // #01
+work/dis/classes18.txt-769498-526156: 3900 0a00                              |0041: if-nez v0, 004b // +000a
+work/dis/classes18.txt-769499-52615a: 6200 a599                              |0043: sget-object v0, LX/0Kmr;.A00:LX/0Kmr; // field@99a5
+work/dis/classes18.txt-769500-52615e: 2206 370b                              |0045: new-instance v6, LX/02dJ; // type@0b37
+work/dis/classes18.txt-769501-526162: 7020 5e15 0600                         |0047: invoke-direct {v6, v0}, LX/02dJ;.<init>:(Ljava/lang/Object;)V // method@155e
+work/dis/classes18.txt-769502-526168: 1106                                   |004a: return-object v6
+work/dis/classes18.txt-769503-52616a: 5451 f5c3                              |004b: iget-object v1, v5, Lcom/instagram/ar/core/effectcollection/EffectCollectionService;.A04:Lcom/instagram/common/session/UserSession; // field@c3f5
+work/dis/classes18.txt-769504-52616e: 5450 f6c3                              |004d: iget-object v0, v5, Lcom/instagram/ar/core/effectcollection/EffectCollectionService;.A05:LX/01ys; // field@c3f6
+work/dis/classes18.txt-769505-526172: 2203 830d                              |004f: new-instance v3, LX/033o; // type@0d83
+work/dis/classes18.txt-769506-526176: 7030 ff1a 1300                         |0051: invoke-direct {v3, v1, v0}, LX/033o;.<init>:(Lcom/instagram/common/session/UserSession;LX/01ys;)V // method@1aff
+work/dis/classes18.txt-769507-52617c: 0801 1400                              |0054: move-object/from16 v1, v20
+work/dis/classes18.txt-769508-526180: 541c 49a5                              |0056: iget-object v12, v1, LX/0Lwa;.A02:Ljava/lang/String; // field@a549
+work/dis/classes18.txt-769509-526184: 5412 48a5                              |0058: iget-object v2, v1, LX/0Lwa;.A01:LX/074j; // field@a548
+work/dis/classes18.txt-769510-526188: 541a 4aa5                              |005a: iget-object v10, v1, LX/0Lwa;.A03:Ljava/lang/String; // field@a54a
+work/dis/classes18.txt-769511-52618c: 5419 4ba5                              |005c: iget-object v9, v1, LX/0Lwa;.A04:Ljava/lang/String; // field@a54b
+work/dis/classes18.txt-769512-526190: 5410 4ca5                              |005e: iget-object v0, v1, LX/0Lwa;.A05:Ljava/util/List; // field@a54c
+work/dis/classes18.txt-769513-526194: 0815 0000                              |0060: move-object/from16 v21, v0
+work/dis/classes18.txt-769514-526198: 5310 47a5                              |0062: iget-wide v0, v1, LX/0Lwa;.A00:J // field@a547
+work/dis/classes18.txt-769515-52619c: 0513 0000                              |0064: move-wide/from16 v19, v0
+work/dis/classes18.txt-769516-5261a0: 120e                                   |0066: const/4 v14, #int 0 // #0
+work/dis/classes18.txt-769517-5261a2: 543b 8716                              |0067: iget-object v11, v3, LX/033o;.A01:Lcom/instagram/common/session/UserSession; // field@1687
+work/dis/classes18.txt-769518-5261a6: 1312 0000                              |0069: const/16 v18, #int 0 // #0
+work/dis/classes18.txt-769519-5261aa: 7110 c81d 0b00                         |006b: invoke-static {v11}, LX/03Lk;.A01:(Lcom/instagram/common/session/UserSession;)LX/05xq; // method@1dc8
+work/dis/classes18.txt-769520-5261b0: 0c11                                   |006e: move-result-object v17
+work/dis/classes18.txt-769521-5261b2: 5420 a239                              |006f: iget-object v0, v2, LX/074j;.A00:LX/0Aqt; // field@39a2
+work/dis/classes18.txt-769522-5261b6: 7120 112b e000                         |0071: invoke-static {v0, v14}, LX/04l9;.A0j:(Ljava/lang/Object;I)V // method@2b11
+work/dis/classes18.txt-769523-5261bc: 6e10 b1fc 0000                         |0074: invoke-virtual {v0}, Ljava/lang/Enum;.ordinal:()I // method@fcb1
+work/dis/classes18.txt-769524-5261c2: 0a00                                   |0077: move-result v0
+work/dis/classes18.txt-769525-5261c4: 3380 bb00                              |0078: if-ne v0, v8, 0133 // +00bb
+work/dis/classes18.txt-769526-5261c8: 6210 0000                              |007a: sget-object v16, LX/000A;.A00:Ljava/lang/Integer; // field@0000
+work/dis/classes18.txt-769527-5261cc: 6201 7bc1                              |007c: sget-object v1, Lcom/facebook/graphql/calls/GraphQlCallInput;.A02:LX/000m; // field@c17b
+work/dis/classes18.txt-769528-5261d0: 1a00 bde1                              |007e: const-string v0, "effect_id" // string@e1bd
+work/dis/classes18.txt-769529-5261d4: 6e10 3300 0100                         |0080: invoke-virtual {v1}, LX/000m;.A02:()LX/000q; // method@0033
+work/dis/classes18.txt-769530-5261da: 0c0d                                   |0083: move-result-object v13
+work/dis/classes18.txt-769531-5261dc: 7130 3500 cd00                         |0084: invoke-static {v13, v12, v0}, LX/000q;.A00:(LX/000q;Ljava/lang/Object;Ljava/lang/String;)V // method@0035
+work/dis/classes18.txt-769532-5261e2: 1a00 fcde                              |0087: const-string v0, "crypto_hash" // string@defc
+work/dis/classes18.txt-769533-5261e6: 7130 3500 ad00                         |0089: invoke-static {v13, v10, v0}, LX/000q;.A00:(LX/000q;Ljava/lang/Object;Ljava/lang/String;)V // method@0035
+work/dis/classes18.txt-769534-5261ec: 1300 5b00                              |008c: const/16 v0, #int 91 // #5b
+work/dis/classes18.txt-769535-5261f0: 7110 fd04 0000                         |008e: invoke-static {v0}, LX/0120;.A00:(I)Ljava/lang/String; // method@04fd
+work/dis/classes18.txt-769536-5261f6: 0c00                                   |0091: move-result-object v0
+work/dis/classes18.txt-769537-5261f8: 7130 3500 9d00                         |0092: invoke-static {v13, v9, v0}, LX/000q;.A00:(LX/000q;Ljava/lang/Object;Ljava/lang/String;)V // method@0035
+work/dis/classes18.txt-769538-5261fe: 2201 ab20                              |0095: new-instance v1, LX/05xm; // type@20ab
+work/dis/classes18.txt-769539-526202: 7010 a632 0100                         |0097: invoke-direct {v1}, LX/05xm;.<init>:()V // method@32a6
+work/dis/classes18.txt:769540:526208: 1a0f 31e0                              |009a: const-string v15, "device_capabilities" // string@e031
+work/dis/classes18.txt-769541-52620c: 0800 1100                              |009c: move-object/from16 v0, v17
+work/dis/classes18.txt-769542-526210: 6e30 a732 010f                         |009e: invoke-virtual {v1, v0, v15}, LX/05xm;.A00:(Lcom/facebook/graphql/calls/GraphQlCallInput;Ljava/lang/String;)V // method@32a7
+work/dis/classes18.txt-769543-526216: 1300 f000                              |00a1: const/16 v0, #int 240 // #f0
+work/dis/classes18.txt-769544-52621a: 7110 d3fc 0000                         |00a3: invoke-static {v0}, Ljava/lang/Integer;.valueOf:(I)Ljava/lang/Integer; // method@fcd3
+work/dis/classes18.txt-769545-526220: 0c0f                                   |00a6: move-result-object v15
+work/dis/classes18.txt-769546-526222: 1300 ba00                              |00a7: const/16 v0, #int 186 // #ba
+work/dis/classes18.txt-769547-526226: 7110 fd04 0000                         |00a9: invoke-static {v0}, LX/0120;.A00:(I)Ljava/lang/String; // method@04fd
+work/dis/classes18.txt-769548-52622c: 0c00                                   |00ac: move-result-object v0
+work/dis/classes18.txt-769549-52622e: 6e30 aa32 010f                         |00ad: invoke-virtual {v1, v0, v15}, LX/05xm;.A04:(Ljava/lang/String;Ljava/lang/Number;)V // method@32aa
+work/dis/classes18.txt-769550-526234: 1300 b900                              |00b0: const/16 v0, #int 185 // #b9
+work/dis/classes18.txt-769551-526238: 7110 fd04 0000                         |00b2: invoke-static {v0}, LX/0120;.A00:(I)Ljava/lang/String; // method@04fd
+work/dis/classes18.txt-769552-52623e: 0c00                                   |00b5: move-result-object v0
+work/dis/classes18.txt-769553-526240: 6e30 aa32 010f                         |00b6: invoke-virtual {v1, v0, v15}, LX/05xm;.A04:(Ljava/lang/String;Ljava/lang/Number;)V // method@32aa
+work/dis/classes18.txt-769554-526246: 7701 e1e3 1500                         |00b9: invoke-static/range {v21}, Lcom/google/common/collect/ImmutableList;.copyOf:(Ljava/util/Collection;)Lcom/google/common/collect/ImmutableList; // method@e3e1
+work/dis/classes18.txt-769555-52624c: 0c0f                                   |00bc: move-result-object v15
+work/dis/classes18.txt-769556-52624e: 1a00 b3fd                              |00bd: const-string v0, "requested_effect_ids" // string@fdb3
+work/dis/classes18.txt-769557-526252: 6e30 ac32 010f                         |00bf: invoke-virtual {v1, v0, v15}, LX/05xm;.A06:(Ljava/lang/String;Ljava/util/List;)V // method@32ac
+work/dis/classes18.txt-769558-526258: 1b00 7006 0100                         |00c2: const-string/jumbo v0, "target_effect_id" // string@00010670
+work/dis/classes18.txt-769559-52625e: 6e30 ab32 010c                         |00c5: invoke-virtual {v1, v0, v12}, LX/05xm;.A05:(Ljava/lang/String;Ljava/lang/String;)V // method@32ab
+work/dis/classes18.txt-769560-526264: 1a00 56ee                              |00c8: const-string v0, "include_preview_image" // string@ee56
+work/dis/classes18.txt-769561-526268: 6e20 a832 0100                         |00ca: invoke-virtual {v1, v0}, LX/05xm;.A02:(Ljava/lang/String;)V // method@32a8
+work/dis/classes18.txt-769562-52626e: 1a0f 79c7                              |00cd: const-string v15, "TAR_BROTLI" // string@c779
+work/dis/classes18.txt-769563-526272: 1a00 79cf                              |00cf: const-string v0, "ZIP" // string@cf79
+work/dis/classes18.txt-769564-526276: 7120 e6e3 0f00                         |00d1: invoke-static {v15, v0}, Lcom/google/common/collect/ImmutableList;.of:(Ljava/lang/Object;Ljava/lang/Object;)Lcom/google/common/collect/ImmutableList; // method@e3e6
+work/dis/classes18.txt-769565-52627c: 0c0f                                   |00d4: move-result-object v15
+work/dis/classes18.txt-769566-52627e: 1300 d101                              |00d5: const/16 v0, #int 465 // #1d1
+work/dis/classes18.txt-769567-526282: 7110 fd04 0000                         |00d7: invoke-static {v0}, LX/0120;.A00:(I)Ljava/lang/String; // method@04fd
+work/dis/classes18.txt-769568-526288: 0c00                                   |00da: move-result-object v0
+work/dis/classes18.txt-769569-52628a: 6e30 ac32 010f                         |00db: invoke-virtual {v1, v0, v15}, LX/05xm;.A06:(Ljava/lang/String;Ljava/util/List;)V // method@32ac
+work/dis/classes18.txt-769570-526290: 3810 5300                              |00de: if-eqz v16, 0131 // +0053
+work/dis/classes18.txt-769571-526294: 1a0f cd34                              |00e0: const-string v15, "INSTAGRAM__DIRECT__RTC__EFFECTS_BY_ID" // string@34cd
+work/dis/classes18.txt-769572-526298: 1b00 4705 0100                         |00e2: const-string/jumbo v0, "surface_identity" // string@00010547
+work/dis/classes18.txt-769573-52629e: 6e30 ab32 010f                         |00e5: invoke-virtual {v1, v0, v15}, LX/05xm;.A05:(Ljava/lang/String;Ljava/lang/String;)V // method@32ab
+work/dis/classes18.txt-769574-5262a4: 1b0f 7106 0100                         |00e8: const-string/jumbo v15, "target_effect_params" // string@00010671
+work/dis/classes18.txt-769575-5262aa: 5410 2932                              |00eb: iget-object v0, v1, LX/05xm;.A00:LX/05xq; // field@3229
+work/dis/classes18.txt-769576-5262ae: 6e10 aadf 0000                         |00ed: invoke-virtual {v0}, Lcom/facebook/graphql/calls/GraphQlCallInput;.A03:()LX/000q; // method@dfaa
+work/dis/classes18.txt-769577-5262b4: 0c00                                   |00f0: move-result-object v0
+work/dis/classes18.txt-769578-5262b6: 6e30 3800 d00f                         |00f1: invoke-virtual {v0, v13, v15}, LX/000q;.A0E:(LX/001A;Ljava/lang/String;)V // method@0038
+work/dis/classes18.txt-769579-5262bc: 1300 d403                              |00f4: const/16 v0, #int 980 // #3d4
+work/dis/classes18.txt-769580-5262c0: 7110 fd04 0000                         |00f6: invoke-static {v0}, LX/0120;.A00:(I)Ljava/lang/String; // method@04fd
+work/dis/classes18.txt-769581-5262c6: 0c00                                   |00f9: move-result-object v0
+work/dis/classes18.txt-769582-5262c8: 6e20 a832 0100                         |00fa: invoke-virtual {v1, v0}, LX/05xm;.A02:(Ljava/lang/String;)V // method@32a8
+work/dis/classes18.txt-769583-5262ce: 7401 abdf 1100                         |00fd: invoke-virtual/range {v17}, Lcom/facebook/graphql/calls/GraphQlCallInput;.A04:()Ljava/util/TreeMap; // method@dfab
+work/dis/classes18.txt-769584-5262d4: 0c0f                                   |0100: move-result-object v15
+work/dis/classes18.txt-769585-5262d6: 1b0d 4405 0100                         |0101: const-string/jumbo v13, "supported_texture_formats" // string@00010544
+work/dis/classes18.txt-769586-5262dc: 6e20 e5fd df00                         |0104: invoke-virtual {v15, v13}, Ljava/util/AbstractMap;.containsKey:(Ljava/lang/Object;)Z // method@fde5
+work/dis/classes18.txt-769587-5262e2: 0a00                                   |0107: move-result v0
+work/dis/classes18.txt-769588-5262e4: 3800 3600                              |0108: if-eqz v0, 013e // +0036
+work/dis/classes18.txt-769589-5262e8: 6e20 e7fd df00                         |010a: invoke-virtual {v15, v13}, Ljava/util/AbstractMap;.get:(Ljava/lang/Object;)Ljava/lang/Object; // method@fde7
+work/dis/classes18.txt-769590-5262ee: 0c00                                   |010d: move-result-object v0
+work/dis/classes18.txt-769591-5262f0: 200f 2b82                              |010e: instance-of v15, v0, Ljava/util/List; // type@822b
+work/dis/classes18.txt-769592-5262f4: 380f 2e00                              |0110: if-eqz v15, 013e // +002e
+work/dis/classes18.txt-769593-5262f8: 1f00 c381                              |0112: check-cast v0, Ljava/lang/Iterable; // type@81c3
+work/dis/classes18.txt-769594-5262fc: 2211 1882                              |0114: new-instance v17, Ljava/util/ArrayList; // type@8218
+work/dis/classes18.txt-769595-526300: 7601 f5fd 1100                         |0116: invoke-direct/range {v17}, Ljava/util/ArrayList;.<init>:()V // method@fdf5
+work/dis/classes18.txt-769596-526306: 7210 d5fc 0000                         |0119: invoke-interface {v0}, Ljava/lang/Iterable;.iterator:()Ljava/util/Iterator; // method@fcd5
+work/dis/classes18.txt-769597-52630c: 0c10                                   |011c: move-result-object v16
+work/dis/classes18.txt-769598-52630e: 7801 57fe 1000                         |011d: invoke-interface/range {v16}, Ljava/util/Iterator;.hasNext:()Z // method@fe57
+work/dis/classes18.txt-769599-526314: 0a00                                   |0120: move-result v0
+work/dis/classes18.txt-769600-526316: 3800 1600                              |0121: if-eqz v0, 0137 // +0016
+work/dis/classes18.txt-769601-52631a: 7801 58fe 1000                         |0123: invoke-interface/range {v16}, Ljava/util/Iterator;.next:()Ljava/lang/Object; // method@fe58
+work/dis/classes18.txt-769602-526320: 0c0f                                   |0126: move-result-object v15
+work/dis/classes18.txt-769603-526322: 20f0 d481                              |0127: instance-of v0, v15, Ljava/lang/String; // type@81d4
+work/dis/classes18.txt-769604-526326: 3800 f4ff                              |0129: if-eqz v0, 011d // -000c
+work/dis/classes18.txt-769605-52632a: 0800 1100                              |012b: move-object/from16 v0, v17
+work/dis/classes18.txt-769606-52632e: 6e20 d0fd f000                         |012d: invoke-virtual {v0, v15}, Ljava/util/AbstractCollection;.add:(Ljava/lang/Object;)Z // method@fdd0
+work/dis/classes18.txt-769607-526334: 28ed                                   |0130: goto 011d // -0013
+work/dis/classes18.txt-769608-526336: 120f                                   |0131: const/4 v15, #int 0 // #0
+work/dis/classes18.txt-769609-526338: 28b0                                   |0132: goto 00e2 // -0050
+work/dis/classes18.txt-769610-52633a: 1310 0000                              |0133: const/16 v16, #int 0 // #0
+work/dis/classes18.txt-769611-52633e: 2900 47ff                              |0135: goto/16 007c // -00b9
+work/dis/classes18.txt-769612-526342: 7701 e1e3 1100                         |0137: invoke-static/range {v17}, Lcom/google/common/collect/ImmutableList;.copyOf:(Ljava/util/Collection;)Lcom/google/common/collect/ImmutableList; // method@e3e1
+work/dis/classes18.txt-769613-526348: 0c00                                   |013a: move-result-object v0
+work/dis/classes18.txt-769614-52634a: 6e30 ac32 d100                         |013b: invoke-virtual {v1, v13, v0}, LX/05xm;.A06:(Ljava/lang/String;Ljava/util/List;)V // method@32ac
+work/dis/classes18.txt-769615-526350: 1c0f 115a                              |013e: const-class v15, LX/0JtI; // type@5a11
+work/dis/classes18.txt-769616-526354: 1a00 c832                              |0140: const-string v0, "IGAREffectsByIdQuery" // string@32c8
+work/dis/classes18.txt-769617-526358: 220d fd00                              |0142: new-instance v13, LX/00K8; // type@00fd
+work/dis/classes18.txt-769618-52635c: 705e 3d02 1d0f                         |0144: invoke-direct {v13, v1, v15, v0, v14}, LX/00K8;.<init>:(LX/05xm;Ljava/lang/Class;Ljava/lang/String;Z)V // method@023d
+work/dis/classes18.txt-769619-526362: 2201 d681                              |0147: new-instance v1, Ljava/lang/StringBuilder; // type@81d6
+work/dis/classes18.txt-769620-526366: 7010 44fd 0100                         |0149: invoke-direct {v1}, Ljava/lang/StringBuilder;.<init>:()V // method@fd44
+work/dis/classes18.txt-769621-52636c: 54b0 cbc6                              |014c: iget-object v0, v11, Lcom/instagram/common/session/UserSession;.userId:Ljava/lang/String; // field@c6cb
+work/dis/classes18.txt-769622-526370: 6e20 50fd 0100                         |014e: invoke-virtual {v1, v0}, Ljava/lang/StringBuilder;.append:(Ljava/lang/String;)Ljava/lang/StringBuilder; // method@fd50
+work/dis/classes18.txt-769623-526376: 1300 5f00                              |0151: const/16 v0, #int 95 // #5f
+work/dis/classes18.txt-769624-52637a: 6e20 48fd 0100                         |0153: invoke-virtual {v1, v0}, Ljava/lang/StringBuilder;.append:(C)Ljava/lang/StringBuilder; // method@fd48
+work/dis/classes18.txt-769625-526380: 6e20 50fd c100                         |0156: invoke-virtual {v1, v12}, Ljava/lang/StringBuilder;.append:(Ljava/lang/String;)Ljava/lang/StringBuilder; // method@fd50
+work/dis/classes18.txt-769626-526386: 6e20 48fd 0100                         |0159: invoke-virtual {v1, v0}, Ljava/lang/StringBuilder;.append:(C)Ljava/lang/StringBuilder; // method@fd48
+work/dis/classes18.txt-769627-52638c: 6e20 50fd a100                         |015c: invoke-virtual {v1, v10}, Ljava/lang/StringBuilder;.append:(Ljava/lang/String;)Ljava/lang/StringBuilder; // method@fd50
+work/dis/classes18.txt-769628-526392: 6e20 48fd 0100                         |015f: invoke-virtual {v1, v0}, Ljava/lang/StringBuilder;.append:(C)Ljava/lang/StringBuilder; // method@fd48
+work/dis/classes18.txt-769629-526398: 6e20 50fd 9100                         |0162: invoke-virtual {v1, v9}, Ljava/lang/StringBuilder;.append:(Ljava/lang/String;)Ljava/lang/StringBuilder; // method@fd50
+work/dis/classes18.txt-769630-52639e: 6e20 48fd 0100                         |0165: invoke-virtual {v1, v0}, Ljava/lang/StringBuilder;.append:(C)Ljava/lang/StringBuilder; // method@fd48
+work/dis/classes18.txt-769631-5263a4: 0800 1500                              |0168: move-object/from16 v0, v21
+work/dis/classes18.txt-769632-5263a8: 6e20 4ffd 0100                         |016a: invoke-virtual {v1, v0}, Ljava/lang/StringBuilder;.append:(Ljava/lang/Object;)Ljava/lang/StringBuilder; // method@fd4f
+work/dis/classes18.txt-769633-5263ae: 6e10 08fd 0100                         |016d: invoke-virtual {v1}, Ljava/lang/Object;.toString:()Ljava/lang/String; // method@fd08
+work/dis/classes18.txt-769634-5263b4: 0c00                                   |0170: move-result-object v0
+work/dis/classes18.txt-769635-5263b6: 6e10 27fd 0000                         |0171: invoke-virtual {v0}, Ljava/lang/String;.hashCode:()I // method@fd27
+work/dis/classes18.txt-769636-5263bc: 0a01                                   |0174: move-result v1
+work/dis/classes18.txt-769637-5263be: 1300 1504                              |0175: const/16 v0, #int 1045 // #415
+work/dis/classes18.txt-769638-5263c2: 7110 a50d 0000                         |0177: invoke-static {v0}, LX/020R;.A00:(I)Ljava/lang/String; // method@0da5
+work/dis/classes18.txt-769639-5263c8: 0c00                                   |017a: move-result-object v0
+work/dis/classes18.txt-769640-5263ca: 7120 cb00 1000                         |017b: invoke-static {v0, v1}, LX/002b;.A0S:(Ljava/lang/String;I)Ljava/lang/String; // method@00cb
+work/dis/classes18.txt-769641-5263d0: 0c0a                                   |017e: move-result-object v10
+work/dis/classes18.txt-769642-5263d2: 160e 0000                              |017f: const-wide/16 v14, #int 0 // #0
+work/dis/classes18.txt-769643-5263d6: 3100 130e                              |0181: cmp-long v0, v19, v14
+work/dis/classes18.txt-769644-5263da: 1209                                   |0183: const/4 v9, #int 0 // #0
+work/dis/classes18.txt-769645-5263dc: 3d00 0300                              |0184: if-lez v0, 0187 // +0003
+work/dis/classes18.txt-769646-5263e0: 1219                                   |0186: const/4 v9, #int 1 // #1
+work/dis/classes18.txt-769647-5263e2: 2201 fe00                              |0187: new-instance v1, LX/00K9; // type@00fe
+work/dis/classes18.txt-769648-5263e6: 7020 3e02 b100                         |0189: invoke-direct {v1, v11}, LX/00K9;.<init>:(LX/04BG;)V // method@023e
+work/dis/classes18.txt-769649-5263ec: 6e20 4202 d100                         |018c: invoke-virtual {v1, v13}, LX/00K9;.A06:(LX/08OZ;)V // method@0242
+work/dis/classes18.txt-769650-5263f2: 3809 4400                              |018f: if-eqz v9, 01d3 // +0044
+work/dis/classes18.txt-769651-5263f6: 7100 ae17 0000                         |0191: invoke-static {}, LX/02vx;.A00:()LX/02vu; // method@17ae
+work/dis/classes18.txt-769652-5263fc: 0c00                                   |0194: move-result-object v0
+work/dis/classes18.txt-769653-5263fe: 6e20 ad17 a000                         |0195: invoke-virtual {v0, v10}, LX/02vu;.A03:(Ljava/lang/String;)Z // method@17ad
+work/dis/classes18.txt-769654-526404: 0a00                                   |0198: move-result v0
+work/dis/classes18.txt-769655-526406: 3340 3700                              |0199: if-ne v0, v4, 01d0 // +0037
+work/dis/classes18.txt-769656-52640a: 6200 0c00                              |019b: sget-object v0, LX/000A;.A0C:Ljava/lang/Integer; // field@000c
+work/dis/classes18.txt-769657-52640e: 5b10 4c01                              |019d: iput-object v0, v1, LX/00K9;.A03:Ljava/lang/Integer; // field@014c
+work/dis/classes18.txt-769658-526412: 1200                                   |019f: const/4 v0, #int 0 // #0
+work/dis/classes18.txt-769659-526414: 3809 0300                              |01a0: if-eqz v9, 01a3 // +0003
+work/dis/classes18.txt-769660-526418: 07a0                                   |01a2: move-object v0, v10
+work/dis/classes18.txt-769661-52641a: 5b10 4e01                              |01a3: iput-object v0, v1, LX/00K9;.A05:Ljava/lang/String; // field@014e
+work/dis/classes18.txt-769662-52641e: 7702 ddfc 1300                         |01a5: invoke-static/range {v19, v20}, Ljava/lang/Long;.valueOf:(J)Ljava/lang/Long; // method@fcdd
+work/dis/classes18.txt-769663-526424: 0c00                                   |01a8: move-result-object v0
+work/dis/classes18.txt-769664-526426: 5b10 4d01                              |01a9: iput-object v0, v1, LX/00K9;.A04:Ljava/lang/Long; // field@014d
+work/dis/classes18.txt-769665-52642a: 6e10 4002 0100                         |01ab: invoke-virtual {v1}, LX/00K9;.A04:()LX/03Da; // method@0240
+work/dis/classes18.txt-769666-526430: 0c01                                   |01ae: move-result-object v1
+work/dis/classes18.txt-769667-526432: 1300 c602                              |01af: const/16 v0, #int 710 // #2c6
+work/dis/classes18.txt-769668-526436: 6e30 5b1c 0108                         |01b1: invoke-virtual {v1, v0, v8}, LX/03Da;.A06:(II)LX/0F0k; // method@1c5b
+work/dis/classes18.txt-769669-52643c: 0c09                                   |01b4: move-result-object v9
+work/dis/classes18.txt-769670-52643e: 1308 0b00                              |01b5: const/16 v8, #int 11 // #b
+work/dis/classes18.txt-769671-526442: 2201 fb56                              |01b7: new-instance v1, LX/0IzS; // type@56fb
+work/dis/classes18.txt-769672-526446: 0800 1200                              |01b9: move-object/from16 v0, v18
+work/dis/classes18.txt-769673-52644a: 7030 fa97 8100                         |01bb: invoke-direct {v1, v8, v0}, LX/0IzS;.<init>:(ILX/09oa;)V // method@97fa
+work/dis/classes18.txt-769674-526450: 7120 be0f 9100                         |01be: invoke-static {v1, v9}, LX/028Z;.A01:(LX/0nvI;LX/0F0k;)LX/0661; // method@0fbe
+work/dis/classes18.txt-769675-526456: 0c01                                   |01c1: move-result-object v1
+work/dis/classes18.txt-769676-526458: 2200 2a4a                              |01c2: new-instance v0, LX/0E93; // type@4a2a
+work/dis/classes18.txt-769677-52645c: 7051 4776 4023                         |01c4: invoke-direct {v0, v4, v3, v2, v1}, LX/0E93;.<init>:(ILjava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;)V // method@7647
+work/dis/classes18.txt-769678-526462: 5974 c18b                              |01c7: iput v4, v7, LX/0IqU;.A00:I // field@8bc1
+work/dis/classes18.txt-769679-526466: 7120 e521 0700                         |01c9: invoke-static {v7, v0}, LX/03iu;.A02:(LX/09oa;LX/0F0k;)Ljava/lang/Object; // method@21e5
+work/dis/classes18.txt-769680-52646c: 0c03                                   |01cc: move-result-object v3
+--
+work/dis/classes18.txt-869889-56a9e4: 1300 0800                              |00de: const/16 v0, #int 8 // #8
+work/dis/classes18.txt-869890-56a9e8: 220a ac20                              |00e0: new-instance v10, LX/05xq; // type@20ac
+work/dis/classes18.txt-869891-56a9ec: 7020 ad32 0a00                         |00e2: invoke-direct {v10, v0}, LX/05xq;.<init>:(I)V // method@32ad
+work/dis/classes18.txt-869892-56a9f2: 1a01 acf3                              |00e5: const-string v1, "manifest_capabilities" // string@f3ac
+work/dis/classes18.txt-869893-56a9f6: 7220 8afe 1c00                         |00e7: invoke-interface {v12, v1}, Ljava/util/Map;.get:(Ljava/lang/Object;)Ljava/lang/Object; // method@fe8a
+work/dis/classes18.txt-869894-56a9fc: 0c00                                   |00ea: move-result-object v0
+work/dis/classes18.txt-869895-56a9fe: 3800 7901                              |00eb: if-eqz v0, 0264 // +0179
+work/dis/classes18.txt-869896-56aa02: 1f00 2b82                              |00ed: check-cast v0, Ljava/util/List; // type@822b
+work/dis/classes18.txt-869897-56aa06: 6e30 afdf 1a00                         |00ef: invoke-virtual {v10, v1, v0}, Lcom/facebook/graphql/calls/GraphQlCallInput;.put:(Ljava/lang/String;Ljava/util/List;)V // method@dfaf
+work/dis/classes18.txt-869898-56aa0c: 6212 7bc1                              |00f2: sget-object v18, Lcom/facebook/graphql/calls/GraphQlCallInput;.A02:LX/000m; // field@c17b
+work/dis/classes18.txt-869899-56aa10: 1b0b 4305 0100                         |00f4: const-string/jumbo v11, "supported_sdk_versions" // string@00010543
+work/dis/classes18.txt-869900-56aa16: 7220 8afe bc00                         |00f7: invoke-interface {v12, v11}, Ljava/util/Map;.get:(Ljava/lang/Object;)Ljava/lang/Object; // method@fe8a
+work/dis/classes18.txt-869901-56aa1c: 0c0d                                   |00fa: move-result-object v13
+work/dis/classes18.txt-869902-56aa1e: 380d 6101                              |00fb: if-eqz v13, 025c // +0161
+work/dis/classes18.txt-869903-56aa22: 1f0d 2f82                              |00fd: check-cast v13, Ljava/util/Map; // type@822f
+work/dis/classes18.txt-869904-56aa26: 1a0f d5f4                              |00ff: const-string v15, "min_version" // string@f4d5
+work/dis/classes18.txt-869905-56aa2a: 7220 8afe fd00                         |0101: invoke-interface {v13, v15}, Ljava/util/Map;.get:(Ljava/lang/Object;)Ljava/lang/Object; // method@fe8a
+work/dis/classes18.txt-869906-56aa30: 0c00                                   |0104: move-result-object v0
+work/dis/classes18.txt-869907-56aa32: 3800 4f01                              |0105: if-eqz v0, 0254 // +014f
+work/dis/classes18.txt-869908-56aa36: 1f00 cb81                              |0107: check-cast v0, Ljava/lang/Number; // type@81cb
+work/dis/classes18.txt-869909-56aa3a: 6e10 fcfc 0000                         |0109: invoke-virtual {v0}, Ljava/lang/Number;.doubleValue:()D // method@fcfc
+work/dis/classes18.txt-869910-56aa40: 0b00                                   |010c: move-result-wide v0
+work/dis/classes18.txt-869911-56aa42: 7120 adfc 1000                         |010d: invoke-static {v0, v1}, Ljava/lang/Double;.valueOf:(D)Ljava/lang/Double; // method@fcad
+work/dis/classes18.txt-869912-56aa48: 0c00                                   |0110: move-result-object v0
+work/dis/classes18.txt-869913-56aa4a: 7401 3300 1200                         |0111: invoke-virtual/range {v18}, LX/000m;.A02:()LX/000q; // method@0033
+work/dis/classes18.txt-869914-56aa50: 0c01                                   |0114: move-result-object v1
+work/dis/classes18.txt-869915-56aa52: 7130 3500 010f                         |0115: invoke-static {v1, v0, v15}, LX/000q;.A00:(LX/000q;Ljava/lang/Object;Ljava/lang/String;)V // method@0035
+work/dis/classes18.txt-869916-56aa58: 1a0e e5f3                              |0118: const-string v14, "max_version" // string@f3e5
+work/dis/classes18.txt-869917-56aa5c: 7220 8afe ed00                         |011a: invoke-interface {v13, v14}, Ljava/util/Map;.get:(Ljava/lang/Object;)Ljava/lang/Object; // method@fe8a
+work/dis/classes18.txt-869918-56aa62: 0c00                                   |011d: move-result-object v0
+work/dis/classes18.txt-869919-56aa64: 3800 2e01                              |011e: if-eqz v0, 024c // +012e
+work/dis/classes18.txt-869920-56aa68: 1f00 cb81                              |0120: check-cast v0, Ljava/lang/Number; // type@81cb
+work/dis/classes18.txt-869921-56aa6c: 6e10 fcfc 0000                         |0122: invoke-virtual {v0}, Ljava/lang/Number;.doubleValue:()D // method@fcfc
+work/dis/classes18.txt-869922-56aa72: 0b10                                   |0125: move-result-wide v16
+work/dis/classes18.txt-869923-56aa74: 7702 adfc 1000                         |0126: invoke-static/range {v16, v17}, Ljava/lang/Double;.valueOf:(D)Ljava/lang/Double; // method@fcad
+work/dis/classes18.txt-869924-56aa7a: 0c00                                   |0129: move-result-object v0
+work/dis/classes18.txt-869925-56aa7c: 7130 3500 010e                         |012a: invoke-static {v1, v0, v14}, LX/000q;.A00:(LX/000q;Ljava/lang/Object;Ljava/lang/String;)V // method@0035
+work/dis/classes18.txt-869926-56aa82: 6e10 aadf 0a00                         |012d: invoke-virtual {v10}, Lcom/facebook/graphql/calls/GraphQlCallInput;.A03:()LX/000q; // method@dfaa
+work/dis/classes18.txt-869927-56aa88: 0c00                                   |0130: move-result-object v0
+work/dis/classes18.txt-869928-56aa8a: 6e30 3800 100b                         |0131: invoke-virtual {v0, v1, v11}, LX/000q;.A0E:(LX/001A;Ljava/lang/String;)V // method@0038
+work/dis/classes18.txt-869929-56aa90: 1b0d 4205 0100                         |0134: const-string/jumbo v13, "supported_beta_sdk_versions" // string@00010542
+work/dis/classes18.txt-869930-56aa96: 7220 8afe dc00                         |0137: invoke-interface {v12, v13}, Ljava/util/Map;.get:(Ljava/lang/Object;)Ljava/lang/Object; // method@fe8a
+work/dis/classes18.txt-869931-56aa9c: 0c01                                   |013a: move-result-object v1
+work/dis/classes18.txt-869932-56aa9e: 3801 0901                              |013b: if-eqz v1, 0244 // +0109
+work/dis/classes18.txt-869933-56aaa2: 1f01 2f82                              |013d: check-cast v1, Ljava/util/Map; // type@822f
+work/dis/classes18.txt-869934-56aaa6: 1a00 23d9                              |013f: const-string v0, "beta_min_version" // string@d923
+work/dis/classes18.txt-869935-56aaaa: 7220 8afe 0100                         |0141: invoke-interface {v1, v0}, Ljava/util/Map;.get:(Ljava/lang/Object;)Ljava/lang/Object; // method@fe8a
+work/dis/classes18.txt-869936-56aab0: 0c00                                   |0144: move-result-object v0
+work/dis/classes18.txt-869937-56aab2: 3800 2701                              |0145: if-eqz v0, 026c // +0127
+work/dis/classes18.txt-869938-56aab6: 1f00 cb81                              |0147: check-cast v0, Ljava/lang/Number; // type@81cb
+work/dis/classes18.txt-869939-56aaba: 6e10 fcfc 0000                         |0149: invoke-virtual {v0}, Ljava/lang/Number;.doubleValue:()D // method@fcfc
+work/dis/classes18.txt-869940-56aac0: 0b10                                   |014c: move-result-wide v16
+work/dis/classes18.txt-869941-56aac2: 7702 adfc 1000                         |014d: invoke-static/range {v16, v17}, Ljava/lang/Double;.valueOf:(D)Ljava/lang/Double; // method@fcad
+work/dis/classes18.txt-869942-56aac8: 0c00                                   |0150: move-result-object v0
+work/dis/classes18.txt-869943-56aaca: 7401 3300 1200                         |0151: invoke-virtual/range {v18}, LX/000m;.A02:()LX/000q; // method@0033
+work/dis/classes18.txt-869944-56aad0: 0c0b                                   |0154: move-result-object v11
+work/dis/classes18.txt-869945-56aad2: 7130 3500 0b0f                         |0155: invoke-static {v11, v0, v15}, LX/000q;.A00:(LX/000q;Ljava/lang/Object;Ljava/lang/String;)V // method@0035
+work/dis/classes18.txt-869946-56aad8: 1a00 22d9                              |0158: const-string v0, "beta_max_version" // string@d922
+work/dis/classes18.txt-869947-56aadc: 7220 8afe 0100                         |015a: invoke-interface {v1, v0}, Ljava/util/Map;.get:(Ljava/lang/Object;)Ljava/lang/Object; // method@fe8a
+work/dis/classes18.txt-869948-56aae2: 0c00                                   |015d: move-result-object v0
+work/dis/classes18.txt-869949-56aae4: 3800 de00                              |015e: if-eqz v0, 023c // +00de
+work/dis/classes18.txt-869950-56aae8: 1f00 cb81                              |0160: check-cast v0, Ljava/lang/Number; // type@81cb
+work/dis/classes18.txt-869951-56aaec: 6e10 fcfc 0000                         |0162: invoke-virtual {v0}, Ljava/lang/Number;.doubleValue:()D // method@fcfc
+work/dis/classes18.txt-869952-56aaf2: 0b00                                   |0165: move-result-wide v0
+work/dis/classes18.txt-869953-56aaf4: 7120 adfc 1000                         |0166: invoke-static {v0, v1}, Ljava/lang/Double;.valueOf:(D)Ljava/lang/Double; // method@fcad
+work/dis/classes18.txt-869954-56aafa: 0c00                                   |0169: move-result-object v0
+work/dis/classes18.txt-869955-56aafc: 7130 3500 0b0e                         |016a: invoke-static {v11, v0, v14}, LX/000q;.A00:(LX/000q;Ljava/lang/Object;Ljava/lang/String;)V // method@0035
+work/dis/classes18.txt-869956-56ab02: 6e10 aadf 0a00                         |016d: invoke-virtual {v10}, Lcom/facebook/graphql/calls/GraphQlCallInput;.A03:()LX/000q; // method@dfaa
+work/dis/classes18.txt-869957-56ab08: 0c00                                   |0170: move-result-object v0
+work/dis/classes18.txt-869958-56ab0a: 6e30 3800 b00d                         |0171: invoke-virtual {v0, v11, v13}, LX/000q;.A0E:(LX/001A;Ljava/lang/String;)V // method@0038
+work/dis/classes18.txt-869959-56ab10: 1b0b 9b06 0100                         |0174: const-string/jumbo v11, "texture_compression" // string@0001069b
+work/dis/classes18.txt-869960-56ab16: 7220 8afe bc00                         |0177: invoke-interface {v12, v11}, Ljava/util/Map;.get:(Ljava/lang/Object;)Ljava/lang/Object; // method@fe8a
+work/dis/classes18.txt-869961-56ab1c: 0c01                                   |017a: move-result-object v1
+work/dis/classes18.txt-869962-56ab1e: 1f01 d481                              |017b: check-cast v1, Ljava/lang/String; // type@81d4
+work/dis/classes18.txt-869963-56ab22: 1a0c b3e2                              |017d: const-string v12, "etc2_compression" // string@e2b3
+work/dis/classes18.txt-869964-56ab26: 6e20 1ffd 1c00                         |017f: invoke-virtual {v12, v1}, Ljava/lang/String;.equals:(Ljava/lang/Object;)Z // method@fd1f
+work/dis/classes18.txt-869965-56ab2c: 0a00                                   |0182: move-result v0
+work/dis/classes18.txt-869966-56ab2e: 3800 0800                              |0183: if-eqz v0, 018b // +0008
+work/dis/classes18.txt-869967-56ab32: 1a00 7123                              |0185: const-string v0, "ETC" // string@2371
+work/dis/classes18.txt-869968-56ab36: 6e30 aedf ba00                         |0187: invoke-virtual {v10, v11, v0}, Lcom/facebook/graphql/calls/GraphQlCallInput;.A0B:(Ljava/lang/String;Ljava/lang/String;)V // method@dfae
+work/dis/classes18.txt-869969-56ab3c: 280f                                   |018a: goto 0199 // +000f
+work/dis/classes18.txt-869970-56ab3e: 1a00 b2fb                              |018b: const-string v0, "pvr_compression" // string@fbb2
+work/dis/classes18.txt-869971-56ab42: 6e20 1ffd 1000                         |018d: invoke-virtual {v0, v1}, Ljava/lang/String;.equals:(Ljava/lang/Object;)Z // method@fd1f
+work/dis/classes18.txt-869972-56ab48: 0a00                                   |0190: move-result v0
+work/dis/classes18.txt-869973-56ab4a: 3800 0500                              |0191: if-eqz v0, 0196 // +0005
+work/dis/classes18.txt-869974-56ab4e: 1a00 51c0                              |0193: const-string v0, "PVR" // string@c051
+work/dis/classes18.txt-869975-56ab52: 28f2                                   |0195: goto 0187 // -000e
+work/dis/classes18.txt-869976-56ab54: 1a00 d4c8                              |0196: const-string v0, "UNCOMPRESSED" // string@c8d4
+work/dis/classes18.txt-869977-56ab58: 28ef                                   |0198: goto 0187 // -0011
+work/dis/classes18.txt-869978-56ab5a: 1e13                                   |0199: monitor-exit v19
+work/dis/classes18.txt:869979:56ab5c: 1a00 31e0                              |019a: const-string v0, "device_capabilities" // string@e031
+work/dis/classes18.txt-869980-56ab60: 6e30 a732 a300                         |019c: invoke-virtual {v3, v10, v0}, LX/05xm;.A00:(Lcom/facebook/graphql/calls/GraphQlCallInput;Ljava/lang/String;)V // method@32a7
+work/dis/classes18.txt-869981-56ab66: 5c49 dbaa                              |019f: iput-boolean v9, v4, LX/0Mib;.A01:Z // field@aadb
+work/dis/classes18.txt-869982-56ab6a: 1a01 79cf                              |01a1: const-string v1, "ZIP" // string@cf79
+work/dis/classes18.txt-869983-56ab6e: 1a00 79c7                              |01a3: const-string v0, "TAR_BROTLI" // string@c779
+work/dis/classes18.txt-869984-56ab72: 7120 e6e3 0100                         |01a5: invoke-static {v1, v0}, Lcom/google/common/collect/ImmutableList;.of:(Ljava/lang/Object;Ljava/lang/Object;)Lcom/google/common/collect/ImmutableList; // method@e3e6
+work/dis/classes18.txt-869985-56ab78: 0c01                                   |01a8: move-result-object v1
+work/dis/classes18.txt-869986-56ab7a: 1300 d101                              |01a9: const/16 v0, #int 465 // #1d1
+work/dis/classes18.txt-869987-56ab7e: 7110 fd04 0000                         |01ab: invoke-static {v0}, LX/0120;.A00:(I)Ljava/lang/String; // method@04fd
+work/dis/classes18.txt-869988-56ab84: 0c00                                   |01ae: move-result-object v0
+work/dis/classes18.txt-869989-56ab86: 6e30 ac32 0301                         |01af: invoke-virtual {v3, v0, v1}, LX/05xm;.A06:(Ljava/lang/String;Ljava/util/List;)V // method@32ac
+work/dis/classes18.txt-869990-56ab8c: 5c49 dcaa                              |01b2: iput-boolean v9, v4, LX/0Mib;.A02:Z // field@aadc
+work/dis/classes18.txt-869991-56ab90: 2201 c47a                              |01b4: new-instance v1, Lcom/google/common/collect/ImmutableList$Builder; // type@7ac4
+work/dis/classes18.txt-869992-56ab94: 7010 dce3 0100                         |01b6: invoke-direct {v1}, Lcom/google/common/collect/ImmutableList$Builder;.<init>:()V // method@e3dc
+work/dis/classes18.txt-869993-56ab9a: 7100 7834 0000                         |01b9: invoke-static {}, LX/066L;.A00:()Ljava/util/Map; // method@3478
+work/dis/classes18.txt-869994-56aba0: 0c0b                                   |01bc: move-result-object v11
+work/dis/classes18.txt-869995-56aba2: 7110 002b 0b00                         |01bd: invoke-static {v11}, LX/04l9;.A0R:(Ljava/lang/Object;)V // method@2b00
+work/dis/classes18.txt-869996-56aba8: 7110 8cfc 0900                         |01c0: invoke-static {v9}, Ljava/lang/Boolean;.valueOf:(Z)Ljava/lang/Boolean; // method@fc8c
+work/dis/classes18.txt-869997-56abae: 0c0a                                   |01c3: move-result-object v10
+work/dis/classes18.txt-869998-56abb0: 7220 8afe cb00                         |01c4: invoke-interface {v11, v12}, Ljava/util/Map;.get:(Ljava/lang/Object;)Ljava/lang/Object; // method@fe8a
+work/dis/classes18.txt-869999-56abb6: 0c00                                   |01c7: move-result-object v0
+work/dis/classes18.txt-870000-56abb8: 6e20 03fd 0a00                         |01c8: invoke-virtual {v10, v0}, Ljava/lang/Object;.equals:(Ljava/lang/Object;)Z // method@fd03
+work/dis/classes18.txt-870001-56abbe: 0a00                                   |01cb: move-result v0
+work/dis/classes18.txt-870002-56abc0: 3800 0700                              |01cc: if-eqz v0, 01d3 // +0007
+work/dis/classes18.txt-870003-56abc4: 1a00 7123                              |01ce: const-string v0, "ETC" // string@2371
+work/dis/classes18.txt-870004-56abc8: 6e20 dde3 0100                         |01d0: invoke-virtual {v1, v0}, Lcom/google/common/collect/ImmutableList$Builder;.add:(Ljava/lang/Object;)Lcom/google/common/collect/ImmutableList$Builder; // method@e3dd
+work/dis/classes18.txt-870005-56abce: 1a00 b2fb                              |01d3: const-string v0, "pvr_compression" // string@fbb2
+work/dis/classes18.txt-870006-56abd2: 7220 8afe 0b00                         |01d5: invoke-interface {v11, v0}, Ljava/util/Map;.get:(Ljava/lang/Object;)Ljava/lang/Object; // method@fe8a
+work/dis/classes18.txt-870007-56abd8: 0c00                                   |01d8: move-result-object v0
+work/dis/classes18.txt-870008-56abda: 6e20 03fd 0a00                         |01d9: invoke-virtual {v10, v0}, Ljava/lang/Object;.equals:(Ljava/lang/Object;)Z // method@fd03
+work/dis/classes18.txt-870009-56abe0: 0a00                                   |01dc: move-result v0
+work/dis/classes18.txt-870010-56abe2: 3800 0700                              |01dd: if-eqz v0, 01e4 // +0007
+work/dis/classes18.txt-870011-56abe6: 1a00 51c0                              |01df: const-string v0, "PVR" // string@c051
+work/dis/classes18.txt-870012-56abea: 6e20 dde3 0100                         |01e1: invoke-virtual {v1, v0}, Lcom/google/common/collect/ImmutableList$Builder;.add:(Ljava/lang/Object;)Lcom/google/common/collect/ImmutableList$Builder; // method@e3dd
+work/dis/classes18.txt-870013-56abf0: 1a00 eed7                              |01e4: const-string v0, "astc_compression" // string@d7ee
+work/dis/classes18.txt-870014-56abf4: 7220 8afe 0b00                         |01e6: invoke-interface {v11, v0}, Ljava/util/Map;.get:(Ljava/lang/Object;)Ljava/lang/Object; // method@fe8a
+work/dis/classes18.txt-870015-56abfa: 0c00                                   |01e9: move-result-object v0
+work/dis/classes18.txt-870016-56abfc: 6e20 03fd 0a00                         |01ea: invoke-virtual {v10, v0}, Ljava/lang/Object;.equals:(Ljava/lang/Object;)Z // method@fd03
+work/dis/classes18.txt-870017-56ac02: 0a00                                   |01ed: move-result v0
+work/dis/classes18.txt-870018-56ac04: 3800 0700                              |01ee: if-eqz v0, 01f5 // +0007
+work/dis/classes18.txt-870019-56ac08: 1a00 690f                              |01f0: const-string v0, "ASTC" // string@0f69
+work/dis/classes18.txt-870020-56ac0c: 6e20 dde3 0100                         |01f2: invoke-virtual {v1, v0}, Lcom/google/common/collect/ImmutableList$Builder;.add:(Ljava/lang/Object;)Lcom/google/common/collect/ImmutableList$Builder; // method@e3dd
+work/dis/classes18.txt-870021-56ac12: 1a00 7df6                              |01f5: const-string v0, "none" // string@f67d
+work/dis/classes18.txt-870022-56ac16: 7220 8afe 0b00                         |01f7: invoke-interface {v11, v0}, Ljava/util/Map;.get:(Ljava/lang/Object;)Ljava/lang/Object; // method@fe8a
+work/dis/classes18.txt-870023-56ac1c: 0c00                                   |01fa: move-result-object v0
+work/dis/classes18.txt-870024-56ac1e: 6e20 03fd 0a00                         |01fb: invoke-virtual {v10, v0}, Ljava/lang/Object;.equals:(Ljava/lang/Object;)Z // method@fd03
+work/dis/classes18.txt-870025-56ac24: 0a00                                   |01fe: move-result v0
+work/dis/classes18.txt-870026-56ac26: 3800 0700                              |01ff: if-eqz v0, 0206 // +0007
+work/dis/classes18.txt-870027-56ac2a: 1a00 d4c8                              |0201: const-string v0, "UNCOMPRESSED" // string@c8d4
+work/dis/classes18.txt-870028-56ac2e: 6e20 dde3 0100                         |0203: invoke-virtual {v1, v0}, Lcom/google/common/collect/ImmutableList$Builder;.add:(Ljava/lang/Object;)Lcom/google/common/collect/ImmutableList$Builder; // method@e3dd
+work/dis/classes18.txt-870029-56ac34: 6e10 dee3 0100                         |0206: invoke-virtual {v1}, Lcom/google/common/collect/ImmutableList$Builder;.build:()Lcom/google/common/collect/ImmutableList; // method@e3de
+work/dis/classes18.txt-870030-56ac3a: 0c01                                   |0209: move-result-object v1
+work/dis/classes18.txt-870031-56ac3c: 7110 002b 0100                         |020a: invoke-static {v1}, LX/04l9;.A0R:(Ljava/lang/Object;)V // method@2b00
+work/dis/classes18.txt-870032-56ac42: 1b00 4405 0100                         |020d: const-string/jumbo v0, "supported_texture_formats" // string@00010544
+work/dis/classes18.txt-870033-56ac48: 6e30 ac32 0301                         |0210: invoke-virtual {v3, v0, v1}, LX/05xm;.A06:(Ljava/lang/String;Ljava/util/List;)V // method@32ac
+work/dis/classes18.txt-870034-56ac4e: 5c49 ddaa                              |0213: iput-boolean v9, v4, LX/0Mib;.A03:Z // field@aadd
+work/dis/classes18.txt-870035-56ac52: 1a00 bde1                              |0215: const-string v0, "effect_id" // string@e1bd
+work/dis/classes18.txt-870036-56ac56: 6e30 ab32 0305                         |0217: invoke-virtual {v3, v0, v5}, LX/05xm;.A05:(Ljava/lang/String;Ljava/lang/String;)V // method@32ab
+work/dis/classes18.txt-870037-56ac5c: 6e10 e4b5 0400                         |021a: invoke-virtual {v4}, LX/0Mib;.build:()LX/08OZ; // method@b5e4
+work/dis/classes18.txt-870038-56ac62: 0c05                                   |021d: move-result-object v5
+work/dis/classes18.txt-870039-56ac64: 2200 e43a                              |021e: new-instance v0, LX/0AvM; // type@3ae4
+work/dis/classes18.txt-870040-56ac68: 7030 935c 7006                         |0220: invoke-direct {v0, v7, v6}, LX/0AvM;.<init>:(Ljava/lang/Object;I)V // method@5c93
+work/dis/classes18.txt-870041-56ac6e: 5424 c256                              |0223: iget-object v4, v2, LX/0BKn;.A01:LX/0Arh; // field@56c2
+work/dis/classes18.txt-870042-56ac72: 2203 c662                              |0225: new-instance v3, LX/0MYs; // type@62c6
+work/dis/classes18.txt-870043-56ac76: 070b                                   |0227: move-object v11, v0
+work/dis/classes18.txt-870044-56ac78: 078c                                   |0228: move-object v12, v8
+work/dis/classes18.txt-870045-56ac7a: 016d                                   |0229: move v13, v6
+work/dis/classes18.txt-870046-56ac7c: 0738                                   |022a: move-object v8, v3
+work/dis/classes18.txt-870047-56ac7e: 0729                                   |022b: move-object v9, v2
+work/dis/classes18.txt-870048-56ac80: 077a                                   |022c: move-object v10, v7
+work/dis/classes18.txt-870049-56ac82: 7606 76b2 0800                         |022d: invoke-direct/range {v8, v9, v10, v11, v12, v13}, LX/0MYs;.<init>:(Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/String;I)V // method@b276
+work/dis/classes18.txt-870050-56ac88: 2201 d763                              |0230: new-instance v1, LX/0Mht; // type@63d7
+work/dis/classes18.txt-870051-56ac8c: 7030 cfb5 0106                         |0232: invoke-direct {v1, v0, v6}, LX/0Mht;.<init>:(Lkotlin/jvm/functions/Function1;I)V // method@b5cf
+work/dis/classes18.txt-870052-56ac92: 6200 3d14                              |0235: sget-object v0, LX/02sh;.A01:LX/02sh; // field@143d
+work/dis/classes18.txt-870053-56ac96: 7250 365c 1453                         |0237: invoke-interface {v4, v1, v3, v5, v0}, LX/0Arh;.BA7:(LX/0Puw;LX/0mjZ;LX/08OZ;Ljava/util/concurrent/Executor;)LX/0Pux; // method@5c36
+work/dis/classes18.txt-870054-56ac9c: 1e02                                   |023a: monitor-exit v2
+work/dis/classes18.txt-870055-56ac9e: 0e00                                   |023b: return-void
+work/dis/classes18.txt-870056-56aca0: 1a00 5af6                              |023c: const-string v0, "no maximum beta version found" // string@f65a
+work/dis/classes18.txt-870057-56aca4: 2201 bd81                              |023e: new-instance v1, Ljava/lang/IllegalStateException; // type@81bd
+work/dis/classes18.txt-870058-56aca8: 7020 c5fc 0100                         |0240: invoke-direct {v1, v0}, Ljava/lang/IllegalStateException;.<init>:(Ljava/lang/String;)V // method@fcc5
+work/dis/classes18.txt-870059-56acae: 2830                                   |0243: goto 0273 // +0030
+work/dis/classes18.txt-870060-56acb0: 1a00 1fc3                              |0244: const-string v0, "Required value was null." // string@c31f
+work/dis/classes18.txt-870061-56acb4: 2201 bd81                              |0246: new-instance v1, Ljava/lang/IllegalStateException; // type@81bd
+work/dis/classes18.txt-870062-56acb8: 7020 c5fc 0100                         |0248: invoke-direct {v1, v0}, Ljava/lang/IllegalStateException;.<init>:(Ljava/lang/String;)V // method@fcc5
+work/dis/classes18.txt-870063-56acbe: 2828                                   |024b: goto 0273 // +0028
+work/dis/classes18.txt-870064-56acc0: 1a00 5bf6                              |024c: const-string v0, "no maximum version found" // string@f65b
+work/dis/classes18.txt-870065-56acc4: 2201 bd81                              |024e: new-instance v1, Ljava/lang/IllegalStateException; // type@81bd
+work/dis/classes18.txt-870066-56acc8: 7020 c5fc 0100                         |0250: invoke-direct {v1, v0}, Ljava/lang/IllegalStateException;.<init>:(Ljava/lang/String;)V // method@fcc5
+work/dis/classes18.txt-870067-56acce: 2820                                   |0253: goto 0273 // +0020
+work/dis/classes18.txt-870068-56acd0: 1a00 5df6                              |0254: const-string v0, "no minimum version found" // string@f65d
+work/dis/classes18.txt-870069-56acd4: 2201 bd81                              |0256: new-instance v1, Ljava/lang/IllegalStateException; // type@81bd
+work/dis/classes18.txt-870070-56acd8: 7020 c5fc 0100                         |0258: invoke-direct {v1, v0}, Ljava/lang/IllegalStateException;.<init>:(Ljava/lang/String;)V // method@fcc5
+work/dis/classes18.txt-870071-56acde: 2818                                   |025b: goto 0273 // +0018
+work/dis/classes18.txt-870072-56ace0: 1a00 1fc3                              |025c: const-string v0, "Required value was null." // string@c31f
+work/dis/classes18.txt-870073-56ace4: 2201 bd81                              |025e: new-instance v1, Ljava/lang/IllegalStateException; // type@81bd
+work/dis/classes18.txt-870074-56ace8: 7020 c5fc 0100                         |0260: invoke-direct {v1, v0}, Ljava/lang/IllegalStateException;.<init>:(Ljava/lang/String;)V // method@fcc5
+work/dis/classes18.txt-870075-56acee: 2810                                   |0263: goto 0273 // +0010
+work/dis/classes18.txt-870076-56acf0: 1a00 1fc3                              |0264: const-string v0, "Required value was null." // string@c31f
+work/dis/classes18.txt-870077-56acf4: 2201 bd81                              |0266: new-instance v1, Ljava/lang/IllegalStateException; // type@81bd
+work/dis/classes18.txt-870078-56acf8: 7020 c5fc 0100                         |0268: invoke-direct {v1, v0}, Ljava/lang/IllegalStateException;.<init>:(Ljava/lang/String;)V // method@fcc5
+work/dis/classes18.txt-870079-56acfe: 2808                                   |026b: goto 0273 // +0008
+work/dis/classes18.txt-870080-56ad00: 1a00 5cf6                              |026c: const-string v0, "no minimum beta version found" // string@f65c
+work/dis/classes18.txt-870081-56ad04: 2201 bd81                              |026e: new-instance v1, Ljava/lang/IllegalStateException; // type@81bd
+work/dis/classes18.txt-870082-56ad08: 7020 c5fc 0100                         |0270: invoke-direct {v1, v0}, Ljava/lang/IllegalStateException;.<init>:(Ljava/lang/String;)V // method@fcc5
+work/dis/classes18.txt-870083-56ad0e: 2701                                   |0273: throw v1
+work/dis/classes18.txt-870084-56ad10: 0d01                                   |0274: move-exception v1
+work/dis/classes18.txt-870085-56ad12: 1e13                                   |0275: monitor-exit v19
+work/dis/classes18.txt-870086-56ad14: 281c                                   |0276: goto 0292 // +001c
+work/dis/classes18.txt-870087-56ad16: 0d01                                   |0277: move-exception v1
+work/dis/classes18.txt-870088-56ad18: 2010 b181                              |0278: instance-of v0, v1, Ljava/lang/ClassNotFoundException; // type@81b1
+work/dis/classes18.txt-870089-56ad1c: 3900 1200                              |027a: if-nez v0, 028c // +0012
+work/dis/classes18.txt-870090-56ad20: 2010 bb81                              |027c: instance-of v0, v1, Ljava/lang/IllegalAccessException; // type@81bb
+work/dis/classes18.txt-870091-56ad24: 3900 0e00                              |027e: if-nez v0, 028c // +000e
+work/dis/classes18.txt-870092-56ad28: 2010 bf81                              |0280: instance-of v0, v1, Ljava/lang/InstantiationException; // type@81bf
+work/dis/classes18.txt-870093-56ad2c: 3900 0a00                              |0282: if-nez v0, 028c // +000a
+work/dis/classes18.txt-870094-56ad30: 2010 e981                              |0284: instance-of v0, v1, Ljava/lang/reflect/InvocationTargetException; // type@81e9
+work/dis/classes18.txt-870095-56ad34: 3900 0600                              |0286: if-nez v0, 028c // +0006
+work/dis/classes18.txt-870096-56ad38: 2010 c981                              |0288: instance-of v0, v1, Ljava/lang/NoSuchMethodException; // type@81c9
+work/dis/classes18.txt-870097-56ad3c: 3800 0800                              |028a: if-eqz v0, 0292 // +0008
+work/dis/classes18.txt-870098-56ad40: 2200 d081                              |028c: new-instance v0, Ljava/lang/RuntimeException; // type@81d0
+work/dis/classes18.txt-870099-56ad44: 7020 0ffd 1000                         |028e: invoke-direct {v0, v1}, Ljava/lang/RuntimeException;.<init>:(Ljava/lang/Throwable;)V // method@fd0f
+work/dis/classes18.txt-870100-56ad4a: 2700                                   |0291: throw v0
+work/dis/classes18.txt-870101-56ad4c: 2701                                   |0292: throw v1
+work/dis/classes18.txt-870102-56ad4e: 0d00                                   |0293: move-exception v0
+work/dis/classes18.txt-870103-56ad50: 1e02                                   |0294: monitor-exit v2
+work/dis/classes18.txt-870104-56ad52: 2700                                   |0295: throw v0
+work/dis/classes18.txt-870105-      catches       : 10
+work/dis/classes18.txt-870106-        0x001b - 0x0028
+work/dis/classes18.txt-870107-          <any> -> 0x0293
+work/dis/classes18.txt-870108-        0x0028 - 0x0041
+work/dis/classes18.txt-870109-          Ljava/lang/Exception; -> 0x0277
+work/dis/classes18.txt-870110-          <any> -> 0x0293
+work/dis/classes18.txt-870111-        0x0041 - 0x0056
+work/dis/classes18.txt-870112-          <any> -> 0x0293
+work/dis/classes18.txt-870113-        0x0056 - 0x005d
+work/dis/classes18.txt-870114-          <any> -> 0x0274
+work/dis/classes18.txt-870115-        0x005d - 0x00d9
+work/dis/classes18.txt-870116-          <any> -> 0x00d5
+work/dis/classes18.txt-870117-        0x00d9 - 0x0199
+work/dis/classes18.txt-870118-          <any> -> 0x0274
+work/dis/classes18.txt-870119-        0x0199 - 0x023a
+--
+work/dis/classes18.txt-1937047-      access        : 0x0001 (PUBLIC)
+work/dis/classes18.txt-1937048-    #1              : (in LX/0Lhp;)
+work/dis/classes18.txt-1937049-      name          : 'A01'
+work/dis/classes18.txt-1937050-      type          : 'Lcom/instagram/common/session/UserSession;'
+work/dis/classes18.txt-1937051-      access        : 0x0001 (PUBLIC)
+work/dis/classes18.txt-1937052-  Direct methods    -
+work/dis/classes18.txt-1937053-  Virtual methods   -
+work/dis/classes18.txt-1937054-    #0              : (in LX/0Lhp;)
+work/dis/classes18.txt-1937055-      name          : 'A00'
+work/dis/classes18.txt-1937056-      type          : '(Ljava/lang/String;Ljava/lang/String;)LX/00K9;'
+work/dis/classes18.txt-1937057-      access        : 0x0011 (PUBLIC FINAL)
+work/dis/classes18.txt-1937058-      method_idx    : 44817
+work/dis/classes18.txt-1937059-      code          -
+work/dis/classes18.txt-1937060-      registers     : 14
+work/dis/classes18.txt-1937061-      ins           : 3
+work/dis/classes18.txt-1937062-      outs          : 5
+work/dis/classes18.txt-1937063-      insns size    : 186 16-bit code units
+work/dis/classes18.txt-1937064-834164:                                        |[834164] X.0Lhp.A00:(Ljava/lang/String;Ljava/lang/String;)LX/00K9;
+work/dis/classes18.txt-1937065-834174: 1204                                   |0000: const/4 v4, #int 0 // #0
+work/dis/classes18.txt-1937066-834176: 7120 112b 4c00                         |0001: invoke-static {v12, v4}, LX/04l9;.A0j:(Ljava/lang/Object;I)V // method@2b11
+work/dis/classes18.txt-1937067-83417c: 54b0 16a3                              |0004: iget-object v0, v11, LX/0Lhp;.A01:Lcom/instagram/common/session/UserSession; // field@a316
+work/dis/classes18.txt-1937068-834180: 7110 3f02 0000                         |0006: invoke-static {v0}, LX/00K9;.A03:(LX/04BG;)LX/00K9; // method@023f
+work/dis/classes18.txt-1937069-834186: 0c03                                   |0009: move-result-object v3
+work/dis/classes18.txt-1937070-834188: 7110 e5e3 0c00                         |000a: invoke-static {v12}, Lcom/google/common/collect/ImmutableList;.of:(Ljava/lang/Object;)Lcom/google/common/collect/ImmutableList; // method@e3e5
+work/dis/classes18.txt-1937071-83418e: 0c06                                   |000d: move-result-object v6
+work/dis/classes18.txt-1937072-834190: 2205 ab20                              |000e: new-instance v5, LX/05xm; // type@20ab
+work/dis/classes18.txt-1937073-834194: 7010 a632 0500                         |0010: invoke-direct {v5}, LX/05xm;.<init>:()V // method@32a6
+work/dis/classes18.txt-1937074-83419a: 54b2 16a3                              |0013: iget-object v2, v11, LX/0Lhp;.A01:Lcom/instagram/common/session/UserSession; // field@a316
+work/dis/classes18.txt-1937075-83419e: 54b1 15a3                              |0015: iget-object v1, v11, LX/0Lhp;.A00:Landroid/content/Context; // field@a315
+work/dis/classes18.txt-1937076-8341a2: 1300 2800                              |0017: const/16 v0, #int 40 // #28
+work/dis/classes18.txt-1937077-8341a6: 2207 ac20                              |0019: new-instance v7, LX/05xq; // type@20ac
+work/dis/classes18.txt-1937078-8341aa: 7020 ad32 0700                         |001b: invoke-direct {v7, v0}, LX/05xq;.<init>:(I)V // method@32ad
+work/dis/classes18.txt-1937079-8341b0: 2200 fc3c                              |001e: new-instance v0, LX/0BKL; // type@3cfc
+work/dis/classes18.txt-1937080-8341b4: 7020 1162 2000                         |0020: invoke-direct {v0, v2}, LX/0BKL;.<init>:(LX/04BG;)V // method@6211
+work/dis/classes18.txt-1937081-8341ba: 7120 ce25 0100                         |0023: invoke-static {v1, v0}, LX/049I;.A02:(Landroid/content/Context;LX/0BKL;)Ljava/util/ArrayList; // method@25ce
+work/dis/classes18.txt-1937082-8341c0: 0c01                                   |0026: move-result-object v1
+work/dis/classes18.txt-1937083-8341c2: 1a00 acf3                              |0027: const-string v0, "manifest_capabilities" // string@f3ac
+work/dis/classes18.txt-1937084-8341c6: 6e30 afdf 0701                         |0029: invoke-virtual {v7, v0, v1}, Lcom/facebook/graphql/calls/GraphQlCallInput;.put:(Ljava/lang/String;Ljava/util/List;)V // method@dfaf
+work/dis/classes18.txt-1937085-8341cc: 7100 cd25 0000                         |002c: invoke-static {}, LX/049I;.A01:()Landroid/util/Pair; // method@25cd
+work/dis/classes18.txt-1937086-8341d2: 0c01                                   |002f: move-result-object v1
+work/dis/classes18.txt-1937087-8341d4: 620a 7bc1                              |0030: sget-object v10, Lcom/facebook/graphql/calls/GraphQlCallInput;.A02:LX/000m; // field@c17b
+work/dis/classes18.txt-1937088-8341d8: 5410 33bf                              |0032: iget-object v0, v1, Landroid/util/Pair;.first:Ljava/lang/Object; // field@bf33
+work/dis/classes18.txt-1937089-8341dc: 1a09 d5f4                              |0034: const-string v9, "min_version" // string@f4d5
+work/dis/classes18.txt-1937090-8341e0: 6e10 3300 0a00                         |0036: invoke-virtual {v10}, LX/000m;.A02:()LX/000q; // method@0033
+work/dis/classes18.txt-1937091-8341e6: 0c02                                   |0039: move-result-object v2
+work/dis/classes18.txt-1937092-8341e8: 7130 3500 0209                         |003a: invoke-static {v2, v0, v9}, LX/000q;.A00:(LX/000q;Ljava/lang/Object;Ljava/lang/String;)V // method@0035
+work/dis/classes18.txt-1937093-8341ee: 5410 34bf                              |003d: iget-object v0, v1, Landroid/util/Pair;.second:Ljava/lang/Object; // field@bf34
+work/dis/classes18.txt-1937094-8341f2: 1a08 e5f3                              |003f: const-string v8, "max_version" // string@f3e5
+work/dis/classes18.txt-1937095-8341f6: 7130 3500 0208                         |0041: invoke-static {v2, v0, v8}, LX/000q;.A00:(LX/000q;Ljava/lang/Object;Ljava/lang/String;)V // method@0035
+work/dis/classes18.txt-1937096-8341fc: 1b01 4305 0100                         |0044: const-string/jumbo v1, "supported_sdk_versions" // string@00010543
+work/dis/classes18.txt-1937097-834202: 6e10 aadf 0700                         |0047: invoke-virtual {v7}, Lcom/facebook/graphql/calls/GraphQlCallInput;.A03:()LX/000q; // method@dfaa
+work/dis/classes18.txt-1937098-834208: 0c00                                   |004a: move-result-object v0
+work/dis/classes18.txt-1937099-83420a: 6e30 3800 2001                         |004b: invoke-virtual {v0, v2, v1}, LX/000q;.A0E:(LX/001A;Ljava/lang/String;)V // method@0038
+work/dis/classes18.txt-1937100-834210: 7100 cc25 0000                         |004e: invoke-static {}, LX/049I;.A00:()Landroid/util/Pair; // method@25cc
+work/dis/classes18.txt-1937101-834216: 0c01                                   |0051: move-result-object v1
+work/dis/classes18.txt-1937102-834218: 5410 33bf                              |0052: iget-object v0, v1, Landroid/util/Pair;.first:Ljava/lang/Object; // field@bf33
+work/dis/classes18.txt-1937103-83421c: 6e10 3300 0a00                         |0054: invoke-virtual {v10}, LX/000m;.A02:()LX/000q; // method@0033
+work/dis/classes18.txt-1937104-834222: 0c02                                   |0057: move-result-object v2
+work/dis/classes18.txt-1937105-834224: 7130 3500 0209                         |0058: invoke-static {v2, v0, v9}, LX/000q;.A00:(LX/000q;Ljava/lang/Object;Ljava/lang/String;)V // method@0035
+work/dis/classes18.txt-1937106-83422a: 5410 34bf                              |005b: iget-object v0, v1, Landroid/util/Pair;.second:Ljava/lang/Object; // field@bf34
+work/dis/classes18.txt-1937107-83422e: 7130 3500 0208                         |005d: invoke-static {v2, v0, v8}, LX/000q;.A00:(LX/000q;Ljava/lang/Object;Ljava/lang/String;)V // method@0035
+work/dis/classes18.txt-1937108-834234: 1b01 4205 0100                         |0060: const-string/jumbo v1, "supported_beta_sdk_versions" // string@00010542
+work/dis/classes18.txt-1937109-83423a: 6e10 aadf 0700                         |0063: invoke-virtual {v7}, Lcom/facebook/graphql/calls/GraphQlCallInput;.A03:()LX/000q; // method@dfaa
+work/dis/classes18.txt-1937110-834240: 0c00                                   |0066: move-result-object v0
+work/dis/classes18.txt-1937111-834242: 6e30 3800 2001                         |0067: invoke-virtual {v0, v2, v1}, LX/000q;.A0E:(LX/001A;Ljava/lang/String;)V // method@0038
+work/dis/classes18.txt-1937112-834248: 7100 7834 0000                         |006a: invoke-static {}, LX/066L;.A00:()Ljava/util/Map; // method@3478
+work/dis/classes18.txt-1937113-83424e: 0c09                                   |006d: move-result-object v9
+work/dis/classes18.txt-1937114-834250: 6208 b6d1                              |006e: sget-object v8, Ljava/lang/Boolean;.TRUE:Ljava/lang/Boolean; // field@d1b6
+work/dis/classes18.txt-1937115-834254: 1a01 b3e2                              |0070: const-string v1, "etc2_compression" // string@e2b3
+work/dis/classes18.txt-1937116-834258: 7220 8afe 1900                         |0072: invoke-interface {v9, v1}, Ljava/util/Map;.get:(Ljava/lang/Object;)Ljava/lang/Object; // method@fe8a
+work/dis/classes18.txt-1937117-83425e: 0c00                                   |0075: move-result-object v0
+work/dis/classes18.txt-1937118-834260: 6e20 03fd 0800                         |0076: invoke-virtual {v8, v0}, Ljava/lang/Object;.equals:(Ljava/lang/Object;)Z // method@fd03
+work/dis/classes18.txt-1937119-834266: 0a00                                   |0079: move-result v0
+work/dis/classes18.txt-1937120-834268: 1a02 0000                              |007a: const-string v2, "" // string@0000
+work/dis/classes18.txt-1937121-83426c: 3900 0f00                              |007c: if-nez v0, 008b // +000f
+work/dis/classes18.txt-1937122-834270: 1a01 b2fb                              |007e: const-string v1, "pvr_compression" // string@fbb2
+work/dis/classes18.txt-1937123-834274: 7220 8afe 1900                         |0080: invoke-interface {v9, v1}, Ljava/util/Map;.get:(Ljava/lang/Object;)Ljava/lang/Object; // method@fe8a
+work/dis/classes18.txt-1937124-83427a: 0c00                                   |0083: move-result-object v0
+work/dis/classes18.txt-1937125-83427c: 6e20 03fd 0800                         |0084: invoke-virtual {v8, v0}, Ljava/lang/Object;.equals:(Ljava/lang/Object;)Z // method@fd03
+work/dis/classes18.txt-1937126-834282: 0a00                                   |0087: move-result v0
+work/dis/classes18.txt-1937127-834284: 3900 0300                              |0088: if-nez v0, 008b // +0003
+work/dis/classes18.txt-1937128-834288: 0721                                   |008a: move-object v1, v2
+work/dis/classes18.txt-1937129-83428a: 1a00 a1d2                              |008b: const-string v0, "_compression" // string@d2a1
+work/dis/classes18.txt-1937130-83428e: 6e30 31fd 0102                         |008d: invoke-virtual {v1, v0, v2}, Ljava/lang/String;.replace:(Ljava/lang/CharSequence;Ljava/lang/CharSequence;)Ljava/lang/String; // method@fd31
+work/dis/classes18.txt-1937131-834294: 0c01                                   |0090: move-result-object v1
+work/dis/classes18.txt-1937132-834296: 1a00 9604                              |0091: const-string v0, "2" // string@0496
+work/dis/classes18.txt-1937133-83429a: 6e30 31fd 0102                         |0093: invoke-virtual {v1, v0, v2}, Ljava/lang/String;.replace:(Ljava/lang/CharSequence;Ljava/lang/CharSequence;)Ljava/lang/String; // method@fd31
+work/dis/classes18.txt-1937134-8342a0: 0c01                                   |0096: move-result-object v1
+work/dis/classes18.txt-1937135-8342a2: 1b00 9b06 0100                         |0097: const-string/jumbo v0, "texture_compression" // string@0001069b
+work/dis/classes18.txt-1937136-8342a8: 6e30 aedf 0701                         |009a: invoke-virtual {v7, v0, v1}, Lcom/facebook/graphql/calls/GraphQlCallInput;.A0B:(Ljava/lang/String;Ljava/lang/String;)V // method@dfae
+work/dis/classes18.txt:1937137:8342ae: 1a00 31e0                              |009d: const-string v0, "device_capabilities" // string@e031
+work/dis/classes18.txt-1937138-8342b2: 6e30 a732 7500                         |009f: invoke-virtual {v5, v7, v0}, LX/05xm;.A00:(Lcom/facebook/graphql/calls/GraphQlCallInput;Ljava/lang/String;)V // method@32a7
+work/dis/classes18.txt-1937139-8342b8: 1a00 b3fd                              |00a2: const-string v0, "requested_effect_ids" // string@fdb3
+work/dis/classes18.txt-1937140-8342bc: 6e30 ac32 0506                         |00a4: invoke-virtual {v5, v0, v6}, LX/05xm;.A06:(Ljava/lang/String;Ljava/util/List;)V // method@32ac
+work/dis/classes18.txt-1937141-8342c2: 1b00 4605 0100                         |00a7: const-string/jumbo v0, "surface" // string@00010546
+work/dis/classes18.txt-1937142-8342c8: 6e30 ab32 050d                         |00aa: invoke-virtual {v5, v0, v13}, LX/05xm;.A05:(Ljava/lang/String;Ljava/lang/String;)V // method@32ab
+work/dis/classes18.txt-1937143-8342ce: 1c02 af31                              |00ad: const-class v2, LX/0987; // type@31af
+work/dis/classes18.txt-1937144-8342d2: 1a01 c732                              |00af: const-string v1, "IGAREffectPreviewByIdQuery" // string@32c7
+work/dis/classes18.txt-1937145-8342d6: 2200 fd00                              |00b1: new-instance v0, LX/00K8; // type@00fd
+work/dis/classes18.txt-1937146-8342da: 7054 3d02 5012                         |00b3: invoke-direct {v0, v5, v2, v1, v4}, LX/00K8;.<init>:(LX/05xm;Ljava/lang/Class;Ljava/lang/String;Z)V // method@023d
+work/dis/classes18.txt-1937147-8342e0: 6e20 4202 0300                         |00b6: invoke-virtual {v3, v0}, LX/00K9;.A06:(LX/08OZ;)V // method@0242
+work/dis/classes18.txt-1937148-8342e6: 1103                                   |00b9: return-object v3
+work/dis/classes18.txt-1937149-      catches       : (none)
+work/dis/classes18.txt-1937150-      positions     :
+work/dis/classes18.txt-1937151-      locals        :
+work/dis/classes18.txt-1937152-
+work/dis/classes18.txt-1937153-  source_file_idx   : 0 ()
+work/dis/classes18.txt-1937154-
+work/dis/classes18.txt-1937155-Class #9114 header:
+work/dis/classes18.txt-1937156-class_idx           : 24650
+work/dis/classes18.txt-1937157-access_flags        : 17 (0x0011)
+work/dis/classes18.txt-1937158-superclass_idx      : 33229
+work/dis/classes18.txt-1937159-interfaces_off      : 0 (0x000000)
+work/dis/classes18.txt-1937160-source_file_idx     : 0
+work/dis/classes18.txt-1937161-annotations_off     : 9261020 (0x8d4fdc)
+work/dis/classes18.txt-1937162-class_data_off      : 9144552 (0x8b88e8)
+work/dis/classes18.txt-1937163-static_fields_size  : 0
+work/dis/classes18.txt-1937164-instance_fields_size: 2
+work/dis/classes18.txt-1937165-direct_methods_size : 0
+work/dis/classes18.txt-1937166-virtual_methods_size: 1
+work/dis/classes18.txt-1937167-
+work/dis/classes18.txt-1937168-Class #9114            -
+work/dis/classes18.txt-1937169-  Class descriptor  : 'LX/0Lhq;'
+work/dis/classes18.txt-1937170-  Access flags      : 0x0011 (PUBLIC FINAL)
+work/dis/classes18.txt-1937171-  Superclass        : 'Ljava/lang/Object;'
+work/dis/classes18.txt-1937172-  Interfaces        -
+work/dis/classes18.txt-1937173-  Static fields     -
+work/dis/classes18.txt-1937174-  Instance fields   -
+work/dis/classes18.txt-1937175-    #0              : (in LX/0Lhq;)
+work/dis/classes18.txt-1937176-      name          : 'A00'
+work/dis/classes18.txt-1937177-      type          : 'Lcom/instagram/common/ui/base/IgFrameLayout;'
+work/dis/classes18.txt-1937178-      access        : 0x0001 (PUBLIC)
+work/dis/classes18.txt-1937179-    #1              : (in LX/0Lhq;)
+work/dis/classes18.txt-1937180-      name          : 'A01'
+work/dis/classes18.txt-1937181-      type          : 'Lcom/instagram/common/ui/widget/imageview/IgImageView;'
+work/dis/classes18.txt-1937182-      access        : 0x0001 (PUBLIC)
+work/dis/classes18.txt-1937183-  Direct methods    -
+work/dis/classes18.txt-1937184-  Virtual methods   -
+work/dis/classes18.txt-1937185-    #0              : (in LX/0Lhq;)
+work/dis/classes18.txt-1937186-      name          : 'A00'
+work/dis/classes18.txt-1937187-      type          : '()V'
+work/dis/classes18.txt-1937188-      access        : 0x0011 (PUBLIC FINAL)
+work/dis/classes18.txt-1937189-      method_idx    : 44818
+work/dis/classes18.txt-1937190-      code          -
+work/dis/classes18.txt-1937191-      registers     : 3
+work/dis/classes18.txt-1937192-      ins           : 1
+work/dis/classes18.txt-1937193-      outs          : 2
+work/dis/classes18.txt-1937194-      insns size    : 17 16-bit code units
+work/dis/classes18.txt-1937195-8457b4:                                        |[8457b4] X.0Lhq.A00:()V
+work/dis/classes18.txt-1937196-8457c4: 5421 17a3                              |0000: iget-object v1, v2, LX/0Lhq;.A00:Lcom/instagram/common/ui/base/IgFrameLayout; // field@a317
+work/dis/classes18.txt-1937197-8457c8: 1400 1d99 cb29                         |0002: const v0, #float 9.04157e-14 // #29cb991d
+work/dis/classes18.txt-1937198-8457ce: 7120 0621 0100                         |0005: invoke-static {v1, v0}, LX/03dC;.A0Q:(Landroid/view/View;I)V // method@2106
+work/dis/classes18.txt-1937199-8457d4: 5421 18a3                              |0008: iget-object v1, v2, LX/0Lhq;.A01:Lcom/instagram/common/ui/widget/imageview/IgImageView; // field@a318
+work/dis/classes18.txt-1937200-8457d8: 1400 1487 9f98                         |000a: const v0, #float -4.12369e-24 // #989f8714
+work/dis/classes18.txt-1937201-8457de: 7120 0621 0100                         |000d: invoke-static {v1, v0}, LX/03dC;.A0Q:(Landroid/view/View;I)V // method@2106
+work/dis/classes18.txt-1937202-8457e4: 0e00                                   |0010: return-void
+work/dis/classes18.txt-1937203-      catches       : (none)
+work/dis/classes18.txt-1937204-      positions     :
+work/dis/classes18.txt-1937205-      locals        :
+work/dis/classes18.txt-1937206-
+work/dis/classes18.txt-1937207-  source_file_idx   : 0 ()
+work/dis/classes18.txt-1937208-
+work/dis/classes18.txt-1937209-Class #9115 header:
+work/dis/classes18.txt-1937210-class_idx           : 24651
+work/dis/classes18.txt-1937211-access_flags        : 17 (0x0011)
+work/dis/classes18.txt-1937212-superclass_idx      : 33229
+work/dis/classes18.txt-1937213-interfaces_off      : 0 (0x000000)
+work/dis/classes18.txt-1937214-source_file_idx     : 0
+work/dis/classes18.txt-1937215-annotations_off     : 0 (0x000000)
+work/dis/classes18.txt-1937216-class_data_off      : 9144570 (0x8b88fa)
+work/dis/classes18.txt-1937217-static_fields_size  : 0
+work/dis/classes18.txt-1937218-instance_fields_size: 2
+work/dis/classes18.txt-1937219-direct_methods_size : 0
+work/dis/classes18.txt-1937220-virtual_methods_size: 1
+work/dis/classes18.txt-1937221-
+work/dis/classes18.txt-1937222-Class #9115            -
+work/dis/classes18.txt-1937223-  Class descriptor  : 'LX/0Lhr;'
+work/dis/classes18.txt-1937224-  Access flags      : 0x0011 (PUBLIC FINAL)
+work/dis/classes18.txt-1937225-  Superclass        : 'Ljava/lang/Object;'
+work/dis/classes18.txt-1937226-  Interfaces        -
+work/dis/classes18.txt-1937227-  Static fields     -
+work/dis/classes18.txt-1937228-  Instance fields   -
+work/dis/classes18.txt-1937229-    #0              : (in LX/0Lhr;)
+work/dis/classes18.txt-1937230-      name          : 'A00'
+work/dis/classes18.txt-1937231-      type          : 'Lcom/instagram/common/session/UserSession;'
+work/dis/classes18.txt-1937232-      access        : 0x0001 (PUBLIC)
+work/dis/classes18.txt-1937233-    #1              : (in LX/0Lhr;)
+work/dis/classes18.txt-1937234-      name          : 'A01'
+work/dis/classes18.txt-1937235-      type          : 'LX/0APu;'
+work/dis/classes18.txt-1937236-      access        : 0x0001 (PUBLIC)
+work/dis/classes18.txt-1937237-  Direct methods    -
+work/dis/classes18.txt-1937238-  Virtual methods   -
+work/dis/classes18.txt-1937239-    #0              : (in LX/0Lhr;)
+work/dis/classes18.txt-1937240-      name          : 'A00'
+work/dis/classes18.txt-1937241-      type          : '(Landroid/content/Context;Lcom/instagram/model/reels/ReelItem;LX/04sN;LX/04hO;LX/0AOI;LX/0Onj;Ljava/lang/String;Lkotlin/jvm/functions/Function0;Lkotlin/jvm/functions/Function0;Lkotlin/jvm/functions/Function0;Lkotlin/jvm/functions/Function0;Lkotlin/jvm/functions/Function0;)LX/0Kfb;'
+work/dis/classes18.txt-1937242-      access        : 0x0011 (PUBLIC FINAL)
+work/dis/classes18.txt-1937243-      method_idx    : 44819
+work/dis/classes18.txt-1937244-      code          -
+work/dis/classes18.txt-1937245-      registers     : 44
+work/dis/classes18.txt-1937246-      ins           : 13
+work/dis/classes18.txt-1937247-      outs          : 10
+work/dis/classes18.txt-1937248-      insns size    : 365 16-bit code units
+work/dis/classes18.txt-1937249-7ff248:                                        |[7ff248] X.0Lhr.A00:(Landroid/content/Context;Lcom/instagram/model/reels/ReelItem;LX/04sN;LX/04hO;LX/0AOI;LX/0Onj;Ljava/lang/String;Lkotlin/jvm/functions/Function0;Lkotlin/jvm/functions/Function0;Lkotlin/jvm/functions/Function0;Lkotlin/jvm/functions/Function0;Lkotlin/jvm/functions/Function0;)LX/0Kfb;
+work/dis/classes18.txt-1937250-7ff258: 1209                                   |0000: const/4 v9, #int 0 // #0
+work/dis/classes18.txt-1937251-7ff25a: 080c 2000                              |0001: move-object/from16 v12, v32
+work/dis/classes18.txt-1937252-7ff25e: 080b 2100                              |0003: move-object/from16 v11, v33
+work/dis/classes18.txt-1937253-7ff262: 7130 192b c90b                         |0005: invoke-static {v9, v12, v11}, LX/04l9;.A10:(ILjava/lang/Object;Ljava/lang/Object;)Z // method@2b19
+work/dis/classes18.txt-1937254-7ff268: 0a13                                   |0008: move-result v19
+work/dis/classes18.txt-1937255-7ff26a: 1220                                   |0009: const/4 v0, #int 2 // #2
+work/dis/classes18.txt-1937256-7ff26c: 080a 2200                              |000a: move-object/from16 v10, v34
+work/dis/classes18.txt-1937257-7ff270: 7120 112b 0a00                         |000c: invoke-static {v10, v0}, LX/04l9;.A0j:(Ljava/lang/Object;I)V // method@2b11
+work/dis/classes18.txt-1937258-7ff276: 1230                                   |000f: const/4 v0, #int 3 // #3
+work/dis/classes18.txt-1937259-7ff278: 0803 2300                              |0010: move-object/from16 v3, v35
+work/dis/classes18.txt-1937260-7ff27c: 7120 112b 0300                         |0012: invoke-static {v3, v0}, LX/04l9;.A0j:(Ljava/lang/Object;I)V // method@2b11
+work/dis/classes18.txt-1937261-7ff282: 1240                                   |0015: const/4 v0, #int 4 // #4
+work/dis/classes18.txt-1937262-7ff284: 080e 2400                              |0016: move-object/from16 v14, v36
+work/dis/classes18.txt-1937263-7ff288: 7120 112b 0e00                         |0018: invoke-static {v14, v0}, LX/04l9;.A0j:(Ljava/lang/Object;I)V // method@2b11
+work/dis/classes18.txt-1937264-7ff28e: 081b 2500                              |001b: move-object/from16 v27, v37
+work/dis/classes18.txt-1937265-7ff292: 7701 092b 1b00                         |001d: invoke-static/range {v27}, LX/04l9;.A0a:(Ljava/lang/Object;)V // method@2b09
+work/dis/classes18.txt-1937266-7ff298: 081e 2600                              |0020: move-object/from16 v30, v38
+work/dis/classes18.txt-1937267-7ff29c: 7701 0a2b 1e00                         |0022: invoke-static/range {v30}, LX/04l9;.A0b:(Ljava/lang/Object;)V // method@2b0a
+work/dis/classes18.txt-1937268-7ff2a2: 6202 3739                              |0025: sget-object v2, LX/072F;.A01:LX/072F; // field@3937
+work/dis/classes18.txt-1937269-7ff2a6: 0800 1f00                              |0027: move-object/from16 v0, v31
+work/dis/classes18.txt-1937270-7ff2aa: 5408 19a3                              |0029: iget-object v8, v0, LX/0Lhr;.A00:Lcom/instagram/common/session/UserSession; // field@a319
+work/dis/classes18.txt-1937271-7ff2ae: 6e10 782a 0300                         |002b: invoke-virtual {v3}, LX/04hO;.A02:()Z // method@2a78
+work/dis/classes18.txt-1937272-7ff2b4: 0a00                                   |002e: move-result v0
+work/dis/classes18.txt-1937273-7ff2b6: 3800 0f00                              |002f: if-eqz v0, 003e // +000f
+work/dis/classes18.txt-1937274-7ff2ba: 6e10 80f3 0b00                         |0031: invoke-virtual {v11}, Lcom/instagram/model/reels/ReelItem;.A1g:()Z // method@f380
+work/dis/classes18.txt-1937275-7ff2c0: 0a00                                   |0034: move-result v0
+work/dis/classes18.txt-1937276-7ff2c2: 3900 0900                              |0035: if-nez v0, 003e // +0009
+work/dis/classes18.txt-1937277-7ff2c6: 54a0 8a27                              |0037: iget-object v0, v10, LX/04sN;.A0U:LX/03sn; // field@278a
+--
+work/dis/classes19.txt-53-      registers     : 1
+work/dis/classes19.txt-54-      ins           : 1
+work/dis/classes19.txt-55-      outs          : 0
+work/dis/classes19.txt-56-      insns size    : 7060 16-bit code units
+work/dis/classes19.txt-57-36ff78:                                        |[36ff78] X.0120.A00:(I)Ljava/lang/String;
+work/dis/classes19.txt-58-36ff88: 2b00 8c10 0000                         |0000: packed-switch v0, 0000108c // +0000108c
+work/dis/classes19.txt-59-36ff8e: 1a00 42e2                              |0003: const-string v0, "|old_flow_timed_out" // string@e242
+work/dis/classes19.txt-60-36ff92: 1100                                   |0005: return-object v0
+work/dis/classes19.txt-61-36ff94: 1a00 54c9                              |0006: const-string v0, "null cannot be cast to non-null type androidx.constraintlayout.widget.ConstraintLayout.LayoutParams" // string@c954
+work/dis/classes19.txt-62-36ff98: 1100                                   |0008: return-object v0
+work/dis/classes19.txt-63-36ff9a: 1a00 3ec9                              |0009: const-string v0, "null cannot be cast to non-null type android.graphics.drawable.GradientDrawable" // string@c93e
+work/dis/classes19.txt-64-36ff9e: 1100                                   |000b: return-object v0
+work/dis/classes19.txt-65-36ffa0: 1a00 f809                              |000c: const-string v0, "ARGS_HIDE_GALLERY_DESTINATION_BAR" // string@09f8
+work/dis/classes19.txt-66-36ffa4: 1100                                   |000e: return-object v0
+work/dis/classes19.txt-67-36ffa6: 1a00 4aaa                              |000f: const-string v0, "camera_hide_destination_picker" // string@aa4a
+work/dis/classes19.txt-68-36ffaa: 1100                                   |0011: return-object v0
+work/dis/classes19.txt-69-36ffac: 1a00 24b2                              |0012: const-string v0, "effect_persisted_metadata" // string@b224
+work/dis/classes19.txt-70-36ffb0: 1100                                   |0014: return-object v0
+work/dis/classes19.txt-71-36ffb2: 1a00 c0bd                              |0015: const-string v0, "horizon_world_id" // string@bdc0
+work/dis/classes19.txt-72-36ffb6: 1100                                   |0017: return-object v0
+work/dis/classes19.txt-73-36ffb8: 1a00 9f11                              |0018: const-string v0, "CLOSE_FRIENDS_WITH_BLACKLIST" // string@119f
+work/dis/classes19.txt-74-36ffbc: 1100                                   |001a: return-object v0
+work/dis/classes19.txt-75-36ffbe: 1a00 20a6                              |001b: const-string v0, "android_purge_26_q2_Factory_create" // string@a620
+work/dis/classes19.txt-76-36ffc2: 1100                                   |001d: return-object v0
+work/dis/classes19.txt-77-36ffc4: 1a00 24b6                              |001e: const-string v0, "front" // string@b624
+work/dis/classes19.txt-78-36ffc8: 1100                                   |0020: return-object v0
+work/dis/classes19.txt-79-36ffca: 1a00 29be                              |0021: const-string v0, "ig_ads_conversion_funnel" // string@be29
+work/dis/classes19.txt-80-36ffce: 1100                                   |0023: return-object v0
+work/dis/classes19.txt-81-36ffd0: 1a00 edc1                              |0024: const-string v0, "is_offensive" // string@c1ed
+work/dis/classes19.txt-82-36ffd4: 1100                                   |0026: return-object v0
+work/dis/classes19.txt-83-36ffd6: 1a00 e8d1                              |0027: const-string v0, "result_type" // string@d1e8
+work/dis/classes19.txt-84-36ffda: 1100                                   |0029: return-object v0
+work/dis/classes19.txt-85-36ffdc: 1a00 9fdb                              |002a: const-string v0, "text_language" // string@db9f
+work/dis/classes19.txt-86-36ffe0: 1100                                   |002c: return-object v0
+work/dis/classes19.txt-87-36ffe2: 1a00 96e0                              |002d: const-string v0, "video_prompt_piece_id" // string@e096
+work/dis/classes19.txt-88-36ffe6: 1100                                   |002f: return-object v0
+work/dis/classes19.txt-89-36ffe8: 1a00 2f0e                              |0030: const-string v0, "BOT_FEEDBACK_POSITIVE" // string@0e2f
+work/dis/classes19.txt-90-36ffec: 1100                                   |0032: return-object v0
+work/dis/classes19.txt-91-36ffee: 1a00 3015                              |0033: const-string v0, "ClipsConstants.IS_NCS_AD_FLOW" // string@1530
+work/dis/classes19.txt-92-36fff2: 1100                                   |0035: return-object v0
+work/dis/classes19.txt-93-36fff4: 1a00 7e98                              |0036: const-string v0, "UPSELL_ACCEPT" // string@987e
+work/dis/classes19.txt-94-36fff8: 1100                                   |0038: return-object v0
+work/dis/classes19.txt-95-36fffa: 1a00 83a5                              |0039: const-string v0, "android.hardware.camera" // string@a583
+work/dis/classes19.txt-96-36fffe: 1100                                   |003b: return-object v0
+work/dis/classes19.txt-97-370000: 1a00 85a5                              |003c: const-string v0, "android.hardware.camera.front" // string@a585
+work/dis/classes19.txt-98-370004: 1100                                   |003e: return-object v0
+work/dis/classes19.txt-99-370006: 1a00 9ea5                              |003f: const-string v0, "android:query-arg-limit" // string@a59e
+work/dis/classes19.txt-100-37000a: 1100                                   |0041: return-object v0
+work/dis/classes19.txt-101-37000c: 1a00 a1a5                              |0042: const-string v0, "android:query-arg-sql-selection" // string@a5a1
+work/dis/classes19.txt-102-370010: 1100                                   |0044: return-object v0
+work/dis/classes19.txt-103-370012: 1a00 7aa7                              |0045: const-string v0, "attributed_device_name" // string@a77a
+work/dis/classes19.txt-104-370016: 1100                                   |0047: return-object v0
+work/dis/classes19.txt-105-370018: 1a00 1aae                              |0048: const-string v0, "country_name" // string@ae1a
+work/dis/classes19.txt-106-37001c: 1100                                   |004a: return-object v0
+work/dis/classes19.txt-107-37001e: 1a00 d5b5                              |004b: const-string v0, "formatted_media_count" // string@b5d5
+work/dis/classes19.txt-108-370022: 1100                                   |004d: return-object v0
+work/dis/classes19.txt-109-370024: 1a00 55c9                              |004e: const-string v0, "null cannot be cast to non-null type androidx.coordinatorlayout.widget.CoordinatorLayout.LayoutParams" // string@c955
+work/dis/classes19.txt-110-370028: 1100                                   |0050: return-object v0
+work/dis/classes19.txt-111-37002a: 1a00 33ce                              |0051: const-string v0, "post_tap_variant" // string@ce33
+work/dis/classes19.txt-112-37002e: 1100                                   |0053: return-object v0
+work/dis/classes19.txt-113-370030: 1a00 d5ce                              |0054: const-string v0, "primary_click" // string@ced5
+work/dis/classes19.txt-114-370034: 1100                                   |0056: return-object v0
+work/dis/classes19.txt-115-370036: 1a00 3fcf                              |0057: const-string v0, "prompt_sticker_bundle_id" // string@cf3f
+work/dis/classes19.txt-116-37003a: 1100                                   |0059: return-object v0
+work/dis/classes19.txt-117-37003c: 1a00 23d3                              |005a: const-string v0, "search_query_length" // string@d323
+work/dis/classes19.txt-118-370040: 1100                                   |005c: return-object v0
+work/dis/classes19.txt-119-370042: 1a00 b2dd                              |005d: const-string v0, "ui_component" // string@ddb2
+work/dis/classes19.txt-120-370046: 1100                                   |005f: return-object v0
+work/dis/classes19.txt-121-370048: 1a00 c200                              |0060: const-string v0, " of " // string@00c2
+work/dis/classes19.txt-122-37004c: 1100                                   |0062: return-object v0
+work/dis/classes19.txt-123-37004e: 1a00 1904                              |0063: const-string v0, ", text=" // string@0419
+work/dis/classes19.txt-124-370052: 1100                                   |0065: return-object v0
+work/dis/classes19.txt-125-370054: 1a00 0305                              |0066: const-string v0, "2282005535164995" // string@0503
+work/dis/classes19.txt-126-370058: 1100                                   |0068: return-object v0
+work/dis/classes19.txt-127-37005a: 1a00 0709                              |0069: const-string v0, "ALL_WITH_BLACKLIST" // string@0907
+work/dis/classes19.txt-128-37005e: 1100                                   |006b: return-object v0
+work/dis/classes19.txt-129-370060: 1a00 f509                              |006c: const-string v0, "ARGS_DEFAULT_FOLDER_NAME" // string@09f5
+work/dis/classes19.txt-130-370064: 1100                                   |006e: return-object v0
+work/dis/classes19.txt-131-370066: 1a00 0f8b                              |006f: const-string v0, "MultiClassSegmentation" // string@8b0f
+work/dis/classes19.txt-132-37006a: 1100                                   |0071: return-object v0
+work/dis/classes19.txt-133-37006c: 1a00 458e                              |0072: const-string v0, "PREFERENCE_REELS_AUTO_RECOMMEND_ON_FACEBOOK_LAST_CHANGED_MS" // string@8e45
+work/dis/classes19.txt-134-370070: 1100                                   |0074: return-object v0
+work/dis/classes19.txt-135-370072: 1a00 d598                              |0075: const-string v0, "Uninitialized" // string@98d5
+work/dis/classes19.txt-136-370076: 1100                                   |0077: return-object v0
+work/dis/classes19.txt-137-370078: 1a00 a2a5                              |0078: const-string v0, "android:query-arg-sql-selection-args" // string@a5a2
+work/dis/classes19.txt-138-37007c: 1100                                   |007a: return-object v0
+work/dis/classes19.txt-139-37007e: 1a00 0eac                              |007b: const-string v0, "coefficient_besties_list_ranking" // string@ac0e
+work/dis/classes19.txt-140-370082: 1100                                   |007d: return-object v0
+work/dis/classes19.txt-141-370084: 1a00 94ae                              |007e: const-string v0, "creation_flow_is_ncs_ad" // string@ae94
+work/dis/classes19.txt-142-370088: 1100                                   |0080: return-object v0
+work/dis/classes19.txt:143:37008a: 1a00 66b0                              |0081: const-string v0, "device_capabilities" // string@b066
+work/dis/classes19.txt-144-37008e: 1100                                   |0083: return-object v0
+work/dis/classes19.txt-145-370090: 1a00 76b3                              |0084: const-string v0, "exit_reason" // string@b376
+work/dis/classes19.txt-146-370094: 1100                                   |0086: return-object v0
+work/dis/classes19.txt-147-370096: 1a00 b1be                              |0087: const-string v0, "ig_reels_gallery" // string@beb1
+work/dis/classes19.txt-148-37009a: 1100                                   |0089: return-object v0
+work/dis/classes19.txt-149-37009c: 1a00 cbbe                              |008a: const-string v0, "ig_sharing_creation_genai_oil" // string@becb
+work/dis/classes19.txt-150-3700a0: 1100                                   |008c: return-object v0
+work/dis/classes19.txt-151-3700a2: 1a00 b0c6                              |008d: const-string v0, "mimicry_save_browsing" // string@c6b0
+work/dis/classes19.txt-152-3700a6: 1100                                   |008f: return-object v0
+work/dis/classes19.txt-153-3700a8: 1a00 e2c8                              |0090: const-string v0, "not_activity_or_fragment" // string@c8e2
+work/dis/classes19.txt-154-3700ac: 1100                                   |0092: return-object v0
+work/dis/classes19.txt-155-3700ae: 1a00 b8c9                              |0093: const-string v0, "null cannot be cast to non-null type com.instagram.igds.components.mediabutton.IgdsMediaButton" // string@c9b8
+work/dis/classes19.txt-156-3700b2: 1100                                   |0095: return-object v0
+work/dis/classes19.txt-157-3700b4: 1a00 e7c9                              |0096: const-string v0, "null cannot be cast to non-null type kotlin.CharSequence" // string@c9e7
+work/dis/classes19.txt-158-3700b8: 1100                                   |0098: return-object v0
+work/dis/classes19.txt-159-3700ba: 1a00 18cf                              |0099: const-string v0, "product_share_sticker" // string@cf18
+work/dis/classes19.txt-160-3700be: 1100                                   |009b: return-object v0
+work/dis/classes19.txt-161-3700c0: 1a00 3cd3                              |009c: const-string v0, "section_name" // string@d33c
+work/dis/classes19.txt-162-3700c4: 1100                                   |009e: return-object v0
+work/dis/classes19.txt-163-3700c6: 1a00 90d3                              |009f: const-string v0, "seller_igid" // string@d390
+work/dis/classes19.txt-164-3700ca: 1100                                   |00a1: return-object v0
+work/dis/classes19.txt-165-3700cc: 1a00 3cd9                              |00a2: const-string v0, "sticker_template_id" // string@d93c
+work/dis/classes19.txt-166-3700d0: 1100                                   |00a4: return-object v0
+work/dis/classes19.txt-167-3700d2: 1a00 49dc                              |00a5: const-string v0, "tint_shadows_intensity" // string@dc49
+work/dis/classes19.txt-168-3700d6: 1100                                   |00a7: return-object v0
+work/dis/classes19.txt-169-3700d8: 1a00 e1de                              |00a8: const-string v0, "users/{user_id}/info/" // string@dee1
+work/dis/classes19.txt-170-3700dc: 1100                                   |00aa: return-object v0
+work/dis/classes19.txt-171-3700de: 1a00 e702                              |00ab: const-string v0, ", lineHeight=" // string@02e7
+work/dis/classes19.txt-172-3700e2: 1100                                   |00ad: return-object v0
+work/dis/classes19.txt-173-3700e4: 1a00 3903                              |00ae: const-string v0, ", operation=" // string@0339
+work/dis/classes19.txt-174-3700e8: 1100                                   |00b0: return-object v0
+work/dis/classes19.txt-175-3700ea: 1a00 7f03                              |00b1: const-string v0, ", scaleFactor=" // string@037f
+work/dis/classes19.txt-176-3700ee: 1100                                   |00b3: return-object v0
+work/dis/classes19.txt-177-3700f0: 1a00 f205                              |00b4: const-string v0, "<init>(Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;)V" // string@05f2
+work/dis/classes19.txt-178-3700f4: 1100                                   |00b6: return-object v0
+work/dis/classes19.txt-179-3700f6: 1a00 aa08                              |00b7: const-string v0, "AD_RESPONSES" // string@08aa
+work/dis/classes19.txt-180-3700fa: 1100                                   |00b9: return-object v0
+work/dis/classes19.txt-181-3700fc: 1a00 f909                              |00ba: const-string v0, "ARGS_HIGHLIGHTED_CREATION_TOOL" // string@09f9
+work/dis/classes19.txt-182-370100: 1100                                   |00bc: return-object v0
+work/dis/classes19.txt-183-370102: 1a00 9d0a                              |00bd: const-string v0, "AUTO_CROSSPOST_SETTING" // string@0a9d
+work/dis/classes19.txt-184-370106: 1100                                   |00bf: return-object v0
+work/dis/classes19.txt-185-370108: 1a00 880b                              |00c0: const-string v0, "An operation is not implemented." // string@0b88
+work/dis/classes19.txt-186-37010c: 1100                                   |00c2: return-object v0
+work/dis/classes19.txt-187-37010e: 1a00 0615                              |00c3: const-string v0, "ClipsCaptionRepository" // string@1506
+work/dis/classes19.txt-188-370112: 1100                                   |00c5: return-object v0
+work/dis/classes19.txt-189-370114: 1a00 2915                              |00c6: const-string v0, "ClipsConstants.ARG_IS_CLIPS_ENTRY_POINT" // string@1529
+work/dis/classes19.txt-190-370118: 1100                                   |00c8: return-object v0
+work/dis/classes19.txt-191-37011a: 1a00 9d19                              |00c9: const-string v0, "DirectPrivateStoryRecipientFragment.DIRECT_SHOULD_SHARE_TO_FB" // string@199d
+work/dis/classes19.txt-192-37011e: 1100                                   |00cb: return-object v0
+work/dis/classes19.txt-193-370120: 1a00 a219                              |00cc: const-string v0, "DirectPrivateStoryRecipientFragment.IS_DISPLAYED_IN_BOTTOM_SHEET" // string@19a2
+work/dis/classes19.txt-194-370124: 1100                                   |00ce: return-object v0
+work/dis/classes19.txt-195-370126: 1a00 6e89                              |00cf: const-string v0, "MMMM d, yyyy" // string@896e
+work/dis/classes19.txt-196-37012a: 1100                                   |00d1: return-object v0
+work/dis/classes19.txt-197-37012c: 1a00 b58b                              |00d2: const-string v0, "NOT_SUPPORTED" // string@8bb5
+work/dis/classes19.txt-198-370130: 1100                                   |00d4: return-object v0
+work/dis/classes19.txt-199-370132: 1a00 478e                              |00d5: const-string v0, "PREFERENCE_SETTINGS_AUTO_XPOSTING_DEBUG_TOAST_ENABLED" // string@8e47
+work/dis/classes19.txt-200-370136: 1100                                   |00d7: return-object v0
+work/dis/classes19.txt-201-370138: 1a00 ef90                              |00d8: const-string v0, "RenderBufferTimelineFrameExtractor" // string@90ef
+work/dis/classes19.txt-202-37013c: 1100                                   |00da: return-object v0
+work/dis/classes19.txt-203-37013e: 1a00 9fa5                              |00db: const-string v0, "android:query-arg-sort-columns" // string@a59f
+work/dis/classes19.txt-204-370142: 1100                                   |00dd: return-object v0
+work/dis/classes19.txt-205-370144: 1a00 a0a5                              |00de: const-string v0, "android:query-arg-sort-direction" // string@a5a0
+work/dis/classes19.txt-206-370148: 1100                                   |00e0: return-object v0
+work/dis/classes19.txt-207-37014a: 1a00 c2a6                              |00e1: const-string v0, "application/zip" // string@a6c2
+work/dis/classes19.txt-208-37014e: 1100                                   |00e3: return-object v0
+work/dis/classes19.txt-209-370150: 1a00 0ca7                              |00e4: const-string v0, "args_clips_drafts_fragment_should_use_dark_mode" // string@a70c
+work/dis/classes19.txt-210-370154: 1100                                   |00e6: return-object v0
+work/dis/classes19.txt-211-370156: 1a00 c3a7                              |00e7: const-string v0, "audio_file_path" // string@a7c3
+work/dis/classes19.txt-212-37015a: 1100                                   |00e9: return-object v0
+work/dis/classes19.txt-213-37015c: 1a00 04a8                              |00ea: const-string v0, "autocomplete_user_list" // string@a804
+work/dis/classes19.txt-214-370160: 1100                                   |00ec: return-object v0
+work/dis/classes19.txt-215-370162: 1a00 a9ab                              |00ed: const-string v0, "clips_creator_invite" // string@aba9
+work/dis/classes19.txt-216-370166: 1100                                   |00ef: return-object v0
+work/dis/classes19.txt-217-370168: 1a00 42b0                              |00f0: const-string v0, "destination_surface" // string@b042
+work/dis/classes19.txt-218-37016c: 1100                                   |00f2: return-object v0
+work/dis/classes19.txt-219-37016e: 1a00 4cb2                              |00f3: const-string v0, "elapsed_time" // string@b24c
+work/dis/classes19.txt-220-370172: 1100                                   |00f5: return-object v0
+work/dis/classes19.txt-221-370174: 1a00 a5b5                              |00f6: const-string v0, "follower_status" // string@b5a5
+work/dis/classes19.txt-222-370178: 1100                                   |00f8: return-object v0
+work/dis/classes19.txt-223-37017a: 1a00 aeb6                              |00f9: const-string v0, "gen_ai_request_id" // string@b6ae
+work/dis/classes19.txt-224-37017e: 1100                                   |00fb: return-object v0
+work/dis/classes19.txt-225-370180: 1a00 afb6                              |00fc: const-string v0, "gen_ai_response_id" // string@b6af
+work/dis/classes19.txt-226-370184: 1100                                   |00fe: return-object v0
+work/dis/classes19.txt-227-370186: 1a00 b7b6                              |00ff: const-string v0, "genai_imagine_me_sticker_bundle_id" // string@b6b7
+work/dis/classes19.txt-228-37018a: 1100                                   |0101: return-object v0
+work/dis/classes19.txt-229-37018c: 1a00 bbb6                              |0102: const-string v0, "genai_sharing_source_id" // string@b6bb
+work/dis/classes19.txt-230-370190: 1100                                   |0104: return-object v0
+work/dis/classes19.txt-231-370192: 1a00 9abd                              |0105: const-string v0, "high_quality_media_upload" // string@bd9a
+work/dis/classes19.txt-232-370196: 1100                                   |0107: return-object v0
+work/dis/classes19.txt-233-370198: 1a00 7fbf                              |0108: const-string v0, "include_attribution_ui_data_v2" // string@bf7f
+work/dis/classes19.txt-234-37019c: 1100                                   |010a: return-object v0
+work/dis/classes19.txt-235-37019e: 1a00 d2c1                              |010b: const-string v0, "is_launched_from_bottom_sheet" // string@c1d2
+work/dis/classes19.txt-236-3701a2: 1100                                   |010d: return-object v0
+work/dis/classes19.txt-237-3701a4: 1a00 67c2                              |010e: const-string v0, "join_chat_sticker_default_id" // string@c267
+work/dis/classes19.txt-238-3701a8: 1100                                   |0110: return-object v0
+work/dis/classes19.txt-239-3701aa: 1a00 3dc9                              |0111: const-string v0, "null cannot be cast to non-null type android.graphics.drawable.Drawable" // string@c93d
+work/dis/classes19.txt-240-3701ae: 1100                                   |0113: return-object v0
+work/dis/classes19.txt-241-3701b0: 1a00 e8d0                              |0114: const-string v0, "referrer_surface" // string@d0e8
+work/dis/classes19.txt-242-3701b4: 1100                                   |0116: return-object v0
+work/dis/classes19.txt-243-3701b6: 1a00 19d2                              |0117: const-string v0, "revision_id" // string@d219
+work/dis/classes19.txt-244-3701ba: 1100                                   |0119: return-object v0
+work/dis/classes19.txt-245-3701bc: 1a00 b1d8                              |011a: const-string v0, "standalone_fundraiser_sticker_id" // string@d8b1
+work/dis/classes19.txt-246-3701c0: 1100                                   |011c: return-object v0
+work/dis/classes19.txt-247-3701c2: 1a00 f5d8                              |011d: const-string v0, "start_sharing_wa_status_dialog" // string@d8f5
+work/dis/classes19.txt-248-3701c6: 1100                                   |011f: return-object v0
+work/dis/classes19.txt-249-3701c8: 1a00 36d9                              |0120: const-string v0, "sticker_pack_id" // string@d936
+work/dis/classes19.txt-250-3701cc: 1100                                   |0122: return-object v0
+work/dis/classes19.txt-251-3701ce: 1a00 f6d9                              |0123: const-string v0, "story_user_tag_page" // string@d9f6
+work/dis/classes19.txt-252-3701d2: 1100                                   |0125: return-object v0
+work/dis/classes19.txt-253-3701d4: 1a00 42da                              |0126: const-string v0, "subscriber_status" // string@da42
+work/dis/classes19.txt-254-3701d8: 1100                                   |0128: return-object v0
+work/dis/classes19.txt-255-3701da: 1a00 e0da                              |0129: const-string v0, "take_photo" // string@dae0
+work/dis/classes19.txt-256-3701de: 1100                                   |012b: return-object v0
+work/dis/classes19.txt-257-3701e0: 1a00 c1db                              |012c: const-string v0, "text_sticker_bundle_id" // string@dbc1
+work/dis/classes19.txt-258-3701e4: 1100                                   |012e: return-object v0
+work/dis/classes19.txt-259-3701e6: 1a00 47dc                              |012f: const-string v0, "tint_highlights_intensity" // string@dc47
+work/dis/classes19.txt-260-3701ea: 1100                                   |0131: return-object v0
+work/dis/classes19.txt-261-3701ec: 1a00 4fdd                              |0132: const-string v0, "trending_audio_list" // string@dd4f
+work/dis/classes19.txt-262-3701f0: 1100                                   |0134: return-object v0
+work/dis/classes19.txt-263-3701f2: 1a00 cedd                              |0135: const-string v0, "unavailable_reason" // string@ddce
+work/dis/classes19.txt-264-3701f6: 1100                                   |0137: return-object v0
+work/dis/classes19.txt-265-3701f8: 1a00 f2de                              |0138: const-string v0, "utm_campaign" // string@def2
+work/dis/classes19.txt-266-3701fc: 1100                                   |013a: return-object v0
+work/dis/classes19.txt-267-3701fe: 1a00 f6de                              |013b: const-string v0, "utm_source" // string@def6
+work/dis/classes19.txt-268-370202: 1100                                   |013d: return-object v0
+work/dis/classes19.txt-269-370204: 1a00 89df                              |013e: const-string v0, "video_call" // string@df89
+work/dis/classes19.txt-270-370208: 1100                                   |0140: return-object v0
+work/dis/classes19.txt-271-37020a: 1a00 2502                              |0141: const-string v0, ", entryPoint=" // string@0225
+work/dis/classes19.txt-272-37020e: 1100                                   |0143: return-object v0
+work/dis/classes19.txt-273-370210: 1a00 2602                              |0144: const-string v0, ", error: " // string@0226
+work/dis/classes19.txt-274-370214: 1100                                   |0146: return-object v0
+work/dis/classes19.txt-275-370216: 1a00 c602                              |0147: const-string v0, ", isPhoto=" // string@02c6
+work/dis/classes19.txt-276-37021a: 1100                                   |0149: return-object v0
+work/dis/classes19.txt-277-37021c: 1a00 fd09                              |014a: const-string v0, "ARGS_OPEN_PHOTO_MASH_MODE" // string@09fd
+work/dis/classes19.txt-278-370220: 1100                                   |014c: return-object v0
+work/dis/classes19.txt-279-370222: 1a00 100a                              |014d: const-string v0, "ARG_OPEN_AI_TRANSITION_MODE" // string@0a10
+work/dis/classes19.txt-280-370226: 1100                                   |014f: return-object v0
+work/dis/classes19.txt-281-370228: 1a00 150a                              |0150: const-string v0, "ARG_TARGET_VIEW_SIZE_PROVIDER" // string@0a15
+work/dis/classes19.txt-282-37022c: 1100                                   |0152: return-object v0
+work/dis/classes19.txt-283-37022e: 1a00 2e0e                              |0153: const-string v0, "BOT_FEEDBACK_NEGATIVE_OTHER" // string@0e2e
+--
+work/dis/classes19.txt-49985-38bf96: 6e10 94ee 0c00                         |000d: invoke-virtual {v12}, Ljava/lang/Object;.hashCode:()I // method@ee94
+work/dis/classes19.txt-49986-38bf9c: 0a00                                   |0010: move-result v0
+work/dis/classes19.txt-49987-38bf9e: 810a                                   |0011: int-to-long v10, v0
+work/dis/classes19.txt-49988-38bfa0: 1300 1427                              |0012: const/16 v0, #int 10004 // #2714
+work/dis/classes19.txt-49989-38bfa4: 2204 381e                              |0014: new-instance v4, LX/0EKi; // type@1e38
+work/dis/classes19.txt-49990-38bfa8: 7040 9d98 042d                         |0016: invoke-direct {v4, v0, v13, v2}, LX/0KwJ;.<init>:(ILjava/lang/String;Ljava/lang/Throwable;)V // method@989d
+work/dis/classes19.txt-49991-38bfae: 1a07 33c6                              |0019: const-string v7, "medium" // string@c633
+work/dis/classes19.txt-49992-38bfb2: 1209                                   |001b: const/4 v9, #int 0 // #0
+work/dis/classes19.txt-49993-38bfb4: 1a05 40aa                              |001c: const-string v5, "camera_error" // string@aa40
+work/dis/classes19.txt-49994-38bfb8: 0768                                   |001e: move-object v8, v6
+work/dis/classes19.txt-49995-38bfba: 7809 ff70 0300                         |001f: invoke-interface/range {v3, v4, v5, v6, v7, v8, v9, v10, v11}, LX/0HCG;.ERO:(LX/0KwJ;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/util/Map;J)V // method@70ff
+work/dis/classes19.txt-49996-38bfc0: 7210 fb70 0300                         |0022: invoke-interface {v3}, LX/0HCG;.Cvm:()Ljava/lang/String; // method@70fb
+work/dis/classes19.txt-49997-38bfc6: 0c01                                   |0025: move-result-object v1
+work/dis/classes19.txt-49998-38bfc8: 1200                                   |0026: const/4 v0, #int 0 // #0
+work/dis/classes19.txt-49999-38bfca: 7240 1571 1302                         |0027: invoke-interface {v3, v1, v2, v0}, LX/0HCG;.HDT:(Ljava/lang/String;Ljava/lang/Throwable;Z)V // method@7115
+work/dis/classes19.txt-50000-38bfd0: 0e00                                   |002a: return-void
+work/dis/classes19.txt-50001-      catches       : (none)
+work/dis/classes19.txt-50002-      positions     :
+work/dis/classes19.txt-50003-      locals        :
+work/dis/classes19.txt-50004-
+work/dis/classes19.txt-50005-    #1              : (in LX/028u;)
+work/dis/classes19.txt-50006-      name          : 'EVz'
+work/dis/classes19.txt-50007-      type          : '(ILjava/util/Map;)V'
+work/dis/classes19.txt-50008-      access        : 0x0011 (PUBLIC FINAL)
+work/dis/classes19.txt-50009-      method_idx    : 2390
+work/dis/classes19.txt-50010-      code          -
+work/dis/classes19.txt-50011-      registers     : 18
+work/dis/classes19.txt-50012-      ins           : 3
+work/dis/classes19.txt-50013-      outs          : 9
+work/dis/classes19.txt-50014-      insns size    : 243 16-bit code units
+work/dis/classes19.txt-50015-38bfd4:                                        |[38bfd4] X.028u.EVz:(ILjava/util/Map;)V
+work/dis/classes19.txt-50016-38bfe4: 1a09 b813                              |0000: const-string v9, "CameraEventLoggerImpl" // string@13b8
+work/dis/classes19.txt-50017-38bfe8: 6300 6e06                              |0002: sget-boolean v0, LX/028u;.A0A:Z // field@066e
+work/dis/classes19.txt-50018-38bfec: 080c 1100                              |0004: move-object/from16 v12, v17
+work/dis/classes19.txt-50019-38bff0: 3900 9b00                              |0006: if-nez v0, 00a1 // +009b
+work/dis/classes19.txt-50020-38bff4: 6300 6d06                              |0008: sget-boolean v0, LX/028u;.A09:Z // field@066d
+work/dis/classes19.txt-50021-38bff8: 3900 9700                              |000a: if-nez v0, 00a1 // +0097
+work/dis/classes19.txt-50022-38bffc: 6007 81c1                              |000c: sget v7, Landroid/os/Build$VERSION;.SDK_INT:I // field@c181
+work/dis/classes19.txt-50023-38c000: 1300 2100                              |000e: const/16 v0, #int 33 // #21
+work/dis/classes19.txt-50024-38c004: 1a04 55df                              |0010: const-string v4, "video/hevc" // string@df55
+work/dis/classes19.txt-50025-38c008: 1a06 4edf                              |0012: const-string v6, "video/av01" // string@df4e
+work/dis/classes19.txt-50026-38c00c: 1208                                   |0014: const/4 v8, #int 0 // #0
+work/dis/classes19.txt-50027-38c00e: 3407 da00                              |0015: if-lt v7, v0, 00ef // +00da
+work/dis/classes19.txt-50028-38c012: 1a00 52bd                              |0017: const-string v0, "hdr-editing" // string@bd52
+work/dis/classes19.txt-50029-38c016: 7120 db0d 0600                         |0019: invoke-static {v6, v0}, LX/038M;.A04:(Ljava/lang/String;Ljava/lang/String;)Ljava/lang/Boolean; // method@0ddb
+work/dis/classes19.txt-50030-38c01c: 0c03                                   |001c: move-result-object v3
+work/dis/classes19.txt-50031-38c01e: 7120 db0d 0400                         |001d: invoke-static {v4, v0}, LX/038M;.A04:(Ljava/lang/String;Ljava/lang/String;)Ljava/lang/Boolean; // method@0ddb
+work/dis/classes19.txt-50032-38c024: 0c02                                   |0020: move-result-object v2
+work/dis/classes19.txt-50033-38c026: 1a01 76c1                              |0021: const-string v1, "is_av1_hdr_editing_supported" // string@c176
+work/dis/classes19.txt-50034-38c02a: 1a05 37c9                              |0023: const-string v5, "null" // string@c937
+work/dis/classes19.txt-50035-38c02e: 0750                                   |0025: move-object v0, v5
+work/dis/classes19.txt-50036-38c030: 3803 0600                              |0026: if-eqz v3, 002c // +0006
+work/dis/classes19.txt-50037-38c034: 6e10 97ee 0300                         |0028: invoke-virtual {v3}, Ljava/lang/Object;.toString:()Ljava/lang/String; // method@ee97
+work/dis/classes19.txt-50038-38c03a: 0c00                                   |002b: move-result-object v0
+work/dis/classes19.txt-50039-38c03c: 7230 90f0 1c00                         |002c: invoke-interface {v12, v1, v0}, Ljava/util/Map;.put:(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object; // method@f090
+work/dis/classes19.txt-50040-38c042: 1a01 c7c1                              |002f: const-string v1, "is_hevc_hdr_editing_supported" // string@c1c7
+work/dis/classes19.txt-50041-38c046: 0750                                   |0031: move-object v0, v5
+work/dis/classes19.txt-50042-38c048: 3802 0600                              |0032: if-eqz v2, 0038 // +0006
+work/dis/classes19.txt-50043-38c04c: 6e10 97ee 0200                         |0034: invoke-virtual {v2}, Ljava/lang/Object;.toString:()Ljava/lang/String; // method@ee97
+work/dis/classes19.txt-50044-38c052: 0c00                                   |0037: move-result-object v0
+work/dis/classes19.txt-50045-38c054: 7230 90f0 1c00                         |0038: invoke-interface {v12, v1, v0}, Ljava/util/Map;.put:(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object; // method@f090
+work/dis/classes19.txt-50046-38c05a: 1300 2300                              |003b: const/16 v0, #int 35 // #23
+work/dis/classes19.txt-50047-38c05e: 3407 ae00                              |003d: if-lt v7, v0, 00eb // +00ae
+work/dis/classes19.txt-50048-38c062: 1a00 b8bd                              |003f: const-string v0, "hlg-editing" // string@bdb8
+work/dis/classes19.txt-50049-38c066: 7120 db0d 0600                         |0041: invoke-static {v6, v0}, LX/038M;.A04:(Ljava/lang/String;Ljava/lang/String;)Ljava/lang/Boolean; // method@0ddb
+work/dis/classes19.txt-50050-38c06c: 0c03                                   |0044: move-result-object v3
+work/dis/classes19.txt-50051-38c06e: 7120 db0d 0400                         |0045: invoke-static {v4, v0}, LX/038M;.A04:(Ljava/lang/String;Ljava/lang/String;)Ljava/lang/Boolean; // method@0ddb
+work/dis/classes19.txt-50052-38c074: 0c02                                   |0048: move-result-object v2
+work/dis/classes19.txt-50053-38c076: 1a01 78c1                              |0049: const-string v1, "is_av1_hlg_editing_supported" // string@c178
+work/dis/classes19.txt-50054-38c07a: 0750                                   |004b: move-object v0, v5
+work/dis/classes19.txt-50055-38c07c: 3803 0600                              |004c: if-eqz v3, 0052 // +0006
+work/dis/classes19.txt-50056-38c080: 6e10 97ee 0300                         |004e: invoke-virtual {v3}, Ljava/lang/Object;.toString:()Ljava/lang/String; // method@ee97
+work/dis/classes19.txt-50057-38c086: 0c00                                   |0051: move-result-object v0
+work/dis/classes19.txt-50058-38c088: 7230 90f0 1c00                         |0052: invoke-interface {v12, v1, v0}, Ljava/util/Map;.put:(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object; // method@f090
+work/dis/classes19.txt-50059-38c08e: 1a01 c9c1                              |0055: const-string v1, "is_hevc_hlg_editing_supported" // string@c1c9
+work/dis/classes19.txt-50060-38c092: 0750                                   |0057: move-object v0, v5
+work/dis/classes19.txt-50061-38c094: 3802 0600                              |0058: if-eqz v2, 005e // +0006
+work/dis/classes19.txt-50062-38c098: 6e10 97ee 0200                         |005a: invoke-virtual {v2}, Ljava/lang/Object;.toString:()Ljava/lang/String; // method@ee97
+work/dis/classes19.txt-50063-38c09e: 0c00                                   |005d: move-result-object v0
+work/dis/classes19.txt-50064-38c0a0: 7230 90f0 1c00                         |005e: invoke-interface {v12, v1, v0}, Ljava/util/Map;.put:(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object; // method@f090
+work/dis/classes19.txt-50065-38c0a6: 1300 1d00                              |0061: const/16 v0, #int 29 // #1d
+work/dis/classes19.txt-50066-38c0aa: 3407 0f00                              |0063: if-lt v7, v0, 0072 // +000f
+work/dis/classes19.txt-50067-38c0ae: 1213                                   |0065: const/4 v3, #int 1 // #1
+work/dis/classes19.txt-50068-38c0b0: 1202                                   |0066: const/4 v2, #int 0 // #0
+work/dis/classes19.txt-50069-38c0b2: 1221                                   |0067: const/4 v1, #int 2 // #2
+work/dis/classes19.txt-50070-38c0b4: 1300 0002                              |0068: const/16 v0, #int 512 // #200
+work/dis/classes19.txt-50071-38c0b8: 7152 94c7 1630                         |006a: invoke-static {v6, v1, v0, v3, v2}, LX/0ZNo;.A00:(Ljava/lang/String;IIZZ)Z // method@c794
+work/dis/classes19.txt-50072-38c0be: 0a00                                   |006d: move-result v0
+work/dis/classes19.txt-50073-38c0c0: 7110
