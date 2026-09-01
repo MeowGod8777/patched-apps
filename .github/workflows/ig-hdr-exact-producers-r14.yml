@@ -1,0 +1,116 @@
+name: IG 439 Exact HDR Request Producers R14
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths: [.github/workflows/ig-hdr-exact-producers-r14.yml]
+
+permissions:
+  contents: write
+
+jobs:
+  trace:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    env:
+      APK_NAME: instagram-piko-v439.0.0.37.89-arm64-v8a.apk
+      APK_SHA256: 4015b171ac59f3e7172134d194ec2dcf701f64c3339f127c19d7a04c13d529c8
+    steps:
+      - uses: actions/checkout@v6
+        with: {fetch-depth: 0}
+      - uses: actions/setup-java@v5
+        with:
+          distribution: zulu
+          java-version: '21'
+      - name: Prepare exact smali
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          set -euo pipefail
+          mkdir -p work/apk work/smali research/generated
+          gh release download 8 --pattern "$APK_NAME" --dir work
+          echo "$APK_SHA256  work/$APK_NAME" | sha256sum -c -
+          gh release download 3.0.10 --repo baksmali/smali --pattern 'baksmali-3.0.10-fat.jar' --dir work
+          unzip -q "work/$APK_NAME" 'classes*.dex' -d work/apk
+          for d in work/apk/classes*.dex; do
+            n="$(basename "$d" .dex)"
+            java -jar work/baksmali-3.0.10-fat.jar d "$d" -o "work/smali/$n" >/dev/null
+          done
+
+      - name: Dump exact producer classes and focused referrers
+        run: |
+          set -euo pipefail
+          O=research/generated/instagram_439_exact_hdr_request_producers_r14.txt
+          : > "$O"
+          for c in 02rk 02xS 03Lk 05xq 0hCN 0kr3 0fNi 0hkS 0hTo; do
+            printf '\n================ CLASS X/%s ================\n' "$c" >> "$O"
+            f="$(find work/smali -path "*/X/$c.smali" -print -quit)"
+            if [ -n "$f" ]; then
+              echo "FILE: $f" >> "$O"
+              cat "$f" >> "$O"
+            else
+              echo NOT_FOUND >> "$O"
+            fi
+          done
+
+          printf '\n================ FOCUSED REFERRERS ================\n' >> "$O"
+          python3 - <<'PY'
+          from pathlib import Path
+          import re
+          root=Path('work/smali'); out=Path('research/generated/instagram_439_exact_hdr_request_producers_r14.txt')
+          pats=[
+            'LX/02xS;->A00(',
+            'LX/03Lk;->A01(Lcom/instagram/common/session/UserSession;)LX/05xq;',
+            'LX/0hCN;->A00(LX/0fNi;)Ljava/lang/String;',
+            'LX/0hCN;->A01(Lcom/instagram/common/session/UserSession;)LX/0kr3;',
+            'LX/0hkS;->A2Z',
+            'display_hdr_supported','video_decoder_hdr_supported','is_av1_hdr_supported','is_hevc_hdr_supported',
+            'device_capabilities','X-IG-Capabilities','video_dash_manifest',
+            'clips_viewer_feed_timeline','clips_viewer_reel_feed_timeline','reel_feed_timeline','clips_viewer_reel'
+          ]
+          mr=re.compile(r'^\.method\s+.*?([^\s]+\([^)]*\).+)$'); cr=re.compile(r'^\.class\s+.*\s+(L[^;]+;)$')
+          chunks=[]; count=0
+          for p in root.rglob('*.smali'):
+            text=p.read_text(errors='replace')
+            hit=[x for x in pats if x in text]
+            if not hit: continue
+            ls=text.splitlines(); cls='?'
+            for x in ls[:30]:
+              m=cr.match(x)
+              if m: cls=m.group(1); break
+            i=0
+            while i<len(ls):
+              m=mr.match(ls[i])
+              if not m: i+=1; continue
+              s=i; i+=1
+              while i<len(ls) and not ls[i].startswith('.end method'): i+=1
+              body='\n'.join(ls[s:min(i+1,len(ls))])
+              mh=[x for x in pats if x in body]
+              if mh:
+                chunks += [f'\n===== {cls}->{m.group(1)} =====',f'FILE: {p}', 'MATCH: '+' | '.join(mh), body]
+                count+=1
+              i+=1
+          with out.open('a',encoding='utf-8') as f:
+            f.write('\n'.join(chunks))
+          print('focused_methods',count,'bytes',out.stat().st_size)
+          PY
+          python3 - <<'PY'
+          from pathlib import Path
+          p=Path('research/generated/instagram_439_exact_hdr_request_producers_r14.txt')
+          b=p.read_bytes()
+          if len(b)>980000: p.write_bytes(b[:980000]+b'\n[TRUNCATED 980KB]\n')
+          PY
+          wc -c "$O"
+
+      - name: Commit report
+        run: |
+          set -euo pipefail
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add research/generated/instagram_439_exact_hdr_request_producers_r14.txt
+          if ! git diff --cached --quiet; then
+            git commit -m 'Dump exact Instagram HDR request producers R14'
+            git pull --rebase origin main
+            git push origin HEAD:main
+          fi
