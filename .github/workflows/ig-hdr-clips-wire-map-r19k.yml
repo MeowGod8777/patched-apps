@@ -1,0 +1,107 @@
+name: IG 439 HDR Clips Discover Wire Map R19k
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - .github/workflows/ig-hdr-clips-wire-map-r19k.yml
+
+permissions:
+  contents: write
+
+jobs:
+  trace:
+    runs-on: ubuntu-latest
+    timeout-minutes: 7
+    env:
+      APK_NAME: instagram-piko-v439.0.0.37.89-arm64-v8a.apk
+      APK_SHA256: 4015b171ac59f3e7172134d194ec2dcf701f64c3339f127c19d7a04c13d529c8
+    steps:
+      - uses: actions/checkout@v6
+        with: {fetch-depth: 0}
+      - uses: actions/setup-java@v5
+        with: {distribution: zulu, java-version: '21'}
+      - name: Fetch exact classes15
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          set -euo pipefail
+          mkdir -p work/apk work/smali research/generated
+          gh release download 8 --pattern "$APK_NAME" --dir work
+          echo "$APK_SHA256  work/$APK_NAME" | sha256sum -c -
+          gh release download 3.0.10 --repo baksmali/smali --pattern 'baksmali-3.0.10-fat.jar' --dir work
+          unzip -q "work/$APK_NAME" classes15.dex -d work/apk
+          java -jar work/baksmali-3.0.10-fat.jar d work/apk/classes15.dex -o work/smali/classes15 >/dev/null
+      - name: Build compact wire field map
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          import re
+          p=Path('work/smali/classes15/X/04tC.smali'); ls=p.read_text(errors='replace').splitlines()
+          targets=('A0A(','A07(','A04(','A02(','A05(')
+          setter_re=re.compile(r'invoke-\w+(?:/range)?\s+\{([^}]*)\},\s+LX/03u7;->([^\(]+)\(([^)]*)\)(\S+)')
+          str_re=re.compile(r'^\s*const-string(?:/jumbo)?\s+(\w+),\s+"(.*)"')
+          int_re=re.compile(r'^\s*const(?:/4|/16|/high16)?\s+(\w+),\s+(-?0x[0-9a-fA-F]+|-?\d+)')
+          long_re=re.compile(r'^\s*const-wide(?:/16|/32|/high16)?\s+(\w+),\s+(0x[0-9a-fA-F]+|\d+)')
+          move_re=re.compile(r'^\s*move(?:-object)?(?:/from16|/16)?\s+(\w+),\s+(\w+)')
+          mc_re=re.compile(r'const-wide\s+(\w+),\s+(0x[0-9a-fA-F]+)')
+          O=['Instagram 439 HDR Clips discover compact wire map R19k','==================================================','']
+          i=0
+          while i<len(ls):
+            if not ls[i].startswith('.method') or not any((' '+t) in ls[i] for t in targets): i+=1; continue
+            s=i; sig=ls[i]; i+=1
+            while i<len(ls) and not ls[i].startswith('.end method'): i+=1
+            b=ls[s:min(i+1,len(ls))]
+            O += [f'===== {sig} =====']
+            # all literal strings first
+            strs=[]
+            for line in b:
+              m=str_re.match(line)
+              if m:strs.append(m.group(2))
+            O += ['STRINGS:']+[f'  {x}' for x in strs]
+            regs={}; mc_pending=[]
+            for n,line in enumerate(b):
+              m=str_re.match(line)
+              if m: regs[m.group(1)]=('str',m.group(2))
+              m=int_re.match(line)
+              if m:
+                try: regs[m.group(1)]=('int',int(m.group(2),0))
+                except: pass
+              m=move_re.match(line)
+              if m and m.group(2) in regs: regs[m.group(1)]=regs[m.group(2)]
+              m=mc_re.search(line)
+              if m:
+                try:
+                  val=int(m.group(2),16)
+                  if val>0x80000000000000: mc_pending.append((n,m.group(2)))
+                except: pass
+              sm=setter_re.search(line)
+              if sm:
+                args=[x.strip() for x in sm.group(1).split(',')]
+                vals=[]
+                for a in args:
+                  if a in regs: vals.append(f'{a}={regs[a]}')
+                  else: vals.append(a)
+                nearby=[x for j,x in mc_pending if 0 <= n-j <= 35]
+                O += [f'WIRE line={n+1} setter={sm.group(2)} args={vals} recent_MC={nearby}']
+                # context only when key unresolved
+                if len(args)>1 and (args[1] not in regs or (regs.get(args[1],('',))[0] != 'str')):
+                  a=max(0,n-4);z=min(len(b),n+5);O += ['  CONTEXT:']+['    '+x.strip() for x in b[a:z]]
+              # field assignment to request object (route, timeout, policy)
+              if 'LX/03u7;->' in line and 'iput' in line:
+                O += [f'FIELD line={n+1}: {line.strip()}']
+            # MobileConfig list
+            O += ['MOBILECONFIG_IDS:']
+            for n,x in mc_pending: O += [f'  line={n+1} {x}']
+            O += ['']
+            i+=1
+          text='\n'.join(O); Path('research/generated/instagram_439_hdr_clips_wire_map_r19k.txt').write_text(text)
+          print(text)
+          PY
+      - name: Commit report
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add research/generated/instagram_439_hdr_clips_wire_map_r19k.txt
+          if ! git diff --cached --quiet; then git commit -m 'Add Clips discover compact wire map R19k'; git pull --rebase origin main; git push origin HEAD:main; fi
