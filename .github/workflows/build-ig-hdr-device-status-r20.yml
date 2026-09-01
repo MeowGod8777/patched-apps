@@ -1,0 +1,168 @@
+name: Build IG HDR Device Status R20
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - .github/workflows/build-ig-hdr-device-status-r20.yml
+      - research/tools/ig_hdr_device_status_r20_patch.py
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    env:
+      BASE_APK: instagram-piko-v439.0.0.37.89-arm64-v8a.apk
+      BASE_SHA256: 4015b171ac59f3e7172134d194ec2dcf701f64c3339f127c19d7a04c13d529c8
+      OUT_APK: instagram-piko-v439.0.0.37.89-HDR-R20-DEVICE-STATUS.apk
+      TAG: ig-hdr-device-status-r20
+    steps:
+      - uses: actions/checkout@v6
+      - uses: actions/setup-java@v5
+        with:
+          distribution: zulu
+          java-version: '21'
+
+      - name: Fetch exact base and smali tools
+        run: |
+          set -euo pipefail
+          mkdir -p work out
+          curl -fL --retry 3 --connect-timeout 20 --max-time 180 \
+            'https://github.com/MeowGod8777/patched-apps/releases/download/8/instagram-piko-v439.0.0.37.89-arm64-v8a.apk' \
+            -o "work/$BASE_APK"
+          echo "$BASE_SHA256  work/$BASE_APK" | sha256sum -c -
+          curl -fL --retry 3 --connect-timeout 20 --max-time 120 \
+            'https://github.com/baksmali/smali/releases/download/3.0.10/baksmali-3.0.10-fat.jar' -o work/baksmali.jar
+          curl -fL --retry 3 --connect-timeout 20 --max-time 120 \
+            'https://github.com/baksmali/smali/releases/download/3.0.10/smali-3.0.10-fat.jar' -o work/smali.jar
+          unzip -p "work/$BASE_APK" classes13.dex > work/classes13.dex
+          unzip -p "work/$BASE_APK" classes15.dex > work/classes15.dex
+          unzip -p "work/$BASE_APK" classes2.dex | sha256sum | awk '{print $1}' > work/orig-classes2.sha256
+          unzip -p "work/$BASE_APK" classes4.dex | sha256sum | awk '{print $1}' > work/orig-classes4.sha256
+          unzip -p "work/$BASE_APK" classes12.dex | sha256sum | awk '{print $1}' > work/orig-classes12.sha256
+
+      - name: Disassemble only R20 target dexes
+        run: |
+          set -euo pipefail
+          java -jar work/baksmali.jar d work/classes13.dex -o work/smali13 &
+          java -jar work/baksmali.jar d work/classes15.dex -o work/smali15 &
+          wait
+          test -f work/smali13/X/07sY.smali
+          test -f work/smali13/com/instagram/feed/media/LiveTreeMediaDict.smali
+          test -f work/smali15/X/03u7.smali
+
+      - name: Apply real request-linked R20 patch
+        run: |
+          set -euo pipefail
+          python3 research/tools/ig_hdr_device_status_r20_patch.py work
+
+      - name: Assemble patched dexes
+        run: |
+          set -euo pipefail
+          java -jar work/smali.jar a work/smali13 -o work/classes13-patched.dex &
+          java -jar work/smali.jar a work/smali15 -o work/classes15-patched.dex &
+          wait
+
+      - name: Repack align and sign with existing patch signer
+        run: |
+          set -euo pipefail
+          cp "work/$BASE_APK" work/unsigned.apk
+          zip -q -d work/unsigned.apk classes13.dex classes15.dex || true
+          zip -q -d work/unsigned.apk 'META-INF/*' || true
+          cp work/classes13-patched.dex work/classes13.dex
+          cp work/classes15-patched.dex work/classes15.dex
+          (cd work && zip -q -0 unsigned.apk classes13.dex classes15.dex)
+          ZIPALIGN="$(find "$ANDROID_HOME/build-tools" -type f -name zipalign | sort -V | tail -1)"
+          "$ZIPALIGN" -f -p 4 work/unsigned.apk work/aligned.apk
+          sudo timeout 120 apt-get install -y -qq libbcprov-java
+          BCJAR="$(find /usr/share/java -maxdepth 1 -type f -name 'bcprov*.jar' | head -1)"
+          keytool -importkeystore \
+            -srckeystore ks.keystore -srcstoretype BKS -srcstorepass 123456789 \
+            -srcalias andrewliang -srckeypass 123456789 \
+            -destkeystore work/ks-r20.p12 -deststoretype PKCS12 \
+            -deststorepass 123456789 -destkeypass 123456789 -destalias andrewliang \
+            -providerclass org.bouncycastle.jce.provider.BouncyCastleProvider \
+            -providerpath "$BCJAR" -noprompt
+          java -jar bin/apksigner.jar sign \
+            --ks work/ks-r20.p12 --ks-type PKCS12 --ks-pass pass:123456789 \
+            --key-pass pass:123456789 --ks-key-alias andrewliang \
+            --out "out/$OUT_APK" work/aligned.apk
+          rm -f "out/$OUT_APK.idsig"
+
+      - name: Verify exact scope signer and R20 markers
+        run: |
+          set -euo pipefail
+          unzip -t "out/$OUT_APK" >/dev/null
+          java -jar bin/apksigner.jar verify --verbose --print-certs "out/$OUT_APK" | tee out/verify.txt
+          ORIG_CERT=$(java -jar bin/apksigner.jar verify --print-certs "work/$BASE_APK" | sed -n 's/^Signer #1 certificate SHA-256 digest: //p' | head -1)
+          NEW_CERT=$(java -jar bin/apksigner.jar verify --print-certs "out/$OUT_APK" | sed -n 's/^Signer #1 certificate SHA-256 digest: //p' | head -1)
+          printf 'original_cert=%s\nnew_cert=%s\n' "$ORIG_CERT" "$NEW_CERT" | tee out/cert-match.txt
+          test -n "$ORIG_CERT" && test "$ORIG_CERT" = "$NEW_CERT"
+
+          unzip -p "out/$OUT_APK" classes13.dex > work/v13.dex
+          unzip -p "out/$OUT_APK" classes15.dex > work/v15.dex
+          java -jar work/baksmali.jar d work/v13.dex -o work/v13
+          java -jar work/baksmali.jar d work/v15.dex -o work/v15
+          grep -q 'IG_HDR_R20_RAW' work/v13/com/instagram/feed/media/LiveTreeMediaDict.smali
+          grep -q '10bit_hw_av1_dec' work/v13/X/07sY.smali
+          grep -q 'is_hlg_supported' work/v13/X/07sY.smali
+          grep -q 'IG_HDR_R20_STATUS' work/v15/X/03u7.smali
+          grep -q 'R20: clips/\* always carries' work/v15/X/03u7.smali
+
+          NEW2=$(unzip -p "out/$OUT_APK" classes2.dex | sha256sum | awk '{print $1}')
+          NEW4=$(unzip -p "out/$OUT_APK" classes4.dex | sha256sum | awk '{print $1}')
+          NEW12=$(unzip -p "out/$OUT_APK" classes12.dex | sha256sum | awk '{print $1}')
+          ORIG2=$(cat work/orig-classes2.sha256)
+          ORIG4=$(cat work/orig-classes4.sha256)
+          ORIG12=$(cat work/orig-classes12.sha256)
+          test "$NEW2" = "$ORIG2"
+          test "$NEW4" = "$ORIG4"
+          test "$NEW12" = "$ORIG12"
+          printf 'classes2_original=%s\nclasses2_r20=%s\nclasses4_original=%s\nclasses4_r20=%s\nclasses12_original=%s\nclasses12_r20=%s\n' \
+            "$ORIG2" "$NEW2" "$ORIG4" "$NEW4" "$ORIG12" "$NEW12" | tee out/untouched-dexes.txt
+
+          cat > out/patches.txt <<'EOF'
+          R20 patch scope
+          ===============
+          PATCHED classes15 / LX/03u7.A04:
+            - force DeviceStatusApiUtil infrastructure active in this finalizer
+            - clips/* bypasses only MC 0x81061e00031d79 and always attaches existing device_status
+            - log exact outgoing JSON as IG_HDR_R20_STATUS
+          PATCHED classes13 / LX/07sY.A00:
+            - hw_av1_dec=true
+            - 10bit_hw_av1_dec=true
+            - is_hlg_supported=true
+          PATCHED classes13 / LiveTreeMediaDict.A7q:
+            - RAW video_dash_manifest observer IG_HDR_R20_RAW
+          UNTOUCHED classes2:
+            - no R17 UA/model spoof
+          UNTOUCHED classes4/classes12:
+            - no static-attribute / device-segmentation telemetry spoof
+          UNTOUCHED renderer / selector / MediaCodec / Surface / display path
+          EOF
+          sha256sum "out/$OUT_APK" | tee out/sha256.txt
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: instagram-hdr-device-status-r20
+          path: |
+            out/${{ env.OUT_APK }}
+            out/sha256.txt
+            out/verify.txt
+            out/cert-match.txt
+            out/untouched-dexes.txt
+            out/patches.txt
+          retention-days: 14
+
+      - name: Publish prerelease
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          set -euo pipefail
+          NOTES='R20 is the first repair candidate based on a proven synchronous server-visible HDR capability payload in the real Clips streaming request. Exact 439 request tracing proves clips/items -> LX/03u7.A04 -> device_status JSON, whose fields include hw_av1_dec, 10bit_hw_av1_dec and is_hlg_supported. R20 forces only those HDR-relevant request capabilities true and ensures clips/* attaches device_status, while retaining RAW MPD and outgoing-status logging. UA/Build identity, X-IG-Capabilities, static-attribute telemetry, device-segmentation telemetry, renderer and display paths remain untouched.'
+          gh release create "$TAG" "out/$OUT_APK" out/sha256.txt out/verify.txt out/cert-match.txt out/untouched-dexes.txt out/patches.txt \
+            --title 'Instagram HDR Device Status R20' --notes "$NOTES" --prerelease
