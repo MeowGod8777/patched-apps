@@ -1,0 +1,102 @@
+name: IG 439 HDR DeviceSeg Schema R20d
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - .github/workflows/ig-hdr-deviceseg-schema-r20d.yml
+
+permissions:
+  contents: write
+
+jobs:
+  trace:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    env:
+      APK_NAME: instagram-piko-v439.0.0.37.89-arm64-v8a.apk
+      APK_SHA256: 4015b171ac59f3e7172134d194ec2dcf701f64c3339f127c19d7a04c13d529c8
+    steps:
+      - uses: actions/checkout@v6
+        with: {fetch-depth: 0}
+      - uses: actions/setup-java@v5
+        with:
+          distribution: zulu
+          java-version: '21'
+      - name: Fetch exact APK and classes12
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          set -euo pipefail
+          mkdir -p work/smali research/generated
+          gh release download 8 --pattern "$APK_NAME" --dir work
+          echo "$APK_SHA256  work/$APK_NAME" | sha256sum -c -
+          gh release download 3.0.10 --repo baksmali/smali --pattern 'baksmali-3.0.10-fat.jar' --dir work
+          unzip -p "work/$APK_NAME" classes12.dex > work/classes12.dex
+          java -jar work/baksmali-3.0.10-fat.jar d work/classes12.dex -o work/smali
+      - name: Decode LX/0hkS schema and usages
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          from pathlib import Path
+          import re
+          root=Path('work/smali')
+          p=root/'X/0hkS.smali'
+          text=p.read_text(errors='replace'); ls=text.splitlines()
+          O=['Instagram 439 com.facebook.devicesegmentation schema R20d','====================================================','']
+          # Keep exact clinit as ground truth.
+          i=next(i for i,x in enumerate(ls) if x.startswith('.method') and '<clinit>()V' in x)
+          j=i+1
+          while j<len(ls) and not ls[j].startswith('.end method'): j+=1
+          cl=ls[i:j+1]
+          O += ['===== LX/0hkS.<clinit> =====']+cl+['']
+          # Extract human-readable strings and nearby sput-object field assignments.
+          O += ['===== STRING -> DESCRIPTOR FIELD NEARBY MAP =====','']
+          for n,x in enumerate(cl):
+            m=re.search(r'const-string(?:/jumbo)?\s+(v\d+),\s+"([^"]+)"',x)
+            if not m: continue
+            reg,key=m.groups(); nearby=cl[n:min(n+18,len(cl))]
+            fields=[]
+            for y in nearby:
+              q=re.search(r'sput-object\s+v\d+,\s+LX/0hkS;->([^:]+):LX/0fKx;',y)
+              if q: fields.append(q.group(1))
+            if fields:
+              O.append(f'{fields[0]} <= {key!r}')
+          # All external references to each descriptor field, but only methods whose body contains suspicious semantics.
+          suspicious=('score','class','tier','bucket','benchmark','perf','hdr','video','codec','av1','hevc','resolution','playback','delivery','device','gpu','cpu','memory','ram')
+          O += ['','===== SUSPICIOUS FIELD CONSUMERS IN classes12 =====','']
+          for q in root.rglob('*.smali'):
+            qls=q.read_text(errors='replace').splitlines(); cls='?'
+            for x in qls[:30]:
+              m=re.match(r'^\.class\s+.*\s+(L[^;]+;)$',x)
+              if m: cls=m.group(1); break
+            k=0
+            while k<len(qls):
+              if not qls[k].startswith('.method'): k+=1; continue
+              s=k; k+=1
+              while k<len(qls) and not qls[k].startswith('.end method'): k+=1
+              e=min(k,len(qls)-1); b=qls[s:e+1]; bt='\n'.join(b)
+              refs=re.findall(r'LX/0hkS;->([A-Za-z0-9]+):LX/0fKx;',bt)
+              if refs:
+                strings=re.findall(r'const-string(?:/jumbo)?\s+[^,]+,\s+"([^"]+)"',bt)
+                sem=[z for z in suspicious if z in (' '.join(strings)+' '+bt).lower()]
+                if sem:
+                  O += [f'--- {cls} {qls[s]} FILE={q} FIELDS={sorted(set(refs))} SEM={sem} ---']+b+['']
+              k+=1
+          out='\n'.join(O)
+          if len(out)>980000: out=out[:980000]+'\n[TRUNCATED]\n'
+          Path('research/generated/instagram_439_hdr_deviceseg_schema_r20d.txt').write_text(out,encoding='utf-8')
+          print(out[:300000]); print('bytes',len(out))
+          PY
+      - name: Commit report
+        run: |
+          set -euo pipefail
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add research/generated/instagram_439_hdr_deviceseg_schema_r20d.txt
+          if ! git diff --cached --quiet; then
+            git commit -m 'Add decoded device segmentation schema R20d'
+            git pull --rebase origin main
+            git push origin HEAD:main
+          fi
