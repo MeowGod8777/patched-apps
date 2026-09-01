@@ -1,0 +1,121 @@
+name: IG 439 HDR Final Request Materialization R19i
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - .github/workflows/ig-hdr-final-request-materialization-r19i.yml
+
+permissions:
+  contents: write
+
+jobs:
+  trace:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    env:
+      APK_NAME: instagram-piko-v439.0.0.37.89-arm64-v8a.apk
+      APK_SHA256: 4015b171ac59f3e7172134d194ec2dcf701f64c3339f127c19d7a04c13d529c8
+    steps:
+      - uses: actions/checkout@v6
+        with: {fetch-depth: 0}
+      - uses: actions/setup-java@v5
+        with:
+          distribution: zulu
+          java-version: '21'
+      - name: Fetch exact APK and core request dexes
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          set -euo pipefail
+          mkdir -p work/apk work/smali research/generated
+          gh release download 8 --pattern "$APK_NAME" --dir work
+          echo "$APK_SHA256  work/$APK_NAME" | sha256sum -c -
+          gh release download 3.0.10 --repo baksmali/smali --pattern 'baksmali-3.0.10-fat.jar' --dir work
+          unzip -q "work/$APK_NAME" 'classes*.dex' -d work/apk
+          for d in classes2.dex classes15.dex classes.dex; do
+            [ -f "work/apk/$d" ] || continue
+            n="${d%.dex}"
+            java -jar work/baksmali-3.0.10-fat.jar d "work/apk/$d" -o "work/smali/$n" >/dev/null &
+          done
+          wait
+
+      - name: Extract final builder and decorators
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          from pathlib import Path
+          import re
+          root=Path('work/smali')
+          O=['Instagram 439 HDR final request materialization R19i','================================================','']
+          cr=re.compile(r'^\.class\s+.*\s+(L[^;]+;)$')
+          ir=re.compile(r'invoke-[^\s]+\s+\{[^}]*\},\s+(L[^;]+;)->([^\(]+)\(([^)]*)\)(\S+)')
+          def methods(p):
+            ls=p.read_text(errors='replace').splitlines(); cls='?'
+            for x in ls[:50]:
+              m=cr.match(x)
+              if m: cls=m.group(1); break
+            i=0
+            while i<len(ls):
+              if not ls[i].startswith('.method'): i+=1; continue
+              s=i; i+=1
+              while i<len(ls) and not ls[i].startswith('.end method'): i+=1
+              e=min(i,len(ls)-1)
+              yield cls,ls[s],ls[s:e+1],p
+              i+=1
+          index={}
+          for p in root.rglob('*.smali'):
+            for cls,sig,b,path in methods(p):
+              name=sig.split('(')[0].split()[-1] if '(' in sig else sig
+              index.setdefault((cls,name),[]).append((sig,b,path))
+
+          # Exact 03u7.A04 and direct callees.
+          targets=[]
+          for p in root.rglob('03u7.smali'):
+            for cls,sig,b,path in methods(p):
+              if sig.startswith('.method public final A04()LX/03ci;'):
+                targets.append((cls,sig,b,path))
+          for cls,sig,b,path in targets:
+            O += ['===== EXACT LX/03u7.A04 =====',f'FILE={path}',sig]+b[1:]+['']
+            inv=ir.findall('\n'.join(b))
+            O += ['===== DIRECT CALLEE BODIES FROM A04 =====','']
+            seen=set()
+            for c,n,args,ret in inv:
+              if (c,n) in seen: continue
+              seen.add((c,n))
+              for csig,cb,cp in index.get((c,n),[]):
+                O += [f'--- {c}->{n} {csig} FILE={cp}']+cb+['']
+
+          # Request decorators / headers relevant to final network request.
+          keywords=('X-IG-','capabil','device','codec','hdr','display','quality','playback','media','bandwidth','network','screen','performance','accept','header')
+          O += ['===== CORE REQUEST METHODS WITH SERVER-VISIBLE/HARDWARE WORDS =====','']
+          for p in root.rglob('*.smali'):
+            for cls,sig,b,path in methods(p):
+              text='\n'.join(b); low=text.lower()
+              if ('LX/03u7;' not in text and cls not in ('LX/03u7;','LX/02qb;')): continue
+              lits=re.findall(r'const-string(?:/jumbo)?\s+[^,]+,\s+"([^"]*)"',text)
+              hits=[s for s in lits if any(k.lower() in s.lower() for k in keywords)]
+              if hits:
+                O += [f'--- {cls} {sig} FILE={path}',f'LITERALS={hits}']+b+['']
+
+          # Full 02qb common decorator; it appeared in exact request materialization family.
+          for p in root.rglob('02qb.smali'):
+            O += [f'===== FULL LX/02qb FILE={p} =====',p.read_text(errors='replace'),'']
+
+          text='\n'.join(O)
+          Path('research/generated/instagram_439_hdr_final_request_materialization_r19i.txt').write_text(text,encoding='utf-8')
+          print(text[:280000])
+          PY
+
+      - name: Commit R19i report
+        run: |
+          set -euo pipefail
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add research/generated/instagram_439_hdr_final_request_materialization_r19i.txt
+          if ! git diff --cached --quiet; then
+            git commit -m 'Add final Reels request materialization trace R19i'
+            git pull --rebase origin main
+            git push origin HEAD:main
+          fi
