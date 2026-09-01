@@ -1,0 +1,126 @@
+name: IG 439 HDR Clips A06 R19e
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - .github/workflows/ig-hdr-clips-a06-r19e.yml
+
+permissions:
+  contents: write
+
+jobs:
+  trace:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    env:
+      APK_NAME: instagram-piko-v439.0.0.37.89-arm64-v8a.apk
+      APK_SHA256: 4015b171ac59f3e7172134d194ec2dcf701f64c3339f127c19d7a04c13d529c8
+    steps:
+      - uses: actions/checkout@v6
+        with: {fetch-depth: 0}
+      - uses: actions/setup-java@v5
+        with:
+          distribution: zulu
+          java-version: '21'
+      - name: Fetch exact APK and smali tools
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          set -euo pipefail
+          mkdir -p work/apk work/smali research/generated
+          gh release download 8 --pattern "$APK_NAME" --dir work
+          echo "$APK_SHA256  work/$APK_NAME" | sha256sum -c -
+          gh release download 3.0.10 --repo baksmali/smali --pattern 'baksmali-3.0.10-fat.jar' --dir work
+          unzip -q "work/$APK_NAME" 'classes*.dex' -d work/apk
+      - name: Disassemble all dexes in parallel
+        run: |
+          set -euo pipefail
+          for d in work/apk/classes*.dex; do
+            n="$(basename "${d%.dex}")"
+            java -jar work/baksmali-3.0.10-fat.jar d "$d" -o "work/smali/$n" >/dev/null &
+          done
+          wait
+      - name: Extract A06 exact body and reverse callers
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          from pathlib import Path
+          import re
+          root=Path('work/smali')
+          out=[]
+          out += ['Instagram 439 HDR ClipsApiUtilHelper.A06 R19e','===========================================','']
+          target='Lcom/instagram/clips/api/ClipsApiUtilHelper;->A06(Lcom/instagram/common/session/UserSession;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;I)LX/02ue;'
+          tp=None
+          for p in root.rglob('ClipsApiUtilHelper.smali'):
+            tp=p; break
+          if not tp: raise SystemExit('ClipsApiUtilHelper.smali not found')
+          ls=tp.read_text(errors='replace').splitlines()
+          start=None
+          for i,l in enumerate(ls):
+            if l.startswith('.method') and ' A06(Lcom/instagram/common/session/UserSession;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;I)LX/02ue;' in l:
+              start=i; break
+          if start is None: raise SystemExit('A06 not found')
+          end=start
+          while end<len(ls) and not ls[end].startswith('.end method'): end+=1
+          body=ls[start:end+1]
+          out += ['===== EXACT A06 BODY =====',f'FILE={tp}']+body+['']
+          # Extract all literal request keys/routes and mobileconfig ids in A06.
+          strings=[]; cfg=[]; reqcalls=[]
+          sr=re.compile(r'const-string(?:/jumbo)?\s+[^,]+,\s+"(.*)"')
+          for l in body:
+            m=sr.search(l)
+            if m: strings.append(m.group(1))
+            if 'MobileConfigUnsafeContext;->' in l: cfg.append(l.strip())
+            if 'LX/03u7;->' in l: reqcalls.append(l.strip())
+          out += ['===== A06 SUMMARY =====', 'STRINGS:']+[f'  {x}' for x in strings]
+          out += ['REQUEST_BUILDER_CALLS:']+[f'  {x}' for x in reqcalls]
+          out += ['MOBILECONFIG_CALLS:']+[f'  {x}' for x in cfg]+['']
+          # Reverse direct callers across all smali; include full method but cap each to 240 lines.
+          callers=[]
+          for p in root.rglob('*.smali'):
+            text=p.read_text(errors='replace')
+            if target not in text: continue
+            lines=text.splitlines(); i=0
+            while i<len(lines):
+              if not lines[i].startswith('.method'): i+=1; continue
+              s=i; i+=1
+              while i<len(lines) and not lines[i].startswith('.end method'): i+=1
+              e=min(i,len(lines)-1); b=lines[s:e+1]
+              if target in '\n'.join(b): callers.append((str(p),lines[s],b))
+              i+=1
+          out += [f'===== DIRECT CALLERS ({len(callers)}) =====','']
+          for p,sig,b in callers:
+            out += [f'--- {sig}',f'FILE={p}'] + b[:240]
+            if len(b)>240: out += ['[CALLER TRUNCATED]']
+            out += ['']
+          # Search sibling ClipsApiUtilHelper request builders for route/header/capability clues.
+          out += ['===== SIBLING ClipsApiUtilHelper REQUEST METHODS =====','']
+          i=0
+          keys=('clips/','reels/','feed/','hdr','codec','dash','device','quality','bandwidth','playback','X-IG-','capabil','media_delivery','media_codec')
+          while i<len(ls):
+            if not ls[i].startswith('.method'): i+=1; continue
+            s=i; i+=1
+            while i<len(ls) and not ls[i].startswith('.end method'): i+=1
+            e=min(i,len(ls)-1); b=ls[s:e+1]; low='\n'.join(b).lower()
+            if 'lx/03u7;->' in low and any(k.lower() in low for k in keys):
+              out += [f'--- {ls[s]}'] + b[:220]
+              if len(b)>220: out += ['[METHOD TRUNCATED]']
+              out += ['']
+            i+=1
+          txt='\n'.join(out)
+          Path('research/generated/instagram_439_hdr_clips_a06_r19e.txt').write_text(txt,encoding='utf-8')
+          print(txt[:250000])
+          PY
+      - name: Commit R19e report
+        run: |
+          set -euo pipefail
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add research/generated/instagram_439_hdr_clips_a06_r19e.txt
+          if ! git diff --cached --quiet; then
+            git commit -m 'Add ClipsApiUtilHelper A06 trace R19e'
+            git pull --rebase origin main
+            git push origin HEAD:main
+          fi
