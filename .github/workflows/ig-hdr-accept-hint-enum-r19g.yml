@@ -1,0 +1,81 @@
+name: IG 439 HDR Accept Hint Enum R19g
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths: [.github/workflows/ig-hdr-accept-hint-enum-r19g.yml]
+permissions:
+  contents: write
+jobs:
+  trace:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v6
+        with: {fetch-depth: 0}
+      - uses: actions/setup-java@v5
+        with: {distribution: zulu, java-version: '21'}
+      - name: Trace
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          set -euo pipefail
+          mkdir -p work/apk work/smali research/generated
+          gh release download 8 --pattern 'instagram-piko-v439.0.0.37.89-arm64-v8a.apk' --dir work
+          echo '4015b171ac59f3e7172134d194ec2dcf701f64c3339f127c19d7a04c13d529c8  work/instagram-piko-v439.0.0.37.89-arm64-v8a.apk' | sha256sum -c -
+          gh release download 3.0.10 --repo baksmali/smali --pattern 'baksmali-3.0.10-fat.jar' --dir work
+          unzip -q work/instagram-piko-v439.0.0.37.89-arm64-v8a.apk 'classes*.dex' -d work/apk
+          python3 - <<'PY'
+          from pathlib import Path
+          import subprocess
+          hit=[]
+          for p in sorted(Path('work/apk').glob('classes*.dex')):
+              s=subprocess.run(['strings','-a',str(p)],capture_output=True,text=True,errors='replace').stdout
+              if any(x in s for x in ['X-IG-Accept-Hint','LX/02po;','LX/02qh;']): hit.append(p.name)
+          if 'classes2.dex' not in hit: hit.append('classes2.dex')
+          Path('work/hitdex.txt').write_text('\n'.join(sorted(set(hit)))+'\n')
+          print('HITDEX',sorted(set(hit)))
+          PY
+          while read d; do [ -n "$d" ] && java -jar work/baksmali-3.0.10-fat.jar d "work/apk/$d" -o "work/smali/${d%.dex}" >/dev/null & done < work/hitdex.txt
+          wait
+          python3 - <<'PY'
+          from pathlib import Path
+          import re
+          R=Path('work/smali'); O=['Instagram 439 HDR Accept-Hint enum R19g','========================================','']
+          cr=re.compile(r'^\.class\s+.*\s+(L[^;]+;)$'); methods=[]
+          for p in R.rglob('*.smali'):
+              ls=p.read_text(errors='replace').splitlines(); cls='?'
+              for x in ls[:50]:
+                  m=cr.match(x)
+                  if m: cls=m.group(1); break
+              i=0
+              while i<len(ls):
+                  if not ls[i].startswith('.method'): i+=1; continue
+                  s=i; sig=ls[i]; i+=1
+                  while i<len(ls) and not ls[i].startswith('.end method'): i+=1
+                  methods.append((cls,sig,p,ls[s:min(i+1,len(ls))])); i+=1
+          for t in ['LX/02qh;','LX/02po;','LX/02pp;']:
+              O += [f'===== FULL {t} =====']
+              for cls,sig,p,b in methods:
+                  if cls==t: O += [f'FILE={p}',sig]+b+['']
+          O += ['===== 02qh.A00 CALLS =====']
+          for cls,sig,p,b in methods:
+              for i,l in enumerate(b):
+                  if 'LX/02qh;->A00(Ljava/lang/Integer;)Ljava/lang/String;' in l:
+                      O += [f'--- {cls} {sig} FILE={p}']+b[max(0,i-30):min(len(b),i+15)]+['']
+          O += ['===== 02po PRODUCERS =====']
+          for cls,sig,p,b in methods:
+              text='\n'.join(b)
+              if 'LX/02po;' in text and ('->A00:Ljava/lang/Integer;' in text or 'LX/02po;-><init>' in text):
+                  O += [f'--- {cls} {sig} FILE={p}']+b+['']
+          Path('research/generated/instagram_439_hdr_accept_hint_enum_r19g.txt').write_text('\n'.join(O))
+          print('\n'.join(O[:8000]))
+          PY
+      - name: Commit
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add research/generated/instagram_439_hdr_accept_hint_enum_r19g.txt
+          git commit -m 'Add Accept-Hint enum trace R19g' || exit 0
+          git pull --rebase origin main
+          git push origin HEAD:main
