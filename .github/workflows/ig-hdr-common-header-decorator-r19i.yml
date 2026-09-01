@@ -1,0 +1,160 @@
+name: IG 439 HDR Common Header Decorator R19i
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - .github/workflows/ig-hdr-common-header-decorator-r19i.yml
+
+permissions:
+  contents: write
+
+jobs:
+  trace:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    env:
+      APK_NAME: instagram-piko-v439.0.0.37.89-arm64-v8a.apk
+      APK_SHA256: 4015b171ac59f3e7172134d194ec2dcf701f64c3339f127c19d7a04c13d529c8
+    steps:
+      - uses: actions/checkout@v6
+        with: {fetch-depth: 0}
+      - uses: actions/setup-java@v5
+        with:
+          distribution: zulu
+          java-version: '21'
+
+      - name: Fetch exact APK and disassemble common-header dexes
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          set -euo pipefail
+          mkdir -p work/apk work/smali research/generated
+          gh release download 8 --pattern "$APK_NAME" --dir work
+          echo "$APK_SHA256  work/$APK_NAME" | sha256sum -c -
+          gh release download 3.0.10 --repo baksmali/smali --pattern 'baksmali-3.0.10-fat.jar' --dir work
+          unzip -q "work/$APK_NAME" 'classes*.dex' -d work/apk
+          python3 - <<'PY'
+          from pathlib import Path
+          import subprocess
+          needles=['LX/02qb;','LX/02pu;','LX/03u7;','X-IG-Accept-Hint','X-IG-Capabilities','X-IG-Device','Family-Device','Bandwidth','Connection-Type']
+          hit=[]; rows=[]
+          for p in sorted(Path('work/apk').glob('classes*.dex')):
+              s=subprocess.run(['strings','-a',str(p)],capture_output=True,text=True,errors='replace').stdout
+              hs=[n for n in needles if n.lower() in s.lower()]
+              if hs:
+                  hit.append(p.name); rows.append(f'{p.name}: '+', '.join(hs))
+          Path('work/hitdex.txt').write_text('\n'.join(hit)+'\n')
+          Path('research/generated/instagram_439_hdr_common_header_dex_hits_r19i.txt').write_text('\n'.join(rows)+'\n')
+          print('\n'.join(rows)); print('HITDEX',hit)
+          PY
+          while read d; do
+            [ -n "$d" ] || continue
+            n="${d%.dex}"
+            java -jar work/baksmali-3.0.10-fat.jar d "work/apk/$d" -o "work/smali/$n" >/dev/null &
+          done < work/hitdex.txt
+          wait
+
+      - name: Trace LX 02qb common headers and finalizer path
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          from pathlib import Path
+          import re
+
+          ROOT=Path('work/smali')
+          OUT=Path('research/generated/instagram_439_hdr_common_header_decorator_r19i.txt')
+          cr=re.compile(r'^\.class\s+.*\s+(L[^;]+;)$')
+          sr=re.compile(r'^\s*const-string(?:/jumbo)?\s+([^,]+),\s+"(.*)"')
+          invr=re.compile(r'(L[^;]+;)->([^\s(]+)\(([^)]*)\)(\S+)')
+          methods=[]; classes={}
+          for p in ROOT.rglob('*.smali'):
+              ls=p.read_text(errors='replace').splitlines(); cls='?'
+              for x in ls[:60]:
+                  m=cr.match(x)
+                  if m: cls=m.group(1); break
+              classes[cls]=(p,ls)
+              i=0
+              while i<len(ls):
+                  if not ls[i].startswith('.method'):
+                      i+=1; continue
+                  s=i; sig=ls[i]; i+=1
+                  while i<len(ls) and not ls[i].startswith('.end method'):
+                      i+=1
+                  e=min(i,len(ls)-1); methods.append((cls,sig,p,ls[s:e+1])); i+=1
+
+          O=['Instagram 439 HDR common request-header decorator R19i','================================================','']
+
+          # Full target decorator and finalizers.
+          for cls,sig,p,b in methods:
+              if cls=='LX/02qb;' and ' A01(' in sig:
+                  O += [f'===== TARGET {cls} {sig} =====',f'FILE={p}']+b+['']
+              if cls=='LX/02pu;' and (' A0K(' in sig or ' <init>(' in sig):
+                  O += [f'===== FINALIZER {cls} {sig} =====',f'FILE={p}']+b+['']
+              if cls=='LX/03u7;' and any(k in sig for k in (' AMu(',' AOA(',' A0F(',' A07(')):
+                  O += [f'===== BUILDER_METHOD {cls} {sig} =====',f'FILE={p}']+b+['']
+
+          # Extract every AMu header write from 02qb.A01 and nearby source/value producer.
+          target=None
+          for m in methods:
+              if m[0]=='LX/02qb;' and ' A01(' in m[1]: target=m; break
+          O += ['===== 02qb.A01 HEADER WRITES =====','']
+          if target:
+              cls,sig,p,b=target
+              for i,l in enumerate(b):
+                  if 'LX/03u7;->AMu(' in l:
+                      O += [f'--- AMu index={i} ---']+[f'{j:04d}: {b[j]}' for j in range(max(0,i-28),min(len(b),i+8))]+['']
+              # All literals in target, with emphasis on headers/device/media/capability/network.
+              vals=[]
+              for i,l in enumerate(b):
+                  sm=sr.match(l)
+                  if sm: vals.append((i,sm.group(2)))
+              O += ['ALL_CONST_STRINGS:']+[f'{i}: {v}' for i,v in vals]+['']
+              O += ['HIGH_VALUE_CONST_STRINGS:']+[f'{i}: {v}' for i,v in vals if any(k in v.lower() for k in ('x-ig','device','capab','codec','hdr','video','media','quality','bandwidth','network','connection','screen','display','model','family','accept','hint'))]+['']
+
+          # Exact callers of 02qb.A01.
+          needle='LX/02qb;->A01('
+          calls=[]
+          for cls,sig,p,b in methods:
+              for i,l in enumerate(b):
+                  if needle in l: calls.append((cls,sig,p,b,i,l))
+          O += [f'===== EXACT 02qb.A01 CALLERS ({len(calls)}) =====','']
+          for cls,sig,p,b,i,l in calls:
+              O += [f'--- {cls} {sig}',f'FILE={p}',f'CALL={l}',f'INDEX={i}']+[f'{j:04d}: {b[j]}' for j in range(max(0,i-45),min(len(b),i+25))]+['']
+
+          # Search request-finalizer related methods for headers/capability/device fields, not telemetry-only classes.
+          O += ['===== REQUEST PATH HIGH-VALUE HEADER/FIELD METHODS =====','']
+          keyterms=('x-ig-','device','capab','hdr','codec','video','quality','bandwidth','connection','display','screen','family-device','media')
+          for cls,sig,p,b in methods:
+              text='\n'.join(b); low=text.lower()
+              if not any(k in low for k in keyterms): continue
+              # Require actual request builder/header interaction or direct 02qb/02pu/03u7 ownership.
+              if not ('LX/03u7;->' in text or 'LX/02pu;->' in text or cls in ('LX/02qb;','LX/02pu;','LX/03u7;')): continue
+              vals=[]
+              for l in b:
+                  sm=sr.match(l)
+                  if sm and any(k in sm.group(2).lower() for k in keyterms): vals.append(sm.group(2))
+              if vals:
+                  O += [f'--- {cls} {sig}',f'FILE={p}',f'STRINGS={vals}']
+                  for i,l in enumerate(b):
+                      if 'LX/03u7;->AMu(' in l or any(v in l for v in vals[:8]):
+                          O += [f'{j:04d}: {b[j]}' for j in range(max(0,i-10),min(len(b),i+5))]
+                  O += ['']
+
+          OUT.write_text('\n'.join(O),encoding='utf-8')
+          print('\n'.join(O[:10000]))
+          print('bytes',OUT.stat().st_size,'02qb_callers',len(calls))
+          PY
+
+      - name: Commit R19i reports
+        run: |
+          set -euo pipefail
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add research/generated/instagram_439_hdr_common_header_dex_hits_r19i.txt research/generated/instagram_439_hdr_common_header_decorator_r19i.txt
+          if ! git diff --cached --quiet; then
+            git commit -m 'Add common request header decorator trace R19i'
+            git pull --rebase origin main
+            git push origin HEAD:main
+          fi
