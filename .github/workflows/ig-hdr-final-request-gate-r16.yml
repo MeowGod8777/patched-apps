@@ -1,0 +1,194 @@
+name: IG 439 HDR Final Request Gate R16
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - .github/workflows/ig-hdr-final-request-gate-r16.yml
+
+permissions:
+  contents: write
+
+jobs:
+  trace:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    env:
+      APK_NAME: instagram-piko-v439.0.0.37.89-arm64-v8a.apk
+      APK_SHA256: 4015b171ac59f3e7172134d194ec2dcf701f64c3339f127c19d7a04c13d529c8
+    steps:
+      - uses: actions/checkout@v6
+        with: {fetch-depth: 0}
+      - uses: actions/setup-java@v5
+        with:
+          distribution: zulu
+          java-version: '21'
+      - name: Prepare exact smali
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          set -euo pipefail
+          mkdir -p work/apk work/smali research/generated
+          gh release download 8 --pattern "$APK_NAME" --dir work
+          echo "$APK_SHA256  work/$APK_NAME" | sha256sum -c -
+          gh release download 3.0.10 --repo baksmali/smali --pattern 'baksmali-3.0.10-fat.jar' --dir work
+          unzip -q "work/$APK_NAME" 'classes*.dex' -d work/apk
+          for d in work/apk/classes*.dex; do
+            n="$(basename "$d" .dex)"
+            java -jar work/baksmali-3.0.10-fat.jar d "$d" -o "work/smali/$n" >/dev/null
+          done
+
+      - name: Trace exact Reels request identity and capability path
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          from pathlib import Path
+          import re, collections
+          ROOT=Path('work/smali')
+          OUT=Path('research/generated/instagram_439_hdr_final_request_gate_r16.txt')
+          cr=re.compile(r'^\.class\s+.*\s+(L[^;]+;)$')
+          mr=re.compile(r'^\.method\s+.*?([^\s]+\([^)]*\).+)$')
+          ir=re.compile(r'invoke-[^\s]+\s+\{[^}]*\},\s+(L[^;]+;->[^\s]+)')
+          sr=re.compile(r'^\s*const-string(?:/jumbo)?\s+[^,]+,\s+"(.*)"')
+          M={}; C=collections.defaultdict(set)
+          for p in ROOT.rglob('*.smali'):
+            ls=p.read_text(errors='replace').splitlines(); cls=None
+            for x in ls[:30]:
+              z=cr.match(x)
+              if z: cls=z.group(1); break
+            if not cls: continue
+            i=0
+            while i<len(ls):
+              z=mr.match(ls[i])
+              if not z: i+=1; continue
+              ref=cls+'->'+z.group(1); s=i; i+=1
+              while i<len(ls) and not ls[i].startswith('.end method'): i+=1
+              b=ls[s:min(i+1,len(ls))]; inv=[]; ss=[]
+              for x in b:
+                q=ir.search(x)
+                if q: inv.append(q.group(1))
+                q=sr.match(x)
+                if q: ss.append(q.group(1))
+              M[ref]={'file':str(p),'body':b,'invokes':inv,'strings':ss}
+              for n in inv: C[n].add(ref)
+              i+=1
+          def text(m): return '\n'.join(M[m]['body'])
+          def emit(O,m,label):
+            if m not in M:
+              O += [f'===== {label} {m} =====','NOT_FOUND','']; return
+            d=M[m]
+            O += [f'===== {label} {m} =====','FILE: '+d['file'],
+                  'STRINGS: '+' | '.join(dict.fromkeys(d['strings'])),
+                  'CALLERS: '+' | '.join(sorted(C.get(m,()))),
+                  'CALLEES: '+' | '.join(dict.fromkeys(d['invokes']))]
+            O += d['body']; O.append('')
+          def bfs(starts, reverse=False, md=8):
+            D={x:0 for x in starts if x in M}; q=collections.deque(D)
+            parent={}
+            while q:
+              x=q.popleft(); d=D[x]
+              if d>=md: continue
+              ns=C.get(x,()) if reverse else M[x]['invokes']
+              for n in ns:
+                if n in M and n not in D:
+                  D[n]=d+1; parent[n]=x; q.append(n)
+            return D,parent
+          target_cap={
+            'LX/0hCN;->A00(LX/0fNi;)Ljava/lang/String;',
+            'LX/0hCN;->A01(Lcom/instagram/common/session/UserSession;)LX/0kr3;',
+            'LX/0kr3;->A00()LX/0fNi;'
+          }
+          ua_targets={
+            'LX/02rk;->A00()Ljava/lang/String;',
+            'LX/02rk;->A01(Ljava/lang/String;)Ljava/lang/String;',
+            'LX/02xS;->A00(Landroid/content/Context;)Ljava/lang/String;',
+            'LX/02lw;->A00(LX/04BG;)Lcom/instagram/service/tigon/IGTigonService;'
+          }
+          exact={
+            'LX/08zY;->run()V',
+            'LX/09ay;->A00(LX/09ay;)LX/02pp;',
+            'LX/0Ucr;->run()V',
+          } | target_cap | ua_targets
+          reel_needles=(
+            'clips_viewer_feed_timeline','clips_viewer_reel_feed_timeline','reel_feed_timeline',
+            'clips_viewer_homecoming_fyp','starting_clips_media_id','clips_fetch','clips/feed',
+            'reels/feed','feed/reels','clips/items','clips_media','reels_media','video_dash_manifest'
+          )
+          reels=set()
+          for m,d in M.items():
+            t=text(m).lower(); s='\n'.join(d['strings']).lower()
+            if any(n.lower() in t or n.lower() in s for n in reel_needles): reels.add(m)
+          cap_rev,_=bfs(target_cap,True,8)
+          ua_rev,_=bfs(ua_targets,True,8)
+          reel_f,_=bfs(reels,False,8)
+          reel_r,_=bfs(reels,True,8)
+          O=['Instagram 439 HDR final request gate R16','========================================',
+             f'methods={len(M)} reel_seeds={len(reels)}','']
+          O += ['===== A. EXACT X-IG-CAPABILITIES CALLERS + UA/TIGON =====','']
+          for m in sorted(exact): emit(O,m,'EXACT')
+          O += ['===== B. EVERY DIRECT X-IG-CAPABILITIES PRODUCER CALLER =====','']
+          callers=set()
+          for t in target_cap: callers |= set(C.get(t,()))
+          for m in sorted(callers): emit(O,m,'CAP_CALLER')
+          O += ['===== C. REELS SEEDS THAT REACH X-IG-CAPABILITIES <=8 HOPS =====','']
+          cap_hits=[]
+          for m in reels:
+            # A reel seed reaches a capability target iff it is in reverse-reachability of target.
+            if m in cap_rev: cap_hits.append((cap_rev[m],m))
+          if not cap_hits: O += ['NONE','']
+          for d,m in sorted(cap_hits)[:100]:
+            O += [f'CAP_REEL_HIT dist={d} {m}','STRINGS: '+' | '.join(dict.fromkeys(M[m]['strings']))]
+          O += ['','===== D. REELS SEEDS THAT REACH UA/TIGON <=8 HOPS =====','']
+          ua_hits=[]
+          for m in reels:
+            if m in ua_rev: ua_hits.append((ua_rev[m],m))
+          if not ua_hits: O += ['NONE','']
+          for d,m in sorted(ua_hits)[:120]:
+            O += [f'UA_REEL_HIT dist={d} {m}','STRINGS: '+' | '.join(dict.fromkeys(M[m]['strings']))]
+          O += ['','===== E. REQUEST/REELS METHODS NEAR GLOBAL UA OR CAP HEADER =====','']
+          near=[]
+          for m,dct in M.items():
+            s=' | '.join(dct['strings']).lower(); t=text(m).lower()
+            req=any(x in s or x in t for x in ('clips','reel','feed/timeline','graphql','request','http','api/'))
+            du=ua_rev.get(m,99); dc=cap_rev.get(m,99); dr=min(reel_f.get(m,99),reel_r.get(m,99))
+            if req and (du<=5 or dc<=5) and dr<=5:
+              near.append((min(du,dc)+dr,du,dc,dr,m))
+          for score,du,dc,dr,m in sorted(near)[:160]:
+            O += [f'NEAR score={score} ua={du} cap={dc} reel={dr} {m}',
+                  '  STRINGS: '+' | '.join(dict.fromkeys(M[m]['strings'])),
+                  '  CALLERS: '+' | '.join(sorted(C.get(m,()))[:25]),
+                  '  CALLEES: '+' | '.join(dict.fromkeys(M[m]['invokes'][:35]))]
+          O += ['','===== F. BUILD IDENTITY READERS ON/NEAR REELS GRAPH =====','']
+          for m in M:
+            t=text(m)
+            if any(x in t for x in ('Landroid/os/Build;->MODEL','Landroid/os/Build;->DEVICE','Landroid/os/Build;->MANUFACTURER','Landroid/os/Build;->HARDWARE','Landroid/os/Build;->PRODUCT')):
+              dr=min(reel_f.get(m,99),reel_r.get(m,99)); du=ua_rev.get(m,99)
+              if dr<=8 or du<=3:
+                O += [f'BUILD_ID dr={dr} ua={du} {m}','  STRINGS: '+' | '.join(dict.fromkeys(M[m]['strings'])),
+                      '  CALLERS: '+' | '.join(sorted(C.get(m,()))[:30])]
+          O += ['','===== G. TOP REELS REQUEST SEED BODIES =====','']
+          ranked=[]
+          for m in reels:
+            s=' | '.join(M[m]['strings']).lower(); score=0
+            for k,w in [('clips_viewer_feed_timeline',20),('reel_feed_timeline',20),('clips/feed',18),('reels/feed',18),('starting_clips_media_id',12),('graphql',8),('request',4),('video_dash_manifest',1)]:
+              if k in s or k in text(m).lower(): score+=w
+            if score>=12: ranked.append((-score,m))
+          for _,m in sorted(ranked)[:50]: emit(O,m,'REEL_REQUEST')
+          out='\n'.join(O)
+          if len(out)>900000: out=out[:900000]+'\n[TRUNCATED 900KB]\n'
+          OUT.write_text(out,encoding='utf-8')
+          print(out[:250000])
+          print('bytes',OUT.stat().st_size,'cap_reel_hits',len(cap_hits),'ua_reel_hits',len(ua_hits))
+          PY
+      - name: Commit report
+        run: |
+          set -euo pipefail
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add research/generated/instagram_439_hdr_final_request_gate_r16.txt
+          if ! git diff --cached --quiet; then
+            git commit -m 'Add Instagram HDR final request gate trace R16'
+            git pull --rebase origin main
+            git push origin HEAD:main
+          fi
