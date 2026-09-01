@@ -58,15 +58,12 @@ jobs:
                   s=i; sig=ls[i]; i+=1
                   while i<len(ls) and not ls[i].startswith('.end method'): i+=1
                   e=min(i,len(ls)-1); methods.append((cls,sig,p,ls[s:e+1])); i+=1
-
           O=['Instagram 439 Reels dynamic common-header map R19j','==============================================','']
           for target in ('LX/04qU;','LX/02dp;'):
               O += [f'===== FULL CLASS {target} =====']
               if target in classes:
                   p,ls=classes[target]; O += [f'FILE={p}']+ls+['']
               else: O += ['NOT_FOUND','']
-
-          # Every method touching 04qU, with classification by construct/read/write.
           O += ['===== ALL LX/04qU TOUCH METHODS =====','']
           touch=[]
           for cls,sig,p,b in methods:
@@ -85,29 +82,19 @@ jobs:
               touch.append((cls,sig,p,b,tags,vals))
           for cls,sig,p,b,tags,vals in touch:
               O += [f'--- {cls} {sig}',f'FILE={p}',f'TAGS={tags}',f'HIGH_VALUE_STRINGS={vals}']
-              # keep full only when constructing/writing map or decorator call; otherwise compact references
-              if any(t in tags for t in ('CONSTRUCT','A00_MAP','DECORATOR_CALL')):
-                  O += b
+              if any(t in tags for t in ('CONSTRUCT','A00_MAP','DECORATOR_CALL')): O += b
               else:
                   for i,l in enumerate(b):
-                      if 'LX/04qU;' in l:
-                          O += [f'{j:04d}: {b[j]}' for j in range(max(0,i-8),min(len(b),i+9))]
+                      if 'LX/04qU;' in l: O += [f'{j:04d}: {b[j]}' for j in range(max(0,i-8),min(len(b),i+9))]
               O += ['']
-
-          # Specifically identify Map.put calls whose receiver came from 04qU.A00 in a local window.
           O += ['===== 04qU.A00 MAP.PUT CANDIDATES =====','']
           for cls,sig,p,b,tags,vals in touch:
               for i,l in enumerate(b):
                   if 'LX/04qU;->A00:Ljava/util/Map;' in l:
                       O += [f'--- {cls} {sig} FILE={p} A00_INDEX={i} ---']+[f'{j:04d}: {b[j]}' for j in range(max(0,i-15),min(len(b),i+45))]+['']
-
-          # Feed data-source methods that create head/tail requests; show any 04qU/request envelope relation.
           O += ['===== REELS HEAD/TAIL DATA SOURCE CONTEXT =====','']
           for cls,sig,p,b in methods:
-              text='\n'.join(b)
-              if cls=='LX/04ej;' and (' Eam(' in sig or ' Eao(' in sig):
-                  O += [f'--- {cls} {sig}',f'FILE={p}']+b+['']
-
+              if cls=='LX/04ej;' and (' Eam(' in sig or ' Eao(' in sig): O += [f'--- {cls} {sig}',f'FILE={p}']+b+['']
           OUT.write_text('\n'.join(O),encoding='utf-8')
           print('\n'.join(O[:9000])); print('bytes',OUT.stat().st_size,'touch',len(touch))
           PY
@@ -122,3 +109,4 @@ jobs:
             git pull --rebase origin main
             git push origin HEAD:main
           fi
+# retrigger
