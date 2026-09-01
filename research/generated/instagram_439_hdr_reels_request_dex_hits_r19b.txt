@@ -1,0 +1,21 @@
+classes.dex: video_dash_manifest, clips_viewer_feed_timeline, clips_viewer, feed/reels, GraphQlCallInput, hdr
+classes10.dex: video_dash_manifest, clips_viewer_feed_timeline, reel_feed_timeline, clips_viewer, GraphQlCallInput, hdr
+classes11.dex: clips_viewer, hdr
+classes12.dex: GraphQlCallInput, media_codec, hdr
+classes13.dex: video_dash_manifest, clips_viewer_feed_timeline, clips_viewer_reel_feed_timeline, reel_feed_timeline, clips_viewer, feed/reels, clips_viewer_homecoming_fyp, GraphQlCallInput, media_codec, hdr, is_dash_eligible
+classes14.dex: clips_viewer_feed_timeline, clips_viewer_reel_feed_timeline, reel_feed_timeline, clips_viewer, clips_viewer_homecoming_fyp, hdr
+classes15.dex: clips_viewer_feed_timeline, clips_viewer_reel_feed_timeline, reel_feed_timeline, clips_viewer, clips_fetch, clips/items, feed/reels, clips_viewer_homecoming_fyp, GraphQlCallInput, media_codec, hdr, is_dash_eligible
+classes16.dex: clips_viewer, clips_viewer_homecoming_fyp, GraphQlCallInput, hdr
+classes17.dex: video_dash_manifest, reel_feed_timeline, clips_viewer, feed/reels, clips_viewer_homecoming_fyp, GraphQlCallInput, media_delivery, media_codec, hdr, is_dash_eligible
+classes18.dex: reel_feed_timeline, clips_viewer, GraphQlCallInput, hdr, is_dash_eligible
+classes19.dex: reel_feed_timeline, clips_viewer, clips_viewer_homecoming_fyp, GraphQlCallInput, media_codec, hdr
+classes2.dex: video_dash_manifest, clips_viewer_feed_timeline, clips_viewer_reel_feed_timeline, reel_feed_timeline, clips_viewer, clips_fetch, feed/reels, clips_viewer_homecoming_fyp, GraphQlCallInput, media_delivery, media_codec, hdr, is_dash_eligible
+classes20.dex: clips_viewer_feed_timeline, clips_viewer_reel_feed_timeline, reel_feed_timeline, clips_viewer, clips_fetch, clips/items, clips_viewer_homecoming_fyp, GraphQlCallInput, media_codec, hdr
+classes21.dex: clips_viewer, GraphQlCallInput, hdr
+classes3.dex: clips_viewer, GraphQlCallInput, hdr
+classes4.dex: clips_viewer, GraphQlCallInput, hdr
+classes5.dex: video_dash_manifest, clips_viewer, GraphQlCallInput, hdr, is_dash_eligible
+classes6.dex: clips_viewer, reels/feed, GraphQlCallInput, hdr
+classes7.dex: clips_viewer, GraphQlCallInput, media_delivery, hdr
+classes8.dex: clips_viewer, reels/feed, GraphQlCallInput, media_codec, hdr
+classes9.dex: clips_viewer, GraphQlCallInput, hdr
