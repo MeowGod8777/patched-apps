@@ -1,0 +1,1469 @@
+Instagram 439 X.09z5.A0S filterPeriod trace SLIM
+================================================
+A0S_LINES=3655
+FILTER_STRING_HITS=[517, 550, 590, 670]
+
+===== FILTER WINDOW 1 =====
+00377: 
+00378:     move-result-object v0
+00379: 
+00380:     if-nez v0, :cond_d39
+00381: 
+00382:     const/16 v120, 0x0
+00383: 
+00384:     :goto_16f
+00385:     const-string v0, "FBManifestTimestamp"
+00386: 
+00387:     const/4 v7, 0x0
+00388: 
+00389:     move-object/from16 v121, v7
+00390: 
+00391:     invoke-interface {v2, v4, v0}, Lorg/xmlpull/v1/XmlPullParser;->getAttributeValue(Ljava/lang/String;Ljava/lang/String;)Ljava/lang/String;
+00392: 
+00393:     move-result-object v0
+00394: 
+00395:     if-eqz v0, :cond_17c
+00396: 
+00397:     move-object/from16 v121, v0
+00398: 
+00399:     :cond_17c
+00400:     iget-object v0, v6, LX/08ro;->A03:Ljava/lang/String;
+00401: 
+00402:     move-object/from16 v28, v0
+00403: 
+00404:     if-nez v0, :cond_d25
+00405: 
+00406:     const/16 v28, 0x0
+00407: 
+00408:     :cond_184
+00409:     :goto_184
+00410:     new-instance v27, Ljava/util/ArrayList;
+00411: 
+00412:     invoke-direct/range {v27 .. v27}, Ljava/util/ArrayList;-><init>()V
+00413: 
+00414:     new-instance v104, Ljava/util/ArrayList;
+00415: 
+00416:     invoke-direct/range {v104 .. v104}, Ljava/util/ArrayList;-><init>()V
+00417: 
+00418:     if-eqz v152, :cond_d21
+00419: 
+00420:     const-wide v17, -0x7fffffffffffffffL    # -4.9E-324
+00421: 
+00422:     :goto_195
+00423:     move-object/from16 v116, v7
+00424: 
+00425:     move-object/from16 v113, v7
+00426: 
+00427:     move-object/from16 v115, v7
+00428: 
+00429:     const/4 v3, 0x0
+00430: 
+00431:     const/16 v24, 0x0
+00432: 
+00433:     const/16 v155, 0x0
+00434: 
+00435:     move-object/from16 v114, v7
+00436: 
+00437:     :cond_1a2
+00438:     invoke-interface {v2}, Lorg/xmlpull/v1/XmlPullParser;->next()I
+00439: 
+00440:     const-string v101, "BaseURL"
+00441: 
+00442:     move-object/from16 v0, v101
+00443: 
+00444:     invoke-static {v0, v2}, LX/08ru;->A02(Ljava/lang/String;Lorg/xmlpull/v1/XmlPullParser;)Z
+00445: 
+00446:     move-result v0
+00447: 
+00448:     if-eqz v0, :cond_2a6
+00449: 
+00450:     if-nez v24, :cond_1b9
+00451: 
+00452:     move-wide/from16 v0, v25
+00453: 
+00454:     invoke-static {v2, v0, v1}, LX/09z5;->A0C(Lorg/xmlpull/v1/XmlPullParser;J)J
+00455: 
+00456:     move-result-wide v25
+00457: 
+00458:     const/16 v24, 0x1
+00459: 
+00460:     :cond_1b9
+00461:     move-object/from16 v1, v108
+00462: 
+00463:     move/from16 v0, v29
+00464: 
+00465:     invoke-static {v1, v2, v0}, LX/09z5;->A0K(Ljava/util/List;Lorg/xmlpull/v1/XmlPullParser;Z)Ljava/util/ArrayList;
+00466: 
+00467:     move-result-object v1
+00468: 
+00469:     move-object/from16 v0, v104
+00470: 
+00471:     invoke-virtual {v0, v1}, Ljava/util/AbstractCollection;->addAll(Ljava/util/Collection;)Z
+00472: 
+00473:     :goto_1c6
+00474:     move-object/from16 v107, v41
+00475: 
+00476:     :goto_1c8
+00477:     const-string v0, "MPD"
+00478: 
+00479:     invoke-static {v0, v2}, LX/08ru;->A01(Ljava/lang/String;Lorg/xmlpull/v1/XmlPullParser;)Z
+00480: 
+00481:     move-result v0
+00482: 
+00483:     if-eqz v0, :cond_1a2
+00484: 
+00485:     cmp-long v0, v39, v14
+00486: 
+00487:     if-nez v0, :cond_2a2
+00488: 
+00489:     cmp-long v0, v17, v14
+00490: 
+00491:     if-eqz v0, :cond_2a2
+00492: 
+00493:     :goto_1d8
+00494:     invoke-virtual/range {v27 .. v27}, Ljava/util/AbstractCollection;->isEmpty()Z
+00495: 
+00496:     move-result v0
+00497: 
+00498:     if-nez v0, :cond_d63
+00499: 
+00500:     invoke-static/range {v27 .. v27}, LX/09z5;->A0P(Ljava/util/List;)Z
+00501: 
+00502:     move-result v1
+00503: 
+00504:     iget-boolean v0, v9, LX/09z5;->A09:Z
+00505: 
+00506:     if-eqz v0, :cond_1eb
+00507: 
+00508:     new-instance v7, Ljava/lang/StringBuilder;
+00509: 
+00510:     invoke-direct {v7}, Ljava/lang/StringBuilder;-><init>()V
+00511: 
+00512:     :cond_1eb
+00513:     const-string v2, "\n"
+00514: 
+00515:     if-eqz v7, :cond_202
+00516: 
+00517:     const-string v0, "Before filterPeriod() for "
+00518: 
+00519:     invoke-virtual {v7, v0}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+00520: 
+00521:     iget-object v0, v9, LX/09z5;->A05:Ljava/lang/String;
+00522: 
+00523:     invoke-virtual {v7, v0}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+00524: 
+00525:     invoke-virtual {v7, v2}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+00526: 
+00527:     move-object/from16 v0, v27
+00528: 
+00529:     invoke-direct {v9, v7, v0}, LX/09z5;->A0I(Ljava/lang/StringBuilder;Ljava/util/List;)Ljava/lang/String;
+00530: 
+00531:     move-result-object v41
+00532: 
+00533:     :cond_202
+00534:     const-string v3, "->"
+00535: 
+00536:     if-eqz v1, :cond_284
+00537: 
+00538:     invoke-static {}, Ljava/lang/System;->currentTimeMillis()J
+00539: 
+00540:     move-result-wide v5
+00541: 
+00542:     move-object/from16 v0, v27
+00543: 
+00544:     invoke-virtual {v9, v0}, LX/09z5;->A0b(Ljava/util/List;)Ljava/util/List;
+00545: 
+00546:     move-result-object v27
+00547: 
+00548:     if-eqz v7, :cond_21f
+00549: 
+00550:     const-string v0, "filterPeriod() for "
+00551: 
+00552:     invoke-virtual {v7, v0}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+00553: 
+00554:     iget-object v0, v9, LX/09z5;->A05:Ljava/lang/String;
+00555: 
+00556:     invoke-virtual {v7, v0}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+00557: 
+00558:     invoke-virtual {v7, v2}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+00559: 
+00560:     :cond_21f
+00561:     move-object/from16 v0, v27
+00562: 
+00563:     invoke-direct {v9, v7, v0}, LX/09z5;->A0I(Ljava/lang/StringBuilder;Ljava/util/List;)Ljava/lang/String;
+00564: 
+00565:     move-result-object v4
+00566: 
+00567:     invoke-static/range {v27 .. v27}, LX/09z5;->A0P(Ljava/util/List;)Z
+00568: 
+00569:     move-result v158
+00570: 
+00571:     invoke-static {}, Ljava/lang/System;->currentTimeMillis()J
+00572: 
+00573:     move-result-wide v0
+00574: 
+00575:     sub-long/2addr v0, v5
+00576: 
+00577:     iput-wide v0, v9, LX/09z5;->A00:J
+00578: 
+00579:     move-object/from16 v0, v41
+00580: 
+00581:     invoke-static {v0, v3, v4}, LX/002b;->A0q(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)Ljava/lang/String;
+00582: 
+00583:     move-result-object v0
+00584: 
+00585:     iput-object v0, v9, LX/09z5;->A02:Ljava/lang/String;
+00586: 
+00587:     :goto_238
+00588:     if-eqz v7, :cond_24b
+00589: 
+00590:     const-string v0, "Finish filterPeriod() for "
+00591: 
+00592:     invoke-virtual {v7, v0}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+00593: 
+00594:     iget-object v0, v9, LX/09z5;->A05:Ljava/lang/String;
+00595: 
+00596:     invoke-virtual {v7, v0}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+00597: 
+00598:     invoke-virtual {v7, v2}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+00599: 
+00600:     invoke-virtual {v7}, Ljava/lang/Object;->toString()Ljava/lang/String;
+00601: 
+00602:     move-result-object v107
+00603: 
+00604:     :cond_24b
+00605:     move/from16 v1, v44
+00606: 
+00607:     move-object/from16 v0, v27
+00608: 
+00609:     invoke-static {v1, v0}, LX/09z5;->A0O(ILjava/util/List;)Z
+00610: 
+00611:     move-result v0
+00612: 
+00613:     if-eqz v0, :cond_25b
+00614: 
+00615:     move-object/from16 v0, v27
+00616: 
+00617:     invoke-virtual {v9, v0}, LX/09z5;->A0c(Ljava/util/List;)Ljava/util/List;
+00618: 
+00619:     move-result-object v27
+00620: 
+00621:     :cond_25b
+00622:     if-eqz v152, :cond_268
+00623: 
+00624:     cmp-long v0, v30, v14
+00625: 
+00626:     if-nez v0, :cond_268
+00627: 
+00628:     iget v0, v9, LX/09z5;->A03:I
+00629: 
+00630:     if-lez v0, :cond_268
+00631: 
+00632:     int-to-long v0, v0
+00633: 
+00634:     move-wide/from16 v30, v0
+00635: 
+00636:     :cond_268
+00637:     if-nez v36, :cond_26e
+00638: 
+00639:     const/16 v153, 0x0
+00640: 
+00641:     if-eqz v154, :cond_270
+00642: 
+00643:     :cond_26e
+00644:     const/16 v153, 0x1
+00645: 
+00646:     :cond_270
+00647:     new-instance v0, LX/08rn;
+00648: 
+00649:     move-object/from16 v112, v0
+00650: 
+00651:     move-object/from16 v122, v28
+00652: 
+00653:     move-object/from16 v124, v27
+00654: 
+00655:     move-wide/from16 v128, v17
+00656: 
+00657:     move-wide/from16 v132, v30
+00658: 
+00659:     invoke-direct/range {v112 .. v158}, LX/08rn;-><init>(Landroid/net/Uri;LX/0Ajy;LX/0A8J;LX/0AE1;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/util/List;IJJJJJJJJJJJJJZZZZZZZ)V
+00660: 
+00661:     move-object/from16 v1, v107
+00662: 
+00663:     iput-object v1, v0, LX/08rn;->A02:Ljava/lang/String;
+00664: 
+00665:     return-object v0
+00666: 
+00667:     :cond_284
+00668:     if-eqz v7, :cond_293
+00669: 
+00670:     const-string v0, "Skip filterPeriod() for "
+00671: 
+00672:     invoke-virtual {v7, v0}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+00673: 
+00674:     iget-object v0, v9, LX/09z5;->A05:Ljava/lang/String;
+00675: 
+00676:     invoke-virtual {v7, v0}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+00677: 
+00678:     invoke-virtual {v7, v2}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+00679: 
+00680:     :cond_293
+00681:     move-wide/from16 v0, v105
+00682: 
+00683:     iput-wide v0, v9, LX/09z5;->A00:J
+00684: 
+00685:     move-object/from16 v1, v41
+00686: 
+00687:     invoke-static {v1, v3, v1}, LX/002b;->A0q(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)Ljava/lang/String;
+00688: 
+00689:     move-result-object v0
+00690: 
+00691:     iput-object v0, v9, LX/09z5;->A02:Ljava/lang/String;
+00692: 
+00693:     const/16 v158, 0x0
+00694: 
+00695:     goto :goto_238
+00696: 
+00697:     :cond_2a2
+00698:     move-wide/from16 v17, v39
+00699: 
+00700:     goto/16 :goto_1d8
+00701: 
+00702:     :cond_2a6
+00703:     const-string v0, "ProgramInformation"
+00704: 
+00705:     invoke-static {v0, v2}, LX/08ru;->A02(Ljava/lang/String;Lorg/xmlpull/v1/XmlPullParser;)Z
+00706: 
+00707:     move-result v0
+00708: 
+00709:     if-eqz v0, :cond_2b4
+00710: 
+00711:     invoke-static {v2}, LX/09z5;->A0F(Lorg/xmlpull/v1/XmlPullParser;)LX/0Ajy;
+00712: 
+00713:     move-result-object v114
+00714: 
+00715:     goto/16 :goto_1c6
+00716: 
+
+===== FILTER WINDOW 2 =====
+00410:     new-instance v27, Ljava/util/ArrayList;
+00411: 
+00412:     invoke-direct/range {v27 .. v27}, Ljava/util/ArrayList;-><init>()V
+00413: 
+00414:     new-instance v104, Ljava/util/ArrayList;
+00415: 
+00416:     invoke-direct/range {v104 .. v104}, Ljava/util/ArrayList;-><init>()V
+00417: 
+00418:     if-eqz v152, :cond_d21
+00419: 
+00420:     const-wide v17, -0x7fffffffffffffffL    # -4.9E-324
+00421: 
+00422:     :goto_195
+00423:     move-object/from16 v116, v7
+00424: 
+00425:     move-object/from16 v113, v7
+00426: 
+00427:     move-object/from16 v115, v7
+00428: 
+00429:     const/4 v3, 0x0
+00430: 
+00431:     const/16 v24, 0x0
+00432: 
+00433:     const/16 v155, 0x0
+00434: 
+00435:     move-object/from16 v114, v7
+00436: 
+00437:     :cond_1a2
+00438:     invoke-interface {v2}, Lorg/xmlpull/v1/XmlPullParser;->next()I
+00439: 
+00440:     const-string v101, "BaseURL"
+00441: 
+00442:     move-object/from16 v0, v101
+00443: 
+00444:     invoke-static {v0, v2}, LX/08ru;->A02(Ljava/lang/String;Lorg/xmlpull/v1/XmlPullParser;)Z
+00445: 
+00446:     move-result v0
+00447: 
+00448:     if-eqz v0, :cond_2a6
+00449: 
+00450:     if-nez v24, :cond_1b9
+00451: 
+00452:     move-wide/from16 v0, v25
+00453: 
+00454:     invoke-static {v2, v0, v1}, LX/09z5;->A0C(Lorg/xmlpull/v1/XmlPullParser;J)J
+00455: 
+00456:     move-result-wide v25
+00457: 
+00458:     const/16 v24, 0x1
+00459: 
+00460:     :cond_1b9
+00461:     move-object/from16 v1, v108
+00462: 
+00463:     move/from16 v0, v29
+00464: 
+00465:     invoke-static {v1, v2, v0}, LX/09z5;->A0K(Ljava/util/List;Lorg/xmlpull/v1/XmlPullParser;Z)Ljava/util/ArrayList;
+00466: 
+00467:     move-result-object v1
+00468: 
+00469:     move-object/from16 v0, v104
+00470: 
+00471:     invoke-virtual {v0, v1}, Ljava/util/AbstractCollection;->addAll(Ljava/util/Collection;)Z
+00472: 
+00473:     :goto_1c6
+00474:     move-object/from16 v107, v41
+00475: 
+00476:     :goto_1c8
+00477:     const-string v0, "MPD"
+00478: 
+00479:     invoke-static {v0, v2}, LX/08ru;->A01(Ljava/lang/String;Lorg/xmlpull/v1/XmlPullParser;)Z
+00480: 
+00481:     move-result v0
+00482: 
+00483:     if-eqz v0, :cond_1a2
+00484: 
+00485:     cmp-long v0, v39, v14
+00486: 
+00487:     if-nez v0, :cond_2a2
+00488: 
+00489:     cmp-long v0, v17, v14
+00490: 
+00491:     if-eqz v0, :cond_2a2
+00492: 
+00493:     :goto_1d8
+00494:     invoke-virtual/range {v27 .. v27}, Ljava/util/AbstractCollection;->isEmpty()Z
+00495: 
+00496:     move-result v0
+00497: 
+00498:     if-nez v0, :cond_d63
+00499: 
+00500:     invoke-static/range {v27 .. v27}, LX/09z5;->A0P(Ljava/util/List;)Z
+00501: 
+00502:     move-result v1
+00503: 
+00504:     iget-boolean v0, v9, LX/09z5;->A09:Z
+00505: 
+00506:     if-eqz v0, :cond_1eb
+00507: 
+00508:     new-instance v7, Ljava/lang/StringBuilder;
+00509: 
+00510:     invoke-direct {v7}, Ljava/lang/StringBuilder;-><init>()V
+00511: 
+00512:     :cond_1eb
+00513:     const-string v2, "\n"
+00514: 
+00515:     if-eqz v7, :cond_202
+00516: 
+00517:     const-string v0, "Before filterPeriod() for "
+00518: 
+00519:     invoke-virtual {v7, v0}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+00520: 
+00521:     iget-object v0, v9, LX/09z5;->A05:Ljava/lang/String;
+00522: 
+00523:     invoke-virtual {v7, v0}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+00524: 
+00525:     invoke-virtual {v7, v2}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+00526: 
+00527:     move-object/from16 v0, v27
+00528: 
+00529:     invoke-direct {v9, v7, v0}, LX/09z5;->A0I(Ljava/lang/StringBuilder;Ljava/util/List;)Ljava/lang/String;
+00530: 
+00531:     move-result-object v41
+00532: 
+00533:     :cond_202
+00534:     const-string v3, "->"
+00535: 
+00536:     if-eqz v1, :cond_284
+00537: 
+00538:     invoke-static {}, Ljava/lang/System;->currentTimeMillis()J
+00539: 
+00540:     move-result-wide v5
+00541: 
+00542:     move-object/from16 v0, v27
+00543: 
+00544:     invoke-virtual {v9, v0}, LX/09z5;->A0b(Ljava/util/List;)Ljava/util/List;
+00545: 
+00546:     move-result-object v27
+00547: 
+00548:     if-eqz v7, :cond_21f
+00549: 
+00550:     const-string v0, "filterPeriod() for "
+00551: 
+00552:     invoke-virtual {v7, v0}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+00553: 
+00554:     iget-object v0, v9, LX/09z5;->A05:Ljava/lang/String;
+00555: 
+00556:     invoke-virtual {v7, v0}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+00557: 
+00558:     invoke-virtual {v7, v2}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+00559: 
+00560:     :cond_21f
+00561:     move-object/from16 v0, v27
+00562: 
+00563:     invoke-direct {v9, v7, v0}, LX/09z5;->A0I(Ljava/lang/StringBuilder;Ljava/util/List;)Ljava/lang/String;
+00564: 
+00565:     move-result-object v4
+00566: 
+00567:     invoke-static/range {v27 .. v27}, LX/09z5;->A0P(Ljava/util/List;)Z
+00568: 
+00569:     move-result v158
+00570: 
+00571:     invoke-static {}, Ljava/lang/System;->currentTimeMillis()J
+00572: 
+00573:     move-result-wide v0
+00574: 
+00575:     sub-long/2addr v0, v5
+00576: 
+00577:     iput-wide v0, v9, LX/09z5;->A00:J
+00578: 
+00579:     move-object/from16 v0, v41
+00580: 
+00581:     invoke-static {v0, v3, v4}, LX/002b;->A0q(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)Ljava/lang/String;
+00582: 
+00583:     move-result-object v0
+00584: 
+00585:     iput-object v0, v9, LX/09z5;->A02:Ljava/lang/String;
+00586: 
+00587:     :goto_238
+00588:     if-eqz v7, :cond_24b
+00589: 
+00590:     const-string v0, "Finish filterPeriod() for "
+00591: 
+00592:     invoke-virtual {v7, v0}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+00593: 
+00594:     iget-object v0, v9, LX/09z5;->A05:Ljava/lang/String;
+00595: 
+00596:     invoke-virtual {v7, v0}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+00597: 
+00598:     invoke-virtual {v7, v2}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+00599: 
+00600:     invoke-virtual {v7}, Ljava/lang/Object;->toString()Ljava/lang/String;
+00601: 
+00602:     move-result-object v107
+00603: 
+00604:     :cond_24b
+00605:     move/from16 v1, v44
+00606: 
+00607:     move-object/from16 v0, v27
+00608: 
+00609:     invoke-static {v1, v0}, LX/09z5;->A0O(ILjava/util/List;)Z
+00610: 
+00611:     move-result v0
+00612: 
+00613:     if-eqz v0, :cond_25b
+00614: 
+00615:     move-object/from16 v0, v27
+00616: 
+00617:     invoke-virtual {v9, v0}, LX/09z5;->A0c(Ljava/util/List;)Ljava/util/List;
+00618: 
+00619:     move-result-object v27
+00620: 
+00621:     :cond_25b
+00622:     if-eqz v152, :cond_268
+00623: 
+00624:     cmp-long v0, v30, v14
+00625: 
+00626:     if-nez v0, :cond_268
+00627: 
+00628:     iget v0, v9, LX/09z5;->A03:I
+00629: 
+00630:     if-lez v0, :cond_268
+00631: 
+00632:     int-to-long v0, v0
+00633: 
+00634:     move-wide/from16 v30, v0
+00635: 
+00636:     :cond_268
+00637:     if-nez v36, :cond_26e
+00638: 
+00639:     const/16 v153, 0x0
+00640: 
+00641:     if-eqz v154, :cond_270
+00642: 
+00643:     :cond_26e
+00644:     const/16 v153, 0x1
+00645: 
+00646:     :cond_270
+00647:     new-instance v0, LX/08rn;
+00648: 
+00649:     move-object/from16 v112, v0
+00650: 
+00651:     move-object/from16 v122, v28
+00652: 
+00653:     move-object/from16 v124, v27
+00654: 
+00655:     move-wide/from16 v128, v17
+00656: 
+00657:     move-wide/from16 v132, v30
+00658: 
+00659:     invoke-direct/range {v112 .. v158}, LX/08rn;-><init>(Landroid/net/Uri;LX/0Ajy;LX/0A8J;LX/0AE1;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/util/List;IJJJJJJJJJJJJJZZZZZZZ)V
+00660: 
+00661:     move-object/from16 v1, v107
+00662: 
+00663:     iput-object v1, v0, LX/08rn;->A02:Ljava/lang/String;
+00664: 
+00665:     return-object v0
+00666: 
+00667:     :cond_284
+00668:     if-eqz v7, :cond_293
+00669: 
+00670:     const-string v0, "Skip filterPeriod() for "
+00671: 
+00672:     invoke-virtual {v7, v0}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+00673: 
+00674:     iget-object v0, v9, LX/09z5;->A05:Ljava/lang/String;
+00675: 
+00676:     invoke-virtual {v7, v0}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+00677: 
+00678:     invoke-virtual {v7, v2}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+00679: 
+00680:     :cond_293
+00681:     move-wide/from16 v0, v105
+00682: 
+00683:     iput-wide v0, v9, LX/09z5;->A00:J
+00684: 
+00685:     move-object/from16 v1, v41
+00686: 
+00687:     invoke-static {v1, v3, v1}, LX/002b;->A0q(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)Ljava/lang/String;
+00688: 
+00689:     move-result-object v0
+00690: 
+00691:     iput-object v0, v9, LX/09z5;->A02:Ljava/lang/String;
+00692: 
+00693:     const/16 v158, 0x0
+00694: 
+00695:     goto :goto_238
+00696: 
+00697:     :cond_2a2
+00698:     move-wide/from16 v17, v39
+00699: 
+00700:     goto/16 :goto_1d8
+00701: 
+00702:     :cond_2a6
+00703:     const-string v0, "ProgramInformation"
+00704: 
+00705:     invoke-static {v0, v2}, LX/08ru;->A02(Ljava/lang/String;Lorg/xmlpull/v1/XmlPullParser;)Z
+00706: 
+00707:     move-result v0
+00708: 
+00709:     if-eqz v0, :cond_2b4
+00710: 
+00711:     invoke-static {v2}, LX/09z5;->A0F(Lorg/xmlpull/v1/XmlPullParser;)LX/0Ajy;
+00712: 
+00713:     move-result-object v114
+00714: 
+00715:     goto/16 :goto_1c6
+00716: 
+00717:     :cond_2b4
+00718:     const-string v0, "UTCTiming"
+00719: 
+00720:     invoke-static {v0, v2}, LX/08ru;->A02(Ljava/lang/String;Lorg/xmlpull/v1/XmlPullParser;)Z
+00721: 
+00722:     move-result v0
+00723: 
+00724:     if-eqz v0, :cond_2c2
+00725: 
+00726:     invoke-virtual {v9, v2}, LX/09z5;->A0a(Lorg/xmlpull/v1/XmlPullParser;)LX/0AE1;
+00727: 
+00728:     move-result-object v116
+00729: 
+00730:     goto/16 :goto_1c6
+00731: 
+00732:     :cond_2c2
+00733:     const-string v0, "Location"
+00734: 
+00735:     invoke-static {v0, v2}, LX/08ru;->A02(Ljava/lang/String;Lorg/xmlpull/v1/XmlPullParser;)Z
+00736: 
+00737:     move-result v0
+00738: 
+00739:     if-eqz v0, :cond_2d4
+00740: 
+00741:     invoke-interface {v2}, Lorg/xmlpull/v1/XmlPullParser;->nextText()Ljava/lang/String;
+00742: 
+00743:     move-result-object v0
+00744: 
+00745:     invoke-static {v0}, Landroid/net/Uri;->parse(Ljava/lang/String;)Landroid/net/Uri;
+00746: 
+00747:     move-result-object v113
+00748: 
+00749:     goto/16 :goto_1c6
+
+===== FILTER WINDOW 3 =====
+00450:     if-nez v24, :cond_1b9
+00451: 
+00452:     move-wide/from16 v0, v25
+00453: 
+00454:     invoke-static {v2, v0, v1}, LX/09z5;->A0C(Lorg/xmlpull/v1/XmlPullParser;J)J
+00455: 
+00456:     move-result-wide v25
+00457: 
+00458:     const/16 v24, 0x1
+00459: 
+00460:     :cond_1b9
+00461:     move-object/from16 v1, v108
+00462: 
+00463:     move/from16 v0, v29
+00464: 
+00465:     invoke-static {v1, v2, v0}, LX/09z5;->A0K(Ljava/util/List;Lorg/xmlpull/v1/XmlPullParser;Z)Ljava/util/ArrayList;
+00466: 
+00467:     move-result-object v1
+00468: 
+00469:     move-object/from16 v0, v104
+00470: 
+00471:     invoke-virtual {v0, v1}, Ljava/util/AbstractCollection;->addAll(Ljava/util/Collection;)Z
+00472: 
+00473:     :goto_1c6
+00474:     move-object/from16 v107, v41
+00475: 
+00476:     :goto_1c8
+00477:     const-string v0, "MPD"
+00478: 
+00479:     invoke-static {v0, v2}, LX/08ru;->A01(Ljava/lang/String;Lorg/xmlpull/v1/XmlPullParser;)Z
+00480: 
+00481:     move-result v0
+00482: 
+00483:     if-eqz v0, :cond_1a2
+00484: 
+00485:     cmp-long v0, v39, v14
+00486: 
+00487:     if-nez v0, :cond_2a2
+00488: 
+00489:     cmp-long v0, v17, v14
+00490: 
+00491:     if-eqz v0, :cond_2a2
+00492: 
+00493:     :goto_1d8
+00494:     invoke-virtual/range {v27 .. v27}, Ljava/util/AbstractCollection;->isEmpty()Z
+00495: 
+00496:     move-result v0
+00497: 
+00498:     if-nez v0, :cond_d63
+00499: 
+00500:     invoke-static/range {v27 .. v27}, LX/09z5;->A0P(Ljava/util/List;)Z
+00501: 
+00502:     move-result v1
+00503: 
+00504:     iget-boolean v0, v9, LX/09z5;->A09:Z
+00505: 
+00506:     if-eqz v0, :cond_1eb
+00507: 
+00508:     new-instance v7, Ljava/lang/StringBuilder;
+00509: 
+00510:     invoke-direct {v7}, Ljava/lang/StringBuilder;-><init>()V
+00511: 
+00512:     :cond_1eb
+00513:     const-string v2, "\n"
+00514: 
+00515:     if-eqz v7, :cond_202
+00516: 
+00517:     const-string v0, "Before filterPeriod() for "
+00518: 
+00519:     invoke-virtual {v7, v0}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+00520: 
+00521:     iget-object v0, v9, LX/09z5;->A05:Ljava/lang/String;
+00522: 
+00523:     invoke-virtual {v7, v0}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+00524: 
+00525:     invoke-virtual {v7, v2}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+00526: 
+00527:     move-object/from16 v0, v27
+00528: 
+00529:     invoke-direct {v9, v7, v0}, LX/09z5;->A0I(Ljava/lang/StringBuilder;Ljava/util/List;)Ljava/lang/String;
+00530: 
+00531:     move-result-object v41
+00532: 
+00533:     :cond_202
+00534:     const-string v3, "->"
+00535: 
+00536:     if-eqz v1, :cond_284
+00537: 
+00538:     invoke-static {}, Ljava/lang/System;->currentTimeMillis()J
+00539: 
+00540:     move-result-wide v5
+00541: 
+00542:     move-object/from16 v0, v27
+00543: 
+00544:     invoke-virtual {v9, v0}, LX/09z5;->A0b(Ljava/util/List;)Ljava/util/List;
+00545: 
+00546:     move-result-object v27
+00547: 
+00548:     if-eqz v7, :cond_21f
+00549: 
+00550:     const-string v0, "filterPeriod() for "
+00551: 
+00552:     invoke-virtual {v7, v0}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+00553: 
+00554:     iget-object v0, v9, LX/09z5;->A05:Ljava/lang/String;
+00555: 
+00556:     invoke-virtual {v7, v0}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+00557: 
+00558:     invoke-virtual {v7, v2}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+00559: 
+00560:     :cond_21f
+00561:     move-object/from16 v0, v27
+00562: 
+00563:     invoke-direct {v9, v7, v0}, LX/09z5;->A0I(Ljava/lang/StringBuilder;Ljava/util/List;)Ljava/lang/String;
+00564: 
+00565:     move-result-object v4
+00566: 
+00567:     invoke-static/range {v27 .. v27}, LX/09z5;->A0P(Ljava/util/List;)Z
+00568: 
+00569:     move-result v158
+00570: 
+00571:     invoke-static {}, Ljava/lang/System;->currentTimeMillis()J
+00572: 
+00573:     move-result-wide v0
+00574: 
+00575:     sub-long/2addr v0, v5
+00576: 
+00577:     iput-wide v0, v9, LX/09z5;->A00:J
+00578: 
+00579:     move-object/from16 v0, v41
+00580: 
+00581:     invoke-static {v0, v3, v4}, LX/002b;->A0q(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)Ljava/lang/String;
+00582: 
+00583:     move-result-object v0
+00584: 
+00585:     iput-object v0, v9, LX/09z5;->A02:Ljava/lang/String;
+00586: 
+00587:     :goto_238
+00588:     if-eqz v7, :cond_24b
+00589: 
+00590:     const-string v0, "Finish filterPeriod() for "
+00591: 
+00592:     invoke-virtual {v7, v0}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+00593: 
+00594:     iget-object v0, v9, LX/09z5;->A05:Ljava/lang/String;
+00595: 
+00596:     invoke-virtual {v7, v0}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+00597: 
+00598:     invoke-virtual {v7, v2}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+00599: 
+00600:     invoke-virtual {v7}, Ljava/lang/Object;->toString()Ljava/lang/String;
+00601: 
+00602:     move-result-object v107
+00603: 
+00604:     :cond_24b
+00605:     move/from16 v1, v44
+00606: 
+00607:     move-object/from16 v0, v27
+00608: 
+00609:     invoke-static {v1, v0}, LX/09z5;->A0O(ILjava/util/List;)Z
+00610: 
+00611:     move-result v0
+00612: 
+00613:     if-eqz v0, :cond_25b
+00614: 
+00615:     move-object/from16 v0, v27
+00616: 
+00617:     invoke-virtual {v9, v0}, LX/09z5;->A0c(Ljava/util/List;)Ljava/util/List;
+00618: 
+00619:     move-result-object v27
+00620: 
+00621:     :cond_25b
+00622:     if-eqz v152, :cond_268
+00623: 
+00624:     cmp-long v0, v30, v14
+00625: 
+00626:     if-nez v0, :cond_268
+00627: 
+00628:     iget v0, v9, LX/09z5;->A03:I
+00629: 
+00630:     if-lez v0, :cond_268
+00631: 
+00632:     int-to-long v0, v0
+00633: 
+00634:     move-wide/from16 v30, v0
+00635: 
+00636:     :cond_268
+00637:     if-nez v36, :cond_26e
+00638: 
+00639:     const/16 v153, 0x0
+00640: 
+00641:     if-eqz v154, :cond_270
+00642: 
+00643:     :cond_26e
+00644:     const/16 v153, 0x1
+00645: 
+00646:     :cond_270
+00647:     new-instance v0, LX/08rn;
+00648: 
+00649:     move-object/from16 v112, v0
+00650: 
+00651:     move-object/from16 v122, v28
+00652: 
+00653:     move-object/from16 v124, v27
+00654: 
+00655:     move-wide/from16 v128, v17
+00656: 
+00657:     move-wide/from16 v132, v30
+00658: 
+00659:     invoke-direct/range {v112 .. v158}, LX/08rn;-><init>(Landroid/net/Uri;LX/0Ajy;LX/0A8J;LX/0AE1;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/util/List;IJJJJJJJJJJJJJZZZZZZZ)V
+00660: 
+00661:     move-object/from16 v1, v107
+00662: 
+00663:     iput-object v1, v0, LX/08rn;->A02:Ljava/lang/String;
+00664: 
+00665:     return-object v0
+00666: 
+00667:     :cond_284
+00668:     if-eqz v7, :cond_293
+00669: 
+00670:     const-string v0, "Skip filterPeriod() for "
+00671: 
+00672:     invoke-virtual {v7, v0}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+00673: 
+00674:     iget-object v0, v9, LX/09z5;->A05:Ljava/lang/String;
+00675: 
+00676:     invoke-virtual {v7, v0}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+00677: 
+00678:     invoke-virtual {v7, v2}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+00679: 
+00680:     :cond_293
+00681:     move-wide/from16 v0, v105
+00682: 
+00683:     iput-wide v0, v9, LX/09z5;->A00:J
+00684: 
+00685:     move-object/from16 v1, v41
+00686: 
+00687:     invoke-static {v1, v3, v1}, LX/002b;->A0q(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)Ljava/lang/String;
+00688: 
+00689:     move-result-object v0
+00690: 
+00691:     iput-object v0, v9, LX/09z5;->A02:Ljava/lang/String;
+00692: 
+00693:     const/16 v158, 0x0
+00694: 
+00695:     goto :goto_238
+00696: 
+00697:     :cond_2a2
+00698:     move-wide/from16 v17, v39
+00699: 
+00700:     goto/16 :goto_1d8
+00701: 
+00702:     :cond_2a6
+00703:     const-string v0, "ProgramInformation"
+00704: 
+00705:     invoke-static {v0, v2}, LX/08ru;->A02(Ljava/lang/String;Lorg/xmlpull/v1/XmlPullParser;)Z
+00706: 
+00707:     move-result v0
+00708: 
+00709:     if-eqz v0, :cond_2b4
+00710: 
+00711:     invoke-static {v2}, LX/09z5;->A0F(Lorg/xmlpull/v1/XmlPullParser;)LX/0Ajy;
+00712: 
+00713:     move-result-object v114
+00714: 
+00715:     goto/16 :goto_1c6
+00716: 
+00717:     :cond_2b4
+00718:     const-string v0, "UTCTiming"
+00719: 
+00720:     invoke-static {v0, v2}, LX/08ru;->A02(Ljava/lang/String;Lorg/xmlpull/v1/XmlPullParser;)Z
+00721: 
+00722:     move-result v0
+00723: 
+00724:     if-eqz v0, :cond_2c2
+00725: 
+00726:     invoke-virtual {v9, v2}, LX/09z5;->A0a(Lorg/xmlpull/v1/XmlPullParser;)LX/0AE1;
+00727: 
+00728:     move-result-object v116
+00729: 
+00730:     goto/16 :goto_1c6
+00731: 
+00732:     :cond_2c2
+00733:     const-string v0, "Location"
+00734: 
+00735:     invoke-static {v0, v2}, LX/08ru;->A02(Ljava/lang/String;Lorg/xmlpull/v1/XmlPullParser;)Z
+00736: 
+00737:     move-result v0
+00738: 
+00739:     if-eqz v0, :cond_2d4
+00740: 
+00741:     invoke-interface {v2}, Lorg/xmlpull/v1/XmlPullParser;->nextText()Ljava/lang/String;
+00742: 
+00743:     move-result-object v0
+00744: 
+00745:     invoke-static {v0}, Landroid/net/Uri;->parse(Ljava/lang/String;)Landroid/net/Uri;
+00746: 
+00747:     move-result-object v113
+00748: 
+00749:     goto/16 :goto_1c6
+00750: 
+00751:     :cond_2d4
+00752:     const-string v0, "ServiceDescription"
+00753: 
+00754:     invoke-static {v0, v2}, LX/08ru;->A02(Ljava/lang/String;Lorg/xmlpull/v1/XmlPullParser;)Z
+00755: 
+00756:     move-result v0
+00757: 
+00758:     if-eqz v0, :cond_2e2
+00759: 
+00760:     invoke-static {v2}, LX/09z5;->A0G(Lorg/xmlpull/v1/XmlPullParser;)LX/0A8J;
+00761: 
+00762:     move-result-object v115
+00763: 
+00764:     goto/16 :goto_1c6
+00765: 
+00766:     :cond_2e2
+00767:     const-string v100, "Period"
+00768: 
+00769:     move-object/from16 v0, v100
+00770: 
+00771:     invoke-static {v0, v2}, LX/08ru;->A02(Ljava/lang/String;Lorg/xmlpull/v1/XmlPullParser;)Z
+00772: 
+00773:     move-result v0
+00774: 
+00775:     if-eqz v0, :cond_d1a
+00776: 
+00777:     if-nez v3, :cond_d1a
+00778: 
+00779:     invoke-virtual/range {v104 .. v104}, Ljava/util/AbstractCollection;->isEmpty()Z
+00780: 
+00781:     move-result v0
+00782: 
+00783:     move-object/from16 v220, v108
+00784: 
+00785:     if-nez v0, :cond_2f8
+00786: 
+00787:     move-object/from16 v220, v104
+00788: 
+00789:     :cond_2f8
+
+===== FILTER WINDOW 4 =====
+00530: 
+00531:     move-result-object v41
+00532: 
+00533:     :cond_202
+00534:     const-string v3, "->"
+00535: 
+00536:     if-eqz v1, :cond_284
+00537: 
+00538:     invoke-static {}, Ljava/lang/System;->currentTimeMillis()J
+00539: 
+00540:     move-result-wide v5
+00541: 
+00542:     move-object/from16 v0, v27
+00543: 
+00544:     invoke-virtual {v9, v0}, LX/09z5;->A0b(Ljava/util/List;)Ljava/util/List;
+00545: 
+00546:     move-result-object v27
+00547: 
+00548:     if-eqz v7, :cond_21f
+00549: 
+00550:     const-string v0, "filterPeriod() for "
+00551: 
+00552:     invoke-virtual {v7, v0}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+00553: 
+00554:     iget-object v0, v9, LX/09z5;->A05:Ljava/lang/String;
+00555: 
+00556:     invoke-virtual {v7, v0}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+00557: 
+00558:     invoke-virtual {v7, v2}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+00559: 
+00560:     :cond_21f
+00561:     move-object/from16 v0, v27
+00562: 
+00563:     invoke-direct {v9, v7, v0}, LX/09z5;->A0I(Ljava/lang/StringBuilder;Ljava/util/List;)Ljava/lang/String;
+00564: 
+00565:     move-result-object v4
+00566: 
+00567:     invoke-static/range {v27 .. v27}, LX/09z5;->A0P(Ljava/util/List;)Z
+00568: 
+00569:     move-result v158
+00570: 
+00571:     invoke-static {}, Ljava/lang/System;->currentTimeMillis()J
+00572: 
+00573:     move-result-wide v0
+00574: 
+00575:     sub-long/2addr v0, v5
+00576: 
+00577:     iput-wide v0, v9, LX/09z5;->A00:J
+00578: 
+00579:     move-object/from16 v0, v41
+00580: 
+00581:     invoke-static {v0, v3, v4}, LX/002b;->A0q(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)Ljava/lang/String;
+00582: 
+00583:     move-result-object v0
+00584: 
+00585:     iput-object v0, v9, LX/09z5;->A02:Ljava/lang/String;
+00586: 
+00587:     :goto_238
+00588:     if-eqz v7, :cond_24b
+00589: 
+00590:     const-string v0, "Finish filterPeriod() for "
+00591: 
+00592:     invoke-virtual {v7, v0}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+00593: 
+00594:     iget-object v0, v9, LX/09z5;->A05:Ljava/lang/String;
+00595: 
+00596:     invoke-virtual {v7, v0}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+00597: 
+00598:     invoke-virtual {v7, v2}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+00599: 
+00600:     invoke-virtual {v7}, Ljava/lang/Object;->toString()Ljava/lang/String;
+00601: 
+00602:     move-result-object v107
+00603: 
+00604:     :cond_24b
+00605:     move/from16 v1, v44
+00606: 
+00607:     move-object/from16 v0, v27
+00608: 
+00609:     invoke-static {v1, v0}, LX/09z5;->A0O(ILjava/util/List;)Z
+00610: 
+00611:     move-result v0
+00612: 
+00613:     if-eqz v0, :cond_25b
+00614: 
+00615:     move-object/from16 v0, v27
+00616: 
+00617:     invoke-virtual {v9, v0}, LX/09z5;->A0c(Ljava/util/List;)Ljava/util/List;
+00618: 
+00619:     move-result-object v27
+00620: 
+00621:     :cond_25b
+00622:     if-eqz v152, :cond_268
+00623: 
+00624:     cmp-long v0, v30, v14
+00625: 
+00626:     if-nez v0, :cond_268
+00627: 
+00628:     iget v0, v9, LX/09z5;->A03:I
+00629: 
+00630:     if-lez v0, :cond_268
+00631: 
+00632:     int-to-long v0, v0
+00633: 
+00634:     move-wide/from16 v30, v0
+00635: 
+00636:     :cond_268
+00637:     if-nez v36, :cond_26e
+00638: 
+00639:     const/16 v153, 0x0
+00640: 
+00641:     if-eqz v154, :cond_270
+00642: 
+00643:     :cond_26e
+00644:     const/16 v153, 0x1
+00645: 
+00646:     :cond_270
+00647:     new-instance v0, LX/08rn;
+00648: 
+00649:     move-object/from16 v112, v0
+00650: 
+00651:     move-object/from16 v122, v28
+00652: 
+00653:     move-object/from16 v124, v27
+00654: 
+00655:     move-wide/from16 v128, v17
+00656: 
+00657:     move-wide/from16 v132, v30
+00658: 
+00659:     invoke-direct/range {v112 .. v158}, LX/08rn;-><init>(Landroid/net/Uri;LX/0Ajy;LX/0A8J;LX/0AE1;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/util/List;IJJJJJJJJJJJJJZZZZZZZ)V
+00660: 
+00661:     move-object/from16 v1, v107
+00662: 
+00663:     iput-object v1, v0, LX/08rn;->A02:Ljava/lang/String;
+00664: 
+00665:     return-object v0
+00666: 
+00667:     :cond_284
+00668:     if-eqz v7, :cond_293
+00669: 
+00670:     const-string v0, "Skip filterPeriod() for "
+00671: 
+00672:     invoke-virtual {v7, v0}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+00673: 
+00674:     iget-object v0, v9, LX/09z5;->A05:Ljava/lang/String;
+00675: 
+00676:     invoke-virtual {v7, v0}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+00677: 
+00678:     invoke-virtual {v7, v2}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+00679: 
+00680:     :cond_293
+00681:     move-wide/from16 v0, v105
+00682: 
+00683:     iput-wide v0, v9, LX/09z5;->A00:J
+00684: 
+00685:     move-object/from16 v1, v41
+00686: 
+00687:     invoke-static {v1, v3, v1}, LX/002b;->A0q(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)Ljava/lang/String;
+00688: 
+00689:     move-result-object v0
+00690: 
+00691:     iput-object v0, v9, LX/09z5;->A02:Ljava/lang/String;
+00692: 
+00693:     const/16 v158, 0x0
+00694: 
+00695:     goto :goto_238
+00696: 
+00697:     :cond_2a2
+00698:     move-wide/from16 v17, v39
+00699: 
+00700:     goto/16 :goto_1d8
+00701: 
+00702:     :cond_2a6
+00703:     const-string v0, "ProgramInformation"
+00704: 
+00705:     invoke-static {v0, v2}, LX/08ru;->A02(Ljava/lang/String;Lorg/xmlpull/v1/XmlPullParser;)Z
+00706: 
+00707:     move-result v0
+00708: 
+00709:     if-eqz v0, :cond_2b4
+00710: 
+00711:     invoke-static {v2}, LX/09z5;->A0F(Lorg/xmlpull/v1/XmlPullParser;)LX/0Ajy;
+00712: 
+00713:     move-result-object v114
+00714: 
+00715:     goto/16 :goto_1c6
+00716: 
+00717:     :cond_2b4
+00718:     const-string v0, "UTCTiming"
+00719: 
+00720:     invoke-static {v0, v2}, LX/08ru;->A02(Ljava/lang/String;Lorg/xmlpull/v1/XmlPullParser;)Z
+00721: 
+00722:     move-result v0
+00723: 
+00724:     if-eqz v0, :cond_2c2
+00725: 
+00726:     invoke-virtual {v9, v2}, LX/09z5;->A0a(Lorg/xmlpull/v1/XmlPullParser;)LX/0AE1;
+00727: 
+00728:     move-result-object v116
+00729: 
+00730:     goto/16 :goto_1c6
+00731: 
+00732:     :cond_2c2
+00733:     const-string v0, "Location"
+00734: 
+00735:     invoke-static {v0, v2}, LX/08ru;->A02(Ljava/lang/String;Lorg/xmlpull/v1/XmlPullParser;)Z
+00736: 
+00737:     move-result v0
+00738: 
+00739:     if-eqz v0, :cond_2d4
+00740: 
+00741:     invoke-interface {v2}, Lorg/xmlpull/v1/XmlPullParser;->nextText()Ljava/lang/String;
+00742: 
+00743:     move-result-object v0
+00744: 
+00745:     invoke-static {v0}, Landroid/net/Uri;->parse(Ljava/lang/String;)Landroid/net/Uri;
+00746: 
+00747:     move-result-object v113
+00748: 
+00749:     goto/16 :goto_1c6
+00750: 
+00751:     :cond_2d4
+00752:     const-string v0, "ServiceDescription"
+00753: 
+00754:     invoke-static {v0, v2}, LX/08ru;->A02(Ljava/lang/String;Lorg/xmlpull/v1/XmlPullParser;)Z
+00755: 
+00756:     move-result v0
+00757: 
+00758:     if-eqz v0, :cond_2e2
+00759: 
+00760:     invoke-static {v2}, LX/09z5;->A0G(Lorg/xmlpull/v1/XmlPullParser;)LX/0A8J;
+00761: 
+00762:     move-result-object v115
+00763: 
+00764:     goto/16 :goto_1c6
+00765: 
+00766:     :cond_2e2
+00767:     const-string v100, "Period"
+00768: 
+00769:     move-object/from16 v0, v100
+00770: 
+00771:     invoke-static {v0, v2}, LX/08ru;->A02(Ljava/lang/String;Lorg/xmlpull/v1/XmlPullParser;)Z
+00772: 
+00773:     move-result v0
+00774: 
+00775:     if-eqz v0, :cond_d1a
+00776: 
+00777:     if-nez v3, :cond_d1a
+00778: 
+00779:     invoke-virtual/range {v104 .. v104}, Ljava/util/AbstractCollection;->isEmpty()Z
+00780: 
+00781:     move-result v0
+00782: 
+00783:     move-object/from16 v220, v108
+00784: 
+00785:     if-nez v0, :cond_2f8
+00786: 
+00787:     move-object/from16 v220, v104
+00788: 
+00789:     :cond_2f8
+00790:     move-object/from16 v107, v41
+00791: 
+00792:     const-string v99, "id"
+00793: 
+00794:     move-object/from16 v0, v99
+00795: 
+00796:     invoke-interface {v2, v7, v0}, Lorg/xmlpull/v1/XmlPullParser;->getAttributeValue(Ljava/lang/String;Ljava/lang/String;)Ljava/lang/String;
+00797: 
+00798:     move-result-object v215
+00799: 
+00800:     const-string v3, "start"
+00801: 
+00802:     move-wide/from16 v0, v17
+00803: 
+00804:     invoke-static {v3, v2, v0, v1}, LX/09z5;->A0A(Ljava/lang/String;Lorg/xmlpull/v1/XmlPullParser;J)J
+00805: 
+00806:     move-result-wide v218
+00807: 
+00808:     cmp-long v0, v126, v14
+00809: 
+00810:     if-eqz v0, :cond_ce8
+00811: 
+00812:     add-long v188, v126, v218
+00813: 
+00814:     :goto_310
+00815:     const-string v0, "duration"
+00816: 
+00817:     invoke-static {v0, v2, v14, v15}, LX/09z5;->A0A(Ljava/lang/String;Lorg/xmlpull/v1/XmlPullParser;J)J
+00818: 
+00819:     move-result-wide v20
+00820: 
+00821:     new-instance v102, Ljava/util/ArrayList;
+00822: 
+00823:     invoke-direct/range {v102 .. v102}, Ljava/util/ArrayList;-><init>()V
+00824: 
+00825:     new-instance v103, Ljava/util/ArrayList;
+00826: 
+00827:     invoke-direct/range {v103 .. v103}, Ljava/util/ArrayList;-><init>()V
+00828: 
+00829:     new-instance v98, Ljava/util/ArrayList;
+00830: 
+00831:     invoke-direct/range {v98 .. v98}, Ljava/util/ArrayList;-><init>()V
+00832: 
+00833:     move-wide/from16 v94, v25
+00834: 
+00835:     const-wide v198, -0x7fffffffffffffffL    # -4.9E-324
+00836: 
+00837:     move-object/from16 v23, v7
+00838: 
+00839:     move-object/from16 v214, v7
+00840: 
+00841:     const/16 v22, 0x0
+00842: 
+00843:     :cond_332
+00844:     invoke-interface {v2}, Lorg/xmlpull/v1/XmlPullParser;->next()I
+00845: 
+00846:     move-object/from16 v0, v101
+00847: 
+00848:     invoke-static {v0, v2}, LX/08ru;->A02(Ljava/lang/String;Lorg/xmlpull/v1/XmlPullParser;)Z
+00849: 
+00850:     move-result v0
+00851: 
+00852:     if-eqz v0, :cond_38c
+00853: 
+00854:     if-nez v22, :cond_347
+00855: 
+00856:     move-wide/from16 v0, v94
+00857: 
+00858:     invoke-static {v2, v0, v1}, LX/09z5;->A0C(Lorg/xmlpull/v1/XmlPullParser;J)J
+00859: 
+00860:     move-result-wide v94
+00861: 
+00862:     const/16 v22, 0x1
+00863: 
+00864:     :cond_347
+00865:     move-object/from16 v1, v220
+00866: 
+00867:     move/from16 v0, v29
+00868: 
+00869:     invoke-static {v1, v2, v0}, LX/09z5;->A0K(Ljava/util/List;Lorg/xmlpull/v1/XmlPullParser;Z)Ljava/util/ArrayList;
+
+===== INVOCATION INDEX NEAR FILTER =====
+00301|LX/09z5;A03Ljava/lang/String;Lorg/xmlpull/v1/XmlPullParser;II|    invoke-static {v1, v2, v0}, LX/09z5;->A03(Ljava/lang/String;Lorg/xmlpull/v1/XmlPullParser;I)I
+00357|LX/09z5;A0BLjava/lang/String;Lorg/xmlpull/v1/XmlPullParser;JJ|    invoke-static {v3, v2, v0, v1}, LX/09z5;->A0B(Ljava/lang/String;Lorg/xmlpull/v1/XmlPullParser;J)J
+00444|LX/08ru;A02Ljava/lang/String;Lorg/xmlpull/v1/XmlPullParser;Z|    invoke-static {v0, v2}, LX/08ru;->A02(Ljava/lang/String;Lorg/xmlpull/v1/XmlPullParser;)Z
+00454|LX/09z5;A0CLorg/xmlpull/v1/XmlPullParser;JJ|    invoke-static {v2, v0, v1}, LX/09z5;->A0C(Lorg/xmlpull/v1/XmlPullParser;J)J
+00465|LX/09z5;A0KLjava/util/List;Lorg/xmlpull/v1/XmlPullParser;ZLjava/util/ArrayList;|    invoke-static {v1, v2, v0}, LX/09z5;->A0K(Ljava/util/List;Lorg/xmlpull/v1/XmlPullParser;Z)Ljava/util/ArrayList;
+00479|LX/08ru;A01Ljava/lang/String;Lorg/xmlpull/v1/XmlPullParser;Z|    invoke-static {v0, v2}, LX/08ru;->A01(Ljava/lang/String;Lorg/xmlpull/v1/XmlPullParser;)Z
+00500|LX/09z5;A0PLjava/util/List;Z|    invoke-static/range {v27 .. v27}, LX/09z5;->A0P(Ljava/util/List;)Z
+00529|LX/09z5;A0ILjava/lang/StringBuilder;Ljava/util/List;Ljava/lang/String;|    invoke-direct {v9, v7, v0}, LX/09z5;->A0I(Ljava/lang/StringBuilder;Ljava/util/List;)Ljava/lang/String;
+00544|LX/09z5;A0bLjava/util/List;Ljava/util/List;|    invoke-virtual {v9, v0}, LX/09z5;->A0b(Ljava/util/List;)Ljava/util/List;
+00563|LX/09z5;A0ILjava/lang/StringBuilder;Ljava/util/List;Ljava/lang/String;|    invoke-direct {v9, v7, v0}, LX/09z5;->A0I(Ljava/lang/StringBuilder;Ljava/util/List;)Ljava/lang/String;
+00567|LX/09z5;A0PLjava/util/List;Z|    invoke-static/range {v27 .. v27}, LX/09z5;->A0P(Ljava/util/List;)Z
+00581|LX/002b;A0qLjava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;|    invoke-static {v0, v3, v4}, LX/002b;->A0q(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)Ljava/lang/String;
+00609|LX/09z5;A0OILjava/util/List;Z|    invoke-static {v1, v0}, LX/09z5;->A0O(ILjava/util/List;)Z
+00617|LX/09z5;A0cLjava/util/List;Ljava/util/List;|    invoke-virtual {v9, v0}, LX/09z5;->A0c(Ljava/util/List;)Ljava/util/List;
+00659|LX/08rn;<init>Landroid/net/Uri;LX/0Ajy;LX/0A8J;LX/0AE1;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/util/List;IJJJJJJJJJJJJJZZZZZZZV|    invoke-direct/range {v112 .. v158}, LX/08rn;-><init>(Landroid/net/Uri;LX/0Ajy;LX/0A8J;LX/0AE1;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/util/List;IJJJJJJJJJJJJJZZZZZZZ)V
+00687|LX/002b;A0qLjava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;|    invoke-static {v1, v3, v1}, LX/002b;->A0q(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)Ljava/lang/String;
+00705|LX/08ru;A02Ljava/lang/String;Lorg/xmlpull/v1/XmlPullParser;Z|    invoke-static {v0, v2}, LX/08ru;->A02(Ljava/lang/String;Lorg/xmlpull/v1/XmlPullParser;)Z
+00711|LX/09z5;A0FLorg/xmlpull/v1/XmlPullParser;LX/0Ajy;|    invoke-static {v2}, LX/09z5;->A0F(Lorg/xmlpull/v1/XmlPullParser;)LX/0Ajy;
+00720|LX/08ru;A02Ljava/lang/String;Lorg/xmlpull/v1/XmlPullParser;Z|    invoke-static {v0, v2}, LX/08ru;->A02(Ljava/lang/String;Lorg/xmlpull/v1/XmlPullParser;)Z
+00726|LX/09z5;A0aLorg/xmlpull/v1/XmlPullParser;LX/0AE1;|    invoke-virtual {v9, v2}, LX/09z5;->A0a(Lorg/xmlpull/v1/XmlPullParser;)LX/0AE1;
+00735|LX/08ru;A02Ljava/lang/String;Lorg/xmlpull/v1/XmlPullParser;Z|    invoke-static {v0, v2}, LX/08ru;->A02(Ljava/lang/String;Lorg/xmlpull/v1/XmlPullParser;)Z
+00754|LX/08ru;A02Ljava/lang/String;Lorg/xmlpull/v1/XmlPullParser;Z|    invoke-static {v0, v2}, LX/08ru;->A02(Ljava/lang/String;Lorg/xmlpull/v1/XmlPullParser;)Z
+00760|LX/09z5;A0GLorg/xmlpull/v1/XmlPullParser;LX/0A8J;|    invoke-static {v2}, LX/09z5;->A0G(Lorg/xmlpull/v1/XmlPullParser;)LX/0A8J;
+00771|LX/08ru;A02Ljava/lang/String;Lorg/xmlpull/v1/XmlPullParser;Z|    invoke-static {v0, v2}, LX/08ru;->A02(Ljava/lang/String;Lorg/xmlpull/v1/XmlPullParser;)Z
+00804|LX/09z5;A0ALjava/lang/String;Lorg/xmlpull/v1/XmlPullParser;JJ|    invoke-static {v3, v2, v0, v1}, LX/09z5;->A0A(Ljava/lang/String;Lorg/xmlpull/v1/XmlPullParser;J)J
+00817|LX/09z5;A0ALjava/lang/String;Lorg/xmlpull/v1/XmlPullParser;JJ|    invoke-static {v0, v2, v14, v15}, LX/09z5;->A0A(Ljava/lang/String;Lorg/xmlpull/v1/XmlPullParser;J)J
+00848|LX/08ru;A02Ljava/lang/String;Lorg/xmlpull/v1/XmlPullParser;Z|    invoke-static {v0, v2}, LX/08ru;->A02(Ljava/lang/String;Lorg/xmlpull/v1/XmlPullParser;)Z
+00858|LX/09z5;A0CLorg/xmlpull/v1/XmlPullParser;JJ|    invoke-static {v2, v0, v1}, LX/09z5;->A0C(Lorg/xmlpull/v1/XmlPullParser;J)J
+00869|LX/09z5;A0KLjava/util/List;Lorg/xmlpull/v1/XmlPullParser;ZLjava/util/ArrayList;|    invoke-static {v1, v2, v0}, LX/09z5;->A0K(Ljava/util/List;Lorg/xmlpull/v1/XmlPullParser;Z)Ljava/util/ArrayList;
+00880|LX/08ru;A01Ljava/lang/String;Lorg/xmlpull/v1/XmlPullParser;Z|    invoke-static {v0, v2}, LX/08ru;->A01(Ljava/lang/String;Lorg/xmlpull/v1/XmlPullParser;)Z
+00928|LX/096x;A0AZ|    invoke-virtual {v5}, LX/096x;->A0A()Z
+00948|LX/08ru;A02Ljava/lang/String;Lorg/xmlpull/v1/XmlPullParser;Z|    invoke-static {v0, v2}, LX/08ru;->A02(Ljava/lang/String;Lorg/xmlpull/v1/XmlPullParser;)Z
+00969|LX/09z5;A03Ljava/lang/String;Lorg/xmlpull/v1/XmlPullParser;II|    invoke-static {v0, v2, v10}, LX/09z5;->A03(Ljava/lang/String;Lorg/xmlpull/v1/XmlPullParser;I)I
+===== METADATA INDEX =====
+02771|    new-instance v1, LX/08tc;
+02773|    invoke-direct {v1}, LX/08tc;-><init>()V
+02777|    iput-object v0, v1, LX/08tc;->A09:Ljava/lang/String;
+02781|    iput-boolean v0, v1, LX/08tc;->A0L:Z
+02785|    iput-boolean v0, v1, LX/08tc;->A0M:Z
+02789|    iput-boolean v0, v1, LX/08tc;->A0I:Z
+02793|    iput-boolean v0, v1, LX/08tc;->A0H:Z
+02797|    iput-boolean v0, v1, LX/08tc;->A0G:Z
+02801|    iput-boolean v0, v1, LX/08tc;->A0F:Z
+02805|    iput-boolean v0, v1, LX/08tc;->A0E:Z
+02809|    iput-boolean v0, v1, LX/08tc;->A0D:Z
+02813|    iput-boolean v0, v1, LX/08tc;->A0N:Z
+02817|    iput-object v0, v1, LX/08tc;->A07:Ljava/lang/String;
+02821|    iput-object v0, v1, LX/08tc;->A08:Ljava/lang/String;
+02825|    iput-object v0, v1, LX/08tc;->A06:Ljava/lang/String;
+02829|    iput-object v0, v1, LX/08tc;->A0A:Ljava/lang/String;
+02833|    iput-object v0, v1, LX/08tc;->A04:Ljava/lang/String;
+02837|    iput-boolean v0, v1, LX/08tc;->A0K:Z
+02841|    iput v0, v1, LX/08tc;->A01:I
+02845|    iput-boolean v0, v1, LX/08tc;->A0J:Z
+02849|    iput-boolean v0, v1, LX/08tc;->A0O:Z
+02853|    iput-object v0, v1, LX/08tc;->A0C:Ljava/lang/String;
+02857|    iput-object v0, v1, LX/08tc;->A0B:Ljava/lang/String;
+02861|    iput v0, v1, LX/08tc;->A00:I
+02865|    iput-object v0, v1, LX/08tc;->A02:Ljava/lang/String;
+02869|    iput-object v0, v1, LX/08tc;->A03:Ljava/lang/String;
+02872|    new-instance v0, LX/08td;
+02874|    invoke-direct {v0, v1}, LX/08td;-><init>(LX/08tc;)V
+02967|    new-instance v1, LX/08tc;
+02969|    invoke-direct {v1}, LX/08tc;-><init>()V
+02973|    iput-boolean v0, v1, LX/08tc;->A0I:Z
+02977|    iput-boolean v0, v1, LX/08tc;->A0H:Z
+02981|    iput-object v0, v1, LX/08tc;->A04:Ljava/lang/String;
+02985|    iput-boolean v0, v1, LX/08tc;->A0K:Z
+02989|    iput v0, v1, LX/08tc;->A01:I
+02993|    iput-boolean v0, v1, LX/08tc;->A0O:Z
+02997|    iput-object v0, v1, LX/08tc;->A05:Ljava/lang/String;
+03001|    iput-object v0, v1, LX/08tc;->A02:Ljava/lang/String;
+03005|    iput-object v0, v1, LX/08tc;->A03:Ljava/lang/String;
+03009|    iput-object v0, v1, LX/08tc;->A0C:Ljava/lang/String;
+03080|    new-instance v1, LX/08tc;
+03082|    invoke-direct {v1}, LX/08tc;-><init>()V
+03086|    iput-object v0, v1, LX/08tc;->A09:Ljava/lang/String;
+03090|    iput-boolean v0, v1, LX/08tc;->A0L:Z
+03094|    iput-boolean v0, v1, LX/08tc;->A0M:Z
+03098|    iput-boolean v0, v1, LX/08tc;->A0I:Z
+03102|    iput-boolean v0, v1, LX/08tc;->A0H:Z
+03106|    iput-boolean v0, v1, LX/08tc;->A0G:Z
+03110|    iput-boolean v0, v1, LX/08tc;->A0F:Z
+03114|    iput-boolean v0, v1, LX/08tc;->A0E:Z
+03118|    iput-boolean v0, v1, LX/08tc;->A0D:Z
+03122|    iput-boolean v0, v1, LX/08tc;->A0N:Z
+03126|    iput-object v0, v1, LX/08tc;->A07:Ljava/lang/String;
+03130|    iput-object v0, v1, LX/08tc;->A08:Ljava/lang/String;
+03134|    iput-object v0, v1, LX/08tc;->A06:Ljava/lang/String;
+03138|    iput-object v0, v1, LX/08tc;->A0A:Ljava/lang/String;
+03142|    iput-object v0, v1, LX/08tc;->A04:Ljava/lang/String;
+03146|    iput-boolean v0, v1, LX/08tc;->A0K:Z
+03150|    iput v0, v1, LX/08tc;->A01:I
+03154|    iput-boolean v0, v1, LX/08tc;->A0J:Z
+03158|    iput-boolean v0, v1, LX/08tc;->A0O:Z
