@@ -1,0 +1,152 @@
+name: IG 439 AV1 Filter Fields
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - .github/workflows/ig-hdr-av1-filter-fields.yml
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  probe:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    env:
+      APK_NAME: instagram-piko-v439.0.0.37.89-arm64-v8a.apk
+      APK_SHA256: 4015b171ac59f3e7172134d194ec2dcf701f64c3339f127c19d7a04c13d529c8
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+
+      - name: Download and disassemble exact R8
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          set -euo pipefail
+          mkdir -p work/dex work/dis research/generated
+          gh release download 8 --pattern "$APK_NAME" --dir work
+          echo "$APK_SHA256  work/$APK_NAME" | sha256sum -c -
+          unzip -j "work/$APK_NAME" 'classes*.dex' -d work/dex
+          DEXDUMP="$(find "$ANDROID_HOME/build-tools" -type f -name dexdump | sort -V | tail -1)"
+          for d in work/dex/classes*.dex; do
+            b="$(basename "$d" .dex)"
+            "$DEXDUMP" -d -f -h "$d" > "work/dis/$b.txt"
+          done
+
+      - name: Trace fields and secondary transform
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          from pathlib import Path
+          import re
+          from collections import defaultdict
+
+          hr=re.compile(r'\|\[[0-9a-f]+\]\s+([^\s]+):')
+          inv=re.compile(r'invoke-[^,]+.*?\s(L[^;]+;\.[^:]+:\([^\n ]*?\)[^\s/]+)')
+          methods=[]
+          def sig(h):
+              m=re.match(r'X\.([^.]+)\.([^:]+):(.*)$',h)
+              return f'LX/{m.group(1)};.{m.group(2)}:{m.group(3)}' if m else None
+
+          for p in sorted(Path('work/dis').glob('classes*.txt')):
+              lines=p.read_text(errors='replace').splitlines(); starts=[]; heads=[]
+              for i,l in enumerate(lines):
+                  m=hr.search(l)
+                  if m: starts.append(i); heads.append(m.group(1))
+              for j,s in enumerate(starts):
+                  e=starts[j+1] if j+1<len(starts) else len(lines)
+                  methods.append({'file':p.name,'s':s+1,'e':e,'head':heads[j],'sig':sig(heads[j]),'body':lines[s:e]})
+
+          rev=defaultdict(set)
+          for i,m in enumerate(methods):
+              for t in inv.findall('\n'.join(m['body'])): rev[t].add(i)
+
+          out=['Instagram 439 AV1 manifest filter settings trace','===============================================','APK SHA256: 4015b171ac59f3e7172134d194ec2dcf701f64c3339f127c19d7a04c13d529c8','']
+          def emit(m,label,cap=3200):
+              out.append(f'===== {label} :: {m["file"]}:{m["s"]}-{m["e"]} :: {m["head"]} =====')
+              out.extend(x.rstrip() for x in m['body'][:cap])
+              if len(m['body'])>cap: out.append(f'... omitted {len(m["body"])-cap} lines ...')
+              out.append('')
+
+          # Full transform method; gives exact A74=false branch too.
+          for m in methods:
+              if m['head'].startswith('X.08oh.A0b:'):
+                  emit(m,'X.08oh.A0b FULL RAW',5000)
+
+          # Every read/write of the two gate fields, with full owner methods.
+          fields={
+              'LX_05xw_A74':'LX/05xw;.A74:Z',
+              'HeroPlayerSetting_A23':'Lcom/facebook/video/heroplayer/setting/HeroPlayerSetting;.A23:Z',
+          }
+          for label,needle in fields.items():
+              ids=[]
+              for i,m in enumerate(methods):
+                  if needle in '\n'.join(m['body']): ids.append(i)
+              out.append(f'{label}_OWNER_COUNT={len(ids)}')
+              for i in ids: emit(methods[i],f'{label} OWNER',4200)
+
+          # Secondary transform X.0Heu, all methods and direct callers.
+          heu=[]
+          for i,m in enumerate(methods):
+              if m['head'].startswith('X.0Heu.'):
+                  heu.append(i); emit(m,'X.0Heu DEFINITION',4000)
+          hs=[methods[i]['sig'] for i in heu if methods[i]['sig']]
+          hc=set()
+          for s in hs: hc.update(rev.get(s,()))
+          for i,m in enumerate(methods):
+              if 'new-instance' in '\n'.join(m['body']) and 'LX/0Heu;' in '\n'.join(m['body']): hc.add(i)
+          out.append(f'X_0Heu_CALLER_COUNT={len(hc)}')
+          for i in sorted(hc): emit(methods[i],'X.0Heu CALLER/OWNER',3000)
+
+          # Descriptor helper used by A74=false path; identify what A0E means.
+          for prefix in ('X.08td.','X.03oR.'):
+              ids=[]
+              for i,m in enumerate(methods):
+                  if m['head'].startswith(prefix):
+                      txt='\n'.join(m['body']).lower()
+                      if prefix=='X.08td.' or any(k in txt for k in ('hdr','color','transfer','profile','codec','mime','video/')):
+                          ids.append(i)
+              out.append(f'{prefix}_RELEVANT_METHOD_COUNT={len(ids)}')
+              for i in ids[:120]: emit(methods[i],f'{prefix} RELEVANT DEF',2600)
+
+          # Find setting/config initialization touching A74/A23 by nearby constants and MobileConfig calls.
+          # Include any method with field write OR exact field reference; raw body preserves preceding qpl/groot ids.
+          for label,needle in fields.items():
+              for i,m in enumerate(methods):
+                  txt='\n'.join(m['body'])
+                  if needle not in txt: continue
+                  if 'iput-boolean' in txt or 'sput-boolean' in txt:
+                      # one caller layer can expose builder/config source
+                      s=m['sig']
+                      if s:
+                          for ci in sorted(rev.get(s,())):
+                              emit(methods[ci],f'CALLER OF {label} WRITER',2600)
+
+          # String owners for known AV1 fallback/manifest terminology.
+          needles=('av01','dav1d','mixed_codec_manifest','mixed codec','manifest filter','filter av1','remove av1','prefer av1','disable av1','av1 fallback','codec fallback')
+          ids=[]
+          for i,m in enumerate(methods):
+              txt='\n'.join(m['body']).lower()
+              if any(n in txt for n in needles): ids.append(i)
+          out.append(f'AV1_FILTER_STRING_OWNER_COUNT={len(ids)}')
+          for i in ids[:180]: emit(methods[i],'AV1/FILTER STRING OWNER',2200)
+
+          path=Path('research/generated/instagram_439_hdr_av1_filter_fields.txt')
+          path.write_text('\n'.join(out)+'\n',encoding='utf-8')
+          if path.stat().st_size < 5000: raise SystemExit('report unexpectedly small')
+          print(path.read_text()[:260000])
+          PY
+
+      - name: Commit report
+        run: |
+          set -euo pipefail
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add research/generated/instagram_439_hdr_av1_filter_fields.txt
+          if ! git diff --cached --quiet; then git commit -m "Trace Instagram 439 AV1 filter settings"; fi
+          git pull --rebase origin main
+          git push origin HEAD:main
