@@ -1,0 +1,180 @@
+name: IG 439 HDR Server Device Classification R19i
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - .github/workflows/ig-hdr-server-device-classification-r19i.yml
+
+permissions:
+  contents: write
+
+jobs:
+  trace:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    env:
+      APK_NAME: instagram-piko-v439.0.0.37.89-arm64-v8a.apk
+      APK_SHA256: 4015b171ac59f3e7172134d194ec2dcf701f64c3339f127c19d7a04c13d529c8
+    steps:
+      - uses: actions/checkout@v6
+        with: {fetch-depth: 0}
+      - uses: actions/setup-java@v5
+        with: {distribution: zulu, java-version: '21'}
+      - name: Fetch exact APK and disassemble classification-hit dexes
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          set -euo pipefail
+          mkdir -p work/apk work/smali research/generated
+          gh release download 8 --pattern "$APK_NAME" --dir work
+          echo "$APK_SHA256  work/$APK_NAME" | sha256sum -c -
+          gh release download 3.0.10 --repo baksmali/smali --pattern 'baksmali-3.0.10-fat.jar' --dir work
+          unzip -q "work/$APK_NAME" 'classes*.dex' -d work/apk
+          python3 - <<'PY'
+          from pathlib import Path
+          import subprocess
+          terms=[
+            'com.facebook.devicesegmentation','ig_device_static_attributes','device_capabilities',
+            'key_display_hdr_supported','key_video_decoder_hdr_supported','display_hdr_supported',
+            'video_decoder_hdr_supported','is_av1_hdr_supported','is_hevc_hdr_supported',
+            'supported_display_hdr_types','hdr_supported_types','client_device_model','device_brand',
+            'chipset_platform','performance_class','media_codec_info','profile_levels',
+            'X-IG-Device-ID','X-IG-Family-Device-ID','device_id'
+          ]
+          rows=[]; hit=[]
+          for p in sorted(Path('work/apk').glob('classes*.dex')):
+              s=subprocess.run(['strings','-a',str(p)],capture_output=True,text=True,errors='replace').stdout
+              hs=[t for t in terms if t.lower() in s.lower()]
+              if hs:
+                  rows.append(f'{p.name}: '+', '.join(hs)); hit.append(p.name)
+          Path('work/hitdex.txt').write_text('\n'.join(sorted(set(hit)))+'\n')
+          Path('research/generated/instagram_439_hdr_server_classification_dex_hits_r19i.txt').write_text('\n'.join(rows)+'\n')
+          print('\n'.join(rows)); print('HITDEX',sorted(set(hit)))
+          PY
+          while read d; do
+            [ -n "$d" ] || continue
+            java -jar work/baksmali-3.0.10-fat.jar d "work/apk/$d" -o "work/smali/${d%.dex}" >/dev/null &
+          done < work/hitdex.txt
+          wait
+
+      - name: Trace classification producers to real network sinks
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          from pathlib import Path
+          import re
+          ROOT=Path('work/smali'); OUT=Path('research/generated/instagram_439_hdr_server_device_classification_r19i.txt')
+          cr=re.compile(r'^\.class\s+.*\s+(L[^;]+;)$')
+          sr=re.compile(r'^\s*const-string(?:/jumbo)?\s+[^,]+,\s+"(.*)"')
+          invre=re.compile(r'(L[^;]+;)->([^\s(]+)\(([^)]*)\)(\S+)')
+          methods=[]
+          for p in ROOT.rglob('*.smali'):
+              ls=p.read_text(errors='replace').splitlines(); cls='?'
+              for x in ls[:50]:
+                  m=cr.match(x)
+                  if m: cls=m.group(1); break
+              i=0
+              while i<len(ls):
+                  if not ls[i].startswith('.method'): i+=1; continue
+                  s=i; sig=ls[i]; i+=1
+                  while i<len(ls) and not ls[i].startswith('.end method'): i+=1
+                  methods.append((cls,sig,p,ls[s:min(i+1,len(ls))])); i+=1
+
+          capterms=[
+            'com.facebook.devicesegmentation','ig_device_static_attributes','device_capabilities',
+            'key_display_hdr_supported','key_video_decoder_hdr_supported','display_hdr_supported',
+            'video_decoder_hdr_supported','is_av1_hdr_supported','is_hevc_hdr_supported',
+            'supported_display_hdr_types','hdr_supported_types','client_device_model','device_brand',
+            'chipset_platform','performance_class','media_codec_info','profile_levels'
+          ]
+          netterms=['/api/v1/','/api/v2/','GraphQlCallInput','PandoGraphQLRequest','doc_id','query_id','query_hash','signed_body',
+                    'LX/03u7;','LX/01pg;','LX/02pu;','AMu(','AOA(','A0F(','LX/05xm;','LX/05yb;']
+          telemetry=['markerAnnotate','QPL','quick_performance_logger','pigeon','falco','analytics','MediaCodecInfoReporter','ig_device_static_attributes']
+
+          # map exact method key and callers
+          keymap={}
+          for cls,sig,p,b in methods:
+              mm=re.search(r'\s([^\s(]+)\(([^)]*)\)(\S+)$',sig)
+              if mm: keymap[(cls,mm.group(1),mm.group(2),mm.group(3))]=(sig,p,b)
+
+          seeds=[]
+          for cls,sig,p,b in methods:
+              text='\n'.join(b); low=text.lower()
+              ch=[t for t in capterms if t.lower() in low]
+              if ch: seeds.append((cls,sig,p,b,ch))
+
+          O=['Instagram 439 HDR server device classification R19i','================================================','',f'seed_methods={len(seeds)}','']
+          O += ['===== DIRECT CAPABILITY + NETWORK SINK INTERSECTIONS =====','']
+          direct=[]
+          for cls,sig,p,b,ch in seeds:
+              text='\n'.join(b); low=text.lower()
+              nh=[t for t in netterms if t.lower() in low]
+              if not nh: continue
+              strings=[]
+              for l in b:
+                  m=sr.match(l)
+                  if m: strings.append(m.group(1))
+              tel=[t for t in telemetry if t.lower() in low]
+              direct.append((cls,sig,p,b,ch,nh,tel,strings))
+              O += [f'--- {cls} {sig}',f'FILE={p}',f'CAP={ch}',f'NET={nh}',f'TELEMETRY_MARKERS={tel}',f'STRINGS={strings}']+b+['']
+          O += [f'DIRECT_COUNT={len(direct)}','']
+
+          # One-hop and two-hop: callers of capability seed methods that contain actual network construction.
+          seed_keys=[]
+          for cls,sig,p,b,ch in seeds:
+              mm=re.search(r'\s([^\s(]+)\(([^)]*)\)(\S+)$',sig)
+              if mm: seed_keys.append((cls,mm.group(1),mm.group(2),mm.group(3),ch))
+          O += ['===== NETWORK CALLERS OF CAPABILITY SEEDS =====','']
+          hop1=[]
+          for ccls,csig,cp,cb in methods:
+              ctext='\n'.join(cb); low=ctext.lower()
+              nh=[t for t in netterms if t.lower() in low]
+              if not nh: continue
+              for sk in seed_keys:
+                  needle=f'{sk[0]}->{sk[1]}({sk[2]}){sk[3]}'
+                  if needle in ctext:
+                      strings=[m.group(1) for l in cb if (m:=sr.match(l))]
+                      tel=[t for t in telemetry if t.lower() in low]
+                      hop1.append((sk,ccls,csig,cp,cb,nh,tel,strings))
+                      O += [f'--- CALLS {sk[:4]} CAP={sk[4]}',f'CALLER={ccls} {csig}',f'FILE={cp}',f'NET={nh}',f'TELEMETRY_MARKERS={tel}',f'STRINGS={strings}']+cb+['']
+                      break
+          O += [f'HOP1_COUNT={len(hop1)}','']
+
+          # Device segmentation readers specifically: show callers and any request/GraphQL context.
+          O += ['===== DEVICE SEGMENTATION PREF READERS / NETWORK USE =====','']
+          segclasses=set()
+          for cls,sig,p,b,ch in seeds:
+              if any('devicesegmentation' in x.lower() for x in ch): segclasses.add(cls)
+          # known prior reader helpers are useful even if literal is in another class
+          segclasses.update(['LX/0hkS;','LX/0hld;'])
+          for cls,sig,p,b in methods:
+              text='\n'.join(b); low=text.lower()
+              if cls in segclasses or any(sc+'->' in text for sc in segclasses):
+                  strings=[m.group(1) for l in b if (m:=sr.match(l))]
+                  nh=[t for t in netterms if t.lower() in low]
+                  O += [f'--- {cls} {sig}',f'FILE={p}',f'NET={nh}',f'STRINGS={strings}']+b+['']
+
+          # Header/device-id context to tell identity headers from capability reports.
+          O += ['===== DEVICE ID HEADER WRITES WITH NEARBY ROUTES =====','']
+          for cls,sig,p,b in methods:
+              text='\n'.join(b)
+              if 'X-IG-Device-ID' not in text and 'X-IG-Family-Device-ID' not in text: continue
+              strings=[m.group(1) for l in b if (m:=sr.match(l))]
+              O += [f'--- {cls} {sig}',f'FILE={p}',f'STRINGS={strings}']+b+['']
+
+          OUT.write_text('\n'.join(O),encoding='utf-8')
+          print('\n'.join(O[:7000])); print('bytes',OUT.stat().st_size,'direct',len(direct),'hop1',len(hop1))
+          PY
+      - name: Commit reports
+        run: |
+          set -euo pipefail
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add research/generated/instagram_439_hdr_server_classification_dex_hits_r19i.txt research/generated/instagram_439_hdr_server_device_classification_r19i.txt
+          if ! git diff --cached --quiet; then
+            git commit -m 'Add server device classification sink trace R19i'
+            git pull --rebase origin main
+            git push origin HEAD:main
+          fi
