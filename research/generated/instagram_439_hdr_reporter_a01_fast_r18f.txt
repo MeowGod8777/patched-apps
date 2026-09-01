@@ -1,0 +1,103 @@
+Instagram 439 LX/0knW.A01 fast R18f
+=====================================
+.method public static final A01(Landroid/content/Context;LX/02rJ;)V
+    .registers 8
+
+    const/4 v1, 0x3
+
+    new-instance v0, LX/0FRB;
+
+    invoke-direct {v0, p1, v1}, LX/0FRB;-><init>(Ljava/lang/Object;I)V
+
+    invoke-static {v0}, LX/06cv;->A00(Lkotlin/jvm/functions/Function0;)LX/0C8T;
+
+    move-result-object v5
+
+    const v4, 0x6e03ce0
+
+    :try_start_d
+    invoke-interface {v5}, LX/0C8T;->getValue()Ljava/lang/Object;
+
+    move-result-object v0
+
+    check-cast v0, LX/02rM;
+
+    invoke-virtual {v0, v4}, LX/03e9;->markerStart(I)V
+
+    invoke-static {p0, p1}, LX/0knW;->A00(Landroid/content/Context;LX/02rJ;)Ljava/util/LinkedHashMap;
+
+    move-result-object v0
+
+    invoke-static {v0}, LX/000H;->A0W(Ljava/util/AbstractMap;)Ljava/util/Iterator;
+
+    move-result-object v3
+
+    :goto_1e
+    invoke-interface {v3}, Ljava/util/Iterator;->hasNext()Z
+
+    move-result v0
+
+    if-eqz v0, :cond_3e
+
+    invoke-static {v3}, LX/0020;->A0u(Ljava/util/Iterator;)Ljava/util/Map$Entry;
+
+    move-result-object v0
+
+    invoke-interface {v5}, LX/0C8T;->getValue()Ljava/lang/Object;
+
+    move-result-object v2
+
+    check-cast v2, LX/02rM;
+
+    invoke-static {v0}, LX/021X;->A13(Ljava/util/Map$Entry;)Ljava/lang/String;
+
+    move-result-object v1
+
+    invoke-interface {v0}, Ljava/util/Map$Entry;->getValue()Ljava/lang/Object;
+
+    move-result-object v0
+
+    invoke-virtual {v0}, Ljava/lang/Object;->toString()Ljava/lang/String;
+
+    move-result-object v0
+
+    invoke-virtual {v2, v4, v1, v0}, LX/03e9;->markerAnnotate(ILjava/lang/String;Ljava/lang/String;)V
+
+    goto :goto_1e
+
+    :cond_3e
+    invoke-interface {v5}, LX/0C8T;->getValue()Ljava/lang/Object;
+
+    move-result-object v0
+
+    check-cast v0, LX/02rM;
+
+    invoke-virtual {v0, v4}, LX/03e9;->A0Y(I)V
+
+    return-void
+    :try_end_48
+    .catchall {:try_start_d .. :try_end_48} :catchall_48
+
+    :catchall_48
+    move-exception v0
+
+    invoke-static {v5}, LX/0222;->A0P(LX/0C8T;)LX/03e9;
+
+    move-result-object v2
+
+    const-string v1, "error"
+
+    invoke-virtual {v0}, Ljava/lang/Object;->toString()Ljava/lang/String;
+
+    move-result-object v0
+
+    invoke-virtual {v2, v4, v1, v0}, LX/03e9;->markerAnnotate(ILjava/lang/String;Ljava/lang/String;)V
+
+    invoke-static {v5}, LX/0222;->A0P(LX/0C8T;)LX/03e9;
+
+    move-result-object v0
+
+    invoke-virtual {v0, v4}, LX/03e9;->A0Z(I)V
+
+    return-void
+.end method
