@@ -1,0 +1,90 @@
+name: IG HDR Format Class Exact
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - .github/workflows/ig-hdr-format-class-exact.yml
+
+permissions:
+  contents: write
+
+jobs:
+  probe:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    env:
+      APK_NAME: instagram-piko-v439.0.0.37.89-arm64-v8a.apk
+      APK_SHA256: 4015b171ac59f3e7172134d194ec2dcf701f64c3339f127c19d7a04c13d529c8
+    steps:
+      - uses: actions/checkout@v6
+      - name: Locate exact classes and consumers
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          set -euo pipefail
+          mkdir -p work/dex work/out research/generated
+          gh release download 8 --pattern "$APK_NAME" --dir work
+          echo "$APK_SHA256  work/$APK_NAME" | sha256sum -c -
+          sudo apt-get update -qq && sudo apt-get install -y -qq smali
+          unzip -j "work/$APK_NAME" 'classes*.dex' -d work/dex
+          : > work/out/classes.txt
+          found096x=0
+          found03oR=0
+          for d in work/dex/classes*.dex; do
+            b=$(basename "$d" .dex)
+            rm -rf work/smali
+            mkdir -p work/smali
+            baksmali d "$d" -o work/smali
+            for rel in X/096x.smali X/03oR.smali; do
+              p="work/smali/$rel"
+              if [ -f "$p" ]; then
+                echo "===== $b / $rel =====" >> work/out/classes.txt
+                cat "$p" >> work/out/classes.txt
+                echo >> work/out/classes.txt
+                [ "$rel" = X/096x.smali ] && found096x=1
+                [ "$rel" = X/03oR.smali ] && found03oR=1
+              fi
+            done
+            # Once the defining dex is found, extract concise field consumers from that dex.
+            if [ -f work/smali/X/03oR.smali ]; then
+              python3 - <<'PY' >> work/out/classes.txt
+          from pathlib import Path
+          root=Path('work/smali')
+          print('===== 03oR FIELD CONSUMERS IN DEFINING DEX =====')
+          count=0
+          for p in root.rglob('*.smali'):
+              t=p.read_text(errors='replace')
+              if 'LX/03oR;->' not in t: continue
+              ls=t.splitlines(); starts=[i for i,l in enumerate(ls) if l.startswith('.method')]
+              for n,s in enumerate(starts):
+                  e=starts[n+1] if n+1<len(starts) else len(ls)
+                  body='\n'.join(ls[s:e])
+                  if 'LX/03oR;->' not in body: continue
+                  semantic=('codec','mime','video/','audio/','profile','level','color','hdr','bitrate','width','height','frame','transfer','dataspace','format')
+                  if not any(x in body.lower() for x in semantic): continue
+                  print(f'--- {p.relative_to(root)} :: {ls[s]} ---')
+                  print(body[:12000])
+                  print()
+                  count += 1
+                  if count >= 100: break
+              if count >= 100: break
+          print('consumer_count=',count)
+          PY
+            fi
+            if [ "$found096x" = 1 ] && [ "$found03oR" = 1 ]; then break; fi
+          done
+          test "$found096x" = 1
+          test "$found03oR" = 1
+          cp work/out/classes.txt research/generated/instagram_439_hdr_format_class_exact.txt
+          wc -c research/generated/instagram_439_hdr_format_class_exact.txt
+          head -n 1200 research/generated/instagram_439_hdr_format_class_exact.txt
+      - name: Commit report
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add research/generated/instagram_439_hdr_format_class_exact.txt
+          git commit -m 'Extract Instagram 439 DASH format metadata class' || true
+          git pull --rebase origin main
+          git push origin HEAD:main
