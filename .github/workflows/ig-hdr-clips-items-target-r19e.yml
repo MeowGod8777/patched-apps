@@ -1,0 +1,85 @@
+name: IG 439 HDR clips/items Target R19e
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - .github/workflows/ig-hdr-clips-items-target-r19e.yml
+
+permissions:
+  contents: write
+
+jobs:
+  trace:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    env:
+      APK_NAME: instagram-piko-v439.0.0.37.89-arm64-v8a.apk
+      APK_SHA256: 4015b171ac59f3e7172134d194ec2dcf701f64c3339f127c19d7a04c13d529c8
+    steps:
+      - uses: actions/checkout@v6
+        with: {fetch-depth: 0}
+      - uses: actions/setup-java@v5
+        with:
+          distribution: zulu
+          java-version: '21'
+      - name: Fetch exact APK and classes15
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          set -euo pipefail
+          mkdir -p work/smali research/generated
+          gh release download 8 --pattern "$APK_NAME" --dir work
+          echo "$APK_SHA256  work/$APK_NAME" | sha256sum -c -
+          gh release download 3.0.10 --repo baksmali/smali --pattern 'baksmali-3.0.10-fat.jar' --dir work
+          unzip -p "work/$APK_NAME" classes15.dex > work/classes15.dex
+          java -jar work/baksmali-3.0.10-fat.jar d work/classes15.dex -o work/smali
+      - name: Extract A06 and exact callers
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          from pathlib import Path
+          import re
+          root=Path('work/smali')
+          target='Lcom/instagram/clips/api/ClipsApiUtilHelper;->A06(Lcom/instagram/common/session/UserSession;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;I)LX/02ue;'
+          O=['Instagram 439 clips/items exact target R19e','========================================','']
+          p=root/'com/instagram/clips/api/ClipsApiUtilHelper.smali'
+          ls=p.read_text(errors='replace').splitlines()
+          def methods(lines):
+            i=0
+            while i<len(lines):
+              if not lines[i].startswith('.method'): i+=1; continue
+              s=i; i+=1
+              while i<len(lines) and not lines[i].startswith('.end method'): i+=1
+              e=min(i,len(lines)-1); yield lines[s],lines[s:e+1]
+              i+=1
+          for sig,b in methods(ls):
+            if ' A06(Lcom/instagram/common/session/UserSession;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;I)LX/02ue;' in sig:
+              O += ['===== TARGET BODY =====']+b+['']
+          O += ['===== CALLERS IN classes15 =====','']
+          for q in root.rglob('*.smali'):
+            qls=q.read_text(errors='replace').splitlines()
+            cls='?'
+            for x in qls[:30]:
+              m=re.match(r'^\.class\s+.*\s+(L[^;]+;)$',x)
+              if m: cls=m.group(1); break
+            for sig,b in methods(qls):
+              t='\n'.join(b)
+              if target in t:
+                O += [f'--- {cls} {sig} FILE={q} ---']+b+['']
+          text='\n'.join(O)
+          Path('research/generated/instagram_439_hdr_clips_items_target_r19e.txt').write_text(text,encoding='utf-8')
+          print(text)
+          PY
+      - name: Commit report
+        run: |
+          set -euo pipefail
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add research/generated/instagram_439_hdr_clips_items_target_r19e.txt
+          if ! git diff --cached --quiet; then
+            git commit -m 'Add exact clips/items target trace R19e'
+            git pull --rebase origin main
+            git push origin HEAD:main
+          fi
