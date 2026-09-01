@@ -76,7 +76,7 @@ jobs:
           ZIPALIGN="$(find "$ANDROID_HOME/build-tools" -type f -name zipalign | sort -V | tail -1)"
           "$ZIPALIGN" -f -p 4 work/unsigned.apk work/aligned.apk
           java -jar bin/apksigner.jar sign \
-            --ks ks-p12.keystore \
+            --ks ks.keystore \
             --ks-pass pass:123456789 \
             --key-pass pass:123456789 \
             --ks-key-alias andrewliang \
