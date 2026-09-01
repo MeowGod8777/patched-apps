@@ -1,0 +1,4652 @@
+Instagram 439 HDR feed/reels headers R19f
+=========================================
+
+===== LX/02qh; .method public static A00(Ljava/lang/Integer;)Ljava/lang/String; =====
+FILE=work/smali/classes2/X/02qh.smali
+LITERALS=['feed', 'image-grid']
+
+.method public static A00(Ljava/lang/Integer;)Ljava/lang/String;
+    .registers 2
+
+    .line 0
+    invoke-virtual {p0}, Ljava/lang/Number;->intValue()I
+
+    .line 1
+    .line 2
+    .line 3
+    move-result p0
+
+    .line 4
+    const/4 v0, 0x1
+
+    .line 5
+    if-eq p0, v0, :cond_a
+
+    .line 6
+    .line 7
+    const-string v0, "feed"
+
+    .line 8
+    .line 9
+    return-object v0
+
+    .line 10
+    :cond_a
+    const-string v0, "image-grid"
+
+    .line 11
+    .line 12
+    return-object v0
+.end method
+
+-- REQUEST WRITE WINDOWS --
+
+===== LX/03Hy; .method public static final A00(Lcom/instagram/common/session/UserSession;LX/07b1;LX/02po;Ljava/lang/String;Ljava/lang/String;Ljava/util/Map;Ljava/util/Set;)LX/02ue; =====
+FILE=work/smali/classes15/X/03Hy.smali
+LITERALS=['reason', 'feed/reels_media_stream/', 'batch_size', 'X-IG-Accept-Hint', 'reel_id_to_media_ids_dict']
+
+.method public static final A00(Lcom/instagram/common/session/UserSession;LX/07b1;LX/02po;Ljava/lang/String;Ljava/lang/String;Ljava/util/Map;Ljava/util/Set;)LX/02ue;
+    .registers 19
+
+    const/4 v11, 0x0
+
+    const/4 v0, 0x2
+
+    invoke-static {p0, v0}, LX/04l9;->A0j(Ljava/lang/Object;I)V
+
+    const/4 v0, 0x3
+
+    invoke-static {p3, v0}, LX/04l9;->A0j(Ljava/lang/Object;I)V
+
+    const-string/jumbo v3, "reason"
+
+    const/4 v5, 0x0
+
+    const/4 v10, 0x1
+
+    const v0, 0x19d53133
+
+    new-instance v2, LX/02pu;
+
+    invoke-direct {v2, p0, v0, v10, v11}, LX/02pu;-><init>(LX/04BG;IIZ)V
+
+    sget-object v0, LX/000A;->A01:Ljava/lang/Integer;
+
+    invoke-virtual {v2, v0}, LX/03u7;->A07(Ljava/lang/Integer;)V
+
+    const-string v0, "feed/reels_media_stream/"
+
+    iput-object v0, v2, LX/03u7;->A0G:Ljava/lang/String;
+
+    sget-object v7, LX/0079;->A00:LX/0079;
+
+    new-instance v8, LX/02py;
+
+    invoke-direct {v8, p0}, LX/02py;-><init>(Lcom/instagram/common/session/UserSession;)V
+
+    invoke-static {p0}, LX/02qP;->A01(LX/04BG;)LX/00AT;
+
+    move-result-object v4
+
+    const-wide v0, 0x810b2f000b3fa7L
+
+    check-cast v4, Lcom/facebook/mobileconfig/factory/MobileConfigUnsafeContext;
+
+    invoke-interface {v4, v0, v1}, Lcom/facebook/mobileconfig/factory/MobileConfigUnsafeContext;->BTb(J)Z
+
+    move-result v0
+
+    if-eqz v0, :cond_98
+
+    invoke-static {p0}, LX/02qP;->A01(LX/04BG;)LX/00AT;
+
+    move-result-object v4
+
+    const-wide v0, 0x820b2f000a1854L
+
+    check-cast v4, Lcom/facebook/mobileconfig/factory/MobileConfigUnsafeContext;
+
+    invoke-interface {v4, v0, v1}, Lcom/facebook/mobileconfig/factory/MobileConfigUnsafeContext;->CUf(J)J
+
+    move-result-wide v0
+
+    long-to-int v4, v0
+
+    invoke-static {v4}, Ljava/lang/Integer;->valueOf(I)Ljava/lang/Integer;
+
+    move-result-object v9
+
+    :goto_4b
+    new-instance v6, LX/03sc;
+
+    invoke-direct {v6, v5}, LX/03sc;-><init>(Ljava/io/File;)V
+
+    new-instance v4, LX/02pz;
+
+    invoke-direct/range {v4 .. v11}, LX/02pz;-><init>(LX/0BPk;LX/08IT;LX/0nQH;LX/0nQI;Ljava/lang/Integer;ZZ)V
+
+    iput-object v4, v2, LX/02pu;->A00:LX/0AOo;
+
+    iput-boolean v10, v2, LX/03u7;->A0T:Z
+
+    invoke-static {p0}, LX/02qP;->A01(LX/04BG;)LX/00AT;
+
+    move-result-object v4
+
+    const-wide v0, 0x82108500011e11L
+
+    check-cast v4, Lcom/facebook/mobileconfig/factory/MobileConfigUnsafeContext;
+
+    invoke-interface {v4, v0, v1}, Lcom/facebook/mobileconfig/factory/MobileConfigUnsafeContext;->CUf(J)J
+
+    move-result-wide v0
+
+    long-to-int v4, v0
+
+    const-string v0, "batch_size"
+
+    invoke-virtual {v2, v0, v4}, LX/03u7;->A0C(Ljava/lang/String;I)V
+
+    invoke-virtual {p1}, Ljava/lang/Object;->toString()Ljava/lang/String;
+
+    move-result-object v0
+
+    invoke-virtual {v2, v3, v0}, LX/03u7;->AOA(Ljava/lang/String;Ljava/lang/String;)V
+
+    iget-object v0, p2, LX/02po;->A00:Ljava/lang/Integer;
+
+    if-eqz v0, :cond_82
+
+    const-string v1, "X-IG-Accept-Hint"
+
+    invoke-static {v0}, LX/02qh;->A00(Ljava/lang/Integer;)Ljava/lang/String;
+
+    move-result-object v0
+
+    invoke-virtual {v2, v1, v0}, LX/03u7;->AMu(Ljava/lang/String;Ljava/lang/String;)V
+
+    :cond_82
+    move-object/from16 v1, p4
+
+    if-eqz p4, :cond_8c
+
+    const-string/jumbo v0, "reel_id_to_media_ids_dict"
+
+    invoke-virtual {v2, v0, v1}, LX/03u7;->AOQ(Ljava/lang/String;Ljava/lang/String;)V
+
+    :cond_8c
+    move-object/from16 v1, p5
+
+    move-object/from16 v0, p6
+
+    invoke-static {v2, p0, p3, v1, v0}, LX/03Mf;->A00(LX/03u7;Lcom/instagram/common/session/UserSession;Ljava/lang/String;Ljava/util/Map;Ljava/util/Set;)V
+
+    invoke-virtual {v2}, LX/02pu;->A0K()LX/02ue;
+
+    move-result-object v0
+
+    return-object v0
+
+    :cond_98
+    const/4 v9, 0x0
+
+    goto :goto_4b
+.end method
+
+-- REQUEST WRITE WINDOWS --
+@27: invoke-virtual {v2, v0}, LX/03u7;->A07(Ljava/lang/Integer;)V
+    const v0, 0x19d53133
+
+    new-instance v2, LX/02pu;
+
+    invoke-direct {v2, p0, v0, v10, v11}, LX/02pu;-><init>(LX/04BG;IIZ)V
+
+    sget-object v0, LX/000A;->A01:Ljava/lang/Integer;
+
+    invoke-virtual {v2, v0}, LX/03u7;->A07(Ljava/lang/Integer;)V
+
+    const-string v0, "feed/reels_media_stream/"
+
+    iput-object v0, v2, LX/03u7;->A0G:Ljava/lang/String;
+
+@100: invoke-virtual {v2, v0, v4}, LX/03u7;->A0C(Ljava/lang/String;I)V
+    invoke-interface {v4, v0, v1}, Lcom/facebook/mobileconfig/factory/MobileConfigUnsafeContext;->CUf(J)J
+
+    move-result-wide v0
+
+    long-to-int v4, v0
+
+    const-string v0, "batch_size"
+
+    invoke-virtual {v2, v0, v4}, LX/03u7;->A0C(Ljava/lang/String;I)V
+
+    invoke-virtual {p1}, Ljava/lang/Object;->toString()Ljava/lang/String;
+
+    move-result-object v0
+
+@106: invoke-virtual {v2, v3, v0}, LX/03u7;->AOA(Ljava/lang/String;Ljava/lang/String;)V
+    const-string v0, "batch_size"
+
+    invoke-virtual {v2, v0, v4}, LX/03u7;->A0C(Ljava/lang/String;I)V
+
+    invoke-virtual {p1}, Ljava/lang/Object;->toString()Ljava/lang/String;
+
+    move-result-object v0
+
+    invoke-virtual {v2, v3, v0}, LX/03u7;->AOA(Ljava/lang/String;Ljava/lang/String;)V
+
+    iget-object v0, p2, LX/02po;->A00:Ljava/lang/Integer;
+
+    if-eqz v0, :cond_82
+
+@118: invoke-virtual {v2, v1, v0}, LX/03u7;->AMu(Ljava/lang/String;Ljava/lang/String;)V
+    if-eqz v0, :cond_82
+
+    const-string v1, "X-IG-Accept-Hint"
+
+    invoke-static {v0}, LX/02qh;->A00(Ljava/lang/Integer;)Ljava/lang/String;
+
+    move-result-object v0
+
+    invoke-virtual {v2, v1, v0}, LX/03u7;->AMu(Ljava/lang/String;Ljava/lang/String;)V
+
+    :cond_82
+    move-object/from16 v1, p4
+
+
+@127: invoke-virtual {v2, v0, v1}, LX/03u7;->AOQ(Ljava/lang/String;Ljava/lang/String;)V
+
+    :cond_82
+    move-object/from16 v1, p4
+
+    if-eqz p4, :cond_8c
+
+    const-string/jumbo v0, "reel_id_to_media_ids_dict"
+
+    invoke-virtual {v2, v0, v1}, LX/03u7;->AOQ(Ljava/lang/String;Ljava/lang/String;)V
+
+    :cond_8c
+    move-object/from16 v1, p5
+
+
+
+===== LX/03Mf; .method public static final A00(LX/03u7;Lcom/instagram/common/session/UserSession;Ljava/lang/String;Ljava/util/Map;Ljava/util/Set;)V =====
+FILE=work/smali/classes15/X/03Mf.smali
+LITERALS=['source', 'push_notification', 'friend_map', 'exclude_media_ids', 'reel_id', 'media_count', 'timestamp', 'media_ids', 'Required value was null.', 'reel_ids']
+
+.method public static final A00(LX/03u7;Lcom/instagram/common/session/UserSession;Ljava/lang/String;Ljava/util/Map;Ljava/util/Set;)V
+    .registers 15
+
+    const-string/jumbo v3, "source"
+
+    new-instance v2, Ljava/util/ArrayList;
+
+    invoke-direct {v2}, Ljava/util/ArrayList;-><init>()V
+
+    const/16 v1, 0x10
+
+    new-instance v0, LX/06Bk;
+
+    invoke-direct {v0, p1, v1}, LX/06Bk;-><init>(Ljava/lang/Object;I)V
+
+    invoke-static {v0}, LX/06cv;->A00(Lkotlin/jvm/functions/Function0;)LX/0C8T;
+
+    move-result-object v5
+
+    invoke-interface {p4}, Ljava/util/Set;->iterator()Ljava/util/Iterator;
+
+    move-result-object v4
+
+    :cond_17
+    :goto_17
+    invoke-interface {v4}, Ljava/util/Iterator;->hasNext()Z
+
+    move-result v0
+
+    if-eqz v0, :cond_3f
+
+    invoke-interface {v4}, Ljava/util/Iterator;->next()Ljava/lang/Object;
+
+    move-result-object v1
+
+    check-cast v1, Ljava/lang/String;
+
+    invoke-interface {v5}, LX/0C8T;->getValue()Ljava/lang/Object;
+
+    move-result-object v0
+
+    check-cast v0, LX/03sf;
+
+    invoke-virtual {v0, v1}, LX/03sf;->A0Q(Ljava/lang/String;)LX/03sn;
+
+    move-result-object v0
+
+    if-nez v0, :cond_3b
+
+    invoke-interface {v5}, LX/0C8T;->getValue()Ljava/lang/Object;
+
+    move-result-object v0
+
+    check-cast v0, LX/03sf;
+
+    invoke-virtual {v0, v1}, LX/03sf;->A0R(Ljava/lang/String;)LX/03sn;
+
+    move-result-object v0
+
+    if-eqz v0, :cond_17
+
+    :cond_3b
+    invoke-virtual {v2, v0}, Ljava/util/AbstractCollection;->add(Ljava/lang/Object;)Z
+
+    goto :goto_17
+
+    :cond_3f
+    const-string/jumbo v0, "push_notification"
+
+    const/4 v1, 0x0
+
+    invoke-static {p2, v0, v1}, LX/04m9;->A0w(Ljava/lang/CharSequence;Ljava/lang/CharSequence;Z)Z
+
+    move-result v0
+
+    if-nez v0, :cond_eb
+
+    const-string v0, "friend_map"
+
+    invoke-static {p2, v0, v1}, LX/04m9;->A0w(Ljava/lang/CharSequence;Ljava/lang/CharSequence;Z)Z
+
+    move-result v0
+
+    if-nez v0, :cond_eb
+
+    invoke-virtual {v2}, Ljava/util/AbstractCollection;->isEmpty()Z
+
+    move-result v0
+
+    if-nez v0, :cond_eb
+
+    :try_start_57
+    const-string v5, "exclude_media_ids"
+
+    new-instance v6, Ljava/io/StringWriter;
+
+    invoke-direct {v6}, Ljava/io/StringWriter;-><init>()V
+
+    sget-object v0, LX/01uy;->A00:LX/01vA;
+
+    invoke-virtual {v0, v6}, LX/01vA;->A01(Ljava/io/Writer;)LX/0BbN;
+
+    move-result-object v4
+
+    invoke-virtual {v4}, LX/0BbN;->A0L()V
+
+    invoke-interface {v2}, Ljava/util/List;->iterator()Ljava/util/Iterator;
+
+    move-result-object v9
+
+    :cond_6b
+    :goto_6b
+    invoke-interface {v9}, Ljava/util/Iterator;->hasNext()Z
+
+    move-result v0
+
+    if-eqz v0, :cond_db
+
+    invoke-interface {v9}, Ljava/util/Iterator;->next()Ljava/lang/Object;
+
+    move-result-object v8
+
+    check-cast v8, LX/03sn;
+
+    new-instance v7, Ljava/util/ArrayList;
+
+    invoke-direct {v7}, Ljava/util/ArrayList;-><init>()V
+
+    invoke-virtual {v8, p1}, LX/03sn;->A0W(Lcom/instagram/common/session/UserSession;)Ljava/util/List;
+
+    move-result-object v0
+
+    invoke-interface {v0}, Ljava/util/List;->iterator()Ljava/util/Iterator;
+
+    move-result-object v1
+
+    :cond_84
+    :goto_84
+    invoke-interface {v1}, Ljava/util/Iterator;->hasNext()Z
+
+    move-result v0
+
+    if-eqz v0, :cond_9e
+
+    invoke-interface {v1}, Ljava/util/Iterator;->next()Ljava/lang/Object;
+
+    move-result-object v0
+
+    check-cast v0, Lcom/instagram/model/reels/ReelItem;
+
+    iget-object v0, v0, Lcom/instagram/model/reels/ReelItem;->A0x:Lcom/instagram/feed/media/Media;
+
+    if-eqz v0, :cond_84
+
+    invoke-virtual {v0}, Lcom/instagram/feed/media/Media;->A0X()Ljava/lang/String;
+
+    move-result-object v0
+
+    if-eqz v0, :cond_d3
+
+    invoke-virtual {v7, v0}, Ljava/util/AbstractCollection;->add(Ljava/lang/Object;)Z
+
+    goto :goto_84
+
+    :cond_9e
+    invoke-virtual {v7}, Ljava/util/AbstractCollection;->isEmpty()Z
+
+    move-result v0
+
+    if-nez v0, :cond_6b
+
+    invoke-virtual {v4}, LX/0BbN;->A0M()V
+
+    const-string/jumbo v1, "reel_id"
+
+    iget-object v0, v8, LX/03sn;->A26:Ljava/lang/String;
+
+    invoke-virtual {v4, v1, v0}, LX/0BbN;->A11(Ljava/lang/String;Ljava/lang/String;)V
+
+    invoke-virtual {v7}, Ljava/util/AbstractCollection;->size()I
+
+    move-result v0
+
+    invoke-static {v0}, Ljava/lang/String;->valueOf(I)Ljava/lang/String;
+
+    move-result-object v1
+
+    const-string/jumbo v0, "media_count"
+
+    invoke-virtual {v4, v0, v1}, LX/0BbN;->A11(Ljava/lang/String;Ljava/lang/String;)V
+
+    const-string/jumbo v2, "timestamp"
+
+    iget-wide v0, v8, LX/03sn;->A05:J
+
+    invoke-virtual {v4, v2, v0, v1}, LX/0BbN;->A10(Ljava/lang/String;J)V
+
+    invoke-static {v7}, LX/007K;->A00(Ljava/util/Collection;)Ljava/lang/String;
+
+    move-result-object v1
+
+    const-string/jumbo v0, "media_ids"
+
+    invoke-virtual {v4, v0, v1}, LX/0BbN;->A11(Ljava/lang/String;Ljava/lang/String;)V
+
+    invoke-virtual {v4}, LX/0BbN;->A0J()V
+
+    goto :goto_6b
+
+    :cond_d3
+    const-string v1, "Required value was null."
+
+    new-instance v0, Ljava/lang/IllegalStateException;
+
+    invoke-direct {v0, v1}, Ljava/lang/IllegalStateException;-><init>(Ljava/lang/String;)V
+
+    throw v0
+
+    :cond_db
+    invoke-virtual {v4}, LX/0BbN;->A0I()V
+
+    invoke-virtual {v4}, LX/0BbN;->close()V
+
+    invoke-virtual {v6}, Ljava/lang/Object;->toString()Ljava/lang/String;
+
+    move-result-object v0
+
+    invoke-static {v0}, LX/04l9;->A0R(Ljava/lang/Object;)V
+
+    invoke-virtual {p0, v5, v0}, LX/03u7;->AOA(Ljava/lang/String;Ljava/lang/String;)V
+    :try_end_eb
+    .catch Ljava/io/IOException; {:try_start_57 .. :try_end_eb} :catch_eb
+
+    :catch_eb
+    :cond_eb
+    invoke-static {p4}, LX/007K;->A00(Ljava/util/Collection;)Ljava/lang/String;
+
+    move-result-object v1
+
+    const-string/jumbo v0, "reel_ids"
+
+    invoke-virtual {p0, v0, v1}, LX/03u7;->AOQ(Ljava/lang/String;Ljava/lang/String;)V
+
+    if-eqz p3, :cond_11f
+
+    invoke-interface {p3}, Ljava/util/Map;->entrySet()Ljava/util/Set;
+
+    move-result-object v0
+
+    if-eqz v0, :cond_11f
+
+    invoke-interface {v0}, Ljava/util/Set;->iterator()Ljava/util/Iterator;
+
+    move-result-object v2
+
+    :goto_101
+    invoke-interface {v2}, Ljava/util/Iterator;->hasNext()Z
+
+    move-result v0
+
+    if-eqz v0, :cond_11f
+
+    invoke-interface {v2}, Ljava/util/Iterator;->next()Ljava/lang/Object;
+
+    move-result-object v1
+
+    check-cast v1, Ljava/util/Map$Entry;
+
+    invoke-interface {v1}, Ljava/util/Map$Entry;->getKey()Ljava/lang/Object;
+
+    move-result-object v0
+
+    check-cast v0, LX/06Wx;
+
+    invoke-interface {v1}, Ljava/util/Map$Entry;->getValue()Ljava/lang/Object;
+
+    move-result-object v1
+
+    check-cast v1, Ljava/lang/String;
+
+    iget-object v0, v0, LX/06Wx;->A00:Ljava/lang/String;
+
+    invoke-virtual {p0, v0, v1}, LX/03u7;->AOA(Ljava/lang/String;Ljava/lang/String;)V
+
+    goto :goto_101
+
+    :cond_11f
+    invoke-virtual {p0, v3, p2}, LX/03u7;->AOA(Ljava/lang/String;Ljava/lang/String;)V
+
+    invoke-static {p1}, LX/02qP;->A01(LX/04BG;)LX/00AT;
+
+    move-result-object v2
+
+    const-wide v0, 0x810333001d0c9cL
+
+    check-cast v2, Lcom/facebook/mobileconfig/factory/MobileConfigUnsafeContext;
+
+    invoke-interface {v2, v0, v1}, Lcom/facebook/mobileconfig/factory/MobileConfigUnsafeContext;->BTb(J)Z
+
+    move-result v0
+
+    if-nez v0, :cond_145
+
+    invoke-static {p1}, LX/03Lk;->A00(Lcom/instagram/common/session/UserSession;)Landroid/util/Pair;
+
+    move-result-object v0
+
+    iget-object v1, v0, Landroid/util/Pair;->first:Ljava/lang/Object;
+
+    invoke-static {v1}, LX/04l9;->A0Q(Ljava/lang/Object;)V
+
+    check-cast v1, Ljava/lang/String;
+
+    iget-object v0, v0, Landroid/util/Pair;->second:Ljava/lang/Object;
+
+    check-cast v0, Ljava/lang/String;
+
+    invoke-virtual {p0, v1, v0}, LX/03u7;->A0F(Ljava/lang/String;Ljava/lang/String;)V
+
+    :cond_145
+    return-void
+.end method
+
+-- REQUEST WRITE WINDOWS --
+@229: invoke-virtual {p0, v5, v0}, LX/03u7;->AOA(Ljava/lang/String;Ljava/lang/String;)V
+    invoke-virtual {v4}, LX/0BbN;->close()V
+
+    invoke-virtual {v6}, Ljava/lang/Object;->toString()Ljava/lang/String;
+
+    move-result-object v0
+
+    invoke-static {v0}, LX/04l9;->A0R(Ljava/lang/Object;)V
+
+    invoke-virtual {p0, v5, v0}, LX/03u7;->AOA(Ljava/lang/String;Ljava/lang/String;)V
+    :try_end_eb
+    .catch Ljava/io/IOException; {:try_start_57 .. :try_end_eb} :catch_eb
+
+    :catch_eb
+
+@241: invoke-virtual {p0, v0, v1}, LX/03u7;->AOQ(Ljava/lang/String;Ljava/lang/String;)V
+    :catch_eb
+    :cond_eb
+    invoke-static {p4}, LX/007K;->A00(Ljava/util/Collection;)Ljava/lang/String;
+
+    move-result-object v1
+
+    const-string/jumbo v0, "reel_ids"
+
+    invoke-virtual {p0, v0, v1}, LX/03u7;->AOQ(Ljava/lang/String;Ljava/lang/String;)V
+
+    if-eqz p3, :cond_11f
+
+    invoke-interface {p3}, Ljava/util/Map;->entrySet()Ljava/util/Set;
+
+@282: invoke-virtual {p0, v0, v1}, LX/03u7;->AOA(Ljava/lang/String;Ljava/lang/String;)V
+    invoke-interface {v1}, Ljava/util/Map$Entry;->getValue()Ljava/lang/Object;
+
+    move-result-object v1
+
+    check-cast v1, Ljava/lang/String;
+
+    iget-object v0, v0, LX/06Wx;->A00:Ljava/lang/String;
+
+    invoke-virtual {p0, v0, v1}, LX/03u7;->AOA(Ljava/lang/String;Ljava/lang/String;)V
+
+    goto :goto_101
+
+    :cond_11f
+
+@287: invoke-virtual {p0, v3, p2}, LX/03u7;->AOA(Ljava/lang/String;Ljava/lang/String;)V
+
+    iget-object v0, v0, LX/06Wx;->A00:Ljava/lang/String;
+
+    invoke-virtual {p0, v0, v1}, LX/03u7;->AOA(Ljava/lang/String;Ljava/lang/String;)V
+
+    goto :goto_101
+
+    :cond_11f
+    invoke-virtual {p0, v3, p2}, LX/03u7;->AOA(Ljava/lang/String;Ljava/lang/String;)V
+
+    invoke-static {p1}, LX/02qP;->A01(LX/04BG;)LX/00AT;
+
+    move-result-object v2
+
+@317: invoke-virtual {p0, v1, v0}, LX/03u7;->A0F(Ljava/lang/String;Ljava/lang/String;)V
+    invoke-static {v1}, LX/04l9;->A0Q(Ljava/lang/Object;)V
+
+    check-cast v1, Ljava/lang/String;
+
+    iget-object v0, v0, Landroid/util/Pair;->second:Ljava/lang/Object;
+
+    check-cast v0, Ljava/lang/String;
+
+    invoke-virtual {p0, v1, v0}, LX/03u7;->A0F(Ljava/lang/String;Ljava/lang/String;)V
+
+    :cond_145
+    return-void
+.end method
+
+
+===== LX/03sA; .method public static final A05(Landroid/util/Pair;Lcom/instagram/common/session/UserSession;Ljava/lang/Integer;Ljava/lang/Integer;Z)LX/03su; =====
+FILE=work/smali/classes2/X/03sA.smali
+LITERALS=['ReelApiUtil.createReelsTrayStreamingRequestTask - reason: ', 'feed/reels_tray/', 'X-Ig-Last-Connection-Type', 'feed/reels_tray/_v1', 'X-Ig-App-Start-Time', 'X-Ig-Tail-Load-Request']
+
+.method public static final A05(Landroid/util/Pair;Lcom/instagram/common/session/UserSession;Ljava/lang/Integer;Ljava/lang/Integer;Z)LX/03su;
+    .registers 27
+
+    .line 0
+    const/4 v13, 0x0
+
+    .line 1
+    const/4 v4, 0x0
+
+    .line 2
+    const/4 v3, 0x1
+
+    .line 3
+    const-string v1, "ReelApiUtil.createReelsTrayStreamingRequestTask - reason: "
+
+    .line 4
+    .line 5
+    move-object/from16 v5, p3
+
+    .line 6
+    .line 7
+    invoke-static {v5}, LX/03sa;->A00(Ljava/lang/Integer;)Ljava/lang/String;
+
+    .line 8
+    .line 9
+    .line 10
+    move-result-object v0
+
+    .line 11
+    invoke-static {v1, v0}, LX/002b;->A0W(Ljava/lang/String;Ljava/lang/String;)Ljava/lang/String;
+
+    .line 12
+    .line 13
+    .line 14
+    move-result-object v1
+
+    .line 15
+    const-wide/16 v10, 0x1
+
+    .line 16
+    .line 17
+    invoke-static {v10, v11}, Lcom/facebook/systrace/Systrace;->A0F(J)Z
+
+    .line 18
+    .line 19
+    .line 20
+    move-result v0
+
+    .line 21
+    if-eqz v0, :cond_1d
+
+    .line 22
+    .line 23
+    const v0, 0x1bfe18fe
+
+    .line 24
+    .line 25
+    .line 26
+    invoke-static {v1, v0}, LX/03Al;->A01(Ljava/lang/String;I)V
+
+    .line 27
+    .line 28
+    .line 29
+    :cond_1d
+    :try_start_1d
+    sget-object v15, LX/03sb;->A00:LX/03sb;
+
+    .line 30
+    .line 31
+    new-instance v0, LX/02py;
+
+    .line 32
+    .line 33
+    move-object/from16 v6, p1
+
+    .line 34
+    .line 35
+    invoke-direct {v0, v6}, LX/02py;-><init>(Lcom/instagram/common/session/UserSession;)V
+
+    .line 36
+    .line 37
+    .line 38
+    new-instance v14, LX/03sc;
+
+    .line 39
+    .line 40
+    invoke-direct {v14, v13}, LX/03sc;-><init>(Ljava/io/File;)V
+
+    .line 41
+    .line 42
+    .line 43
+    new-instance v12, LX/02pz;
+
+    .line 44
+    .line 45
+    move-object/from16 v17, v13
+
+    .line 46
+    .line 47
+    move/from16 v19, v4
+
+    .line 48
+    .line 49
+    move/from16 v18, v4
+
+    .line 50
+    .line 51
+    move-object/from16 v16, v0
+
+    .line 52
+    .line 53
+    invoke-direct/range {v12 .. v19}, LX/02pz;-><init>(LX/0BPk;LX/08IT;LX/0nQH;LX/0nQI;Ljava/lang/Integer;ZZ)V
+
+    .line 54
+    .line 55
+    .line 56
+    const v0, 0x31fc9ea5
+
+    .line 57
+    .line 58
+    .line 59
+    new-instance v15, LX/02pu;
+
+    .line 60
+    .line 61
+    invoke-direct {v15, v6, v0, v3, v4}, LX/02pu;-><init>(LX/04BG;IIZ)V
+
+    .line 62
+    .line 63
+    .line 64
+    sget-object v2, LX/000A;->A01:Ljava/lang/Integer;
+
+    .line 65
+    .line 66
+    invoke-virtual {v15, v2}, LX/03u7;->A07(Ljava/lang/Integer;)V
+
+    .line 67
+    .line 68
+    .line 69
+    const-string v0, "feed/reels_tray/"
+
+    .line 70
+    .line 71
+    iput-object v0, v15, LX/03u7;->A0G:Ljava/lang/String;
+
+    .line 72
+    .line 73
+    move-object/from16 v7, p2
+
+    .line 74
+    .line 75
+    iput-object v7, v15, LX/03u7;->A08:Ljava/lang/Integer;
+
+    .line 76
+    .line 77
+    const/4 v0, -0x4
+
+    .line 78
+    invoke-static {v0}, Ljava/lang/Integer;->valueOf(I)Ljava/lang/Integer;
+
+    .line 79
+    .line 80
+    .line 81
+    move-result-object v0
+
+    .line 82
+    iput-object v0, v15, LX/02pu;->A02:Ljava/lang/Integer;
+
+    .line 83
+    .line 84
+    iput-object v0, v15, LX/02pu;->A03:Ljava/lang/Integer;
+
+    .line 85
+    .line 86
+    sget-object v8, LX/000A;->A00:Ljava/lang/Integer;
+
+    .line 87
+    .line 88
+    if-ne v5, v8, :cond_81
+
+    .line 89
+    .line 90
+    invoke-static {v6}, LX/02qP;->A01(LX/04BG;)LX/00AT;
+
+    .line 91
+    .line 92
+    .line 93
+    move-result-object v9
+
+    .line 94
+    const-wide v0, 0x81095a0002350cL
+
+    .line 95
+    .line 96
+    .line 97
+    .line 98
+    .line 99
+    check-cast v9, Lcom/facebook/mobileconfig/factory/MobileConfigUnsafeContext;
+
+    .line 100
+    .line 101
+    invoke-interface {v9, v0, v1}, Lcom/facebook/mobileconfig/factory/MobileConfigUnsafeContext;->BTb(J)Z
+
+    .line 102
+    .line 103
+    .line 104
+    move-result v0
+
+    .line 105
+    if-eqz v0, :cond_81
+
+    .line 106
+    .line 107
+    sget-object v0, LX/03Ak;->A02:Ljava/util/concurrent/atomic/AtomicBoolean;
+
+    .line 108
+    .line 109
+    invoke-virtual {v0, v4, v3}, Ljava/util/concurrent/atomic/AtomicBoolean;->compareAndSet(ZZ)Z
+
+    .line 110
+    .line 111
+    .line 112
+    move-result v0
+
+    .line 113
+    if-eqz v0, :cond_78
+
+    .line 114
+    .line 115
+    sget-object v0, LX/03sd;->A00:LX/03sd;
+
+    .line 116
+    .line 117
+    invoke-static {v0}, LX/03GA;->A01(LX/09in;)V
+
+    .line 118
+    .line 119
+    .line 120
+    :cond_78
+    const-string v1, "X-Ig-Last-Connection-Type"
+
+    .line 121
+    .line 122
+    invoke-static {}, LX/03Ak;->A06()Ljava/lang/String;
+
+    .line 123
+    .line 124
+    .line 125
+    move-result-object v0
+
+    .line 126
+    invoke-virtual {v15, v1, v0}, LX/03u7;->AMu(Ljava/lang/String;Ljava/lang/String;)V
+
+    .line 127
+    .line 128
+    .line 129
+    :cond_81
+    if-eq v7, v8, :cond_87
+
+    .line 130
+    .line 131
+    const-string v0, "feed/reels_tray/_v1"
+
+    .line 132
+    .line 133
+    iput-object v0, v15, LX/03u7;->A0B:Ljava/lang/String;
+
+    .line 134
+    .line 135
+    :cond_87
+    invoke-static {}, Ljava/util/UUID;->randomUUID()Ljava/util/UUID;
+
+    .line 136
+    .line 137
+    .line 138
+    move-result-object v0
+
+    .line 139
+    invoke-virtual {v0}, Ljava/lang/Object;->toString()Ljava/lang/String;
+
+    .line 140
+    .line 141
+    .line 142
+    move-result-object v18
+
+    .line 143
+    invoke-static {}, Ljava/util/UUID;->randomUUID()Ljava/util/UUID;
+
+    .line 144
+    .line 145
+    .line 146
+    move-result-object v0
+
+    .line 147
+    invoke-virtual {v0}, Ljava/lang/Object;->toString()Ljava/lang/String;
+
+    .line 148
+    .line 149
+    .line 150
+    move-result-object v19
+
+    .line 151
+    sget-object v0, LX/04BF;->A00:LX/04BE;
+
+    .line 152
+    .line 153
+    invoke-static {v0}, LX/01pv;->A03(LX/04BE;)LX/01pv;
+
+    .line 154
+    .line 155
+    .line 156
+    move-result-object v0
+
+    .line 157
+    iget-object v0, v0, LX/01pv;->A09:Ljava/lang/Long;
+
+    .line 158
+    .line 159
+    if-eqz v0, :cond_aa
+
+    .line 160
+    .line 161
+    const-string v1, "X-Ig-App-Start-Time"
+
+    .line 162
+    .line 163
+    invoke-virtual {v0}, Ljava/lang/Object;->toString()Ljava/lang/String;
+
+    .line 164
+    .line 165
+    .line 166
+    move-result-object v0
+
+    .line 167
+    invoke-virtual {v15, v1, v0}, LX/03u7;->AMu(Ljava/lang/String;Ljava/lang/String;)V
+
+    .line 168
+    .line 169
+    .line 170
+    :cond_aa
+    invoke-static {v6}, LX/02qP;->A01(LX/04BG;)LX/00AT;
+
+    .line 171
+    .line 172
+    .line 173
+    move-result-object v9
+
+    .line 174
+    const-wide v0, 0x810810000b2b79L
+
+    .line 175
+    .line 176
+    .line 177
+    .line 178
+    .line 179
+    check-cast v9, Lcom/facebook/mobileconfig/factory/MobileConfigUnsafeContext;
+
+    .line 180
+    .line 181
+    invoke-interface {v9, v0, v1}, Lcom/facebook/mobileconfig/factory/MobileConfigUnsafeContext;->BTb(J)Z
+
+    .line 182
+    .line 183
+    .line 184
+    move-result v0
+
+    .line 185
+    if-eqz v0, :cond_bd
+
+    .line 186
+    .line 187
+    iput-boolean v3, v15, LX/03u7;->A0X:Z
+
+    .line 188
+    .line 189
+    :cond_bd
+    move-object/from16 v14, p0
+
+    .line 190
+    .line 191
+    move/from16 v21, p4
+
+    .line 192
+    .line 193
+    move-object/from16 v16, v6
+
+    .line 194
+    .line 195
+    move-object/from16 v17, v5
+
+    .line 196
+    .line 197
+    move/from16 v20, v4
+
+    .line 198
+    .line 199
+    invoke-static/range {v14 .. v21}, LX/03sA;->A08(Landroid/util/Pair;LX/03u7;Lcom/instagram/common/session/UserSession;Ljava/lang/Integer;Ljava/lang/String;Ljava/lang/String;ZZ)V
+
+    .line 200
+    .line 201
+    .line 202
+    invoke-static {v4}, Ljava/lang/String;->valueOf(Z)Ljava/lang/String;
+
+    .line 203
+    .line 204
+    .line 205
+    move-result-object v1
+
+    .line 206
+    const-string v0, "X-Ig-Tail-Load-Request"
+
+    .line 207
+    .line 208
+    invoke-virtual {v15, v0, v1}, LX/03u7;->AMu(Ljava/lang/String;Ljava/lang/String;)V
+
+    .line 209
+    .line 210
+    .line 211
+    iput-object v12, v15, LX/02pu;->A00:LX/0AOo;
+
+    .line 212
+    .line 213
+    sget-object v0, LX/000A;->A1R:Ljava/lang/Integer;
+
+    .line 214
+    .line 215
+    if-ne v5, v0, :cond_df
+
+    .line 216
+    .line 217
+    invoke-static {v6}, LX/00mG;->A06(Lcom/instagram/common/session/UserSession;)Z
+
+    .line 218
+    .line 219
+    .line 220
+    move-result v0
+
+    .line 221
+    if-nez v0, :cond_e0
+
+    .line 222
+    .line 223
+    :cond_df
+    move-object v2, v8
+
+    .line 224
+    :cond_e0
+    invoke-virtual {v15}, LX/02pu;->A0K()LX/02ue;
+
+    .line 225
+    .line 226
+    .line 227
+    move-result-object v21
+
+    .line 228
+    new-instance v1, LX/03su;
+
+    .line 229
+    .line 230
+    move-object/from16 v20, v1
+
+    .line 231
+    .line 232
+    move-object/from16 p0, v7
+
+    .line 233
+    .line 234
+    move-object/from16 p1, v5
+
+    .line 235
+    .line 236
+    move-object/from16 p2, v2
+
+    .line 237
+    .line 238
+    move-object/from16 p3, v19
+
+    .line 239
+    .line 240
+    move-object/from16 p4, v18
+
+    .line 241
+    .line 242
+    invoke-direct/range {v20 .. v26}, LX/03su;-><init>(LX/02ue;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/String;Ljava/lang/String;)V
+
+    .line 243
+    .line 244
+    .line 245
+    iput-object v13, v1, LX/04Ia;->A00:LX/01qE;
+    :try_end_f7
+    .catchall {:try_start_1d .. :try_end_f7} :catchall_104
+
+    .line 246
+    .line 247
+    invoke-static {v10, v11}, Lcom/facebook/systrace/Systrace;->A0F(J)Z
+
+    .line 248
+    .line 249
+    .line 250
+    move-result v0
+
+    .line 251
+    if-eqz v0, :cond_103
+
+    .line 252
+    .line 253
+    const v0, 0x7e5cfd15
+
+    .line 254
+    .line 255
+    .line 256
+    invoke-static {v0}, LX/03Al;->A00(I)V
+
+    .line 257
+    .line 258
+    .line 259
+    :cond_103
+    return-object v1
+
+    .line 260
+    :catchall_104
+    move-exception v1
+
+    .line 261
+    invoke-static {}, Lcom/facebook/systrace/Systrace;->A0E()Z
+
+    .line 262
+    .line 263
+    .line 264
+    move-result v0
+
+    .line 265
+    if-eqz v0, :cond_111
+
+    .line 266
+    .line 267
+    const v0, -0x4637484b
+
+    .line 268
+    .line 269
+    .line 270
+    invoke-static {v0}, LX/03Al;->A00(I)V
+
+    .line 271
+    .line 272
+    .line 273
+    :cond_111
+    throw v1
+.end method
+
+-- REQUEST WRITE WINDOWS --
+@134: invoke-virtual {v15, v2}, LX/03u7;->A07(Ljava/lang/Integer;)V
+
+    .line 62
+    .line 63
+    .line 64
+    sget-object v2, LX/000A;->A01:Ljava/lang/Integer;
+
+    .line 65
+    .line 66
+    invoke-virtual {v15, v2}, LX/03u7;->A07(Ljava/lang/Integer;)V
+
+    .line 67
+    .line 68
+    .line 69
+
+@251: invoke-virtual {v15, v1, v0}, LX/03u7;->AMu(Ljava/lang/String;Ljava/lang/String;)V
+    invoke-static {}, LX/03Ak;->A06()Ljava/lang/String;
+
+    .line 123
+    .line 124
+    .line 125
+    move-result-object v0
+
+    .line 126
+    invoke-virtual {v15, v1, v0}, LX/03u7;->AMu(Ljava/lang/String;Ljava/lang/String;)V
+
+    .line 127
+    .line 128
+    .line 129
+
+@334: invoke-virtual {v15, v1, v0}, LX/03u7;->AMu(Ljava/lang/String;Ljava/lang/String;)V
+    invoke-virtual {v0}, Ljava/lang/Object;->toString()Ljava/lang/String;
+
+    .line 164
+    .line 165
+    .line 166
+    move-result-object v0
+
+    .line 167
+    invoke-virtual {v15, v1, v0}, LX/03u7;->AMu(Ljava/lang/String;Ljava/lang/String;)V
+
+    .line 168
+    .line 169
+    .line 170
+
+@413: invoke-virtual {v15, v0, v1}, LX/03u7;->AMu(Ljava/lang/String;Ljava/lang/String;)V
+    .line 205
+    move-result-object v1
+
+    .line 206
+    const-string v0, "X-Ig-Tail-Load-Request"
+
+    .line 207
+    .line 208
+    invoke-virtual {v15, v0, v1}, LX/03u7;->AMu(Ljava/lang/String;Ljava/lang/String;)V
+
+    .line 209
+    .line 210
+    .line 211
+
+
+===== LX/03sA; .method public static final A07(Lcom/instagram/common/session/UserSession;LX/07b1;Ljava/lang/String;Ljava/util/Map;Ljava/util/Set;)LX/0080; =====
+FILE=work/smali/classes2/X/03sA.smali
+LITERALS=['ReelApiUtil.createBatchReelRequestTask - reason: ', 'feed/reels_media/', 'reason']
+
+.method public static final A07(Lcom/instagram/common/session/UserSession;LX/07b1;Ljava/lang/String;Ljava/util/Map;Ljava/util/Set;)LX/0080;
+    .registers 8
+
+    .line 0
+    invoke-static {p4}, LX/04l9;->A0f(Ljava/lang/Object;)V
+
+    .line 1
+    .line 2
+    .line 3
+    invoke-static {p0}, LX/04l9;->A0X(Ljava/lang/Object;)V
+
+    .line 4
+    .line 5
+    .line 6
+    new-instance v1, Ljava/lang/StringBuilder;
+
+    .line 7
+    .line 8
+    invoke-direct {v1}, Ljava/lang/StringBuilder;-><init>()V
+
+    .line 9
+    .line 10
+    .line 11
+    const-string v0, "ReelApiUtil.createBatchReelRequestTask - reason: "
+
+    .line 12
+    .line 13
+    invoke-virtual {v1, v0}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+
+    .line 14
+    .line 15
+    .line 16
+    invoke-virtual {v1, p1}, Ljava/lang/StringBuilder;->append(Ljava/lang/Object;)Ljava/lang/StringBuilder;
+
+    .line 17
+    .line 18
+    .line 19
+    invoke-virtual {v1}, Ljava/lang/Object;->toString()Ljava/lang/String;
+
+    .line 20
+    .line 21
+    .line 22
+    move-result-object v1
+
+    .line 23
+    invoke-static {}, Lcom/facebook/systrace/Systrace;->A0E()Z
+
+    .line 24
+    .line 25
+    .line 26
+    move-result v0
+
+    .line 27
+    if-eqz v0, :cond_23
+
+    .line 28
+    .line 29
+    const v0, -0x65575b30
+
+    .line 30
+    .line 31
+    .line 32
+    invoke-static {v1, v0}, LX/03Al;->A01(Ljava/lang/String;I)V
+
+    .line 33
+    .line 34
+    .line 35
+    :cond_23
+    :try_start_23
+    sget-object v1, LX/01pR;->A01:LX/01pS;
+
+    .line 36
+    .line 37
+    sget-object v0, LX/0079;->A00:LX/0079;
+
+    .line 38
+    .line 39
+    invoke-virtual {v1, v0, v0, p0}, LX/01pS;->A01(LX/0nQH;LX/0nQH;Lcom/instagram/common/session/UserSession;)LX/01pg;
+
+    .line 40
+    .line 41
+    .line 42
+    move-result-object v2
+
+    .line 43
+    sget-object v0, LX/000A;->A01:Ljava/lang/Integer;
+
+    .line 44
+    .line 45
+    invoke-virtual {v2, v0}, LX/03u7;->A07(Ljava/lang/Integer;)V
+
+    .line 46
+    .line 47
+    .line 48
+    const-string v0, "feed/reels_media/"
+
+    .line 49
+    .line 50
+    iput-object v0, v2, LX/03u7;->A0G:Ljava/lang/String;
+
+    .line 51
+    .line 52
+    const/4 v0, 0x1
+
+    .line 53
+    iput-boolean v0, v2, LX/03u7;->A0T:Z
+
+    .line 54
+    .line 55
+    const-string/jumbo v1, "reason"
+
+    .line 56
+    .line 57
+    .line 58
+    invoke-virtual {p1}, Ljava/lang/Object;->toString()Ljava/lang/String;
+
+    .line 59
+    .line 60
+    .line 61
+    move-result-object v0
+
+    .line 62
+    invoke-virtual {v2, v1, v0}, LX/03u7;->AOA(Ljava/lang/String;Ljava/lang/String;)V
+
+    .line 63
+    .line 64
+    .line 65
+    invoke-static {v2, p0, p2, p3, p4}, LX/03Mf;->A00(LX/03u7;Lcom/instagram/common/session/UserSession;Ljava/lang/String;Ljava/util/Map;Ljava/util/Set;)V
+
+    .line 66
+    .line 67
+    .line 68
+    invoke-virtual {v2}, LX/0AMH;->A0K()LX/03Da;
+
+    .line 69
+    .line 70
+    .line 71
+    move-result-object v0
+
+    .line 72
+    new-instance v1, LX/0080;
+
+    .line 73
+    .line 74
+    invoke-direct {v1, p1, p2, p4}, LX/0080;-><init>(LX/07b1;Ljava/lang/String;Ljava/util/Collection;)V
+
+    .line 75
+    .line 76
+    .line 77
+    iput-object v0, v1, LX/0080;->A00:LX/03Da;
+    :try_end_4f
+    .catchall {:try_start_23 .. :try_end_4f} :catchall_5c
+
+    .line 78
+    .line 79
+    invoke-static {}, Lcom/facebook/systrace/Systrace;->A0E()Z
+
+    .line 80
+    .line 81
+    .line 82
+    move-result v0
+
+    .line 83
+    if-eqz v0, :cond_5b
+
+    .line 84
+    .line 85
+    const v0, -0x6023ac4b
+
+    .line 86
+    .line 87
+    .line 88
+    invoke-static {v0}, LX/03Al;->A00(I)V
+
+    .line 89
+    .line 90
+    .line 91
+    :cond_5b
+    return-object v1
+
+    .line 92
+    :catchall_5c
+    move-exception v1
+
+    .line 93
+    invoke-static {}, Lcom/facebook/systrace/Systrace;->A0E()Z
+
+    .line 94
+    .line 95
+    .line 96
+    move-result v0
+
+    .line 97
+    if-eqz v0, :cond_69
+
+    .line 98
+    .line 99
+    const v0, -0x6f5bf080
+
+    .line 100
+    .line 101
+    .line 102
+    invoke-static {v0}, LX/03Al;->A00(I)V
+
+    .line 103
+    .line 104
+    .line 105
+    :cond_69
+    throw v1
+.end method
+
+-- REQUEST WRITE WINDOWS --
+@89: invoke-virtual {v2, v0}, LX/03u7;->A07(Ljava/lang/Integer;)V
+    .line 42
+    move-result-object v2
+
+    .line 43
+    sget-object v0, LX/000A;->A01:Ljava/lang/Integer;
+
+    .line 44
+    .line 45
+    invoke-virtual {v2, v0}, LX/03u7;->A07(Ljava/lang/Integer;)V
+
+    .line 46
+    .line 47
+    .line 48
+
+@122: invoke-virtual {v2, v1, v0}, LX/03u7;->AOA(Ljava/lang/String;Ljava/lang/String;)V
+    invoke-virtual {p1}, Ljava/lang/Object;->toString()Ljava/lang/String;
+
+    .line 59
+    .line 60
+    .line 61
+    move-result-object v0
+
+    .line 62
+    invoke-virtual {v2, v1, v0}, LX/03u7;->AOA(Ljava/lang/String;Ljava/lang/String;)V
+
+    .line 63
+    .line 64
+    .line 65
+
+
+===== LX/03sA; .method public static final A08(Landroid/util/Pair;LX/03u7;Lcom/instagram/common/session/UserSession;Ljava/lang/Integer;Ljava/lang/String;Ljava/lang/String;ZZ)V =====
+FILE=work/smali/classes2/X/03sA.smali
+LITERALS=['ReelApiUtil.SetBuilderParams', 'tray_session_id', 'request_id', 'reason', 'timezone_offset', 'bg', '1', 'realtime_push_publisher_id', 'realtime_push_trigger_media_id', 'is_following_feed', 'source', 'reel_feed_timeline_following', 'page_size', 'stories_view_info_v2']
+
+-- REQUEST WRITE WINDOWS --
+@41: invoke-virtual {p1, v0, p4}, LX/03u7;->AOA(Ljava/lang/String;Ljava/lang/String;)V
+    .line 16
+    :cond_10
+    :try_start_10
+    const-string/jumbo v0, "tray_session_id"
+
+    .line 17
+    .line 18
+    .line 19
+    invoke-virtual {p1, v0, p4}, LX/03u7;->AOA(Ljava/lang/String;Ljava/lang/String;)V
+
+    .line 20
+    .line 21
+    .line 22
+
+@51: invoke-virtual {p1, v0, p5}, LX/03u7;->AOA(Ljava/lang/String;Ljava/lang/String;)V
+    .line 20
+    .line 21
+    .line 22
+    const-string/jumbo v0, "request_id"
+
+    .line 23
+    .line 24
+    .line 25
+    invoke-virtual {p1, v0, p5}, LX/03u7;->AOA(Ljava/lang/String;Ljava/lang/String;)V
+
+    .line 26
+    .line 27
+    .line 28
+
+@69: invoke-virtual {p1, v1, v0}, LX/03u7;->AOA(Ljava/lang/String;Ljava/lang/String;)V
+    invoke-static {p3}, LX/03sa;->A00(Ljava/lang/Integer;)Ljava/lang/String;
+
+    .line 32
+    .line 33
+    .line 34
+    move-result-object v0
+
+    .line 35
+    invoke-virtual {p1, v1, v0}, LX/03u7;->AOA(Ljava/lang/String;Ljava/lang/String;)V
+
+    .line 36
+    .line 37
+    .line 38
+
+@95: invoke-virtual {p1, v2, v0}, LX/03u7;->AOA(Ljava/lang/String;Ljava/lang/String;)V
+    invoke-static {v0, v1}, Ljava/lang/String;->valueOf(J)Ljava/lang/String;
+
+    .line 46
+    .line 47
+    .line 48
+    move-result-object v0
+
+    .line 49
+    invoke-virtual {p1, v2, v0}, LX/03u7;->AOA(Ljava/lang/String;Ljava/lang/String;)V
+
+    .line 50
+    .line 51
+    .line 52
+
+@112: invoke-virtual {p1, v1, v0}, LX/03u7;->AOA(Ljava/lang/String;Ljava/lang/String;)V
+    const-string v1, "bg"
+
+    .line 55
+    .line 56
+    const-string v0, "1"
+
+    .line 57
+    .line 58
+    invoke-virtual {p1, v1, v0}, LX/03u7;->AOA(Ljava/lang/String;Ljava/lang/String;)V
+
+    .line 59
+    .line 60
+    .line 61
+
+@160: invoke-virtual {p1, v1, v0}, LX/03u7;->A0F(Ljava/lang/String;Ljava/lang/String;)V
+    iget-object v0, p0, Landroid/util/Pair;->first:Ljava/lang/Object;
+
+    .line 79
+    .line 80
+    check-cast v0, Ljava/lang/String;
+
+    .line 81
+    .line 82
+    invoke-virtual {p1, v1, v0}, LX/03u7;->A0F(Ljava/lang/String;Ljava/lang/String;)V
+
+    .line 83
+    .line 84
+    .line 85
+
+@178: invoke-virtual {p1, v1, v0}, LX/03u7;->A0F(Ljava/lang/String;Ljava/lang/String;)V
+    iget-object v0, p0, Landroid/util/Pair;->second:Ljava/lang/Object;
+
+    .line 89
+    .line 90
+    check-cast v0, Ljava/lang/String;
+
+    .line 91
+    .line 92
+    invoke-virtual {p1, v1, v0}, LX/03u7;->A0F(Ljava/lang/String;Ljava/lang/String;)V
+    :try_end_5f
+    .catchall {:try_start_10 .. :try_end_5f} :catchall_1b1
+
+    .line 93
+
+@251: invoke-virtual {p1, v1, v0}, LX/03u7;->AOA(Ljava/lang/String;Ljava/lang/String;)V
+    .line 124
+    .line 125
+    .line 126
+    const-string/jumbo v0, "reel_feed_timeline_following"
+
+    .line 127
+    .line 128
+    .line 129
+    invoke-virtual {p1, v1, v0}, LX/03u7;->AOA(Ljava/lang/String;Ljava/lang/String;)V
+
+    .line 130
+    .line 131
+    .line 132
+
+@257: invoke-virtual {p1, v3, v4}, LX/03u7;->A0G(Ljava/lang/String;Z)V
+    .line 128
+    .line 129
+    invoke-virtual {p1, v1, v0}, LX/03u7;->AOA(Ljava/lang/String;Ljava/lang/String;)V
+
+    .line 130
+    .line 131
+    .line 132
+    :cond_84
+    invoke-virtual {p1, v3, v4}, LX/03u7;->A0G(Ljava/lang/String;Z)V
+
+    .line 133
+    .line 134
+    .line 135
+
+@427: invoke-virtual {p1, v3, v0}, LX/03u7;->AOA(Ljava/lang/String;Ljava/lang/String;)V
+    invoke-static {v0, v1}, Ljava/lang/String;->valueOf(J)Ljava/lang/String;
+
+    .line 220
+    .line 221
+    .line 222
+    move-result-object v0
+
+    .line 223
+    invoke-virtual {p1, v3, v0}, LX/03u7;->AOA(Ljava/lang/String;Ljava/lang/String;)V
+
+    .line 224
+    .line 225
+    .line 226
+
+@548: invoke-virtual {p1, v0, v1}, LX/03u7;->AOA(Ljava/lang/String;Ljava/lang/String;)V
+    move-result-object v1
+
+    .line 283
+    const-string/jumbo v0, "stories_view_info_v2"
+
+    .line 284
+    .line 285
+    .line 286
+    invoke-virtual {p1, v0, v1}, LX/03u7;->AOA(Ljava/lang/String;Ljava/lang/String;)V
+
+    .line 287
+    .line 288
+    .line 289
+
+@802: invoke-virtual {p1, v1, v0}, LX/03u7;->A0F(Ljava/lang/String;Ljava/lang/String;)V
+    iget-object v0, v0, Landroid/util/Pair;->second:Ljava/lang/Object;
+
+    .line 412
+    .line 413
+    check-cast v0, Ljava/lang/String;
+
+    .line 414
+    .line 415
+    invoke-virtual {p1, v1, v0}, LX/03u7;->A0F(Ljava/lang/String;Ljava/lang/String;)V
+
+    .line 416
+    .line 417
+    .line 418
+
+
+===== LX/03sa; .method public static A00(Ljava/lang/Integer;)Ljava/lang/String; =====
+FILE=work/smali/classes2/X/03sa.smali
+LITERALS=['cold_start', 'friend_highlights', 'creator_following_stories', 'unconnected_stories', 'cross_tab_refresh', 'reset_to_home_after_story_consumption', 'reset_to_home', 'swipe_right', 'digital_reset', 'group_stories_full', 'group_stories_filter', 'reconnection_refresh', 'realtime_push_pending', 'realtime_push', 'following_feed', 'profile_stories', 'pagination', 'consumption_based_refresh', 'auto_refresh', 'fragment_refresh', 'pull_to_refresh', 'background_prefetch', 'warm_start_with_feed']
+
+.method public static A00(Ljava/lang/Integer;)Ljava/lang/String;
+    .registers 1
+
+    .line 0
+    invoke-virtual {p0}, Ljava/lang/Number;->intValue()I
+
+    .line 1
+    .line 2
+    .line 3
+    move-result p0
+
+    .line 4
+    packed-switch p0, :pswitch_data_58
+
+    .line 5
+    .line 6
+    .line 7
+    const-string p0, "cold_start"
+
+    .line 8
+    .line 9
+    return-object p0
+
+    .line 10
+    :pswitch_a
+    const-string p0, "friend_highlights"
+
+    .line 11
+    .line 12
+    return-object p0
+
+    .line 13
+    :pswitch_d
+    const-string p0, "creator_following_stories"
+
+    .line 14
+    .line 15
+    return-object p0
+
+    .line 16
+    :pswitch_10
+    const-string/jumbo p0, "unconnected_stories"
+
+    .line 17
+    .line 18
+    .line 19
+    return-object p0
+
+    .line 20
+    :pswitch_14
+    const-string p0, "cross_tab_refresh"
+
+    .line 21
+    .line 22
+    return-object p0
+
+    .line 23
+    :pswitch_17
+    const-string/jumbo p0, "reset_to_home_after_story_consumption"
+
+    .line 24
+    .line 25
+    .line 26
+    return-object p0
+
+    .line 27
+    :pswitch_1b
+    const-string/jumbo p0, "reset_to_home"
+
+    .line 28
+    .line 29
+    .line 30
+    return-object p0
+
+    .line 31
+    :pswitch_1f
+    const-string/jumbo p0, "swipe_right"
+
+    .line 32
+    .line 33
+    .line 34
+    return-object p0
+
+    .line 35
+    :pswitch_23
+    const-string p0, "digital_reset"
+
+    .line 36
+    .line 37
+    return-object p0
+
+    .line 38
+    :pswitch_26
+    const-string p0, "group_stories_full"
+
+    .line 39
+    .line 40
+    return-object p0
+
+    .line 41
+    :pswitch_29
+    const-string p0, "group_stories_filter"
+
+    .line 42
+    .line 43
+    return-object p0
+
+    .line 44
+    :pswitch_2c
+    const-string/jumbo p0, "reconnection_refresh"
+
+    .line 45
+    .line 46
+    .line 47
+    return-object p0
+
+    .line 48
+    :pswitch_30
+    const-string/jumbo p0, "realtime_push_pending"
+
+    .line 49
+    .line 50
+    .line 51
+    return-object p0
+
+    .line 52
+    :pswitch_34
+    const-string/jumbo p0, "realtime_push"
+
+    .line 53
+    .line 54
+    .line 55
+    return-object p0
+
+    .line 56
+    :pswitch_38
+    const-string p0, "following_feed"
+
+    .line 57
+    .line 58
+    return-object p0
+
+    .line 59
+    :pswitch_3b
+    const-string/jumbo p0, "profile_stories"
+
+    .line 60
+    .line 61
+    .line 62
+    return-object p0
+
+    .line 63
+    :pswitch_3f
+    const-string/jumbo p0, "pagination"
+
+    .line 64
+    .line 65
+    .line 66
+    return-object p0
+
+    .line 67
+    :pswitch_43
+    const-string p0, "consumption_based_refresh"
+
+    .line 68
+    .line 69
+    return-object p0
+
+    .line 70
+    :pswitch_46
+    const-string p0, "auto_refresh"
+
+    .line 71
+    .line 72
+    return-object p0
+
+    .line 73
+    :pswitch_49
+    const-string p0, "fragment_refresh"
+
+    .line 74
+    .line 75
+    return-object p0
+
+    .line 76
+    :pswitch_4c
+    const-string/jumbo p0, "pull_to_refresh"
+
+    .line 77
+    .line 78
+    .line 79
+    return-object p0
+
+    .line 80
+    :pswitch_50
+    const-string p0, "background_prefetch"
+
+    .line 81
+    .line 82
+    return-object p0
+
+    .line 83
+    :pswitch_53
+    const-string/jumbo p0, "warm_start_with_feed"
+
+    .line 84
+    .line 85
+    .line 86
+    return-object p0
+
+    .line 87
+    nop
+
+    .line 88
+    :pswitch_data_58
+    .packed-switch 0x1
+        :pswitch_53
+        :pswitch_50
+        :pswitch_4c
+        :pswitch_49
+        :pswitch_46
+        :pswitch_43
+        :pswitch_3f
+        :pswitch_3b
+        :pswitch_38
+        :pswitch_34
+        :pswitch_30
+        :pswitch_2c
+        :pswitch_29
+        :pswitch_26
+        :pswitch_23
+        :pswitch_1f
+        :pswitch_1b
+        :pswitch_17
+        :pswitch_14
+        :pswitch_10
+        :pswitch_d
+        :pswitch_a
+    .end packed-switch
+.end method
+
+-- REQUEST WRITE WINDOWS --
+
+===== LX/03sa; .method public static A01(Ljava/lang/Integer;)Ljava/lang/String; =====
+FILE=work/smali/classes2/X/03sa.smali
+LITERALS=['RESET_TO_HOME_AFTER_STORY_CONSUMPTION', 'RESET_TO_HOME', 'SWIPE_RIGHT', 'DIGITAL_RESET', 'GROUP_STORIES_FILTER', 'RECONNECTION_REFRESH', 'REALTIME_PUSH_PENDING', 'REALTIME_PUSH', 'FOLLOWING_FEED', 'PROFILE_STORIES', 'PAGINATION', 'CONSUMPTION_BASED_REFRESH', 'AUTO_REFRESH', 'PULL_TO_REFRESH', 'BACKGROUND_PREFETCH', 'WARM_START_WITH_FEED', 'COLD_START']
+
+.method public static A01(Ljava/lang/Integer;)Ljava/lang/String;
+    .registers 1
+
+    .line 0
+    invoke-virtual {p0}, Ljava/lang/Number;->intValue()I
+
+    .line 1
+    .line 2
+    .line 3
+    move-result p0
+
+    .line 4
+    packed-switch p0, :pswitch_data_3a
+
+    .line 5
+    .line 6
+    .line 7
+    :pswitch_7
+    const-string p0, "RESET_TO_HOME_AFTER_STORY_CONSUMPTION"
+
+    .line 8
+    .line 9
+    return-object p0
+
+    .line 10
+    :pswitch_a
+    const-string p0, "RESET_TO_HOME"
+
+    .line 11
+    .line 12
+    return-object p0
+
+    .line 13
+    :pswitch_d
+    const-string p0, "SWIPE_RIGHT"
+
+    .line 14
+    .line 15
+    return-object p0
+
+    .line 16
+    :pswitch_10
+    const-string p0, "DIGITAL_RESET"
+
+    .line 17
+    .line 18
+    return-object p0
+
+    .line 19
+    :pswitch_13
+    const-string p0, "GROUP_STORIES_FILTER"
+
+    .line 20
+    .line 21
+    return-object p0
+
+    .line 22
+    :pswitch_16
+    const-string p0, "RECONNECTION_REFRESH"
+
+    .line 23
+    .line 24
+    return-object p0
+
+    .line 25
+    :pswitch_19
+    const-string p0, "REALTIME_PUSH_PENDING"
+
+    .line 26
+    .line 27
+    return-object p0
+
+    .line 28
+    :pswitch_1c
+    const-string p0, "REALTIME_PUSH"
+
+    .line 29
+    .line 30
+    return-object p0
+
+    .line 31
+    :pswitch_1f
+    const-string p0, "FOLLOWING_FEED"
+
+    .line 32
+    .line 33
+    return-object p0
+
+    .line 34
+    :pswitch_22
+    const-string p0, "PROFILE_STORIES"
+
+    .line 35
+    .line 36
+    return-object p0
+
+    .line 37
+    :pswitch_25
+    const-string p0, "PAGINATION"
+
+    .line 38
+    .line 39
+    return-object p0
+
+    .line 40
+    :pswitch_28
+    const-string p0, "CONSUMPTION_BASED_REFRESH"
+
+    .line 41
+    .line 42
+    return-object p0
+
+    .line 43
+    :pswitch_2b
+    const-string p0, "AUTO_REFRESH"
+
+    .line 44
+    .line 45
+    return-object p0
+
+    .line 46
+    :pswitch_2e
+    const-string p0, "PULL_TO_REFRESH"
+
+    .line 47
+    .line 48
+    return-object p0
+
+    .line 49
+    :pswitch_31
+    const-string p0, "BACKGROUND_PREFETCH"
+
+    .line 50
+    .line 51
+    return-object p0
+
+    .line 52
+    :pswitch_34
+    const-string p0, "WARM_START_WITH_FEED"
+
+    .line 53
+    .line 54
+    return-object p0
+
+    .line 55
+    :pswitch_37
+    const-string p0, "COLD_START"
+
+    .line 56
+    .line 57
+    return-object p0
+
+    :pswitch_data_3a
+    .packed-switch 0x0
+        :pswitch_37
+        :pswitch_34
+        :pswitch_31
+        :pswitch_2e
+        :pswitch_7
+        :pswitch_2b
+        :pswitch_28
+        :pswitch_25
+        :pswitch_22
+        :pswitch_1f
+        :pswitch_1c
+        :pswitch_19
+        :pswitch_16
+        :pswitch_13
+        :pswitch_7
+        :pswitch_10
+        :pswitch_d
+        :pswitch_a
+    .end packed-switch
+.end method
+
+-- REQUEST WRITE WINDOWS --
+
+===== LX/05uL; .method public final BCw(Ljava/lang/String;)V =====
+FILE=work/smali/classes13/X/05uL.smali
+LITERALS=['ReelApiUtil.createReelsTrayPageRequestTask', 'feed/reels_tray/', 'request_id', 'tray_session_id', 'X-Ig-Tail-Load-Request', 'reason', 'source', 'current_highest_ranked_position', 'reel_ids_to_fetch', 'ReelApiUtil', 'cursor']
+
+.method public final BCw(Ljava/lang/String;)V
+    .registers 22
+
+    const/4 v5, 0x0
+
+    move-object/from16 v11, p0
+
+    invoke-virtual {v11, v5}, LX/05uL;->A0F(Z)Z
+
+    move-result v0
+
+    if-nez v0, :cond_132
+
+    iget-object v3, v11, LX/05uL;->A0S:Ljava/util/ArrayList;
+
+    invoke-virtual {v3}, Ljava/util/AbstractCollection;->isEmpty()Z
+
+    move-result v0
+
+    if-nez v0, :cond_132
+
+    const/4 v2, 0x1
+
+    iput-boolean v2, v11, LX/05uL;->A0K:Z
+
+    iget-object v0, v11, LX/05uL;->A0W:LX/0C8T;
+
+    invoke-interface {v0}, LX/0C8T;->getValue()Ljava/lang/Object;
+
+    move-result-object v0
+
+    check-cast v0, Ljava/lang/Number;
+
+    if-nez v0, :cond_4c
+
+    iget-object v0, v11, LX/05uL;->A0A:Ljava/lang/Integer;
+
+    if-nez v0, :cond_4c
+
+    iget-object v0, v11, LX/05uL;->A0V:LX/0C8T;
+
+    invoke-interface {v0}, LX/0C8T;->getValue()Ljava/lang/Object;
+
+    move-result-object v0
+
+    check-cast v0, Ljava/lang/Number;
+
+    invoke-virtual {v0}, Ljava/lang/Number;->intValue()I
+
+    move-result v0
+
+    :goto_2e
+    invoke-virtual {v3}, Ljava/util/AbstractCollection;->size()I
+
+    move-result v1
+
+    invoke-static {v0, v1}, Ljava/lang/Math;->min(II)I
+
+    move-result v0
+
+    invoke-virtual {v3, v5, v0}, Ljava/util/AbstractList;->subList(II)Ljava/util/List;
+
+    move-result-object v0
+
+    new-instance v4, Ljava/util/ArrayList;
+
+    invoke-direct {v4, v0}, Ljava/util/ArrayList;-><init>(Ljava/util/Collection;)V
+
+    iget-object v3, v11, LX/05uL;->A0P:Lcom/instagram/common/session/UserSession;
+
+    iget-object v6, v11, LX/05uL;->A0D:Ljava/lang/String;
+
+    invoke-static {v3, v5}, LX/04l9;->A0j(Ljava/lang/Object;I)V
+
+    invoke-static {v3}, LX/03sf;->A03(Lcom/instagram/common/session/UserSession;)LX/03sf;
+
+    move-result-object v5
+
+    monitor-enter v5
+
+    goto :goto_51
+
+    :cond_4c
+    invoke-virtual {v0}, Ljava/lang/Number;->intValue()I
+
+    move-result v0
+
+    goto :goto_2e
+
+    :goto_51
+    :try_start_51
+    iget-object v0, v5, LX/03sf;->A02:LX/03si;
+
+    iget-object v0, v0, LX/03si;->A00:Ljava/util/Map;
+
+    invoke-interface {v0}, Ljava/util/Map;->values()Ljava/util/Collection;
+
+    move-result-object v0
+
+    invoke-interface {v0}, Ljava/util/Collection;->iterator()Ljava/util/Iterator;
+
+    move-result-object v12
+
+    const-wide/16 v0, 0x0
+
+    :goto_5f
+    invoke-interface {v12}, Ljava/util/Iterator;->hasNext()Z
+
+    move-result v7
+
+    if-eqz v7, :cond_75
+
+    invoke-interface {v12}, Ljava/util/Iterator;->next()Ljava/lang/Object;
+
+    move-result-object v9
+
+    check-cast v9, LX/03sn;
+
+    long-to-double v7, v0
+
+    iget-wide v9, v9, LX/03sn;->A06:J
+
+    long-to-double v0, v9
+
+    invoke-static {v7, v8, v0, v1}, Ljava/lang/Math;->max(DD)D
+
+    move-result-wide v7
+
+    double-to-long v0, v7
+
+    goto :goto_5f
+    :try_end_75
+    .catchall {:try_start_51 .. :try_end_75} :catchall_12f
+
+    :cond_75
+    monitor-exit v5
+
+    iget-object v8, v11, LX/05uL;->A0B:Ljava/lang/String;
+
+    const-wide/16 v10, 0x1
+
+    invoke-static {v10, v11}, Lcom/facebook/systrace/Systrace;->A0F(J)Z
+
+    move-result v5
+
+    if-eqz v5, :cond_88
+
+    const v7, 0x347c1050
+
+    const-string v5, "ReelApiUtil.createReelsTrayPageRequestTask"
+
+    invoke-static {v5, v7}, LX/03Al;->A01(Ljava/lang/String;I)V
+
+    :cond_88
+    :try_start_88
+    sget-object v9, LX/01pR;->A01:LX/01pS;
+
+    sget-object v7, LX/03sb;->A00:LX/03sb;
+
+    const/4 v5, -0x2
+
+    invoke-virtual {v9, v7, v7, v3, v5}, LX/01pS;->A02(LX/0nQH;LX/0nQH;Lcom/instagram/common/session/UserSession;I)LX/01pg;
+
+    move-result-object v7
+
+    sget-object v5, LX/000A;->A01:Ljava/lang/Integer;
+
+    invoke-virtual {v7, v5}, LX/03u7;->A07(Ljava/lang/Integer;)V
+
+    const-string v5, "feed/reels_tray/"
+
+    iput-object v5, v7, LX/03u7;->A0G:Ljava/lang/String;
+
+    invoke-static {}, Ljava/util/UUID;->randomUUID()Ljava/util/UUID;
+
+    move-result-object v5
+
+    invoke-virtual {v5}, Ljava/lang/Object;->toString()Ljava/lang/String;
+
+    move-result-object v5
+
+    const-string/jumbo v9, "request_id"
+
+    invoke-virtual {v7, v9, v5}, LX/03u7;->AOA(Ljava/lang/String;Ljava/lang/String;)V
+
+    const-string/jumbo v9, "tray_session_id"
+
+    invoke-virtual {v7, v9, v6}, LX/03u7;->AOA(Ljava/lang/String;Ljava/lang/String;)V
+
+    sget-object v9, LX/02uV;->A05:LX/02uV;
+
+    iput-object v9, v7, LX/03u7;->A07:LX/02uV;
+
+    sget-object v15, LX/000A;->A15:Ljava/lang/Integer;
+
+    invoke-static {v2}, Ljava/lang/String;->valueOf(Z)Ljava/lang/String;
+
+    move-result-object v9
+
+    const-string v2, "X-Ig-Tail-Load-Request"
+
+    invoke-virtual {v7, v2, v9}, LX/03u7;->AMu(Ljava/lang/String;Ljava/lang/String;)V
+
+    const-string/jumbo v9, "reason"
+
+    invoke-static {v15}, LX/03sa;->A00(Ljava/lang/Integer;)Ljava/lang/String;
+
+    move-result-object v2
+
+    invoke-virtual {v7, v9, v2}, LX/03u7;->AOA(Ljava/lang/String;Ljava/lang/String;)V
+
+    const-string/jumbo v2, "source"
+
+    move-object/from16 v9, p1
+
+    invoke-virtual {v7, v2, v9}, LX/03u7;->AOA(Ljava/lang/String;Ljava/lang/String;)V
+
+    const-string v2, "current_highest_ranked_position"
+
+    invoke-static {v0, v1}, Ljava/lang/String;->valueOf(J)Ljava/lang/String;
+
+    move-result-object v0
+
+    invoke-virtual {v7, v2, v0}, LX/03u7;->AOA(Ljava/lang/String;Ljava/lang/String;)V
+    :try_end_d8
+    .catchall {:try_start_88 .. :try_end_d8} :catchall_121
+
+    :try_start_d8
+    const-string/jumbo v1, "reel_ids_to_fetch"
+
+    invoke-static {v4}, LX/007K;->A00(Ljava/util/Collection;)Ljava/lang/String;
+
+    move-result-object v0
+
+    invoke-virtual {v7, v1, v0}, LX/03u7;->AOA(Ljava/lang/String;Ljava/lang/String;)V
+
+    goto :goto_ef
+    :try_end_e3
+    .catch Ljava/io/IOException; {:try_start_d8 .. :try_end_e3} :catch_e3
+    .catchall {:try_start_d8 .. :try_end_e3} :catchall_121
+
+    :catch_e3
+    move-exception v2
+
+    :try_start_e4
+    const-string v1, "ReelApiUtil"
+
+    const/16 v0, 0x36
+
+    invoke-static {v0}, LX/0018;->A00(I)Ljava/lang/String;
+
+    move-result-object v0
+
+    invoke-static {v1, v2, v0}, LX/00Iv;->A0O(Ljava/lang/String;Ljava/lang/Throwable;Ljava/lang/String;)V
+
+    :goto_ef
+    const-string v0, "cursor"
+
+    invoke-virtual {v7, v0, v8}, LX/03u7;->A0F(Ljava/lang/String;Ljava/lang/String;)V
+
+    invoke-virtual {v7}, LX/0AMH;->A0K()LX/03Da;
+
+    move-result-object v13
+
+    sget-object v14, LX/000A;->A00:Ljava/lang/Integer;
+
+    new-instance v12, LX/0Fsx;
+
+    move-object/from16 v16, v14
+
+    move-object/from16 v17, v5
+
+    move-object/from16 v18, v6
+
+    move-object/from16 v19, v4
+
+    invoke-direct/range {v12 .. v19}, LX/0Fsx;-><init>(LX/03Da;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/String;Ljava/lang/String;Ljava/util/List;)V
+    :try_end_107
+    .catchall {:try_start_e4 .. :try_end_107} :catchall_121
+
+    invoke-static {v10, v11}, Lcom/facebook/systrace/Systrace;->A0F(J)Z
+
+    move-result v0
+
+    if-eqz v0, :cond_113
+
+    const v0, -0x6e409ff0
+
+    invoke-static {v0}, LX/03Al;->A00(I)V
+
+    :cond_113
+    iget-object v1, v12, LX/0Fsx;->A00:LX/03Da;
+
+    new-instance v0, LX/07vF;
+
+    invoke-direct {v0, v3, v12, v4}, LX/07vF;-><init>(Lcom/instagram/common/session/UserSession;LX/04Ia;Ljava/util/List;)V
+
+    invoke-virtual {v1, v0}, LX/03Da;->A09(LX/045A;)V
+
+    invoke-static {v1}, LX/02lz;->A03(LX/0Zvn;)V
+
+    return-void
+
+    :catchall_121
+    move-exception v1
+
+    invoke-static {}, Lcom/facebook/systrace/Systrace;->A0E()Z
+
+    move-result v0
+
+    if-eqz v0, :cond_12e
+
+    const v0, 0x1e2de4e4
+
+    invoke-static {v0}, LX/03Al;->A00(I)V
+
+    :cond_12e
+    throw v1
+
+    :catchall_12f
+    move-exception v1
+
+    :try_start_130
+    monitor-exit v5
+    :try_end_131
+    .catchall {:try_start_130 .. :try_end_131} :catchall_12f
+
+    throw v1
+
+    :cond_132
+    return-void
+.end method
+
+-- REQUEST WRITE WINDOWS --
+@167: invoke-virtual {v7, v5}, LX/03u7;->A07(Ljava/lang/Integer;)V
+    const/4 v5, -0x2
+
+    invoke-virtual {v9, v7, v7, v3, v5}, LX/01pS;->A02(LX/0nQH;LX/0nQH;Lcom/instagram/common/session/UserSession;I)LX/01pg;
+
+    move-result-object v7
+
+    sget-object v5, LX/000A;->A01:Ljava/lang/Integer;
+
+    invoke-virtual {v7, v5}, LX/03u7;->A07(Ljava/lang/Integer;)V
+
+    const-string v5, "feed/reels_tray/"
+
+    iput-object v5, v7, LX/03u7;->A0G:Ljava/lang/String;
+
+@183: invoke-virtual {v7, v9, v5}, LX/03u7;->AOA(Ljava/lang/String;Ljava/lang/String;)V
+    move-result-object v5
+
+    invoke-virtual {v5}, Ljava/lang/Object;->toString()Ljava/lang/String;
+
+    move-result-object v5
+
+    const-string/jumbo v9, "request_id"
+
+    invoke-virtual {v7, v9, v5}, LX/03u7;->AOA(Ljava/lang/String;Ljava/lang/String;)V
+
+    const-string/jumbo v9, "tray_session_id"
+
+    invoke-virtual {v7, v9, v6}, LX/03u7;->AOA(Ljava/lang/String;Ljava/lang/String;)V
+
+@187: invoke-virtual {v7, v9, v6}, LX/03u7;->AOA(Ljava/lang/String;Ljava/lang/String;)V
+    move-result-object v5
+
+    const-string/jumbo v9, "request_id"
+
+    invoke-virtual {v7, v9, v5}, LX/03u7;->AOA(Ljava/lang/String;Ljava/lang/String;)V
+
+    const-string/jumbo v9, "tray_session_id"
+
+    invoke-virtual {v7, v9, v6}, LX/03u7;->AOA(Ljava/lang/String;Ljava/lang/String;)V
+
+    sget-object v9, LX/02uV;->A05:LX/02uV;
+
+    iput-object v9, v7, LX/03u7;->A07:LX/02uV;
+
+@201: invoke-virtual {v7, v2, v9}, LX/03u7;->AMu(Ljava/lang/String;Ljava/lang/String;)V
+    sget-object v15, LX/000A;->A15:Ljava/lang/Integer;
+
+    invoke-static {v2}, Ljava/lang/String;->valueOf(Z)Ljava/lang/String;
+
+    move-result-object v9
+
+    const-string v2, "X-Ig-Tail-Load-Request"
+
+    invoke-virtual {v7, v2, v9}, LX/03u7;->AMu(Ljava/lang/String;Ljava/lang/String;)V
+
+    const-string/jumbo v9, "reason"
+
+    invoke-static {v15}, LX/03sa;->A00(Ljava/lang/Integer;)Ljava/lang/String;
+
+@209: invoke-virtual {v7, v9, v2}, LX/03u7;->AOA(Ljava/lang/String;Ljava/lang/String;)V
+    invoke-virtual {v7, v2, v9}, LX/03u7;->AMu(Ljava/lang/String;Ljava/lang/String;)V
+
+    const-string/jumbo v9, "reason"
+
+    invoke-static {v15}, LX/03sa;->A00(Ljava/lang/Integer;)Ljava/lang/String;
+
+    move-result-object v2
+
+    invoke-virtual {v7, v9, v2}, LX/03u7;->AOA(Ljava/lang/String;Ljava/lang/String;)V
+
+    const-string/jumbo v2, "source"
+
+    move-object/from16 v9, p1
+
+@215: invoke-virtual {v7, v2, v9}, LX/03u7;->AOA(Ljava/lang/String;Ljava/lang/String;)V
+    move-result-object v2
+
+    invoke-virtual {v7, v9, v2}, LX/03u7;->AOA(Ljava/lang/String;Ljava/lang/String;)V
+
+    const-string/jumbo v2, "source"
+
+    move-object/from16 v9, p1
+
+    invoke-virtual {v7, v2, v9}, LX/03u7;->AOA(Ljava/lang/String;Ljava/lang/String;)V
+
+    const-string v2, "current_highest_ranked_position"
+
+    invoke-static {v0, v1}, Ljava/lang/String;->valueOf(J)Ljava/lang/String;
+
+@223: invoke-virtual {v7, v2, v0}, LX/03u7;->AOA(Ljava/lang/String;Ljava/lang/String;)V
+    invoke-virtual {v7, v2, v9}, LX/03u7;->AOA(Ljava/lang/String;Ljava/lang/String;)V
+
+    const-string v2, "current_highest_ranked_position"
+
+    invoke-static {v0, v1}, Ljava/lang/String;->valueOf(J)Ljava/lang/String;
+
+    move-result-object v0
+
+    invoke-virtual {v7, v2, v0}, LX/03u7;->AOA(Ljava/lang/String;Ljava/lang/String;)V
+    :try_end_d8
+    .catchall {:try_start_88 .. :try_end_d8} :catchall_121
+
+    :try_start_d8
+
+@234: invoke-virtual {v7, v1, v0}, LX/03u7;->AOA(Ljava/lang/String;Ljava/lang/String;)V
+
+    :try_start_d8
+    const-string/jumbo v1, "reel_ids_to_fetch"
+
+    invoke-static {v4}, LX/007K;->A00(Ljava/util/Collection;)Ljava/lang/String;
+
+    move-result-object v0
+
+    invoke-virtual {v7, v1, v0}, LX/03u7;->AOA(Ljava/lang/String;Ljava/lang/String;)V
+
+    goto :goto_ef
+    :try_end_e3
+    .catch Ljava/io/IOException; {:try_start_d8 .. :try_end_e3} :catch_e3
+
+@258: invoke-virtual {v7, v0, v8}, LX/03u7;->A0F(Ljava/lang/String;Ljava/lang/String;)V
+
+    move-result-object v0
+
+    invoke-static {v1, v2, v0}, LX/00Iv;->A0O(Ljava/lang/String;Ljava/lang/Throwable;Ljava/lang/String;)V
+
+    :goto_ef
+    const-string v0, "cursor"
+
+    invoke-virtual {v7, v0, v8}, LX/03u7;->A0F(Ljava/lang/String;Ljava/lang/String;)V
+
+    invoke-virtual {v7}, LX/0AMH;->A0K()LX/03Da;
+
+    move-result-object v13
+
+
+===== LX/08T8; .method public final Duf(LX/01fS;Ljava/util/List;)V =====
+FILE=work/smali/classes18/X/08T8.smali
+LITERALS=['Required value was null.', 'next_ad_slot_ad_pod', 'stories/stories_intent_aware_ads/', 'container_module', 'reel_feed_timeline', 'seed_ad_id', 'position', 'trigger_type']
+
+-- REQUEST WRITE WINDOWS --
+@497: invoke-virtual {v5, v1}, LX/03u7;->A07(Ljava/lang/Integer;)V
+    sget-object v1, LX/0LD3;->A00:LX/0LD3;
+
+    invoke-virtual {v2, v1, v4}, LX/01pS;->A03(LX/0nQH;Lcom/instagram/common/session/UserSession;)LX/01pg;
+
+    move-result-object v5
+
+    sget-object v1, LX/000A;->A01:Ljava/lang/Integer;
+
+    invoke-virtual {v5, v1}, LX/03u7;->A07(Ljava/lang/Integer;)V
+
+    const-string/jumbo v2, "stories/stories_intent_aware_ads/"
+
+    iput-object v2, v5, LX/03u7;->A0G:Ljava/lang/String;
+
+@507: invoke-virtual {v5, v14, v1}, LX/03u7;->AOA(Ljava/lang/String;Ljava/lang/String;)V
+    const-string/jumbo v2, "stories/stories_intent_aware_ads/"
+
+    iput-object v2, v5, LX/03u7;->A0G:Ljava/lang/String;
+
+    const-string v14, "container_module"
+
+    const-string v1, "reel_feed_timeline"
+
+    invoke-virtual {v5, v14, v1}, LX/03u7;->AOA(Ljava/lang/String;Ljava/lang/String;)V
+
+    const-string v1, "seed_ad_id"
+
+    invoke-virtual {v5, v1, v12}, LX/03u7;->AOA(Ljava/lang/String;Ljava/lang/String;)V
+
+@511: invoke-virtual {v5, v1, v12}, LX/03u7;->AOA(Ljava/lang/String;Ljava/lang/String;)V
+    const-string v14, "container_module"
+
+    const-string v1, "reel_feed_timeline"
+
+    invoke-virtual {v5, v14, v1}, LX/03u7;->AOA(Ljava/lang/String;Ljava/lang/String;)V
+
+    const-string v1, "seed_ad_id"
+
+    invoke-virtual {v5, v1, v12}, LX/03u7;->AOA(Ljava/lang/String;Ljava/lang/String;)V
+
+    const/16 v1, 0x9
+
+    invoke-static {v1}, LX/0055;->A00(I)Ljava/lang/String;
+
+@519: invoke-virtual {v5, v1, v3}, LX/03u7;->AOA(Ljava/lang/String;Ljava/lang/String;)V
+    invoke-virtual {v5, v1, v12}, LX/03u7;->AOA(Ljava/lang/String;Ljava/lang/String;)V
+
+    const/16 v1, 0x9
+
+    invoke-static {v1}, LX/0055;->A00(I)Ljava/lang/String;
+
+    move-result-object v1
+
+    invoke-virtual {v5, v1, v3}, LX/03u7;->AOA(Ljava/lang/String;Ljava/lang/String;)V
+
+    const-string v14, "position"
+
+    move/from16 v1, v20
+
+@525: invoke-virtual {v5, v14, v1}, LX/03u7;->A0C(Ljava/lang/String;I)V
+    move-result-object v1
+
+    invoke-virtual {v5, v1, v3}, LX/03u7;->AOA(Ljava/lang/String;Ljava/lang/String;)V
+
+    const-string v14, "position"
+
+    move/from16 v1, v20
+
+    invoke-virtual {v5, v14, v1}, LX/03u7;->A0C(Ljava/lang/String;I)V
+
+    const-string/jumbo v14, "trigger_type"
+
+    iget-object v1, v8, LX/01fR;->A00:Ljava/lang/String;
+
+@531: invoke-virtual {v5, v14, v1}, LX/03u7;->AOA(Ljava/lang/String;Ljava/lang/String;)V
+    move/from16 v1, v20
+
+    invoke-virtual {v5, v14, v1}, LX/03u7;->A0C(Ljava/lang/String;I)V
+
+    const-string/jumbo v14, "trigger_type"
+
+    iget-object v1, v8, LX/01fR;->A00:Ljava/lang/String;
+
+    invoke-virtual {v5, v14, v1}, LX/03u7;->AOA(Ljava/lang/String;Ljava/lang/String;)V
+
+    const/16 v1, 0x5f2
+
+    invoke-static {v1}, LX/0055;->A00(I)Ljava/lang/String;
+
+@541: invoke-virtual {v5, v14, v1}, LX/03u7;->A0F(Ljava/lang/String;Ljava/lang/String;)V
+    const/16 v1, 0x5f2
+
+    invoke-static {v1}, LX/0055;->A00(I)Ljava/lang/String;
+
+    move-result-object v14
+
+    move-object/from16 v1, v16
+
+    invoke-virtual {v5, v14, v1}, LX/03u7;->A0F(Ljava/lang/String;Ljava/lang/String;)V
+
+    const/16 v1, 0x245
+
+    invoke-static {v1}, LX/0055;->A00(I)Ljava/lang/String;
+
+@551: invoke-virtual {v5, v14, v1}, LX/03u7;->A0F(Ljava/lang/String;Ljava/lang/String;)V
+    const/16 v1, 0x245
+
+    invoke-static {v1}, LX/0055;->A00(I)Ljava/lang/String;
+
+    move-result-object v14
+
+    move-object/from16 v1, v18
+
+    invoke-virtual {v5, v14, v1}, LX/03u7;->A0F(Ljava/lang/String;Ljava/lang/String;)V
+
+    const/16 v1, 0x4ed
+
+    invoke-static {v1}, LX/0000;->A00(I)Ljava/lang/String;
+
+@559: invoke-virtual {v5, v1, v13}, LX/03u7;->AOA(Ljava/lang/String;Ljava/lang/String;)V
+    invoke-virtual {v5, v14, v1}, LX/03u7;->A0F(Ljava/lang/String;Ljava/lang/String;)V
+
+    const/16 v1, 0x4ed
+
+    invoke-static {v1}, LX/0000;->A00(I)Ljava/lang/String;
+
+    move-result-object v1
+
+    invoke-virtual {v5, v1, v13}, LX/03u7;->AOA(Ljava/lang/String;Ljava/lang/String;)V
+
+    const/16 v1, 0x7c
+
+    invoke-static {v1}, LX/0055;->A00(I)Ljava/lang/String;
+
+@569: invoke-virtual {v5, v13, v1}, LX/03u7;->A0G(Ljava/lang/String;Z)V
+    const/16 v1, 0x7c
+
+    invoke-static {v1}, LX/0055;->A00(I)Ljava/lang/String;
+
+    move-result-object v13
+
+    move/from16 v1, v17
+
+    invoke-virtual {v5, v13, v1}, LX/03u7;->A0G(Ljava/lang/String;Z)V
+
+    const/16 v1, 0x9fa
+
+    invoke-static {v1}, LX/0000;->A00(I)Ljava/lang/String;
+
+@577: invoke-virtual {v5, v1, v0}, LX/03u7;->A0F(Ljava/lang/String;Ljava/lang/String;)V
+    invoke-virtual {v5, v13, v1}, LX/03u7;->A0G(Ljava/lang/String;Z)V
+
+    const/16 v1, 0x9fa
+
+    invoke-static {v1}, LX/0000;->A00(I)Ljava/lang/String;
+
+    move-result-object v1
+
+    invoke-virtual {v5, v1, v0}, LX/03u7;->A0F(Ljava/lang/String;Ljava/lang/String;)V
+
+    iget v13, v9, LX/08T4;->A01:I
+
+    iget v0, v9, LX/08T4;->A02:I
+
+@595: invoke-virtual {v5, v0, v1}, LX/03u7;->A0C(Ljava/lang/String;I)V
+    sub-int/2addr v1, v13
+
+    const/16 v0, 0x27b
+
+    invoke-static {v0}, LX/0000;->A00(I)Ljava/lang/String;
+
+    move-result-object v0
+
+    invoke-virtual {v5, v0, v1}, LX/03u7;->A0C(Ljava/lang/String;I)V
+
+    sget-object v0, LX/04ji;->A09:LX/04ji;
+
+    invoke-static {v4, v0, v11}, LX/04jk;->A00(Lcom/instagram/common/session/UserSession;LX/04ji;Ljava/util/Map;)V
+
+@648: invoke-virtual {v5, v1, v0}, LX/03u7;->AOQ(Ljava/lang/String;Ljava/lang/String;)V
+    check-cast v1, Ljava/lang/String;
+
+    invoke-interface {v0}, Ljava/util/Map$Entry;->getValue()Ljava/lang/Object;
+
+    move-result-object v0
+
+    check-cast v0, Ljava/lang/String;
+
+    invoke-virtual {v5, v1, v0}, LX/03u7;->AOQ(Ljava/lang/String;Ljava/lang/String;)V
+
+    goto :goto_26f
+
+    :cond_28b
+
+@690: invoke-virtual {v5, v1, v0}, LX/03u7;->AOQ(Ljava/lang/String;Ljava/lang/String;)V
+    check-cast v1, Ljava/lang/String;
+
+    invoke-interface {v0}, Ljava/util/Map$Entry;->getValue()Ljava/lang/Object;
+
+    move-result-object v0
+
+    check-cast v0, Ljava/lang/String;
+
+    invoke-virtual {v5, v1, v0}, LX/03u7;->AOQ(Ljava/lang/String;Ljava/lang/String;)V
+
+    goto :goto_297
+
+    :cond_2b3
+
+@707: invoke-virtual {v5, v0, v1}, LX/03u7;->AOQ(Ljava/lang/String;Ljava/lang/String;)V
+    move-result-object v1
+
+    const/16 v0, 0xf4
+
+    invoke-static {v0}, LX/0000;->A00(I)Ljava/lang/String;
+
+    move-result-object v0
+
+    invoke-virtual {v5, v0, v1}, LX/03u7;->AOQ(Ljava/lang/String;Ljava/lang/String;)V
+
+    iput-boolean v10, v5, LX/03u7;->A0T:Z
+
+    const v0, 0x480c7
+
+
+===== LX/0Aeq; .method public final run()V =====
+FILE=work/smali/classes17/X/0Aeq.smali
+LITERALS=['ReelApiUtil.createReelsTrayRequestTask - reason: ', 'feed/reels_tray/', 'exception', 'reel_background_prefetch']
+
+.method public final run()V
+    .registers 21
+
+    :try_start_0
+    move-object/from16 v4, p0
+
+    iget-object v3, v4, LX/0Aeq;->A01:LX/07CS;
+
+    iget-object v2, v4, LX/0Aeq;->A00:LX/0Jpa;
+
+    iget-object v8, v3, LX/07CS;->A01:Lcom/instagram/common/session/UserSession;
+
+    sget-object v14, LX/000A;->A00:Ljava/lang/Integer;
+
+    sget-object v9, LX/000A;->A0C:Ljava/lang/Integer;
+
+    const/4 v13, 0x0
+
+    invoke-static {v8, v13}, LX/04l9;->A0j(Ljava/lang/Object;I)V
+
+    invoke-static {v8}, LX/02qP;->A01(LX/04BG;)LX/00AT;
+
+    move-result-object v5
+
+    const-wide v0, 0x810994002636eaL
+
+    check-cast v5, Lcom/facebook/mobileconfig/factory/MobileConfigUnsafeContext;
+
+    invoke-interface {v5, v0, v1}, Lcom/facebook/mobileconfig/factory/MobileConfigUnsafeContext;->BTb(J)Z
+
+    move-result v0
+
+    const/4 v6, 0x0
+
+    const/4 v12, 0x1
+
+    if-eqz v0, :cond_4f
+
+    invoke-static {v6, v8, v14, v9, v13}, LX/03sA;->A05(Landroid/util/Pair;Lcom/instagram/common/session/UserSession;Ljava/lang/Integer;Ljava/lang/Integer;Z)LX/03su;
+
+    move-result-object v12
+
+    :cond_27
+    :goto_27
+    instance-of v0, v12, LX/0Fsx;
+
+    if-eqz v0, :cond_3e
+
+    new-instance v0, LX/07vF;
+
+    invoke-direct {v0, v2, v12, v3}, LX/07vF;-><init>(LX/0Jpa;LX/04Ia;LX/07CS;)V
+
+    check-cast v12, LX/0Fsx;
+
+    iget-object v1, v12, LX/0Fsx;->A00:LX/03Da;
+
+    invoke-virtual {v1, v0}, LX/03Da;->A09(LX/045A;)V
+
+    :goto_37
+    check-cast v1, LX/0Zvn;
+
+    invoke-static {v1}, LX/02lz;->A03(LX/0Zvn;)V
+
+    goto/16 :goto_cb
+
+    :cond_3e
+    instance-of v0, v12, LX/03su;
+
+    if-eqz v0, :cond_f6
+
+    new-instance v0, LX/0Jep;
+
+    invoke-direct {v0, v2, v12, v3}, LX/0Jep;-><init>(LX/0Jpa;LX/04Ia;LX/07CS;)V
+
+    check-cast v12, LX/03su;
+
+    iget-object v1, v12, LX/03su;->A00:LX/02ue;
+
+    invoke-virtual {v1, v0}, LX/02ue;->A02(LX/0Acl;)V
+
+    goto :goto_37
+
+    :cond_4f
+    const-string v1, "ReelApiUtil.createReelsTrayRequestTask - reason: "
+
+    invoke-static {v9}, LX/03sa;->A00(Ljava/lang/Integer;)Ljava/lang/String;
+
+    move-result-object v0
+
+    invoke-static {v1, v0}, LX/002b;->A0W(Ljava/lang/String;Ljava/lang/String;)Ljava/lang/String;
+
+    move-result-object v1
+
+    invoke-static {}, Lcom/facebook/systrace/Systrace;->A0E()Z
+
+    move-result v0
+
+    if-eqz v0, :cond_65
+
+    const v0, 0x771e6190
+
+    invoke-static {v1, v0}, LX/03Al;->A01(Ljava/lang/String;I)V
+    :try_end_65
+    .catchall {:try_start_0 .. :try_end_65} :catchall_da
+
+    :cond_65
+    :try_start_65
+    invoke-static {}, Ljava/util/UUID;->randomUUID()Ljava/util/UUID;
+
+    move-result-object v0
+
+    invoke-virtual {v0}, Ljava/lang/Object;->toString()Ljava/lang/String;
+
+    move-result-object v10
+
+    invoke-static {}, Ljava/util/UUID;->randomUUID()Ljava/util/UUID;
+
+    move-result-object v0
+
+    invoke-virtual {v0}, Ljava/lang/Object;->toString()Ljava/lang/String;
+
+    move-result-object v11
+
+    sget-object v5, LX/03sb;->A00:LX/03sb;
+
+    new-instance v0, LX/02py;
+
+    invoke-direct {v0, v8}, LX/02py;-><init>(Lcom/instagram/common/session/UserSession;)V
+
+    new-instance v1, LX/01i2;
+
+    invoke-direct {v1, v5, v0}, LX/01i2;-><init>(LX/0nQH;LX/0nQI;)V
+
+    const/16 v0, 0xc5
+
+    new-instance v7, LX/01pg;
+
+    invoke-direct {v7, v8, v1, v6, v0}, LX/0AMH;-><init>(LX/04BG;LX/0AHm;LX/0AHm;I)V
+
+    sget-object v0, LX/000A;->A01:Ljava/lang/Integer;
+
+    invoke-virtual {v7, v0}, LX/03u7;->A07(Ljava/lang/Integer;)V
+
+    const-string v0, "feed/reels_tray/"
+
+    iput-object v0, v7, LX/03u7;->A0G:Ljava/lang/String;
+
+    iput-object v14, v7, LX/03u7;->A08:Ljava/lang/Integer;
+
+    invoke-static {v9}, LX/03sa;->A01(Ljava/lang/Integer;)Ljava/lang/String;
+
+    move-result-object v0
+
+    iput-object v0, v7, LX/03u7;->A0C:Ljava/lang/String;
+
+    invoke-static/range {v6 .. v13}, LX/03sA;->A08(Landroid/util/Pair;LX/03u7;Lcom/instagram/common/session/UserSession;Ljava/lang/Integer;Ljava/lang/String;Ljava/lang/String;ZZ)V
+
+    invoke-static {v13}, Ljava/lang/String;->valueOf(Z)Ljava/lang/String;
+
+    move-result-object v1
+
+    const/16 v0, 0xca3
+
+    invoke-static {v0}, LX/0000;->A00(I)Ljava/lang/String;
+
+    move-result-object v0
+
+    invoke-virtual {v7, v0, v1}, LX/03u7;->AMu(Ljava/lang/String;Ljava/lang/String;)V
+
+    invoke-virtual {v7}, LX/0AMH;->A0K()LX/03Da;
+
+    move-result-object v13
+
+    new-instance v12, LX/0Fsx;
+
+    move-object v15, v9
+
+    move-object/from16 v16, v14
+
+    move-object/from16 v17, v11
+
+    move-object/from16 v18, v10
+
+    move-object/from16 v19, v6
+
+    invoke-direct/range {v12 .. v19}, LX/0Fsx;-><init>(LX/03Da;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/String;Ljava/lang/String;Ljava/util/List;)V
+
+    iput-object v6, v12, LX/04Ia;->A00:LX/01qE;
+    :try_end_bd
+    .catchall {:try_start_65 .. :try_end_bd} :catchall_cc
+
+    :try_start_bd
+    invoke-static {}, Lcom/facebook/systrace/Systrace;->A0E()Z
+
+    move-result v0
+
+    if-eqz v0, :cond_27
+
+    const v0, 0x2829cdc3
+
+    invoke-static {v0}, LX/03Al;->A00(I)V
+
+    goto/16 :goto_27
+
+    :goto_cb
+    return-void
+
+    :catchall_cc
+    move-exception v1
+
+    invoke-static {}, Lcom/facebook/systrace/Systrace;->A0E()Z
+
+    move-result v0
+
+    if-eqz v0, :cond_d9
+
+    const v0, -0x5169a810
+
+    invoke-static {v0}, LX/03Al;->A00(I)V
+
+    :cond_d9
+    throw v1
+    :try_end_da
+    .catchall {:try_start_bd .. :try_end_da} :catchall_da
+
+    :catchall_da
+    move-exception v5
+
+    sget-object v3, LX/02tO;->A01:LX/02tO;
+
+    const-string v2, "exception"
+
+    const/4 v1, 0x1
+
+    const v0, 0x10792a45
+
+    invoke-virtual {v3, v2, v0, v1}, LX/02tO;->A05(Ljava/lang/String;IZ)LX/0Iel;
+
+    move-result-object v0
+
+    if-eqz v0, :cond_ef
+
+    invoke-interface {v0, v5}, LX/0Iel;->GcC(Ljava/lang/Throwable;)V
+
+    invoke-interface {v0}, LX/0Iel;->report()V
+
+    :cond_ef
+    iget-object v1, v4, LX/0Aeq;->A00:LX/0Jpa;
+
+    const-string v0, "reel_background_prefetch"
+
+    invoke-interface {v1, v0}, LX/0Jpa;->BDd(Ljava/lang/String;)V
+
+    :cond_f6
+    return-void
+.end method
+
+-- REQUEST WRITE WINDOWS --
+@141: invoke-virtual {v7, v0}, LX/03u7;->A07(Ljava/lang/Integer;)V
+    const/16 v0, 0xc5
+
+    new-instance v7, LX/01pg;
+
+    invoke-direct {v7, v8, v1, v6, v0}, LX/0AMH;-><init>(LX/04BG;LX/0AHm;LX/0AHm;I)V
+
+    sget-object v0, LX/000A;->A01:Ljava/lang/Integer;
+
+    invoke-virtual {v7, v0}, LX/03u7;->A07(Ljava/lang/Integer;)V
+
+    const-string v0, "feed/reels_tray/"
+
+    iput-object v0, v7, LX/03u7;->A0G:Ljava/lang/String;
+
+@167: invoke-virtual {v7, v0, v1}, LX/03u7;->AMu(Ljava/lang/String;Ljava/lang/String;)V
+    move-result-object v1
+
+    const/16 v0, 0xca3
+
+    invoke-static {v0}, LX/0000;->A00(I)Ljava/lang/String;
+
+    move-result-object v0
+
+    invoke-virtual {v7, v0, v1}, LX/03u7;->AMu(Ljava/lang/String;Ljava/lang/String;)V
+
+    invoke-virtual {v7}, LX/0AMH;->A0K()LX/03Da;
+
+    move-result-object v13
+
+
+===== LX/0Giz; .method public static A00(LX/03u7;Lcom/instagram/common/session/UserSession;Ljava/lang/Integer;Ljava/lang/String;)V =====
+FILE=work/smali/classes17/X/0Giz.smali
+LITERALS=['request_id', 'reason', 'timezone_offset', 'is_following_feed']
+
+.method public static A00(LX/03u7;Lcom/instagram/common/session/UserSession;Ljava/lang/Integer;Ljava/lang/String;)V
+    .registers 7
+
+    const/4 v2, 0x1
+
+    const-string v0, "request_id"
+
+    invoke-virtual {p0, v0, p3}, LX/03u7;->AOA(Ljava/lang/String;Ljava/lang/String;)V
+
+    const-string v1, "reason"
+
+    invoke-static {p2}, LX/03sa;->A00(Ljava/lang/Integer;)Ljava/lang/String;
+
+    move-result-object v0
+
+    invoke-virtual {p0, v1, v0}, LX/03u7;->AOA(Ljava/lang/String;Ljava/lang/String;)V
+
+    invoke-static {}, LX/02su;->A00()J
+
+    move-result-wide v0
+
+    invoke-static {v0, v1}, Ljava/lang/String;->valueOf(J)Ljava/lang/String;
+
+    move-result-object v1
+
+    const-string v0, "timezone_offset"
+
+    invoke-virtual {p0, v0, v1}, LX/03u7;->AOA(Ljava/lang/String;Ljava/lang/String;)V
+
+    const-string v0, "is_following_feed"
+
+    invoke-virtual {p0, v0, v2}, LX/03u7;->A0G(Ljava/lang/String;Z)V
+
+    sget-object v0, LX/02uV;->A05:LX/02uV;
+
+    iput-object v0, p0, LX/03u7;->A07:LX/02uV;
+
+    invoke-static {p1}, LX/03Lk;->A00(Lcom/instagram/common/session/UserSession;)Landroid/util/Pair;
+
+    move-result-object v0
+
+    iget-object v1, v0, Landroid/util/Pair;->first:Ljava/lang/Object;
+
+    invoke-static {v1}, LX/04l9;->A0Q(Ljava/lang/Object;)V
+
+    check-cast v1, Ljava/lang/String;
+
+    iget-object v0, v0, Landroid/util/Pair;->second:Ljava/lang/Object;
+
+    check-cast v0, Ljava/lang/String;
+
+    invoke-virtual {p0, v1, v0}, LX/03u7;->A0F(Ljava/lang/String;Ljava/lang/String;)V
+
+    iput-boolean v2, p0, LX/03u7;->A0V:Z
+
+    return-void
+.end method
+
+-- REQUEST WRITE WINDOWS --
+@7: invoke-virtual {p0, v0, p3}, LX/03u7;->AOA(Ljava/lang/String;Ljava/lang/String;)V
+.method public static A00(LX/03u7;Lcom/instagram/common/session/UserSession;Ljava/lang/Integer;Ljava/lang/String;)V
+    .registers 7
+
+    const/4 v2, 0x1
+
+    const-string v0, "request_id"
+
+    invoke-virtual {p0, v0, p3}, LX/03u7;->AOA(Ljava/lang/String;Ljava/lang/String;)V
+
+    const-string v1, "reason"
+
+    invoke-static {p2}, LX/03sa;->A00(Ljava/lang/Integer;)Ljava/lang/String;
+
+@15: invoke-virtual {p0, v1, v0}, LX/03u7;->AOA(Ljava/lang/String;Ljava/lang/String;)V
+    invoke-virtual {p0, v0, p3}, LX/03u7;->AOA(Ljava/lang/String;Ljava/lang/String;)V
+
+    const-string v1, "reason"
+
+    invoke-static {p2}, LX/03sa;->A00(Ljava/lang/Integer;)Ljava/lang/String;
+
+    move-result-object v0
+
+    invoke-virtual {p0, v1, v0}, LX/03u7;->AOA(Ljava/lang/String;Ljava/lang/String;)V
+
+    invoke-static {}, LX/02su;->A00()J
+
+    move-result-wide v0
+
+@27: invoke-virtual {p0, v0, v1}, LX/03u7;->AOA(Ljava/lang/String;Ljava/lang/String;)V
+    move-result-wide v0
+
+    invoke-static {v0, v1}, Ljava/lang/String;->valueOf(J)Ljava/lang/String;
+
+    move-result-object v1
+
+    const-string v0, "timezone_offset"
+
+    invoke-virtual {p0, v0, v1}, LX/03u7;->AOA(Ljava/lang/String;Ljava/lang/String;)V
+
+    const-string v0, "is_following_feed"
+
+    invoke-virtual {p0, v0, v2}, LX/03u7;->A0G(Ljava/lang/String;Z)V
+
+@31: invoke-virtual {p0, v0, v2}, LX/03u7;->A0G(Ljava/lang/String;Z)V
+    move-result-object v1
+
+    const-string v0, "timezone_offset"
+
+    invoke-virtual {p0, v0, v1}, LX/03u7;->AOA(Ljava/lang/String;Ljava/lang/String;)V
+
+    const-string v0, "is_following_feed"
+
+    invoke-virtual {p0, v0, v2}, LX/03u7;->A0G(Ljava/lang/String;Z)V
+
+    sget-object v0, LX/02uV;->A05:LX/02uV;
+
+    iput-object v0, p0, LX/03u7;->A07:LX/02uV;
+
+@51: invoke-virtual {p0, v1, v0}, LX/03u7;->A0F(Ljava/lang/String;Ljava/lang/String;)V
+    invoke-static {v1}, LX/04l9;->A0Q(Ljava/lang/Object;)V
+
+    check-cast v1, Ljava/lang/String;
+
+    iget-object v0, v0, Landroid/util/Pair;->second:Ljava/lang/Object;
+
+    check-cast v0, Ljava/lang/String;
+
+    invoke-virtual {p0, v1, v0}, LX/03u7;->A0F(Ljava/lang/String;Ljava/lang/String;)V
+
+    iput-boolean v2, p0, LX/03u7;->A0V:Z
+
+    return-void
+
+
+===== LX/0Giz; .method public final A02(ZZ)V =====
+FILE=work/smali/classes17/X/0Giz.smali
+LITERALS=['feed/reels_tray/', 'feed/reels_tray/_v1_FOLLOWING', 'tray_session_id', 'feed/reels_tray/_v1', 'feed/reels_tray/', 'feed/reels_tray/_v1_FOLLOWING', 'tray_session_id', 'feed/reels_tray/_v1']
+
+.method public final A02(ZZ)V
+    .registers 27
+
+    move-object/from16 v3, p0
+
+    iget-object v0, v3, LX/0Giz;->A00:LX/0Gix;
+
+    invoke-virtual {v0}, LX/0Gix;->A00()LX/08CQ;
+
+    move-result-object v0
+
+    move/from16 v2, p1
+
+    move/from16 v1, p2
+
+    invoke-virtual {v0, v2, v1}, LX/08CQ;->A0O(ZZ)V
+
+    if-eqz p1, :cond_e8
+
+    iget-object v0, v3, LX/0Giz;->A00:LX/0Gix;
+
+    iget-object v0, v0, LX/0Gix;->A00:Linstagram/features/feed/contextualfeed/ContextualFeedFragment;
+
+    move-object/from16 v23, v0
+
+    iget-object v0, v0, Linstagram/features/feed/contextualfeed/ContextualFeedFragment;->A0N:LX/08yO;
+
+    if-eqz v0, :cond_e8
+
+    const v0, 0x24026
+
+    invoke-static {v0}, LX/04oL;->A01(I)Ljava/lang/Object;
+
+    move-result-object v1
+
+    check-cast v1, LX/05uK;
+
+    invoke-static/range {v23 .. v23}, Linstagram/features/feed/contextualfeed/ContextualFeedFragment;->A00(Linstagram/features/feed/contextualfeed/ContextualFeedFragment;)Lcom/instagram/common/session/UserSession;
+
+    move-result-object v0
+
+    invoke-virtual {v1, v0}, LX/05uK;->A00(Lcom/instagram/common/session/UserSession;)LX/05uL;
+
+    move-result-object v7
+
+    const/4 v10, 0x0
+
+    invoke-virtual {v7, v10}, LX/05uL;->A0F(Z)Z
+
+    move-result v0
+
+    if-nez v0, :cond_e8
+
+    sget-object v6, LX/000A;->A0Y:Ljava/lang/Integer;
+
+    sget-object v5, LX/000A;->A1R:Ljava/lang/Integer;
+
+    new-instance v8, LX/01qE;
+
+    invoke-direct {v8}, LX/01qE;-><init>()V
+
+    iget-object v4, v7, LX/05uL;->A0P:Lcom/instagram/common/session/UserSession;
+
+    invoke-static {v4}, LX/03sj;->A00(Lcom/instagram/common/session/UserSession;)LX/03sj;
+
+    move-result-object v0
+
+    iget-object v2, v0, LX/03sj;->A00:LX/00AT;
+
+    const-wide v0, 0x81095a00083510L
+
+    invoke-static {v2, v0, v1}, LX/000H;->A0l(Ljava/lang/Object;J)Z
+
+    move-result v2
+
+    const/4 v9, 0x1
+
+    if-eqz v2, :cond_ec
+
+    const/4 v3, 0x2
+
+    sget-object v18, LX/03sb;->A00:LX/03sb;
+
+    new-instance v12, LX/02py;
+
+    invoke-direct {v12, v4}, LX/02py;-><init>(Lcom/instagram/common/session/UserSession;)V
+
+    const/4 v11, 0x0
+
+    new-instance v2, LX/03sc;
+
+    invoke-direct {v2, v11}, LX/03sc;-><init>(Ljava/io/File;)V
+
+    new-instance v15, LX/02pz;
+
+    move-object/from16 v20, v11
+
+    move/from16 v22, v10
+
+    move-object/from16 v16, v11
+
+    move-object/from16 v17, v2
+
+    move-object/from16 v19, v12
+
+    move/from16 v21, v10
+
+    invoke-direct/range {v15 .. v22}, LX/02pz;-><init>(LX/0BPk;LX/08IT;LX/0nQH;LX/0nQI;Ljava/lang/Integer;ZZ)V
+
+    invoke-static {}, LX/000H;->A0J()Ljava/lang/String;
+
+    move-result-object v12
+
+    invoke-static {}, LX/000H;->A0J()Ljava/lang/String;
+
+    move-result-object v11
+
+    const v2, 0x31fc9ea5
+
+    new-instance v13, LX/02pu;
+
+    invoke-direct {v13, v4, v2, v3, v10}, LX/02pu;-><init>(LX/04BG;IIZ)V
+
+    sget-object v10, LX/000A;->A01:Ljava/lang/Integer;
+
+    invoke-virtual {v13, v10}, LX/03u7;->A07(Ljava/lang/Integer;)V
+
+    const-string v2, "feed/reels_tray/"
+
+    iput-object v2, v13, LX/03u7;->A0G:Ljava/lang/String;
+
+    iput-object v15, v13, LX/02pu;->A00:LX/0AOo;
+
+    iput-object v6, v13, LX/03u7;->A08:Ljava/lang/Integer;
+
+    invoke-static {v4}, LX/02qP;->A01(LX/04BG;)LX/00AT;
+
+    move-result-object v14
+
+    const-wide v2, 0x81092200493237L
+
+    invoke-static {v14, v2, v3}, LX/000H;->A0l(Ljava/lang/Object;J)Z
+
+    move-result v2
+
+    if-eqz v2, :cond_e9
+
+    const-string v2, "feed/reels_tray/_v1_FOLLOWING"
+
+    :goto_9d
+    iput-object v2, v13, LX/03u7;->A0B:Ljava/lang/String;
+
+    const-string v2, "tray_session_id"
+
+    invoke-virtual {v13, v2, v12}, LX/03u7;->AOA(Ljava/lang/String;Ljava/lang/String;)V
+
+    invoke-static {v13, v4, v5, v11}, LX/0Giz;->A00(LX/03u7;Lcom/instagram/common/session/UserSession;Ljava/lang/Integer;Ljava/lang/String;)V
+
+    iput-object v15, v13, LX/02pu;->A00:LX/0AOo;
+
+    invoke-virtual {v13}, LX/02pu;->A0K()LX/02ue;
+
+    move-result-object v15
+
+    new-instance v14, LX/03su;
+
+    move-object/from16 v16, v6
+
+    move-object/from16 v17, v5
+
+    move-object/from16 v18, v10
+
+    move-object/from16 v19, v11
+
+    move-object/from16 v20, v12
+
+    invoke-direct/range {v14 .. v20}, LX/03su;-><init>(LX/02ue;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/String;Ljava/lang/String;)V
+
+    new-instance v3, LX/0NtS;
+
+    invoke-direct {v3, v14}, LX/0NtS;-><init>(LX/03su;)V
+
+    iget-object v2, v8, LX/01qE;->A01:Ljava/util/concurrent/CopyOnWriteArrayList;
+
+    invoke-virtual {v2, v3}, Ljava/util/concurrent/CopyOnWriteArrayList;->add(Ljava/lang/Object;)Z
+
+    :goto_c6
+    iput-object v8, v14, LX/04Ia;->A00:LX/01qE;
+
+    const/4 v11, 0x0
+
+    move-object/from16 v10, v23
+
+    move-object v12, v14
+
+    move-object v13, v7
+
+    move-object v14, v6
+
+    move-object v15, v5
+
+    invoke-static/range {v10 .. v15}, LX/05uL;->A00(LX/0Hkk;LX/05qM;LX/04Ia;LX/05uL;Ljava/lang/Integer;Ljava/lang/Integer;)V
+
+    invoke-static {v4}, LX/03sj;->A00(Lcom/instagram/common/session/UserSession;)LX/03sj;
+
+    move-result-object v2
+
+    iget-boolean v2, v2, LX/03sj;->A05:Z
+
+    if-nez v2, :cond_e8
+
+    invoke-static {v4}, LX/03sj;->A00(Lcom/instagram/common/session/UserSession;)LX/03sj;
+
+    move-result-object v2
+
+    iget-object v2, v2, LX/03sj;->A00:LX/00AT;
+
+    invoke-static {v2, v0, v1}, LX/000H;->A0l(Ljava/lang/Object;J)Z
+
+    move-result v0
+
+    if-nez v0, :cond_e8
+
+    iput-boolean v9, v7, LX/05uL;->A0I:Z
+
+    :cond_e8
+    return-void
+
+    :cond_e9
+    const-string v2, "feed/reels_tray/_v1"
+
+    goto :goto_9d
+
+    :cond_ec
+    sget-object v10, LX/03sb;->A00:LX/03sb;
+
+    new-instance v2, LX/02py;
+
+    invoke-direct {v2, v4}, LX/02py;-><init>(Lcom/instagram/common/session/UserSession;)V
+
+    new-instance v3, LX/01i2;
+
+    invoke-direct {v3, v10, v2}, LX/01i2;-><init>(LX/0nQH;LX/0nQI;)V
+
+    invoke-static {}, LX/000H;->A0J()Ljava/lang/String;
+
+    move-result-object v13
+
+    invoke-static {}, LX/000H;->A0J()Ljava/lang/String;
+
+    move-result-object v12
+
+    const/4 v11, 0x0
+
+    const/16 v2, 0xc5
+
+    new-instance v14, LX/01pg;
+
+    invoke-direct {v14, v4, v3, v11, v2}, LX/0AMH;-><init>(LX/04BG;LX/0AHm;LX/0AHm;I)V
+
+    sget-object v10, LX/000A;->A01:Ljava/lang/Integer;
+
+    invoke-virtual {v14, v10}, LX/03u7;->A07(Ljava/lang/Integer;)V
+
+    const-string v2, "feed/reels_tray/"
+
+    iput-object v2, v14, LX/03u7;->A0G:Ljava/lang/String;
+
+    iput-object v6, v14, LX/03u7;->A08:Ljava/lang/Integer;
+
+    invoke-static {v4}, LX/02qP;->A01(LX/04BG;)LX/00AT;
+
+    move-result-object v15
+
+    const-wide v2, 0x81092200493237L
+
+    invoke-static {v15, v2, v3}, LX/000H;->A0l(Ljava/lang/Object;J)Z
+
+    move-result v2
+
+    if-eqz v2, :cond_146
+
+    const-string v2, "feed/reels_tray/_v1_FOLLOWING"
+
+    :goto_124
+    iput-object v2, v14, LX/03u7;->A0B:Ljava/lang/String;
+
+    iput-object v8, v14, LX/0AMH;->A02:LX/01qE;
+
+    const-string v2, "tray_session_id"
+
+    invoke-virtual {v14, v2, v13}, LX/03u7;->AOA(Ljava/lang/String;Ljava/lang/String;)V
+
+    invoke-static {v14, v4, v5, v12}, LX/0Giz;->A00(LX/03u7;Lcom/instagram/common/session/UserSession;Ljava/lang/Integer;Ljava/lang/String;)V
+
+    invoke-virtual {v14}, LX/0AMH;->A0K()LX/03Da;
+
+    move-result-object v15
+
+    new-instance v14, LX/0Fsx;
+
+    move-object/from16 v16, v6
+
+    move-object/from16 v17, v5
+
+    move-object/from16 v18, v10
+
+    move-object/from16 v19, v12
+
+    move-object/from16 v20, v13
+
+    move-object/from16 v21, v11
+
+    invoke-direct/range {v14 .. v21}, LX/0Fsx;-><init>(LX/03Da;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/String;Ljava/lang/String;Ljava/util/List;)V
+
+    goto :goto_c6
+
+    :cond_146
+    const-string v2, "feed/reels_tray/_v1"
+
+    goto :goto_124
+.end method
+
+-- REQUEST WRITE WINDOWS --
+@125: invoke-virtual {v13, v10}, LX/03u7;->A07(Ljava/lang/Integer;)V
+    const v2, 0x31fc9ea5
+
+    new-instance v13, LX/02pu;
+
+    invoke-direct {v13, v4, v2, v3, v10}, LX/02pu;-><init>(LX/04BG;IIZ)V
+
+    sget-object v10, LX/000A;->A01:Ljava/lang/Integer;
+
+    invoke-virtual {v13, v10}, LX/03u7;->A07(Ljava/lang/Integer;)V
+
+    const-string v2, "feed/reels_tray/"
+
+    iput-object v2, v13, LX/03u7;->A0G:Ljava/lang/String;
+
+@154: invoke-virtual {v13, v2, v12}, LX/03u7;->AOA(Ljava/lang/String;Ljava/lang/String;)V
+
+    const-string v2, "feed/reels_tray/_v1_FOLLOWING"
+
+    :goto_9d
+    iput-object v2, v13, LX/03u7;->A0B:Ljava/lang/String;
+
+    const-string v2, "tray_session_id"
+
+    invoke-virtual {v13, v2, v12}, LX/03u7;->AOA(Ljava/lang/String;Ljava/lang/String;)V
+
+    invoke-static {v13, v4, v5, v11}, LX/0Giz;->A00(LX/03u7;Lcom/instagram/common/session/UserSession;Ljava/lang/Integer;Ljava/lang/String;)V
+
+    iput-object v15, v13, LX/02pu;->A00:LX/0AOo;
+
+@262: invoke-virtual {v14, v10}, LX/03u7;->A07(Ljava/lang/Integer;)V
+    const/16 v2, 0xc5
+
+    new-instance v14, LX/01pg;
+
+    invoke-direct {v14, v4, v3, v11, v2}, LX/0AMH;-><init>(LX/04BG;LX/0AHm;LX/0AHm;I)V
+
+    sget-object v10, LX/000A;->A01:Ljava/lang/Integer;
+
+    invoke-virtual {v14, v10}, LX/03u7;->A07(Ljava/lang/Integer;)V
+
+    const-string v2, "feed/reels_tray/"
+
+    iput-object v2, v14, LX/03u7;->A0G:Ljava/lang/String;
+
+@291: invoke-virtual {v14, v2, v13}, LX/03u7;->AOA(Ljava/lang/String;Ljava/lang/String;)V
+
+    :goto_124
+    iput-object v2, v14, LX/03u7;->A0B:Ljava/lang/String;
+
+    iput-object v8, v14, LX/0AMH;->A02:LX/01qE;
+
+    const-string v2, "tray_session_id"
+
+    invoke-virtual {v14, v2, v13}, LX/03u7;->AOA(Ljava/lang/String;Ljava/lang/String;)V
+
+    invoke-static {v14, v4, v5, v12}, LX/0Giz;->A00(LX/03u7;Lcom/instagram/common/session/UserSession;Ljava/lang/Integer;Ljava/lang/String;)V
+
+    invoke-virtual {v14}, LX/0AMH;->A0K()LX/03Da;
+
+
+===== DIRECT CALLERS OF CENTRAL BUILDERS =====
+
+--- LX/08yB; .method public final BCw(Ljava/lang/String;)V
+FILE=work/smali/classes13/X/08yB.smali
+CALLS=[('LX/05uL;', 'BCw', 'Ljava/lang/String;', 'V')]
+INTERESTING_STRINGS=[]
+---
+.method public final BCw(Ljava/lang/String;)V
+    .registers 4
+
+    iget-object v1, p0, LX/08yB;->A02:LX/05uL;
+
+    iget-object v0, p0, LX/08yB;->A00:LX/07YW;
+
+    invoke-interface {v0}, LX/07YW;->getModuleName()Ljava/lang/String;
+
+    move-result-object v0
+
+    invoke-virtual {v1, v0}, LX/05uL;->BCw(Ljava/lang/String;)V
+
+    return-void
+.end method
+
+--- LX/05uL; .method public static final A02(LX/0Hkk;LX/05qM;LX/05uL;Ljava/lang/Integer;Ljava/lang/Integer;)V
+FILE=work/smali/classes13/X/05uL.smali
+CALLS=[('LX/03sA;', 'A05', 'Landroid/util/Pair;Lcom/instagram/common/session/UserSession;Ljava/lang/Integer;Ljava/lang/Integer;Z', 'LX/03su;')]
+INTERESTING_STRINGS=['ReelTrayManager.fetchReelTrayHeadloadSync - fetchReason: ']
+---
+.method public static final A02(LX/0Hkk;LX/05qM;LX/05uL;Ljava/lang/Integer;Ljava/lang/Integer;)V
+    .registers 11
+
+    const-string v3, "ReelTrayManager.fetchReelTrayHeadloadSync - fetchReason: "
+
+    move-object v5, p4
+
+    invoke-static {p4}, LX/03sa;->A00(Ljava/lang/Integer;)Ljava/lang/String;
+
+    move-result-object v2
+
+    const-string v1, " - cachePolicy: "
+
+    move-object v4, p3
+
+    invoke-static {p3}, LX/03vj;->A00(Ljava/lang/Integer;)Ljava/lang/String;
+
+    move-result-object v0
+
+    invoke-static {v3, v2, v1, v0}, LX/002b;->A19(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)Ljava/lang/String;
+
+    move-result-object v1
+
+    invoke-static {}, Lcom/facebook/systrace/Systrace;->A0E()Z
+
+    move-result v0
+
+    if-eqz v0, :cond_1e
+
+    const v0, -0x16e10ac2
+
+    invoke-static {v1, v0}, LX/03Al;->A01(Ljava/lang/String;I)V
+
+    :cond_1e
+    :try_start_1e
+    move-object v3, p2
+
+    iget-object v2, p2, LX/05uL;->A0P:Lcom/instagram/common/session/UserSession;
+
+    iget-object v1, p2, LX/05uL;->A07:Landroid/util/Pair;
+
+    iget-boolean v0, p2, LX/05uL;->A0L:Z
+
+    invoke-static {v1, v2, p3, p4, v0}, LX/03sA;->A05(Landroid/util/Pair;Lcom/instagram/common/session/UserSession;Ljava/lang/Integer;Ljava/lang/Integer;Z)LX/03su;
+
+    move-result-object v2
+
+    move-object v0, p0
+
+    move-object v1, p1
+
+    invoke-static/range {v0 .. v5}, LX/05uL;->A00(LX/0Hkk;LX/05qM;LX/04Ia;LX/05uL;Ljava/lang/Integer;Ljava/lang/Integer;)V
+    :try_end_2e
+    .catchall {:try_start_1e .. :try_end_2e} :catchall_3b
+
+    invoke-static {}, Lcom/facebook/systrace/Systrace;->A0E()Z
+
+    move-result v0
+
+    if-eqz v0, :cond_3a
+
+    const v0, -0x142f5ccd
+
+    invoke-static {v0}, LX/03Al;->A00(I)V
+
+    :cond_3a
+    return-void
+
+    :catchall_3b
+    move-exception v1
+
+    invoke-static {}, Lcom/facebook/systrace/Systrace;->A0E()Z
+
+    move-result v0
+
+    if-eqz v0, :cond_48
+
+    const v0, 0x1adccc48
+
+    invoke-static {v0}, LX/03Al;->A00(I)V
+
+    :cond_48
+    throw v1
+.end method
+
+--- LX/07b9; .method private final A00(LX/02po;Ljava/util/Set;Z)LX/0080;
+FILE=work/smali/classes13/X/07b9.smali
+CALLS=[('LX/03sA;', 'A07', 'Lcom/instagram/common/session/UserSession;LX/07b1;Ljava/lang/String;Ljava/util/Map;Ljava/util/Set;', 'LX/0080;')]
+INTERESTING_STRINGS=['ReelLoader.createNetworkTask']
+---
+.method private final A00(LX/02po;Ljava/util/Set;Z)LX/0080;
+    .registers 20
+
+    const-wide/16 v4, 0x1
+
+    invoke-static {v4, v5}, Lcom/facebook/systrace/Systrace;->A0F(J)Z
+
+    move-result v0
+
+    if-eqz v0, :cond_10
+
+    const v1, -0x3e6292d5
+
+    const-string v0, "ReelLoader.createNetworkTask"
+
+    invoke-static {v0, v1}, LX/03Al;->A01(Ljava/lang/String;I)V
+
+    :cond_10
+    :try_start_10
+    move-object/from16 v3, p0
+
+    iget-object v9, v3, LX/07b9;->A04:Ljava/lang/String;
+
+    const-string/jumbo v1, "push_notification"
+
+    const/4 v0, 0x0
+
+    invoke-static {v9, v1, v0}, LX/04m9;->A0w(Ljava/lang/CharSequence;Ljava/lang/CharSequence;Z)Z
+
+    move-result v0
+
+    move-object/from16 v11, p2
+
+    if-eqz v0, :cond_4d
+
+    iget-object v8, v3, LX/07b9;->A01:Lcom/instagram/common/session/UserSession;
+
+    invoke-static {v8}, LX/02qP;->A01(LX/04BG;)LX/00AT;
+
+    move-result-object v2
+
+    const-wide v0, 0x811085000257e9L
+
+    check-cast v2, Lcom/facebook/mobileconfig/factory/MobileConfigUnsafeContext;
+
+    invoke-interface {v2, v0, v1}, Lcom/facebook/mobileconfig/factory/MobileConfigUnsafeContext;->BTb(J)Z
+
+    move-result v0
+
+    if-nez v0, :cond_4d
+
+    iget-object v1, v3, LX/07b9;->A07:Ljava/util/Map;
+
+    iget-object v0, v3, LX/07b9;->A02:LX/07b1;
+
+    invoke-static {v8, v0, v9, v1, v11}, LX/03sA;->A07(Lcom/instagram/common/session/UserSession;LX/07b1;Ljava/lang/String;Ljava/util/Map;Ljava/util/Set;)LX/0080;
+
+    move-result-object v9
+
+    iget-object v1, v9, LX/0080;->A00:LX/03Da;
+
+    if-eqz v1, :cond_85
+
+    iget-object v10, v3, LX/07b9;->A03:LX/07bC;
+
+    iget-boolean v0, v3, LX/07b9;->A00:Z
+
+    new-instance v7, LX/08dW;
+
+    move v12, v0
+
+    invoke-direct/range {v7 .. v12}, LX/08dW;-><init>(Lcom/instagram/common/session/UserSession;LX/0080;LX/04Zo;Ljava/util/Set;Z)V
+
+    invoke-virtual {v1, v7}, LX/03Da;->A09(LX/045A;)V
+
+    goto :goto_85
+
+    :cond_4d
+    iget-object v10, v3, LX/07b9;->A07:Ljava/util/Map;
+
+    iget-object v6, v3, LX/07b9;->A01:Lcom/instagram/common/session/UserSession;
+
+    iget-object v7, v3, LX/07b9;->A02:LX/07b1;
+
+    move-object/from16 v8, p1
+
+    invoke-static/range {v6 .. v11}, LX/03sA;->A06(Lcom/instagram/common/session/UserSession;LX/07b1;LX/02po;Ljava/lang/String;Ljava/util/Map;Ljava/util/Set;)LX/0080;
+
+    move-result-object v9
+
+    iget-object v10, v3, LX/07b9;->A03:LX/07bC;
+
+    new-instance v7, LX/03Lf;
+
+    move/from16 v12, p3
+
+    move-object v8, v6
+
+    invoke-direct/range {v7 .. v12}, LX/03Lf;-><init>(Lcom/instagram/common/session/UserSession;LX/0080;LX/04Zo;Ljava/util/Set;Z)V
+
+    sget-object v0, LX/02vY;->A05:LX/02vZ;
+
+    invoke-virtual {v0}, LX/02vZ;->A00()LX/02vY;
+
+    move-result-object v0
+
+    iget-object v2, v0, LX/02vY;->A02:Ljava/lang/String;
+
+    sget-object v13, LX/000A;->A1R:Ljava/lang/Integer;
+
+    const/16 v1, 0x17
+
+    new-instance v0, LX/0Im1;
+
+    invoke-direct {v0, v1}, LX/0Im1;-><init>(I)V
+
+    new-instance v1, LX/03Ex;
+
+    move-object v10, v1
+
+    move-object v11, v7
+
+    move-object v12, v6
+
+    move-object v14, v2
+
+    move-object v15, v0
+
+    invoke-direct/range {v10 .. v15}, LX/03Ex;-><init>(LX/0Acl;Lcom/instagram/common/session/UserSession;Ljava/lang/Integer;Ljava/lang/String;Lkotlin/jvm/functions/Function1;)V
+
+    iget-object v0, v9, LX/0080;->A01:LX/02ue;
+
+    if-eqz v0, :cond_85
+
+    invoke-virtual {v0, v1}, LX/02ue;->A02(LX/0Acl;)V
+    :try_end_85
+    .catchall {:try_start_10 .. :try_end_85} :catchall_92
+
+    :cond_85
+    :goto_85
+    invoke-static {v4, v5}, Lcom/facebook/systrace/Systrace;->A0F(J)Z
+
+    move-result v0
+
+    if-eqz v0, :cond_91
+
+    const v0, 0x75a0b352
+
+    invoke-static {v0}, LX/03Al;->A00(I)V
+
+    :cond_91
+    return-object v9
+
+    :catchall_92
+    move-exception v1
+
+    invoke-static {}, Lcom/facebook/systrace/Systrace;->A0E()Z
+
+    move-result v0
+
+    if-eqz v0, :cond_9f
+
+    const v0, -0x56f1aa92
+
+    invoke-static {v0}, LX/03Al;->A00(I)V
+
+    :cond_9f
+    throw v1
+.end method
+
+--- LX/03rx; .method public static final A00(Lcom/instagram/common/session/UserSession;)LX/03su;
+FILE=work/smali/classes2/X/03rx.smali
+CALLS=[('LX/03sA;', 'A05', 'Landroid/util/Pair;Lcom/instagram/common/session/UserSession;Ljava/lang/Integer;Ljava/lang/Integer;Z', 'LX/03su;')]
+INTERESTING_STRINGS=['StartupReelTrayPrefetcher.createReelTrayRequest']
+---
+.method public static final A00(Lcom/instagram/common/session/UserSession;)LX/03su;
+    .registers 6
+
+    .line 0
+    const-wide/16 v3, 0x1
+
+    .line 1
+    .line 2
+    invoke-static {v3, v4}, Lcom/facebook/systrace/Systrace;->A0F(J)Z
+
+    .line 3
+    .line 4
+    .line 5
+    move-result v0
+
+    .line 6
+    if-eqz v0, :cond_10
+
+    .line 7
+    .line 8
+    const v1, -0x4cad4567
+
+    .line 9
+    .line 10
+    .line 11
+    const-string v0, "StartupReelTrayPrefetcher.createReelTrayRequest"
+
+    .line 12
+    .line 13
+    invoke-static {v0, v1}, LX/03Al;->A01(Ljava/lang/String;I)V
+
+    .line 14
+    .line 15
+    .line 16
+    :cond_10
+    :try_start_10
+    sget-object v2, LX/000A;->A00:Ljava/lang/Integer;
+
+    .line 17
+    .line 18
+    const/4 v1, 0x0
+
+    .line 19
+    const/4 v0, 0x0
+
+    .line 20
+    invoke-static {v1, p0, v2, v2, v0}, LX/03sA;->A05(Landroid/util/Pair;Lcom/instagram/common/session/UserSession;Ljava/lang/Integer;Ljava/lang/Integer;Z)LX/03su;
+
+    .line 21
+    .line 22
+    .line 23
+    move-result-object v1
+    :try_end_18
+    .catchall {:try_start_10 .. :try_end_18} :catchall_25
+
+    .line 24
+    invoke-static {v3, v4}, Lcom/facebook/systrace/Systrace;->A0F(J)Z
+
+    .line 25
+    .line 26
+    .line 27
+    move-result v0
+
+    .line 28
+    if-eqz v0, :cond_24
+
+    .line 29
+    .line 30
+    const v0, -0x1e49cd22
+
+    .line 31
+    .line 32
+    .line 33
+    invoke-static {v0}, LX/03Al;->A00(I)V
+
+    .line 34
+    .line 35
+    .line 36
+    :cond_24
+    return-object v1
+
+    .line 37
+    :catchall_25
+    move-exception v1
+
+    .line 38
+    invoke-static {}, Lcom/facebook/systrace/Systrace;->A0E()Z
+
+    .line 39
+    .line 40
+    .line 41
+    move-result v0
+
+    .line 42
+    if-eqz v0, :cond_32
+
+    .line 43
+    .line 44
+    const v0, 0x3454417a
+
+    .line 45
+    .line 46
+    .line 47
+    invoke-static {v0}, LX/03Al;->A00(I)V
+
+    .line 48
+    .line 49
+    .line 50
+    :cond_32
+    throw v1
+.end method
+
+--- LX/03sA; .method public static final A05(Landroid/util/Pair;Lcom/instagram/common/session/UserSession;Ljava/lang/Integer;Ljava/lang/Integer;Z)LX/03su;
+FILE=work/smali/classes2/X/03sA.smali
+CALLS=[('LX/03sA;', 'A08', 'Landroid/util/Pair;LX/03u7;Lcom/instagram/common/session/UserSession;Ljava/lang/Integer;Ljava/lang/String;Ljava/lang/String;ZZ', 'V')]
+INTERESTING_STRINGS=['ReelApiUtil.createReelsTrayStreamingRequestTask - reason: ', 'feed/reels_tray/', 'feed/reels_tray/_v1']
+---
+
+--- LX/03sA; .method public static final A06(Lcom/instagram/common/session/UserSession;LX/07b1;LX/02po;Ljava/lang/String;Ljava/util/Map;Ljava/util/Set;)LX/0080;
+FILE=work/smali/classes2/X/03sA.smali
+CALLS=[('LX/03Hy;', 'A00', 'Lcom/instagram/common/session/UserSession;LX/07b1;LX/02po;Ljava/lang/String;Ljava/lang/String;Ljava/util/Map;Ljava/util/Set;', 'LX/02ue;')]
+INTERESTING_STRINGS=['ReelApiUtil.createBatchReelStreamingRequestTask - reason: ']
+---
+.method public static final A06(Lcom/instagram/common/session/UserSession;LX/07b1;LX/02po;Ljava/lang/String;Ljava/util/Map;Ljava/util/Set;)LX/0080;
+    .registers 13
+
+    .line 0
+    new-instance v1, Ljava/lang/StringBuilder;
+
+    .line 1
+    .line 2
+    invoke-direct {v1}, Ljava/lang/StringBuilder;-><init>()V
+
+    .line 3
+    .line 4
+    .line 5
+    const-string v0, "ReelApiUtil.createBatchReelStreamingRequestTask - reason: "
+
+    .line 6
+    .line 7
+    invoke-virtual {v1, v0}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+
+    .line 8
+    .line 9
+    .line 10
+    move-object v5, p1
+
+    .line 11
+    invoke-virtual {v1, p1}, Ljava/lang/StringBuilder;->append(Ljava/lang/Object;)Ljava/lang/StringBuilder;
+
+    .line 12
+    .line 13
+    .line 14
+    invoke-virtual {v1}, Ljava/lang/Object;->toString()Ljava/lang/String;
+
+    .line 15
+    .line 16
+    .line 17
+    move-result-object v1
+
+    .line 18
+    const-wide/16 v2, 0x1
+
+    .line 19
+    .line 20
+    invoke-static {v2, v3}, Lcom/facebook/systrace/Systrace;->A0F(J)Z
+
+    .line 21
+    .line 22
+    .line 23
+    move-result v0
+
+    .line 24
+    if-eqz v0, :cond_20
+
+    .line 25
+    .line 26
+    const v0, 0x22e1e145
+
+    .line 27
+    .line 28
+    .line 29
+    invoke-static {v1, v0}, LX/03Al;->A01(Ljava/lang/String;I)V
+
+    .line 30
+    .line 31
+    .line 32
+    :cond_20
+    :try_start_20
+    const/4 p1, 0x0
+
+    .line 33
+    move-object v4, p0
+
+    .line 34
+    move-object v6, p2
+
+    .line 35
+    move-object p0, p3
+
+    .line 36
+    move-object p2, p4
+
+    .line 37
+    move-object p3, p5
+
+    .line 38
+    invoke-static/range {v4 .. v10}, LX/03Hy;->A00(Lcom/instagram/common/session/UserSession;LX/07b1;LX/02po;Ljava/lang/String;Ljava/lang/String;Ljava/util/Map;Ljava/util/Set;)LX/02ue;
+
+    .line 39
+    .line 40
+    .line 41
+    move-result-object v0
+
+    .line 42
+    new-instance v1, LX/0080;
+
+    .line 43
+    .line 44
+    invoke-direct {v1, v5, p0, p5}, LX/0080;-><init>(LX/07b1;Ljava/lang/String;Ljava/util/Collection;)V
+
+    .line 45
+    .line 46
+    .line 47
+    iput-object v0, v1, LX/0080;->A01:LX/02ue;
+    :try_end_31
+    .catchall {:try_start_20 .. :try_end_31} :catchall_3e
+
+    .line 48
+    .line 49
+    invoke-static {v2, v3}, Lcom/facebook/systrace/Systrace;->A0F(J)Z
+
+    .line 50
+    .line 51
+    .line 52
+    move-result v0
+
+    .line 53
+    if-eqz v0, :cond_3d
+
+    .line 54
+    .line 55
+    const v0, 0x42e8ef7c
+
+    .line 56
+    .line 57
+    .line 58
+    invoke-static {v0}, LX/03Al;->A00(I)V
+
+    .line 59
+    .line 60
+    .line 61
+    :cond_3d
+    return-object v1
+
+    .line 62
+    :catchall_3e
+    move-exception v1
+
+    .line 63
+    invoke-static {}, Lcom/facebook/systrace/Systrace;->A0E()Z
+
+    .line 64
+    .line 65
+    .line 66
+    move-result v0
+
+    .line 67
+    if-eqz v0, :cond_4b
+
+    .line 68
+    .line 69
+    const v0, 0x76ca670b
+
+    .line 70
+    .line 71
+    .line 72
+    invoke-static {v0}, LX/03Al;->A00(I)V
+
+    .line 73
+    .line 74
+    .line 75
+    :cond_4b
+    throw v1
+.end method
+
+--- LX/0IdK; .method public final A00(Ljava/lang/String;LX/09oa;)Ljava/lang/Object;
+FILE=work/smali/classes18/X/0IdK.smali
+CALLS=[('LX/03Hy;', 'A00', 'Lcom/instagram/common/session/UserSession;LX/07b1;LX/02po;Ljava/lang/String;Ljava/lang/String;Ljava/util/Map;Ljava/util/Set;', 'LX/02ue;')]
+INTERESTING_STRINGS=[]
+---
+.method public final A00(Ljava/lang/String;LX/09oa;)Ljava/lang/Object;
+    .registers 16
+
+    const/4 v3, 0x5
+
+    instance-of v0, p2, LX/0Nqc;
+
+    if-eqz v0, :cond_2a
+
+    move-object v4, p2
+
+    check-cast v4, LX/0Nqc;
+
+    iget v0, v4, LX/0Nqc;->$t:I
+
+    if-ne v0, v3, :cond_2a
+
+    iget v2, v4, LX/0Nqc;->A00:I
+
+    const/high16 v1, -0x80000000
+
+    and-int v0, v2, v1
+
+    if-eqz v0, :cond_2a
+
+    sub-int/2addr v2, v1
+
+    iput v2, v4, LX/0Nqc;->A00:I
+
+    :goto_17
+    iget-object v6, v4, LX/0Nqc;->A02:Ljava/lang/Object;
+
+    sget-object v5, LX/02sJ;->A02:LX/02sJ;
+
+    iget v2, v4, LX/0Nqc;->A00:I
+
+    const/4 v1, 0x1
+
+    if-eqz v2, :cond_30
+
+    if-eq v2, v1, :cond_6b
+
+    const-string v1, "call to \'resume\' before \'invoke\' with coroutine"
+
+    new-instance v0, Ljava/lang/IllegalStateException;
+
+    invoke-direct {v0, v1}, Ljava/lang/IllegalStateException;-><init>(Ljava/lang/String;)V
+
+    throw v0
+
+    :cond_2a
+    new-instance v4, LX/0Nqc;
+
+    invoke-direct {v4, p0, p2, v3}, LX/0Nqc;-><init>(Ljava/lang/Object;LX/09oa;I)V
+
+    goto :goto_17
+
+    :cond_30
+    invoke-static {v6}, LX/02uJ;->A01(Ljava/lang/Object;)V
+
+    filled-new-array {p1}, [Ljava/lang/String;
+
+    move-result-object v0
+
+    invoke-static {v0}, LX/02pP;->A00([Ljava/lang/Object;)Ljava/util/HashSet;
+
+    move-result-object v12
+
+    iget-object v6, p0, LX/0IdK;->A00:Lcom/instagram/common/session/UserSession;
+
+    sget-object v7, LX/07b1;->A0D:LX/07b1;
+
+    const/4 v10, 0x0
+
+    new-instance v8, LX/02po;
+
+    invoke-direct {v8, v10}, LX/02po;-><init>(Ljava/lang/Integer;)V
+
+    const/16 v0, 0x5ae
+
+    invoke-static {v0}, LX/0005;->A00(I)Ljava/lang/String;
+
+    move-result-object v9
+
+    move-object v11, v10
+
+    invoke-static/range {v6 .. v12}, LX/03Hy;->A00(Lcom/instagram/common/session/UserSession;LX/07b1;LX/02po;Ljava/lang/String;Ljava/lang/String;Ljava/util/Map;Ljava/util/Set;)LX/02ue;
+
+    move-result-object v6
+
+    new-instance v3, LX/02pS;
+
+    invoke-direct {v3}, Ljava/lang/Object;-><init>()V
+
+    const/16 v0, 0x8
+
+    new-instance v2, LX/0C3g;
+
+    invoke-direct {v2, v3, p0, p1, v0}, LX/0C3g;-><init>(Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/String;I)V
+
+    iput-object v3, v4, LX/0Nqc;->A03:Ljava/lang/Object;
+
+    iput v1, v4, LX/0Nqc;->A00:I
+
+    const v1, 0x51b1dd3e
+
+    const/4 v0, 0x3
+
+    invoke-virtual {v6, v4, v2, v1, v0}, LX/02ue;->A01(LX/09oa;Lkotlin/jvm/functions/Function1;II)Ljava/lang/Object;
+
+    move-result-object v0
+
+    if-ne v0, v5, :cond_72
+
+    return-object v5
+
+    :cond_6b
+    iget-object v3, v4, LX/0Nqc;->A03:Ljava/lang/Object;
+
+    check-cast v3, LX/02pS;
+
+    invoke-static {v6}, LX/02uJ;->A01(Ljava/lang/Object;)V
+
+    :cond_72
+    iget-object v5, v3, LX/02pS;->A00:Ljava/lang/Object;
+
+    return-object v5
+.end method
+
+--- LX/0Aeq; .method public final run()V
+FILE=work/smali/classes17/X/0Aeq.smali
+CALLS=[('LX/03sA;', 'A05', 'Landroid/util/Pair;Lcom/instagram/common/session/UserSession;Ljava/lang/Integer;Ljava/lang/Integer;Z', 'LX/03su;'), ('LX/03sA;', 'A08', 'Landroid/util/Pair;LX/03u7;Lcom/instagram/common/session/UserSession;Ljava/lang/Integer;Ljava/lang/String;Ljava/lang/String;ZZ', 'V')]
+INTERESTING_STRINGS=['ReelApiUtil.createReelsTrayRequestTask - reason: ', 'feed/reels_tray/', 'reel_background_prefetch']
+---
+.method public final run()V
+    .registers 21
+
+    :try_start_0
+    move-object/from16 v4, p0
+
+    iget-object v3, v4, LX/0Aeq;->A01:LX/07CS;
+
+    iget-object v2, v4, LX/0Aeq;->A00:LX/0Jpa;
+
+    iget-object v8, v3, LX/07CS;->A01:Lcom/instagram/common/session/UserSession;
+
+    sget-object v14, LX/000A;->A00:Ljava/lang/Integer;
+
+    sget-object v9, LX/000A;->A0C:Ljava/lang/Integer;
+
+    const/4 v13, 0x0
+
+    invoke-static {v8, v13}, LX/04l9;->A0j(Ljava/lang/Object;I)V
+
+    invoke-static {v8}, LX/02qP;->A01(LX/04BG;)LX/00AT;
+
+    move-result-object v5
+
+    const-wide v0, 0x810994002636eaL
+
+    check-cast v5, Lcom/facebook/mobileconfig/factory/MobileConfigUnsafeContext;
+
+    invoke-interface {v5, v0, v1}, Lcom/facebook/mobileconfig/factory/MobileConfigUnsafeContext;->BTb(J)Z
+
+    move-result v0
+
+    const/4 v6, 0x0
+
+    const/4 v12, 0x1
+
+    if-eqz v0, :cond_4f
+
+    invoke-static {v6, v8, v14, v9, v13}, LX/03sA;->A05(Landroid/util/Pair;Lcom/instagram/common/session/UserSession;Ljava/lang/Integer;Ljava/lang/Integer;Z)LX/03su;
+
+    move-result-object v12
+
+    :cond_27
+    :goto_27
+    instance-of v0, v12, LX/0Fsx;
+
+    if-eqz v0, :cond_3e
+
+    new-instance v0, LX/07vF;
+
+    invoke-direct {v0, v2, v12, v3}, LX/07vF;-><init>(LX/0Jpa;LX/04Ia;LX/07CS;)V
+
+    check-cast v12, LX/0Fsx;
+
+    iget-object v1, v12, LX/0Fsx;->A00:LX/03Da;
+
+    invoke-virtual {v1, v0}, LX/03Da;->A09(LX/045A;)V
+
+    :goto_37
+    check-cast v1, LX/0Zvn;
+
+    invoke-static {v1}, LX/02lz;->A03(LX/0Zvn;)V
+
+    goto/16 :goto_cb
+
+    :cond_3e
+    instance-of v0, v12, LX/03su;
+
+    if-eqz v0, :cond_f6
+
+    new-instance v0, LX/0Jep;
+
+    invoke-direct {v0, v2, v12, v3}, LX/0Jep;-><init>(LX/0Jpa;LX/04Ia;LX/07CS;)V
+
+    check-cast v12, LX/03su;
+
+    iget-object v1, v12, LX/03su;->A00:LX/02ue;
+
+    invoke-virtual {v1, v0}, LX/02ue;->A02(LX/0Acl;)V
+
+    goto :goto_37
+
+    :cond_4f
+    const-string v1, "ReelApiUtil.createReelsTrayRequestTask - reason: "
+
+    invoke-static {v9}, LX/03sa;->A00(Ljava/lang/Integer;)Ljava/lang/String;
+
+    move-result-object v0
+
+    invoke-static {v1, v0}, LX/002b;->A0W(Ljava/lang/String;Ljava/lang/String;)Ljava/lang/String;
+
+    move-result-object v1
+
+    invoke-static {}, Lcom/facebook/systrace/Systrace;->A0E()Z
+
+    move-result v0
+
+    if-eqz v0, :cond_65
+
+    const v0, 0x771e6190
+
+    invoke-static {v1, v0}, LX/03Al;->A01(Ljava/lang/String;I)V
+    :try_end_65
+    .catchall {:try_start_0 .. :try_end_65} :catchall_da
+
+    :cond_65
+    :try_start_65
+    invoke-static {}, Ljava/util/UUID;->randomUUID()Ljava/util/UUID;
+
+    move-result-object v0
+
+    invoke-virtual {v0}, Ljava/lang/Object;->toString()Ljava/lang/String;
+
+    move-result-object v10
+
+    invoke-static {}, Ljava/util/UUID;->randomUUID()Ljava/util/UUID;
+
+    move-result-object v0
+
+    invoke-virtual {v0}, Ljava/lang/Object;->toString()Ljava/lang/String;
+
+    move-result-object v11
+
+    sget-object v5, LX/03sb;->A00:LX/03sb;
+
+    new-instance v0, LX/02py;
+
+    invoke-direct {v0, v8}, LX/02py;-><init>(Lcom/instagram/common/session/UserSession;)V
+
+    new-instance v1, LX/01i2;
+
+    invoke-direct {v1, v5, v0}, LX/01i2;-><init>(LX/0nQH;LX/0nQI;)V
+
+    const/16 v0, 0xc5
+
+    new-instance v7, LX/01pg;
+
+    invoke-direct {v7, v8, v1, v6, v0}, LX/0AMH;-><init>(LX/04BG;LX/0AHm;LX/0AHm;I)V
+
+    sget-object v0, LX/000A;->A01:Ljava/lang/Integer;
+
+    invoke-virtual {v7, v0}, LX/03u7;->A07(Ljava/lang/Integer;)V
+
+    const-string v0, "feed/reels_tray/"
+
+    iput-object v0, v7, LX/03u7;->A0G:Ljava/lang/String;
+
+    iput-object v14, v7, LX/03u7;->A08:Ljava/lang/Integer;
+
+    invoke-static {v9}, LX/03sa;->A01(Ljava/lang/Integer;)Ljava/lang/String;
+
+    move-result-object v0
+
+    iput-object v0, v7, LX/03u7;->A0C:Ljava/lang/String;
+
+    invoke-static/range {v6 .. v13}, LX/03sA;->A08(Landroid/util/Pair;LX/03u7;Lcom/instagram/common/session/UserSession;Ljava/lang/Integer;Ljava/lang/String;Ljava/lang/String;ZZ)V
+
+    invoke-static {v13}, Ljava/lang/String;->valueOf(Z)Ljava/lang/String;
+
+    move-result-object v1
+
+    const/16 v0, 0xca3
+
+    invoke-static {v0}, LX/0000;->A00(I)Ljava/lang/String;
+
+    move-result-object v0
+
+    invoke-virtual {v7, v0, v1}, LX/03u7;->AMu(Ljava/lang/String;Ljava/lang/String;)V
+
+    invoke-virtual {v7}, LX/0AMH;->A0K()LX/03Da;
+
+    move-result-object v13
+
+    new-instance v12, LX/0Fsx;
+
+    move-object v15, v9
+
+    move-object/from16 v16, v14
+
+    move-object/from16 v17, v11
+
+    move-object/from16 v18, v10
+
+    move-object/from16 v19, v6
+
+    invoke-direct/range {v12 .. v19}, LX/0Fsx;-><init>(LX/03Da;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/String;Ljava/lang/String;Ljava/util/List;)V
+
+    iput-object v6, v12, LX/04Ia;->A00:LX/01qE;
+    :try_end_bd
+    .catchall {:try_start_65 .. :try_end_bd} :catchall_cc
+
+    :try_start_bd
+    invoke-static {}, Lcom/facebook/systrace/Systrace;->A0E()Z
+
+    move-result v0
+
+    if-eqz v0, :cond_27
+
+    const v0, 0x2829cdc3
+
+    invoke-static {v0}, LX/03Al;->A00(I)V
+
+    goto/16 :goto_27
+
+    :goto_cb
+    return-void
+
+    :catchall_cc
+    move-exception v1
+
+    invoke-static {}, Lcom/facebook/systrace/Systrace;->A0E()Z
+
+    move-result v0
+
+    if-eqz v0, :cond_d9
+
+    const v0, -0x5169a810
+
+    invoke-static {v0}, LX/03Al;->A00(I)V
+
+    :cond_d9
+    throw v1
+    :try_end_da
+    .catchall {:try_start_bd .. :try_end_da} :catchall_da
+
+    :catchall_da
+    move-exception v5
+
+    sget-object v3, LX/02tO;->A01:LX/02tO;
+
+    const-string v2, "exception"
+
+    const/4 v1, 0x1
+
+    const v0, 0x10792a45
+
+    invoke-virtual {v3, v2, v0, v1}, LX/02tO;->A05(Ljava/lang/String;IZ)LX/0Iel;
+
+    move-result-object v0
+
+    if-eqz v0, :cond_ef
+
+    invoke-interface {v0, v5}, LX/0Iel;->GcC(Ljava/lang/Throwable;)V
+
+    invoke-interface {v0}, LX/0Iel;->report()V
+
+    :cond_ef
+    iget-object v1, v4, LX/0Aeq;->A00:LX/0Jpa;
+
+    const-string v0, "reel_background_prefetch"
+
+    invoke-interface {v1, v0}, LX/0Jpa;->BDd(Ljava/lang/String;)V
+
+    :cond_f6
+    return-void
+.end method
