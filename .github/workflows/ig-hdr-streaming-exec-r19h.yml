@@ -1,0 +1,192 @@
+name: IG 439 HDR Streaming Exec R19h
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - .github/workflows/ig-hdr-streaming-exec-r19h.yml
+
+permissions:
+  contents: write
+
+jobs:
+  trace:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    env:
+      APK_NAME: instagram-piko-v439.0.0.37.89-arm64-v8a.apk
+      APK_SHA256: 4015b171ac59f3e7172134d194ec2dcf701f64c3339f127c19d7a04c13d529c8
+    steps:
+      - uses: actions/checkout@v6
+        with: {fetch-depth: 0}
+      - uses: actions/setup-java@v5
+        with:
+          distribution: zulu
+          java-version: '21'
+
+      - name: Fetch exact APK and disassemble focused dexes
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          set -euo pipefail
+          mkdir -p work/apk work/smali research/generated
+          gh release download 8 --pattern "$APK_NAME" --dir work
+          echo "$APK_SHA256  work/$APK_NAME" | sha256sum -c -
+          gh release download 3.0.10 --repo baksmali/smali --pattern 'baksmali-3.0.10-fat.jar' --dir work
+          unzip -q "work/$APK_NAME" 'classes*.dex' -d work/apk
+          python3 - <<'PY'
+          from pathlib import Path
+          import subprocess
+          needles=[
+            'LX/02pu;', 'LX/02ue;', 'LX/02xV;',
+            '0xa59b6f5', 'A59B6F5',
+            'X-IG-Accept-Hint', 'clips/items/', 'clips_item_streaming/',
+            'Tigon', 'RequestInterceptor', 'media_delivery', 'video_dash_manifest'
+          ]
+          hit=[]; lines=[]
+          for p in sorted(Path('work/apk').glob('classes*.dex')):
+              s=subprocess.run(['strings','-a',str(p)],capture_output=True,text=True,errors='replace').stdout
+              hs=[n for n in needles if n.lower() in s.lower()]
+              if hs:
+                  hit.append(p.name); lines.append(f'{p.name}: {hs}')
+          Path('work/hitdex.txt').write_text('\n'.join(hit)+'\n')
+          Path('research/generated/instagram_439_hdr_streaming_exec_dex_hits_r19h.txt').write_text('\n'.join(lines)+'\n')
+          print('\n'.join(lines)); print('HITDEX',hit)
+          PY
+          while read d; do
+            [ -n "$d" ] || continue
+            n="${d%.dex}"
+            java -jar work/baksmali-3.0.10-fat.jar d "work/apk/$d" -o "work/smali/$n" >/dev/null &
+          done < work/hitdex.txt
+          wait
+
+      - name: Trace request builder id and streaming execution
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          from pathlib import Path
+          import re
+
+          ROOT=Path('work/smali')
+          OUT=Path('research/generated/instagram_439_hdr_streaming_exec_r19h.txt')
+          cr=re.compile(r'^\.class\s+.*\s+(L[^;]+;)$')
+          inv_re=re.compile(r'(L[^;]+;)->([^\s(]+)\(([^)]*)\)(\S+)')
+          str_re=re.compile(r'^\s*const-string(?:/jumbo)?\s+[^,]+,\s+"(.*)"')
+          methods=[]; classes={}
+          for p in ROOT.rglob('*.smali'):
+              ls=p.read_text(errors='replace').splitlines(); cls='?'
+              for x in ls[:60]:
+                  m=cr.match(x)
+                  if m: cls=m.group(1); break
+              classes[cls]=(p,ls)
+              i=0
+              while i<len(ls):
+                  if not ls[i].startswith('.method'):
+                      i+=1; continue
+                  s=i; sig=ls[i]; i+=1
+                  while i<len(ls) and not ls[i].startswith('.end method'):
+                      i+=1
+                  e=min(i,len(ls)-1); methods.append((cls,sig,p,ls[s:e+1])); i+=1
+
+          O=['Instagram 439 HDR streaming execution R19h','============================================','']
+
+          # Full request builder / request task classes.
+          for target in ['LX/02pu;','LX/02ue;','LX/02xV;']:
+              O += [f'===== FULL CLASS {target} =====']
+              if target not in classes:
+                  O += ['NOT_FOUND','']; continue
+              p,ls=classes[target]
+              O += [f'FILE={p}'] + ls + ['']
+
+          # All constructor xrefs for 02pu and all 02xV.A01 calls.
+          keys=[
+            'LX/02pu;-><init>(LX/04BG;IIZ)V',
+            'LX/02xV;->A01(',
+            'LX/02ue;->',
+          ]
+          for key in keys:
+              O += [f'===== XREF {key} =====','']
+              count=0
+              for cls,sig,p,b in methods:
+                  text='\n'.join(b)
+                  if key not in text: continue
+                  count+=1
+                  O += [f'--- {cls} {sig}',f'FILE={p}']
+                  # concise but enough to recover constants and args
+                  for i,l in enumerate(b):
+                      if key in l:
+                          lo=max(0,i-45); hi=min(len(b),i+35)
+                          O += [f'{j:04d}: {b[j]}' for j in range(lo,hi)]
+                  O += ['']
+              O += [f'COUNT={count}','']
+
+          # All occurrences of the request-id constant and nearby call context.
+          O += ['===== CONSTANT 0x0A59B6F5 OCCURRENCES =====','']
+          for cls,sig,p,b in methods:
+              for i,l in enumerate(b):
+                  low=l.lower().replace('_','')
+                  if '0xa59b6f5' in low or '0x0a59b6f5' in low:
+                      O += [f'--- {cls} {sig}',f'FILE={p}',f'INDEX={i}']
+                      lo=max(0,i-35); hi=min(len(b),i+45)
+                      O += [f'{j:04d}: {b[j]}' for j in range(lo,hi)] + ['']
+
+          # Request-execution methods carrying likely server-visible metadata.
+          needles=('x-ig-','accept','header','codec','hdr','av1','hevc','vp9','dash','manifest','capabil','device','performance','quality','delivery','playback','bandwidth','resolution','screen','media','video','tigon','requestinterceptor','request_type','network')
+          targets={'LX/02pu;','LX/02ue;','LX/02xV;'}
+          O += ['===== TARGET-CLASS SERVER-VISIBLE / MEDIA SEMANTICS =====','']
+          for cls,sig,p,b in methods:
+              if cls not in targets: continue
+              text='\n'.join(b); low=text.lower()
+              hits=[n for n in needles if n in low]
+              if not hits: continue
+              strings=[]; invokes=[]
+              for l in b:
+                  sm=str_re.match(l)
+                  if sm and any(n in sm.group(1).lower() for n in needles): strings.append(sm.group(1))
+                  if 'invoke-' in l:
+                      im=inv_re.search(l)
+                      if im and any(n in (im.group(1)+' '+im.group(2)).lower() for n in ('tigon','request','header','network','media')):
+                          invokes.append(im.groups())
+              O += [f'--- {cls} {sig}',f'FILE={p}',f'HITS={hits}',f'STRINGS={strings}',f'INVOKES={invokes}'] + b + ['']
+
+          # One-hop callees of LX/02xV.A01, then locate their local definitions if present.
+          seed=None
+          for cls,sig,p,b in methods:
+              if cls=='LX/02xV;' and ' A01(' in sig:
+                  seed=(cls,sig,p,b); break
+          if seed:
+              _,sig,p,b=seed
+              callees=[]
+              for l in b:
+                  if 'invoke-' not in l: continue
+                  m=inv_re.search(l)
+                  if m: callees.append(m.groups())
+              O += ['===== LX/02xV.A01 CALLEES =====',f'SIG={sig}',f'FILE={p}',f'CALLEES={callees}','']
+              seen=set()
+              for owner,name,args,ret in callees:
+                  key=(owner,name,args,ret)
+                  if key in seen: continue
+                  seen.add(key)
+                  for cls2,sig2,p2,b2 in methods:
+                      if cls2!=owner: continue
+                      if f' {name}(' not in sig2: continue
+                      # signature args may be overloaded; emit all same-name local defs
+                      O += [f'--- LOCAL CALLEE {owner}->{name} wanted=({args}){ret}',f'{sig2}',f'FILE={p2}']+b2+['']
+
+          OUT.write_text('\n'.join(O),encoding='utf-8')
+          print('\n'.join(O[:10000]))
+          print('bytes',OUT.stat().st_size)
+          PY
+
+      - name: Commit R19h reports
+        run: |
+          set -euo pipefail
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add research/generated/instagram_439_hdr_streaming_exec_dex_hits_r19h.txt research/generated/instagram_439_hdr_streaming_exec_r19h.txt
+          if ! git diff --cached --quiet; then
+            git commit -m 'Add Clips streaming execution trace R19h'
+            git pull --rebase origin main
+            git push origin HEAD:main
+          fi
