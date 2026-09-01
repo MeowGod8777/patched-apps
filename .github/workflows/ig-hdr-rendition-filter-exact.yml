@@ -1,0 +1,140 @@
+name: IG 439 HDR Rendition Filter Exact
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - .github/workflows/ig-hdr-rendition-filter-exact.yml
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  probe:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    env:
+      APK_NAME: instagram-piko-v439.0.0.37.89-arm64-v8a.apk
+      APK_SHA256: 4015b171ac59f3e7172134d194ec2dcf701f64c3339f127c19d7a04c13d529c8
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+      - name: Download/disassemble exact R8
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          mkdir -p work/dex work/dis research/generated
+          gh release download 8 --pattern "$APK_NAME" --dir work
+          echo "$APK_SHA256  work/$APK_NAME" | sha256sum -c -
+          unzip -j "work/$APK_NAME" 'classes*.dex' -d work/dex
+          DEXDUMP="$(find "$ANDROID_HOME/build-tools" -type f -name dexdump | sort -V | tail -1)"
+          for d in work/dex/classes*.dex; do b="$(basename "$d" .dex)"; "$DEXDUMP" -d -f -h "$d" > "work/dis/$b.txt"; done
+      - name: Extract exact representation filter / AV1 HDR methods
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          import re
+
+          exact = [
+            'ALL_VALID_VIDEO_REPRESENTATION_FILTERED_OUT',
+            'NO_VALID_VIDEO_REPRESENTATION_FALLBACK_PROGRESSIVE',
+            'NO_VALID_VIDEO_REPRESENTATION',
+            'NO_VIDEO_REPRESENTATIONS',
+            'MANIFEST_REPRESENTATION_FORMAT_MISMATCH',
+            'MANIFEST_REPRESENTATION_COUNT',
+            'ENABLE_REPRESENTATION_ID_CHECK',
+            'is_av1_hdr_supported',
+            'is_hevc_hdr_supported',
+            'hdr_supported',
+            'display_hdr_supported',
+            'server_abr_enabled',
+            'original_is_hdr',
+            'tenBitAv1',
+            'hdrType',
+          ]
+          mh = re.compile(r'\|\[[0-9a-f]+\]\s+([^\s]+):')
+          invoke_x = re.compile(r'(LX/[A-Za-z0-9_$]+;\.[A-Za-z0-9_$<>]+:\([^\s]*?\)[^\s/]+)')
+          methods=[]
+          for p in sorted(Path('work/dis').glob('classes*.txt')):
+              lines=p.read_text(errors='replace').splitlines()
+              starts=[]; heads=[]
+              for i,l in enumerate(lines):
+                  m=mh.search(l)
+                  if m: starts.append(i); heads.append(m.group(1))
+              for j,s in enumerate(starts):
+                  e=starts[j+1] if j+1<len(starts) else len(lines)
+                  methods.append({'file':p.name,'s':s+1,'e':e,'head':heads[j],'body':lines[s:e]})
+
+          out=['Instagram 439 exact HDR rendition filter trace','==============================================','',f'APK SHA256: {"4015b171ac59f3e7172134d194ec2dcf701f64c3339f127c19d7a04c13d529c8"}','']
+
+          matched=[]
+          helper_refs=set()
+          def semantic(m,label,maxlines=500):
+              out.append(f'===== {label} :: {m["file"]}:{m["s"]}-{m["e"]} :: {m["head"]} =====')
+              txt='\n'.join(m['body'])
+              hits=[x for x in exact if x in txt]
+              if hits: out.append('EXACT HITS: ' + ' | '.join(hits))
+              for l in m['body']:
+                  if ('const-string' in l or 'invoke-' in l or 'new-instance' in l or 'check-cast' in l or
+                      'instance-of' in l or 'return-' in l or 'if-' in l or 'switch' in l or
+                      'LX/03oR;' in l or 'MediaCodec' in l or 'MediaFormat' in l or 'Representation' in l or
+                      'AdaptationSet' in l or 'Dash' in l or 'manifest' in l.lower() or 'abr' in l.lower() or
+                      'hdr' in l.lower() or 'profile' in l.lower() or 'codec' in l.lower() or
+                      'video/' in l or 'bitrate' in l.lower() or 'bandwidth' in l.lower()):
+                      out.append(l.rstrip())
+              out.append('')
+
+          for m in methods:
+              txt='\n'.join(m['body'])
+              if any(x in txt for x in exact):
+                  matched.append(m)
+                  semantic(m,'exact-string owner')
+                  for l in m['body']:
+                      if 'invoke-' in l:
+                          helper_refs.update(invoke_x.findall(l))
+
+          out.append(f'===== exact-string owner count={len(matched)} =====')
+          out.append('')
+
+          # Dump definitions of X helpers directly invoked by exact-string owners.
+          # Match class.method prefix because reconstructing full descriptor from dexdump header is fragile.
+          prefixes=set()
+          for sig in helper_refs:
+              mm=re.match(r'LX/([^;]+);\.([^:]+):',sig)
+              if mm: prefixes.add(f'X.{mm.group(1)}.{mm.group(2)}:')
+          helper_defs=[]
+          for m in methods:
+              if any(m['head'].startswith(p) for p in prefixes):
+                  helper_defs.append(m)
+          out.append(f'===== directly invoked X-helper definitions count={len(helper_defs)} =====')
+          for m in helper_defs[:180]: semantic(m,'direct helper definition',360)
+          if len(helper_defs)>180: out.append(f'... omitted {len(helper_defs)-180} helper definitions ...\n')
+
+          # One-layer callers of exact-string-owner methods by class.method prefix.
+          owner_prefixes=[]
+          for m in matched:
+              mm=re.match(r'X\.([^.]+)\.([^:]+):',m['head'])
+              if mm: owner_prefixes.append(f'LX/{mm.group(1)};.{mm.group(2)}:')
+          callers=[]
+          for m in methods:
+              if m in matched: continue
+              txt='\n'.join(m['body'])
+              if any(p in txt for p in owner_prefixes): callers.append(m)
+          out.append(f'===== one-layer callers of exact owners count={len(callers)} =====')
+          for m in callers[:160]: semantic(m,'caller of exact-string owner',320)
+          if len(callers)>160: out.append(f'... omitted {len(callers)-160} callers ...\n')
+
+          path=Path('research/generated/instagram_439_hdr_rendition_filter_exact.txt')
+          path.write_text('\n'.join(out)+'\n')
+          print(path.read_text()[:190000])
+          PY
+      - name: Commit
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add research/generated/instagram_439_hdr_rendition_filter_exact.txt
+          if ! git diff --cached --quiet; then git commit -m "Trace Instagram 439 exact HDR rendition filter"; fi
+          git pull --rebase origin main
+          git push origin HEAD:main
