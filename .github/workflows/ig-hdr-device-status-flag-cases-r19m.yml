@@ -1,0 +1,82 @@
+name: IG 439 HDR Device Status Flag Cases R19m
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - .github/workflows/ig-hdr-device-status-flag-cases-r19m.yml
+
+permissions:
+  contents: write
+
+jobs:
+  trace:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    env:
+      APK_NAME: instagram-piko-v439.0.0.37.89-arm64-v8a.apk
+      APK_SHA256: 4015b171ac59f3e7172134d194ec2dcf701f64c3339f127c19d7a04c13d529c8
+    steps:
+      - uses: actions/checkout@v6
+        with: {fetch-depth: 0}
+      - uses: actions/setup-java@v5
+        with:
+          distribution: zulu
+          java-version: '21'
+      - name: Fetch exact APK and exact dexes
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          set -euo pipefail
+          mkdir -p work/apk work/smali research/generated
+          gh release download 8 --pattern "$APK_NAME" --dir work
+          echo "$APK_SHA256  work/$APK_NAME" | sha256sum -c -
+          gh release download 3.0.10 --repo baksmali/smali --pattern 'baksmali-3.0.10-fat.jar' --dir work
+          unzip -q "work/$APK_NAME" 'classes*.dex' -d work/apk
+          for d in classes15.dex classes19.dex; do
+            java -jar work/baksmali-3.0.10-fat.jar d "work/apk/$d" -o "work/smali/${d%.dex}" >/dev/null &
+          done
+          wait
+
+      - name: Resolve exact lazy bodies
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          from pathlib import Path
+          import re
+          O=['Instagram 439 device_status HDR exact flag cases R19m','================================================','']
+          # Dump full 07mA invoke because t=0 is small enough to resolve by reading switch.
+          for p in Path('work/smali').rglob('07mA.smali'):
+            txt=p.read_text(errors='replace')
+            O += [f'===== FULL 07mA FILE={p} =====',txt,'']
+          # For 0GiY, extract A01 plus make a small structural summary around AV1/VP9 branches.
+          for p in Path('work/smali').rglob('0GiY.smali'):
+            ls=p.read_text(errors='replace').splitlines()
+            i=next((i for i,x in enumerate(ls) if x.startswith('.method public static A01(I)Ljava/lang/Object;')),None)
+            if i is None: continue
+            j=i+1
+            while j<len(ls) and not ls[j].startswith('.end method'): j+=1
+            b=ls[i:j+1]
+            O += [f'===== FULL 0GiY.A01 FILE={p} =====']+b+['']
+            # concise windows around video types and calls into DecoderCapabilityUtil
+            O += ['===== 0GiY.A01 RELEVANT WINDOWS =====']
+            for k,x in enumerate(b):
+              if 'video/av01' in x or 'LX/0GjW;->A01' in x or 'LX/0GjW;->A02' in x or 'video/x-vnd.on2.vp9' in x:
+                O += [f'--- window @{k} ---']+b[max(0,k-14):min(len(b),k+22)]
+          text='\n'.join(O)
+          Path('research/generated/instagram_439_hdr_device_status_flag_cases_r19m.txt').write_text(text,encoding='utf-8')
+          print(text[:250000])
+          PY
+
+      - name: Commit R19m report
+        run: |
+          set -euo pipefail
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add research/generated/instagram_439_hdr_device_status_flag_cases_r19m.txt
+          if ! git diff --cached --quiet; then
+            git commit -m 'Add exact device_status HDR flag cases R19m'
+            git pull --rebase origin main
+            git push origin HEAD:main
+          fi
