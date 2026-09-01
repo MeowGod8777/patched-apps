@@ -1,0 +1,218 @@
+name: IG 439 HDR Tigon Request Metadata R18
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - .github/workflows/ig-hdr-tigon-request-metadata-r18.yml
+
+permissions:
+  contents: write
+
+jobs:
+  trace:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    env:
+      APK_NAME: instagram-piko-v439.0.0.37.89-arm64-v8a.apk
+      APK_SHA256: 4015b171ac59f3e7172134d194ec2dcf701f64c3339f127c19d7a04c13d529c8
+    steps:
+      - uses: actions/checkout@v6
+        with: {fetch-depth: 0}
+      - uses: actions/setup-java@v5
+        with:
+          distribution: zulu
+          java-version: '21'
+      - name: Prepare exact smali
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          set -euo pipefail
+          mkdir -p work/apk work/smali research/generated
+          gh release download 8 --pattern "$APK_NAME" --dir work
+          echo "$APK_SHA256  work/$APK_NAME" | sha256sum -c -
+          gh release download 3.0.10 --repo baksmali/smali --pattern 'baksmali-3.0.10-fat.jar' --dir work
+          unzip -q "work/$APK_NAME" 'classes*.dex' -d work/apk
+          for d in work/apk/classes*.dex; do
+            n="$(basename "$d" .dex)"
+            java -jar work/baksmali-3.0.10-fat.jar d "$d" -o "work/smali/$n" >/dev/null &
+          done
+          wait
+
+      - name: Trace Tigon interceptors, headers, and Reels reachability
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          from pathlib import Path
+          import re, collections
+          ROOT=Path('work/smali')
+          OUT=Path('research/generated/instagram_439_hdr_tigon_request_metadata_r18.txt')
+          cr=re.compile(r'^\.class\s+.*\s+(L[^;]+;)$')
+          sr=re.compile(r'^\.super\s+(L[^;]+;)$')
+          mr=re.compile(r'^\.method\s+.*?([^\s]+\([^)]*\).+)$')
+          ir=re.compile(r'invoke-[^\s]+\s+\{[^}]*\},\s+(L[^;]+;->[^\s]+)')
+          strr=re.compile(r'^\s*const-string(?:/jumbo)?\s+[^,]+,\s+"(.*)"')
+          M={}; C=collections.defaultdict(set); classmeta={}
+          for p in ROOT.rglob('*.smali'):
+            ls=p.read_text(errors='replace').splitlines(); cls=None; sup=None
+            for x in ls[:40]:
+              q=cr.match(x)
+              if q: cls=q.group(1)
+              q=sr.match(x)
+              if q: sup=q.group(1)
+            if not cls: continue
+            classmeta[cls]=(str(p),sup,ls)
+            i=0
+            while i<len(ls):
+              q=mr.match(ls[i])
+              if not q: i+=1; continue
+              ref=cls+'->'+q.group(1); s=i; i+=1
+              while i<len(ls) and not ls[i].startswith('.end method'): i+=1
+              b=ls[s:min(i+1,len(ls))]; inv=[]; ss=[]
+              for x in b:
+                z=ir.search(x)
+                if z: inv.append(z.group(1))
+                z=strr.match(x)
+                if z: ss.append(z.group(1))
+              M[ref]={'file':str(p),'body':b,'invokes':inv,'strings':ss,'class':cls}
+              for n in inv: C[n].add(ref)
+              i+=1
+          def body(m): return '\n'.join(M[m]['body'])
+          def emit(O,m,label):
+            if m not in M: return
+            d=M[m]
+            O += [f'===== {label} {m} =====', 'FILE: '+d['file'],
+                  'STRINGS: '+' | '.join(dict.fromkeys(d['strings'])),
+                  'CALLERS: '+' | '.join(sorted(C.get(m,()))[:80]),
+                  'CALLEES: '+' | '.join(dict.fromkeys(d['invokes'][:120]))]
+            O += d['body']; O.append('')
+          def bfs(starts, reverse=False, md=10):
+            D={x:0 for x in starts if x in M}; q=collections.deque(D)
+            while q:
+              x=q.popleft(); d=D[x]
+              if d>=md: continue
+              ns=C.get(x,()) if reverse else M[x]['invokes']
+              for n in ns:
+                if n in M and n not in D:
+                  D[n]=d+1; q.append(n)
+            return D
+
+          reel_needles=('clips_viewer_feed_timeline','clips_viewer_reel_feed_timeline','reel_feed_timeline',
+                        'clips_viewer_homecoming_fyp','starting_clips_media_id','clips_fetch','clips/feed',
+                        'reels/feed','feed/reels','clips/items','clips_media','reels_media')
+          reels=set()
+          for m,d in M.items():
+            t=(body(m)+'\n'+'\n'.join(d['strings'])).lower()
+            if any(k in t for k in reel_needles): reels.add(m)
+          reel_f=bfs(reels,False,10); reel_r=bfs(reels,True,10)
+
+          header_words=('x-ig-','x-fb-','x-mid','x-pigeon','user-agent','capabilities','device_id','device-id',
+                        'device_model','device-model','android-id','family_device','phone_id','machine_id',
+                        'bandwidth','connection-type','client-cap','device_class','device-class','hardware')
+          header_methods=set()
+          for m,d in M.items():
+            t=(body(m)+'\n'+'\n'.join(d['strings'])).lower()
+            if any(k in t for k in header_words): header_methods.add(m)
+
+          interceptor_classes=set()
+          for cls,(p,sup,ls) in classmeta.items():
+            txt='\n'.join(ls[:80])
+            if sup in ('Lcom/facebook/tigon/interceptors/RequestInterceptor;','Lcom/facebook/tigon/interceptors/Interceptor;') \
+               or 'Lcom/facebook/tigon/interceptors/RequestInterceptor;' in txt:
+              interceptor_classes.add(cls)
+          interceptor_methods={m for m,d in M.items() if d['class'] in interceptor_classes}
+
+          core={'LX/02nh;->CMt(LX/04BG;)Lcom/facebook/tigon/interceptors/RequestInterceptor;',
+                'LX/02lw;->A00(LX/04BG;)Lcom/instagram/service/tigon/IGTigonService;',
+                'LX/02vG;->A02(I)Ljava/util/Set;',
+                'LX/02mf;-><init>(LX/04BG;)V'}
+          core_rev=bfs(core,True,10)
+          hdr_rev=bfs(header_methods,True,10)
+
+          O=['Instagram 439 HDR Tigon request metadata R18','============================================',
+             f'methods={len(M)} reels={len(reels)} header_methods={len(header_methods)} interceptor_classes={len(interceptor_classes)}','']
+
+          O += ['===== A. CORE TIGON REQUEST REGISTRY =====','']
+          for prefix in ('LX/02nh;->','LX/02vG;->','LX/02mf;->','LX/02lw;->'):
+            for m in sorted(x for x in M if x.startswith(prefix)):
+              emit(O,m,'CORE')
+
+          O += ['===== B. REQUEST INTERCEPTOR CLASSES =====','']
+          for cls in sorted(interceptor_classes):
+            p,sup,ls=classmeta[cls]
+            strings=[]
+            for x in ls:
+              z=strr.match(x)
+              if z: strings.append(z.group(1))
+            O += [f'INTERCEPTOR {cls} SUPER={sup} FILE={p}', 'STRINGS: '+' | '.join(dict.fromkeys(strings))]
+            for m in sorted(x for x in M if M[x]['class']==cls):
+              O += ['  METHOD '+m, '    CALLERS: '+' | '.join(sorted(C.get(m,()))[:40]),
+                    '    CALLEES: '+' | '.join(dict.fromkeys(M[m]['invokes'][:60]))]
+            O.append('')
+
+          O += ['===== C. SERVER-VISIBLE HEADER / DEVICE METADATA PRODUCERS =====','']
+          ranked=[]
+          for m in header_methods:
+            d=min(reel_f.get(m,99),reel_r.get(m,99)); tc=core_rev.get(m,99)
+            t=(body(m)+'\n'+'\n'.join(M[m]['strings'])).lower()
+            score=(20 if d<=3 else 10 if d<=6 else 0)+(15 if tc<=3 else 8 if tc<=6 else 0)
+            score += sum(2 for k in header_words if k in t)
+            if d<=10 or tc<=8 or M[m]['class'] in interceptor_classes:
+              ranked.append((-score,d,tc,m))
+          for ns,d,tc,m in sorted(ranked)[:220]:
+            O += [f'META score={-ns} reel={d} tigon={tc} {m}',
+                  '  STRINGS: '+' | '.join(dict.fromkeys(M[m]['strings'])),
+                  '  CALLERS: '+' | '.join(sorted(C.get(m,()))[:50]),
+                  '  CALLEES: '+' | '.join(dict.fromkeys(M[m]['invokes'][:80]))]
+
+          O += ['','===== D. BUILD / HARDWARE READERS THAT FEED REQUEST-NEAR METHODS =====','']
+          buildtokens=('Landroid/os/Build;->MODEL','Landroid/os/Build;->DEVICE','Landroid/os/Build;->MANUFACTURER',
+                       'Landroid/os/Build;->HARDWARE','Landroid/os/Build;->PRODUCT','Landroid/os/Build;->BRAND',
+                       'Landroid/os/Build;->FINGERPRINT','Landroid/os/Build$VERSION;->SDK_INT')
+          for m in sorted(M):
+            t=body(m)
+            if any(k in t for k in buildtokens):
+              d=min(reel_f.get(m,99),reel_r.get(m,99)); tc=core_rev.get(m,99); hr=hdr_rev.get(m,99)
+              if d<=10 or tc<=8 or hr<=4:
+                O += [f'BUILD reel={d} tigon={tc} header={hr} {m}',
+                      '  STRINGS: '+' | '.join(dict.fromkeys(M[m]['strings'])),
+                      '  CALLERS: '+' | '.join(sorted(C.get(m,()))[:60]),
+                      '  CALLEES: '+' | '.join(dict.fromkeys(M[m]['invokes'][:80]))]
+
+          O += ['','===== E. REELS REQUEST METHODS WITH SERVER-METADATA LINKS =====','']
+          for m in sorted(reels):
+            hf=hdr_rev.get(m,99); cf=core_rev.get(m,99)
+            if hf<=10 or cf<=10:
+              O += [f'REEL header={hf} tigon={cf} {m}',
+                    '  STRINGS: '+' | '.join(dict.fromkeys(M[m]['strings'])),
+                    '  CALLERS: '+' | '.join(sorted(C.get(m,()))[:50]),
+                    '  CALLEES: '+' | '.join(dict.fromkeys(M[m]['invokes'][:100]))]
+
+          # Full bodies for the most promising server-visible metadata methods.
+          O += ['','===== F. TOP METADATA METHOD BODIES =====','']
+          seen=set()
+          for ns,d,tc,m in sorted(ranked):
+            if m in seen: continue
+            if -ns < 16: continue
+            emit(O,m,'TOP_META'); seen.add(m)
+            if len(seen)>=45: break
+
+          out='\n'.join(O)
+          if len(out)>980000: out=out[:980000]+'\n[TRUNCATED 980KB]\n'
+          OUT.write_text(out,encoding='utf-8')
+          print(out[:260000])
+          print('bytes',OUT.stat().st_size,'interceptor_classes',len(interceptor_classes),'ranked',len(ranked))
+          PY
+
+      - name: Commit report
+        run: |
+          set -euo pipefail
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add research/generated/instagram_439_hdr_tigon_request_metadata_r18.txt
+          if ! git diff --cached --quiet; then
+            git commit -m 'Add Instagram HDR Tigon request metadata trace R18'
+            git pull --rebase origin main
+            git push origin HEAD:main
+          fi
