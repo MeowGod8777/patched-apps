@@ -1,0 +1,280 @@
+name: Build IG HDR Eligibility R13
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - .github/workflows/build-ig-hdr-eligibility-r13.yml
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    env:
+      BASE_APK: instagram-piko-v439.0.0.37.89-arm64-v8a.apk
+      BASE_SHA256: 4015b171ac59f3e7172134d194ec2dcf701f64c3339f127c19d7a04c13d529c8
+      OUT_APK: instagram-piko-v439.0.0.37.89-hdr-eligibility-r13.apk
+      TAG: ig-hdr-eligibility-r13
+    steps:
+      - uses: actions/checkout@v6
+      - uses: actions/setup-java@v5
+        with:
+          distribution: zulu
+          java-version: '21'
+
+      - name: Download exact APK and smali tools
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          set -euo pipefail
+          mkdir -p work/smali2 work/smali4 work/smali12 work/smali13 out
+          gh release download 8 --pattern "$BASE_APK" --dir work
+          echo "$BASE_SHA256  work/$BASE_APK" | sha256sum -c -
+          gh release download 3.0.10 --repo baksmali/smali --pattern 'smali-3.0.10-fat.jar' --pattern 'baksmali-3.0.10-fat.jar' --dir work
+          sudo apt-get update -qq
+          sudo apt-get install -y -qq libbcprov-java
+          for n in 2 4 12 13; do
+            unzip -p "work/$BASE_APK" "classes${n}.dex" > "work/classes${n}.dex"
+            java -jar work/baksmali-3.0.10-fat.jar d "work/classes${n}.dex" -o "work/smali${n}"
+          done
+          test -f work/smali2/X/02rk.smali
+          test -f work/smali4/X/0Uiy.smali
+          test -f work/smali12/X/0hTo.smali
+          test -f work/smali13/com/instagram/feed/media/LiveTreeMediaDict.smali
+
+      - name: Patch scoped Instagram network User-Agent identity
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          from pathlib import Path
+          p=Path('work/smali2/X/02rk.smali')
+          lines=p.read_text().splitlines()
+          needle='.method public static final declared-synchronized A00()Ljava/lang/String;'
+          starts=[i for i,l in enumerate(lines) if l.strip()==needle]
+          if len(starts)!=1: raise SystemExit(f'UA A00 count={len(starts)}')
+          s=starts[0]
+          e=next(i for i in range(s+1,len(lines)) if lines[i].startswith('.end method'))
+          # Method has no parameters; grow from 2 to 3 registers for v2.
+          reg=next(i for i in range(s+1,min(s+12,e)) if lines[i].strip().startswith('.registers'))
+          if lines[reg].strip() != '.registers 2':
+              raise SystemExit(f'unexpected UA register directive: {lines[reg]}')
+          lines[reg]=lines[reg].replace('.registers 2','.registers 3')
+          e += 0
+          # Find exact generated-UA call and move-result.
+          call=[i for i in range(s,e) if 'LX/02xS;->A00(Landroid/content/Context;)Ljava/lang/String;' in lines[i]]
+          if len(call)!=1: raise SystemExit(f'UA generator call count={len(call)}')
+          i=call[0]
+          mr=next(j for j in range(i+1,min(i+5,e)) if lines[j].strip()=='move-result-object v0')
+          inject=[
+            '',
+            '    # R13: scoped backend device-classification spoof; only Instagram network UA.',
+            '    const-string v1, "vivo"',
+            '    const-string v2, "samsung"',
+            '    invoke-virtual {v0, v1, v2}, Ljava/lang/String;->replace(Ljava/lang/CharSequence;Ljava/lang/CharSequence;)Ljava/lang/String;',
+            '    move-result-object v0',
+            '    const-string v1, "V2329A"',
+            '    const-string v2, "SM-S928B"',
+            '    invoke-virtual {v0, v1, v2}, Ljava/lang/String;->replace(Ljava/lang/CharSequence;Ljava/lang/CharSequence;)Ljava/lang/String;',
+            '    move-result-object v0',
+            '    const-string v1, "PD2329B"',
+            '    const-string v2, "e3q"',
+            '    invoke-virtual {v0, v1, v2}, Ljava/lang/String;->replace(Ljava/lang/CharSequence;Ljava/lang/CharSequence;)Ljava/lang/String;',
+            '    move-result-object v0',
+            '    const-string v1, "PD2329"',
+            '    const-string v2, "e3q"',
+            '    invoke-virtual {v0, v1, v2}, Ljava/lang/String;->replace(Ljava/lang/CharSequence;Ljava/lang/CharSequence;)Ljava/lang/String;',
+            '    move-result-object v0',
+            ''
+          ]
+          lines[mr+1:mr+1]=inject
+          p.write_text('\n'.join(lines)+'\n')
+          print('patched scoped UA -> samsung/SM-S928B/e3q')
+          PY
+          java -jar work/smali-3.0.10-fat.jar a work/smali2 -o work/classes2-patched.dex
+
+      - name: Force ODC HDR display and decoder classifier outputs true
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          from pathlib import Path
+          p=Path('work/smali4/X/0Uiy.smali')
+          lines=p.read_text().splitlines()
+          targets=['key_display_hdr_supported','key_video_decoder_hdr_supported']
+          for key in targets:
+              hits=[i for i,l in enumerate(lines) if f'"{key}"' in l]
+              if len(hits)!=1: raise SystemExit(f'{key} count={len(hits)}')
+              i=hits[0]
+              # Value was loaded as Boolean in v1 immediately before key; override only the
+              # value passed to the One Device Classifier/analytics field writer.
+              inv=next(j for j in range(i+1,min(i+8,len(lines))) if 'LX/00vy;->A0n(Ljava/lang/String;Ljava/lang/Boolean;)V' in lines[j])
+              lines[inv:inv]=['    sget-object v1, Ljava/lang/Boolean;->TRUE:Ljava/lang/Boolean;']
+          p.write_text('\n'.join(lines)+'\n')
+          print('forced ODC display HDR + video decoder HDR true')
+          PY
+          java -jar work/smali-3.0.10-fat.jar a work/smali4 -o work/classes4-patched.dex
+
+      - name: Force persisted decoder HDR capability true
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          from pathlib import Path
+          import re
+          p=Path('work/smali12/X/0hTo.smali')
+          lines=p.read_text().splitlines()
+          required=['video_decoder_hdr_supported']
+          optional=['video_av1_hardware_decoder_supported','video_hevc_hardware_decoder_supported','display_hdr_supported']
+          patched=[]
+          for key in required+optional:
+              hits=[i for i,l in enumerate(lines) if f'"{key}"' in l]
+              if not hits:
+                  if key in required: raise SystemExit(f'missing required {key}')
+                  print('optional absent:',key); continue
+              if len(hits)!=1: raise SystemExit(f'{key} count={len(hits)}')
+              i=hits[0]
+              inv=None
+              for j in range(i+1,min(i+12,len(lines))):
+                  if 'SharedPreferences$Editor;->putBoolean(Ljava/lang/String;Z)' in lines[j]:
+                      inv=j; break
+              if inv is None:
+                  if key in required: raise SystemExit(f'no putBoolean after {key}')
+                  print('optional not persisted here:',key); continue
+              m=re.search(r'invoke-interface \{([^}]*)\}', lines[inv])
+              if not m: raise SystemExit(f'cannot parse invoke for {key}')
+              regs=[x.strip() for x in m.group(1).split(',')]
+              if len(regs)<3: raise SystemExit(f'bad putBoolean regs {key}: {regs}')
+              value_reg=regs[-1]
+              lines[inv:inv]=[f'    const/4 {value_reg}, 0x1']
+              patched.append(key)
+          p.write_text('\n'.join(lines)+'\n')
+          print('persisted forced true:',patched)
+          PY
+          java -jar work/smali-3.0.10-fat.jar a work/smali12 -o work/classes12-patched.dex
+
+      - name: Keep one proven RAW video_dash_manifest observer
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          from pathlib import Path
+          p=Path('work/smali13/com/instagram/feed/media/LiveTreeMediaDict.smali')
+          lines=p.read_text().splitlines()
+          needle='.method public final A7q()Ljava/lang/String;'
+          starts=[i for i,l in enumerate(lines) if l.strip()==needle]
+          if len(starts)!=1: raise SystemExit(f'A7q count={len(starts)}')
+          s=starts[0]
+          e=next(i for i in range(s+1,len(lines)) if lines[i].startswith('.end method'))
+          out=[]; patched=0
+          for l in lines[s:e+1]:
+              if l.strip()=='return-object v0':
+                  indent=l[:len(l)-len(l.lstrip())]
+                  out.append(f'{indent}invoke-static {{v0}}, Lcom/instagram/feed/media/LiveTreeMediaDict;->hdrRawR13(Ljava/lang/String;)V')
+                  patched+=1
+              out.append(l)
+          if patched!=2: raise SystemExit(f'A7q return count={patched}')
+          lines[s:e+1]=out
+          lines += [
+            '',
+            '.method private static hdrRawR13(Ljava/lang/String;)V',
+            '    .registers 9',
+            '    if-eqz p0, :done_raw',
+            '    invoke-virtual {p0}, Ljava/lang/String;->length()I',
+            '    move-result v0',
+            '    invoke-virtual {p0}, Ljava/lang/String;->hashCode()I',
+            '    move-result v6',
+            '    const/4 v1, 0x0',
+            ':raw_loop',
+            '    if-ge v1, v0, :done_raw',
+            '    add-int/lit16 v2, v1, 0xbb8',
+            '    invoke-static {v2, v0}, Ljava/lang/Math;->min(II)I',
+            '    move-result v2',
+            '    invoke-virtual {p0, v1, v2}, Ljava/lang/String;->substring(II)Ljava/lang/String;',
+            '    move-result-object v3',
+            '    new-instance v4, Ljava/lang/StringBuilder;',
+            '    invoke-direct {v4}, Ljava/lang/StringBuilder;-><init>()V',
+            '    const-string v5, "hash="',
+            '    invoke-virtual {v4, v5}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;',
+            '    invoke-virtual {v4, v6}, Ljava/lang/StringBuilder;->append(I)Ljava/lang/StringBuilder;',
+            '    const-string v5, " off="',
+            '    invoke-virtual {v4, v5}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;',
+            '    invoke-virtual {v4, v1}, Ljava/lang/StringBuilder;->append(I)Ljava/lang/StringBuilder;',
+            '    const-string v5, " "',
+            '    invoke-virtual {v4, v5}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;',
+            '    invoke-virtual {v4, v3}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;',
+            '    invoke-virtual {v4}, Ljava/lang/Object;->toString()Ljava/lang/String;',
+            '    move-result-object v3',
+            '    const-string v4, "IG_HDR_R13_RAW"',
+            '    invoke-static {v4, v3}, Landroid/util/Log;->i(Ljava/lang/String;Ljava/lang/String;)I',
+            '    move v1, v2',
+            '    goto :raw_loop',
+            ':done_raw',
+            '    return-void',
+            '.end method',
+            ''
+          ]
+          p.write_text('\n'.join(lines)+'\n')
+          PY
+          java -jar work/smali-3.0.10-fat.jar a work/smali13 -o work/classes13-patched.dex
+
+      - name: Repack align and sign with exact Release 8 key
+        run: |
+          set -euo pipefail
+          cp "work/$BASE_APK" work/unsigned.apk
+          zip -q -d work/unsigned.apk classes2.dex classes4.dex classes12.dex classes13.dex || true
+          zip -q -d work/unsigned.apk 'META-INF/*' || true
+          for n in 2 4 12 13; do cp "work/classes${n}-patched.dex" "work/classes${n}.dex"; done
+          (cd work && zip -q -0 unsigned.apk classes2.dex classes4.dex classes12.dex classes13.dex)
+          ZIPALIGN="$(find "$ANDROID_HOME/build-tools" -type f -name zipalign | sort -V | tail -1)"
+          "$ZIPALIGN" -f -p 4 work/unsigned.apk work/aligned.apk
+          BCJAR="$(find /usr/share/java -maxdepth 1 -type f -name 'bcprov*.jar' | head -1)"
+          keytool -importkeystore -srckeystore ks.keystore -srcstoretype BKS -srcstorepass 123456789 -srcalias andrewliang -srckeypass 123456789 -destkeystore work/ks-r8.p12 -deststoretype PKCS12 -deststorepass 123456789 -destkeypass 123456789 -destalias andrewliang -providerclass org.bouncycastle.jce.provider.BouncyCastleProvider -providerpath "$BCJAR" -noprompt
+          java -jar bin/apksigner.jar sign --ks work/ks-r8.p12 --ks-type PKCS12 --ks-pass pass:123456789 --key-pass pass:123456789 --ks-key-alias andrewliang --out "out/$OUT_APK" work/aligned.apk
+          rm -f "out/$OUT_APK.idsig"
+
+      - name: Verify exact patches and signing identity
+        run: |
+          set -euo pipefail
+          unzip -t "out/$OUT_APK" >/dev/null
+          java -jar bin/apksigner.jar verify --verbose --print-certs "out/$OUT_APK" | tee out/verify.txt
+          ORIG_CERT=$(java -jar bin/apksigner.jar verify --print-certs "work/$BASE_APK" | sed -n 's/^Signer #1 certificate SHA-256 digest: //p' | head -1)
+          NEW_CERT=$(java -jar bin/apksigner.jar verify --print-certs "out/$OUT_APK" | sed -n 's/^Signer #1 certificate SHA-256 digest: //p' | head -1)
+          printf 'original_cert=%s\nnew_cert=%s\n' "$ORIG_CERT" "$NEW_CERT" | tee out/cert-match.txt
+          test -n "$ORIG_CERT" && test "$ORIG_CERT" = "$NEW_CERT"
+          for n in 2 4 12 13; do
+            unzip -p "out/$OUT_APK" "classes${n}.dex" > "work/verify${n}.dex"
+            java -jar work/baksmali-3.0.10-fat.jar d "work/verify${n}.dex" -o "work/verify${n}"
+          done
+          grep -q 'SM-S928B' work/verify2/X/02rk.smali
+          grep -q 'samsung' work/verify2/X/02rk.smali
+          grep -A5 -B5 'key_display_hdr_supported' work/verify4/X/0Uiy.smali | grep -q 'Boolean;->TRUE'
+          grep -A5 -B5 'key_video_decoder_hdr_supported' work/verify4/X/0Uiy.smali | grep -q 'Boolean;->TRUE'
+          grep -A8 -B4 'video_decoder_hdr_supported' work/verify12/X/0hTo.smali | grep -q 'const/4'
+          grep -q 'IG_HDR_R13_RAW' work/verify13/com/instagram/feed/media/LiveTreeMediaDict.smali
+          printf 'ua_spoof=SM-S928B\nodc_display_hdr=true\nodc_decoder_hdr=true\npersisted_decoder_hdr=true\nraw_manifest_observer=IG_HDR_R13_RAW\n' | tee out/patches.txt
+          sha256sum "out/$OUT_APK" | tee out/sha256.txt
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: instagram-hdr-eligibility-r13
+          path: |
+            out/${{ env.OUT_APK }}
+            out/sha256.txt
+            out/verify.txt
+            out/cert-match.txt
+            out/patches.txt
+          retention-days: 14
+
+      - name: Publish prerelease
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          set -euo pipefail
+          NOTES='R13 backend HDR eligibility patch for exact Instagram 439/Piko 3.9.0 Release 8. Scopes network User-Agent identity to Samsung Galaxy S24 Ultra (SM-S928B), forces One Device Classifier display HDR and decoder HDR capability true, forces persisted video_decoder_hdr_supported true, and retains one RAW video_dash_manifest logger (IG_HDR_R13_RAW). Does not modify renderer, selector, MediaCodec, Surface, or display path.'
+          if gh release view "$TAG" >/dev/null 2>&1; then
+            gh release upload "$TAG" "out/$OUT_APK" out/sha256.txt out/verify.txt out/cert-match.txt out/patches.txt --clobber
+            gh release edit "$TAG" --title 'Instagram HDR Eligibility R13' --notes "$NOTES" --prerelease
+          else
+            gh release create "$TAG" "out/$OUT_APK" out/sha256.txt out/verify.txt out/cert-match.txt out/patches.txt --title 'Instagram HDR Eligibility R13' --notes "$NOTES" --prerelease
+          fi
