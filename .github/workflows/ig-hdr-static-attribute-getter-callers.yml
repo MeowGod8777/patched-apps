@@ -1,0 +1,80 @@
+name: IG 439 Static Attribute Getter Callers
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - .github/workflows/ig-hdr-static-attribute-getter-callers.yml
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  probe:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    env:
+      APK_NAME: instagram-piko-v439.0.0.37.89-arm64-v8a.apk
+      APK_SHA256: 4015b171ac59f3e7172134d194ec2dcf701f64c3339f127c19d7a04c13d529c8
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+      - name: Download and disassemble exact R8
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          mkdir -p work/dex work/dis research/generated
+          gh release download 8 --pattern "$APK_NAME" --dir work
+          echo "$APK_SHA256  work/$APK_NAME" | sha256sum -c -
+          unzip -j "work/$APK_NAME" 'classes*.dex' -d work/dex
+          DEXDUMP="$(find "$ANDROID_HOME/build-tools" -type f -name dexdump | sort -V | tail -1)"
+          for d in work/dex/classes*.dex; do b="$(basename "$d" .dex)"; "$DEXDUMP" -d -f -h "$d" > "work/dis/$b.txt"; done
+      - name: Trace generic static-attribute getter callers
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          import re
+          sig='LX/0hkS;.A01:(Landroid/content/Context;Landroid/content/SharedPreferences;Landroid/content/pm/PackageManager;I)Ljava/lang/Object;'
+          arr='LX/0hkS;.A3V:[LX/0fKx;'
+          r=[]
+          r += ['Instagram 439 static-attribute getter callers','==============================================','']
+          mre=re.compile(r'\|\[[0-9a-f]+\]\s+([^\s]+\.[^:]+):')
+          def ms(lines):
+              st=[i for i,l in enumerate(lines) if mre.search(l)]
+              for j,s in enumerate(st):
+                  e=st[j+1] if j+1<len(st) else len(lines)
+                  yield s,e,lines[s:e]
+          def emit(p,s,e,b,label):
+              r.append(f'===== {label} :: {p.name}:{s+1}-{e} =====')
+              r.append(b[0] if b else '')
+              for l in b[1:]:
+                  if any(x in l for x in ('const-string','invoke-','new-instance','LX/0hkS;','LX/0mJp;','LX/0Uiy;','LX/03Tz;','LX/02tU;','LX/00vv;','Handler','return-','iget-','sget-','iput-','sput-')):
+                      r.append(l.rstrip())
+              r.append('')
+          counts={'getter':0,'array':0}
+          for p in sorted(Path('work/dis').glob('classes*.txt')):
+              lines=p.read_text(errors='replace').splitlines()
+              for s,e,b in ms(lines):
+                  body='\n'.join(b)
+                  head=b[0] if b else ''
+                  if sig in body and 'X.0hkS.A01:' not in head:
+                      emit(p,s,e,b,'caller of X.0hkS.A01')
+                      counts['getter']+=1
+                  if arr in body and 'X.0hkS.<clinit>' not in head:
+                      emit(p,s,e,b,'consumer of X.0hkS.A3V key array')
+                      counts['array']+=1
+          r += ['===== counts =====',f'X.0hkS.A01 callers excluding definition: {counts["getter"]}',f'X.0hkS.A3V consumers excluding <clinit>: {counts["array"]}','']
+          out=Path('research/generated/instagram_439_hdr_static_attribute_getter_callers.txt')
+          out.write_text('\n'.join(r)+'\n')
+          print(out.read_text()[:180000])
+          PY
+      - name: Commit report
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add research/generated/instagram_439_hdr_static_attribute_getter_callers.txt
+          if ! git diff --cached --quiet; then git commit -m "Trace Instagram 439 static attribute getter callers"; fi
+          git pull --rebase origin main
+          git push origin HEAD:main
