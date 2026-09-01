@@ -1,0 +1,139 @@
+name: IG 439 HDR DASH Selector Core
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - .github/workflows/ig-hdr-dash-selector-core.yml
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  probe:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    env:
+      APK_NAME: instagram-piko-v439.0.0.37.89-arm64-v8a.apk
+      APK_SHA256: 4015b171ac59f3e7172134d194ec2dcf701f64c3339f127c19d7a04c13d529c8
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+
+      - name: Download and disassemble exact R8
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          mkdir -p work/dex work/dis research/generated
+          gh release download 8 --pattern "$APK_NAME" --dir work
+          echo "$APK_SHA256  work/$APK_NAME" | sha256sum -c -
+          unzip -j "work/$APK_NAME" 'classes*.dex' -d work/dex
+          DEXDUMP="$(find "$ANDROID_HOME/build-tools" -type f -name dexdump | sort -V | tail -1)"
+          for d in work/dex/classes*.dex; do
+            b="$(basename "$d" .dex)"
+            "$DEXDUMP" -d -f -h "$d" > "work/dis/$b.txt"
+          done
+
+      - name: Extract selector core only
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          import re
+
+          mh=re.compile(r'\|\[[0-9a-f]+\]\s+([^\s]+):')
+          methods=[]
+          classes={}
+          for p in sorted(Path('work/dis').glob('classes*.txt')):
+              lines=p.read_text(errors='replace').splitlines()
+              starts=[]; heads=[]
+              for i,l in enumerate(lines):
+                  m=mh.search(l)
+                  if m: starts.append(i); heads.append(m.group(1))
+              for j,s in enumerate(starts):
+                  e=starts[j+1] if j+1<len(starts) else len(lines)
+                  methods.append((p.name,s+1,e,heads[j],lines[s:e]))
+              classes[p.name]=lines
+
+          out=[
+            'Instagram 439 HDR DASH selector core',
+            '====================================',
+            'APK SHA256: 4015b171ac59f3e7172134d194ec2dcf701f64c3339f127c19d7a04c13d529c8',
+            ''
+          ]
+
+          wanted_exact={
+            'X.00NW.CYd',
+            'X.08lb.A03',
+            'X.0A5J.A0A',
+            'X.0A5J.A0B',
+            'X.0A5J.A03',
+            'X.0A5J.A04',
+            'X.0A5J.A08',
+          }
+          wanted_prefix=(
+            'X.08ti.<init>', 'X.08tp.<init>', 'X.08rn.<init>', 'X.08lb.<init>',
+            'X.08rl.A0', 'X.08td.A00', 'X.07my.', 'X.07ne.A00',
+          )
+
+          def semantic_line(l):
+              return any(x in l for x in (
+                'invoke-', 'const-string', 'new-instance', 'check-cast', 'instance-of',
+                'iget-', 'iput-', 'sget-', 'sput-', 'if-', 'switch', 'return-',
+                'MediaCodec', 'MediaFormat', 'Dash', 'Representation', 'Adaptation',
+                'video/', 'codec', 'Codec', 'bitrate', 'Bitrate', 'bandwidth',
+                'hdr', 'HDR', 'color', 'Color', 'profile', 'Profile', 'roleFlags',
+                'LX/08ti;', 'LX/08tp;', 'LX/08rn;', 'LX/08lb;', 'LX/096x;', 'LX/03oR;'
+              ))
+
+          for rec in methods:
+              p,s,e,h,b=rec
+              base=h.split(':',1)[0]
+              if base in wanted_exact or any(base.startswith(x) for x in wanted_prefix):
+                  out.append(f'===== {p}:{s}-{e} :: {h} =====')
+                  if base=='X.00NW.CYd':
+                      # Entire instruction stream matters for register provenance; keep all non-debug lines.
+                      for l in b:
+                          if 'positions     :' in l or 'locals        :' in l: break
+                          out.append(l.rstrip())
+                  else:
+                      for l in b:
+                          if semantic_line(l): out.append(l.rstrip())
+                  out.append('')
+
+          # Class field inventories for the four manifest/media model classes.
+          targets=['LX/08ti;','LX/08tp;','LX/08rn;','LX/08lb;','LX/096x;']
+          for target in targets:
+              out.append(f'===== FIELD INVENTORY {target} =====')
+              found=False
+              for p,lines in classes.items():
+                  for i,l in enumerate(lines):
+                      if f"Class descriptor  : '{target}'" in l:
+                          found=True
+                          # from class header until first direct method header-ish section, cap 300 lines
+                          for x in lines[i:min(len(lines),i+320)]:
+                              if ('name          :' in x or 'type          :' in x or 'access        :' in x or
+                                  'Class descriptor' in x or 'Superclass' in x or 'Interfaces' in x or
+                                  'static fields' in x or 'instance fields' in x):
+                                  out.append(f'{p}: {x.rstrip()}')
+                          break
+                  if found: break
+              if not found: out.append('NOT FOUND')
+              out.append('')
+
+          path=Path('research/generated/instagram_439_hdr_dash_selector_core.txt')
+          path.write_text('\n'.join(out)+'\n')
+          print(path.read_text()[:220000])
+          PY
+
+      - name: Commit report
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add research/generated/instagram_439_hdr_dash_selector_core.txt
+          if ! git diff --cached --quiet; then
+            git commit -m "Trace Instagram 439 DASH selector core"
+          fi
+          git pull --rebase origin main
+          git push origin HEAD:main
