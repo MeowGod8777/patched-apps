@@ -1,0 +1,173 @@
+name: IG 439 HDR Reporter Outbound R18d
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - .github/workflows/ig-hdr-reporter-outbound-r18d.yml
+
+permissions:
+  contents: write
+
+jobs:
+  trace:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    env:
+      APK_NAME: instagram-piko-v439.0.0.37.89-arm64-v8a.apk
+      APK_SHA256: 4015b171ac59f3e7172134d194ec2dcf701f64c3339f127c19d7a04c13d529c8
+    steps:
+      - uses: actions/checkout@v6
+        with: {fetch-depth: 0}
+      - uses: actions/setup-java@v5
+        with:
+          distribution: zulu
+          java-version: '21'
+      - name: Prepare exact smali
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          set -euo pipefail
+          mkdir -p work/apk work/smali research/generated
+          gh release download 8 --pattern "$APK_NAME" --dir work
+          echo "$APK_SHA256  work/$APK_NAME" | sha256sum -c -
+          gh release download 3.0.10 --repo baksmali/smali --pattern 'baksmali-3.0.10-fat.jar' --dir work
+          unzip -q "work/$APK_NAME" 'classes*.dex' -d work/apk
+          for d in work/apk/classes*.dex; do
+            n="$(basename "$d" .dex)"
+            java -jar work/baksmali-3.0.10-fat.jar d "$d" -o "work/smali/$n" >/dev/null &
+          done
+          wait
+
+      - name: Trace HDR reporter and device-classifier outbound paths
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          from pathlib import Path
+          import re, collections
+          root=Path('work/smali')
+          out=Path('research/generated/instagram_439_hdr_reporter_outbound_r18d.txt')
+          cr=re.compile(r'^\.class\s+.*\s+(L[^;]+;)$')
+          mr=re.compile(r'^\.method\s+.*?([^\s]+\([^)]*\).+)$')
+          ir=re.compile(r'invoke-[^\s]+\s+\{[^}]*\},\s+(L[^;]+;->[^\s]+)')
+          sr=re.compile(r'^\s*const-string(?:/jumbo)?\s+[^,]+,\s+"(.*)"')
+          M={}; callers=collections.defaultdict(set); classes={}
+          for p in root.rglob('*.smali'):
+            ls=p.read_text(errors='replace').splitlines(); cls=None
+            for x in ls[:40]:
+              q=cr.match(x)
+              if q: cls=q.group(1); break
+            if not cls: continue
+            classes[cls]=(p,ls)
+            i=0
+            while i<len(ls):
+              q=mr.match(ls[i])
+              if not q: i+=1; continue
+              ref=cls+'->'+q.group(1); s=i; i+=1
+              while i<len(ls) and not ls[i].startswith('.end method'): i+=1
+              b=ls[s:min(i+1,len(ls))]; inv=[]; ss=[]
+              for x in b:
+                z=ir.search(x)
+                if z: inv.append(z.group(1))
+                z=sr.match(x)
+                if z: ss.append(z.group(1))
+              M[ref]={'file':str(p),'body':b,'invokes':inv,'strings':ss,'class':cls}
+              for n in inv: callers[n].add(ref)
+              i+=1
+          def emit(O,m,label):
+            if m not in M: return
+            d=M[m]; O += [f'===== {label} {m} =====','FILE: '+d['file'],
+              'STRINGS: '+' | '.join(dict.fromkeys(d['strings'])),
+              'CALLERS: '+' | '.join(sorted(callers.get(m,()))[:120]),
+              'CALLEES: '+' | '.join(dict.fromkeys(d['invokes'][:160]))]
+            O += d['body']; O.append('')
+          def rev(starts,depth=8):
+            D={x:0 for x in starts if x in M}; q=collections.deque(D)
+            while q:
+              x=q.popleft(); d=D[x]
+              if d>=depth: continue
+              for n in callers.get(x,()):
+                if n in M and n not in D: D[n]=d+1; q.append(n)
+            return D
+          def fwd(starts,depth=6):
+            D={x:0 for x in starts if x in M}; q=collections.deque(D)
+            while q:
+              x=q.popleft(); d=D[x]
+              if d>=depth: continue
+              for n in M[x]['invokes']:
+                if n in M and n not in D: D[n]=d+1; q.append(n)
+            return D
+
+          hdr_targets={m for m in M if m.startswith('LX/0knW;->A00(')}
+          reporter_targets={m for m in M if m.startswith('LX/0knW;->')}
+          classifier_run={m for m in M if m.startswith('LX/0lAl;->run(')}
+          O=['Instagram 439 HDR reporter outbound R18d','=========================================',
+             f'methods={len(M)} hdr_targets={len(hdr_targets)} classifier_run={len(classifier_run)}','']
+
+          for m in sorted(hdr_targets): emit(O,m,'HDR_REPORTER')
+          for m in sorted(classifier_run): emit(O,m,'DEVICE_CLASSIFIER')
+
+          O += ['===== DIRECT HDR REPORTER INVOKERS =====','']
+          for t in sorted(hdr_targets):
+            for c in sorted(callers.get(t,())): emit(O,c,'HDR_DIRECT_CALLER')
+
+          # Constructors / Runnable scheduling refs for 0lAl; direct smali refs, not just invokes.
+          O += ['===== ALL 0lAl REFERENCES / SCHEDULERS =====','']
+          needle='LX/0lAl;'
+          for m,d in M.items():
+            if any(needle in x for x in d['body']): emit(O,m,'CLASSIFIER_REF')
+
+          # Reverse chain from HDR reporter: rank parent methods by network / JSON / analytics semantics.
+          R=rev(hdr_targets,10)
+          semantic=('api/','graphql','network','request','signed_body','device','capabil','benchmark','classification',
+                    'segment','mobileconfig','startup','event','analytics','logger','logevent','json','payload','report')
+          O += ['===== HDR REPORTER REVERSE CHAIN RANKING =====','']
+          ranked=[]
+          for m,d in R.items():
+            t=('\n'.join(M[m]['body'])+'\n'+'\n'.join(M[m]['strings'])).lower()
+            hits=[s for s in semantic if s in t]
+            score=len(hits)*3 + max(0,10-d)
+            ranked.append((-score,d,m,hits))
+          for ns,d,m,hits in sorted(ranked)[:180]:
+            x=M[m]
+            O += [f'PATH score={-ns} dist={d} {m} HITS={hits}',
+                  '  FILE: '+x['file'], '  STRINGS: '+' | '.join(dict.fromkeys(x['strings'])),
+                  '  CALLERS: '+' | '.join(sorted(callers.get(m,()))[:80]),
+                  '  CALLEES: '+' | '.join(dict.fromkeys(x['invokes'][:100]))]
+
+          # Full bodies for reverse-chain nodes that contain likely outbound sinks.
+          O += ['','===== HDR REVERSE CHAIN OUTBOUND-LIKE BODIES =====','']
+          sinkterms=('LX/03u7;','LX/03ci;','LX/02qb;','GraphQlCallInput','/api/v1/','/api/v2/','signed_body',
+                     'Lorg/json/JSONObject;->put','Lorg/json/JSONArray;->put','logEvent','analytics','mobileconfig')
+          n=0
+          for ns,d,m,hits in sorted(ranked):
+            t='\n'.join(M[m]['body'])
+            if any(s in t for s in sinkterms):
+              emit(O,m,'OUTBOUND_OR_EVENT'); n+=1
+              if n>=60: break
+
+          # Look for known HDR JSON key names outside 0knW: this can reveal consumers/serializers by duplicated constants.
+          O += ['===== SHARED HDR REPORTER KEY OWNERS =====','']
+          hdrkeys=('hdr_types','desired_max_average_luminance','desired_max_luminance','desired_min_luminance','hdr_output_control_available')
+          for m,d in M.items():
+            hs=[k for k in hdrkeys if any(k in s for s in d['strings'])]
+            if hs: O += [f'KEYS {m} {hs} FILE={d["file"]}','  STRINGS: '+' | '.join(dict.fromkeys(d['strings']))]
+
+          text='\n'.join(O)
+          if len(text)>990000: text=text[:990000]+'\n[TRUNCATED]\n'
+          out.write_text(text,encoding='utf-8')
+          print(text[:300000]); print('bytes',out.stat().st_size)
+          PY
+
+      - name: Commit report
+        run: |
+          set -euo pipefail
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add research/generated/instagram_439_hdr_reporter_outbound_r18d.txt
+          if ! git diff --cached --quiet; then
+            git commit -m 'Add Instagram HDR reporter outbound trace R18d'
+            git pull --rebase origin main
+            git push origin HEAD:main
+          fi
