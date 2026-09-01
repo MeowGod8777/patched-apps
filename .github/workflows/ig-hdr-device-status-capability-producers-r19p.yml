@@ -1,0 +1,114 @@
+name: IG 439 HDR Device Status Capability Producers R19p
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths: [.github/workflows/ig-hdr-device-status-capability-producers-r19p.yml]
+
+permissions:
+  contents: write
+
+jobs:
+  trace:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    env:
+      APK_NAME: instagram-piko-v439.0.0.37.89-arm64-v8a.apk
+      APK_SHA256: 4015b171ac59f3e7172134d194ec2dcf701f64c3339f127c19d7a04c13d529c8
+    steps:
+      - uses: actions/checkout@v6
+        with: {fetch-depth: 0}
+      - uses: actions/setup-java@v5
+        with: {distribution: zulu, java-version: '21'}
+      - name: Locate producer class owners
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          set -euo pipefail
+          mkdir -p work/apk work/smali research/generated
+          gh release download 8 --pattern "$APK_NAME" --dir work
+          echo "$APK_SHA256  work/$APK_NAME" | sha256sum -c -
+          gh release download 3.0.10 --repo baksmali/smali --pattern 'baksmali-3.0.10-fat.jar' --dir work
+          unzip -q "work/$APK_NAME" 'classes*.dex' -d work/apk
+          python3 - <<'PY'
+          from pathlib import Path
+          import subprocess
+          targets=['LX/0GjW;','LX/01Zz;','LX/07js;']
+          owners={t:[] for t in targets}; hit=set()
+          for d in sorted(Path('work/apk').glob('classes*.dex')):
+              r=subprocess.run(['java','-jar','work/baksmali-3.0.10-fat.jar','list','classes',str(d)],capture_output=True,text=True,errors='replace')
+              s=set(r.stdout.splitlines())
+              for t in targets:
+                  if t in s: owners[t].append(d.name); hit.add(d.name)
+          print(owners)
+          Path('work/hitdex.txt').write_text('\n'.join(sorted(hit))+'\n')
+          PY
+          while read d; do
+            [ -n "$d" ] || continue
+            java -jar work/baksmali-3.0.10-fat.jar d "work/apk/$d" -o "work/smali/${d%.dex}" >/dev/null &
+          done < work/hitdex.txt
+          wait
+      - name: Dump producers and lazy provider callbacks
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          from pathlib import Path
+          import re
+          R=Path('work/smali'); targets={'LX/0GjW;','LX/01Zz;','LX/07js;'}
+          clsre=re.compile(r'^\.class\s+.*\s+(L[^;]+;)$')
+          invre=re.compile(r'(L[^;]+;)->([^\s(]+)\(([^)]*)\)(\S+)')
+          files={}; methods=[]
+          for p in R.rglob('*.smali'):
+              ls=p.read_text(errors='replace').splitlines(); cls='?'
+              for x in ls[:60]:
+                  m=clsre.match(x)
+                  if m: cls=m.group(1); break
+              files[cls]=(p,ls)
+              i=0
+              while i<len(ls):
+                  if not ls[i].startswith('.method'): i+=1; continue
+                  s=i; sig=ls[i]; i+=1
+                  while i<len(ls) and not ls[i].startswith('.end method'): i+=1
+                  methods.append((cls,sig,p,ls[s:min(i+1,len(ls))])); i+=1
+          O=['Instagram 439 HDR device_status capability producers R19p','=================================================','']
+          refs=set()
+          for cls in targets:
+              if cls not in files: continue
+              p,ls=files[cls]; O += [f'===== CLASS {cls} FILE={p} =====']+ls+['']
+              for x in ls:
+                  if 'invoke-' in x:
+                      m=invre.search(x)
+                      if m: refs.add(m.groups())
+                  # capture constructed callback/lambda classes
+                  m=re.search(r'new-instance\s+[^,]+,\s+(L[^;]+;)',x)
+                  if m: refs.add((m.group(1),'<class>','',''))
+          # dump locally resolvable referenced classes that look like provider/lambda callbacks
+          refclasses={r[0] for r in refs}
+          O += ['===== REFERENCED PROVIDER CLASSES =====']
+          for cls in sorted(refclasses):
+              if cls in files and cls not in targets:
+                  p,ls=files[cls]
+                  text='\n'.join(ls).lower()
+                  if any(k in text for k in ('mediacodec','codec','av1','vp9','hlg','hdr','chip','hardware','decoder')):
+                      O += [f'===== REF CLASS {cls} FILE={p} =====']+ls+['']
+          # any method in owner dexes containing the exact capability vocabulary
+          O += ['===== EXACT CAPABILITY VOCAB METHODS =====']
+          for cls,sig,p,b in methods:
+              low='\n'.join(b).lower()
+              if any(k in low for k in ('10bit_hw_av1_dec','is_hlg_supported','hw_av1_dec','av1 decoder','video/av01','hdr10','hlg')):
+                  O += [f'--- {cls} {sig} FILE={p}']+b+['']
+          out=Path('research/generated/instagram_439_hdr_device_status_capability_producers_r19p.txt')
+          out.write_text('\n'.join(O),encoding='utf-8')
+          print('\n'.join(O[:18000])); print('bytes',out.stat().st_size)
+          PY
+      - name: Commit
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add research/generated/instagram_439_hdr_device_status_capability_producers_r19p.txt
+          if ! git diff --cached --quiet; then
+            git commit -m 'Add exact HDR device_status capability producer trace R19p'
+            git pull --rebase origin main
+            git push origin HEAD:main
+          fi
