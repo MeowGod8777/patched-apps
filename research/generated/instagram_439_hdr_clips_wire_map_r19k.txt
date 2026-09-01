@@ -1,0 +1,141 @@
+Instagram 439 HDR Clips discover compact wire map R19k
+==================================================
+
+===== .method public static final A02(Landroid/content/Context;LX/03u7;LX/0Ciw;Lcom/instagram/common/session/UserSession;LX/08Rs;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Lkotlin/jvm/functions/Function0;ZZZZZ)V =====
+STRINGS:
+  android_purge_26_q2_ClipsDiscoverApiUtil_setSyncFlowRequestFields
+  ig_reels_client_early_ads_prepare_enabled
+  is_sync_flow_enabled_for_streaming
+  seed_item_id
+  chaining_session_id
+  is_sync_flow_enabled
+WIRE line=58 setter=A0G args=['v5', "v0=('str', 'ig_reels_client_early_ads_prepare_enabled')", "v14=('int', 1)"] recent_MC=[]
+WIRE line=106 setter=A0G args=['v5', "v0=('str', 'is_sync_flow_enabled_for_streaming')", "v14=('int', 1)"] recent_MC=[]
+WIRE line=169 setter=A0F args=['v5', "v0=('str', 'seed_item_id')", 'v8'] recent_MC=[]
+WIRE line=176 setter=A0F args=['v5', "v0=('str', 'chaining_session_id')", 'v6'] recent_MC=[]
+WIRE line=260 setter=A0G args=['v5', "v0=('str', 'is_sync_flow_enabled')", "v14=('int', 1)"] recent_MC=[]
+MOBILECONFIG_IDS:
+
+===== .method public static final A04(LX/0Aev;LX/03u7;Lcom/instagram/common/session/UserSession;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/util/List;ZZZ)V =====
+STRINGS:
+  android_purge_26_q2_ClipsDiscoverApiUtil_setNonCacheSharedRequestFields
+  chaining_media_id
+  blend_options
+  max_id
+  session_info
+  seen_reels
+  dropped_media_ids
+  chaining_media_trigger
+WIRE line=10 setter=A0F args=['p1', "v0=('str', 'chaining_media_id')", 'p3'] recent_MC=[]
+WIRE line=47 setter=AOA args=['p1', "v0=('str', 'blend_options')", 'v1'] recent_MC=[]
+WIRE line=52 setter=A0F args=['p1', "v0=('str', 'max_id')", 'p5'] recent_MC=[]
+WIRE line=56 setter=A0F args=['p1', "v0=('str', 'session_info')", 'p6'] recent_MC=[]
+WIRE line=60 setter=A0F args=['p1', "v0=('str', 'seen_reels')", 'p7'] recent_MC=[]
+FIELD line=67: iput-object v0, p1, LX/03u7;->A0A:Ljava/lang/Integer;
+WIRE line=82 setter=A0F args=['p1', "v0=('str', 'dropped_media_ids')", 'v1'] recent_MC=[]
+WIRE line=94 setter=A0F args=['p1', "v0=('str', 'chaining_media_trigger')", 'v1'] recent_MC=[]
+MOBILECONFIG_IDS:
+
+===== .method private final A05(LX/03u7;LX/0Iwp;LX/0Ciw;Lcom/instagram/common/session/UserSession;LX/08Rs;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;ZZZZ)V =====
+STRINGS:
+  android_purge_26_q2_ClipsDiscoverApiUtil_setRealtimeSignals
+  android_purge_26_q2_ClipsDiscoverApiUtil_setViewStateMediaList
+  client_view_state_media_list
+WIRE line=152 setter=AOA args=['v4', "v1=('int', 0)", "v0=('str', 'android_purge_26_q2_ClipsDiscoverApiUtil_setRealtimeSignals')"] recent_MC=[]
+  CONTEXT:
+    move-result-object v0
+    
+    check-cast v0, Ljava/lang/String;
+    
+    invoke-virtual {v4, v1, v0}, LX/03u7;->AOA(Ljava/lang/String;Ljava/lang/String;)V
+    
+    goto :goto_70
+    
+    :cond_8c
+WIRE line=204 setter=AOA args=['v4', "v1=('int', 0)", "v0=('str', 'android_purge_26_q2_ClipsDiscoverApiUtil_setRealtimeSignals')"] recent_MC=[]
+  CONTEXT:
+    move-result-object v0
+    
+    check-cast v0, Ljava/lang/String;
+    
+    invoke-virtual {v4, v1, v0}, LX/03u7;->AOA(Ljava/lang/String;Ljava/lang/String;)V
+    
+    goto :goto_9d
+    
+    :cond_b9
+WIRE line=269 setter=AOA args=['v4', "v0=('str', 'client_view_state_media_list')", "v1=('int', 0)"] recent_MC=[]
+MOBILECONFIG_IDS:
+  line=37 0x20811267001460ce
+
+===== .method public static final A07(LX/03u7;Lcom/instagram/common/session/UserSession;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Lkotlin/jvm/functions/Function0;ZZZZZZ)V =====
+STRINGS:
+  android_purge_26_q2_ClipsDiscoverApiUtil_setSharedRequestFields
+  ?max_id=
+  container_module
+  netego_subtype
+  should_refetch_chaining_media
+  is_homecoming
+  1
+  
+  homecoming_feed_ranking_mode
+  prefetch
+  reason
+  viewer_session_id
+  enable_mixed_media_chaining
+  prefetch_trigger_type
+  client_flashcache_size
+  X-Ig-Tail-Load-Request
+  android_purge_26_q3_ClipsViewPagerImpl_hasClickedOnTabIcon
+  navigate
+  pull_to_refresh
+  tailload
+  
+FIELD line=8: iput-object p6, p0, LX/03u7;->A0G:Ljava/lang/String;
+WIRE line=12 setter=A07 args=['p0', "v0=('str', 'android_purge_26_q2_ClipsDiscoverApiUtil_setSharedRequestFields')"] recent_MC=[]
+FIELD line=63: iput-object v0, p0, LX/03u7;->A0B:Ljava/lang/String;
+FIELD line=65: iput-object p2, p0, LX/03u7;->A08:Ljava/lang/Integer;
+WIRE line=70 setter=AOA args=['p0', "v0=('str', 'container_module')", 'p4'] recent_MC=['0x810d5b000a4ab7']
+WIRE line=80 setter=A0C args=['p0', "v0=('str', 'netego_subtype')", 'v1'] recent_MC=[]
+WIRE line=105 setter=A0G args=['p0', "v3=('str', 'should_refetch_chaining_media')", "v4=('int', 0)"] recent_MC=['0x8105400011187c']
+WIRE line=132 setter=AOA args=['p0', "v1=('str', 'is_homecoming')", "v0=('str', '1')"] recent_MC=['0x810af400383ea5']
+WIRE line=147 setter=AOA args=['p0', "v0=('str', 'homecoming_feed_ranking_mode')", "v1=('str', '')"] recent_MC=['0x810af400383ea5']
+WIRE line=161 setter=AOA args=['p0', "v0=('str', 'reason')", "v1=('str', 'prefetch')"] recent_MC=[]
+WIRE line=167 setter=AOA args=['p0', "v0=('str', 'viewer_session_id')", 'p8'] recent_MC=[]
+FIELD line=170: iput-object p4, p0, LX/03u7;->A0I:Ljava/lang/String;
+WIRE line=208 setter=A0G args=['p0', "v0=('str', 'enable_mixed_media_chaining')", "v1=('int', 0)"] recent_MC=['0x8104010000116c', '0x8104010006116d']
+WIRE line=212 setter=AOA args=['p0', "v0=('str', 'prefetch_trigger_type')", 'p9'] recent_MC=['0x8104010006116d']
+WIRE line=228 setter=A0C args=['p0', "v0=('str', 'client_flashcache_size')", "v1=('int', 0)"] recent_MC=[]
+FIELD line=262: iput-wide v3, p0, LX/03u7;->A02:J
+WIRE line=273 setter=AMu args=['p0', "v0=('str', 'X-Ig-Tail-Load-Request')", "v1=('int', 0)"] recent_MC=['0x82111b000b1ea1']
+WIRE line=361 setter=A0G args=['p0', "v3=('str', 'should_refetch_chaining_media')", "v0=('int', 2317)"] recent_MC=['0x830af400190507']
+MOBILECONFIG_IDS:
+  line=35 0x810d5b000a4ab7
+  line=95 0x8105400011187c
+  line=118 0x810af400383ea5
+  line=176 0x8104010000116c
+  line=190 0x8104010006116d
+  line=234 0x81111b000a5af6
+  line=248 0x82111b000b1ea1
+  line=346 0x830af400190507
+
+===== .method public final A0A(Landroid/content/Context;LX/0Aev;LX/0Iwp;LX/0Ciw;Lcom/instagram/common/session/UserSession;LX/08Rs;Ljava/lang/Integer;Ljava/lang/Long;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/util/List;Lkotlin/jvm/functions/Function0;ZZZZZZZZZZZ)LX/02ue; =====
+STRINGS:
+  android_purge_26_q2_ClipsDiscoverApiUtil_createStreamingRequestTask
+  ctv_topic
+  gaming_referral_source_override
+  clips_viewer_clips_tab
+  clips_viewer_homecoming_fyp
+  clips/homecoming/
+  X-IG-Accept-Hint
+  feed
+  clips/discover/stream/
+FIELD line=38: iput-wide v0, v3, LX/03u7;->A01:J
+FIELD line=66: iput-object v0, v3, LX/03u7;->A07:LX/02uV;
+WIRE line=73 setter=A0F args=['v3', "v0=('str', 'ctv_topic')", 'v1'] recent_MC=['0x81110f002e5ac2']
+WIRE line=79 setter=A0F args=['v3', "v0=('str', 'gaming_referral_source_override')", 'v1'] recent_MC=['0x81110f002e5ac2']
+WIRE line=256 setter=AMu args=['v3', "v1=('str', 'X-IG-Accept-Hint')", "v0=('str', 'feed')"] recent_MC=[]
+MOBILECONFIG_IDS:
+  line=53 0x81110f002e5ac2
+  line=110 0x810b9a007b4194
+  line=124 0x810af400383ea5
+  line=310 0x810e2800024ece
