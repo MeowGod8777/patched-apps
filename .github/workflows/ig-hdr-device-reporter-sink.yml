@@ -1,0 +1,193 @@
+name: IG 439 HDR Device Reporter Sink Trace
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - .github/workflows/ig-hdr-device-reporter-sink.yml
+
+permissions:
+  contents: write
+
+jobs:
+  trace:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    env:
+      APK_NAME: instagram-piko-v439.0.0.37.89-arm64-v8a.apk
+      APK_SHA256: 4015b171ac59f3e7172134d194ec2dcf701f64c3339f127c19d7a04c13d529c8
+    steps:
+      - uses: actions/checkout@v6
+        with: {fetch-depth: 0}
+      - uses: actions/setup-java@v5
+        with:
+          distribution: zulu
+          java-version: '21'
+      - name: Prepare exact smali
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          set -euo pipefail
+          mkdir -p work/apk work/smali research/generated
+          gh release download 8 --pattern "$APK_NAME" --dir work
+          echo "$APK_SHA256  work/$APK_NAME" | sha256sum -c -
+          gh release download 3.0.10 --repo baksmali/smali --pattern 'baksmali-3.0.10-fat.jar' --dir work
+          unzip -q "work/$APK_NAME" 'classes*.dex' -d work/apk
+          for d in work/apk/classes*.dex; do
+            n="$(basename "$d" .dex)"
+            java -jar work/baksmali-3.0.10-fat.jar d "$d" -o "work/smali/$n" >/dev/null
+          done
+
+      - name: Trace reporter sink and caller graph
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          from pathlib import Path
+          import re, collections
+
+          ROOT=Path('work/smali')
+          OUT=Path('research/generated/instagram_439_hdr_device_reporter_sink.txt')
+          cr=re.compile(r'^\.class\s+.*\s+(L[^;]+;)$')
+          mr=re.compile(r'^\.method\s+.*?([^\s]+\([^)]*\).+)$')
+          ir=re.compile(r'invoke-[^\s]+\s+\{[^}]*\},\s+(L[^;]+;->[^\s]+)')
+          sr=re.compile(r'^\s*const-string(?:/jumbo)?\s+[^,]+,\s+"(.*)"')
+
+          M={}; C=collections.defaultdict(set); CLASS=collections.defaultdict(list)
+          for p in ROOT.rglob('*.smali'):
+            lines=p.read_text(errors='replace').splitlines(); cls=None
+            for l in lines[:25]:
+              z=cr.match(l)
+              if z: cls=z.group(1); break
+            if not cls: continue
+            i=0
+            while i<len(lines):
+              z=mr.match(lines[i])
+              if not z: i+=1; continue
+              ref=cls+'->'+z.group(1); s=i; i+=1
+              while i<len(lines) and not lines[i].startswith('.end method'): i+=1
+              body=lines[s:min(i+1,len(lines))]; ss=[]; inv=[]
+              for l in body:
+                q=sr.match(l)
+                if q: ss.append(q.group(1))
+                q=ir.search(l)
+                if q: inv.append(q.group(1))
+              M[ref]={'file':str(p),'body':body,'strings':ss,'invokes':inv}
+              CLASS[cls].append(ref)
+              for n in inv: C[n].add(ref)
+              i+=1
+
+          target_classes=['LX/0knW;','LX/0lAl;','LX/0lCd;','LX/0l6k;']
+          target_methods=set()
+          for cls in target_classes: target_methods.update(CLASS.get(cls,[]))
+
+          # Constructors/call sites creating the reporter runnable or referencing target classes.
+          constructors=[]
+          for m,d in M.items():
+            t='\n'.join(d['body'])
+            if any(x in t for x in ('new-instance v0, LX/0lAl;','new-instance v1, LX/0lAl;',
+                                    'new-instance v2, LX/0lAl;','new-instance v3, LX/0lAl;',
+                                    'new-instance v4, LX/0lAl;','new-instance v5, LX/0lAl;',
+                                    'LX/0lAl;-><init>','LX/0knW;->A01','LX/0knW;->A00')):
+              constructors.append(m)
+
+          def emit(O,m,label='METHOD',full=True):
+            if m not in M: return
+            d=M[m]
+            O += [f'===== {label} {m} =====', 'FILE: '+d['file'],
+                  'STRINGS: '+' | '.join(dict.fromkeys(d['strings'])),
+                  'CALLERS: '+(' | '.join(sorted(C.get(m,()))) if C.get(m) else '<none>'),
+                  'CALLEES: '+(' | '.join(dict.fromkeys(d['invokes'])) if d['invokes'] else '<none>')]
+            if full: O += d['body']
+            O.append('')
+
+          # Reverse caller graph for target methods up to 4 hops.
+          dist={m:0 for m in target_methods}; q=collections.deque(target_methods)
+          while q:
+            x=q.popleft(); d=dist[x]
+            if d>=4: continue
+            for c in C.get(x,()):
+              if c in M and c not in dist:
+                dist[c]=d+1; q.append(c)
+
+          # Focus sink candidates: callers with network/analytics/dispatch strings or types.
+          keywords=('graphql','http','request','network','analytics','falco','logger','logging','report','device_info',
+                    'device_feature_values','i.instagram.com','x-ig-','user-agent','publish','upload','event','endpoint',
+                    'mobileconfig','device_segmentation','device_class','performance')
+          sink_candidates=[]
+          for m,d in M.items():
+            if m not in dist: continue
+            blob=('\n'.join(d['strings'])+'\n'+'\n'.join(d['body'])).lower()
+            hits=[k for k in keywords if k in blob]
+            if hits: sink_candidates.append((dist[m],m,hits))
+
+          O=[
+            'Instagram 439 HDR device reporter / model-classification sink trace',
+            '===============================================================',
+            'Exact APK SHA256: 4015b171ac59f3e7172134d194ec2dcf701f64c3339f127c19d7a04c13d529c8',
+            f'methods={len(M)} target_methods={len(target_methods)} constructors={len(constructors)} reverse_nodes={len(dist)}',
+            ''
+          ]
+
+          O += ['===== 1. FULL TARGET CLASSES =====','']
+          for cls in target_classes:
+            O += [f'##### CLASS {cls} methods={len(CLASS.get(cls,[]))} #####','']
+            for m in CLASS.get(cls,[]): emit(O,m,'TARGET',True)
+
+          O += ['===== 2. EXACT 0lAl CONSTRUCTION / 0knW CALL SITES =====','']
+          for m in sorted(set(constructors)): emit(O,m,'CALLSITE',True)
+
+          O += ['===== 3. REVERSE CALLER GRAPH <=4 HOPS =====','']
+          for m,d in sorted(dist.items(),key=lambda x:(x[1],x[0])):
+            O.append(f'd={d} {m}')
+            O.append('  FILE: '+M[m]['file'])
+            O.append('  STRINGS: '+' | '.join(dict.fromkeys(M[m]['strings'])))
+            O.append('  CALLERS: '+' | '.join(sorted(C.get(m,()))[:24]))
+            O.append('  CALLEES: '+' | '.join(list(dict.fromkeys(M[m]['invokes']))[:24]))
+          O.append('')
+
+          O += ['===== 4. SINK-LIKE CALLERS FULL BODIES =====','']
+          for d,m,hits in sorted(sink_candidates,key=lambda x:(x[0],x[1]))[:160]:
+            O.append(f'### sink candidate distance={d} hits={",".join(hits)} ###')
+            emit(O,m,'SINK_CANDIDATE',True)
+
+          # Exact references to critical key literals outside targets.
+          keys=('client_device_model','device_brand','sdk_mpc','play_services_mpc','playservice_mpc',
+                'PlayServicesDevicePerformance','media_codec_info','display_hdr_support','display_hdr_data',
+                'hdr_support','hdr_types','performance_class','video_performance_points','ar_class')
+          O += ['===== 5. CRITICAL KEY LITERAL OWNERS =====','']
+          owners=[]
+          for m,d in M.items():
+            ss='\n'.join(d['strings'])
+            hits=[k for k in keys if k in ss]
+            if hits: owners.append((m,hits))
+          for m,hits in owners:
+            O.append(f'{m} KEYS={",".join(hits)}')
+            O.append('  FILE: '+M[m]['file'])
+            O.append('  CALLERS: '+' | '.join(sorted(C.get(m,()))[:20]))
+            O.append('  STRINGS: '+' | '.join(dict.fromkeys(M[m]['strings'])))
+          O.append('')
+
+          # Built-in device mapping class 0lCd: dump static map initialization references with all constants.
+          O += ['===== 6. 0lCd STATIC DEVICE MAP / MPC MAPPING =====','']
+          for m in CLASS.get('LX/0lCd;',[]): emit(O,m,'0lCd_MAP',True)
+
+          text='\n'.join(O)
+          if len(text)>1200000:
+            text=text[:1200000]+'\n[TRUNCATED 1.2MB]\n'
+          OUT.write_text(text,encoding='utf-8')
+          print(f'bytes={OUT.stat().st_size} sink_candidates={len(sink_candidates)}')
+          print(text[:300000])
+          PY
+
+      - name: Commit report
+        run: |
+          set -euo pipefail
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add research/generated/instagram_439_hdr_device_reporter_sink.txt
+          if ! git diff --cached --quiet; then
+            git commit -m 'Trace Instagram HDR device reporter sink'
+            git pull --rebase origin main
+            git push origin HEAD:main
+          fi
