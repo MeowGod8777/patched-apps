@@ -1,0 +1,492 @@
+Instagram 439 HDR Clips final request layer R19l
+=============================================
+
+===== LX/04u9; .method public static final A00(LX/03u7;Lcom/instagram/common/session/UserSession;Ljava/lang/String;)LX/0ABi; =====
+STRINGS=['media_pk', 'container_module', 'item_type', 'view_timestamp', 'client_position', 'ENTER', 'nav_marker', 'is_multi_ad', 'gap_to_previous_sponsored_item', 'RETURN', 'view_history', 'media_pk', 'container_module', 'item_type', 'client_position', 'is_multi_ad', 'items', 'user_journey']
+0036: const-wide v0, 0x8107f2002d2ab1L
+0040: invoke-interface {v2, v0, v1}, Lcom/facebook/mobileconfig/factory/MobileConfigUnsafeContext;->BTb(J)Z
+0100: const-string/jumbo v0, "media_pk"
+0104: const-string v1, "container_module"
+0116: const-string v0, "item_type"
+0120: const-string/jumbo v8, "view_timestamp"
+0126: const-string v1, "client_position"
+0158: const-string v1, "ENTER"
+0161: const-string/jumbo v0, "nav_marker"
+0175: const-string v1, "is_multi_ad"
+0188: const-string v0, "gap_to_previous_sponsored_item"
+0197: const-string v1, "RETURN"
+0207: const-string/jumbo v0, "view_history"
+0281: const-string/jumbo v1, "media_pk"
+0287: const-string v1, "container_module"
+0299: const-string v0, "item_type"
+0303: const-string v1, "client_position"
+0319: const-string v1, "is_multi_ad"
+0330: const-string v0, "items"
+0401: const-string/jumbo v0, "user_journey"
+0403: invoke-virtual {p0, v0, v1}, LX/03u7;->AOA(Ljava/lang/String;Ljava/lang/String;)V
+
+FULL_METHOD:
+.method public static final A00(LX/03u7;Lcom/instagram/common/session/UserSession;Ljava/lang/String;)LX/0ABi;
+    .registers 16
+
+    const v0, 0x2c031
+
+    invoke-static {v0}, LX/04oL;->A01(I)Ljava/lang/Object;
+
+    const/16 v0, 0x3e
+
+    new-instance v1, LX/0ImJ;
+
+    invoke-direct {v1, p1, v0}, LX/0ImJ;-><init>(Ljava/lang/Object;I)V
+
+    const-class v0, LX/04uK;
+
+    invoke-virtual {p1, v0, v1}, LX/04BG;->getScopedLazy(Ljava/lang/Class;Lkotlin/jvm/functions/Function0;)LX/0C8T;
+
+    move-result-object v0
+
+    invoke-interface {v0}, LX/0C8T;->getValue()Ljava/lang/Object;
+
+    move-result-object v3
+
+    check-cast v3, LX/04uK;
+
+    iget-object v0, v3, LX/04uK;->A02:LX/04kb;
+
+    iget-object v0, v0, LX/04kb;->A00:LX/0C8T;
+
+    invoke-interface {v0}, LX/0C8T;->getValue()Ljava/lang/Object;
+
+    move-result-object v2
+
+    check-cast v2, LX/00AT;
+
+    const-wide v0, 0x8107f2002d2ab1L
+
+    check-cast v2, Lcom/facebook/mobileconfig/factory/MobileConfigUnsafeContext;
+
+    invoke-interface {v2, v0, v1}, Lcom/facebook/mobileconfig/factory/MobileConfigUnsafeContext;->BTb(J)Z
+
+    move-result v0
+
+    if-eqz v0, :cond_196
+
+    iget-object v0, v3, LX/04uK;->A06:Ljava/util/concurrent/ConcurrentHashMap;
+
+    invoke-virtual {v0, p2}, Ljava/util/AbstractMap;->get(Ljava/lang/Object;)Ljava/lang/Object;
+
+    move-result-object v0
+
+    invoke-static {v0}, LX/04l9;->A19(Ljava/lang/Object;)Z
+
+    move-result v0
+
+    if-eqz v0, :cond_196
+
+    iget-object v3, v3, LX/04uK;->A0A:Linstagram/features/sponsored/asyncads/userjourney/UserJourneyPayload;
+
+    invoke-static {v3}, LX/04l9;->A0f(Ljava/lang/Object;)V
+
+    new-instance v5, Lorg/json/JSONObject;
+
+    invoke-direct {v5}, Lorg/json/JSONObject;-><init>()V
+
+    iget-object v4, v3, Linstagram/features/sponsored/asyncads/userjourney/UserJourneyPayload;->A00:Ljava/util/List;
+
+    new-instance v2, Lorg/json/JSONArray;
+
+    invoke-direct {v2}, Lorg/json/JSONArray;-><init>()V
+
+    invoke-interface {v4}, Ljava/util/List;->iterator()Ljava/util/Iterator;
+
+    move-result-object v9
+
+    :goto_51
+    invoke-interface {v9}, Ljava/util/Iterator;->hasNext()Z
+
+    move-result v0
+
+    if-eqz v0, :cond_d7
+
+    invoke-interface {v9}, Ljava/util/Iterator;->next()Ljava/lang/Object;
+
+    move-result-object v7
+
+    check-cast v7, LX/01Xb;
+
+    new-instance v6, Lorg/json/JSONObject;
+
+    invoke-direct {v6}, Lorg/json/JSONObject;-><init>()V
+
+    iget-object v1, v7, LX/01Xb;->A09:Ljava/lang/String;
+
+    if-nez v1, :cond_68
+
+    iget-object v1, v7, LX/01Xb;->A08:Ljava/lang/String;
+
+    :cond_68
+    const-string/jumbo v0, "media_pk"
+
+    invoke-virtual {v6, v0, v1}, Lorg/json/JSONObject;->put(Ljava/lang/String;Ljava/lang/Object;)Lorg/json/JSONObject;
+
+    const-string v1, "container_module"
+
+    iget-object v0, v7, LX/01Xb;->A07:Ljava/lang/String;
+
+    invoke-virtual {v6, v1, v0}, Lorg/json/JSONObject;->put(Ljava/lang/String;Ljava/lang/Object;)Lorg/json/JSONObject;
+
+    iget-object v0, v7, LX/01Xb;->A04:Ljava/lang/Integer;
+
+    invoke-static {v0}, LX/02v3;->A00(Ljava/lang/Integer;)I
+
+    move-result v1
+
+    const-string v0, "item_type"
+
+    invoke-virtual {v6, v0, v1}, Lorg/json/JSONObject;->put(Ljava/lang/String;I)Lorg/json/JSONObject;
+
+    const-string/jumbo v8, "view_timestamp"
+
+    iget-wide v0, v7, LX/01Xb;->A01:J
+
+    invoke-virtual {v6, v8, v0, v1}, Lorg/json/JSONObject;->put(Ljava/lang/String;J)Lorg/json/JSONObject;
+
+    const-string v1, "client_position"
+
+    iget v0, v7, LX/01Xb;->A00:I
+
+    invoke-virtual {v6, v1, v0}, Lorg/json/JSONObject;->put(Ljava/lang/String;I)Lorg/json/JSONObject;
+
+    const/16 v8, 0xc
+
+    const/16 v1, 0xa
+
+    const/16 v0, 0x3b
+
+    invoke-static {v8, v1, v0}, LX/06Di;->A00(III)Ljava/lang/String;
+
+    move-result-object v1
+
+    iget-object v0, v7, LX/01Xb;->A0A:Ljava/lang/String;
+
+    invoke-virtual {v6, v1, v0}, Lorg/json/JSONObject;->put(Ljava/lang/String;Ljava/lang/Object;)Lorg/json/JSONObject;
+
+    iget-object v0, v7, LX/01Xb;->A05:Ljava/lang/Integer;
+
+    if-eqz v0, :cond_d5
+
+    invoke-virtual {v0}, Ljava/lang/Number;->intValue()I
+
+    move-result v1
+
+    const/4 v0, 0x1
+
+    if-eq v1, v0, :cond_d2
+
+    const-string v1, "ENTER"
+
+    :goto_ab
+    const-string/jumbo v0, "nav_marker"
+
+    invoke-virtual {v6, v0, v1}, Lorg/json/JSONObject;->put(Ljava/lang/String;Ljava/lang/Object;)Lorg/json/JSONObject;
+
+    const/16 v0, 0x6ba
+
+    invoke-static {v0}, LX/0005;->A00(I)Ljava/lang/String;
+
+    move-result-object v1
+
+    iget-boolean v0, v7, LX/01Xb;->A0C:Z
+
+    invoke-virtual {v6, v1, v0}, Lorg/json/JSONObject;->put(Ljava/lang/String;Z)Lorg/json/JSONObject;
+
+    const-string v1, "is_multi_ad"
+
+    iget-boolean v0, v7, LX/01Xb;->A0B:Z
+
+    invoke-virtual {v6, v1, v0}, Lorg/json/JSONObject;->put(Ljava/lang/String;Z)Lorg/json/JSONObject;
+
+    iget-object v1, v7, LX/01Xb;->A03:Ljava/lang/Integer;
+
+    if-nez v1, :cond_c9
+
+    sget-object v1, Lorg/json/JSONObject;->NULL:Ljava/lang/Object;
+
+    :cond_c9
+    const-string v0, "gap_to_previous_sponsored_item"
+
+    invoke-virtual {v6, v0, v1}, Lorg/json/JSONObject;->put(Ljava/lang/String;Ljava/lang/Object;)Lorg/json/JSONObject;
+
+    invoke-virtual {v2, v6}, Lorg/json/JSONArray;->put(Ljava/lang/Object;)Lorg/json/JSONArray;
+
+    goto :goto_51
+
+    :cond_d2
+    const-string v1, "RETURN"
+
+    goto :goto_ab
+
+    :cond_d5
+    const/4 v1, 0x0
+
+    goto :goto_ab
+
+    :cond_d7
+    const-string/jumbo v0, "view_history"
+
+    invoke-virtual {v5, v0, v2}, Lorg/json/JSONObject;->put(Ljava/lang/String;Ljava/lang/Object;)Lorg/json/JSONObject;
+
+    iget-object v0, v3, Linstagram/features/sponsored/asyncads/userjourney/UserJourneyPayload;->A01:Ljava/util/Map;
+
+    new-instance v3, Lorg/json/JSONObject;
+
+    invoke-direct {v3}, Lorg/json/JSONObject;-><init>()V
+
+    invoke-interface {v0}, Ljava/util/Map;->entrySet()Ljava/util/Set;
+
+    move-result-object v0
+
+    invoke-interface {v0}, Ljava/util/Set;->iterator()Ljava/util/Iterator;
+
+    move-result-object v12
+
+    :goto_ec
+    invoke-interface {v12}, Ljava/util/Iterator;->hasNext()Z
+
+    move-result v0
+
+    if-eqz v0, :cond_175
+
+    invoke-interface {v12}, Ljava/util/Iterator;->next()Ljava/lang/Object;
+
+    move-result-object v0
+
+    check-cast v0, Ljava/util/Map$Entry;
+
+    invoke-interface {v0}, Ljava/util/Map$Entry;->getKey()Ljava/lang/Object;
+
+    move-result-object v7
+
+    check-cast v7, Ljava/lang/String;
+
+    invoke-interface {v0}, Ljava/util/Map$Entry;->getValue()Ljava/lang/Object;
+
+    move-result-object v8
+
+    check-cast v8, LX/07f7;
+
+    new-instance v6, Lorg/json/JSONObject;
+
+    invoke-direct {v6}, Lorg/json/JSONObject;-><init>()V
+
+    iget-object v0, v8, LX/07f7;->A01:Ljava/util/List;
+
+    new-instance v2, Lorg/json/JSONArray;
+
+    invoke-direct {v2}, Lorg/json/JSONArray;-><init>()V
+
+    invoke-interface {v0}, Ljava/util/List;->iterator()Ljava/util/Iterator;
+
+    move-result-object v11
+
+    :goto_114
+    invoke-interface {v11}, Ljava/util/Iterator;->hasNext()Z
+
+    move-result v0
+
+    if-eqz v0, :cond_15c
+
+    invoke-interface {v11}, Ljava/util/Iterator;->next()Ljava/lang/Object;
+
+    move-result-object v10
+
+    check-cast v10, LX/07h1;
+
+    new-instance v9, Lorg/json/JSONObject;
+
+    invoke-direct {v9}, Lorg/json/JSONObject;-><init>()V
+
+    const-string/jumbo v1, "media_pk"
+
+    iget-object v0, v10, LX/07h1;->A03:Ljava/lang/String;
+
+    invoke-virtual {v9, v1, v0}, Lorg/json/JSONObject;->put(Ljava/lang/String;Ljava/lang/Object;)Lorg/json/JSONObject;
+
+    const-string v1, "container_module"
+
+    iget-object v0, v10, LX/07h1;->A02:Ljava/lang/String;
+
+    invoke-virtual {v9, v1, v0}, Lorg/json/JSONObject;->put(Ljava/lang/String;Ljava/lang/Object;)Lorg/json/JSONObject;
+
+    iget-object v0, v10, LX/07h1;->A01:Ljava/lang/Integer;
+
+    invoke-static {v0}, LX/02v3;->A00(Ljava/lang/Integer;)I
+
+    move-result v1
+
+    const-string v0, "item_type"
+
+    invoke-virtual {v9, v0, v1}, Lorg/json/JSONObject;->put(Ljava/lang/String;I)Lorg/json/JSONObject;
+
+    const-string v1, "client_position"
+
+    iget v0, v10, LX/07h1;->A00:I
+
+    invoke-virtual {v9, v1, v0}, Lorg/json/JSONObject;->put(Ljava/lang/String;I)Lorg/json/JSONObject;
+
+    const/16 v0, 0xa9c
+
+    invoke-static {v0}, LX/0000;->A00(I)Ljava/lang/String;
+
+    move-result-object v1
+
+    iget-boolean v0, v10, LX/07h1;->A05:Z
+
+    invoke-virtual {v9, v1, v0}, Lorg/json/JSONObject;->put(Ljava/lang/String;Z)Lorg/json/JSONObject;
+
+    const-string v1, "is_multi_ad"
+
+    iget-boolean v0, v10, LX/07h1;->A04:Z
+
+    invoke-virtual {v9, v1, v0}, Lorg/json/JSONObject;->put(Ljava/lang/String;Z)Lorg/json/JSONObject;
+
+    invoke-virtual {v2, v9}, Lorg/json/JSONArray;->put(Ljava/lang/Object;)Lorg/json/JSONArray;
+
+    goto :goto_114
+
+    :cond_15c
+    const-string v0, "items"
+
+    invoke-virtual {v6, v0, v2}, Lorg/json/JSONObject;->put(Ljava/lang/String;Ljava/lang/Object;)Lorg/json/JSONObject;
+
+    const/16 v2, 0xc
+
+    const/16 v1, 0xa
+
+    const/16 v0, 0x3b
+
+    invoke-static {v2, v1, v0}, LX/06Di;->A00(III)Ljava/lang/String;
+
+    move-result-object v1
+
+    iget-object v0, v8, LX/07f7;->A00:Ljava/lang/String;
+
+    invoke-virtual {v6, v1, v0}, Lorg/json/JSONObject;->put(Ljava/lang/String;Ljava/lang/Object;)Lorg/json/JSONObject;
+
+    invoke-virtual {v3, v7, v6}, Lorg/json/JSONObject;->put(Ljava/lang/String;Ljava/lang/Object;)Lorg/json/JSONObject;
+
+    goto/16 :goto_ec
+
+    :cond_175
+    const/16 v0, 0x4ba
+
+    invoke-static {v0}, LX/0000;->A00(I)Ljava/lang/String;
+
+    move-result-object v0
+
+    invoke-virtual {v5, v0, v3}, Lorg/json/JSONObject;->put(Ljava/lang/String;Ljava/lang/Object;)Lorg/json/JSONObject;
+
+    invoke-virtual {v5}, Ljava/lang/Object;->toString()Ljava/lang/String;
+
+    move-result-object v1
+
+    invoke-static {v1}, LX/04l9;->A0R(Ljava/lang/Object;)V
+
+    invoke-interface {v4}, Ljava/util/List;->size()I
+
+    move-result v0
+
+    new-instance v2, LX/04v0;
+
+    invoke-direct {v2}, Ljava/lang/Object;-><init>()V
+
+    iput-object v1, v2, LX/04v0;->A01:Ljava/lang/String;
+
+    iput v0, v2, LX/04v0;->A00:I
+
+    const/4 v0, 0x0
+
+    sput v0, Lredex/$StoreFenceHelper;->DUMMY_VOLATILE:I
+
+    goto :goto_198
+
+    :cond_196
+    sget-object v2, LX/04uX;->A00:LX/04uX;
+
+    :goto_198
+    check-cast v2, LX/0ABi;
+
+    instance-of v0, v2, LX/04v0;
+
+    if-eqz v0, :cond_1aa
+
+    move-object v0, v2
+
+    check-cast v0, LX/04v0;
+
+    iget-object v1, v0, LX/04v0;->A01:Ljava/lang/String;
+
+    const-string/jumbo v0, "user_journey"
+
+    invoke-virtual {p0, v0, v1}, LX/03u7;->AOA(Ljava/lang/String;Ljava/lang/String;)V
+
+    :cond_1a9
+    return-object v2
+
+    :cond_1aa
+    sget-object v0, LX/04uX;->A00:LX/04uX;
+
+    invoke-static {v2, v0}, LX/04l9;->areEqual(Ljava/lang/Object;Ljava/lang/Object;)Z
+
+    move-result v0
+
+    if-nez v0, :cond_1a9
+
+    new-instance v0, Lkotlin/NoWhenBranchMatchedException;
+
+    invoke-direct {v0}, Ljava/lang/RuntimeException;-><init>()V
+
+    throw v0
+.end method
+
+===== Lcom/instagram/clips/api/ClipsApiUtilHelper; .method public static final A01(Lcom/instagram/common/session/UserSession;I)LX/02pu; =====
+STRINGS=[]
+0012: invoke-direct {v0, p0, p1, v7, v1}, LX/02pu;-><init>(LX/04BG;IIZ)V
+0032: iput-object v1, v0, LX/02pu;->A00:LX/0AOo;
+
+FULL_METHOD:
+.method public static final A01(Lcom/instagram/common/session/UserSession;I)LX/02pu;
+    .registers 10
+
+    const/4 v2, 0x0
+
+    const/4 v7, 0x1
+
+    const/4 v1, 0x0
+
+    new-instance v0, LX/02pu;
+
+    invoke-direct {v0, p0, p1, v7, v1}, LX/02pu;-><init>(LX/04BG;IIZ)V
+
+    sget-object v4, LX/04u0;->A00:LX/04u0;
+
+    new-instance v5, LX/02py;
+
+    invoke-direct {v5, p0}, LX/02py;-><init>(Lcom/instagram/common/session/UserSession;)V
+
+    new-instance v3, LX/03sc;
+
+    invoke-direct {v3, v2}, LX/03sc;-><init>(Ljava/io/File;)V
+
+    new-instance v1, LX/02pz;
+
+    move-object v6, v2
+
+    move p0, v7
+
+    invoke-direct/range {v1 .. v8}, LX/02pz;-><init>(LX/0BPk;LX/08IT;LX/0nQH;LX/0nQI;Ljava/lang/Integer;ZZ)V
+
+    iput-object v1, v0, LX/02pu;->A00:LX/0AOo;
+
+    return-object v0
+.end method
