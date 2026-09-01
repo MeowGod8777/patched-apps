@@ -1,0 +1,151 @@
+name: IG 439 HDR Capability Persistent Sinks R19l
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - .github/workflows/ig-hdr-capability-persistent-sinks-r19l.yml
+
+permissions:
+  contents: write
+
+jobs:
+  trace:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    env:
+      APK_NAME: instagram-piko-v439.0.0.37.89-arm64-v8a.apk
+      APK_SHA256: 4015b171ac59f3e7172134d194ec2dcf701f64c3339f127c19d7a04c13d529c8
+    steps:
+      - uses: actions/checkout@v6
+        with: {fetch-depth: 0}
+      - uses: actions/setup-java@v5
+        with:
+          distribution: zulu
+          java-version: '21'
+      - name: Fetch exact APK and disassemble capability dexes
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          set -euo pipefail
+          mkdir -p work/apk work/smali research/generated
+          gh release download 8 --pattern "$APK_NAME" --dir work
+          echo "$APK_SHA256  work/$APK_NAME" | sha256sum -c -
+          gh release download 3.0.10 --repo baksmali/smali --pattern 'baksmali-3.0.10-fat.jar' --dir work
+          unzip -q "work/$APK_NAME" 'classes*.dex' -d work/apk
+          python3 - <<'PY'
+          from pathlib import Path
+          import subprocess
+          toks=['device_capabilities','display_hdr_supported','supported_display_hdr_types','hdr_supported_types',
+                'is_av1_hdr_supported','is_hevc_hdr_supported','key_display_hdr_supported',
+                'key_video_decoder_hdr_supported','video_decoder_hdr_supported','media_codec_info',
+                'profile_levels','performance_class','chipset_platform']
+          hit=set(); lines=[]
+          for p in sorted(Path('work/apk').glob('classes*.dex')):
+              s=subprocess.run(['strings','-a',str(p)],capture_output=True,text=True,errors='replace').stdout
+              hs=[t for t in toks if t.lower() in s.lower()]
+              if hs:
+                  hit.add(p.name); lines.append(f'{p.name}: '+', '.join(hs))
+          Path('work/hitdex.txt').write_text('\n'.join(sorted(hit))+'\n')
+          Path('research/generated/instagram_439_hdr_capability_persistent_dex_hits_r19l.txt').write_text('\n'.join(lines)+'\n')
+          print('\n'.join(lines)); print('HITDEX',sorted(hit))
+          PY
+          while read d; do
+            [ -n "$d" ] || continue
+            n="${d%.dex}"
+            java -jar work/baksmali-3.0.10-fat.jar d "work/apk/$d" -o "work/smali/$n" >/dev/null &
+          done < work/hitdex.txt
+          wait
+
+      - name: Classify capability methods and one-hop callers
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          from pathlib import Path
+          import re
+          ROOT=Path('work/smali')
+          OUT=Path('research/generated/instagram_439_hdr_capability_persistent_sinks_r19l.txt')
+          cls_re=re.compile(r'^\.class\s+.*\s+(L[^;]+;)$')
+          str_re=re.compile(r'^\s*const-string(?:/jumbo)?\s+([^,]+),\s+"(.*)"')
+          meth_sig_re=re.compile(r'^\.method.*?\s([^\s(]+)\(([^)]*)\)(\S+)')
+          invoke_re=re.compile(r'(L[^;]+;)->([^\s(]+)\(([^)]*)\)(\S+)')
+          methods=[]
+          for p in ROOT.rglob('*.smali'):
+              ls=p.read_text(errors='replace').splitlines(); cls='?'
+              for x in ls[:50]:
+                  m=cls_re.match(x)
+                  if m: cls=m.group(1); break
+              i=0
+              while i<len(ls):
+                  if not ls[i].startswith('.method'): i+=1; continue
+                  s=i; sig=ls[i]; i+=1
+                  while i<len(ls) and not ls[i].startswith('.end method'): i+=1
+                  e=min(i,len(ls)-1); methods.append((cls,sig,p,ls[s:e+1])); i+=1
+
+          caps=('device_capabilities','display_hdr_supported','supported_display_hdr_types','hdr_supported_types',
+                'is_av1_hdr_supported','is_hevc_hdr_supported','key_display_hdr_supported',
+                'key_video_decoder_hdr_supported','video_decoder_hdr_supported','media_codec_info',
+                'profile_levels','performance_class','chipset_platform')
+          seeds=[]
+          for cls,sig,p,b in methods:
+              text='\n'.join(b); low=text.lower(); hs=[c for c in caps if c in low]
+              if hs: seeds.append((cls,sig,p,b,hs))
+
+          O=['Instagram 439 HDR Capability Persistent Sink Trace R19l','========================================================','',f'SEED_METHODS={len(seeds)}','']
+          keys=[]
+          for cls,sig,p,b,hs in seeds:
+              text='\n'.join(b); low=text.lower()
+              categories=[]
+              if 'lx/03u7;' in low: categories.append('REST_REQUEST_BUILDER')
+              if 'graphqlcallinput' in low or 'pando' in low: categories.append('GRAPHQL')
+              if 'sharedpreferences' in low: categories.append('PREFS')
+              if 'lx/00vy;' in low or 'lx/03tz;' in low: categories.append('STATIC_ATTR_EVENT')
+              if 'markerannotate' in low: categories.append('QPL')
+              if any(x in low for x in ['tigon','http','requestinterceptor']): categories.append('NETWORK_INFRA')
+              if 'java/util/map;->put' in low or 'hashmap' in low: categories.append('MAP')
+              O += [f'===== SEED {cls} {sig} =====',f'FILE={p}',f'CAPS={hs}',f'CATEGORIES={categories}']
+              ss=[m.group(2) for l in b if (m:=str_re.match(l))]
+              O += [f'STRINGS={ss}']+b+['']
+              m=meth_sig_re.match(sig)
+              if m: keys.append((cls,m.group(1),m.group(2),m.group(3),hs))
+
+          # one-hop exact callers of every seed method
+          callers=[]
+          for cls,sig,p,b in methods:
+              text='\n'.join(b); matched=[]
+              for k in keys:
+                  needle=f'{k[0]}->{k[1]}({k[2]}){k[3]}'
+                  if needle in text: matched.append((k,needle))
+              if matched: callers.append((cls,sig,p,b,matched))
+          O += [f'===== ONE-HOP SEED CALLERS ({len(callers)}) =====','']
+          for cls,sig,p,b,matched in callers:
+              low='\n'.join(b).lower(); categories=[]
+              if 'lx/03u7;' in low: categories.append('REST_REQUEST_BUILDER')
+              if 'graphqlcallinput' in low or 'pando' in low: categories.append('GRAPHQL')
+              if 'sharedpreferences' in low: categories.append('PREFS')
+              if any(x in low for x in ['tigon','http','requestinterceptor']): categories.append('NETWORK_INFRA')
+              if 'lx/00vy;' in low or 'lx/03tz;' in low: categories.append('STATIC_ATTR_EVENT')
+              O += [f'--- CALLER {cls} {sig}',f'FILE={p}',f'MATCHES={[m[0][:4] for m in matched]}',f'CATEGORIES={categories}']
+              ss=[m.group(2) for l in b if (m:=str_re.match(l))]
+              O += [f'STRINGS={ss}']
+              for _,needle in matched:
+                  for i,l in enumerate(b):
+                      if needle in l: O += [f'CALL_AT={i}']+[f'{j:04d}: {b[j]}' for j in range(max(0,i-40),min(len(b),i+30))]
+              O += ['']
+
+          OUT.write_text('\n'.join(O),encoding='utf-8')
+          print('\n'.join(O[:14000])); print('bytes',OUT.stat().st_size,'seeds',len(seeds),'callers',len(callers))
+          PY
+
+      - name: Commit R19l reports
+        run: |
+          set -euo pipefail
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add research/generated/instagram_439_hdr_capability_persistent_dex_hits_r19l.txt research/generated/instagram_439_hdr_capability_persistent_sinks_r19l.txt
+          if ! git diff --cached --quiet; then
+            git commit -m 'Add capability persistent sink trace R19l'
+            git pull --rebase origin main
+            git push origin HEAD:main
+          fi
