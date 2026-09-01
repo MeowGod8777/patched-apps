@@ -1,0 +1,78 @@
+name: IG 439 HDR Clips Slash Endpoints Fast R19i
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - .github/workflows/ig-hdr-clips-endpoint-slash-fast-r19i.yml
+
+permissions:
+  contents: write
+
+jobs:
+  trace:
+    runs-on: ubuntu-latest
+    timeout-minutes: 7
+    env:
+      APK_NAME: instagram-piko-v439.0.0.37.89-arm64-v8a.apk
+      APK_SHA256: 4015b171ac59f3e7172134d194ec2dcf701f64c3339f127c19d7a04c13d529c8
+    steps:
+      - uses: actions/checkout@v6
+        with: {fetch-depth: 0}
+      - uses: actions/setup-java@v5
+        with: {distribution: zulu, java-version: '21'}
+      - name: Fetch and disassemble only literal clips slash dexes
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          set -euo pipefail
+          mkdir -p work/apk work/smali research/generated
+          gh release download 8 --pattern "$APK_NAME" --dir work
+          echo "$APK_SHA256  work/$APK_NAME" | sha256sum -c -
+          gh release download 3.0.10 --repo baksmali/smali --pattern 'baksmali-3.0.10-fat.jar' --dir work
+          unzip -q "work/$APK_NAME" 'classes*.dex' -d work/apk
+          : > work/hitdex.txt
+          for d in work/apk/classes*.dex; do
+            if strings -a "$d" | grep -Fq 'clips/'; then basename "$d" >> work/hitdex.txt; fi
+          done
+          echo HITDEX; cat work/hitdex.txt
+          while read d; do [ -n "$d" ] || continue; n="${d%.dex}"; java -jar work/baksmali-3.0.10-fat.jar d "work/apk/$d" -o "work/smali/$n" >/dev/null & done < work/hitdex.txt
+          wait
+      - name: Dump all actual clips slash request methods
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          import re
+          O=['Instagram 439 HDR literal clips/ endpoint inventory R19i','====================================================','']
+          rows=[]
+          for p in Path('work/smali').rglob('*.smali'):
+            ls=p.read_text(errors='replace').splitlines(); cls='?'
+            for x in ls[:30]:
+              m=re.match(r'^\.class\s+.*\s+(L[^;]+;)$',x)
+              if m: cls=m.group(1); break
+            i=0
+            while i<len(ls):
+              if not ls[i].startswith('.method'): i+=1; continue
+              s=i; sig=ls[i]; i+=1
+              while i<len(ls) and not ls[i].startswith('.end method'):i+=1
+              b=ls[s:min(i+1,len(ls))]; t='\n'.join(b); low=t.lower()
+              ss=re.findall(r'const-string(?:/jumbo)?\s+[^,]+,\s+"([^"]*)"',t)
+              routes=[x for x in ss if 'clips/' in x.lower()]
+              if routes:
+                req=[x for x in ('LX/03u7;->','LX/02pu;','LX/0AMH;','GraphQlCallInput','PandoGraphQLRequest','IgGraphQLQueryExecutor','LX/05yb;') if x.lower() in low]
+                wire=[x for x in ('hdr','codec','av1','hevc','vp9','dash','manifest','quality','device','performance','playback','delivery','bandwidth','resolution','capabil','accept-hint','media') if x in low]
+                rows.append((-(len(req)*20+len(wire)*2),cls,sig,str(p),routes,req,wire,b))
+              i+=1
+          for ns,cls,sig,p,routes,req,wire,b in sorted(rows,key=lambda x:(x[0],x[1],x[2])):
+            O += [f'===== {cls} {sig} =====',f'FILE={p}',f'ROUTES={routes}',f'REQUEST_MARKS={req}',f'WIRE_HITS={wire}']+b+['']
+          O.insert(3,f'count={len(rows)}')
+          text='\n'.join(O); Path('research/generated/instagram_439_hdr_clips_endpoint_slash_fast_r19i.txt').write_text(text)
+          print(text[:300000])
+          PY
+      - name: Commit report
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add research/generated/instagram_439_hdr_clips_endpoint_slash_fast_r19i.txt
+          if ! git diff --cached --quiet; then git commit -m 'Add fast literal Clips endpoint inventory R19i'; git pull --rebase origin main; git push origin HEAD:main; fi
