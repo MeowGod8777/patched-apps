@@ -33,19 +33,16 @@ jobs:
           DEXDUMP="$(find "$ANDROID_HOME/build-tools" -type f -name dexdump | sort -V | tail -1)"
           echo "DEXDUMP=$DEXDUMP" >> "$GITHUB_ENV"
 
-      - name: Disassemble AV1 and codec-capability DEXes
+      - name: Disassemble exact APK DEX files
         shell: bash
         run: |
           for d in work/dex/classes*.dex; do
-            S="$(strings "$d")"
-            if printf '%s' "$S" | grep -Eqi 'av01|av1|MediaCodecInfo|CodecProfileLevel|profileLevels|getCapabilitiesForType|track.?selector|representation'; then
-              b="$(basename "$d" .dex)"
-              echo "Disassembling $b" >&2
-              "$DEXDUMP" -d -f -h "$d" > "work/dis/$b.txt"
-            fi
+            b="$(basename "$d" .dex)"
+            echo "Disassembling $b" >&2
+            "$DEXDUMP" -d -f -h "$d" > "work/dis/$b.txt"
           done
 
-      - name: Rank methods bridging AV1 codec capability and track selection
+      - name: Rank AV1 codec capability and track-selection methods
         shell: bash
         run: |
           python3 - <<'PY'
@@ -56,67 +53,76 @@ jobs:
           groups={
             'av1':[r'video/av01',r'av01',r'\bav1\b',r'dav1d'],
             'codec':[r'MediaCodecInfo',r'MediaCodecList',r'CodecProfileLevel',r'CodecCapabilities',r'getCapabilitiesForType',r'profileLevels',r'isFormatSupported',r'findDecoderForFormat'],
-            'profile':[r'\.profile:I',r'profile',r'level',r'10.?bit',r'Main10',r'P010',r'color-transfer',r'color-standard',r'hdr'],
+            'profile':[r'CodecProfileLevel;\.profile:I',r'CodecProfileLevel;\.level:I',r'10.?bit',r'Main10',r'P010',r'color-transfer',r'color-standard',r'\bhdr\b'],
             'track':[r'track',r'representation',r'adaptation',r'manifest',r'FormatSupport',r'supportsFormat',r'selectTracks',r'TrackSelector',r'preferredMimeType',r'codecSupport'],
           }
           cre={k:[re.compile(x,re.I) for x in v] for k,v in groups.items()}
-          method_marker=re.compile(r'^([0-9a-f]+):\s+\|\[([0-9a-f]+)\]\s+(.+)$')
-          all_methods=[]
+          # dexdump executable method marker looks like:
+          # 37a2d0: ... |00dc: check-cast ... (instruction)
+          # while method entry looks like:
+          # 367f7c: ... |[367f7c] X.0D2R.A08:()Ljava/lang/Object;
+          marker=re.compile(r'^\s*[0-9a-f]+:.*\|\[[0-9a-f]+\]\s+(.+?:\(.*)$')
+          methods=[]
           for p in Path('work/dis').glob('*.txt'):
             lines=p.read_text(errors='ignore').splitlines()
             starts=[]
             for i,l in enumerate(lines):
-              m=method_marker.match(l.strip())
-              if m and ':(' in m.group(3):
-                starts.append((i,m.group(3)))
+              m=marker.match(l)
+              if m:
+                starts.append((i,m.group(1)))
             for n,(i,name) in enumerate(starts):
-              j=starts[n+1][0] if n+1<len(starts) else min(len(lines),i+3000)
+              j=starts[n+1][0] if n+1<len(starts) else min(len(lines),i+3500)
               block=lines[i:j]
               text='\n'.join(block)
               hits={g:sum(len(r.findall(text)) for r in regs) for g,regs in cre.items()}
-              hits={g:n for g,n in hits.items() if n}
+              hits={g:v for g,v in hits.items() if v}
               if not hits: continue
               cats=len(hits)
               score=sum(hits.values())+cats*20
-              if 'av1' in hits and 'codec' in hits: score+=150
-              if 'codec' in hits and 'track' in hits: score+=170
-              if 'av1' in hits and 'track' in hits: score+=150
-              if 'codec' in hits and 'profile' in hits: score+=120
-              if {'av1','codec','track'} <= hits.keys(): score+=350
-              all_methods.append((score,cats,p.name,name,hits,block))
+              if 'av1' in hits and 'codec' in hits: score+=180
+              if 'codec' in hits and 'track' in hits: score+=200
+              if 'av1' in hits and 'track' in hits: score+=180
+              if 'codec' in hits and 'profile' in hits: score+=160
+              if {'av1','codec','track'} <= hits.keys(): score+=400
+              methods.append((score,cats,p.name,name,hits,block))
 
-          all_methods.sort(key=lambda x:(x[0],x[1]), reverse=True)
+          methods.sort(key=lambda x:(x[0],x[1]), reverse=True)
           with report.open('w',encoding='utf-8') as f:
             f.write('Instagram 439 AV1 Main10 / track eligibility trace\n')
             f.write('================================================\n')
             f.write('APK SHA256: 4015b171ac59f3e7172134d194ec2dcf701f64c3339f127c19d7a04c13d529c8\n')
             f.write('Runtime: V2329A selected video/av01 profile=1 Main8, 720x1280@60, BT.709 SDR.\n')
-            f.write('Goal: find code that bridges MediaCodecInfo/profile capability to AV1 representation/track selection.\n\n')
+            f.write('Goal: locate code bridging Android codec/profile capability to AV1 representation/track selection.\n\n')
             f.write('===== RANKED METHODS =====\n')
-            for score,cats,p,name,hits,_ in all_methods[:400]:
+            for score,cats,p,name,hits,_ in methods[:500]:
               f.write(f'{score}\t{cats}\t{p}\t{name}\t{hits}\n')
 
             f.write('\n===== TOP BRIDGE METHOD BODIES =====\n')
             shown=0
-            for score,cats,p,name,hits,block in all_methods:
-              if cats<2: continue
-              if not (('codec' in hits and ('av1' in hits or 'track' in hits or 'profile' in hits)) or ('av1' in hits and 'track' in hits)):
+            for score,cats,p,name,hits,block in methods:
+              if not (('codec' in hits and ('av1' in hits or 'profile' in hits or 'track' in hits)) or ('av1' in hits and 'track' in hits)):
                 continue
               f.write(f'\n### {p} :: {name} score={score} hits={hits}\n')
-              for line in block[:700]: f.write(line+'\n')
+              for line in block[:900]: f.write(line+'\n')
               shown+=1
-              if shown>=70: break
+              if shown>=80: break
 
-            # Exact call references, independent of method ranking.
             f.write('\n===== EXACT PROFILE/CAPABILITY REFERENCES =====\n')
             needles=['CodecProfileLevel;.profile:I','CodecProfileLevel;.level:I','getCapabilitiesForType','profileLevels','isFormatSupported','findDecoderForFormat']
             for p in Path('work/dis').glob('*.txt'):
               lines=p.read_text(errors='ignore').splitlines()
+              # map each hit to nearest preceding method marker for context
+              last_method='UNKNOWN'
+              last_idx=0
               for i,l in enumerate(lines):
+                m=marker.match(l)
+                if m:
+                  last_method=m.group(1); last_idx=i
                 if any(n.lower() in l.lower() for n in needles):
-                  f.write(f'\n--- {p.name}:{i+1} ---\n')
-                  for x in lines[max(0,i-45):min(len(lines),i+90)]: f.write(x+'\n')
-          print('\n'.join(report.read_text(errors='ignore').splitlines()[:700]))
+                  f.write(f'\n--- {p.name}:{i+1} method={last_method} ---\n')
+                  lo=max(last_idx,i-60); hi=min(len(lines),i+120)
+                  for x in lines[lo:hi]: f.write(x+'\n')
+          print('\n'.join(report.read_text(errors='ignore').splitlines()[:900]))
           PY
 
       - name: Commit report
@@ -125,7 +131,7 @@ jobs:
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add research/generated/instagram_439_av1_main10_track_gate.txt
           if ! git diff --cached --quiet; then
-            git commit -m "Trace Instagram 439 AV1 Main10 track gate"
+            git commit -m "Fix Instagram 439 AV1 Main10 track gate report"
           fi
           git pull --rebase origin main
           git push origin HEAD:main
