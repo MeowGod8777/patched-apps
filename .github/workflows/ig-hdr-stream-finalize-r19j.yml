@@ -1,0 +1,110 @@
+name: IG 439 HDR Streaming Finalize R19j
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - .github/workflows/ig-hdr-stream-finalize-r19j.yml
+
+permissions:
+  contents: write
+
+jobs:
+  trace:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    env:
+      APK_NAME: instagram-piko-v439.0.0.37.89-arm64-v8a.apk
+      APK_SHA256: 4015b171ac59f3e7172134d194ec2dcf701f64c3339f127c19d7a04c13d529c8
+    steps:
+      - uses: actions/checkout@v6
+        with: {fetch-depth: 0}
+      - uses: actions/setup-java@v5
+        with: {distribution: zulu, java-version: '21'}
+      - name: Disassemble classes2 and classes15
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          set -euo pipefail
+          mkdir -p work/apk work/smali/c2 work/smali/c15 research/generated
+          gh release download 8 --pattern "$APK_NAME" --dir work
+          echo "$APK_SHA256  work/$APK_NAME" | sha256sum -c -
+          gh release download 3.0.10 --repo baksmali/smali --pattern 'baksmali-3.0.10-fat.jar' --dir work
+          unzip -q "work/$APK_NAME" classes2.dex classes15.dex -d work/apk
+          java -jar work/baksmali-3.0.10-fat.jar d work/apk/classes2.dex -o work/smali/c2 >/dev/null &
+          java -jar work/baksmali-3.0.10-fat.jar d work/apk/classes15.dex -o work/smali/c15 >/dev/null &
+          wait
+      - name: Extract exact finalization chain
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          from pathlib import Path
+          import re
+          roots=[Path('work/smali/c2'),Path('work/smali/c15')]
+          cls_re=re.compile(r'^\.class\s+.*\s+(L[^;]+;)$')
+          methods=[]; files={}
+          for root in roots:
+            for p in root.rglob('*.smali'):
+              ls=p.read_text(errors='replace').splitlines(); cls='?'
+              for x in ls[:60]:
+                m=cls_re.match(x)
+                if m: cls=m.group(1); break
+              files[cls]=(p,ls)
+              i=0
+              while i<len(ls):
+                if not ls[i].startswith('.method'): i+=1; continue
+                s=i; sig=ls[i]; i+=1
+                while i<len(ls) and not ls[i].startswith('.end method'): i+=1
+                methods.append((cls,sig,p,ls[s:min(i+1,len(ls))])); i+=1
+          O=['Instagram 439 HDR streaming finalization R19j','=========================================','']
+          # Exact core methods/classes.
+          for cls in ['LX/02tw;','LX/02ug;','LX/02um;','LX/02jh;','LX/02ud;','LX/02ty;']:
+            if cls in files:
+              p,ls=files[cls]; O += [f'===== CLASS {cls} FILE={p} =====']+ls+['']
+          # Compact invoke inventory for 02tw.A00.
+          for cls,sig,p,b in methods:
+            if cls=='LX/02tw;' and ' A00(' in sig:
+              invokes=[x.strip() for x in b if 'invoke-' in x]
+              strings=[]
+              for x in b:
+                m=re.search(r'const-string(?:/jumbo)?\s+[^,]+,\s+"([^"]*)"',x)
+                if m: strings.append(m.group(1))
+              O += ['===== 02tw.A00 SEMANTIC =====',f'SIG={sig}',f'STRINGS={strings}','INVOKES:']+invokes+['FULL:']+b+['']
+          # All 03u7 methods called by 02tw.A00, and A01/A04 methods explicitly.
+          callnames=set()
+          for cls,sig,p,b in methods:
+            if cls=='LX/02tw;' and ' A00(' in sig:
+              for x in b:
+                m=re.search(r'LX/03u7;->([^\s(]+)',x)
+                if m: callnames.add(m.group(1))
+          O += [f'03u7_CALLNAMES_FROM_02tw={sorted(callnames)}','']
+          for cls,sig,p,b in methods:
+            if cls=='LX/03u7;' and (any(f' {n}(' in sig for n in callnames) or ' A01(' in sig or ' A04(' in sig):
+              O += [f'===== 03u7 TARGET {sig} FILE={p} =====']+b+['']
+          # Find direct request-header maps / server identity additions in finalization chain only.
+          for cls,sig,p,b in methods:
+            if cls not in ('LX/02tw;','LX/03u7;','LX/02ud;','LX/02ty;','LX/02ug;','LX/02um;'): continue
+            text='\n'.join(b)
+            vals=re.findall(r'const-string(?:/jumbo)?\s+[^,]+,\s+"([^"]+)"',text)
+            ints=[v for v in vals if v.lower().startswith('x-') or any(k in v.lower() for k in ('device','model','manufacturer','capabil','codec','hdr','quality','delivery','playback','bandwidth','resolution','media'))]
+            if ints:
+              O += [f'===== FINALIZER STRINGS {cls} {sig} =====',f'VALUES={ints}']
+              idx=[i for i,x in enumerate(b) if any(v in x for v in ints)]
+              for i in idx: O += b[max(0,i-20):min(len(b),i+30)]
+              O += ['']
+          out=Path('research/generated/instagram_439_hdr_stream_finalize_r19j.txt')
+          out.write_text('\n'.join(O),encoding='utf-8')
+          print('\n'.join(O[:14000])); print('bytes',out.stat().st_size)
+          PY
+      - name: Commit report
+        run: |
+          set -euo pipefail
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add research/generated/instagram_439_hdr_stream_finalize_r19j.txt
+          if ! git diff --cached --quiet; then
+            git commit -m 'Add Instagram streaming request finalization trace R19j'
+            git pull --rebase origin main
+            git push origin HEAD:main
+          fi
