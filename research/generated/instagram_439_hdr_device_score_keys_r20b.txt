@@ -1,0 +1,154 @@
+Instagram 439 device score key inventory R20b
+==========================================
+
+===== classes10.dex (9) =====
+"Error saving mediaPerformanceClass
+CUltra HDR image capture does not support for use with CameraEffect.
+FLcom/google/android/gms/deviceperformance/MediaPerformanceClassResult;
+G[Lcom/google/android/gms/deviceperformance/MediaPerformanceClassResult;
+MEDIA_PERFORMANCE_CLASS
+WResolved dynamic range for use case %s from %s 10-bit supported dynamic range.
+getSupportedHdrTypes
+hdr_support
+yResolved dynamic range for use case %s from validated dynamic range constraints or supported HDR dynamic ranges.
+
+===== classes12.dex (11) =====
+#camera_back_hlg_hdr_video_supported
+$One-Device-Classifier-Handler-Thread
+$camera_front_hlg_hdr_video_supported
+*com.facebook.devicesegmentation.GET_FAILED
+*com.facebook.devicesegmentation.NOT_STORED
+-setHdrEnabled is not supported in Camera1 api
+GTrying to prepare HDR with AVC codec, which is not supported. Standard 
+com.facebook.devicesegmentation
+display_hdr_supported
+video_decoder_hdr_supported
+video_encoder_hdr_supported
+
+===== classes13.dex (8) =====
+>Lcom/instagram/devicesegmentation/logging/PerfMetricRunnerJni;
+ARClassBenchmark
+AR_CLASS_BENCHMARK
+HDR_TEXTURE_VIEW_NOT_SUPPORTED
+getSupportedHdrTypes
+ig_device_perf_benchmark
+isHdrSupported
+perf_benchmark_failure
+
+===== classes14.dex (24) =====
+ ON_DEVICE_SEGMENTATION_INFERENCE
+!AGGREGATED_ON_DEVICE_SEGMENTATION
+#ON_DEVICE_SUBJECT_SEGMENTATION_LOAD
+$ON_DEVICE_SUBJECT_SEGMENTATION_CLOSE
+%ON_DEVICE_SUBJECT_SEGMENTATION_CREATE
+&aggregatedOnDeviceSegmentationLogEvent
+&onDeviceDigitalInkSegmentationLogEvent
+'ON_DEVICE_DIGITAL_INK_SEGMENTATION_LOAD
+'onDeviceSubjectSegmentationLoadLogEvent
+(ON_DEVICE_DIGITAL_INK_SEGMENTATION_CLOSE
+(ON_DEVICE_SUBJECT_SEGMENTATION_INFERENCE
+)ON_DEVICE_DIGITAL_INK_SEGMENTATION_CREATE
+)onDeviceSubjectSegmentationCreateLogEvent
+*ON_DEVICE_DIGITAL_INK_SEGMENTATION_PROCESS
++ON_DEVICE_DIGITAL_INK_SEGMENTATION_DOWNLOAD
+,onDeviceSubjectSegmentationInferenceLogEvent
+-aggregatedOnDeviceSubjectSegmentationLogEvent
+3AGGREGATED_ON_DEVICE_SUBJECT_SEGMENTATION_INFERENCE
+MLcom/instagram/devicesegmentation/logging/PerfMetricsLoggerStartupTaskBinder;
+ON_DEVICE_SEGMENTATION_CLOSE
+ON_DEVICE_SEGMENTATION_CREATE
+ON_DEVICE_SEGMENTATION_LOAD
+RLcom/instagram/devicesegmentation/logging/StaticAttributesLoggerStartupTaskBinder;
+onDeviceSegmentationLogEvent
+
+===== classes15.dex (4) =====
+IG_AR_CLASS_BENCHMARK
+LOG_PERF_BENCHMARK
+Yfbandroid_java_com_facebook_cameracore_mediapipeline_arclass_benchmark_interfaces_jni_jni
+_libfbandroid_java_com_facebook_cameracore_mediapipeline_arclass_benchmark_interfaces_jni_jni_so
+
+===== classes16.dex (1) =====
+&display does not support HDR/SDR ratio
+
+===== classes17.dex (1) =====
+$=BluetoothDevice.DEVICE_TYPE_CLASSIC
+
+===== classes18.dex (6) =====
+> Device year class is newer than CLASS_2015
+> Device year class is newer than CLASS_2015...
+> Device year class is older than CLASS_2015
+attributed_device_class
+
+===== classes19.dex (16) =====
+VLcom/facebook/cameracore/mediapipeline/arclass/benchmark/interfaces/IARClassBenchmark;
+arClassBenchmark
+device.action.CLASS_CHANGED
+getSupportedHdrTypes
+has_hevc_encoder_with_hdr
+has_hw_av1_hdr_enc
+has_hw_hevc_hdr_enc
+hdr_hlg_supported
+hdr_jpegr_supported
+hdr_supported
+is_av1_hdr_editing_supported
+is_av1_hdr_supported
+is_hevc_hdr_editing_supported
+is_hevc_hdr_supported
+lLcom/facebook/cameracore/mediapipeline/arclass/benchmark/implementation/instagram/InstagramARClassBenchmark;
+supported_display_hdr_types
+
+===== classes2.dex (7) =====
+AR_CLASS_BENCHMARK
+Dcom.facebook.common.dextricks.benchmarkhelper.ClassloadNameCollector
+FLcom/facebook/common/dextricks/benchmarkhelper/ClassloadNameCollector;
+Kcom.instagram.devicesegmentation.logging.PerfMetricsLoggerStartupTaskBinder
+LogPerfBenchmark
+Pcom.instagram.devicesegmentation.logging.StaticAttributesLoggerStartupTaskBinder
+arclassBenchmarks
+
+===== classes20.dex (6) =====
+%AIPLATFORM_SEGMENT_ANYTHING_ON_DEVICE
+,MANAGED_MOBILE_ERRORS_PERF_BENCHMARK_FAILURE
+.AIPLATFORM_SALIENCY_SEGMENT_ANYTHING_ON_DEVICE
+9STORIES_VIEWER_PERFORMANCE_ANDROID_BUCKET_TRANSITION_TTRC
+MOBILELAB_MICROBENCHMARK_RESULT
+PERF_BENCHMARK
+
+===== classes4.dex (11) =====
+"Error encrypting device risk score
+'key_camera_back_hlg_hdr_video_supported
+(key_camera_front_hlg_hdr_video_supported
+)Error processing on-device classification
+1FileStorageApi class not available on this device
+@Text classifier not available, skipping on-device classification
+DeviceRiskScoreUtil
+deviceClass
+key_display_hdr_supported
+key_video_decoder_hdr_supported
+key_video_encoder_hdr_supported
+
+===== classes6.dex (1) =====
+NLcom/aiplatform/processors/segmentanything/SegmentAnythingOnDeviceProcessorV2;
+
+===== classes7.dex (3) =====
+, deviceARClass=
+media_performance_class
+nativeGetDeviceARClass
+
+===== classes8.dex (16) =====
+*SegmentAnythingOnDeviceProcessorV2.predict
+1SegmentAnythingOnDeviceProcessorUtil.toMaskBitmap
+2SegmentAnythingOnDeviceProcessorUtil.toInputTensor
+2SegmentAnythingOnDeviceProcessorUtil.toMaskOutline
+3SegmentAnythingOnDeviceProcessorUtil.toCutoutBitmap
+9SegmentAnythingOnDeviceProcessorUtil.toInputPointsTensor2
+9SegmentAnythingOnDeviceProcessorUtil.toInputPointsTensor3
+;SegmentAnythingOnDeviceProcessorUtil.createBitmapFromPixels
+?SegmentAnythingOnDeviceProcessorUtil.getPointsAndOriginalBitmap
+CSegmentAnythingOnDeviceProcessorUtil.toMaskOutlineAndOriginalBitmap
+DSegmentAnythingOnDeviceProcessorUtil.getBoundingBoxAndOriginalBitmap
+NLcom/aiplatform/processors/segmentanything/SegmentAnythingOnDeviceProcessorV2;
+UIT_TRANSCODE_DEVICE_AR_CLASS
+getSupportedHdrTypes
+hdr_supported_types
+performance_class
