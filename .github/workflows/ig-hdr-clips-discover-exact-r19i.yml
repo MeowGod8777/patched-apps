@@ -1,0 +1,140 @@
+name: IG 439 HDR ClipsDiscover Exact R19i
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - .github/workflows/ig-hdr-clips-discover-exact-r19i.yml
+
+permissions:
+  contents: write
+
+jobs:
+  trace:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    env:
+      APK_NAME: instagram-piko-v439.0.0.37.89-arm64-v8a.apk
+      APK_SHA256: 4015b171ac59f3e7172134d194ec2dcf701f64c3339f127c19d7a04c13d529c8
+    steps:
+      - uses: actions/checkout@v6
+        with: {fetch-depth: 0}
+      - uses: actions/setup-java@v5
+        with:
+          distribution: zulu
+          java-version: '21'
+      - name: Fetch exact APK and targeted dexes
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          set -euo pipefail
+          mkdir -p work/apk work/smali research/generated
+          gh release download 8 --pattern "$APK_NAME" --dir work
+          echo "$APK_SHA256  work/$APK_NAME" | sha256sum -c -
+          gh release download 3.0.10 --repo baksmali/smali --pattern 'baksmali-3.0.10-fat.jar' --dir work
+          unzip -q "work/$APK_NAME" 'classes2.dex' 'classes13.dex' 'classes15.dex' 'classes16.dex' -d work/apk
+          for d in classes2.dex classes13.dex classes15.dex classes16.dex; do
+            java -jar work/baksmali-3.0.10-fat.jar d "work/apk/$d" -o "work/smali/${d%.dex}" >/dev/null &
+          done
+          wait
+
+      - name: Dump ClipsDiscover request builders and callers
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          from pathlib import Path
+          import re
+          ROOT=Path('work/smali'); OUT=Path('research/generated/instagram_439_hdr_clips_discover_exact_r19i.txt')
+          cls_re=re.compile(r'^\.class\s+.*\s+(L[^;]+;)$')
+          meth_re=re.compile(r'^\.method.*\s([^\s(]+)\(([^)]*)\)(\S+)$')
+          str_re=re.compile(r'^\s*const-string(?:/jumbo)?\s+([^,]+),\s+"(.*)"')
+          inv_re=re.compile(r'(L[^;]+;)->([^\s(]+)\(([^)]*)\)(\S+)')
+
+          methods=[]
+          for p in ROOT.rglob('*.smali'):
+            ls=p.read_text(errors='replace').splitlines(); cls=None
+            for x in ls[:50]:
+              m=cls_re.match(x)
+              if m: cls=m.group(1); break
+            if not cls: continue
+            i=0
+            while i<len(ls):
+              if not ls[i].startswith('.method'): i+=1; continue
+              s=i; sig=ls[i]; i+=1
+              while i<len(ls) and not ls[i].startswith('.end method'): i+=1
+              e=min(i,len(ls)-1); b=ls[s:e+1]
+              mm=meth_re.match(sig)
+              key=(cls,mm.group(1),mm.group(2),mm.group(3)) if mm else (cls,sig,'','')
+              methods.append((key,p,b,sig))
+              i+=1
+
+          def lits(b):
+            o=[]
+            for i,l in enumerate(b):
+              m=str_re.match(l)
+              if m:o.append((i,m.group(1),m.group(2)))
+            return o
+          def invs(b):
+            o=[]
+            for i,l in enumerate(b):
+              if 'invoke-' not in l: continue
+              m=inv_re.search(l)
+              if m:o.append((i,m.group(1),m.group(2),m.group(3),m.group(4),l.strip()))
+            return o
+
+          targets=[]
+          for key,p,b,sig in methods:
+            ss=[v for _,_,v in lits(b)]
+            route=[v for v in ss if v in ('clips/discover/','clips/discover/stream/','clips/homecoming/','clips/discover/interest/stream/')]
+            named=(key[0]=='LX/04tC;' and key[1]=='A0A') or (key[0]=='LX/04ej;')
+            if route or named:
+              targets.append((key,p,b,sig,route))
+
+          targetkeys={x[0] for x in targets}
+          O=['Instagram 439 HDR ClipsDiscover exact R19i','=========================================','',f'targets={len(targets)}','']
+          O += ['===== TARGET SUMMARY =====']
+          for key,p,b,sig,route in targets:
+            ss=[v for _,_,v in lits(b)]
+            req=[q[1:5] for q in invs(b) if q[1] in ('LX/03u7;','LX/02pu;','LX/03ci;','Lcom/facebook/graphql/calls/GraphQlCallInput;')]
+            interesting=[v for v in ss if any(t in v.lower() for t in ('clips','media','video','dash','hdr','codec','quality','device','playback','delivery','bandwidth','resolution','screen','performance','rank','session','x-ig-','accept-hint','view_state','paging','seen_'))]
+            O += [f'{key[0]} {sig} | routes={route} | req={req} | strings={interesting} | {p}']
+          O += ['']
+
+          for key,p,b,sig,route in targets:
+            O += [f'===== {key[0]} {sig} =====',f'FILE={p}',f'ROUTES={route}','-- FULL METHOD --']+b+['']
+
+          # Direct callers of every target within these dexes.
+          O += ['===== DIRECT CALLERS =====','']
+          for key,p,b,sig in methods:
+            hits=[]
+            for q in invs(b):
+              qk=(q[1],q[2],q[3],q[4])
+              if qk in targetkeys: hits.append(qk)
+            if not hits: continue
+            ss=[v for _,_,v in lits(b)]
+            interesting=[v for v in ss if any(t in v.lower() for t in ('clip','reel','feed','media','video','hdr','codec','quality','device','playback','session','homecoming','discover'))]
+            O += [f'--- {key[0]} {sig}',f'FILE={p}',f'CALLS={hits}',f'STRINGS={interesting}','---']
+            if len(b)<=700: O+=b
+            O+=['']
+
+          text='\n'.join(O)
+          if len(text)>180000: text=text[:180000]+'\n[TRUNCATED]\n'
+          OUT.write_text(text,encoding='utf-8')
+          print(text[:140000])
+          print('REPORT_BYTES',OUT.stat().st_size)
+          PY
+
+      - name: Commit R19i report with retry
+        run: |
+          set -euo pipefail
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add research/generated/instagram_439_hdr_clips_discover_exact_r19i.txt
+          git commit -m 'Add exact ClipsDiscover request trace R19i' || exit 0
+          for n in 1 2 3 4 5; do
+            git pull --rebase origin main
+            if git push origin HEAD:main; then exit 0; fi
+            sleep $((n*2))
+          done
+          exit 1
