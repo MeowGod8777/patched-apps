@@ -1,0 +1,110 @@
+name: IG 439 HDR Capabilities Generator R18b
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - .github/workflows/ig-hdr-capabilities-generator-r18b.yml
+
+permissions:
+  contents: write
+
+jobs:
+  trace:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    env:
+      APK_NAME: instagram-piko-v439.0.0.37.89-arm64-v8a.apk
+      APK_SHA256: 4015b171ac59f3e7172134d194ec2dcf701f64c3339f127c19d7a04c13d529c8
+    steps:
+      - uses: actions/checkout@v6
+        with: {fetch-depth: 0}
+      - uses: actions/setup-java@v5
+        with:
+          distribution: zulu
+          java-version: '21'
+      - name: Extract exact target smali
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          set -euo pipefail
+          mkdir -p work/apk work/smali research/generated
+          gh release download 8 --pattern "$APK_NAME" --dir work
+          echo "$APK_SHA256  work/$APK_NAME" | sha256sum -c -
+          gh release download 3.0.10 --repo baksmali/smali --pattern 'baksmali-3.0.10-fat.jar' --dir work
+          unzip -q "work/$APK_NAME" 'classes*.dex' -d work/apk
+          for d in work/apk/classes*.dex; do
+            n="$(basename "$d" .dex)"
+            java -jar work/baksmali-3.0.10-fat.jar d "$d" -o "work/smali/$n" >/dev/null &
+          done
+          wait
+          python3 - <<'PY'
+          from pathlib import Path
+          import re
+          root=Path('work/smali')
+          out=Path('research/generated/instagram_439_hdr_capabilities_generator_r18b.txt')
+          targets=('LX/0hCN;','LX/0kr3;','LX/0fNi;','LX/08zY;','LX/02dp;')
+          O=['Instagram 439 X-IG-Capabilities generator R18b','================================================','']
+          found={}
+          for p in root.rglob('*.smali'):
+            t=p.read_text(errors='replace')
+            m=re.search(r'^\.class\s+.*\s+(L[^;]+;)$',t,re.M)
+            if m and m.group(1) in targets:
+              found[m.group(1)]=(p,t)
+          for c in targets:
+            O += [f'===== FULL CLASS {c} =====']
+            if c in found:
+              p,t=found[c]; O += ['FILE: '+str(p),t,'']
+            else: O += ['NOT_FOUND','']
+          O += ['===== ALL METHODS THAT SET X-IG-CAPABILITIES =====','']
+          for p in root.rglob('*.smali'):
+            ls=p.read_text(errors='replace').splitlines()
+            if not any('X-IG-Capabilities' in x or '3brTv10=' in x for x in ls): continue
+            cls='?'
+            for x in ls[:30]:
+              m=re.match(r'^\.class\s+.*\s+(L[^;]+;)$',x)
+              if m: cls=m.group(1); break
+            i=0
+            while i<len(ls):
+              if not ls[i].startswith('.method'): i+=1; continue
+              s=i; i+=1
+              while i<len(ls) and not ls[i].startswith('.end method'): i+=1
+              e=min(i,len(ls)-1); b=ls[s:e+1]
+              if any('X-IG-Capabilities' in x or '3brTv10=' in x for x in b):
+                O += [f'--- {cls} {ls[s]} FILE={p} ---']+b+['']
+              i+=1
+          O += ['===== DIRECT CALLERS OF 0hCN/0kr3 GENERATOR =====','']
+          needles=('LX/0hCN;->A00(','LX/0hCN;->A01(','LX/0kr3;->A00(')
+          for p in root.rglob('*.smali'):
+            ls=p.read_text(errors='replace').splitlines()
+            if not any(any(n in x for n in needles) for x in ls): continue
+            cls='?'
+            for x in ls[:30]:
+              m=re.match(r'^\.class\s+.*\s+(L[^;]+;)$',x)
+              if m: cls=m.group(1); break
+            i=0
+            while i<len(ls):
+              if not ls[i].startswith('.method'): i+=1; continue
+              s=i; i+=1
+              while i<len(ls) and not ls[i].startswith('.end method'): i+=1
+              e=min(i,len(ls)-1); b=ls[s:e+1]
+              if any(any(n in x for n in needles) for x in b):
+                O += [f'--- {cls} {ls[s]} FILE={p} ---']+b+['']
+              i+=1
+          text='\n'.join(O)
+          if len(text)>980000: text=text[:980000]+'\n[TRUNCATED]\n'
+          out.write_text(text,encoding='utf-8')
+          print(text[:260000])
+          PY
+      - name: Commit report
+        run: |
+          set -euo pipefail
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add research/generated/instagram_439_hdr_capabilities_generator_r18b.txt
+          if ! git diff --cached --quiet; then
+            git commit -m 'Add Instagram X-IG-Capabilities generator trace R18b'
+            git pull --rebase origin main
+            git push origin HEAD:main
+          fi
