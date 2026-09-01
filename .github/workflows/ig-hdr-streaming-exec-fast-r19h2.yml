@@ -1,0 +1,114 @@
+name: IG 439 HDR Streaming Exec Fast R19h2
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - .github/workflows/ig-hdr-streaming-exec-fast-r19h2.yml
+
+permissions:
+  contents: write
+
+jobs:
+  trace:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    env:
+      APK_NAME: instagram-piko-v439.0.0.37.89-arm64-v8a.apk
+      APK_SHA256: 4015b171ac59f3e7172134d194ec2dcf701f64c3339f127c19d7a04c13d529c8
+    steps:
+      - uses: actions/checkout@v6
+        with: {fetch-depth: 0}
+      - uses: actions/setup-java@v5
+        with:
+          distribution: zulu
+          java-version: '21'
+      - name: Fetch APK locate exact owner dexes and disassemble
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          set -euo pipefail
+          mkdir -p work/apk work/smali research/generated
+          gh release download 8 --pattern "$APK_NAME" --dir work
+          echo "$APK_SHA256  work/$APK_NAME" | sha256sum -c -
+          gh release download 3.0.10 --repo baksmali/smali --pattern 'baksmali-3.0.10-fat.jar' --dir work
+          unzip -q "work/$APK_NAME" 'classes*.dex' -d work/apk
+          : > work/hitdex.txt
+          : > research/generated/instagram_439_hdr_streaming_owner_dex_r19h2.txt
+          for d in work/apk/classes*.dex; do
+            names=$(java -jar work/baksmali-3.0.10-fat.jar list classes "$d" | grep -E '^(LX/02pu;|LX/02ue;|LX/02xV;|LX/01Jw;|Lcom/instagram/clips/api/ClipsApiUtilHelper;)$' || true)
+            if [ -n "$names" ]; then
+              basename "$d" >> work/hitdex.txt
+              printf '%s:\n%s\n' "$(basename "$d")" "$names" >> research/generated/instagram_439_hdr_streaming_owner_dex_r19h2.txt
+            fi
+          done
+          sort -u work/hitdex.txt -o work/hitdex.txt
+          cat research/generated/instagram_439_hdr_streaming_owner_dex_r19h2.txt
+          echo HITDEX; cat work/hitdex.txt
+          while read d; do
+            [ -n "$d" ] || continue
+            n="${d%.dex}"
+            java -jar work/baksmali-3.0.10-fat.jar d "work/apk/$d" -o "work/smali/$n" >/dev/null &
+          done < work/hitdex.txt
+          wait
+
+      - name: Extract exact classes and xrefs
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          from pathlib import Path
+          import re
+          R=Path('work/smali'); O=['Instagram 439 HDR streaming owner-dex fast R19h2','================================================','']
+          targets=['LX/02pu;','LX/02ue;','LX/02xV;','LX/01Jw;','Lcom/instagram/clips/api/ClipsApiUtilHelper;']
+          cr=re.compile(r'^\.class\s+.*\s+(L[^;]+;)$')
+          methods=[]; classes={}
+          for p in R.rglob('*.smali'):
+            ls=p.read_text(errors='replace').splitlines(); cls='?'
+            for x in ls[:50]:
+              m=cr.match(x)
+              if m: cls=m.group(1); break
+            classes[cls]=(p,ls)
+            i=0
+            while i<len(ls):
+              if not ls[i].startswith('.method'): i+=1; continue
+              s=i; sig=ls[i]; i+=1
+              while i<len(ls) and not ls[i].startswith('.end method'): i+=1
+              e=min(i,len(ls)-1); methods.append((cls,sig,p,ls[s:e+1])); i+=1
+          for t in targets:
+            O += [f'===== FULL {t} =====']
+            if t in classes:
+              p,ls=classes[t]; O += [f'FILE={p}']+ls+['']
+            else: O += ['NOT_FOUND','']
+          keys=['LX/02pu;-><init>(LX/04BG;IIZ)V','LX/02xV;->A01(','LX/02ue;->']
+          for k in keys:
+            O += [f'===== XREF {k} =====']
+            c=0
+            for cls,sig,p,b in methods:
+              for i,l in enumerate(b):
+                if k in l:
+                  c+=1; lo=max(0,i-35); hi=min(len(b),i+30)
+                  O += [f'--- {cls} {sig}',f'FILE={p}']+[f'{j:04d}: {b[j]}' for j in range(lo,hi)]+['']
+            O += [f'COUNT={c}','']
+          # semantic lines from all target methods
+          words=('x-ig-','header','accept','codec','hdr','av1','hevc','vp9','dash','manifest','device','capabil','quality','delivery','playback','bandwidth','resolution','media','video','tigon','request','network')
+          O += ['===== SEMANTIC TARGET METHODS =====']
+          for cls,sig,p,b in methods:
+            if cls not in targets: continue
+            text='\n'.join(b).lower(); hits=[w for w in words if w in text]
+            if hits: O += [f'--- {cls} {sig}',f'HITS={hits}',f'FILE={p}']+b+['']
+          out=Path('research/generated/instagram_439_hdr_streaming_exec_fast_r19h2.txt')
+          out.write_text('\n'.join(O),encoding='utf-8')
+          print('\n'.join(O[:12000])); print('bytes',out.stat().st_size)
+          PY
+      - name: Commit R19h2 reports
+        run: |
+          set -euo pipefail
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add research/generated/instagram_439_hdr_streaming_owner_dex_r19h2.txt research/generated/instagram_439_hdr_streaming_exec_fast_r19h2.txt
+          if ! git diff --cached --quiet; then
+            git commit -m 'Add owner-dex Clips streaming execution trace R19h2'
+            git pull --rebase origin main
+            git push origin HEAD:main
+          fi
