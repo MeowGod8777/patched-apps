@@ -1,0 +1,153 @@
+name: IG 439 HDR ODC Outbound R19n
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - .github/workflows/ig-hdr-odc-outbound-r19n.yml
+
+permissions:
+  contents: write
+
+jobs:
+  trace:
+    runs-on: ubuntu-latest
+    timeout-minutes: 18
+    env:
+      APK_NAME: instagram-piko-v439.0.0.37.89-arm64-v8a.apk
+      APK_SHA256: 4015b171ac59f3e7172134d194ec2dcf701f64c3339f127c19d7a04c13d529c8
+    steps:
+      - uses: actions/checkout@v6
+        with: {fetch-depth: 0}
+      - uses: actions/setup-java@v5
+        with:
+          distribution: zulu
+          java-version: '21'
+      - name: Fetch exact APK and disassemble ODC transport hit dexes
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          set -euo pipefail
+          mkdir -p work/apk work/smali research/generated
+          gh release download 8 --pattern "$APK_NAME" --dir work
+          echo "$APK_SHA256  work/$APK_NAME" | sha256sum -c -
+          gh release download 3.0.10 --repo baksmali/smali --pattern 'baksmali-3.0.10-fat.jar' --dir work
+          unzip -q "work/$APK_NAME" 'classes*.dex' -d work/apk
+          python3 - <<'PY'
+          from pathlib import Path
+          import subprocess
+          needles=['ig_device_static_attributes','One-Device-Classifier-Handler-Thread','LX/0Uiy;','LX/0ece;','LX/03Tz;','com.facebook.devicesegmentation','key_display_hdr_supported','key_video_decoder_hdr_supported']
+          hit=[]; rows=[]
+          for p in sorted(Path('work/apk').glob('classes*.dex')):
+              s=subprocess.run(['strings','-a',str(p)],capture_output=True,text=True,errors='replace').stdout
+              hs=[n for n in needles if n in s]
+              if hs:
+                  hit.append(p.name); rows.append(f'{p.name}: '+', '.join(hs))
+          Path('work/hitdex.txt').write_text('\n'.join(hit)+'\n')
+          Path('research/generated/instagram_439_hdr_odc_outbound_dex_hits_r19n.txt').write_text('\n'.join(rows)+'\n')
+          print('\n'.join(rows)); print('HITDEX',hit)
+          PY
+          while read d; do
+            [ -n "$d" ] || continue
+            java -jar work/baksmali-3.0.10-fat.jar d "work/apk/$d" -o "work/smali/${d%.dex}" >/dev/null &
+          done < work/hitdex.txt
+          wait
+
+      - name: Trace ODC event transport and identity correlation
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          from pathlib import Path
+          import re
+          ROOT=Path('work/smali'); OUT=Path('research/generated/instagram_439_hdr_odc_outbound_r19n.txt')
+          cr=re.compile(r'^\.class\s+.*\s+(L[^;]+;)$')
+          inv=re.compile(r'(L[^;]+;)->([^\s(]+)\(([^)]*)\)(\S+)')
+          sr=re.compile(r'^\s*const-string(?:/jumbo)?\s+[^,]+,\s+"(.*)"')
+          methods=[]; classes={}
+          for p in ROOT.rglob('*.smali'):
+              ls=p.read_text(errors='replace').splitlines(); cls='?'
+              for x in ls[:50]:
+                  m=cr.match(x)
+                  if m: cls=m.group(1); break
+              classes[cls]=(p,ls)
+              i=0
+              while i<len(ls):
+                  if not ls[i].startswith('.method'): i+=1; continue
+                  s=i; sig=ls[i]; i+=1
+                  while i<len(ls) and not ls[i].startswith('.end method'): i+=1
+                  methods.append((cls,sig,p,ls[s:min(i+1,len(ls))])); i+=1
+          O=['Instagram 439 HDR One Device Classifier outbound R19n','====================================================','']
+          targets=['LX/0ece;','LX/0Uiy;','LX/03Tz;','LX/00vy;']
+          for t in targets:
+              O += [f'===== FULL CLASS {t} =====']
+              if t in classes:
+                  p,ls=classes[t]; O += [f'FILE={p}']+ls
+              else: O += ['NOT_FOUND']
+              O += ['']
+
+          # Exact owner/caller chain around ODC launcher + serializer + event object.
+          needles=['LX/0ece;->','LX/0Uiy;-><init>','LX/0Uiy;->run','LX/03Tz;->','ig_device_static_attributes']
+          O += ['===== EXACT ODC / SERIALIZER REFERENCE METHODS =====','']
+          refs=[]
+          for cls,sig,p,b in methods:
+              text='\n'.join(b)
+              hs=[n for n in needles if n in text]
+              if hs:
+                  refs.append((cls,sig,p,b,hs))
+          for cls,sig,p,b,hs in refs:
+              ss=[]
+              for l in b:
+                  m=sr.match(l)
+                  if m: ss.append(m.group(1))
+              invokes=[]
+              for l in b:
+                  if 'invoke-' in l:
+                      m=inv.search(l)
+                      if m: invokes.append(m.groups())
+              O += [f'--- {cls} {sig}',f'FILE={p}',f'HITS={hs}',f'STRINGS={ss}',f'INVOKES={invokes}']+b+['']
+
+          # Classify direct network/analytics sinks reached by these methods and one hop through their callees.
+          refkeys=[]
+          for cls,sig,p,b,hs in refs:
+              mm=re.search(r'\s([^\s(]+)\(([^)]*)\)(\S+)$',sig)
+              if mm: refkeys.append((cls,mm.group(1),mm.group(2),mm.group(3)))
+          sinkwords=('LX/03u7;','GraphQlCallInput','PandoGraphQLRequest','IgGraphQLQueryExecutor','Tigon','Falco','Analytics','analytics','event','logEvent','publish','flush','upload','request','endpoint','graphql','/api/v1/','/api/v2/','phone_id','device_id','family_device','pigeon','advertising_id','android_id')
+          O += ['===== ODC METHODS WITH TRANSPORT / IDENTITY SIGNALS =====','']
+          for cls,sig,p,b in methods:
+              text='\n'.join(b)
+              if not any(k[0]+'->'+k[1]+'('+k[2]+')'+k[3] in text for k in refkeys): continue
+              hits=[w for w in sinkwords if w.lower() in text.lower()]
+              ss=[m.group(1) for l in b if (m:=sr.match(l))]
+              O += [f'--- UPSTREAM {cls} {sig}',f'FILE={p}',f'SINK_HITS={hits}',f'STRINGS={ss}']+b+['']
+
+          # Independently find methods containing ODC event name and identity/network terms together.
+          O += ['===== SAME-METHOD EVENT x NETWORK/IDENTITY INTERSECTIONS =====','']
+          for cls,sig,p,b in methods:
+              text='\n'.join(b); low=text.lower()
+              if 'ig_device_static_attributes' not in low: continue
+              hits=[w for w in sinkwords if w.lower() in low]
+              O += [f'--- {cls} {sig}',f'FILE={p}',f'HITS={hits}']+b+['']
+
+          # Device segmentation storage readers/writers and any network/ref owners.
+          O += ['===== DEVICESEG STORAGE OWNERS =====','']
+          for cls,sig,p,b in methods:
+              text='\n'.join(b); low=text.lower()
+              if 'com.facebook.devicesegmentation' in low or 'video_decoder_hdr_supported' in low or 'display_hdr_supported' in low:
+                  hits=[w for w in sinkwords if w.lower() in low]
+                  O += [f'--- {cls} {sig}',f'FILE={p}',f'SINK_HITS={hits}']+b+['']
+
+          OUT.write_text('\n'.join(O),encoding='utf-8')
+          print('\n'.join(O[:9000])); print('bytes',OUT.stat().st_size,'refs',len(refs))
+          PY
+      - name: Commit R19n reports
+        run: |
+          set -euo pipefail
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add research/generated/instagram_439_hdr_odc_outbound_dex_hits_r19n.txt research/generated/instagram_439_hdr_odc_outbound_r19n.txt
+          if ! git diff --cached --quiet; then
+            git commit -m 'Add One Device Classifier outbound identity trace R19n'
+            git pull --rebase origin main
+            git push origin HEAD:main
+          fi
