@@ -1,0 +1,113 @@
+name: IG 439 HDR Device Status Producer R19k
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - .github/workflows/ig-hdr-device-status-producer-r19k.yml
+
+permissions:
+  contents: write
+
+jobs:
+  trace:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    env:
+      APK_NAME: instagram-piko-v439.0.0.37.89-arm64-v8a.apk
+      APK_SHA256: 4015b171ac59f3e7172134d194ec2dcf701f64c3339f127c19d7a04c13d529c8
+    steps:
+      - uses: actions/checkout@v6
+        with: {fetch-depth: 0}
+      - uses: actions/setup-java@v5
+        with:
+          distribution: zulu
+          java-version: '21'
+      - name: Fetch exact APK and focused dexes
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          set -euo pipefail
+          mkdir -p work/apk work/smali research/generated
+          gh release download 8 --pattern "$APK_NAME" --dir work
+          echo "$APK_SHA256  work/$APK_NAME" | sha256sum -c -
+          gh release download 3.0.10 --repo baksmali/smali --pattern 'baksmali-3.0.10-fat.jar' --dir work
+          unzip -q "work/$APK_NAME" 'classes*.dex' -d work/apk
+          : > work/hitdex.txt
+          for d in work/apk/classes*.dex; do
+            if strings -a "$d" | grep -Eq 'DeviceStatusExtractor|LX/06Kl|LX/07sY|LX/02tZ'; then basename "$d" >> work/hitdex.txt; fi
+          done
+          grep -qx 'classes15.dex' work/hitdex.txt || echo classes15.dex >> work/hitdex.txt
+          grep -qx 'classes2.dex' work/hitdex.txt || echo classes2.dex >> work/hitdex.txt
+          sort -u work/hitdex.txt -o work/hitdex.txt
+          while read d; do
+            [ -n "$d" ] || continue
+            n="${d%.dex}"
+            java -jar work/baksmali-3.0.10-fat.jar d "work/apk/$d" -o "work/smali/$n" >/dev/null &
+          done < work/hitdex.txt
+          wait
+
+      - name: Extract producer chain
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          from pathlib import Path
+          import re
+          root=Path('work/smali'); O=['Instagram 439 device_status producer R19k','=====================================','']
+          cr=re.compile(r'^\.class\s+.*\s+(L[^;]+;)$')
+          ir=re.compile(r'invoke-[^\s]+\s+\{[^}]*\},\s+(L[^;]+;)->([^\(]+)\(([^)]*)\)(\S+)')
+          def methods(p):
+            ls=p.read_text(errors='replace').splitlines(); cls='?'
+            for x in ls[:50]:
+              m=cr.match(x)
+              if m: cls=m.group(1); break
+            i=0
+            while i<len(ls):
+              if not ls[i].startswith('.method'): i+=1; continue
+              s=i; i+=1
+              while i<len(ls) and not ls[i].startswith('.end method'): i+=1
+              e=min(i,len(ls)-1)
+              yield cls,ls[s],ls[s:e+1],p
+              i+=1
+          index={}
+          for p in root.rglob('*.smali'):
+            for cls,sig,b,path in methods(p):
+              n=sig.split('(')[0].split()[-1] if '(' in sig else sig
+              index.setdefault((cls,n),[]).append((sig,b,path))
+          seeds=[]
+          for p in root.rglob('06Kl.smali'):
+            for cls,sig,b,path in methods(p):
+              if 'run()V' in sig:
+                seeds.append((cls,sig,b,path))
+          for cls,sig,b,path in seeds:
+            O += [f'===== SEED {cls} {sig} FILE={path} =====']+b+['']
+            inv=ir.findall('\n'.join(b))
+            for c,n,args,ret in inv:
+              for csig,cb,cp in index.get((c,n),[]):
+                O += [f'===== DIRECT CALLEE {c}->{n} {csig} FILE={cp} =====']+cb+['']
+          # Full named classes if present.
+          for name in ('07sY.smali','02tZ.smali','06Nk.smali'):
+            for p in root.rglob(name): O += [f'===== FULL {name} FILE={p} =====',p.read_text(errors='replace'),'']
+          # Any methods that write cached status.
+          for p in root.rglob('*.smali'):
+            for cls,sig,b,path in methods(p):
+              text='\n'.join(b)
+              if 'sput-object' in text and 'LX/06Nk;->A01' in text:
+                O += [f'===== STATUS WRITER {cls} {sig} FILE={path} =====']+b+['']
+          text='\n'.join(O)
+          Path('research/generated/instagram_439_hdr_device_status_producer_r19k.txt').write_text(text,encoding='utf-8')
+          print(text[:250000])
+          PY
+
+      - name: Commit R19k report
+        run: |
+          set -euo pipefail
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add research/generated/instagram_439_hdr_device_status_producer_r19k.txt
+          if ! git diff --cached --quiet; then
+            git commit -m 'Add device_status producer trace R19k'
+            git pull --rebase origin main
+            git push origin HEAD:main
+          fi
