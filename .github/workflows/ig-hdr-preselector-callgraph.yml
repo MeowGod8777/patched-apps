@@ -1,0 +1,208 @@
+name: IG 439 HDR Preselector Call Graph
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - .github/workflows/ig-hdr-preselector-callgraph.yml
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  probe:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    env:
+      APK_NAME: instagram-piko-v439.0.0.37.89-arm64-v8a.apk
+      APK_SHA256: 4015b171ac59f3e7172134d194ec2dcf701f64c3339f127c19d7a04c13d529c8
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+
+      - name: Download and disassemble exact R8
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          mkdir -p work/dex work/dis research/generated
+          gh release download 8 --pattern "$APK_NAME" --dir work
+          echo "$APK_SHA256  work/$APK_NAME" | sha256sum -c -
+          unzip -j "work/$APK_NAME" 'classes*.dex' -d work/dex
+          DEXDUMP="$(find "$ANDROID_HOME/build-tools" -type f -name dexdump | sort -V | tail -1)"
+          for d in work/dex/classes*.dex; do
+            b="$(basename "$d" .dex)"
+            "$DEXDUMP" -d -f -h "$d" > "work/dis/$b.txt"
+          done
+
+      - name: Build focused reverse call graph and semantic report
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          import re
+          from collections import defaultdict, deque
+
+          files = sorted(Path('work/dis').glob('classes*.txt'))
+          header_re = re.compile(r'\|\[[0-9a-f]+\]\s+([^\s]+):')
+          invoke_re = re.compile(r'invoke-[^,]+.*?\s(L[^;]+;\.[^:]+:\([^\n ]*?\)[^\s/]+)')
+
+          methods = []
+          by_sig = {}
+          reverse = defaultdict(set)
+
+          def header_to_sig(h):
+              # X.0hkt.A00:(...)Z -> LX/0hkt;.A00:(...)Z
+              m = re.match(r'([^.]+)\.([^.]+)\.(.+)', h)
+              if not m:
+                  return None
+              pkg, cls, tail = m.groups()
+              if pkg != 'X':
+                  # e.g. android.foo.Class.method - preserve package separators conservatively
+                  parts = h.split('.')
+                  if len(parts) < 2: return None
+                  return None
+              if ':' not in tail: return None
+              meth, typ = tail.split(':',1)
+              return f'LX/{cls};.{meth}:{typ}'
+
+          for p in files:
+              lines=p.read_text(errors='replace').splitlines()
+              starts=[]
+              heads=[]
+              for i,l in enumerate(lines):
+                  m=header_re.search(l)
+                  if m:
+                      starts.append(i); heads.append(m.group(1))
+              for j,s in enumerate(starts):
+                  e=starts[j+1] if j+1<len(starts) else len(lines)
+                  h=heads[j]
+                  b=lines[s:e]
+                  sig=header_to_sig(h)
+                  rec={'file':p.name,'start':s+1,'end':e,'head':h,'sig':sig,'body':b}
+                  idx=len(methods); methods.append(rec)
+                  if sig: by_sig[sig]=idx
+
+          # Build reverse graph from exact invoke target signatures.
+          for idx,m in enumerate(methods):
+              joined='\n'.join(m['body'])
+              for t in invoke_re.findall(joined):
+                  reverse[t].add(idx)
+
+          out=[]
+          out += [
+            'Instagram 439 HDR pre-selector reverse call graph',
+            '================================================',
+            'Exact R8 SHA256: 4015b171ac59f3e7172134d194ec2dcf701f64c3339f127c19d7a04c13d529c8',
+            '',
+          ]
+
+          semantic_tokens=(
+            'MediaCodecInfo', 'MediaCodecList', 'CodecCapabilities', 'profileLevels', 'isFormatSupported',
+            'MediaFormat', 'color-transfer', 'color-standard', 'color-range', 'hdr', 'HDR', 'Hdr',
+            'BT2020', 'ST2084', 'HLG', '10bit', '10_bit', 'bit_depth', 'bitDepth',
+            'rendition', 'representation', 'adaptation', 'manifest', 'track', 'Track', 'Format',
+            'video/av01', 'video/hevc', 'video/dolby-vision', 'mime', 'profile', 'level',
+            'MobileConfig', 'ExperimentParameter', 'specifier'
+          )
+
+          def emit(m,label,maxlines=260):
+              out.append(f'===== {label} :: {m["file"]}:{m["start"]}-{m["end"]} =====')
+              out.append(m['body'][0] if m['body'] else m['head'])
+              kept=[]
+              for l in m['body'][1:]:
+                  if ('invoke-' in l or 'const-string' in l or 'new-instance' in l or
+                      'iget-' in l or 'sget-' in l or 'iput-' in l or 'sput-' in l or
+                      'check-cast' in l or 'instance-of' in l or 'return-' in l or
+                      'if-' in l or any(t in l for t in semantic_tokens)):
+                      kept.append(l.rstrip())
+              # keep exact order, cap pathological methods
+              for l in kept[:maxlines]: out.append(l)
+              if len(kept)>maxlines: out.append(f'... omitted {len(kept)-maxlines} semantic lines ...')
+              out.append('')
+
+          # A. Prove second generic static-attribute getter call in X.0Qgy belongs to the classifier branch.
+          out.append('===== X.0Qgy handleMessage exact branch around X.0hkS.A01 =====')
+          for m in methods:
+              if m['head'].startswith('X.0Qgy.handleMessage:'):
+                  b=m['body']
+                  for i,l in enumerate(b):
+                      if 'LX/0hkS;.A01:' in l:
+                          lo=max(0,i-45); hi=min(len(b),i+46)
+                          out.append(f'{m["file"]}:{m["start"]+lo}-{m["start"]+hi}')
+                          out.extend(x.rstrip() for x in b[lo:hi])
+                          out.append('')
+
+          # B. Dump X.0hkt methods; known exact-439 Media3/Exo codec-info wrapper.
+          hkt=[]
+          for i,m in enumerate(methods):
+              if m['head'].startswith('X.0hkt.'):
+                  hkt.append(i); emit(m,'X.0hkt codec-info wrapper definition')
+
+          # C. Reverse callers up to depth 4 from every X.0hkt method.
+          seed_sigs=[methods[i]['sig'] for i in hkt if methods[i]['sig']]
+          q=deque((s,0) for s in seed_sigs)
+          seen_sig=set(seed_sigs)
+          seen_methods=set(hkt)
+          depth_groups=defaultdict(list)
+          while q:
+              target,d=q.popleft()
+              if d>=4: continue
+              for ci in reverse.get(target,()):
+                  if ci in seen_methods: continue
+                  seen_methods.add(ci)
+                  depth_groups[d+1].append(ci)
+                  cs=methods[ci]['sig']
+                  if cs and cs not in seen_sig:
+                      seen_sig.add(cs); q.append((cs,d+1))
+          for d in sorted(depth_groups):
+              out.append(f'===== reverse callers of X.0hkt — depth {d}, count={len(depth_groups[d])} =====')
+              for ci in depth_groups[d][:120]: emit(methods[ci],f'X.0hkt reverse caller depth {d}',220)
+              if len(depth_groups[d])>120: out.append(f'... omitted {len(depth_groups[d])-120} methods at depth {d} ...\n')
+
+          # D. Focused methods combining video/format semantics with a selection/filter clue.
+          groups={
+            'HDR + track/format': lambda s: re.search(r'(?i)hdr|ST2084|BT2020|HLG|color-transfer',s) and re.search(r'(?i)track|format|representation|rendition|adaptation|manifest',s),
+            'AV1 + profile/capability': lambda s: ('video/av01' in s or 'MediaCodecInfo' in s) and re.search(r'(?i)profile|isFormatSupported|profileLevels|CodecCapabilities',s),
+            'manifest/rendition selection': lambda s: re.search(r'(?i)manifest|rendition|representation|adaptation',s) and re.search(r'(?i)video|track|codec|format|quality|abr|select|support',s),
+          }
+          for label,pred in groups.items():
+              matches=[]
+              for i,m in enumerate(methods):
+                  text='\n'.join(m['body'])
+                  try:
+                      if pred(text): matches.append(i)
+                  except Exception: pass
+              out.append(f'===== semantic group: {label}; count={len(matches)} =====')
+              for i in matches[:100]: emit(methods[i],label,220)
+              if len(matches)>100: out.append(f'... omitted {len(matches)-100} matches ...\n')
+
+          # E. Plaintext strings likely to expose Meta's own naming for HDR/ABR/rendition gates.
+          clue_re=re.compile(r'(?i)(hdr|10.?bit|bt.?2020|st.?2084|hlg|rendition|representation|adaptation.?set|manifest|abr|device.?capab|video.?quality|codec.?capab)')
+          out.append('===== targeted plaintext const-string clues =====')
+          hits=0
+          for m in methods:
+              for l in m['body']:
+                  if 'const-string' in l and clue_re.search(l):
+                      out.append(f'{m["file"]}:{m["start"]}: {m["head"]} :: {l.strip()}')
+                      hits+=1
+                      if hits>=700: break
+              if hits>=700: break
+          out.append(f'plaintext clue hits emitted={hits}')
+          out.append('')
+
+          report=Path('research/generated/instagram_439_hdr_preselector_callgraph.txt')
+          report.write_text('\n'.join(out)+'\n')
+          print(report.read_text()[:220000])
+          PY
+
+      - name: Commit report
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add research/generated/instagram_439_hdr_preselector_callgraph.txt
+          if ! git diff --cached --quiet; then
+            git commit -m "Trace Instagram 439 HDR pre-selector call graph"
+          fi
+          git pull --rebase origin main
+          git push origin HEAD:main
