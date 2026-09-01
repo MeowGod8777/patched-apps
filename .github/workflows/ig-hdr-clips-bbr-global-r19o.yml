@@ -1,0 +1,97 @@
+name: IG 439 HDR Clips BBr Global R19o
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - .github/workflows/ig-hdr-clips-bbr-global-r19o.yml
+
+permissions:
+  contents: write
+
+jobs:
+  trace:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    env:
+      APK_NAME: instagram-piko-v439.0.0.37.89-arm64-v8a.apk
+      APK_SHA256: 4015b171ac59f3e7172134d194ec2dcf701f64c3339f127c19d7a04c13d529c8
+    steps:
+      - uses: actions/checkout@v6
+        with: {fetch-depth: 0}
+      - uses: actions/setup-java@v5
+        with: {distribution: zulu, java-version: '21'}
+      - name: Locate only BBr/interface dexes
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          set -euo pipefail
+          mkdir -p work/apk work/smali research/generated
+          gh release download 8 --pattern "$APK_NAME" --dir work
+          echo "$APK_SHA256  work/$APK_NAME" | sha256sum -c -
+          gh release download 3.0.10 --repo baksmali/smali --pattern 'baksmali-3.0.10-fat.jar' --dir work
+          unzip -q "work/$APK_NAME" 'classes*.dex' -d work/apk
+          python3 - <<'PY'
+          from pathlib import Path
+          import subprocess
+          hits=[]; detail=[]
+          for p in sorted(Path('work/apk').glob('classes*.dex')):
+              s=subprocess.run(['strings','-a',str(p)],capture_output=True,text=True,errors='replace').stdout
+              hs=[x for x in ('BBr','0Omv','0Iwp') if x in s]
+              if hs:
+                  hits.append(p.name); detail.append(f'{p.name}: {hs}')
+          Path('work/hitdex.txt').write_text('\n'.join(hits)+'\n')
+          Path('research/generated/instagram_439_hdr_clips_bbr_global_dexhits_r19o.txt').write_text('\n'.join(detail)+'\n')
+          print('\n'.join(detail)); print('HITDEX',hits)
+          PY
+          while read d; do
+            [ -n "$d" ] || continue
+            n="${d%.dex}"
+            java -jar work/baksmali-3.0.10-fat.jar d "work/apk/$d" -o "work/smali/$n" >/dev/null &
+          done < work/hitdex.txt
+          wait
+      - name: Extract interface hierarchy and every BBr implementation
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          from pathlib import Path
+          import re
+          O=['Instagram 439 Clips BBr global R19o','=================================','']
+          cr=re.compile(r'^\.class\s+.*\s+(L[^;]+;)$')
+          rows=[]
+          for p in Path('work/smali').rglob('*.smali'):
+              ls=p.read_text(errors='replace').splitlines(); cls='?'; head='\n'.join(ls[:80])
+              for x in ls[:50]:
+                  m=cr.match(x)
+                  if m: cls=m.group(1); break
+              # dump actual named classes and classes implementing/extending the interface/type
+              if cls in ('LX/0Omv;','LX/0Iwp;') or 'implements LX/0Omv;' in head or 'implements LX/0Iwp;' in head or '.super LX/0Iwp;' in head:
+                  O += [f'===== CLASS {cls} FILE={p} =====']+ls+['']
+              i=0
+              while i<len(ls):
+                  if not ls[i].startswith('.method'): i+=1; continue
+                  s=i; sig=ls[i]; i+=1
+                  while i<len(ls) and not ls[i].startswith('.end method'): i+=1
+                  e=min(i,len(ls)-1); b=ls[s:e+1]; t='\n'.join(b)
+                  if ' BBr(Ljava/lang/String;)Ljava/util/Map;' in sig:
+                      lits=re.findall(r'const-string(?:/jumbo)?\s+[^,]+,\s+"(.*)"',t)
+                      rows.append((cls,sig,str(p),lits,b))
+                  i+=1
+          O += [f'===== ALL BBr DEFINITIONS ({len(rows)}) =====','']
+          for cls,sig,p,lits,b in rows:
+              O += [f'--- {cls} {sig}',f'FILE={p}',f'LITERALS={lits}']+b+['']
+          Path('research/generated/instagram_439_hdr_clips_bbr_global_r19o.txt').write_text('\n'.join(O),encoding='utf-8')
+          print('\n'.join(O[:16000])); print('BBr defs',len(rows))
+          PY
+      - name: Commit R19o reports
+        run: |
+          set -euo pipefail
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add research/generated/instagram_439_hdr_clips_bbr_global_dexhits_r19o.txt research/generated/instagram_439_hdr_clips_bbr_global_r19o.txt
+          if ! git diff --cached --quiet; then
+            git commit -m 'Add global Clips BBr implementation trace R19o'
+            git pull --rebase origin main
+            git push origin HEAD:main
+          fi
