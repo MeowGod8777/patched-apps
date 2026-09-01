@@ -1,0 +1,208 @@
+name: IG 439 HDR Clips Primary Request R19g
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - .github/workflows/ig-hdr-clips-primary-request-r19g.yml
+
+permissions:
+  contents: write
+
+jobs:
+  trace:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    env:
+      APK_NAME: instagram-piko-v439.0.0.37.89-arm64-v8a.apk
+      APK_SHA256: 4015b171ac59f3e7172134d194ec2dcf701f64c3339f127c19d7a04c13d529c8
+    steps:
+      - uses: actions/checkout@v6
+        with: {fetch-depth: 0}
+      - uses: actions/setup-java@v5
+        with:
+          distribution: zulu
+          java-version: '21'
+      - name: Fetch exact APK and disassemble only R19c target dexes
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          set -euo pipefail
+          mkdir -p work/apk work/smali research/generated
+          gh release download 8 --pattern "$APK_NAME" --dir work
+          echo "$APK_SHA256  work/$APK_NAME" | sha256sum -c -
+          gh release download 3.0.10 --repo baksmali/smali --pattern 'baksmali-3.0.10-fat.jar' --dir work
+          unzip -q "work/$APK_NAME" 'classes*.dex' -d work/apk
+          python3 - <<'PY'
+          from pathlib import Path
+          import re
+          p=Path('research/generated/instagram_439_hdr_reels_string_xref_r19c.txt')
+          t=p.read_text(errors='replace')
+          targets=('clips_viewer_feed_timeline','clips_viewer_reel_feed_timeline','clips_fetch','reel_feed_timeline')
+          dex=set(); sections=re.split(r'\n--- ',t)
+          for s in sections:
+            if not any(x in s for x in targets): continue
+            m=re.search(r'FILE=work/smali/([^/]+)/',s)
+            if m: dex.add(m.group(1)+'.dex')
+          # Always include exact response-model/request-heavy dexes found previously.
+          dex.update(['classes2.dex','classes13.dex','classes15.dex','classes16.dex','classes17.dex','classes20.dex'])
+          dex={d for d in dex if Path('work/apk',d).exists()}
+          Path('work/hitdex.txt').write_text('\n'.join(sorted(dex))+'\n')
+          print('HITDEX',sorted(dex))
+          PY
+          while read d; do
+            [ -n "$d" ] || continue
+            n="${d%.dex}"
+            java -jar work/baksmali-3.0.10-fat.jar d "work/apk/$d" -o "work/smali/$n" >/dev/null &
+          done < work/hitdex.txt
+          wait
+      - name: Resolve exact context producers into request graph
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          from pathlib import Path
+          import re, collections
+
+          root=Path('work/smali')
+          out=Path('research/generated/instagram_439_hdr_clips_primary_request_r19g.txt')
+          target_idx={0x10d:'clips_viewer_feed_timeline',0x144:'reel_feed_timeline',0x955:'clips_fetch',0xceb:'clips_viewer_reel_feed_timeline'}
+          target_names=set(target_idx.values())
+          exclude_classes={'LX/0000;','LX/0BnF;','LX/00Aj;','LX/04q3;','LX/0018;','Lcom/instagram/feed/media/LiveTreeMediaDict;','LX/03hQ;','LX/04vn;'}
+          request_terms=('LX/03u7;','LX/02pu;','LX/0AMH;','GraphQlCallInput','PandoGraphQLRequest','IgGraphQLQueryExecutor','LX/05yb;','LX/05xm;','doc_id','query_id','query_hash','variables','signed_body','/api/v1/','/api/v2/','AMu(','AOA(','A0F(','AOQ(','A0G:Ljava/lang/String;')
+          wire_terms=('hdr','codec','av1','hevc','vp9','dash','manifest','device','quality','performance','playback','delivery','bandwidth','resolution','screen','media','video','accept-hint','capabil')
+          invoke_re=re.compile(r'invoke-\w+(?:/range)?\s+\{[^}]*\},\s+(L[^;]+;)->([^\(]+)\(([^)]*)\)(\S+)')
+          class_re=re.compile(r'^\.class\s+.*\s+(L[^;]+;)$')
+          const_re=re.compile(r'^\s*const(?:/\w+)?(?:\s+|/\w+\s+)(v\d+|p\d+),\s+(-?0x[0-9a-fA-F]+|-?\d+)')
+          # explicit forms we actually need
+          const_int_re=re.compile(r'^\s*const(?:/4|/16|/high16)?\s+(v\d+|p\d+),\s+(-?0x[0-9a-fA-F]+|-?\d+)')
+          const_str_re=re.compile(r'^\s*const-string(?:/jumbo)?\s+(v\d+|p\d+),\s+"(.*)"')
+          move_result_re=re.compile(r'^\s*move-result-object\s+(v\d+|p\d+)')
+          invoke_a00_re=re.compile(r'^\s*invoke-static\s+\{(v\d+|p\d+)\},\s+LX/0000;->A00\(I\)Ljava/lang/String;')
+
+          methods={}; by_class=collections.defaultdict(list)
+          for p in root.rglob('*.smali'):
+            ls=p.read_text(errors='replace').splitlines(); cls='?'
+            for x in ls[:40]:
+              m=class_re.match(x)
+              if m: cls=m.group(1); break
+            i=0
+            while i<len(ls):
+              if not ls[i].startswith('.method'):
+                i+=1; continue
+              s=i; sig=ls[i]; i+=1
+              while i<len(ls) and not ls[i].startswith('.end method'): i+=1
+              e=min(i,len(ls)-1); body=ls[s:e+1]
+              # stable key by class + raw method declaration
+              name_m=re.search(r'\s([^\s(]+)\(([^)]*)\)(\S+)',sig)
+              if name_m:
+                k=(cls,name_m.group(1),name_m.group(2),name_m.group(3))
+                methods[k]=(str(p),sig,body)
+                by_class[cls].append(k)
+              i+=1
+
+          def strings(body):
+            a=[]
+            for line in body:
+              m=const_str_re.match(line)
+              if m:a.append(m.group(2))
+            return a
+          def invokes(body):
+            a=[]
+            for line in body:
+              m=invoke_re.search(line)
+              if m:a.append((m.group(1),m.group(2),m.group(3),m.group(4)))
+            return a
+          def reqscore(text):
+            return sum(1 for x in request_terms if x.lower() in text.lower())
+          def wirehits(text):
+            low=text.lower(); return [x for x in wire_terms if x in low]
+          def resolve_targets(body):
+            regs={}; found=[]; pending=None
+            for line in body:
+              m=const_int_re.match(line)
+              if m:
+                try: regs[m.group(1)]=int(m.group(2),0)
+                except: pass
+              m=const_str_re.match(line)
+              if m and m.group(2) in target_names:
+                found.append(('direct',m.group(2)))
+              m=invoke_a00_re.match(line)
+              if m:
+                val=regs.get(m.group(1)); pending=target_idx.get(val)
+              else:
+                mm=move_result_re.match(line)
+                if mm and pending:
+                  found.append(('table',pending)); pending=None
+                elif line.strip() and not line.strip().startswith('.line') and not line.strip().startswith('#') and not mm:
+                  # keep pending across .line only
+                  if not line.strip().startswith('move-result-object'): pending=None
+            # unique
+            seen=[]
+            for x in found:
+              if x not in seen: seen.append(x)
+            return seen
+
+          producers=[]
+          for k,(p,sig,b) in methods.items():
+            cls=k[0]
+            hits=resolve_targets(b)
+            if hits and cls not in exclude_classes and '<clinit>' not in sig:
+              t='\n'.join(b); producers.append((k,hits,reqscore(t),wirehits(t),p,sig,b))
+
+          # reverse caller map within disassembled target dexes
+          rev=collections.defaultdict(list)
+          for ck,(p,sig,b) in methods.items():
+            for inv in invokes(b):
+              if inv in methods: rev[inv].append(ck)
+
+          O=['Instagram 439 HDR Clips primary request trace R19g','================================================','',f'producer_count={len(producers)}','']
+          for k,hits,rs,wh,p,sig,b in sorted(producers,key=lambda x:(-x[2],x[0])):
+            O += [f'===== PRODUCER {k[0]} {sig} =====',f'FILE={p}',f'TARGETS={hits}',f'REQUEST_SCORE={rs}',f'WIRE_HITS={wh}']
+            if rs>0: O += b
+            else: O += ['[producer body omitted: no direct request construction]']
+            O += ['']
+            # direct callees that are request-heavy
+            for inv in invokes(b):
+              if inv in methods:
+                cp,cs,cb=methods[inv]; ct='\n'.join(cb); cr=reqscore(ct)
+                if cr>0 and inv[0] not in exclude_classes:
+                  O += [f'--- REQUEST CALLEE depth=1 {inv[0]} {cs}',f'FILE={cp}',f'REQUEST_SCORE={cr}',f'WIRE_HITS={wirehits(ct)}']+cb+['']
+            # direct callers that are request-heavy
+            for caller in rev.get(k,[]):
+              cp,cs,cb=methods[caller]; ct='\n'.join(cb); cr=reqscore(ct)
+              if cr>0 and caller[0] not in exclude_classes:
+                O += [f'--- REQUEST CALLER depth=1 {caller[0]} {cs}',f'FILE={cp}',f'REQUEST_SCORE={cr}',f'WIRE_HITS={wirehits(ct)}']+cb+['']
+                # caller's request-heavy callees as depth 2
+                for inv2 in invokes(cb):
+                  if inv2 in methods:
+                    dp,ds,db=methods[inv2]; dt='\n'.join(db); dr=reqscore(dt)
+                    if dr>0 and inv2[0] not in exclude_classes and inv2!=k:
+                      O += [f'------ REQUEST NEIGHBOR depth=2 {inv2[0]} {ds}',f'FILE={dp}',f'REQUEST_SCORE={dr}',f'WIRE_HITS={wirehits(dt)}']+db+['']
+
+          # Independent strong request builders in these same dexes whose strings mention Clips viewer contexts directly.
+          O += ['===== DIRECT STRING + REQUEST BUILDERS =====','']
+          for k,(p,sig,b) in methods.items():
+            if k[0] in exclude_classes or '<clinit>' in sig: continue
+            ss=strings(b); th=[s for s in ss if s in target_names]
+            t='\n'.join(b); rs=reqscore(t)
+            if th and rs>0:
+              O += [f'--- {k[0]} {sig}',f'FILE={p}',f'TARGETS={th}',f'REQUEST_SCORE={rs}',f'WIRE_HITS={wirehits(t)}']+b+['']
+
+          text='\n'.join(O)
+          if len(text)>900000: text=text[:900000]+'\n[TRUNCATED]\n'
+          out.write_text(text,encoding='utf-8')
+          print(text[:280000])
+          print('bytes',out.stat().st_size,'producers',len(producers))
+          PY
+      - name: Commit R19g report
+        run: |
+          set -euo pipefail
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add research/generated/instagram_439_hdr_clips_primary_request_r19g.txt
+          if ! git diff --cached --quiet; then
+            git commit -m 'Add primary Clips request trace R19g'
+            git pull --rebase origin main
+            git push origin HEAD:main
+          fi
