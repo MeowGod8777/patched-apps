@@ -1,0 +1,64 @@
+name: IG 439 HDR R19h Decision Summary
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - .github/workflows/ig-hdr-r19h-decision-summary.yml
+
+permissions:
+  contents: write
+
+jobs:
+  summarize:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+        with: {fetch-depth: 0}
+      - name: Extract compact R19h decision
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          from pathlib import Path
+          src=Path('research/generated/instagram_439_hdr_clips_request_finalization_r19h.txt')
+          out=Path('research/generated/instagram_439_hdr_r19h_decision_summary.txt')
+          lines=src.read_text(errors='replace').splitlines()
+          O=['Instagram 439 HDR R19h decision summary','=======================================','']
+          markers=[
+            '===== REQUEST x HDR/CAPABILITY STRONG INTERSECTIONS =====',
+            '===== HEADER WRITES IN REQUEST-INFRA NEIGHBORHOOD ====='
+          ]
+          for marker in markers:
+            O += [marker]
+            try: s=lines.index(marker)
+            except ValueError:
+              O += ['MARKER_NOT_FOUND','']; continue
+            e=len(lines)
+            for j in range(s+1,len(lines)):
+              if lines[j].startswith('===== ') and lines[j]!=marker:
+                e=j; break
+            block=lines[s+1:e]
+            # keep full section but cap each at 800 lines
+            O += block[:800] + (['[SECTION_TRUNCATED]'] if len(block)>800 else []) + ['']
+          O += ['===== GLOBAL DECISION LINES =====']
+          for i,l in enumerate(lines):
+            if ('INTERSECTION_COUNT=' in l or 'X-IG-Accept-Hint' in l or 'X-Ads-Opt-Out' in l or
+                'display_hdr_supported' in l or 'video_decoder_hdr_supported' in l or
+                'is_av1_hdr_supported' in l or 'is_hevc_hdr_supported' in l or
+                'device_capabilities' in l or 'hdr_supported_types' in l):
+              O += [f'{i+1}: {l}']
+          out.write_text('\n'.join(O)+'\n')
+          print(out.read_text())
+          PY
+      - name: Commit summary
+        run: |
+          set -euo pipefail
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add research/generated/instagram_439_hdr_r19h_decision_summary.txt
+          if ! git diff --cached --quiet; then
+            git commit -m 'Add R19h HDR request decision summary'
+            git pull --rebase origin main
+            git push origin HEAD:main
+          fi
