@@ -1,0 +1,175 @@
+name: IG 439 HDR DeviceSeg Precise Network Join R19n
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - .github/workflows/ig-hdr-deviceseg-network-join-r19n.yml
+
+permissions:
+  contents: write
+
+jobs:
+  trace:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    env:
+      APK_NAME: instagram-piko-v439.0.0.37.89-arm64-v8a.apk
+      APK_SHA256: 4015b171ac59f3e7172134d194ec2dcf701f64c3339f127c19d7a04c13d529c8
+    steps:
+      - uses: actions/checkout@v6
+        with: {fetch-depth: 0}
+      - uses: actions/setup-java@v5
+        with:
+          distribution: zulu
+          java-version: '21'
+      - name: Fetch exact APK and disassemble only DeviceSeg reference dexes
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          set -euo pipefail
+          mkdir -p work/apk work/smali research/generated
+          gh release download 8 --pattern "$APK_NAME" --dir work
+          echo "$APK_SHA256  work/$APK_NAME" | sha256sum -c -
+          gh release download 3.0.10 --repo baksmali/smali --pattern 'baksmali-3.0.10-fat.jar' --dir work
+          unzip -q "work/$APK_NAME" 'classes*.dex' -d work/apk
+          : > work/hitdex.txt
+          for d in work/apk/classes*.dex; do
+            if strings -a "$d" | grep -Eq 'com.facebook.devicesegmentation|LX/0hld;|LX/0hkS;|LX/0hqj;'; then
+              basename "$d" >> work/hitdex.txt
+            fi
+          done
+          sort -u work/hitdex.txt -o work/hitdex.txt
+          echo HITDEX; cat work/hitdex.txt
+          while read d; do
+            [ -n "$d" ] || continue
+            n="${d%.dex}"
+            java -jar work/baksmali-3.0.10-fat.jar d "work/apk/$d" -o "work/smali/$n" >/dev/null &
+          done < work/hitdex.txt
+          wait
+      - name: Build precise same-method and one-hop joins
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          from pathlib import Path
+          import re, collections
+
+          root=Path('work/smali')
+          out=Path('research/generated/instagram_439_hdr_deviceseg_network_join_r19n.txt')
+          class_re=re.compile(r'^\.class\s+.*\s+(L[^;]+;)$')
+          inv_re=re.compile(r'invoke-\w+(?:/range)?\s+\{[^}]*\},\s+(L[^;]+;)->([^\(]+)\(([^)]*)\)(\S+)')
+          str_re=re.compile(r'const-string(?:/jumbo)?\s+[^,]+,\s+"([^"]*)"')
+
+          devmarks=(
+            'com.facebook.devicesegmentation',
+            'LX/0hld;',
+            'LX/0hkS;',
+            'LX/0hqj;',
+          )
+          # Only concrete network/request classes or unmistakable endpoint/request literals.
+          netmarks=(
+            'LX/03u7;',
+            'LX/02pu;',
+            'Lcom/facebook/graphql/calls/GraphQlCallInput;',
+            'GraphQlCallInput',
+            'PandoGraphQLRequest',
+            'IgGraphQLQueryExecutor',
+            'Tigon',
+            'RequestInterceptor',
+            'X-IG-Device-ID',
+            'X-IG-Family-Device-ID',
+            'X-IG-Android-ID',
+            'X-IG-Capabilities',
+            'signed_body',
+            '/api/v1/',
+            '/api/v2/',
+          )
+
+          methods={}
+          by_class=collections.defaultdict(list)
+          for p in root.rglob('*.smali'):
+            ls=p.read_text(errors='replace').splitlines(); cls='?'
+            for x in ls[:40]:
+              m=class_re.match(x)
+              if m: cls=m.group(1); break
+            i=0
+            while i < len(ls):
+              if not ls[i].startswith('.method'):
+                i+=1; continue
+              s=i; sig=ls[i]; i+=1
+              while i<len(ls) and not ls[i].startswith('.end method'): i+=1
+              body=ls[s:min(i+1,len(ls))]
+              mm=re.search(r'\s([^\s(]+)\(([^)]*)\)(\S+)',sig)
+              if mm:
+                k=(cls,mm.group(1),mm.group(2),mm.group(3))
+                methods[k]=(str(p),sig,body)
+                by_class[cls].append(k)
+              i+=1
+
+          def invokes(body):
+            out=[]
+            for line in body:
+              m=inv_re.search(line)
+              if m: out.append((m.group(1),m.group(2),m.group(3),m.group(4)))
+            return out
+          def hits(text, marks):
+            low=text.lower()
+            return [m for m in marks if m.lower() in low]
+          def strings(body):
+            return [m.group(1) for line in body for m in [str_re.search(line)] if m]
+
+          rev=collections.defaultdict(list)
+          for ck,(p,s,b) in methods.items():
+            for cal in invokes(b):
+              if cal in methods: rev[cal].append(ck)
+
+          seeds=[]
+          for k,(p,s,b) in methods.items():
+            t='\n'.join(b); dh=hits(t,devmarks)
+            if dh: seeds.append((k,dh,p,s,b))
+
+          same=[]; caller=[]; callee=[]
+          for k,dh,p,s,b in seeds:
+            t='\n'.join(b); nh=hits(t,netmarks)
+            if nh: same.append((k,dh,nh,p,s,b))
+            for ck in rev.get(k,[]):
+              cp,cs,cb=methods[ck]; ch=hits('\n'.join(cb),netmarks)
+              if ch: caller.append((ck,k,ch,cp,cs,cb))
+            for cal in invokes(b):
+              if cal not in methods: continue
+              cp,cs,cb=methods[cal]; ch=hits('\n'.join(cb),netmarks)
+              if ch: callee.append((cal,k,ch,cp,cs,cb))
+
+          O=['Instagram 439 HDR precise DeviceSeg -> network join R19n',
+             '========================================================',
+             '',f'seed_methods={len(seeds)}',f'same_method_joins={len(same)}',
+             f'caller_joins={len(caller)}',f'callee_joins={len(callee)}','']
+
+          for k,dh,nh,p,s,b in same:
+            O += [f'===== SAME-METHOD TRUE JOIN {k[0]} {s} =====',f'FILE={p}',f'DEV={dh}',f'NET={nh}',f'STRINGS={strings(b)}']+b+['']
+          for ck,seed,ch,p,s,b in caller:
+            O += [f'===== CALLER TRUE JOIN {ck[0]} {s} =====',f'FILE={p}',f'CALLS_DEVICESEG={seed}',f'NET={ch}',f'STRINGS={strings(b)}']+b+['']
+          for cal,seed,ch,p,s,b in callee:
+            O += [f'===== CALLEE TRUE JOIN {cal[0]} {s} =====',f'FILE={p}',f'CALLED_BY_DEVICESEG={seed}',f'NET={ch}',f'STRINGS={strings(b)}']+b+['']
+
+          O += ['===== DEVICESEG SEED COMPACT INVENTORY =====']
+          for k,dh,p,s,b in seeds:
+            O += [f'{k[0]} {s} FILE={p} DEV={dh} STRINGS={strings(b)[:40]}']
+
+          text='\n'.join(O)
+          if len(text)>900000: text=text[:900000]+'\n[TRUNCATED]\n'
+          out.write_text(text,encoding='utf-8')
+          print(text[:300000])
+          PY
+      - name: Commit report
+        run: |
+          set -euo pipefail
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add research/generated/instagram_439_hdr_deviceseg_network_join_r19n.txt
+          if ! git diff --cached --quiet; then
+            git commit -m 'Add precise DeviceSeg network join R19n'
+            git pull --rebase origin main
+            git push origin HEAD:main
+          fi
