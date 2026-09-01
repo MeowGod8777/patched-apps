@@ -1,0 +1,20 @@
+classes.dex: LX/02pu;, LX/03u7;
+classes10.dex: LX/03u7;, Bandwidth
+classes12.dex: LX/03u7;, Bandwidth
+classes13.dex: LX/02qb;, LX/02pu;, LX/03u7;, X-IG-Capabilities, Bandwidth
+classes14.dex: Bandwidth
+classes15.dex: LX/02qb;, LX/02pu;, LX/03u7;, X-IG-Accept-Hint, X-IG-Device, Family-Device, Bandwidth
+classes16.dex: LX/02qb;, LX/02pu;, LX/03u7;, Family-Device
+classes17.dex: LX/02qb;, LX/02pu;, LX/03u7;, Bandwidth
+classes18.dex: LX/02qb;, LX/02pu;, LX/03u7;, Bandwidth
+classes19.dex: LX/02pu;, LX/03u7;, X-IG-Accept-Hint, Bandwidth
+classes2.dex: LX/02qb;, LX/02pu;, LX/03u7;, X-IG-Accept-Hint, X-IG-Capabilities, X-IG-Device, Bandwidth, Connection-Type
+classes20.dex: Bandwidth
+classes21.dex: LX/03u7;, Bandwidth
+classes3.dex: LX/02pu;, LX/03u7;, Bandwidth
+classes4.dex: LX/03u7;, Bandwidth
+classes5.dex: LX/02pu;, LX/03u7;
+classes6.dex: LX/03u7;
+classes7.dex: LX/03u7;, Bandwidth
+classes8.dex: LX/02qb;, LX/03u7;, Bandwidth
+classes9.dex: LX/02pu;, LX/03u7;
