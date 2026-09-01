@@ -1,0 +1,91 @@
+name: IG 439 HDR Streaming Core Owners R19i
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - .github/workflows/ig-hdr-stream-core-owners-r19i.yml
+
+permissions:
+  contents: write
+
+jobs:
+  trace:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    env:
+      APK_NAME: instagram-piko-v439.0.0.37.89-arm64-v8a.apk
+      APK_SHA256: 4015b171ac59f3e7172134d194ec2dcf701f64c3339f127c19d7a04c13d529c8
+    steps:
+      - uses: actions/checkout@v6
+        with: {fetch-depth: 0}
+      - uses: actions/setup-java@v5
+        with: {distribution: zulu, java-version: '21'}
+      - name: Locate exact class owners and disassemble only owner dexes
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          set -euo pipefail
+          mkdir -p work/apk work/smali research/generated
+          gh release download 8 --pattern "$APK_NAME" --dir work
+          echo "$APK_SHA256  work/$APK_NAME" | sha256sum -c -
+          gh release download 3.0.10 --repo baksmali/smali --pattern 'baksmali-3.0.10-fat.jar' --dir work
+          unzip -q "work/$APK_NAME" 'classes*.dex' -d work/apk
+          python3 - <<'PY'
+          from pathlib import Path
+          import subprocess
+          targets=['LX/03u7;','LX/02tw;','LX/02ud;','LX/02ty;','LX/02ug;','LX/02um;','LX/02jh;','LX/02pt;','LX/0AOo;','LX/0Acl;']
+          owners={t:[] for t in targets}
+          for d in sorted(Path('work/apk').glob('classes*.dex')):
+              r=subprocess.run(['java','-jar','work/baksmali-3.0.10-fat.jar','list','classes',str(d)],capture_output=True,text=True,errors='replace')
+              ss=set(r.stdout.splitlines())
+              for t in targets:
+                  if t in ss: owners[t].append(d.name)
+          lines=[]; hit=set()
+          for t,ds in owners.items():
+              lines.append(f'{t} -> {ds}'); hit.update(ds)
+          Path('work/owners.txt').write_text('\n'.join(lines)+'\n')
+          Path('work/hitdex.txt').write_text('\n'.join(sorted(hit))+'\n')
+          print('\n'.join(lines)); print('OWNER_DEXES',sorted(hit))
+          PY
+          while read d; do
+            [ -n "$d" ] || continue
+            n="${d%.dex}"
+            java -jar work/baksmali-3.0.10-fat.jar d "work/apk/$d" -o "work/smali/$n" >/dev/null &
+          done < work/hitdex.txt
+          wait
+      - name: Extract exact core owners and constructor chain
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          from pathlib import Path
+          import re
+          R=Path('work/smali')
+          targets=['03u7','02tw','02ud','02ty','02ug','02um','02jh','02pt','0AOo','0Acl']
+          O=['Instagram 439 HDR streaming request core owners R19i','==============================================','',Path('work/owners.txt').read_text(errors='replace')]
+          for n in targets:
+              for p in R.rglob(n+'.smali'):
+                  O += [f'===== {n} FILE={p} =====']+p.read_text(errors='replace').splitlines()+['']
+          # Methods directly invoking 02tw.A00, constructing 02ue, or registering 02ug/02jh interceptors.
+          needles=['LX/02tw;->A00','LX/02ue;-><init>','LX/02ug;-><init>','LX/02jh;->A00','LX/0Acl;->F9a']
+          for p in R.rglob('*.smali'):
+              ls=p.read_text(errors='replace').splitlines()
+              for i,x in enumerate(ls):
+                  if any(n in x for n in needles):
+                      O += [f'===== CONTEXT {p} idx={i} =====']+ls[max(0,i-65):min(len(ls),i+90)]+['']
+          out=Path('research/generated/instagram_439_hdr_stream_core_owners_r19i.txt')
+          out.write_text('\n'.join(O),encoding='utf-8')
+          print('\n'.join(O[:12000])); print('bytes',out.stat().st_size)
+          PY
+      - name: Commit report
+        run: |
+          set -euo pipefail
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add research/generated/instagram_439_hdr_stream_core_owners_r19i.txt
+          if ! git diff --cached --quiet; then
+            git commit -m 'Add exact Instagram streaming request core owner trace R19i'
+            git pull --rebase origin main
+            git push origin HEAD:main
+          fi
