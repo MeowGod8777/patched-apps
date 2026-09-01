@@ -39,17 +39,23 @@ jobs:
         run: |
           set -euo pipefail
           REPORT=research/generated/instagram_439_hdr_request_eligibility_compact.txt
+          FULL=work/request-eligibility-full.txt
           REGEX='is_hdr_source|video_decoder_hdr_supported|key_video_decoder_hdr_supported|hdr.*support|support.*hdr|hdr.*capab|capab.*hdr|hdr10|hdr10plus|video_dash_manifest|device_capabil|supported_codecs|codec_capabil|playback.*capab|reels.*hdr|clips.*hdr|dash.*hdr|hdr.*dash|mixed_codec_manifest|device_static_attributes'
           {
             echo 'Instagram 439 HDR request eligibility compact trace'
             echo '================================================='
             echo
             echo '===== STRING INVENTORY ====='
-            for d in work/dex/classes*.dex; do strings "$d" | grep -Eai "$REGEX" || true; done | sort -u | head -n 600
+            (for d in work/dex/classes*.dex; do strings "$d" | grep -Eai "$REGEX" || true; done) | sort -u
             echo
             echo '===== OWNER CONTEXTS ====='
             grep -aHn -B 14 -A 22 -Ei "$REGEX" work/dis/*.txt || true
-          } | tr -cd '\11\12\15\40-\176' | head -c 95000 > "$REPORT"
+          } | tr -cd '\11\12\15\40-\176' > "$FULL"
+          python3 - <<'PY'
+          from pathlib import Path
+          src=Path('work/request-eligibility-full.txt').read_bytes()
+          Path('research/generated/instagram_439_hdr_request_eligibility_compact.txt').write_bytes(src[:95000])
+          PY
           wc -c "$REPORT"
           sed -n '1,1400p' "$REPORT"
       - name: Commit compact report
