@@ -1,66 +1,13 @@
-Instagram 439 X.0D2R.invoke switch payload
-==========================================
+Instagram 439 X.0D2R.A08 exact selector
+======================================
 Exact APK SHA256: 4015b171ac59f3e7172134d194ec2dcf701f64c3339f127c19d7a04c13d529c8
-
-===== INVOKE HEAD =====
-17287:368da0:                                        |[368da0] X.0D2R.invoke:()Ljava/lang/Object;
-17288-368db0: 5280 df08                              |0000: iget v0, v8, LX/0D2R;.$t:I // field@08df
-17289-368db4: 2b00 2003 0000                         |0002: packed-switch v0, 00000322 // +00000320
-17290-368dba: 7110 4c12 0000                         |0005: invoke-static {v0}, LX/0D2R;.A0D:(I)Ljava/lang/Object; // method@124c
-17291-368dc0: 0c00                                   |0008: move-result-object v0
-17292-368dc2: 1100                                   |0009: return-object v0
-17293-368dc4: 7100 4b12 0000                         |000a: invoke-static {}, LX/0D2R;.A0C:()Ljava/lang/Object; // method@124b
-17294-368dca: 0c00                                   |000d: move-result-object v0
-17295-368dcc: 1100                                   |000e: return-object v0
-17296-368dce: 7100 4a12 0000                         |000f: invoke-static {}, LX/0D2R;.A0B:()Ljava/lang/Object; // method@124a
-17297-368dd4: 0c00                                   |0012: move-result-object v0
-17298-368dd6: 1100                                   |0013: return-object v0
-17299-368dd8: 7100 4912 0000                         |0014: invoke-static {}, LX/0D2R;.A0A:()Ljava/lang/Object; // method@1249
-17300-368dde: 0c00                                   |0017: move-result-object v0
-17301-368de0: 1100                                   |0018: return-object v0
-17302-368de2: 7100 4812 0000                         |0019: invoke-static {}, LX/0D2R;.A09:()Ljava/lang/Object; // method@1248
-17303-368de8: 0c00                                   |001c: move-result-object v0
-17304-368dea: 1100                                   |001d: return-object v0
-17305-368dec: 7100 4712 0000                         |001e: invoke-static {}, LX/0D2R;.A08:()Ljava/lang/Object; // method@1247
-17306-368df2: 0c00                                   |0021: move-result-object v0
-17307-368df4: 1100                                   |0022: return-object v0
-17308-368df6: 7100 4612 0000                         |0023: invoke-static {}, LX/0D2R;.A07:()Ljava/lang/Object; // method@1246
-17309-368dfc: 0c00                                   |0026: move-result-object v0
-17310-368dfe: 1100                                   |0027: return-object v0
-17311-368e00: 7100 4512 0000                         |0028: invoke-static {}, LX/0D2R;.A06:()Ljava/lang/Object; // method@1245
-17312-368e06: 0c00                                   |002b: move-result-object v0
-17313-368e08: 1100                                   |002c: return-object v0
-17314-368e0a: 7100 4412 0000                         |002d: invoke-static {}, LX/0D2R;.A05:()Ljava/lang/Object; // method@1244
-17315-368e10: 0c00                                   |0030: move-result-object v0
-17316-368e12: 1100                                   |0031: return-object v0
-17317-368e14: 7100 4312 0000                         |0032: invoke-static {}, LX/0D2R;.A04:()Ljava/lang/Object; // method@1243
-17318-368e1a: 0c00                                   |0035: move-result-object v0
-17319-368e1c: 1100                                   |0036: return-object v0
-17320-368e1e: 1210                                   |0037: const/4 v0, #int 1 // #1
-17321-368e20: 7110 65d0 0000                         |0038: invoke-static {v0}, Ljava/lang/Boolean;.valueOf:(Z)Ljava/lang/Boolean; // method@d065
-17322-368e26: 0c00                                   |003b: move-result-object v0
-17323-368e28: 1100                                   |003c: return-object v0
-17324-368e2a: 1200                                   |003d: const/4 v0, #int 0 // #0
-17325-368e2c: 7110 65d0 0000                         |003e: invoke-static {v0}, Ljava/lang/Boolean;.valueOf:(Z)Ljava/lang/Boolean; // method@d065
-17326-368e32: 0c00                                   |0041: move-result-object v0
-17327-368e34: 1100                                   |0042: return-object v0
-17328-368e36: 6205 f61d                              |0043: sget-object v5, LX/0VAj;.A01:LX/0Dlt; // field@1df6
-17329-368e3a: 6204 f91d                              |0045: sget-object v4, LX/0VAj;.A04:LX/0Dlt; // field@1df9
-17330-368e3e: 6203 f81d                              |0047: sget-object v3, LX/0VAj;.A03:LX/0Dlt; // field@1df8
-17331-368e42: 6202 f71d                              |0049: sget-object v2, LX/0VAj;.A02:LX/0Dlt; // field@1df7
-17332-368e46: 6200 f51d                              |004b: sget-object v0, LX/0VAj;.A00:LX/0Dlt; // field@1df5
-
-===== PACKED SWITCH PAYLOAD BYTES =====
-invoke code_item=0x368da0, insns=0x368db0, payload code-unit offset=0x322 => file offset 0x3693f4
-003693f4: 0001 8802 0000 0000 3500 0000 3500 0000  ........5...5...
-00369404: 2600 0000 3500 0000 3b00 0000 3b00 0000  &...5...;...;...
-00369414: 4100 0000 3b00 0000 3b00 0000 3b00 0000  A...;...;...;...
-00369424: 3b00 0000 3b00 0000 3b00 0000 5c00 0000  ;...;...;...\...
-00369434: 5c00 0000 6300 0000 3b00 0000 3b00 0000  \...c...;...;...
-00369444: 3b00 0000 3b00 0000 3b00 0000 3b00 0000  ;...;...;...;...
-00369454: 3b00 0000 3b00 0000 3b00 0000 3b00 0000  ;...;...;...;...
-00369464: 3b00 0000 3b00 0000 6900 0000 3b00 0000  ;...;...i...;...
-00369474: 3b00 0000 6900 0000 6f00 0000 7300 0000  ;...i...o...s...
-00369484: 3500 0000 8700 0000 8e00 0000 9500 0000  5...............
-00369494: a200 0000 6900 0000 a800 0000 af00 0000  ....i...........
-003694a4: b500 0000 bb00 0000 c400 0000 cd00 0000  ................
+ident=0x0100 size=648 first_key=0
+A0C: branch=0xa rel=0x8 selectors=[114]
+A0B: branch=0xf rel=0xd selectors=[135]
+A0A: branch=0x14 rel=0x12 selectors=[102]
+A09: branch=0x19 rel=0x17 selectors=[101]
+A08: branch=0x1e rel=0x1c selectors=[105]
+A07: branch=0x23 rel=0x21 selectors=[99]
+A06: branch=0x28 rel=0x26 selectors=[2]
+A05: branch=0x2d rel=0x2b selectors=[179]
+A04: branch=0x32 rel=0x30 selectors=[208]
