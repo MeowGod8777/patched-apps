@@ -1,0 +1,163 @@
+Instagram 439 Reels Accept-Hint fast R19h
+======================================
+
+===== X/02qh.smali =====
+NOT_FOUND
+
+===== X/02po.smali =====
+NOT_FOUND
+
+===== X/03Hy.smali =====
+.class public abstract LX/03Hy;
+.super Ljava/lang/Object;
+.source ""
+
+
+# direct methods
+.method public static final A00(Lcom/instagram/common/session/UserSession;LX/07b1;LX/02po;Ljava/lang/String;Ljava/lang/String;Ljava/util/Map;Ljava/util/Set;)LX/02ue;
+    .registers 19
+
+    const/4 v11, 0x0
+
+    const/4 v0, 0x2
+
+    invoke-static {p0, v0}, LX/04l9;->A0j(Ljava/lang/Object;I)V
+
+    const/4 v0, 0x3
+
+    invoke-static {p3, v0}, LX/04l9;->A0j(Ljava/lang/Object;I)V
+
+    const-string/jumbo v3, "reason"
+
+    const/4 v5, 0x0
+
+    const/4 v10, 0x1
+
+    const v0, 0x19d53133
+
+    new-instance v2, LX/02pu;
+
+    invoke-direct {v2, p0, v0, v10, v11}, LX/02pu;-><init>(LX/04BG;IIZ)V
+
+    sget-object v0, LX/000A;->A01:Ljava/lang/Integer;
+
+    invoke-virtual {v2, v0}, LX/03u7;->A07(Ljava/lang/Integer;)V
+
+    const-string v0, "feed/reels_media_stream/"
+
+    iput-object v0, v2, LX/03u7;->A0G:Ljava/lang/String;
+
+    sget-object v7, LX/0079;->A00:LX/0079;
+
+    new-instance v8, LX/02py;
+
+    invoke-direct {v8, p0}, LX/02py;-><init>(Lcom/instagram/common/session/UserSession;)V
+
+    invoke-static {p0}, LX/02qP;->A01(LX/04BG;)LX/00AT;
+
+    move-result-object v4
+
+    const-wide v0, 0x810b2f000b3fa7L
+
+    check-cast v4, Lcom/facebook/mobileconfig/factory/MobileConfigUnsafeContext;
+
+    invoke-interface {v4, v0, v1}, Lcom/facebook/mobileconfig/factory/MobileConfigUnsafeContext;->BTb(J)Z
+
+    move-result v0
+
+    if-eqz v0, :cond_98
+
+    invoke-static {p0}, LX/02qP;->A01(LX/04BG;)LX/00AT;
+
+    move-result-object v4
+
+    const-wide v0, 0x820b2f000a1854L
+
+    check-cast v4, Lcom/facebook/mobileconfig/factory/MobileConfigUnsafeContext;
+
+    invoke-interface {v4, v0, v1}, Lcom/facebook/mobileconfig/factory/MobileConfigUnsafeContext;->CUf(J)J
+
+    move-result-wide v0
+
+    long-to-int v4, v0
+
+    invoke-static {v4}, Ljava/lang/Integer;->valueOf(I)Ljava/lang/Integer;
+
+    move-result-object v9
+
+    :goto_4b
+    new-instance v6, LX/03sc;
+
+    invoke-direct {v6, v5}, LX/03sc;-><init>(Ljava/io/File;)V
+
+    new-instance v4, LX/02pz;
+
+    invoke-direct/range {v4 .. v11}, LX/02pz;-><init>(LX/0BPk;LX/08IT;LX/0nQH;LX/0nQI;Ljava/lang/Integer;ZZ)V
+
+    iput-object v4, v2, LX/02pu;->A00:LX/0AOo;
+
+    iput-boolean v10, v2, LX/03u7;->A0T:Z
+
+    invoke-static {p0}, LX/02qP;->A01(LX/04BG;)LX/00AT;
+
+    move-result-object v4
+
+    const-wide v0, 0x82108500011e11L
+
+    check-cast v4, Lcom/facebook/mobileconfig/factory/MobileConfigUnsafeContext;
+
+    invoke-interface {v4, v0, v1}, Lcom/facebook/mobileconfig/factory/MobileConfigUnsafeContext;->CUf(J)J
+
+    move-result-wide v0
+
+    long-to-int v4, v0
+
+    const-string v0, "batch_size"
+
+    invoke-virtual {v2, v0, v4}, LX/03u7;->A0C(Ljava/lang/String;I)V
+
+    invoke-virtual {p1}, Ljava/lang/Object;->toString()Ljava/lang/String;
+
+    move-result-object v0
+
+    invoke-virtual {v2, v3, v0}, LX/03u7;->AOA(Ljava/lang/String;Ljava/lang/String;)V
+
+    iget-object v0, p2, LX/02po;->A00:Ljava/lang/Integer;
+
+    if-eqz v0, :cond_82
+
+    const-string v1, "X-IG-Accept-Hint"
+
+    invoke-static {v0}, LX/02qh;->A00(Ljava/lang/Integer;)Ljava/lang/String;
+
+    move-result-object v0
+
+    invoke-virtual {v2, v1, v0}, LX/03u7;->AMu(Ljava/lang/String;Ljava/lang/String;)V
+
+    :cond_82
+    move-object/from16 v1, p4
+
+    if-eqz p4, :cond_8c
+
+    const-string/jumbo v0, "reel_id_to_media_ids_dict"
+
+    invoke-virtual {v2, v0, v1}, LX/03u7;->AOQ(Ljava/lang/String;Ljava/lang/String;)V
+
+    :cond_8c
+    move-object/from16 v1, p5
+
+    move-object/from16 v0, p6
+
+    invoke-static {v2, p0, p3, v1, v0}, LX/03Mf;->A00(LX/03u7;Lcom/instagram/common/session/UserSession;Ljava/lang/String;Ljava/util/Map;Ljava/util/Set;)V
+
+    invoke-virtual {v2}, LX/02pu;->A0K()LX/02ue;
+
+    move-result-object v0
+
+    return-object v0
+
+    :cond_98
+    const/4 v9, 0x0
+
+    goto :goto_4b
+.end method
