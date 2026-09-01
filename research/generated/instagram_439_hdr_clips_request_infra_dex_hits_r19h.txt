@@ -1,0 +1,19 @@
+classes.dex: LX/02pu;, LX/02ue;, LX/03u7;
+classes10.dex: LX/03u7;
+classes12.dex: LX/0AOo;, LX/03u7;, ClipsApiUtilHelper, display_hdr_supported, video_decoder_hdr_supported
+classes13.dex: LX/02pu;, LX/02ue;, LX/02pz;, LX/03u7;, ClipsApiUtilHelper
+classes15.dex: LX/02pu;, LX/02ue;, LX/02pz;, LX/0AOo;, LX/03u7;, ClipsApiUtilHelper, X-IG-Accept-Hint, playback_format
+classes16.dex: LX/02pu;, LX/02ue;, LX/02pz;, LX/0AOo;, LX/03u7;, ClipsApiUtilHelper
+classes17.dex: LX/02pu;, LX/02ue;, LX/02pz;, LX/0AOo;, LX/03u7;, ClipsApiUtilHelper, media_delivery
+classes18.dex: LX/02pu;, LX/02ue;, LX/02pz;, LX/0AOo;, LX/03u7;, ClipsApiUtilHelper, device_capabilities, playback_format
+classes19.dex: LX/02pu;, LX/02ue;, LX/02pz;, LX/0AOo;, LX/03u7;, X-IG-Accept-Hint, is_av1_hdr_supported, is_hevc_hdr_supported, device_capabilities
+classes2.dex: LX/02pu;, LX/02ue;, LX/02pz;, LX/0AOo;, LX/03u7;, ClipsApiUtilHelper, X-IG-Accept-Hint, media_delivery
+classes20.dex: device_capabilities
+classes21.dex: LX/02ue;, LX/03u7;, ClipsApiUtilHelper
+classes3.dex: LX/02pu;, LX/02ue;, LX/02pz;, LX/0AOo;, LX/03u7;
+classes4.dex: LX/02ue;, LX/03u7;, ClipsApiUtilHelper, display_hdr_supported, video_decoder_hdr_supported
+classes5.dex: LX/02pu;, LX/02ue;, LX/02pz;, LX/0AOo;, LX/03u7;, ClipsApiUtilHelper
+classes6.dex: LX/02ue;, LX/0AOo;, LX/03u7;
+classes7.dex: LX/02ue;, LX/0AOo;, LX/03u7;, ClipsApiUtilHelper, media_delivery
+classes8.dex: LX/02ue;, LX/02pz;, LX/0AOo;, LX/03u7;, hdr_supported_types
+classes9.dex: LX/02pu;, LX/02ue;, LX/02pz;, LX/0AOo;, LX/03u7;, ClipsApiUtilHelper
