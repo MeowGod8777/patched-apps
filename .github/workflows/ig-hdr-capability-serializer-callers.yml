@@ -1,0 +1,58 @@
+name: IG 439 Capability Serializer Callers
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - .github/workflows/ig-hdr-capability-serializer-callers.yml
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  probe:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    env:
+      APK_NAME: instagram-piko-v439.0.0.37.89-arm64-v8a.apk
+      APK_SHA256: 4015b171ac59f3e7172134d194ec2dcf701f64c3339f127c19d7a04c13d529c8
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+      - name: Download and disassemble all DEX files
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          mkdir -p work/dex work/dis research/generated
+          gh release download 8 --pattern "$APK_NAME" --dir work
+          echo "$APK_SHA256  work/$APK_NAME" | sha256sum -c -
+          unzip -j "work/$APK_NAME" 'classes*.dex' -d work/dex
+          DEXDUMP="$(find "$ANDROID_HOME/build-tools" -type f -name dexdump | sort -V | tail -1)"
+          for d in work/dex/classes*.dex; do b="$(basename "$d" .dex)"; "$DEXDUMP" -d -f -h "$d" > "work/dis/$b.txt"; done
+      - name: Extract callers and event class
+        run: |
+          REPORT=research/generated/instagram_439_hdr_capability_serializer_callers.txt
+          {
+            echo "Instagram 439 capability serializer callers"
+            echo "============================================"
+            echo
+            echo "===== X.0Uiy constructor/call references ====="
+            grep -aHn -B 100 -A 180 -E 'LX/0Uiy;\.<init>|new-instance .*LX/0Uiy;|LX/0Uiy;\.run' work/dis/*.txt || true
+            echo
+            echo "===== X.03Tz class and references ====="
+            grep -aHn -B 100 -A 260 -E "Class descriptor  : 'LX/03Tz;'|LX/03Tz;\.<init>|new-instance .*LX/03Tz;" work/dis/*.txt || true
+            echo
+            echo "===== X.00vy class identity/context ====="
+            grep -aHn -B 80 -A 220 -E "Class descriptor  : 'LX/00vy;'" work/dis/*.txt || true
+          } > "$REPORT"
+          sed -n '1,2200p' "$REPORT"
+      - name: Commit report
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add research/generated/instagram_439_hdr_capability_serializer_callers.txt
+          if ! git diff --cached --quiet; then git commit -m "Trace Instagram 439 capability serializer callers"; fi
+          git pull --rebase origin main
+          git push origin HEAD:main
