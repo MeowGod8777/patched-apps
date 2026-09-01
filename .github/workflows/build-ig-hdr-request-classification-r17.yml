@@ -1,0 +1,160 @@
+name: Build IG HDR Request Classification R17
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - .github/workflows/build-ig-hdr-request-classification-r17.yml
+      - research/tools/ig_hdr_request_classification_r17_patch.py
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    env:
+      BASE_APK: instagram-piko-v439.0.0.37.89-arm64-v8a.apk
+      BASE_SHA256: 4015b171ac59f3e7172134d194ec2dcf701f64c3339f127c19d7a04c13d529c8
+      OUT_APK: instagram-piko-v439.0.0.37.89-HDR-R17-UA-S24U.apk
+      TAG: ig-hdr-request-classification-r17
+    steps:
+      - uses: actions/checkout@v6
+      - uses: actions/setup-java@v5
+        with:
+          distribution: zulu
+          java-version: '21'
+
+      - name: Fetch exact base and smali tools
+        run: |
+          set -euo pipefail
+          mkdir -p work out
+          curl -fL --retry 3 --connect-timeout 20 --max-time 180 \
+            'https://github.com/MeowGod8777/patched-apps/releases/download/8/instagram-piko-v439.0.0.37.89-arm64-v8a.apk' \
+            -o "work/$BASE_APK"
+          echo "$BASE_SHA256  work/$BASE_APK" | sha256sum -c -
+          curl -fL --retry 3 --connect-timeout 20 --max-time 120 \
+            'https://github.com/baksmali/smali/releases/download/3.0.10/baksmali-3.0.10-fat.jar' \
+            -o work/baksmali.jar
+          curl -fL --retry 3 --connect-timeout 20 --max-time 120 \
+            'https://github.com/baksmali/smali/releases/download/3.0.10/smali-3.0.10-fat.jar' \
+            -o work/smali.jar
+          unzip -p "work/$BASE_APK" classes2.dex > work/classes2.dex
+          unzip -p "work/$BASE_APK" classes13.dex > work/classes13.dex
+          # Save untouched telemetry dex hashes. These dexes must remain byte-identical.
+          unzip -p "work/$BASE_APK" classes4.dex | sha256sum | awk '{print $1}' > work/orig-classes4.sha256
+          unzip -p "work/$BASE_APK" classes12.dex | sha256sum | awk '{print $1}' > work/orig-classes12.sha256
+
+      - name: Disassemble only request UA and RAW manifest dexes
+        run: |
+          set -euo pipefail
+          java -jar work/baksmali.jar d work/classes2.dex -o work/smali2 &
+          java -jar work/baksmali.jar d work/classes13.dex -o work/smali13 &
+          wait
+          test -f work/smali2/X/02rk.smali
+          test -f work/smali13/com/instagram/feed/media/LiveTreeMediaDict.smali
+
+      - name: Apply scoped R17 patch
+        run: |
+          set -euo pipefail
+          python3 research/tools/ig_hdr_request_classification_r17_patch.py work
+
+      - name: Assemble patched dexes
+        run: |
+          set -euo pipefail
+          java -jar work/smali.jar a work/smali2 -o work/classes2-patched.dex &
+          java -jar work/smali.jar a work/smali13 -o work/classes13-patched.dex &
+          wait
+
+      - name: Repack align and sign with existing patch signer
+        run: |
+          set -euo pipefail
+          cp "work/$BASE_APK" work/unsigned.apk
+          zip -q -d work/unsigned.apk classes2.dex classes13.dex || true
+          zip -q -d work/unsigned.apk 'META-INF/*' || true
+          cp work/classes2-patched.dex work/classes2.dex
+          cp work/classes13-patched.dex work/classes13.dex
+          (cd work && zip -q -0 unsigned.apk classes2.dex classes13.dex)
+          ZIPALIGN="$(find "$ANDROID_HOME/build-tools" -type f -name zipalign | sort -V | tail -1)"
+          "$ZIPALIGN" -f -p 4 work/unsigned.apk work/aligned.apk
+          sudo timeout 120 apt-get install -y -qq libbcprov-java
+          BCJAR="$(find /usr/share/java -maxdepth 1 -type f -name 'bcprov*.jar' | head -1)"
+          keytool -importkeystore \
+            -srckeystore ks.keystore -srcstoretype BKS -srcstorepass 123456789 \
+            -srcalias andrewliang -srckeypass 123456789 \
+            -destkeystore work/ks-r8.p12 -deststoretype PKCS12 \
+            -deststorepass 123456789 -destkeypass 123456789 -destalias andrewliang \
+            -providerclass org.bouncycastle.jce.provider.BouncyCastleProvider \
+            -providerpath "$BCJAR" -noprompt
+          java -jar bin/apksigner.jar sign \
+            --ks work/ks-r8.p12 --ks-type PKCS12 --ks-pass pass:123456789 \
+            --key-pass pass:123456789 --ks-key-alias andrewliang \
+            --out "out/$OUT_APK" work/aligned.apk
+          rm -f "out/$OUT_APK.idsig"
+
+      - name: Verify scope signer and patch markers
+        run: |
+          set -euo pipefail
+          unzip -t "out/$OUT_APK" >/dev/null
+          java -jar bin/apksigner.jar verify --verbose --print-certs "out/$OUT_APK" | tee out/verify.txt
+          ORIG_CERT=$(java -jar bin/apksigner.jar verify --print-certs "work/$BASE_APK" | sed -n 's/^Signer #1 certificate SHA-256 digest: //p' | head -1)
+          NEW_CERT=$(java -jar bin/apksigner.jar verify --print-certs "out/$OUT_APK" | sed -n 's/^Signer #1 certificate SHA-256 digest: //p' | head -1)
+          printf 'original_cert=%s\nnew_cert=%s\n' "$ORIG_CERT" "$NEW_CERT" | tee out/cert-match.txt
+          test -n "$ORIG_CERT" && test "$ORIG_CERT" = "$NEW_CERT"
+
+          unzip -p "out/$OUT_APK" classes2.dex > work/v2.dex
+          unzip -p "out/$OUT_APK" classes13.dex > work/v13.dex
+          java -jar work/baksmali.jar d work/v2.dex -o work/v2
+          java -jar work/baksmali.jar d work/v13.dex -o work/v13
+          grep -q 'R17 scoped Meta backend request-classification spoof' work/v2/X/02rk.smali
+          grep -q 'SM-S928B' work/v2/X/02rk.smali
+          grep -q 'e3q' work/v2/X/02rk.smali
+          grep -q 'samsung' work/v2/X/02rk.smali
+          grep -q 'IG_HDR_R17_RAW' work/v13/com/instagram/feed/media/LiveTreeMediaDict.smali
+
+          NEW4=$(unzip -p "out/$OUT_APK" classes4.dex | sha256sum | awk '{print $1}')
+          NEW12=$(unzip -p "out/$OUT_APK" classes12.dex | sha256sum | awk '{print $1}')
+          ORIG4=$(cat work/orig-classes4.sha256)
+          ORIG12=$(cat work/orig-classes12.sha256)
+          test "$NEW4" = "$ORIG4"
+          test "$NEW12" = "$ORIG12"
+          printf 'classes4_original=%s\nclasses4_r17=%s\nclasses12_original=%s\nclasses12_r17=%s\n' \
+            "$ORIG4" "$NEW4" "$ORIG12" "$NEW12" | tee out/untouched-telemetry-dexes.txt
+
+          cat > out/patches.txt <<'EOF'
+          R17 patch scope
+          ===============
+          PATCHED: Instagram network UA producer LX/02rk.A00 only
+            vivo -> samsung
+            V2329A -> SM-S928B
+            PD2329B -> e3q
+            PD2329 -> e3q
+          PATCHED: RAW video_dash_manifest observer IG_HDR_R17_RAW
+          UNTOUCHED: ODC/static HDR telemetry (classes4.dex byte-identical)
+          UNTOUCHED: codec capability prefs (classes12.dex byte-identical)
+          UNTOUCHED: renderer / selector / MediaCodec / Surface / display path
+          EOF
+          sha256sum "out/$OUT_APK" | tee out/sha256.txt
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: instagram-hdr-request-classification-r17
+          path: |
+            out/${{ env.OUT_APK }}
+            out/sha256.txt
+            out/verify.txt
+            out/cert-match.txt
+            out/untouched-telemetry-dexes.txt
+            out/patches.txt
+          retention-days: 14
+
+      - name: Publish prerelease
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          set -euo pipefail
+          NOTES='R17 is the first deliberately request-classification-only HDR repair candidate for exact Instagram 439/Piko 3.9.0. R16 found no Reels-to-X-IG-Capabilities path within 8 static call-graph hops, while Instagram User-Agent is consumed by IGTigonService/Tigon HTTP transport and has Reels graph reachability. R17 therefore spoofs only the Instagram network UA device identity to Galaxy S24 Ultra SM-S928B/e3q/Samsung. ODC HDR telemetry and codec capability preference dexes remain byte-identical to the exact base. A proven RAW MPD logger (IG_HDR_R17_RAW) is retained so the same APK can verify whether Meta begins delivering HDR renditions.'
+          gh release create "$TAG" "out/$OUT_APK" out/sha256.txt out/verify.txt out/cert-match.txt out/untouched-telemetry-dexes.txt out/patches.txt \
+            --title 'Instagram HDR Request Classification R17' --notes "$NOTES" --prerelease
