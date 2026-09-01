@@ -1,0 +1,54 @@
+name: IG 439 HDR Rendition String Inventory
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - .github/workflows/ig-hdr-rendition-string-inventory.yml
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  probe:
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    env:
+      APK_NAME: instagram-piko-v439.0.0.37.89-arm64-v8a.apk
+      APK_SHA256: 4015b171ac59f3e7172134d194ec2dcf701f64c3339f127c19d7a04c13d529c8
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+      - name: Download exact R8 and inventory DEX strings
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          mkdir -p work/dex research/generated
+          gh release download 8 --pattern "$APK_NAME" --dir work
+          echo "$APK_SHA256  work/$APK_NAME" | sha256sum -c -
+          unzip -j "work/$APK_NAME" 'classes*.dex' -d work/dex
+          {
+            echo 'Instagram 439 rendition/HDR DEX string inventory'
+            echo '================================================'
+            echo "APK SHA256: $APK_SHA256"
+            echo
+            echo '===== exact / high-signal media schema strings ====='
+            strings -a work/dex/classes*.dex | grep -Eai \
+              '(^|[_./-])(video_versions?|video_dash_manifest|dash_manifest|dash_info|manifest_url|playback_url|video_url|video_codec|bit_?depth|hdr_?(type|format|source|video|playback|supported|capable)|is_hdr|renditions?|representations?|adaptation_?set|abr_?|av1_|av01|dolby.?vision|bt.?2020|st.?2084|hlg)([_./=-]|$)' \
+              | sort -u | head -n 2000 || true
+            echo
+            echo '===== broad strings containing HDR + video/manifest/codec/quality context ====='
+            strings -a work/dex/classes*.dex | grep -Eai '(hdr|10.?bit|bt.?2020|st.?2084|hlg|av01|av1|dolby.?vision|rendition|representation|adaptation|manifest|video_versions|video_codec|bitrate|bandwidth)' \
+              | sort -u | head -n 5000 || true
+          } > research/generated/instagram_439_hdr_rendition_string_inventory.txt
+          cat research/generated/instagram_439_hdr_rendition_string_inventory.txt
+      - name: Commit report
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add research/generated/instagram_439_hdr_rendition_string_inventory.txt
+          if ! git diff --cached --quiet; then git commit -m "Inventory Instagram 439 rendition schema strings"; fi
+          git pull --rebase origin main
+          git push origin HEAD:main
