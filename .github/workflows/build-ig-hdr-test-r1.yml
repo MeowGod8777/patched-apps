@@ -1,0 +1,129 @@
+name: Build IG HDR Test R1
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - .github/workflows/build-ig-hdr-test-r1.yml
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    env:
+      BASE_APK: instagram-piko-v439.0.0.37.89-arm64-v8a.apk
+      BASE_SHA256: 4015b171ac59f3e7172134d194ec2dcf701f64c3339f127c19d7a04c13d529c8
+      OUT_APK: instagram-piko-v439.0.0.37.89-hdr-test-r1.apk
+      TAG: ig-hdr-test-r1
+    steps:
+      - uses: actions/checkout@v6
+
+      - uses: actions/setup-java@v5
+        with:
+          distribution: zulu
+          java-version: '21'
+
+      - name: Download exact R8 and smali tools
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          set -euo pipefail
+          mkdir -p work/tools work/smali2 out
+          gh release download 8 --pattern "$BASE_APK" --dir work
+          echo "$BASE_SHA256  work/$BASE_APK" | sha256sum -c -
+          curl -L --fail --retry 3 -o work/tools/baksmali.jar https://github.com/JesusFreke/smali/releases/download/v2.5.2/baksmali-2.5.2.jar
+          curl -L --fail --retry 3 -o work/tools/smali.jar https://github.com/JesusFreke/smali/releases/download/v2.5.2/smali-2.5.2.jar
+
+      - name: Patch Hero manifest filter
+        run: |
+          set -euo pipefail
+          unzip -p "work/$BASE_APK" classes2.dex > work/classes2.dex
+          java -jar work/tools/baksmali.jar d work/classes2.dex -o work/smali2
+          TARGET=work/smali2/X/08oh.smali
+          test -f "$TARGET"
+          python3 - <<'PY'
+          from pathlib import Path
+          p=Path('work/smali2/X/08oh.smali')
+          lines=p.read_text().splitlines()
+          needle='A0b(Ljava/util/List;)Ljava/util/List;'
+          starts=[i for i,l in enumerate(lines) if l.startswith('.method') and needle in l]
+          if len(starts)!=1:
+              raise SystemExit(f'expected exactly one target method, got {len(starts)}')
+          s=starts[0]
+          e=next(i for i in range(s+1,len(lines)) if lines[i].strip()=='.end method')
+          header=lines[s]
+          repl=[header,'    .registers 2','','    return-object p1','.end method']
+          lines[s:e+1]=repl
+          p.write_text('\n'.join(lines)+'\n')
+          print('\n'.join(repl))
+          PY
+          java -jar work/tools/smali.jar a work/smali2 -o work/classes2-patched.dex
+
+      - name: Repack, align, and sign with R8 key
+        run: |
+          set -euo pipefail
+          cp "work/$BASE_APK" work/unsigned.apk
+          zip -q -d work/unsigned.apk classes2.dex || true
+          zip -q -d work/unsigned.apk 'META-INF/*' || true
+          cp work/classes2-patched.dex work/classes2.dex
+          (cd work && zip -q -0 unsigned.apk classes2.dex)
+          ZIPALIGN="$(find "$ANDROID_HOME/build-tools" -type f -name zipalign | sort -V | tail -1)"
+          "$ZIPALIGN" -f -p 4 work/unsigned.apk work/aligned.apk
+          java -jar bin/apksigner.jar sign \
+            --ks ks-p12.keystore \
+            --ks-pass pass:123456789 \
+            --key-pass pass:123456789 \
+            --ks-key-alias andrewliang \
+            --out "out/$OUT_APK" work/aligned.apk
+          rm -f "out/$OUT_APK.idsig"
+
+      - name: Verify patch and signing identity
+        run: |
+          set -euo pipefail
+          java -jar bin/apksigner.jar verify --verbose --print-certs "out/$OUT_APK" | tee out/verify.txt
+          ORIG_CERT=$(java -jar bin/apksigner.jar verify --print-certs "work/$BASE_APK" | sed -n 's/^Signer #1 certificate SHA-256 digest: //p' | head -1)
+          NEW_CERT=$(java -jar bin/apksigner.jar verify --print-certs "out/$OUT_APK" | sed -n 's/^Signer #1 certificate SHA-256 digest: //p' | head -1)
+          echo "original_cert=$ORIG_CERT"
+          echo "new_cert=$NEW_CERT"
+          test -n "$ORIG_CERT" && test "$ORIG_CERT" = "$NEW_CERT"
+          unzip -p "out/$OUT_APK" classes2.dex > work/verify-classes2.dex
+          rm -rf work/verify-smali2
+          java -jar work/tools/baksmali.jar d work/verify-classes2.dex -o work/verify-smali2
+          python3 - <<'PY'
+          from pathlib import Path
+          t=Path('work/verify-smali2/X/08oh.smali').read_text()
+          pos=t.find('A0b(Ljava/util/List;)Ljava/util/List;')
+          if pos < 0: raise SystemExit('target method missing after rebuild')
+          end=t.find('.end method',pos)
+          body=t[pos:end]
+          print(body)
+          if 'return-object p1' not in body: raise SystemExit('bypass not present')
+          if 'LX/00PM;.A02' in body or 'LX/0XQ2;' in body or 'LX/0XPs;' in body: raise SystemExit('old filter logic still present')
+          PY
+          sha256sum "out/$OUT_APK" | tee out/sha256.txt
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: instagram-hdr-test-r1
+          path: |
+            out/${{ env.OUT_APK }}
+            out/sha256.txt
+            out/verify.txt
+          retention-days: 14
+
+      - name: Publish prerelease
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          set -euo pipefail
+          NOTES='Test R1: exact Release 8 Instagram 439 + one change only: X.08oh.A0b(List) returns the original DASH representation list, bypassing the HeroPlayer AV1/non-AV1 manifest filter. Same signing certificate as Release 8. This is a diagnostic HDR build, not a final release.'
+          if gh release view "$TAG" >/dev/null 2>&1; then
+            gh release upload "$TAG" "out/$OUT_APK" out/sha256.txt out/verify.txt --clobber
+            gh release edit "$TAG" --notes "$NOTES" --prerelease
+          else
+            gh release create "$TAG" "out/$OUT_APK" out/sha256.txt out/verify.txt --title 'Instagram HDR Test R1' --notes "$NOTES" --prerelease
+          fi
