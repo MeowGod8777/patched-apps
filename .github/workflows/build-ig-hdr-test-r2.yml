@@ -1,0 +1,225 @@
+name: Build IG HDR Test R2
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - .github/workflows/build-ig-hdr-test-r2.yml
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    env:
+      BASE_APK: instagram-piko-v439.0.0.37.89-arm64-v8a.apk
+      BASE_SHA256: 4015b171ac59f3e7172134d194ec2dcf701f64c3339f127c19d7a04c13d529c8
+      OUT_APK: instagram-piko-v439.0.0.37.89-hdr-test-r2.apk
+      TAG: ig-hdr-test-r2
+    steps:
+      - uses: actions/checkout@v6
+
+      - uses: actions/setup-java@v5
+        with:
+          distribution: zulu
+          java-version: '21'
+
+      - name: Download exact R8 and install tools
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          set -euo pipefail
+          mkdir -p work/smali2 out
+          gh release download 8 --pattern "$BASE_APK" --dir work
+          echo "$BASE_SHA256  work/$BASE_APK" | sha256sum -c -
+          sudo apt-get update -qq
+          sudo apt-get install -y -qq smali libbcprov-java
+          command -v baksmali
+          command -v smali
+
+      - name: Inject DASH representation logger
+        run: |
+          set -euo pipefail
+          unzip -p "work/$BASE_APK" classes2.dex > work/classes2.dex
+          baksmali d work/classes2.dex -o work/smali2
+          TARGET=work/smali2/X/08oh.smali
+          test -f "$TARGET"
+          python3 - <<'PY'
+          from pathlib import Path
+          p=Path('work/smali2/X/08oh.smali')
+          lines=p.read_text().splitlines()
+          needle='A0b(Ljava/util/List;)Ljava/util/List;'
+          starts=[i for i,l in enumerate(lines) if l.startswith('.method') and needle in l]
+          if len(starts)!=1:
+              raise SystemExit(f'expected exactly one A0b target, got {len(starts)}')
+          s=starts[0]
+          # Insert immediately after .registers/.locals so original behavior remains intact.
+          directive=next(i for i in range(s+1, min(s+10,len(lines))) if lines[i].strip().startswith(('.registers','.locals')))
+          lines[directive+1:directive+1]=['','    invoke-static {p1}, LX/08oh;->hdrDump439(Ljava/util/List;)V','']
+
+          helper=r'''
+.method private static hdrDump439(Ljava/util/List;)V
+    .registers 10
+
+    const-string v0, "IG_HDR_MANIFEST"
+
+    if-eqz p0, :done
+
+    invoke-interface {p0}, Ljava/util/List;->iterator()Ljava/util/Iterator;
+    move-result-object v1
+
+:period_loop
+    invoke-interface {v1}, Ljava/util/Iterator;->hasNext()Z
+    move-result v2
+    if-eqz v2, :done
+
+    invoke-interface {v1}, Ljava/util/Iterator;->next()Ljava/lang/Object;
+    move-result-object v2
+    check-cast v2, LX/08tp;
+    if-eqz v2, :period_loop
+
+    iget-object v2, v2, LX/08tp;->A03:Ljava/util/List;
+    if-eqz v2, :period_loop
+    invoke-interface {v2}, Ljava/util/List;->iterator()Ljava/util/Iterator;
+    move-result-object v3
+
+:adapt_loop
+    invoke-interface {v3}, Ljava/util/Iterator;->hasNext()Z
+    move-result v4
+    if-eqz v4, :period_loop
+
+    invoke-interface {v3}, Ljava/util/Iterator;->next()Ljava/lang/Object;
+    move-result-object v4
+    check-cast v4, LX/08ti;
+    if-eqz v4, :adapt_loop
+
+    iget-object v4, v4, LX/08ti;->A0E:Ljava/util/List;
+    if-eqz v4, :adapt_loop
+    invoke-interface {v4}, Ljava/util/List;->iterator()Ljava/util/Iterator;
+    move-result-object v5
+
+:rep_loop
+    invoke-interface {v5}, Ljava/util/Iterator;->hasNext()Z
+    move-result v6
+    if-eqz v6, :adapt_loop
+
+    invoke-interface {v5}, Ljava/util/Iterator;->next()Ljava/lang/Object;
+    move-result-object v6
+    check-cast v6, LX/096x;
+    if-eqz v6, :rep_loop
+
+    iget-object v6, v6, LX/096x;->A03:LX/03oR;
+    if-eqz v6, :rep_loop
+
+    iget-object v7, v6, LX/03oR;->A0b:Ljava/lang/String;
+    if-eqz v7, :rep_loop
+
+    const-string v8, "video/"
+    invoke-virtual {v7, v8}, Ljava/lang/String;->startsWith(Ljava/lang/String;)Z
+    move-result v8
+    if-eqz v8, :rep_loop
+
+    invoke-static {v6}, Ljava/lang/String;->valueOf(Ljava/lang/Object;)Ljava/lang/String;
+    move-result-object v6
+    invoke-static {v0, v6}, Landroid/util/Log;->i(Ljava/lang/String;Ljava/lang/String;)I
+
+    goto :rep_loop
+
+:done
+    return-void
+.end method
+'''.strip('\n').splitlines()
+          if any('hdrDump439' in x for x in lines):
+              raise SystemExit('helper name already exists')
+          lines += [''] + helper + ['']
+          p.write_text('\n'.join(lines)+'\n')
+          print('Injected hdrDump439() and A0b entry call')
+          PY
+          smali a work/smali2 -o work/classes2-patched.dex
+
+      - name: Repack, align, and sign with exact R8 key
+        run: |
+          set -euo pipefail
+          cp "work/$BASE_APK" work/unsigned.apk
+          zip -q -d work/unsigned.apk classes2.dex || true
+          zip -q -d work/unsigned.apk 'META-INF/*' || true
+          cp work/classes2-patched.dex work/classes2.dex
+          (cd work && zip -q -0 unsigned.apk classes2.dex)
+          ZIPALIGN="$(find "$ANDROID_HOME/build-tools" -type f -name zipalign | sort -V | tail -1)"
+          "$ZIPALIGN" -f -p 4 work/unsigned.apk work/aligned.apk
+
+          BCJAR="$(find /usr/share/java -maxdepth 1 -type f -name 'bcprov*.jar' | head -1)"
+          test -n "$BCJAR"
+          rm -f work/ks-r8.p12
+          keytool -importkeystore \
+            -srckeystore ks.keystore -srcstoretype BKS -srcstorepass 123456789 \
+            -srcalias andrewliang -srckeypass 123456789 \
+            -destkeystore work/ks-r8.p12 -deststoretype PKCS12 \
+            -deststorepass 123456789 -destkeypass 123456789 -destalias andrewliang \
+            -providerclass org.bouncycastle.jce.provider.BouncyCastleProvider \
+            -providerpath "$BCJAR" -noprompt
+
+          java -jar bin/apksigner.jar sign \
+            --ks work/ks-r8.p12 \
+            --ks-type PKCS12 \
+            --ks-pass pass:123456789 \
+            --key-pass pass:123456789 \
+            --ks-key-alias andrewliang \
+            --out "out/$OUT_APK" work/aligned.apk
+          rm -f "out/$OUT_APK.idsig"
+
+      - name: Verify logger and signing identity
+        run: |
+          set -euo pipefail
+          java -jar bin/apksigner.jar verify --verbose --print-certs "out/$OUT_APK" | tee out/verify.txt
+          ORIG_CERT=$(java -jar bin/apksigner.jar verify --print-certs "work/$BASE_APK" | sed -n 's/^Signer #1 certificate SHA-256 digest: //p' | head -1)
+          NEW_CERT=$(java -jar bin/apksigner.jar verify --print-certs "out/$OUT_APK" | sed -n 's/^Signer #1 certificate SHA-256 digest: //p' | head -1)
+          echo "original_cert=$ORIG_CERT" | tee out/cert-match.txt
+          echo "new_cert=$NEW_CERT" | tee -a out/cert-match.txt
+          test -n "$ORIG_CERT" && test "$ORIG_CERT" = "$NEW_CERT"
+
+          unzip -p "out/$OUT_APK" classes2.dex > work/verify-classes2.dex
+          rm -rf work/verify-smali2
+          baksmali d work/verify-classes2.dex -o work/verify-smali2
+          python3 - <<'PY'
+          from pathlib import Path
+          t=Path('work/verify-smali2/X/08oh.smali').read_text()
+          if 'hdrDump439(Ljava/util/List;)V' not in t:
+              raise SystemExit('logger helper missing')
+          pos=t.find('A0b(Ljava/util/List;)Ljava/util/List;')
+          end=t.find('.end method',pos)
+          body=t[pos:end]
+          if 'invoke-static {p1}, LX/08oh;->hdrDump439(Ljava/util/List;)V' not in body:
+              raise SystemExit('A0b logger call missing')
+          # R2 must preserve the original selector/filter code; unlike R1 it is observation-only.
+          if 'LX/00PM;->A02:()Z' not in body or 'LX/0XQ2;' not in body or 'LX/0XPs;' not in body:
+              raise SystemExit('original A0b behavior was not preserved')
+          print('R2 logger verified; original A0b logic preserved')
+          PY
+          sha256sum "out/$OUT_APK" | tee out/sha256.txt
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: instagram-hdr-test-r2
+          path: |
+            out/${{ env.OUT_APK }}
+            out/sha256.txt
+            out/verify.txt
+            out/cert-match.txt
+          retention-days: 14
+
+      - name: Publish prerelease
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          set -euo pipefail
+          NOTES='Test R2: exact Release 8 Instagram 439. Observation-only change: logs every parsed video DASH Representation Format at X.08oh.A0b entry under logcat tag IG_HDR_MANIFEST. Original HeroPlayer AV1/non-AV1 filtering and all playback behavior remain unchanged. Same signing certificate as Release 8, verified before publishing.'
+          if gh release view "$TAG" >/dev/null 2>&1; then
+            gh release upload "$TAG" "out/$OUT_APK" out/sha256.txt out/verify.txt out/cert-match.txt --clobber
+            gh release edit "$TAG" --notes "$NOTES" --prerelease
+          else
+            gh release create "$TAG" "out/$OUT_APK" out/sha256.txt out/verify.txt out/cert-match.txt --title 'Instagram HDR Test R2' --notes "$NOTES" --prerelease
+          fi
