@@ -26,60 +26,43 @@ jobs:
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          mkdir -p work research/generated
+          mkdir -p work/dex work/dis research/generated
           gh release download 8 --pattern "$APK_NAME" --dir work
           echo "$APK_SHA256  work/$APK_NAME" | sha256sum -c -
-          unzip -p "work/$APK_NAME" classes10.dex > work/classes10.dex
+          unzip -j "work/$APK_NAME" 'classes*.dex' -d work/dex
           DEXDUMP="$(find "$ANDROID_HOME/build-tools" -type f -name dexdump | sort -V | tail -1)"
-          "$DEXDUMP" -d -f -h work/classes10.dex > work/classes10.txt
+          echo "DEXDUMP=$DEXDUMP" >> "$GITHUB_ENV"
 
-      - name: Trace X.0m8z A08 consumer
+      - name: Trace X.0m8z A08 callers
         shell: bash
         run: |
-          REPORT=research/generated/instagram_439_hdr_a08_consumer_exact.txt
-          python3 - <<'PY'
-          from pathlib import Path
-          lines=Path('work/classes10.txt').read_text(errors='ignore').splitlines()
-          out=[]
-          out.append('Instagram 439 X.0m8z.A08 exact consumer')
-          out.append('======================================')
-          out.append('X.0D2R selector 105 -> A08() -> has Display HDR type 1 (Dolby Vision) -> X.0m8z.A08 lazy')
-          out.append('')
-
-          # Class definition block.
-          idx=next((i for i,l in enumerate(lines) if "Class descriptor  : 'LX/0m8z;'" in l),None)
-          if idx is not None:
-              lo=max(0,idx-20); hi=min(len(lines),idx+1800)
-              out.append('===== X.0m8z CLASS =====')
-              out.extend(lines[lo:hi])
-
-          # Every read/write/reference to static field A08.
-          out.append('\n===== X.0m8z.A08 REFERENCES =====')
-          for i,l in enumerate(lines):
-              if 'LX/0m8z;.A08:' in l:
-                  lo=max(0,i-55); hi=min(len(lines),i+100)
-                  out.append(f'--- around line {i+1} ---')
-                  out.extend(lines[lo:hi])
-
-          # Dolby codec strings and nearby methods in same DEX.
-          out.append('\n===== DOLBY CODEC STRING CONTEXTS =====')
-          for i,l in enumerate(lines):
-              if 'dolby.decoder' in l.lower() or 'qti.dv.decoder' in l.lower() or 'dolby vision' in l.lower():
-                  lo=max(0,i-45); hi=min(len(lines),i+80)
-                  out.append(f'--- around line {i+1} ---')
-                  out.extend(lines[lo:hi])
-
-          Path('research/generated/instagram_439_hdr_a08_consumer_exact.txt').write_text('\n'.join(out)+'\n')
-          PY
-          sed -n '1,2200p' "$REPORT"
+          REPORT=research/generated/instagram_439_hdr_a08_callers.txt
+          : > "$REPORT"
+          for d in work/dex/classes*.dex; do
+            if strings "$d" | grep -Fq 'LX/0m8z;'; then
+              b="$(basename "$d" .dex)"
+              "$DEXDUMP" -d -f -h "$d" > "work/dis/$b.txt"
+            fi
+          done
+          {
+            echo "Instagram 439 X.0m8z.A08() callers"
+            echo "=================================="
+            echo "X.0m8z.A08() resolves selector 105 -> Display HDR type 1 / Dolby Vision capability."
+            echo
+            grep -Hn -B 70 -A 110 -E 'LX/0m8z;\.A08:\(\)Z' work/dis/*.txt || true
+            echo
+            echo "===== OTHER X.0m8z METHOD CALLS NEAR SAME CONSUMERS ====="
+            grep -Hn -B 30 -A 50 -E 'LX/0m8z;\.A0[0-9]:\(' work/dis/*.txt | head -n 12000 || true
+          } > "$REPORT"
+          sed -n '1,2400p' "$REPORT"
 
       - name: Commit report
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add research/generated/instagram_439_hdr_a08_consumer_exact.txt
+          git add research/generated/instagram_439_hdr_a08_callers.txt
           if ! git diff --cached --quiet; then
-            git commit -m "Trace Instagram 439 X.0m8z HDR type1 consumer"
+            git commit -m "Trace Instagram 439 X.0m8z A08 callers"
           fi
           git pull --rebase origin main
           git push origin HEAD:main
