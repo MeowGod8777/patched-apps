@@ -1,0 +1,92 @@
+name: IG 439 AV1 DASH Fallback Minimal
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - .github/workflows/ig-hdr-av1-dash-fallback-minimal.yml
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  probe:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    env:
+      APK_NAME: instagram-piko-v439.0.0.37.89-arm64-v8a.apk
+      APK_SHA256: 4015b171ac59f3e7172134d194ec2dcf701f64c3339f127c19d7a04c13d529c8
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+      - name: Download and disassemble exact R8
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          mkdir -p work/dex work/dis research/generated
+          gh release download 8 --pattern "$APK_NAME" --dir work
+          echo "$APK_SHA256  work/$APK_NAME" | sha256sum -c -
+          unzip -j "work/$APK_NAME" 'classes*.dex' -d work/dex
+          DEXDUMP="$(find "$ANDROID_HOME/build-tools" -type f -name dexdump | sort -V | tail -1)"
+          for d in work/dex/classes*.dex; do b="$(basename "$d" .dex)"; "$DEXDUMP" -d -f -h "$d" > "work/dis/$b.txt"; done
+      - name: Extract AV1 DASH fallback owners
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          import re
+          targets=[
+            'all dash representation filtered out',
+            'AV1 decoding using dash media source',
+            'AV1 decoding falls back to progressive',
+            'dvFallback=true:skipDolbyVisionTrack',
+            'No video representation selected',
+            'preferFpsOverHdr',
+            'preferResolutionOverHdr',
+            'Dolby vision codec is not supported.',
+            'Ignoring malformed AV1 codec string:',
+          ]
+          mh=re.compile(r'\|\[[0-9a-f]+\]\s+([^\s]+):')
+          methods=[]
+          for p in sorted(Path('work/dis').glob('classes*.txt')):
+              lines=p.read_text(errors='replace').splitlines(); starts=[]; heads=[]
+              for i,l in enumerate(lines):
+                  m=mh.search(l)
+                  if m: starts.append(i); heads.append(m.group(1))
+              for j,s in enumerate(starts):
+                  e=starts[j+1] if j+1<len(starts) else len(lines)
+                  methods.append((p.name,s+1,e,heads[j],lines[s:e]))
+          out=['Instagram 439 AV1/DASH fallback runtime branch owners','==================================================','']
+          owners=[]
+          for t in targets:
+              hits=[r for r in methods if any(t in l for l in r[4])]
+              out.append(f'##### {t} :: owner_count={len(hits)} #####')
+              for p,s,e,h,b in hits:
+                  owners.append((p,s,e,h,b)); out.append(f'===== {p}:{s}-{e} :: {h} =====')
+                  idxs=[i for i,l in enumerate(b) if t in l]
+                  for i in idxs:
+                      lo=max(0,i-70); hi=min(len(b),i+110)
+                      out.append(f'--- hit offset={i}, context={lo}..{hi} ---')
+                      out.extend(x.rstrip() for x in b[lo:hi])
+                  out.append('')
+              out.append('')
+          out.append('##### UNIQUE OWNER SUMMARY #####')
+          seen=set()
+          for p,s,e,h,b in owners:
+              k=(p,s,h)
+              if k not in seen: seen.add(k); out.append(f'{p}:{s}-{e} :: {h}')
+          out.append(f'unique_owner_count={len(seen)}')
+          out.append('')
+          path=Path('research/generated/instagram_439_hdr_av1_dash_fallback_minimal.txt')
+          path.write_text('\n'.join(out)+'\n')
+          print(path.read_text()[:180000])
+          PY
+      - name: Commit report
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add research/generated/instagram_439_hdr_av1_dash_fallback_minimal.txt
+          if ! git diff --cached --quiet; then git commit -m "Trace Instagram 439 AV1 DASH fallback runtime branches"; fi
+          git pull --rebase origin main
+          git push origin HEAD:main
