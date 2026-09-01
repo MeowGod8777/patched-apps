@@ -1,0 +1,118 @@
+name: IG 439 HDR Clips Items A06 Callers R19e
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - .github/workflows/ig-hdr-clips-items-a06-callers-r19e.yml
+
+permissions:
+  contents: write
+
+jobs:
+  trace:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    env:
+      APK_NAME: instagram-piko-v439.0.0.37.89-arm64-v8a.apk
+      APK_SHA256: 4015b171ac59f3e7172134d194ec2dcf701f64c3339f127c19d7a04c13d529c8
+    steps:
+      - uses: actions/checkout@v6
+        with: {fetch-depth: 0}
+      - uses: actions/setup-java@v5
+        with:
+          distribution: zulu
+          java-version: '21'
+      - name: Fetch exact APK and locate caller dexes
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          set -euo pipefail
+          mkdir -p work/apk work/smali research/generated
+          gh release download 8 --pattern "$APK_NAME" --dir work
+          echo "$APK_SHA256  work/$APK_NAME" | sha256sum -c -
+          gh release download 3.0.10 --repo baksmali/smali --pattern 'baksmali-3.0.10-fat.jar' --dir work
+          unzip -q "work/$APK_NAME" 'classes*.dex' -d work/apk
+          python3 - <<'PY'
+          from pathlib import Path
+          import subprocess
+          hits=[]
+          for p in sorted(Path('work/apk').glob('classes*.dex')):
+              s=subprocess.run(['strings','-a',str(p)],capture_output=True,text=True,errors='replace').stdout
+              if 'ClipsApiUtilHelper' in s:
+                  hits.append(p.name)
+          if 'classes15.dex' not in hits: hits.append('classes15.dex')
+          hits=sorted(set(hits))
+          Path('work/hitdex.txt').write_text('\n'.join(hits)+'\n')
+          print('HITDEX',hits)
+          PY
+          while read d; do
+            [ -n "$d" ] || continue
+            n="${d%.dex}"
+            java -jar work/baksmali-3.0.10-fat.jar d "work/apk/$d" -o "work/smali/$n" >/dev/null &
+          done < work/hitdex.txt
+          wait
+      - name: Extract A06 body and exact callers
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          from pathlib import Path
+          import re
+          root=Path('work/smali')
+          out=Path('research/generated/instagram_439_hdr_clips_items_a06_callers_r19e.txt')
+          target_cls='Lcom/instagram/clips/api/ClipsApiUtilHelper;'
+          target_sig='A06(Lcom/instagram/common/session/UserSession;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;I)LX/02ue;'
+          invoke_pat=target_cls+'->'+target_sig
+          O=['Instagram 439 HDR Clips Items A06 Callers R19e','==============================================','']
+          target=[]; callers=[]
+          cr=re.compile(r'^\.class\s+.*\s+(L[^;]+;)$')
+          for p in root.rglob('*.smali'):
+            ls=p.read_text(errors='replace').splitlines(); cls='?'
+            for x in ls[:50]:
+              m=cr.match(x)
+              if m: cls=m.group(1); break
+            i=0
+            while i<len(ls):
+              if not ls[i].startswith('.method'): i+=1; continue
+              s=i; i+=1
+              while i<len(ls) and not ls[i].startswith('.end method'): i+=1
+              e=min(i,len(ls)-1); b=ls[s:e+1]; text='\n'.join(b)
+              if cls==target_cls and (' '+target_sig) in ls[s]: target=(cls,ls[s],str(p),b)
+              if invoke_pat in text: callers.append((cls,ls[s],str(p),b))
+              i+=1
+          O += ['===== TARGET A06 FULL BODY =====']
+          if target:
+            cls,sig,p,b=target
+            O += [f'{cls} {sig}',f'FILE={p}']+b+['']
+          else:
+            O += ['TARGET_NOT_FOUND','']
+          O += [f'===== DIRECT CALLERS ({len(callers)}) =====','']
+          for cls,sig,p,b in callers:
+            strings=[]
+            for line in b:
+              m=re.search(r'const-string(?:/jumbo)?\s+[^,]+,\s+"(.*)"',line)
+              if m: strings.append(m.group(1))
+            O += [f'--- {cls} {sig}',f'FILE={p}',f'STRINGS={strings}']+b+['']
+          # Also collect every request key/header literal and every MobileConfig marker in A06.
+          if target:
+            text='\n'.join(target[3])
+            lits=re.findall(r'const-string(?:/jumbo)?\s+[^,]+,\s+"(.*)"',text)
+            cfg=[x for x in lits if 'ClipsApiUtilHelper_' in x or 'android_purge' in x]
+            req=[x for x in lits if any(k in x.lower() for k in ('clips','module','header','device','media','quality','codec','dash','hdr','session','rank','request','cache'))]
+            O += ['===== A06 LITERAL SUMMARY =====',f'MOBILECONFIG_MARKERS={cfg}',f'REQUESTISH_LITERALS={req}','']
+          out.write_text('\n'.join(O),encoding='utf-8')
+          print('\n'.join(O[:5000]))
+          print('bytes',out.stat().st_size,'callers',len(callers))
+          PY
+      - name: Commit R19e report
+        run: |
+          set -euo pipefail
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add research/generated/instagram_439_hdr_clips_items_a06_callers_r19e.txt
+          if ! git diff --cached --quiet; then
+            git commit -m 'Add exact ClipsApiUtilHelper A06 caller trace R19e'
+            git pull --rebase origin main
+            git push origin HEAD:main
+          fi
