@@ -1,0 +1,148 @@
+name: IG 439 HDR Clips Discover Stream R19h
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - .github/workflows/ig-hdr-clips-discover-stream-r19h.yml
+
+permissions:
+  contents: write
+
+jobs:
+  trace:
+    runs-on: ubuntu-latest
+    timeout-minutes: 18
+    env:
+      APK_NAME: instagram-piko-v439.0.0.37.89-arm64-v8a.apk
+      APK_SHA256: 4015b171ac59f3e7172134d194ec2dcf701f64c3339f127c19d7a04c13d529c8
+    steps:
+      - uses: actions/checkout@v6
+        with: {fetch-depth: 0}
+      - uses: actions/setup-java@v5
+        with:
+          distribution: zulu
+          java-version: '21'
+      - name: Fetch exact APK and find LX/04tC references
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          set -euo pipefail
+          mkdir -p work/apk work/smali research/generated
+          gh release download 8 --pattern "$APK_NAME" --dir work
+          echo "$APK_SHA256  work/$APK_NAME" | sha256sum -c -
+          gh release download 3.0.10 --repo baksmali/smali --pattern 'baksmali-3.0.10-fat.jar' --dir work
+          unzip -q "work/$APK_NAME" 'classes*.dex' -d work/apk
+          python3 - <<'PY'
+          from pathlib import Path
+          import subprocess
+          needles=['LX/04tC;','clips/discover/stream/','clips/discover/','clips/timeline/','reels']
+          hit=[]; lines=[]
+          for p in sorted(Path('work/apk').glob('classes*.dex')):
+              s=subprocess.run(['strings','-a',str(p)],capture_output=True,text=True,errors='replace').stdout
+              hs=[n for n in needles if n in s]
+              if 'LX/04tC;' in s or 'clips/discover/stream/' in s:
+                  hit.append(p.name)
+              if hs: lines.append(f'{p.name}: {hs}')
+          # owner known in classes15; include likely caller dexes with textual refs by strings scan
+          if 'classes15.dex' not in hit: hit.append('classes15.dex')
+          Path('work/hitdex.txt').write_text('\n'.join(sorted(set(hit)))+'\n')
+          print('\n'.join(lines)); print('HITDEX',sorted(set(hit)))
+          PY
+          while read d; do
+            [ -f "work/apk/$d" ] || continue
+            n="${d%.dex}"
+            java -jar work/baksmali-3.0.10-fat.jar d "work/apk/$d" -o "work/smali/$n" >/dev/null &
+          done < work/hitdex.txt
+          wait
+
+      - name: Extract A0A request fields routes configs and callers
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          from pathlib import Path
+          import re
+          ROOT=Path('work/smali')
+          OUT=Path('research/generated/instagram_439_hdr_clips_discover_stream_r19h.txt')
+          cls_re=re.compile(r'^\.class\s+.*\s+(L[^;]+;)$')
+          inv_re=re.compile(r'(L[^;]+;)->([^\s(]+)\(([^)]*)\)(\S+)')
+          str_re=re.compile(r'^\s*const-string(?:/jumbo)?\s+([^,]+),\s+"(.*)"')
+          methods=[]
+          for p in ROOT.rglob('*.smali'):
+              ls=p.read_text(errors='replace').splitlines(); cls='?'
+              for x in ls[:50]:
+                  m=cls_re.match(x)
+                  if m: cls=m.group(1); break
+              i=0
+              while i<len(ls):
+                  if not ls[i].startswith('.method'): i+=1; continue
+                  s=i; sig=ls[i]; i+=1
+                  while i<len(ls) and not ls[i].startswith('.end method'): i+=1
+                  e=min(i,len(ls)-1); methods.append((cls,sig,p,ls[s:e+1])); i+=1
+
+          O=['Instagram 439 HDR Clips Discover Stream R19h','============================================','']
+          owners=[]
+          for cls,sig,p,b in methods:
+              if cls=='LX/04tC;' and any(x in sig for x in [' A0A(',' A05(',' A06(',' A07(',' A08(',' A09(']):
+                  owners.append((cls,sig,p,b))
+                  O += [f'===== OWNER {sig} =====',f'FILE={p}']+b+['']
+
+          # semantic summary for A0A
+          for cls,sig,p,b in owners:
+              if ' A0A(' not in sig: continue
+              O += ['===== A0A SEMANTIC SUMMARY =====']
+              strings=[]; configs=[]; writes=[]; routes=[]
+              for i,l in enumerate(b):
+                  sm=str_re.match(l)
+                  if sm:
+                      strings.append((i,sm.group(1),sm.group(2)))
+                      if '/' in sm.group(2): routes.append((i,sm.group(2)))
+                  if 'const-wide' in l and '0x8' in l:
+                      configs.append((i,l.strip()))
+                  if 'invoke-' in l and 'LX/03u7;->' in l:
+                      writes.append((i,l.strip()))
+              O += ['ROUTES:']+[f'{i}: {s}' for i,s in routes]+['','STRINGS:']+[f'{i}: {r}={s}' for i,r,s in strings]+['','MOBILECONFIG_IDS:']+[f'{i}: {s}' for i,s in configs]+['','REQUEST_WRITES:']
+              for i,l in writes:
+                  O += [f'--- {i}: {l} ---']+[f'{j:04d}: {b[j]}' for j in range(max(0,i-8),min(len(b),i+4))]
+              O += ['']
+
+          # exact A0A callers over disassembled dexes
+          needle='LX/04tC;->A0A('
+          callers=[]
+          for cls,sig,p,b in methods:
+              if needle in '\n'.join(b): callers.append((cls,sig,p,b))
+          O += [f'===== EXACT A0A CALLERS ({len(callers)}) =====','']
+          for cls,sig,p,b in callers:
+              O += [f'--- {cls} {sig}',f'FILE={p}']
+              ss=[m.group(2) for l in b if (m:=str_re.match(l))]
+              O += [f'STRINGS={ss}']
+              for i,l in enumerate(b):
+                  if needle in l:
+                      O += [f'INVOKE_AT={i}']+[f'{j:04d}: {b[j]}' for j in range(max(0,i-100),min(len(b),i+25))]
+              O += ['']
+
+          # Common request augmentation owner from R19g: enumerate server-visible headers.
+          for cls,sig,p,b in methods:
+              if cls=='LX/02qb;' and ' A01(' in sig:
+                  O += [f'===== COMMON_REQUEST_AUGMENTER {sig} =====',f'FILE={p}']
+                  for i,l in enumerate(b):
+                      if '->AMu(' in l or '->AOA(' in l or '->A0F(' in l:
+                          O += [f'WRITE_AT={i}']+[f'{j:04d}: {b[j]}' for j in range(max(0,i-7),min(len(b),i+3))]
+                  O += ['']
+
+          OUT.write_text('\n'.join(O),encoding='utf-8')
+          print('\n'.join(O[:9000])); print('bytes',OUT.stat().st_size,'callers',len(callers))
+          PY
+
+      - name: Commit R19h report
+        run: |
+          set -euo pipefail
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add research/generated/instagram_439_hdr_clips_discover_stream_r19h.txt
+          if ! git diff --cached --quiet; then
+            git commit -m 'Add Clips discover stream request trace R19h'
+            git pull --rebase origin main
+            git push origin HEAD:main
+          fi
