@@ -1,0 +1,96 @@
+name: IG 439 HDR Device Status Flags R19l
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - .github/workflows/ig-hdr-device-status-flags-r19l.yml
+
+permissions:
+  contents: write
+
+jobs:
+  trace:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    env:
+      APK_NAME: instagram-piko-v439.0.0.37.89-arm64-v8a.apk
+      APK_SHA256: 4015b171ac59f3e7172134d194ec2dcf701f64c3339f127c19d7a04c13d529c8
+    steps:
+      - uses: actions/checkout@v6
+        with: {fetch-depth: 0}
+      - uses: actions/setup-java@v5
+        with:
+          distribution: zulu
+          java-version: '21'
+      - name: Fetch exact APK and locate flag dexes
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          set -euo pipefail
+          mkdir -p work/apk work/smali research/generated
+          gh release download 8 --pattern "$APK_NAME" --dir work
+          echo "$APK_SHA256  work/$APK_NAME" | sha256sum -c -
+          gh release download 3.0.10 --repo baksmali/smali --pattern 'baksmali-3.0.10-fat.jar' --dir work
+          unzip -q "work/$APK_NAME" 'classes*.dex' -d work/apk
+          : > work/hitdex.txt
+          for d in work/apk/classes*.dex; do
+            if strings -a "$d" | grep -Eq 'LX/0GjW|LX/01Zz|10bit_hw_av1_dec|is_hlg_supported'; then basename "$d" >> work/hitdex.txt; fi
+          done
+          for d in classes2.dex classes13.dex classes15.dex; do [ ! -f "work/apk/$d" ] || grep -qx "$d" work/hitdex.txt || echo "$d" >> work/hitdex.txt; done
+          sort -u work/hitdex.txt -o work/hitdex.txt
+          cat work/hitdex.txt
+          while read d; do
+            [ -n "$d" ] || continue
+            n="${d%.dex}"
+            java -jar work/baksmali-3.0.10-fat.jar d "work/apk/$d" -o "work/smali/$n" >/dev/null &
+          done < work/hitdex.txt
+          wait
+
+      - name: Extract flag producer chains
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          from pathlib import Path
+          import re
+          root=Path('work/smali'); O=['Instagram 439 device_status HDR flags R19l','======================================','']
+          cr=re.compile(r'^\.class\s+.*\s+(L[^;]+;)$')
+          def methods(p):
+            ls=p.read_text(errors='replace').splitlines(); cls='?'
+            for x in ls[:50]:
+              m=cr.match(x)
+              if m: cls=m.group(1); break
+            i=0
+            while i<len(ls):
+              if not ls[i].startswith('.method'): i+=1; continue
+              s=i; i+=1
+              while i<len(ls) and not ls[i].startswith('.end method'): i+=1
+              e=min(i,len(ls)-1)
+              yield cls,ls[s],ls[s:e+1],p
+              i+=1
+          for name in ('0GjW.smali','01Zz.smali'):
+            for p in root.rglob(name): O += [f'===== FULL {name} FILE={p} =====',p.read_text(errors='replace'),'']
+          # All methods that reference the specific lazy fields or Android HDR APIs.
+          needles=('LX/0GjW;->A05','LX/0GjW;->A01','LX/01Zz;->A00','HdrCapabilities','HDR_TYPE_HLG','MediaCodecInfo','profileLevels','AV1ProfileMain10','is_hlg_supported')
+          for p in root.rglob('*.smali'):
+            for cls,sig,b,path in methods(p):
+              text='\n'.join(b)
+              if any(n in text for n in needles):
+                lits=re.findall(r'const-string(?:/jumbo)?\s+[^,]+,\s+"([^"]*)"',text)
+                O += [f'===== REF {cls} {sig} FILE={path} =====',f'LITERALS={lits}']+b+['']
+          Path('research/generated/instagram_439_hdr_device_status_flags_r19l.txt').write_text('\n'.join(O),encoding='utf-8')
+          print('\n'.join(O)[:260000])
+          PY
+
+      - name: Commit R19l report
+        run: |
+          set -euo pipefail
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add research/generated/instagram_439_hdr_device_status_flags_r19l.txt
+          if ! git diff --cached --quiet; then
+            git commit -m 'Add device_status HDR flag producer trace R19l'
+            git pull --rebase origin main
+            git push origin HEAD:main
+          fi
