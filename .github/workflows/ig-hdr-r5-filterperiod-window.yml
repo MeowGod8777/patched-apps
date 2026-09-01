@@ -1,0 +1,158 @@
+name: IG 439 HDR R5 filterPeriod Window
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - .github/workflows/ig-hdr-r5-filterperiod-window.yml
+
+permissions:
+  contents: write
+
+jobs:
+  trace:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    env:
+      APK_NAME: instagram-piko-v439.0.0.37.89-arm64-v8a.apk
+      APK_SHA256: 4015b171ac59f3e7172134d194ec2dcf701f64c3339f127c19d7a04c13d529c8
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-java@v5
+        with:
+          distribution: zulu
+          java-version: '21'
+      - name: Fetch exact R8 and tools
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          set -euo pipefail
+          mkdir -p work/dis research/generated
+          gh release download 8 --pattern "$APK_NAME" --dir work
+          echo "$APK_SHA256  work/$APK_NAME" | sha256sum -c -
+          unzip -p "work/$APK_NAME" classes17.dex > work/classes17.dex
+          gh release download 3.0.10 --repo baksmali/smali --pattern 'baksmali-3.0.10-fat.jar' --dir work
+          java -jar work/baksmali-3.0.10-fat.jar d work/classes17.dex -o work/dis
+          test -f work/dis/X/09z5.smali
+      - name: Extract A0S filterPeriod boundary and invoked callees
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          from pathlib import Path
+          import re
+
+          root=Path('work/dis')
+          p=root/'X/09z5.smali'
+          lines=p.read_text(errors='replace').splitlines()
+          needle='A0S(Landroid/net/Uri;Lorg/xmlpull/v1/XmlPullParser;)LX/08rn;'
+          s=next(i for i,l in enumerate(lines) if l.startswith('.method') and needle in l)
+          e=next(i for i in range(s+1,len(lines)) if lines[i].startswith('.end method'))
+          block=lines[s:e+1]
+
+          out=['Instagram 439 X.09z5.A0S filterPeriod trace','===========================================',f'A0S_LINES={len(block)}','']
+
+          # Header / register layout / first parser setup.
+          out.append('===== A0S HEAD =====')
+          out.extend(block[:220])
+          out.append('')
+
+          # Exact windows around every filterPeriod diagnostic string.
+          pats=('Before filterPeriod()','filterPeriod() for','Finish filterPeriod()','Skip filterPeriod(')
+          hitidx=[]
+          for i,l in enumerate(block):
+            if any(x in l for x in pats): hitidx.append(i)
+          out.append(f'FILTER_STRING_HITS={hitidx}')
+          for n,i in enumerate(hitidx,1):
+            a=max(0,i-180); z=min(len(block),i+240)
+            out.append(f'===== FILTER WINDOW {n} lines {a}-{z} =====')
+            for j in range(a,z): out.append(f'{j:05d}: {block[j]}')
+            out.append('')
+
+          # All 08tc/08td construction/writes and nearby context within A0S.
+          meta=[i for i,l in enumerate(block) if 'LX/08tc;' in l or 'LX/08td;' in l]
+          out.append(f'METADATA_HITS={len(meta)}')
+          for n,i in enumerate(meta,1):
+            a=max(0,i-18); z=min(len(block),i+30)
+            out.append(f'===== META WINDOW {n} AT {i} =====')
+            for j in range(a,z): out.append(f'{j:05d}: {block[j]}')
+            out.append('')
+
+          # Invocation index for the method; useful for identifying actual filter helper.
+          inv_re=re.compile(r'invoke-[^\s]+\s+\{[^}]*\},\s+(LX/[^;]+;)->([^\s(]+)\(([^)]*)\)(\S+)')
+          inv=[]
+          for i,l in enumerate(block):
+            m=inv_re.search(l)
+            if m: inv.append((i,''.join(m.groups())))
+          out.append('===== INVOCATION INDEX =====')
+          for i,sig in inv: out.append(f'{i:05d}|{sig}|{block[i]}')
+          out.append('')
+
+          # Literal string index.
+          out.append('===== STRING INDEX =====')
+          for i,l in enumerate(block):
+            if 'const-string' in l: out.append(f'{i:05d}|{l.strip()}')
+          out.append('')
+
+          # Extract full bodies of direct X.* callees invoked within ±240 lines of filter strings,
+          # if those callees live in classes17 and are reasonably sized.
+          sigs=[]
+          for center in hitidx:
+            for i,sig in inv:
+              if abs(i-center)<=260 and sig not in sigs: sigs.append(sig)
+          out.append('===== LOCAL FILTER-AREA CALLEES =====')
+          for sig in sigs:
+            m=re.match(r'(LX/[^;]+;)->([^\s(]+)\(([^)]*)\)(\S+)',sig)
+            if not m: continue
+            cls,name,args,ret=m.groups()
+            fp=root/(cls[2:-1]+'.smali')
+            if not fp.exists():
+              out.append(f'MISSING|{sig}')
+              continue
+            ls=fp.read_text(errors='replace').splitlines()
+            target=name+'('+args+')'+ret
+            starts=[i for i,l in enumerate(ls) if l.startswith('.method') and target in l]
+            if len(starts)!=1:
+              out.append(f'AMBIG|{sig}|count={len(starts)}')
+              continue
+            cs=starts[0]; ce=next(i for i in range(cs+1,len(ls)) if ls[i].startswith('.end method'))
+            body=ls[cs:ce+1]
+            out.append(f'--- CALLEE {sig} LINES={len(body)} FILE={fp} ---')
+            if len(body)<=900:
+              out.extend(body)
+            else:
+              out.extend(body[:300]); out.append(f'... OMITTED {len(body)-600} ...'); out.extend(body[-300:])
+            out.append('')
+
+          path=Path('research/generated/instagram_439_hdr_r5_filterperiod_window.txt')
+          text='\n'.join(out)+'\n'
+          # Keep connector-readable. If verbose metadata windows exceed 100 KB, retain critical filter windows/indexes only.
+          if len(text.encode())>100000:
+            slim=['Instagram 439 X.09z5.A0S filterPeriod trace SLIM','================================================',f'A0S_LINES={len(block)}',f'FILTER_STRING_HITS={hitidx}','']
+            for n,i in enumerate(hitidx,1):
+              a=max(0,i-140); z=min(len(block),i+200)
+              slim.append(f'===== FILTER WINDOW {n} =====')
+              for j in range(a,z): slim.append(f'{j:05d}: {block[j]}')
+              slim.append('')
+            slim.append('===== INVOCATION INDEX NEAR FILTER =====')
+            for i,sig in inv:
+              if any(abs(i,c)<=300 for c in hitidx): slim.append(f'{i:05d}|{sig}|{block[i]}')
+            slim.append('===== METADATA INDEX =====')
+            for i in meta: slim.append(f'{i:05d}|{block[i]}')
+            text='\n'.join(slim)+'\n'
+          path.write_text(text,encoding='utf-8')
+          print(f'REPORT_BYTES={path.stat().st_size}')
+          print(path.read_text())
+          if not hitidx: raise SystemExit('filterPeriod strings not found')
+          PY
+      - name: Commit focused trace
+        run: |
+          set -euo pipefail
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add research/generated/instagram_439_hdr_r5_filterperiod_window.txt
+          if ! git diff --cached --quiet; then git commit -m 'Trace Instagram 439 DASH filterPeriod boundary'; fi
+          git pull --rebase origin main
+          git push origin HEAD:main
