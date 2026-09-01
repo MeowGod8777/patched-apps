@@ -1,0 +1,1128 @@
+===== A03 consumers =====
+work/dis/classes8.txt-2142955-7a4a2c: 1a00 35dd                              |0420: const-string v0, "performance_class" // string@dd35
+work/dis/classes8.txt-2142956-7a4a30: 7120 2300 1000                         |0422: invoke-static {v0, v1}, LX/000H;.A0Z:(Ljava/lang/Object;Ljava/lang/Object;)LX/04oE; // method@0023
+work/dis/classes8.txt-2142957-7a4a36: 0c00                                   |0425: move-result-object v0
+work/dis/classes8.txt-2142958-7a4a38: 2450 bf6f 5423                         |0426: filled-new-array {v4, v5, v3, v2, v0}, [LX/04oE; // type@6fbf
+work/dis/classes8.txt-2142959-7a4a3e: 0c00                                   |0429: move-result-object v0
+work/dis/classes8.txt-2142960-7a4a40: 7110 770b 0000                         |042a: invoke-static {v0}, LX/02pX;.A0G:([LX/04oE;)Ljava/util/Map; // method@0b77
+work/dis/classes8.txt-2142961-7a4a46: 0c00                                   |042d: move-result-object v0
+work/dis/classes8.txt-2142962-7a4a48: 7120 2d87 0600                         |042e: invoke-static {v6, v0}, LX/0bbU;.A00:(LX/02hd;Ljava/util/Map;)V // method@872d
+work/dis/classes8.txt-2142963-7a4a4e: 2806                                   |0431: goto 0437 // +0006
+work/dis/classes8.txt-2142964-7a4a50: 1a02 d5c4                              |0432: const-string v2, "decoder" // string@c4d5
+work/dis/classes8.txt-2142965-7a4a54: 28d6                                   |0434: goto 040a // -002a
+work/dis/classes8.txt-2142966-7a4a56: 1201                                   |0435: const/4 v1, #int 0 // #0
+work/dis/classes8.txt-2142967-7a4a58: 28b4                                   |0436: goto 03ea // -004c
+work/dis/classes8.txt-2142968-7a4a5a: 6e20 d2cc cd00                         |0437: invoke-virtual {v13, v12}, Landroid/media/MediaCodecInfo;.getCapabilitiesForType:(Ljava/lang/String;)Landroid/media/MediaCodecInfo$CodecCapabilities; // method@ccd2
+work/dis/classes8.txt-2142969-7a4a60: 0c05                                   |043a: move-result-object v5
+work/dis/classes8.txt-2142970-7a4a62: 7110 a512 0500                         |043b: invoke-static {v5}, LX/04l9;.A0h:(Ljava/lang/Object;)V // method@12a5
+work/dis/classes8.txt-2142971-7a4a68: 1a03 a0de                              |043e: const-string v3, "profile_levels" // string@dea0
+work/dis/classes8.txt-2142972-7a4a6c: 5452 5ee3                              |0440: iget-object v2, v5, Landroid/media/MediaCodecInfo$CodecCapabilities;.profileLevels:[Landroid/media/MediaCodecInfo$CodecProfileLevel; // field@e35e
+work/dis/classes8.txt-2142973-7a4a70: 3802 3300                              |0442: if-eqz v2, 0475 // +0033
+work/dis/classes8.txt-2142974-7a4a74: 2120                                   |0444: array-length v0, v2
+work/dis/classes8.txt-2142975-7a4a76: 3800 3000                              |0445: if-eqz v0, 0475 // +0030
+work/dis/classes8.txt-2142976-7a4a7a: 1301 2900                              |0447: const/16 v1, #int 41 // #29
+work/dis/classes8.txt-2142977-7a4a7e: 2200 0121                              |0449: new-instance v0, LX/0I29; // type@2101
+work/dis/classes8.txt-2142978-7a4a82: 7020 3b39 1000                         |044b: invoke-direct {v0, v1}, LX/0I29;.<init>:(I)V // method@393b
+work/dis/classes8.txt-2142979-7a4a88: 7152 3b0b a90a                         |044e: invoke-static {v9, v10, v10, v0, v2}, LX/02oI;.A0A:(Ljava/lang/CharSequence;Ljava/lang/CharSequence;Ljava/lang/CharSequence;Lkotlin/jvm/functions/Function1;[Ljava/lang/Object;)Ljava/lang/String; // method@0b3b
+work/dis/classes8.txt-2142980-7a4a8e: 0c00                                   |0451: move-result-object v0
+work/dis/classes8.txt-2142981-7a4a90: 7120 2300 0300                         |0452: invoke-static {v3, v0}, LX/000H;.A0Z:(Ljava/lang/Object;Ljava/lang/Object;)LX/04oE; // method@0023
+work/dis/classes8.txt-2142982-7a4a96: 0c13                                   |0455: move-result-object v19
+work/dis/classes8.txt-2142983-7a4a98: 1a02 29c2                              |0456: const-string v2, "color_formats" // string@c229
+work/dis/classes8.txt-2142984-7a4a9c: 5451 5de3                              |0458: iget-object v1, v5, Landroid/media/MediaCodecInfo$CodecCapabilities;.colorFormats:[I // field@e35d
+work/dis/classes8.txt-2142985-7a4aa0: 3801 1900                              |045a: if-eqz v1, 0473 // +0019
+work/dis/classes8.txt-2142986-7a4aa4: 2110                                   |045c: array-length v0, v1
+work/dis/classes8.txt-2142987-7a4aa6: 3800 1600                              |045d: if-eqz v0, 0473 // +0016
+work/dis/classes8.txt-2142988-7a4aaa: 7120 3d0b 1900                         |045f: invoke-static {v9, v1}, LX/02oI;.A0C:(Ljava/lang/CharSequence;[I)Ljava/lang/String; // method@0b3d
+work/dis/classes8.txt-2142989-7a4ab0: 0c00                                   |0462: move-result-object v0
+work/dis/classes8.txt-2142990-7a4ab2: 7120 2300 0200                         |0463: invoke-static {v2, v0}, LX/000H;.A0Z:(Ljava/lang/Object;Ljava/lang/Object;)LX/04oE; // method@0023
+work/dis/classes8.txt-2142991-7a4ab8: 0c12                                   |0466: move-result-object v18
+work/dis/classes8.txt-2142992-7a4aba: 1a11 82c8                              |0467: const-string v17, "features" // string@c882
+work/dis/classes8.txt-2142993-7a4abe: 1310 0a00                              |0469: const/16 v16, #int 10 // #a
+work/dis/classes8.txt-2142994-7a4ac2: 220e 3305                              |046b: new-instance v14, LX/02oH; // type@0533
+work/dis/classes8.txt-2142995-7a4ac6: 0200 1000                              |046d: move/from16 v0, v16
+work/dis/classes8.txt-2142996-7a4aca: 7020 340b 0e00                         |046f: invoke-direct {v14, v0}, LX/02oH;.<init>:(I)V // method@0b34
+work/dis/classes8.txt-2142997-7a4ad0: 2805                                   |0472: goto 0477 // +0005
+work/dis/classes8.txt-2142998-7a4ad2: 1200                                   |0473: const/4 v0, #int 0 // #0
+work/dis/classes8.txt-2142999-7a4ad4: 28ef                                   |0474: goto 0463 // -0011
+work/dis/classes8.txt-2143000-7a4ad6: 1200                                   |0475: const/4 v0, #int 0 // #0
+work/dis/classes8.txt-2143001-7a4ad8: 28dc                                   |0476: goto 0452 // -0024
+work/dis/classes8.txt-2143002-7a4ada: 6202 12b7                              |0477: sget-object v2, LX/0cby;.A00:Ljava/util/List; // field@b712
+work/dis/classes8.txt-2143003-7a4ade: 3902 5600                              |0479: if-nez v2, 04cf // +0056
+work/dis/classes8.txt-2143004-7a4ae2: 6e10 3fea 0500                         |047b: invoke-virtual {v5}, Ljava/lang/Object;.getClass:()Ljava/lang/Class; // method@ea3f
+work/dis/classes8.txt-2143005-7a4ae8: 0c00                                   |047e: move-result-object v0
+work/dis/classes8.txt-2143006-7a4aea: 6e10 d4e9 0000                         |047f: invoke-virtual {v0}, Ljava/lang/Class;.getFields:()[Ljava/lang/reflect/Field; // method@e9d4
+work/dis/classes8.txt-2143007-7a4af0: 0c0f                                   |0482: move-result-object v15
+work/dis/classes8.txt-2143008-7a4af2: 7110 d51f 0f00                         |0483: invoke-static {v15}, LX/0BTH;.A0z:(Ljava/lang/Object;)Ljava/util/ArrayList; // method@1fd5
+work/dis/classes8.txt-2143009-7a4af8: 0c03                                   |0486: move-result-object v3
+work/dis/classes8.txt-2143010-7a4afa: 21f0                                   |0487: array-length v0, v15
+work/dis/classes8.txt-2143011-7a4afc: 021d 0000                              |0488: move/from16 v29, v0
+work/dis/classes8.txt-2143012-7a4b00: 1204                                   |048a: const/4 v4, #int 0 // #0
+work/dis/classes8.txt-2143013-7a4b02: 0200 1d00                              |048b: move/from16 v0, v29
+work/dis/classes8.txt-2143014-7a4b06: 3504 1300                              |048d: if-ge v4, v0, 04a0 // +0013
+work/dis/classes8.txt-2143015-7a4b0a: 4602 0f04                              |048f: aget-object v2, v15, v4
+work/dis/classes8.txt-2143016-7a4b0e: 6e10 beea 0200                         |0491: invoke-virtual {v2}, Ljava/lang/reflect/Field;.getName:()Ljava/lang/String; // method@eabe
+work/dis/classes8.txt-2143017-7a4b14: 0c01                                   |0494: move-result-object v1
+work/dis/classes8.txt-2143018-7a4b16: 7110 9512 0100                         |0495: invoke-static {v1}, LX/04l9;.A0R:(Ljava/lang/Object;)V // method@1295
+work/dis/classes8.txt-2143019-7a4b1c: 1a00 1b21                              |0498: const-string v0, "FEATURE_" // string@211b
+work/dis/classes8.txt-2143020-7a4b20: 7140 6320 1230                         |049a: invoke-static {v2, v1, v0, v3}, LX/0BUB;.A1S:(Ljava/lang/Object;Ljava/lang/String;Ljava/lang/String;Ljava/util/AbstractCollection;)V // method@2063
+work/dis/classes8.txt-2143021-7a4b26: d804 0401                              |049d: add-int/lit8 v4, v4, #int 1 // #01
+work/dis/classes8.txt-2143022-7a4b2a: 28ec                                   |049f: goto 048b // -0014
+work/dis/classes8.txt-2143023-7a4b2c: 7100 1e00 0000                         |04a0: invoke-static {}, LX/000H;.A0U:()Ljava/util/ArrayList; // method@001e
+work/dis/classes8.txt-2143024-7a4b32: 0c02                                   |04a3: move-result-object v2
+work/dis/classes8.txt-2143025-7a4b34: 7210 dfeb 0300                         |04a4: invoke-interface {v3}, Ljava/util/List;.iterator:()Ljava/util/Iterator; // method@ebdf
+work/dis/classes8.txt-2143026-7a4b3a: 0c03                                   |04a7: move-result-object v3
+work/dis/classes8.txt-2143027-7a4b3c: 7210 c8eb 0300                         |04a8: invoke-interface {v3}, Ljava/util/Iterator;.hasNext:()Z // method@ebc8
+work/dis/classes8.txt-2143028-7a4b42: 0a00                                   |04ab: move-result v0
+work/dis/classes8.txt-2143029-7a4b44: 3800 2300                              |04ac: if-eqz v0, 04cf // +0023
+work/dis/classes8.txt-2143030-7a4b48: 7210 c9eb 0300                         |04ae: invoke-interface {v3}, Ljava/util/Iterator;.next:()Ljava/lang/Object; // method@ebc9
+work/dis/classes8.txt-2143031-7a4b4e: 0c00                                   |04b1: move-result-object v0
+work/dis/classes8.txt-2143032-7a4b50: 1f00 c46e                              |04b2: check-cast v0, Ljava/lang/reflect/Field; // type@6ec4
+work/dis/classes8.txt-2143033-7a4b54: 6e20 bcea 8000                         |04b4: invoke-virtual {v0, v8}, Ljava/lang/reflect/Field;.get:(Ljava/lang/Object;)Ljava/lang/Object; // method@eabc
+work/dis/classes8.txt-2143034-7a4b5a: 0c01                                   |04b7: move-result-object v1
+work/dis/classes8.txt-2143035-7a4b5c: 1a00 edd9                              |04b8: const-string v0, "null cannot be cast to non-null type kotlin.String" // string@d9ed
+work/dis/classes8.txt-2143036-7a4b60: 7120 ab12 0100                         |04ba: invoke-static {v1, v0}, LX/04l9;.A0o:(Ljava/lang/Object;Ljava/lang/String;)V // method@12ab
+work/dis/classes8.txt-2143037-7a4b66: 1f01 b86e                              |04bd: check-cast v1, Ljava/lang/String; // type@6eb8
+work/dis/classes8.txt-2143038-7a4b6a: 2806                                   |04bf: goto 04c5 // +0006
+work/dis/classes8.txt-2143039-7a4b6c: 0d00                                   |04c0: move-exception v0
+work/dis/classes8.txt-2143040-7a4b6e: 7110 c107 0000                         |04c1: invoke-static {v0}, LX/0222;.A11:(Ljava/lang/Throwable;)LX/02pD; // method@07c1
+work/dis/classes8.txt-2143041-7a4b74: 0c01                                   |04c4: move-result-object v1
+work/dis/classes8.txt-2143042-7a4b76: 2010 3905                              |04c5: instance-of v0, v1, LX/02pD; // type@0539
+work/dis/classes8.txt-2143043-7a4b7a: 3900 e1ff                              |04c7: if-nez v0, 04a8 // -001f
+work/dis/classes8.txt-2143044-7a4b7e: 3801 dfff                              |04c9: if-eqz v1, 04a8 // -0021
+work/dis/classes8.txt-2143045-7a4b82: 6e20 52eb 1200                         |04cb: invoke-virtual {v2, v1}, Ljava/util/AbstractCollection;.add:(Ljava/lang/Object;)Z // method@eb52
+work/dis/classes8.txt-2143046-7a4b88: 28da                                   |04ce: goto 04a8 // -0026
+work/dis/classes8.txt-2143047-7a4b8a: 6902 12b7                              |04cf: sput-object v2, LX/0cby;.A00:Ljava/util/List; // field@b712
+work/dis/classes8.txt-2143048-7a4b8e: 7210 dfeb 0200                         |04d1: invoke-interface {v2}, Ljava/util/List;.iterator:()Ljava/util/Iterator; // method@ebdf
+work/dis/classes8.txt-2143049-7a4b94: 0c02                                   |04d4: move-result-object v2
+work/dis/classes8.txt-2143050-7a4b96: 7210 c8eb 0200                         |04d5: invoke-interface {v2}, Ljava/util/Iterator;.hasNext:()Z // method@ebc8
+work/dis/classes8.txt-2143051-7a4b9c: 0a00                                   |04d8: move-result v0
+work/dis/classes8.txt-2143052-7a4b9e: 3800 1600                              |04d9: if-eqz v0, 04ef // +0016
+work/dis/classes8.txt-2143053-7a4ba2: 7110 1b00 0200                         |04db: invoke-static {v2}, LX/000H;.A0Q:(Ljava/util/Iterator;)Ljava/lang/String; // method@001b
+work/dis/classes8.txt-2143054-7a4ba8: 0c01                                   |04de: move-result-object v1
+work/dis/classes8.txt-2143055-7a4baa: 6e20 c0cc 1500                         |04df: invoke-virtual {v5, v1}, Landroid/media/MediaCodecInfo$CodecCapabilities;.isFeatureSupported:(Ljava/lang/String;)Z // method@ccc0
+work/dis/classes8.txt-2143056-7a4bb0: 0a00                                   |04e2: move-result v0
+work/dis/classes8.txt-2143057-7a4bb2: 3800 f2ff                              |04e3: if-eqz v0, 04d5 // -000e
+work/dis/classes8.txt-2143058-7a4bb6: 6e20 52eb 1e00                         |04e5: invoke-virtual {v14, v1}, Ljava/util/AbstractCollection;.add:(Ljava/lang/Object;)Z // method@eb52
+work/dis/classes8.txt-2143059-7a4bbc: 28ed                                   |04e8: goto 04d5 // -0013
+work/dis/classes8.txt-2143060-7a4bbe: 0d01                                   |04e9: move-exception v1
+work/dis/classes8.txt-2143061-7a4bc0: 1a00 65a0                              |04ea: const-string v0, "MediaCodecInfoCollector_get_supported_features_error" // string@a065
+work/dis/classes8.txt-2143062-7a4bc4: 7120 b210 1000                         |04ec: invoke-static {v0, v1}, LX/04AT;.A07:(Ljava/lang/String;Ljava/lang/Throwable;)V // method@10b2
+work/dis/classes8.txt-2143063-7a4bca: 7110 1c12 0e00                         |04ef: invoke-static {v14}, LX/04j9;.A02:(Ljava/util/List;)LX/02oH; // method@121c
+work/dis/classes8.txt-2143064-7a4bd0: 0c00                                   |04f2: move-result-object v0
+work/dis/classes8.txt-2143065-7a4bd2: 1202                                   |04f3: const/4 v2, #int 0 // #0
+work/dis/classes8.txt-2143066-7a4bd4: 7158 5012 a90a                         |04f4: invoke-static {v9, v10, v10, v0, v8}, LX/04k4;.A1A:(Ljava/lang/CharSequence;Ljava/lang/CharSequence;Ljava/lang/CharSequence;Ljava/lang/Iterable;Lkotlin/jvm/functions/Function1;)Ljava/lang/String; // method@1250
+work/dis/classes8.txt-2143067-7a4bda: 0c01                                   |04f7: move-result-object v1
+work/dis/classes8.txt-2143068-7a4bdc: 0800 1100                              |04f8: move-object/from16 v0, v17
+work/dis/classes8.txt-2143069-7a4be0: 7120 2300 1000                         |04fa: invoke-static {v0, v1}, LX/000H;.A0Z:(Ljava/lang/Object;Ljava/lang/Object;)LX/04oE; // method@0023
+work/dis/classes8.txt-2143070-7a4be6: 0c03                                   |04fd: move-result-object v3
+work/dis/classes8.txt-2143071-7a4be8: 122e                                   |04fe: const/4 v14, #int 2 // #2
+work/dis/classes8.txt-2143072-7a4bea: 0801 1300                              |04ff: move-object/from16 v1, v19
+work/dis/classes8.txt-2143073-7a4bee: 0800 1200                              |0501: move-object/from16 v0, v18
+work/dis/classes8.txt-2143074-7a4bf2: 2430 bf6f 0103                         |0503: filled-new-array {v1, v0, v3}, [LX/04oE; // type@6fbf
+work/dis/classes8.txt-2143075-7a4bf8: 0c00                                   |0506: move-result-object v0
+work/dis/classes8.txt-2143076-7a4bfa: 7110 770b 0000                         |0507: invoke-static {v0}, LX/02pX;.A0G:([LX/04oE;)Ljava/util/Map; // method@0b77
+work/dis/classes8.txt-2143077-7a4c00: 0c00                                   |050a: move-result-object v0
+work/dis/classes8.txt-2143078-7a4c02: 7120 2d87 0600                         |050b: invoke-static {v6, v0}, LX/0bbU;.A00:(LX/02hd;Ljava/util/Map;)V // method@872d
+work/dis/classes8.txt-2143079-7a4c08: 7110 b38c 0500                         |050e: invoke-static {v5}, LX/0cby;.A01:(Landroid/media/MediaCodecInfo$CodecCapabilities;)Ljava/util/Map; // method@8cb3
+work/dis/classes8.txt-2143080-7a4c0e: 0c00                                   |0511: move-result-object v0
+work/dis/classes8.txt-2143081-7a4c10: 7120 2d87 0600                         |0512: invoke-static {v6, v0}, LX/0bbU;.A00:(LX/02hd;Ljava/util/Map;)V // method@872d
+work/dis/classes8.txt-2143082-7a4c16: 6e10 bdcc 0500                         |0515: invoke-virtual {v5}, Landroid/media/MediaCodecInfo$CodecCapabilities;.getEncoderCapabilities:()Landroid/media/MediaCodecInfo$EncoderCapabilities; // method@ccbd
+work/dis/classes8.txt-2143083-7a4c1c: 0c04                                   |0518: move-result-object v4
+work/dis/classes8.txt-2143084-7a4c1e: 3904 0f01                              |0519: if-nez v4, 0628 // +010f
+work/dis/classes8.txt-2143085-7a4c22: 6202 2007                              |051b: sget-object v2, LX/02tQ;.A00:LX/02tQ; // field@0720
+work/dis/classes8.txt-2143086-7a4c26: 7120 2d87 2600                         |051d: invoke-static {v6, v2}, LX/0bbU;.A00:(LX/02hd;Ljava/util/Map;)V // method@872d
+work/dis/classes8.txt-2143087-7a4c2c: 6e10 bccc 0500                         |0520: invoke-virtual {v5}, Landroid/media/MediaCodecInfo$CodecCapabilities;.getAudioCapabilities:()Landroid/media/MediaCodecInfo$AudioCapabilities; // method@ccbc
+work/dis/classes8.txt-2143088-7a4c32: 0c0f                                   |0523: move-result-object v15
+work/dis/classes8.txt-2143089-7a4c34: 390f bf00                              |0524: if-nez v15, 05e3 // +00bf
+work/dis/classes8.txt-2143090-7a4c38: 6200 2007                              |0526: sget-object v0, LX/02tQ;.A00:LX/02tQ; // field@0720
+work/dis/classes8.txt-2143091-7a4c3c: 7120 2d87 0600                         |0528: invoke-static {v6, v0}, LX/0bbU;.A00:(LX/02hd;Ljava/util/Map;)V // method@872d
+work/dis/classes8.txt-2143092-7a4c42: 6e10 bfcc 0500                         |052b: invoke-virtual {v5}, Landroid/media/MediaCodecInfo$CodecCapabilities;.getVideoCapabilities:()Landroid/media/MediaCodecInfo$VideoCapabilities; // method@ccbf
+work/dis/classes8.txt-2143093-7a4c48: 0c01                                   |052e: move-result-object v1
+work/dis/classes8.txt-2143094-7a4c4a: 0800 1600                              |052f: move-object/from16 v0, v22
+work/dis/classes8.txt:2143095:7a4c4e: 6e20 b58c 1000                         |0531: invoke-virtual {v0, v1}, LX/0cby;.A03:(Landroid/media/MediaCodecInfo$VideoCapabilities;)Ljava/util/Map; // method@8cb5
+work/dis/classes8.txt-2143096-7a4c54: 0c00                                   |0534: move-result-object v0
+work/dis/classes8.txt-2143097-7a4c56: 7120 2d87 0600                         |0535: invoke-static {v6, v0}, LX/0bbU;.A00:(LX/02hd;Ljava/util/Map;)V // method@872d
+work/dis/classes8.txt-2143098-7a4c5c: 6e10 d6cc 0d00                         |0538: invoke-virtual {v13}, Landroid/media/MediaCodecInfo;.isEncoder:()Z // method@ccd6
+work/dis/classes8.txt-2143099-7a4c62: 0a00                                   |053b: move-result v0
+work/dis/classes8.txt-2143100-7a4c64: 3800 5001                              |053c: if-eqz v0, 068c // +0150
+work/dis/classes8.txt-2143101-7a4c68: 1a01 56ec                              |053e: const-string v1, "video/avc" // string@ec56
+work/dis/classes8.txt-2143102-7a4c6c: 1a00 58ec                              |0540: const-string v0, "video/hevc" // string@ec58
+work/dis/classes8.txt-2143103-7a4c70: 2420 7072 0100                         |0542: filled-new-array {v1, v0}, [Ljava/lang/String; // type@7270
+work/dis/classes8.txt-2143104-7a4c76: 0c00                                   |0545: move-result-object v0
+work/dis/classes8.txt-2143105-7a4c78: 7110 78eb 0000                         |0546: invoke-static {v0}, Ljava/util/Arrays;.asList:([Ljava/lang/Object;)Ljava/util/List; // method@eb78
+work/dis/classes8.txt-2143106-7a4c7e: 0c00                                   |0549: move-result-object v0
+work/dis/classes8.txt-2143107-7a4c80: 7220 dbeb c000                         |054a: invoke-interface {v0, v12}, Ljava/util/List;.contains:(Ljava/lang/Object;)Z // method@ebdb
+work/dis/classes8.txt-2143108-7a4c86: 0a00                                   |054d: move-result v0
+work/dis/classes8.txt-2143109-7a4c88: 3800 3e01                              |054e: if-eqz v0, 068c // +013e
+work/dis/classes8.txt-2143110-7a4c8c: 6e10 bfcc 0500                         |0550: invoke-virtual {v5}, Landroid/media/MediaCodecInfo$CodecCapabilities;.getVideoCapabilities:()Landroid/media/MediaCodecInfo$VideoCapabilities; // method@ccbf
+work/dis/classes8.txt-2143111-7a4c92: 0c04                                   |0553: move-result-object v4
+work/dis/classes8.txt-2143112-7a4c94: 3804 3801                              |0554: if-eqz v4, 068c // +0138
+work/dis/classes8.txt-2143113-7a4c98: 6200 c7af                              |0556: sget-object v0, LX/0bbU;.A01:LX/0C8T; // field@afc7
+work/dis/classes8.txt-2143114-7a4c9c: 7110 5007 0000                         |0558: invoke-static {v0}, LX/021Q;.A0w:(LX/0C8T;)Ljava/util/List; // method@0750
+work/dis/classes8.txt-2143115-7a4ca2: 0c01                                   |055b: move-result-object v1
+work/dis/classes8.txt-2143116-7a4ca4: 6200 c6af                              |055c: sget-object v0, LX/0bbU;.A00:LX/0C8T; // field@afc6
+work/dis/classes8.txt-2143117-7a4ca8: 7110 5007 0000                         |055e: invoke-static {v0}, LX/021Q;.A0w:(LX/0C8T;)Ljava/util/List; // method@0750
+work/dis/classes8.txt-2143118-7a4cae: 0c13                                   |0561: move-result-object v19
+work/dis/classes8.txt-2143119-7a4cb0: 0200 1800                              |0562: move/from16 v0, v24
+work/dis/classes8.txt-2143120-7a4cb4: 7120 a612 0100                         |0564: invoke-static {v1, v0}, LX/04l9;.A0j:(Ljava/lang/Object;I)V // method@12a6
+work/dis/classes8.txt-2143121-7a4cba: 0800 1300                              |0567: move-object/from16 v0, v19
+work/dis/classes8.txt-2143122-7a4cbe: 7120 a612 e000                         |0569: invoke-static {v0, v14}, LX/04l9;.A0j:(Ljava/lang/Object;I)V // method@12a6
+work/dis/classes8.txt-2143123-7a4cc4: 7100 6300 0000                         |056c: invoke-static {}, LX/0020;.A0q:()Ljava/util/LinkedHashMap; // method@0063
+work/dis/classes8.txt-2143124-7a4cca: 0c03                                   |056f: move-result-object v3
+work/dis/classes8.txt-2143125-7a4ccc: 7210 dfeb 0100                         |0570: invoke-interface {v1}, Ljava/util/List;.iterator:()Ljava/util/Iterator; // method@ebdf
+work/dis/classes8.txt-2143126-7a4cd2: 0c12                                   |0573: move-result-object v18
+work/dis/classes8.txt-2143127-7a4cd4: 7801 c8eb 1200                         |0574: invoke-interface/range {v18}, Ljava/util/Iterator;.hasNext:()Z // method@ebc8
+work/dis/classes8.txt-2143128-7a4cda: 0a00                                   |0577: move-result v0
+work/dis/classes8.txt-2143129-7a4cdc: 3800 1101                              |0578: if-eqz v0, 0689 // +0111
+work/dis/classes8.txt-2143130-7a4ce0: 7801 c9eb 1200                         |057a: invoke-interface/range {v18}, Ljava/util/Iterator;.next:()Ljava/lang/Object; // method@ebc9
+work/dis/classes8.txt-2143131-7a4ce6: 0c02                                   |057d: move-result-object v2
+work/dis/classes8.txt-2143132-7a4ce8: 1f02 8f20                              |057e: check-cast v2, LX/0Hrf; // type@208f
+work/dis/classes8.txt-2143133-7a4cec: 7801 dfeb 1300                         |0580: invoke-interface/range {v19}, Ljava/util/List;.iterator:()Ljava/util/Iterator; // method@ebdf
+work/dis/classes8.txt-2143134-7a4cf2: 0c11                                   |0583: move-result-object v17
+work/dis/classes8.txt-2143135-7a4cf4: 7801 c8eb 1100                         |0584: invoke-interface/range {v17}, Ljava/util/Iterator;.hasNext:()Z // method@ebc8
+work/dis/classes8.txt-2143136-7a4cfa: 0a01                                   |0587: move-result v1
+work/dis/classes8.txt-2143137-7a4cfc: 130e 5800                              |0588: const/16 v14, #int 88 // #58
+work/dis/classes8.txt-2143138-7a4d00: 1a00 38c7                              |058a: const-string v0, "enc_" // string@c738
+work/dis/classes8.txt-2143139-7a4d04: 3801 3800                              |058c: if-eqz v1, 05c4 // +0038
+work/dis/classes8.txt-2143140-7a4d08: 7801 c9eb 1100                         |058e: invoke-interface/range {v17}, Ljava/util/Iterator;.next:()Ljava/lang/Object; // method@ebc9
+work/dis/classes8.txt-2143141-7a4d0e: 0c0f                                   |0591: move-result-object v15
+work/dis/classes8.txt-2143142-7a4d10: 1f0f c01f                              |0592: check-cast v15, LX/0HRI; // type@1fc0
+work/dis/classes8.txt-2143143-7a4d14: 7110 d608 0000                         |0594: invoke-static {v0}, LX/0248;.A15:(Ljava/lang/String;)Ljava/lang/StringBuilder; // method@08d6
+work/dis/classes8.txt-2143144-7a4d1a: 0c01                                   |0597: move-result-object v1
+work/dis/classes8.txt-2143145-7a4d1c: 5220 a736                              |0598: iget v0, v2, LX/0Hrf;.A01:I // field@36a7
+work/dis/classes8.txt-2143146-7a4d20: 021f 0000                              |059a: move/from16 v31, v0
+work/dis/classes8.txt-2143147-7a4d24: 6e20 85ea 0100                         |059c: invoke-virtual {v1, v0}, Ljava/lang/StringBuilder;.append:(I)Ljava/lang/StringBuilder; // method@ea85
+work/dis/classes8.txt-2143148-7a4d2a: 6e20 82ea e100                         |059f: invoke-virtual {v1, v14}, Ljava/lang/StringBuilder;.append:(C)Ljava/lang/StringBuilder; // method@ea82
+work/dis/classes8.txt-2143149-7a4d30: 522e a636                              |05a2: iget v14, v2, LX/0Hrf;.A00:I // field@36a6
+work/dis/classes8.txt-2143150-7a4d34: 6e20 85ea e100                         |05a4: invoke-virtual {v1, v14}, Ljava/lang/StringBuilder;.append:(I)Ljava/lang/StringBuilder; // method@ea85
+work/dis/classes8.txt-2143151-7a4d3a: 1300 4000                              |05a7: const/16 v0, #int 64 // #40
+work/dis/classes8.txt-2143152-7a4d3e: 6e20 82ea 0100                         |05a9: invoke-virtual {v1, v0}, Ljava/lang/StringBuilder;.append:(C)Ljava/lang/StringBuilder; // method@ea82
+work/dis/classes8.txt-2143153-7a4d44: 52ff 7335                              |05ac: iget v15, v15, LX/0HRI;.A00:I // field@3573
+work/dis/classes8.txt-2143154-7a4d48: 6e20 85ea f100                         |05ae: invoke-virtual {v1, v15}, Ljava/lang/StringBuilder;.append:(I)Ljava/lang/StringBuilder; // method@ea85
+work/dis/classes8.txt-2143155-7a4d4e: 1a00 5fc9                              |05b1: const-string v0, "fps" // string@c95f
+work/dis/classes8.txt-2143156-7a4d52: 7120 1a00 1000                         |05b3: invoke-static {v0, v1}, LX/000H;.A0O:(Ljava/lang/String;Ljava/lang/StringBuilder;)Ljava/lang/String; // method@001a
+work/dis/classes8.txt-2143157-7a4d58: 0c10                                   |05b6: move-result-object v16
+work/dis/classes8.txt-2143158-7a4d5a: 83f0                                   |05b7: int-to-double v0, v15
+work/dis/classes8.txt-2143159-7a4d5c: 020f 1f00                              |05b8: move/from16 v15, v31
+work/dis/classes8.txt-2143160-7a4d60: 6e51 c5cc f40e                         |05ba: invoke-virtual {v4, v15, v14, v0, v1}, Landroid/media/MediaCodecInfo$VideoCapabilities;.areSizeAndRateSupported:(IID)Z // method@ccc5
+work/dis/classes8.txt-2143161-7a4d66: 0a01                                   |05bd: move-result v1
+work/dis/classes8.txt-2143162-7a4d68: 0800 1000                              |05be: move-object/from16 v0, v16
+work/dis/classes8.txt-2143163-7a4d6c: 7130 9e07 3001                         |05c0: invoke-static {v0, v3, v1}, LX/0221;.A1Z:(Ljava/lang/Object;Ljava/util/AbstractMap;Z)V // method@079e
+work/dis/classes8.txt-2143164-7a4d72: 28c1                                   |05c3: goto 0584 // -003f
+work/dis/classes8.txt-2143165-7a4d74: 7110 d608 0000                         |05c4: invoke-static {v0}, LX/0248;.A15:(Ljava/lang/String;)Ljava/lang/StringBuilder; // method@08d6
+work/dis/classes8.txt-2143166-7a4d7a: 0c01                                   |05c7: move-result-object v1
+work/dis/classes8.txt-2143167-7a4d7c: 522f a736                              |05c8: iget v15, v2, LX/0Hrf;.A01:I // field@36a7
+work/dis/classes8.txt-2143168-7a4d80: 6e20 85ea f100                         |05ca: invoke-virtual {v1, v15}, Ljava/lang/StringBuilder;.append:(I)Ljava/lang/StringBuilder; // method@ea85
+work/dis/classes8.txt-2143169-7a4d86: 6e20 82ea e100                         |05cd: invoke-virtual {v1, v14}, Ljava/lang/StringBuilder;.append:(C)Ljava/lang/StringBuilder; // method@ea82
+work/dis/classes8.txt-2143170-7a4d8c: 5222 a636                              |05d0: iget v2, v2, LX/0Hrf;.A00:I // field@36a6
+work/dis/classes8.txt-2143171-7a4d90: 6e20 85ea 2100                         |05d2: invoke-virtual {v1, v2}, Ljava/lang/StringBuilder;.append:(I)Ljava/lang/StringBuilder; // method@ea85
+work/dis/classes8.txt-2143172-7a4d96: 1a00 2d0b                              |05d5: const-string v0, "@any" // string@0b2d
+work/dis/classes8.txt-2143173-7a4d9a: 7120 1a00 1000                         |05d7: invoke-static {v0, v1}, LX/000H;.A0O:(Ljava/lang/String;Ljava/lang/StringBuilder;)Ljava/lang/String; // method@001a
+work/dis/classes8.txt-2143174-7a4da0: 0c01                                   |05da: move-result-object v1
+work/dis/classes8.txt-2143175-7a4da2: 6e30 d0cc f402                         |05db: invoke-virtual {v4, v15, v2}, Landroid/media/MediaCodecInfo$VideoCapabilities;.isSizeSupported:(II)Z // method@ccd0
+work/dis/classes8.txt-2143176-7a4da8: 0a00                                   |05de: move-result v0
+work/dis/classes8.txt-2143177-7a4daa: 7130 9e07 3100                         |05df: invoke-static {v1, v3, v0}, LX/0221;.A1Z:(Ljava/lang/Object;Ljava/util/AbstractMap;Z)V // method@079e
+work/dis/classes8.txt-2143178-7a4db0: 2892                                   |05e2: goto 0574 // -006e
+work/dis/classes8.txt-2143179-7a4db2: 6e10 bacc 0f00                         |05e3: invoke-virtual {v15}, Landroid/media/MediaCodecInfo$AudioCapabilities;.getSupportedSampleRateRanges:()[Landroid/util/Range; // method@ccba
+work/dis/classes8.txt-2143180-7a4db8: 0c04                                   |05e6: move-result-object v4
+work/dis/classes8.txt-2143181-7a4dba: 6e10 b8cc 0f00                         |05e7: invoke-virtual {v15}, Landroid/media/MediaCodecInfo$AudioCapabilities;.getBitrateRange:()Landroid/util/Range; // method@ccb8
+work/dis/classes8.txt-2143182-7a4dc0: 0c00                                   |05ea: move-result-object v0
+work/dis/classes8.txt-2143183-7a4dc2: 3800 3b00                              |05eb: if-eqz v0, 0626 // +003b
+work/dis/classes8.txt-2143184-7a4dc6: 6e10 43ea 0000                         |05ed: invoke-virtual {v0}, Ljava/lang/Object;.toString:()Ljava/lang/String; // method@ea43
+work/dis/classes8.txt-2143185-7a4dcc: 0c01                                   |05f0: move-result-object v1
+work/dis/classes8.txt-2143186-7a4dce: 1a00 3fbe                              |05f1: const-string v0, "audio_bitrate_range" // string@be3f
+work/dis/classes8.txt-2143187-7a4dd2: 7120 2300 1000                         |05f3: invoke-static {v0, v1}, LX/000H;.A0Z:(Ljava/lang/Object;Ljava/lang/Object;)LX/04oE; // method@0023
+work/dis/classes8.txt-2143188-7a4dd8: 0c03                                   |05f6: move-result-object v3
+work/dis/classes8.txt-2143189-7a4dda: 6e10 b9cc 0f00                         |05f7: invoke-virtual {v15}, Landroid/media/MediaCodecInfo$AudioCapabilities;.getMaxInputChannelCount:()I // method@ccb9
+work/dis/classes8.txt-2143190-7a4de0: 0a00                                   |05fa: move-result v0
+work/dis/classes8.txt-2143191-7a4de2: 7110 0cea 0000                         |05fb: invoke-static {v0}, Ljava/lang/Integer;.valueOf:(I)Ljava/lang/Integer; // method@ea0c
+work/dis/classes8.txt-2143192-7a4de8: 0c01                                   |05fe: move-result-object v1
+work/dis/classes8.txt-2143193-7a4dea: 1a00 55be                              |05ff: const-string v0, "audio_max_input_channels" // string@be55
+work/dis/classes8.txt-2143194-7a4dee: 7120 2300 1000                         |0601: invoke-static {v0, v1}, LX/000H;.A0Z:(Ljava/lang/Object;Ljava/lang/Object;)LX/04oE; // method@0023
+work/dis/classes8.txt-2143195-7a4df4: 0c02                                   |0604: move-result-object v2
+work/dis/classes8.txt-2143196-7a4df6: 3804 0800                              |0605: if-eqz v4, 060d // +0008
+work/dis/classes8.txt-2143197-7a4dfa: 7154 3b0b a98a                         |0607: invoke-static {v9, v10, v10, v8, v4}, LX/02oI;.A0A:(Ljava/lang/CharSequence;Ljava/lang/CharSequence;Ljava/lang/CharSequence;Lkotlin/jvm/functions/Function1;[Ljava/lang/Object;)Ljava/lang/String; // method@0b3b
+work/dis/classes8.txt-2143198-7a4e00: 0c01                                   |060a: move-result-object v1
+work/dis/classes8.txt-2143199-7a4e02: 3901 0f00                              |060b: if-nez v1, 061a // +000f
+work/dis/classes8.txt-2143200-7a4e06: 6e10 bbcc 0f00                         |060d: invoke-virtual {v15}, Landroid/media/MediaCodecInfo$AudioCapabilities;.getSupportedSampleRates:()[I // method@ccbb
+work/dis/classes8.txt-2143201-7a4e0c: 0c01                                   |0610: move-result-object v1
+work/dis/classes8.txt-2143202-7a4e0e: 7110 9512 0100                         |0611: invoke-static {v1}, LX/04l9;.A0R:(Ljava/lang/Object;)V // method@1295
+work/dis/classes8.txt-2143203-7a4e14: 1a00 0d0b                              |0614: const-string v0, ";" // string@0b0d
+work/dis/classes8.txt-2143204-7a4e18: 7120 3d0b 1000                         |0616: invoke-static {v0, v1}, LX/02oI;.A0C:(Ljava/lang/CharSequence;[I)Ljava/lang/String; // method@0b3d
+work/dis/classes8.txt-2143205-7a4e1e: 0c01                                   |0619: move-result-object v1
+work/dis/classes8.txt-2143206-7a4e20: 1a00 63be                              |061a: const-string v0, "audio_supported_sample_rates" // string@be63
+work/dis/classes8.txt-2143207-7a4e24: 7140 6303 1023                         |061c: invoke-static {v0, v1, v3, v2}, LX/0112;.A1b:(Ljava/lang/Object;Ljava/lang/Object;LX/04oE;LX/04oE;)[LX/04oE; // method@0363
+work/dis/classes8.txt-2143208-7a4e2a: 0c00                                   |061f: move-result-object v0
+work/dis/classes8.txt-2143209-7a4e2c: 7110 770b 0000                         |0620: invoke-static {v0}, LX/02pX;.A0G:([LX/04oE;)Ljava/util/Map; // method@0b77
+work/dis/classes8.txt-2143210-7a4e32: 0c00                                   |0623: move-result-object v0
+work/dis/classes8.txt-2143211-7a4e34: 2900 04ff                              |0624: goto/16 0528 // -00fc
+work/dis/classes8.txt-2143212-7a4e38: 1201                                   |0626: const/4 v1, #int 0 // #0
+work/dis/classes8.txt-2143213-7a4e3a: 28ca                                   |0627: goto 05f1 // -0036
+work/dis/classes8.txt-2143214-7a4e3c: 6e10 c1cc 0400                         |0628: invoke-virtual {v4}, Landroid/media/MediaCodecInfo$EncoderCapabilities;.getComplexityRange:()Landroid/util/Range; // method@ccc1
+work/dis/classes8.txt-2143215-7a4e42: 0c00                                   |062b: move-result-object v0
+work/dis/classes8.txt-2143216-7a4e44: 3800 0600                              |062c: if-eqz v0, 0632 // +0006
+work/dis/classes8.txt-2143217-7a4e48: 6e10 43ea 0000                         |062e: invoke-virtual {v0}, Ljava/lang/Object;.toString:()Ljava/lang/String; // method@ea43
+work/dis/classes8.txt-2143218-7a4e4e: 0c02                                   |0631: move-result-object v2
+work/dis/classes8.txt-2143219-7a4e50: 1a00 47c7                              |0632: const-string v0, "encoder_complexity_range" // string@c747
+work/dis/classes8.txt-2143220-7a4e54: 7120 2300 2000                         |0634: invoke-static {v0, v2}, LX/000H;.A0Z:(Ljava/lang/Object;Ljava/lang/Object;)LX/04oE; // method@0023
+work/dis/classes8.txt-2143221-7a4e5a: 0c03                                   |0637: move-result-object v3
+work/dis/classes8.txt-2143222-7a4e5c: 1a02 46c7                              |0638: const-string v2, "encoder_bitrate_modes" // string@c746
+work/dis/classes8.txt-2143223-7a4e60: 2201 3305                              |063a: new-instance v1, LX/02oH; // type@0533
+work/dis/classes8.txt-2143224-7a4e64: 0200 1000                              |063c: move/from16 v0, v16
+work/dis/classes8.txt-2143225-7a4e68: 7020 340b 0100                         |063e: invoke-direct {v1, v0}, LX/02oH;.<init>:(I)V // method@0b34
+work/dis/classes8.txt-2143226-7a4e6e: 6e20 c3cc e400                         |0641: invoke-virtual {v4, v14}, Landroid/media/MediaCodecInfo$EncoderCapabilities;.isBitrateModeSupported:(I)Z // method@ccc3
+work/dis/classes8.txt-2143227-7a4e74: 0a00                                   |0644: move-result v0
+work/dis/classes8.txt-2143228-7a4e76: 3800 0700                              |0645: if-eqz v0, 064c // +0007
+work/dis/classes8.txt-2143229-7a4e7a: 1a00 b813                              |0647: const-string v0, "CBR" // string@13b8
+work/dis/classes8.txt-2143230-7a4e7e: 6e20 52eb 0100                         |0649: invoke-virtual {v1, v0}, Ljava/util/AbstractCollection;.add:(Ljava/lang/Object;)Z // method@eb52
+work/dis/classes8.txt-2143231-7a4e84: 0200 1800                              |064c: move/from16 v0, v24
+work/dis/classes8.txt-2143232-7a4e88: 6e20 c3cc 0400                         |064e: invoke-virtual {v4, v0}, Landroid/media/MediaCodecInfo$EncoderCapabilities;.isBitrateModeSupported:(I)Z // method@ccc3
+work/dis/classes8.txt-2143233-7a4e8e: 0a00                                   |0651: move-result v0
+work/dis/classes8.txt-2143234-7a4e90: 3800 0700                              |0652: if-eqz v0, 0659 // +0007
+work/dis/classes8.txt-2143235-7a4e94: 1a00 adab                              |0654: const-string v0, "VBR" // string@abad
+work/dis/classes8.txt-2143236-7a4e98: 6e20 52eb 0100                         |0656: invoke-virtual {v1, v0}, Ljava/util/AbstractCollection;.add:(Ljava/lang/Object;)Z // method@eb52
+work/dis/classes8.txt-2143237-7a4e9e: 0200 1700                              |0659: move/from16 v0, v23
+work/dis/classes8.txt-2143238-7a4ea2: 6e20 c3cc 0400                         |065b: invoke-virtual {v4, v0}, Landroid/media/MediaCodecInfo$EncoderCapabilities;.isBitrateModeSupported:(I)Z // method@ccc3
+work/dis/classes8.txt-2143239-7a4ea8: 0a00                                   |065e: move-result v0
+work/dis/classes8.txt-2143240-7a4eaa: 3800 0700                              |065f: if-eqz v0, 0666 // +0007
+work/dis/classes8.txt-2143241-7a4eae: 1a00 c414                              |0661: const-string v0, "CQ" // string@14c4
+work/dis/classes8.txt-2143242-7a4eb2: 6e20 52eb 0100                         |0663: invoke-virtual {v1, v0}, Ljava/util/AbstractCollection;.add:(Ljava/lang/Object;)Z // method@eb52
+work/dis/classes8.txt-2143243-7a4eb8: 7110 1c12 0100                         |0666: invoke-static {v1}, LX/04j9;.A02:(Ljava/util/List;)LX/02oH; // method@121c
+work/dis/classes8.txt-2143244-7a4ebe: 0c00                                   |0669: move-result-object v0
+work/dis/classes8.txt-2143245-7a4ec0: 7158 5012 a90a                         |066a: invoke-static {v9, v10, v10, v0, v8}, LX/04k4;.A1A:(Ljava/lang/CharSequence;Ljava/lang/CharSequence;Ljava/lang/CharSequence;Ljava/lang/Iterable;Lkotlin/jvm/functions/Function1;)Ljava/lang/String; // method@1250
+work/dis/classes8.txt-2143246-7a4ec6: 0c00                                   |066d: move-result-object v0
+work/dis/classes8.txt-2143247-7a4ec8: 7130 e207 0203                         |066e: invoke-static {v2, v0, v3}, LX/0223;.A1b:(Ljava/lang/Object;Ljava/lang/Object;LX/04oE;)[LX/04oE; // method@07e2
+work/dis/classes8.txt-2143248-7a4ece: 0c00                                   |0671: move-result-object v0
+work/dis/classes8.txt-2143249-7a4ed0: 7110 710b 0000                         |0672: invoke-static {v0}, LX/02pX;.A09:([LX/04oE;)Ljava/util/LinkedHashMap; // method@0b71
+work/dis/classes8.txt-2143250-7a4ed6: 0c02                                   |0675: move-result-object v2
+work/dis/classes8.txt-2143251-7a4ed8: 6e10 c2cc 0400                         |0676: invoke-virtual {v4}, Landroid/media/MediaCodecInfo$EncoderCapabilities;.getQualityRange:()Landroid/util/Range; // method@ccc2
+work/dis/classes8.txt-2143252-7a4ede: 0c00                                   |0679: move-result-object v0
+work/dis/classes8.txt-2143253-7a4ee0: 3800 0d00                              |067a: if-eqz v0, 0687 // +000d
+work/dis/classes8.txt-2143254-7a4ee4: 6e10 43ea 0000                         |067c: invoke-virtual {v0}, Ljava/lang/Object;.toString:()Ljava/lang/String; // method@ea43
+work/dis/classes8.txt-2143255-7a4eea: 0c01                                   |067f: move-result-object v1
+work/dis/classes8.txt-2143256-7a4eec: 1a00 48c7                              |0680: const-string v0, "encoder_quality_range" // string@c748
+work/dis/classes8.txt-2143257-7a4ef0: 6e30 6beb 0201                         |0682: invoke-virtual {v2, v0, v1}, Ljava/util/AbstractMap;.put:(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object; // method@eb6b
+work/dis/classes8.txt-2143258-7a4ef6: 2900 98fe                              |0685: goto/16 051d // -0168
+work/dis/classes8.txt-2143259-7a4efa: 1201                                   |0687: const/4 v1, #int 0 // #0
+work/dis/classes8.txt-2143260-7a4efc: 28f8                                   |0688: goto 0680 // -0008
+work/dis/classes8.txt-2143261-7a4efe: 7120 2d87 3600                         |0689: invoke-static {v6, v3}, LX/0bbU;.A00:(LX/02hd;Ljava/util/Map;)V // method@872d
+work/dis/classes8.txt-2143262-7a4f04: 0800 1600                              |068c: move-object/from16 v0, v22
+work/dis/classes8.txt-2143263-7a4f08: 6e30 b48c 500d                         |068e: invoke-virtual {v0, v5, v13}, LX/0cby;.A02:(Landroid/media/MediaCodecInfo$CodecCapabilities;Landroid/media/MediaCodecInfo;)Ljava/util/LinkedHashMap; // method@8cb4
+work/dis/classes8.txt-2143264-7a4f0e: 0c00                                   |0691: move-result-object v0
+work/dis/classes8.txt-2143265-7a4f10: 7120 2d87 0600                         |0692: invoke-static {v6, v0}, LX/0bbU;.A00:(LX/02hd;Ljava/util/Map;)V // method@872d
+work/dis/classes8.txt-2143266-7a4f16: 280b                                   |0695: goto 06a0 // +000b
+work/dis/classes8.txt-2143267-7a4f18: 0d00                                   |0696: move-exception v0
+work/dis/classes8.txt-2143268-7a4f1a: 1a01 25c8                              |0697: const-string v1, "extraction_error" // string@c825
+work/dis/classes8.txt-2143269-7a4f1e: 6e10 b1ea 0000                         |0699: invoke-virtual {v0}, Ljava/lang/Throwable;.getMessage:()Ljava/lang/String; // method@eab1
+work/dis/classes8.txt-2143270-7a4f24: 0c00                                   |069c: move-result-object v0
+work/dis/classes8.txt-2143271-7a4f26: 6e30 c80a 1600                         |069d: invoke-virtual {v6, v1, v0}, LX/02hd;.A0C:(Ljava/lang/String;Ljava/lang/String;)V // method@0ac8
+work/dis/classes8.txt-2143272-7a4f2c: 1a00 1fbe                              |06a0: const-string v0, "audio/eac3" // string@be1f
+work/dis/classes8.txt-2143273-7a4f30: 6e20 62ea 0c00                         |06a2: invoke-virtual {v12, v0}, Ljava/lang/String;.equalsIgnoreCase:(Ljava/lang/String;)Z // method@ea62
+work/dis/classes8.txt-2143274-7a4f36: 0a00                                   |06a5: move-result v0
+work/dis/classes8.txt-2143275-7a4f38: 3800 2800                              |06a6: if-eqz v0, 06ce // +0028
+work/dis/classes8.txt-2143276-7a4f3c: 7110 f389 0d00                         |06a8: invoke-static {v13}, LX/0btQ;.A02:(Landroid/media/MediaCodecInfo;)Z // method@89f3
+work/dis/classes8.txt-2143277-7a4f42: 0a00                                   |06ab: move-result v0
+work/dis/classes8.txt-2143278-7a4f44: 3800 2200                              |06ac: if-eqz v0, 06ce // +0022
+work/dis/classes8.txt-2143279-7a4f48: 7401 1612 1c00                         |06ae: invoke-virtual/range {v28}, LX/04i7;.getValue:()Ljava/lang/Object; // method@1216
+work/dis/classes8.txt-2143280-7a4f4e: 0c00                                   |06b1: move-result-object v0
+work/dis/classes8.txt-2143281-7a4f50: 7110 2c00 0000                         |06b2: invoke-static {v0}, LX/000H;.A0k:(Ljava/lang/Object;)Z // method@002c
+work/dis/classes8.txt-2143282-7a4f56: 0a00                                   |06b5: move-result v0
+work/dis/classes8.txt-2143283-7a4f58: 3800 1800                              |06b6: if-eqz v0, 06ce // +0018
+work/dis/classes8.txt-2143284-7a4f5c: 7110 f189 0d00                         |06b8: invoke-static {v13}, LX/0btQ;.A00:(Landroid/media/MediaCodecInfo;)Ljava/util/List; // method@89f1
+work/dis/classes8.txt-2143285-7a4f62: 0c0f                                   |06bb: move-result-object v15
+work/dis/classes8.txt-2143286-7a4f64: 5465 9706                              |06bc: iget-object v5, v6, LX/02hd;.A07:LX/02uT; // field@0697
+work/dis/classes8.txt-2143287-7a4f68: 1242                                   |06be: const/4 v2, #int 4 // #4
+work/dis/classes8.txt-2143288-7a4f6a: 2201 2a1b                              |06bf: new-instance v1, LX/0FRB; // type@1b2a
+work/dis/classes8.txt-2143289-7a4f6e: 0800 2000                              |06c1: move-object/from16 v0, v32
+work/dis/classes8.txt-2143290-7a4f72: 7030 0630 0102                         |06c3: invoke-direct {v1, v0, v2}, LX/0FRB;.<init>:(Ljava/lang/Object;I)V // method@3006
+work/dis/classes8.txt-2143291-7a4f78: 7110 6b16 0100                         |06c6: invoke-static {v1}, LX/06cv;.A00:(Lkotlin/jvm/functions/Function0;)LX/0C8T; // method@166b
+work/dis/classes8.txt-2143292-7a4f7e: 0c10                                   |06c9: move-result-object v16
+work/dis/classes8.txt-2143293-7a4f80: 1403 ce3e b81e                         |06ca: const v3, #float 1.95077e-20 // #1eb83ece
+work/dis/classes8.txt-2143294-7a4f86: 2804                                   |06cd: goto 06d1 // +0004
+work/dis/classes8.txt-2143295-7a4f88: 620f 470b                              |06ce: sget-object v15, LX/04k5;.A00:LX/04k5; // field@0b47
+work/dis/classes8.txt-2143296-7a4f8c: 28ec                                   |06d0: goto 06bc // -0014
+work/dis/classes8.txt-2143297-7a4f8e: 7801 2225 1000                         |06d1: invoke-interface/range {v16}, LX/0C8T;.getValue:()Ljava/lang/Object; // method@2522
+work/dis/classes8.txt-2143298-7a4f94: 0c00                                   |06d4: move-result-object v0
+work/dis/classes8.txt-2143299-7a4f96: 1f00 6005                              |06d5: check-cast v0, LX/02rM; // type@0560
+work/dis/classes8.txt-2143300-7a4f9a: 6e20 0e0f 3000                         |06d7: invoke-virtual {v0, v3}, LX/03e9;.markerStart:(I)V // method@0f0e
+work/dis/classes8.txt-2143301-7a4fa0: 120c                                   |06da: const/4 v12, #int 0 // #0
+work/dis/classes8.txt-2143302-7a4fa2: 01ce                                   |06db: move v14, v12
+work/dis/classes8.txt-2143303-7a4fa4: 5454 2507                              |06dc: iget-object v4, v5, LX/02uT;.A00:LX/02he; // field@0725
+work/dis/classes8.txt-2143304-7a4fa8: 5240 9806                              |06de: iget v0, v4, LX/02he;.A00:I // field@0698
+work/dis/classes8.txt-2143305-7a4fac: 350c 3000                              |06e0: if-ge v12, v0, 0710 // +0030
+work/dis/classes8.txt-2143306-7a4fb0: 6e20 cb0a c400                         |06e2: invoke-virtual {v4, v12}, LX/02he;.A02:(I)Ljava/lang/String; // method@0acb
+work/dis/classes8.txt-2143307-7a4fb6: 0c02                                   |06e5: move-result-object v2
+work/dis/classes8.txt-2143308-7a4fb8: d80c 0c01                              |06e6: add-int/lit8 v12, v12, #int 1 // #01
+work/dis/classes8.txt-2143309-7a4fbc: da00 0e02                              |06e8: mul-int/lit8 v0, v14, #int 2 // #02
+work/dis/classes8.txt-2143310-7a4fc0: d801 0001                              |06ea: add-int/lit8 v1, v0, #int 1 // #01
+work/dis/classes8.txt-2143311-7a4fc4: 7130 ca0a e401                         |06ec: invoke-static {v4, v14, v1}, LX/02he;.A00:(LX/02he;II)V // method@0aca
+work/dis/classes8.txt-2143312-7a4fca: 5440 9906                              |06ef: iget-object v0, v4, LX/02he;.A01:Ljava/util/ArrayList; // field@0699
+work/dis/classes8.txt-2143313-7a4fce: 6e20 5eeb 1000                         |06f1: invoke-virtual {v0, v1}, Ljava/util/AbstractList;.get:(I)Ljava/lang/Object; // method@eb5e
+work/dis/classes8.txt-2143314-7a4fd4: 0c00                                   |06f4: move-result-object v0
+work/dis/classes8.txt-2143315-7a4fd6: 2204 9166                              |06f5: new-instance v4, Landroid/util/Pair; // type@6691
+
+===== A02 consumers =====
+work/dis/classes8.txt-2143123-7a4cc4: 7100 6300 0000                         |056c: invoke-static {}, LX/0020;.A0q:()Ljava/util/LinkedHashMap; // method@0063
+work/dis/classes8.txt-2143124-7a4cca: 0c03                                   |056f: move-result-object v3
+work/dis/classes8.txt-2143125-7a4ccc: 7210 dfeb 0100                         |0570: invoke-interface {v1}, Ljava/util/List;.iterator:()Ljava/util/Iterator; // method@ebdf
+work/dis/classes8.txt-2143126-7a4cd2: 0c12                                   |0573: move-result-object v18
+work/dis/classes8.txt-2143127-7a4cd4: 7801 c8eb 1200                         |0574: invoke-interface/range {v18}, Ljava/util/Iterator;.hasNext:()Z // method@ebc8
+work/dis/classes8.txt-2143128-7a4cda: 0a00                                   |0577: move-result v0
+work/dis/classes8.txt-2143129-7a4cdc: 3800 1101                              |0578: if-eqz v0, 0689 // +0111
+work/dis/classes8.txt-2143130-7a4ce0: 7801 c9eb 1200                         |057a: invoke-interface/range {v18}, Ljava/util/Iterator;.next:()Ljava/lang/Object; // method@ebc9
+work/dis/classes8.txt-2143131-7a4ce6: 0c02                                   |057d: move-result-object v2
+work/dis/classes8.txt-2143132-7a4ce8: 1f02 8f20                              |057e: check-cast v2, LX/0Hrf; // type@208f
+work/dis/classes8.txt-2143133-7a4cec: 7801 dfeb 1300                         |0580: invoke-interface/range {v19}, Ljava/util/List;.iterator:()Ljava/util/Iterator; // method@ebdf
+work/dis/classes8.txt-2143134-7a4cf2: 0c11                                   |0583: move-result-object v17
+work/dis/classes8.txt-2143135-7a4cf4: 7801 c8eb 1100                         |0584: invoke-interface/range {v17}, Ljava/util/Iterator;.hasNext:()Z // method@ebc8
+work/dis/classes8.txt-2143136-7a4cfa: 0a01                                   |0587: move-result v1
+work/dis/classes8.txt-2143137-7a4cfc: 130e 5800                              |0588: const/16 v14, #int 88 // #58
+work/dis/classes8.txt-2143138-7a4d00: 1a00 38c7                              |058a: const-string v0, "enc_" // string@c738
+work/dis/classes8.txt-2143139-7a4d04: 3801 3800                              |058c: if-eqz v1, 05c4 // +0038
+work/dis/classes8.txt-2143140-7a4d08: 7801 c9eb 1100                         |058e: invoke-interface/range {v17}, Ljava/util/Iterator;.next:()Ljava/lang/Object; // method@ebc9
+work/dis/classes8.txt-2143141-7a4d0e: 0c0f                                   |0591: move-result-object v15
+work/dis/classes8.txt-2143142-7a4d10: 1f0f c01f                              |0592: check-cast v15, LX/0HRI; // type@1fc0
+work/dis/classes8.txt-2143143-7a4d14: 7110 d608 0000                         |0594: invoke-static {v0}, LX/0248;.A15:(Ljava/lang/String;)Ljava/lang/StringBuilder; // method@08d6
+work/dis/classes8.txt-2143144-7a4d1a: 0c01                                   |0597: move-result-object v1
+work/dis/classes8.txt-2143145-7a4d1c: 5220 a736                              |0598: iget v0, v2, LX/0Hrf;.A01:I // field@36a7
+work/dis/classes8.txt-2143146-7a4d20: 021f 0000                              |059a: move/from16 v31, v0
+work/dis/classes8.txt-2143147-7a4d24: 6e20 85ea 0100                         |059c: invoke-virtual {v1, v0}, Ljava/lang/StringBuilder;.append:(I)Ljava/lang/StringBuilder; // method@ea85
+work/dis/classes8.txt-2143148-7a4d2a: 6e20 82ea e100                         |059f: invoke-virtual {v1, v14}, Ljava/lang/StringBuilder;.append:(C)Ljava/lang/StringBuilder; // method@ea82
+work/dis/classes8.txt-2143149-7a4d30: 522e a636                              |05a2: iget v14, v2, LX/0Hrf;.A00:I // field@36a6
+work/dis/classes8.txt-2143150-7a4d34: 6e20 85ea e100                         |05a4: invoke-virtual {v1, v14}, Ljava/lang/StringBuilder;.append:(I)Ljava/lang/StringBuilder; // method@ea85
+work/dis/classes8.txt-2143151-7a4d3a: 1300 4000                              |05a7: const/16 v0, #int 64 // #40
+work/dis/classes8.txt-2143152-7a4d3e: 6e20 82ea 0100                         |05a9: invoke-virtual {v1, v0}, Ljava/lang/StringBuilder;.append:(C)Ljava/lang/StringBuilder; // method@ea82
+work/dis/classes8.txt-2143153-7a4d44: 52ff 7335                              |05ac: iget v15, v15, LX/0HRI;.A00:I // field@3573
+work/dis/classes8.txt-2143154-7a4d48: 6e20 85ea f100                         |05ae: invoke-virtual {v1, v15}, Ljava/lang/StringBuilder;.append:(I)Ljava/lang/StringBuilder; // method@ea85
+work/dis/classes8.txt-2143155-7a4d4e: 1a00 5fc9                              |05b1: const-string v0, "fps" // string@c95f
+work/dis/classes8.txt-2143156-7a4d52: 7120 1a00 1000                         |05b3: invoke-static {v0, v1}, LX/000H;.A0O:(Ljava/lang/String;Ljava/lang/StringBuilder;)Ljava/lang/String; // method@001a
+work/dis/classes8.txt-2143157-7a4d58: 0c10                                   |05b6: move-result-object v16
+work/dis/classes8.txt-2143158-7a4d5a: 83f0                                   |05b7: int-to-double v0, v15
+work/dis/classes8.txt-2143159-7a4d5c: 020f 1f00                              |05b8: move/from16 v15, v31
+work/dis/classes8.txt-2143160-7a4d60: 6e51 c5cc f40e                         |05ba: invoke-virtual {v4, v15, v14, v0, v1}, Landroid/media/MediaCodecInfo$VideoCapabilities;.areSizeAndRateSupported:(IID)Z // method@ccc5
+work/dis/classes8.txt-2143161-7a4d66: 0a01                                   |05bd: move-result v1
+work/dis/classes8.txt-2143162-7a4d68: 0800 1000                              |05be: move-object/from16 v0, v16
+work/dis/classes8.txt-2143163-7a4d6c: 7130 9e07 3001                         |05c0: invoke-static {v0, v3, v1}, LX/0221;.A1Z:(Ljava/lang/Object;Ljava/util/AbstractMap;Z)V // method@079e
+work/dis/classes8.txt-2143164-7a4d72: 28c1                                   |05c3: goto 0584 // -003f
+work/dis/classes8.txt-2143165-7a4d74: 7110 d608 0000                         |05c4: invoke-static {v0}, LX/0248;.A15:(Ljava/lang/String;)Ljava/lang/StringBuilder; // method@08d6
+work/dis/classes8.txt-2143166-7a4d7a: 0c01                                   |05c7: move-result-object v1
+work/dis/classes8.txt-2143167-7a4d7c: 522f a736                              |05c8: iget v15, v2, LX/0Hrf;.A01:I // field@36a7
+work/dis/classes8.txt-2143168-7a4d80: 6e20 85ea f100                         |05ca: invoke-virtual {v1, v15}, Ljava/lang/StringBuilder;.append:(I)Ljava/lang/StringBuilder; // method@ea85
+work/dis/classes8.txt-2143169-7a4d86: 6e20 82ea e100                         |05cd: invoke-virtual {v1, v14}, Ljava/lang/StringBuilder;.append:(C)Ljava/lang/StringBuilder; // method@ea82
+work/dis/classes8.txt-2143170-7a4d8c: 5222 a636                              |05d0: iget v2, v2, LX/0Hrf;.A00:I // field@36a6
+work/dis/classes8.txt-2143171-7a4d90: 6e20 85ea 2100                         |05d2: invoke-virtual {v1, v2}, Ljava/lang/StringBuilder;.append:(I)Ljava/lang/StringBuilder; // method@ea85
+work/dis/classes8.txt-2143172-7a4d96: 1a00 2d0b                              |05d5: const-string v0, "@any" // string@0b2d
+work/dis/classes8.txt-2143173-7a4d9a: 7120 1a00 1000                         |05d7: invoke-static {v0, v1}, LX/000H;.A0O:(Ljava/lang/String;Ljava/lang/StringBuilder;)Ljava/lang/String; // method@001a
+work/dis/classes8.txt-2143174-7a4da0: 0c01                                   |05da: move-result-object v1
+work/dis/classes8.txt-2143175-7a4da2: 6e30 d0cc f402                         |05db: invoke-virtual {v4, v15, v2}, Landroid/media/MediaCodecInfo$VideoCapabilities;.isSizeSupported:(II)Z // method@ccd0
+work/dis/classes8.txt-2143176-7a4da8: 0a00                                   |05de: move-result v0
+work/dis/classes8.txt-2143177-7a4daa: 7130 9e07 3100                         |05df: invoke-static {v1, v3, v0}, LX/0221;.A1Z:(Ljava/lang/Object;Ljava/util/AbstractMap;Z)V // method@079e
+work/dis/classes8.txt-2143178-7a4db0: 2892                                   |05e2: goto 0574 // -006e
+work/dis/classes8.txt-2143179-7a4db2: 6e10 bacc 0f00                         |05e3: invoke-virtual {v15}, Landroid/media/MediaCodecInfo$AudioCapabilities;.getSupportedSampleRateRanges:()[Landroid/util/Range; // method@ccba
+work/dis/classes8.txt-2143180-7a4db8: 0c04                                   |05e6: move-result-object v4
+work/dis/classes8.txt-2143181-7a4dba: 6e10 b8cc 0f00                         |05e7: invoke-virtual {v15}, Landroid/media/MediaCodecInfo$AudioCapabilities;.getBitrateRange:()Landroid/util/Range; // method@ccb8
+work/dis/classes8.txt-2143182-7a4dc0: 0c00                                   |05ea: move-result-object v0
+work/dis/classes8.txt-2143183-7a4dc2: 3800 3b00                              |05eb: if-eqz v0, 0626 // +003b
+work/dis/classes8.txt-2143184-7a4dc6: 6e10 43ea 0000                         |05ed: invoke-virtual {v0}, Ljava/lang/Object;.toString:()Ljava/lang/String; // method@ea43
+work/dis/classes8.txt-2143185-7a4dcc: 0c01                                   |05f0: move-result-object v1
+work/dis/classes8.txt-2143186-7a4dce: 1a00 3fbe                              |05f1: const-string v0, "audio_bitrate_range" // string@be3f
+work/dis/classes8.txt-2143187-7a4dd2: 7120 2300 1000                         |05f3: invoke-static {v0, v1}, LX/000H;.A0Z:(Ljava/lang/Object;Ljava/lang/Object;)LX/04oE; // method@0023
+work/dis/classes8.txt-2143188-7a4dd8: 0c03                                   |05f6: move-result-object v3
+work/dis/classes8.txt-2143189-7a4dda: 6e10 b9cc 0f00                         |05f7: invoke-virtual {v15}, Landroid/media/MediaCodecInfo$AudioCapabilities;.getMaxInputChannelCount:()I // method@ccb9
+work/dis/classes8.txt-2143190-7a4de0: 0a00                                   |05fa: move-result v0
+work/dis/classes8.txt-2143191-7a4de2: 7110 0cea 0000                         |05fb: invoke-static {v0}, Ljava/lang/Integer;.valueOf:(I)Ljava/lang/Integer; // method@ea0c
+work/dis/classes8.txt-2143192-7a4de8: 0c01                                   |05fe: move-result-object v1
+work/dis/classes8.txt-2143193-7a4dea: 1a00 55be                              |05ff: const-string v0, "audio_max_input_channels" // string@be55
+work/dis/classes8.txt-2143194-7a4dee: 7120 2300 1000                         |0601: invoke-static {v0, v1}, LX/000H;.A0Z:(Ljava/lang/Object;Ljava/lang/Object;)LX/04oE; // method@0023
+work/dis/classes8.txt-2143195-7a4df4: 0c02                                   |0604: move-result-object v2
+work/dis/classes8.txt-2143196-7a4df6: 3804 0800                              |0605: if-eqz v4, 060d // +0008
+work/dis/classes8.txt-2143197-7a4dfa: 7154 3b0b a98a                         |0607: invoke-static {v9, v10, v10, v8, v4}, LX/02oI;.A0A:(Ljava/lang/CharSequence;Ljava/lang/CharSequence;Ljava/lang/CharSequence;Lkotlin/jvm/functions/Function1;[Ljava/lang/Object;)Ljava/lang/String; // method@0b3b
+work/dis/classes8.txt-2143198-7a4e00: 0c01                                   |060a: move-result-object v1
+work/dis/classes8.txt-2143199-7a4e02: 3901 0f00                              |060b: if-nez v1, 061a // +000f
+work/dis/classes8.txt-2143200-7a4e06: 6e10 bbcc 0f00                         |060d: invoke-virtual {v15}, Landroid/media/MediaCodecInfo$AudioCapabilities;.getSupportedSampleRates:()[I // method@ccbb
+work/dis/classes8.txt-2143201-7a4e0c: 0c01                                   |0610: move-result-object v1
+work/dis/classes8.txt-2143202-7a4e0e: 7110 9512 0100                         |0611: invoke-static {v1}, LX/04l9;.A0R:(Ljava/lang/Object;)V // method@1295
+work/dis/classes8.txt-2143203-7a4e14: 1a00 0d0b                              |0614: const-string v0, ";" // string@0b0d
+work/dis/classes8.txt-2143204-7a4e18: 7120 3d0b 1000                         |0616: invoke-static {v0, v1}, LX/02oI;.A0C:(Ljava/lang/CharSequence;[I)Ljava/lang/String; // method@0b3d
+work/dis/classes8.txt-2143205-7a4e1e: 0c01                                   |0619: move-result-object v1
+work/dis/classes8.txt-2143206-7a4e20: 1a00 63be                              |061a: const-string v0, "audio_supported_sample_rates" // string@be63
+work/dis/classes8.txt-2143207-7a4e24: 7140 6303 1023                         |061c: invoke-static {v0, v1, v3, v2}, LX/0112;.A1b:(Ljava/lang/Object;Ljava/lang/Object;LX/04oE;LX/04oE;)[LX/04oE; // method@0363
+work/dis/classes8.txt-2143208-7a4e2a: 0c00                                   |061f: move-result-object v0
+work/dis/classes8.txt-2143209-7a4e2c: 7110 770b 0000                         |0620: invoke-static {v0}, LX/02pX;.A0G:([LX/04oE;)Ljava/util/Map; // method@0b77
+work/dis/classes8.txt-2143210-7a4e32: 0c00                                   |0623: move-result-object v0
+work/dis/classes8.txt-2143211-7a4e34: 2900 04ff                              |0624: goto/16 0528 // -00fc
+work/dis/classes8.txt-2143212-7a4e38: 1201                                   |0626: const/4 v1, #int 0 // #0
+work/dis/classes8.txt-2143213-7a4e3a: 28ca                                   |0627: goto 05f1 // -0036
+work/dis/classes8.txt-2143214-7a4e3c: 6e10 c1cc 0400                         |0628: invoke-virtual {v4}, Landroid/media/MediaCodecInfo$EncoderCapabilities;.getComplexityRange:()Landroid/util/Range; // method@ccc1
+work/dis/classes8.txt-2143215-7a4e42: 0c00                                   |062b: move-result-object v0
+work/dis/classes8.txt-2143216-7a4e44: 3800 0600                              |062c: if-eqz v0, 0632 // +0006
+work/dis/classes8.txt-2143217-7a4e48: 6e10 43ea 0000                         |062e: invoke-virtual {v0}, Ljava/lang/Object;.toString:()Ljava/lang/String; // method@ea43
+work/dis/classes8.txt-2143218-7a4e4e: 0c02                                   |0631: move-result-object v2
+work/dis/classes8.txt-2143219-7a4e50: 1a00 47c7                              |0632: const-string v0, "encoder_complexity_range" // string@c747
+work/dis/classes8.txt-2143220-7a4e54: 7120 2300 2000                         |0634: invoke-static {v0, v2}, LX/000H;.A0Z:(Ljava/lang/Object;Ljava/lang/Object;)LX/04oE; // method@0023
+work/dis/classes8.txt-2143221-7a4e5a: 0c03                                   |0637: move-result-object v3
+work/dis/classes8.txt-2143222-7a4e5c: 1a02 46c7                              |0638: const-string v2, "encoder_bitrate_modes" // string@c746
+work/dis/classes8.txt-2143223-7a4e60: 2201 3305                              |063a: new-instance v1, LX/02oH; // type@0533
+work/dis/classes8.txt-2143224-7a4e64: 0200 1000                              |063c: move/from16 v0, v16
+work/dis/classes8.txt-2143225-7a4e68: 7020 340b 0100                         |063e: invoke-direct {v1, v0}, LX/02oH;.<init>:(I)V // method@0b34
+work/dis/classes8.txt-2143226-7a4e6e: 6e20 c3cc e400                         |0641: invoke-virtual {v4, v14}, Landroid/media/MediaCodecInfo$EncoderCapabilities;.isBitrateModeSupported:(I)Z // method@ccc3
+work/dis/classes8.txt-2143227-7a4e74: 0a00                                   |0644: move-result v0
+work/dis/classes8.txt-2143228-7a4e76: 3800 0700                              |0645: if-eqz v0, 064c // +0007
+work/dis/classes8.txt-2143229-7a4e7a: 1a00 b813                              |0647: const-string v0, "CBR" // string@13b8
+work/dis/classes8.txt-2143230-7a4e7e: 6e20 52eb 0100                         |0649: invoke-virtual {v1, v0}, Ljava/util/AbstractCollection;.add:(Ljava/lang/Object;)Z // method@eb52
+work/dis/classes8.txt-2143231-7a4e84: 0200 1800                              |064c: move/from16 v0, v24
+work/dis/classes8.txt-2143232-7a4e88: 6e20 c3cc 0400                         |064e: invoke-virtual {v4, v0}, Landroid/media/MediaCodecInfo$EncoderCapabilities;.isBitrateModeSupported:(I)Z // method@ccc3
+work/dis/classes8.txt-2143233-7a4e8e: 0a00                                   |0651: move-result v0
+work/dis/classes8.txt-2143234-7a4e90: 3800 0700                              |0652: if-eqz v0, 0659 // +0007
+work/dis/classes8.txt-2143235-7a4e94: 1a00 adab                              |0654: const-string v0, "VBR" // string@abad
+work/dis/classes8.txt-2143236-7a4e98: 6e20 52eb 0100                         |0656: invoke-virtual {v1, v0}, Ljava/util/AbstractCollection;.add:(Ljava/lang/Object;)Z // method@eb52
+work/dis/classes8.txt-2143237-7a4e9e: 0200 1700                              |0659: move/from16 v0, v23
+work/dis/classes8.txt-2143238-7a4ea2: 6e20 c3cc 0400                         |065b: invoke-virtual {v4, v0}, Landroid/media/MediaCodecInfo$EncoderCapabilities;.isBitrateModeSupported:(I)Z // method@ccc3
+work/dis/classes8.txt-2143239-7a4ea8: 0a00                                   |065e: move-result v0
+work/dis/classes8.txt-2143240-7a4eaa: 3800 0700                              |065f: if-eqz v0, 0666 // +0007
+work/dis/classes8.txt-2143241-7a4eae: 1a00 c414                              |0661: const-string v0, "CQ" // string@14c4
+work/dis/classes8.txt-2143242-7a4eb2: 6e20 52eb 0100                         |0663: invoke-virtual {v1, v0}, Ljava/util/AbstractCollection;.add:(Ljava/lang/Object;)Z // method@eb52
+work/dis/classes8.txt-2143243-7a4eb8: 7110 1c12 0100                         |0666: invoke-static {v1}, LX/04j9;.A02:(Ljava/util/List;)LX/02oH; // method@121c
+work/dis/classes8.txt-2143244-7a4ebe: 0c00                                   |0669: move-result-object v0
+work/dis/classes8.txt-2143245-7a4ec0: 7158 5012 a90a                         |066a: invoke-static {v9, v10, v10, v0, v8}, LX/04k4;.A1A:(Ljava/lang/CharSequence;Ljava/lang/CharSequence;Ljava/lang/CharSequence;Ljava/lang/Iterable;Lkotlin/jvm/functions/Function1;)Ljava/lang/String; // method@1250
+work/dis/classes8.txt-2143246-7a4ec6: 0c00                                   |066d: move-result-object v0
+work/dis/classes8.txt-2143247-7a4ec8: 7130 e207 0203                         |066e: invoke-static {v2, v0, v3}, LX/0223;.A1b:(Ljava/lang/Object;Ljava/lang/Object;LX/04oE;)[LX/04oE; // method@07e2
+work/dis/classes8.txt-2143248-7a4ece: 0c00                                   |0671: move-result-object v0
+work/dis/classes8.txt-2143249-7a4ed0: 7110 710b 0000                         |0672: invoke-static {v0}, LX/02pX;.A09:([LX/04oE;)Ljava/util/LinkedHashMap; // method@0b71
+work/dis/classes8.txt-2143250-7a4ed6: 0c02                                   |0675: move-result-object v2
+work/dis/classes8.txt-2143251-7a4ed8: 6e10 c2cc 0400                         |0676: invoke-virtual {v4}, Landroid/media/MediaCodecInfo$EncoderCapabilities;.getQualityRange:()Landroid/util/Range; // method@ccc2
+work/dis/classes8.txt-2143252-7a4ede: 0c00                                   |0679: move-result-object v0
+work/dis/classes8.txt-2143253-7a4ee0: 3800 0d00                              |067a: if-eqz v0, 0687 // +000d
+work/dis/classes8.txt-2143254-7a4ee4: 6e10 43ea 0000                         |067c: invoke-virtual {v0}, Ljava/lang/Object;.toString:()Ljava/lang/String; // method@ea43
+work/dis/classes8.txt-2143255-7a4eea: 0c01                                   |067f: move-result-object v1
+work/dis/classes8.txt-2143256-7a4eec: 1a00 48c7                              |0680: const-string v0, "encoder_quality_range" // string@c748
+work/dis/classes8.txt-2143257-7a4ef0: 6e30 6beb 0201                         |0682: invoke-virtual {v2, v0, v1}, Ljava/util/AbstractMap;.put:(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object; // method@eb6b
+work/dis/classes8.txt-2143258-7a4ef6: 2900 98fe                              |0685: goto/16 051d // -0168
+work/dis/classes8.txt-2143259-7a4efa: 1201                                   |0687: const/4 v1, #int 0 // #0
+work/dis/classes8.txt-2143260-7a4efc: 28f8                                   |0688: goto 0680 // -0008
+work/dis/classes8.txt-2143261-7a4efe: 7120 2d87 3600                         |0689: invoke-static {v6, v3}, LX/0bbU;.A00:(LX/02hd;Ljava/util/Map;)V // method@872d
+work/dis/classes8.txt-2143262-7a4f04: 0800 1600                              |068c: move-object/from16 v0, v22
+work/dis/classes8.txt:2143263:7a4f08: 6e30 b48c 500d                         |068e: invoke-virtual {v0, v5, v13}, LX/0cby;.A02:(Landroid/media/MediaCodecInfo$CodecCapabilities;Landroid/media/MediaCodecInfo;)Ljava/util/LinkedHashMap; // method@8cb4
+work/dis/classes8.txt-2143264-7a4f0e: 0c00                                   |0691: move-result-object v0
+work/dis/classes8.txt-2143265-7a4f10: 7120 2d87 0600                         |0692: invoke-static {v6, v0}, LX/0bbU;.A00:(LX/02hd;Ljava/util/Map;)V // method@872d
+work/dis/classes8.txt-2143266-7a4f16: 280b                                   |0695: goto 06a0 // +000b
+work/dis/classes8.txt-2143267-7a4f18: 0d00                                   |0696: move-exception v0
+work/dis/classes8.txt-2143268-7a4f1a: 1a01 25c8                              |0697: const-string v1, "extraction_error" // string@c825
+work/dis/classes8.txt-2143269-7a4f1e: 6e10 b1ea 0000                         |0699: invoke-virtual {v0}, Ljava/lang/Throwable;.getMessage:()Ljava/lang/String; // method@eab1
+work/dis/classes8.txt-2143270-7a4f24: 0c00                                   |069c: move-result-object v0
+work/dis/classes8.txt-2143271-7a4f26: 6e30 c80a 1600                         |069d: invoke-virtual {v6, v1, v0}, LX/02hd;.A0C:(Ljava/lang/String;Ljava/lang/String;)V // method@0ac8
+work/dis/classes8.txt-2143272-7a4f2c: 1a00 1fbe                              |06a0: const-string v0, "audio/eac3" // string@be1f
+work/dis/classes8.txt-2143273-7a4f30: 6e20 62ea 0c00                         |06a2: invoke-virtual {v12, v0}, Ljava/lang/String;.equalsIgnoreCase:(Ljava/lang/String;)Z // method@ea62
+work/dis/classes8.txt-2143274-7a4f36: 0a00                                   |06a5: move-result v0
+work/dis/classes8.txt-2143275-7a4f38: 3800 2800                              |06a6: if-eqz v0, 06ce // +0028
+work/dis/classes8.txt-2143276-7a4f3c: 7110 f389 0d00                         |06a8: invoke-static {v13}, LX/0btQ;.A02:(Landroid/media/MediaCodecInfo;)Z // method@89f3
+work/dis/classes8.txt-2143277-7a4f42: 0a00                                   |06ab: move-result v0
+work/dis/classes8.txt-2143278-7a4f44: 3800 2200                              |06ac: if-eqz v0, 06ce // +0022
+work/dis/classes8.txt-2143279-7a4f48: 7401 1612 1c00                         |06ae: invoke-virtual/range {v28}, LX/04i7;.getValue:()Ljava/lang/Object; // method@1216
+work/dis/classes8.txt-2143280-7a4f4e: 0c00                                   |06b1: move-result-object v0
+work/dis/classes8.txt-2143281-7a4f50: 7110 2c00 0000                         |06b2: invoke-static {v0}, LX/000H;.A0k:(Ljava/lang/Object;)Z // method@002c
+work/dis/classes8.txt-2143282-7a4f56: 0a00                                   |06b5: move-result v0
+work/dis/classes8.txt-2143283-7a4f58: 3800 1800                              |06b6: if-eqz v0, 06ce // +0018
+work/dis/classes8.txt-2143284-7a4f5c: 7110 f189 0d00                         |06b8: invoke-static {v13}, LX/0btQ;.A00:(Landroid/media/MediaCodecInfo;)Ljava/util/List; // method@89f1
+work/dis/classes8.txt-2143285-7a4f62: 0c0f                                   |06bb: move-result-object v15
+work/dis/classes8.txt-2143286-7a4f64: 5465 9706                              |06bc: iget-object v5, v6, LX/02hd;.A07:LX/02uT; // field@0697
+work/dis/classes8.txt-2143287-7a4f68: 1242                                   |06be: const/4 v2, #int 4 // #4
+work/dis/classes8.txt-2143288-7a4f6a: 2201 2a1b                              |06bf: new-instance v1, LX/0FRB; // type@1b2a
+work/dis/classes8.txt-2143289-7a4f6e: 0800 2000                              |06c1: move-object/from16 v0, v32
+work/dis/classes8.txt-2143290-7a4f72: 7030 0630 0102                         |06c3: invoke-direct {v1, v0, v2}, LX/0FRB;.<init>:(Ljava/lang/Object;I)V // method@3006
+work/dis/classes8.txt-2143291-7a4f78: 7110 6b16 0100                         |06c6: invoke-static {v1}, LX/06cv;.A00:(Lkotlin/jvm/functions/Function0;)LX/0C8T; // method@166b
+work/dis/classes8.txt-2143292-7a4f7e: 0c10                                   |06c9: move-result-object v16
+work/dis/classes8.txt-2143293-7a4f80: 1403 ce3e b81e                         |06ca: const v3, #float 1.95077e-20 // #1eb83ece
+work/dis/classes8.txt-2143294-7a4f86: 2804                                   |06cd: goto 06d1 // +0004
+work/dis/classes8.txt-2143295-7a4f88: 620f 470b                              |06ce: sget-object v15, LX/04k5;.A00:LX/04k5; // field@0b47
+work/dis/classes8.txt-2143296-7a4f8c: 28ec                                   |06d0: goto 06bc // -0014
+work/dis/classes8.txt-2143297-7a4f8e: 7801 2225 1000                         |06d1: invoke-interface/range {v16}, LX/0C8T;.getValue:()Ljava/lang/Object; // method@2522
+work/dis/classes8.txt-2143298-7a4f94: 0c00                                   |06d4: move-result-object v0
+work/dis/classes8.txt-2143299-7a4f96: 1f00 6005                              |06d5: check-cast v0, LX/02rM; // type@0560
+work/dis/classes8.txt-2143300-7a4f9a: 6e20 0e0f 3000                         |06d7: invoke-virtual {v0, v3}, LX/03e9;.markerStart:(I)V // method@0f0e
+work/dis/classes8.txt-2143301-7a4fa0: 120c                                   |06da: const/4 v12, #int 0 // #0
+work/dis/classes8.txt-2143302-7a4fa2: 01ce                                   |06db: move v14, v12
+work/dis/classes8.txt-2143303-7a4fa4: 5454 2507                              |06dc: iget-object v4, v5, LX/02uT;.A00:LX/02he; // field@0725
+work/dis/classes8.txt-2143304-7a4fa8: 5240 9806                              |06de: iget v0, v4, LX/02he;.A00:I // field@0698
+work/dis/classes8.txt-2143305-7a4fac: 350c 3000                              |06e0: if-ge v12, v0, 0710 // +0030
+work/dis/classes8.txt-2143306-7a4fb0: 6e20 cb0a c400                         |06e2: invoke-virtual {v4, v12}, LX/02he;.A02:(I)Ljava/lang/String; // method@0acb
+work/dis/classes8.txt-2143307-7a4fb6: 0c02                                   |06e5: move-result-object v2
+work/dis/classes8.txt-2143308-7a4fb8: d80c 0c01                              |06e6: add-int/lit8 v12, v12, #int 1 // #01
+work/dis/classes8.txt-2143309-7a4fbc: da00 0e02                              |06e8: mul-int/lit8 v0, v14, #int 2 // #02
+work/dis/classes8.txt-2143310-7a4fc0: d801 0001                              |06ea: add-int/lit8 v1, v0, #int 1 // #01
+work/dis/classes8.txt-2143311-7a4fc4: 7130 ca0a e401                         |06ec: invoke-static {v4, v14, v1}, LX/02he;.A00:(LX/02he;II)V // method@0aca
+work/dis/classes8.txt-2143312-7a4fca: 5440 9906                              |06ef: iget-object v0, v4, LX/02he;.A01:Ljava/util/ArrayList; // field@0699
+work/dis/classes8.txt-2143313-7a4fce: 6e20 5eeb 1000                         |06f1: invoke-virtual {v0, v1}, Ljava/util/AbstractList;.get:(I)Ljava/lang/Object; // method@eb5e
+work/dis/classes8.txt-2143314-7a4fd4: 0c00                                   |06f4: move-result-object v0
+work/dis/classes8.txt-2143315-7a4fd6: 2204 9166                              |06f5: new-instance v4, Landroid/util/Pair; // type@6691
+work/dis/classes8.txt-2143316-7a4fda: 7030 d4ce 2400                         |06f7: invoke-direct {v4, v2, v0}, Landroid/util/Pair;.<init>:(Ljava/lang/Object;Ljava/lang/Object;)V // method@ced4
+work/dis/classes8.txt-2143317-7a4fe0: 7801 2225 1000                         |06fa: invoke-interface/range {v16}, LX/0C8T;.getValue:()Ljava/lang/Object; // method@2522
+work/dis/classes8.txt-2143318-7a4fe6: 0c02                                   |06fd: move-result-object v2
+work/dis/classes8.txt-2143319-7a4fe8: 1f02 6005                              |06fe: check-cast v2, LX/02rM; // type@0560
+work/dis/classes8.txt-2143320-7a4fec: 5440 90e3                              |0700: iget-object v0, v4, Landroid/util/Pair;.first:Ljava/lang/Object; // field@e390
+work/dis/classes8.txt-2143321-7a4ff0: 7110 7cea 0000                         |0702: invoke-static {v0}, Ljava/lang/String;.valueOf:(Ljava/lang/Object;)Ljava/lang/String; // method@ea7c
+work/dis/classes8.txt-2143322-7a4ff6: 0c01                                   |0705: move-result-object v1
+work/dis/classes8.txt-2143323-7a4ff8: 5440 91e3                              |0706: iget-object v0, v4, Landroid/util/Pair;.second:Ljava/lang/Object; // field@e391
+work/dis/classes8.txt-2143324-7a4ffc: 7110 7cea 0000                         |0708: invoke-static {v0}, Ljava/lang/String;.valueOf:(Ljava/lang/Object;)Ljava/lang/String; // method@ea7c
+work/dis/classes8.txt-2143325-7a5002: 0c00                                   |070b: move-result-object v0
+work/dis/classes8.txt-2143326-7a5004: 6e40 080f 3201                         |070c: invoke-virtual {v2, v3, v1, v0}, LX/03e9;.markerAnnotate:(ILjava/lang/String;Ljava/lang/String;)V // method@0f08
+work/dis/classes8.txt-2143327-7a500a: 28cc                                   |070f: goto 06db // -0034
+work/dis/classes8.txt-2143328-7a500c: 7210 dfeb 0f00                         |0710: invoke-interface {v15}, Ljava/util/List;.iterator:()Ljava/util/Iterator; // method@ebdf
+work/dis/classes8.txt-2143329-7a5012: 0c04                                   |0713: move-result-object v4
+work/dis/classes8.txt-2143330-7a5014: 7210 c8eb 0400                         |0714: invoke-interface {v4}, Ljava/util/Iterator;.hasNext:()Z // method@ebc8
+work/dis/classes8.txt-2143331-7a501a: 0a00                                   |0717: move-result v0
+work/dis/classes8.txt-2143332-7a501c: 3800 1800                              |0718: if-eqz v0, 0730 // +0018
+work/dis/classes8.txt-2143333-7a5020: 7110 cf03 0400                         |071a: invoke-static {v4}, LX/0129;.A16:(Ljava/util/Iterator;)LX/04oE; // method@03cf
+work/dis/classes8.txt-2143334-7a5026: 0c00                                   |071d: move-result-object v0
+work/dis/classes8.txt-2143335-7a5028: 5402 780b                              |071e: iget-object v2, v0, LX/04oE;.A00:Ljava/lang/Object; // field@0b78
+work/dis/classes8.txt-2143336-7a502c: 1f02 b86e                              |0720: check-cast v2, Ljava/lang/String; // type@6eb8
+work/dis/classes8.txt-2143337-7a5030: 5401 790b                              |0722: iget-object v1, v0, LX/04oE;.A01:Ljava/lang/Object; // field@0b79
+work/dis/classes8.txt-2143338-7a5034: 1f01 b86e                              |0724: check-cast v1, Ljava/lang/String; // type@6eb8
+work/dis/classes8.txt-2143339-7a5038: 7801 2225 1000                         |0726: invoke-interface/range {v16}, LX/0C8T;.getValue:()Ljava/lang/Object; // method@2522
+work/dis/classes8.txt-2143340-7a503e: 0c00                                   |0729: move-result-object v0
+work/dis/classes8.txt-2143341-7a5040: 1f00 6005                              |072a: check-cast v0, LX/02rM; // type@0560
+work/dis/classes8.txt-2143342-7a5044: 6e40 080f 3012                         |072c: invoke-virtual {v0, v3, v2, v1}, LX/03e9;.markerAnnotate:(ILjava/lang/String;Ljava/lang/String;)V // method@0f08
+work/dis/classes8.txt-2143343-7a504a: 28e5                                   |072f: goto 0714 // -001b
+work/dis/classes8.txt-2143344-7a504c: 7801 2225 1000                         |0730: invoke-interface/range {v16}, LX/0C8T;.getValue:()Ljava/lang/Object; // method@2522
+work/dis/classes8.txt-2143345-7a5052: 0c00                                   |0733: move-result-object v0
+work/dis/classes8.txt-2143346-7a5054: 1f00 6005                              |0734: check-cast v0, LX/02rM; // type@0560
+work/dis/classes8.txt-2143347-7a5058: 6e20 ff0e 3000                         |0736: invoke-virtual {v0, v3}, LX/03e9;.A0Y:(I)V // method@0eff
+work/dis/classes8.txt-2143348-7a505e: 281a                                   |0739: goto 0753 // +001a
+work/dis/classes8.txt-2143349-7a5060: 0d00                                   |073a: move-exception v0
+work/dis/classes8.txt-2143350-7a5062: 7801 2225 1000                         |073b: invoke-interface/range {v16}, LX/0C8T;.getValue:()Ljava/lang/Object; // method@2522
+work/dis/classes8.txt-2143351-7a5068: 0c02                                   |073e: move-result-object v2
+work/dis/classes8.txt-2143352-7a506a: 1f02 6005                              |073f: check-cast v2, LX/02rM; // type@0560
+work/dis/classes8.txt-2143353-7a506e: 1a01 a9c7                              |0741: const-string v1, "error" // string@c7a9
+work/dis/classes8.txt-2143354-7a5072: 6e10 43ea 0000                         |0743: invoke-virtual {v0}, Ljava/lang/Object;.toString:()Ljava/lang/String; // method@ea43
+work/dis/classes8.txt-2143355-7a5078: 0c00                                   |0746: move-result-object v0
+work/dis/classes8.txt-2143356-7a507a: 6e40 080f 3201                         |0747: invoke-virtual {v2, v3, v1, v0}, LX/03e9;.markerAnnotate:(ILjava/lang/String;Ljava/lang/String;)V // method@0f08
+work/dis/classes8.txt-2143357-7a5080: 7801 2225 1000                         |074a: invoke-interface/range {v16}, LX/0C8T;.getValue:()Ljava/lang/Object; // method@2522
+work/dis/classes8.txt-2143358-7a5086: 0c00                                   |074d: move-result-object v0
+work/dis/classes8.txt-2143359-7a5088: 1f00 6005                              |074e: check-cast v0, LX/02rM; // type@0560
+work/dis/classes8.txt-2143360-7a508c: 6e20 000f 3000                         |0750: invoke-virtual {v0, v3}, LX/03e9;.A0Z:(I)V // method@0f00
+work/dis/classes8.txt-2143361-7a5092: 7701 070c 2000                         |0753: invoke-static/range {v32}, LX/02uU;.A00:(LX/04BG;)LX/0Kv4; // method@0c07
+work/dis/classes8.txt-2143362-7a5098: 0c00                                   |0756: move-result-object v0
+work/dis/classes8.txt-2143363-7a509a: 7220 83c3 6000                         |0757: invoke-interface {v0, v6}, LX/0nDz;.GPi:(LX/02hd;)V // method@c383
+work/dis/classes8.txt-2143364-7a50a0: 2900 ecfb                              |075a: goto/16 0346 // -0414
+work/dis/classes8.txt-2143365-7a50a4: 0d02                                   |075c: move-exception v2
+work/dis/classes8.txt-2143366-7a50a6: 1a01 161f                              |075d: const-string v1, "Error During MediaCodec info reporting" // string@1f16
+work/dis/classes8.txt-2143367-7a50aa: 1a00 66a0                              |075f: const-string v0, "MediaCodecInfoReporter" // string@a066
+work/dis/classes8.txt-2143368-7a50ae: 7130 bc01 2001                         |0761: invoke-static {v0, v2, v1}, LX/00Iv;.A0O:(Ljava/lang/String;Ljava/lang/Throwable;Ljava/lang/String;)V // method@01bc
+work/dis/classes8.txt-2143369-7a50b4: 0801 2100                              |0764: move-object/from16 v1, v33
+work/dis/classes8.txt-2143370-7a50b8: 0800 2000                              |0766: move-object/from16 v0, v32
+work/dis/classes8.txt-2143371-7a50bc: 7120 9ab5 0100                         |0768: invoke-static {v1, v0}, LX/0knW;.A01:(Landroid/content/Context;LX/02rJ;)V // method@b59a
+work/dis/classes8.txt-2143372-7a50c2: 0e00                                   |076b: return-void
+work/dis/classes8.txt-2143373-7a50c4: 0001 0c00 0000 0000 0800 0000 0b00 ... |076c: packed-switch-data (28 units)
+work/dis/classes8.txt-2143374-      catches       : 12
+work/dis/classes8.txt-2143375-        0x0010 - 0x0262
+work/dis/classes8.txt-2143376-          Ljava/lang/Exception; -> 0x075c
+work/dis/classes8.txt-2143377-        0x0266 - 0x0385
+work/dis/classes8.txt-2143378-          Ljava/lang/Exception; -> 0x075c
+work/dis/classes8.txt-2143379-        0x0385 - 0x03aa
+work/dis/classes8.txt-2143380-          Ljava/lang/Exception; -> 0x03aa
+work/dis/classes8.txt-2143381-          Ljava/lang/Exception; -> 0x075c
+work/dis/classes8.txt-2143382-        0x03aa - 0x0437
+work/dis/classes8.txt-2143383-          Ljava/lang/Exception; -> 0x075c
+work/dis/classes8.txt-2143384-        0x0437 - 0x0477
+work/dis/classes8.txt-2143385-          Ljava/lang/Exception; -> 0x0696
+work/dis/classes8.txt-2143386-        0x0477 - 0x04b4
+work/dis/classes8.txt-2143387-          <any> -> 0x04e9
+work/dis/classes8.txt-2143388-        0x04b4 - 0x04c0
+work/dis/classes8.txt-2143389-          <any> -> 0x04c0
+work/dis/classes8.txt-2143390-        0x04c0 - 0x04e9
+work/dis/classes8.txt-2143391-          <any> -> 0x04e9
+work/dis/classes8.txt-2143392-        0x04e9 - 0x0696
+work/dis/classes8.txt-2143393-          Ljava/lang/Exception; -> 0x0696
+work/dis/classes8.txt-2143394-        0x0697 - 0x06d1
+work/dis/classes8.txt-2143395-          Ljava/lang/Exception; -> 0x075c
+work/dis/classes8.txt-2143396-        0x06d1 - 0x073a
+work/dis/classes8.txt-2143397-          <any> -> 0x073a
+work/dis/classes8.txt-2143398-        0x073a - 0x075c
+work/dis/classes8.txt-2143399-          Ljava/lang/Exception; -> 0x075c
+work/dis/classes8.txt-2143400-      positions     :
+work/dis/classes8.txt-2143401-      locals        :
+work/dis/classes8.txt-2143402-
+work/dis/classes8.txt-2143403-  source_file_idx   : 0 ()
+work/dis/classes8.txt-2143404-
+work/dis/classes8.txt-2143405-Class #10085 header:
+work/dis/classes8.txt-2143406-class_idx           : 23821
+work/dis/classes8.txt-2143407-access_flags        : 17 (0x0011)
+work/dis/classes8.txt-2143408-superclass_idx      : 28336
+work/dis/classes8.txt-2143409-interfaces_off      : 2103404 (0x20186c)
+work/dis/classes8.txt-2143410-source_file_idx     : 0
+work/dis/classes8.txt-2143411-annotations_off     : 0 (0x000000)
+work/dis/classes8.txt-2143412-class_data_off      : 10109250 (0x9a4142)
+work/dis/classes8.txt-2143413-static_fields_size  : 0
+work/dis/classes8.txt-2143414-instance_fields_size: 2
+work/dis/classes8.txt-2143415-direct_methods_size : 1
+work/dis/classes8.txt-2143416-virtual_methods_size: 1
+work/dis/classes8.txt-2143417-
+work/dis/classes8.txt-2143418-Class #10085            -
+work/dis/classes8.txt-2143419-  Class descriptor  : 'LX/0lAm;'
+work/dis/classes8.txt-2143420-  Access flags      : 0x0011 (PUBLIC FINAL)
+work/dis/classes8.txt-2143421-  Superclass        : 'Ljava/lang/Object;'
+work/dis/classes8.txt-2143422-  Interfaces        -
+work/dis/classes8.txt-2143423-    #0              : 'Ljava/lang/Runnable;'
+work/dis/classes8.txt-2143424-  Static fields     -
+work/dis/classes8.txt-2143425-  Instance fields   -
+work/dis/classes8.txt-2143426-    #0              : (in LX/0lAm;)
+work/dis/classes8.txt-2143427-      name          : 'A00'
+work/dis/classes8.txt-2143428-      type          : 'Landroid/view/View;'
+work/dis/classes8.txt-2143429-      access        : 0x1011 (PUBLIC FINAL SYNTHETIC)
+work/dis/classes8.txt-2143430-    #1              : (in LX/0lAm;)
+work/dis/classes8.txt-2143431-      name          : 'A01'
+work/dis/classes8.txt-2143432-      type          : 'Lcom/instagram/basel/text/composer/TextComposerFragment;'
+work/dis/classes8.txt-2143433-      access        : 0x1011 (PUBLIC FINAL SYNTHETIC)
+work/dis/classes8.txt-2143434-  Direct methods    -
+work/dis/classes8.txt-2143435-    #0              : (in LX/0lAm;)
+work/dis/classes8.txt-2143436-      name          : '<init>'
+work/dis/classes8.txt-2143437-      type          : '(Landroid/view/View;Lcom/instagram/basel/text/composer/TextComposerFragment;)V'
+work/dis/classes8.txt-2143438-      access        : 0x10001 (PUBLIC CONSTRUCTOR)
+work/dis/classes8.txt-2143439-      method_idx    : 46853
+work/dis/classes8.txt-2143440-      code          -
+work/dis/classes8.txt-2143441-      registers     : 3
+work/dis/classes8.txt-2143442-      ins           : 3
+work/dis/classes8.txt-2143443-      outs          : 1
+work/dis/classes8.txt-2143444-      insns size    : 8 16-bit code units
+work/dis/classes8.txt-2143445-4dc5f4:                                        |[4dc5f4] X.0lAm.<init>:(Landroid/view/View;Lcom/instagram/basel/text/composer/TextComposerFragment;)V
+work/dis/classes8.txt-2143446-4dc604: 5b02 80d2                              |0000: iput-object v2, v0, LX/0lAm;.A01:Lcom/instagram/basel/text/composer/TextComposerFragment; // field@d280
+work/dis/classes8.txt-2143447-4dc608: 5b01 7fd2                              |0002: iput-object v1, v0, LX/0lAm;.A00:Landroid/view/View; // field@d27f
+work/dis/classes8.txt-2143448-4dc60c: 7010 3cea 0000                         |0004: invoke-direct {v0}, Ljava/lang/Object;.<init>:()V // method@ea3c
+work/dis/classes8.txt-2143449-4dc612: 0e00                                   |0007: return-void
+work/dis/classes8.txt-2143450-      catches       : (none)
+work/dis/classes8.txt-2143451-      positions     :
+work/dis/classes8.txt-2143452-      locals        :
+work/dis/classes8.txt-2143453-
+work/dis/classes8.txt-2143454-  Virtual methods   -
+work/dis/classes8.txt-2143455-    #0              : (in LX/0lAm;)
+work/dis/classes8.txt-2143456-      name          : 'run'
+work/dis/classes8.txt-2143457-      type          : '()V'
+work/dis/classes8.txt-2143458-      access        : 0x0011 (PUBLIC FINAL)
+work/dis/classes8.txt-2143459-      method_idx    : 46854
+work/dis/classes8.txt-2143460-      code          -
+work/dis/classes8.txt-2143461-      registers     : 5
+work/dis/classes8.txt-2143462-      ins           : 1
+work/dis/classes8.txt-2143463-      outs          : 3
+work/dis/classes8.txt-2143464-      insns size    : 27 16-bit code units
+work/dis/classes8.txt-2143465-54e54c:                                        |[54e54c] X.0lAm.run:()V
+work/dis/classes8.txt-2143466-54e55c: 5440 80d2                              |0000: iget-object v0, v4, LX/0lAm;.A01:Lcom/instagram/basel/text/composer/TextComposerFragment; // field@d280
+work/dis/classes8.txt-2143467-54e560: 5400 27e9                              |0002: iget-object v0, v0, Lcom/instagram/basel/text/composer/TextComposerFragment;.A0O:LX/0C8T; // field@e927
+work/dis/classes8.txt-2143468-54e564: 7210 2225 0000                         |0004: invoke-interface {v0}, LX/0C8T;.getValue:()Ljava/lang/Object; // method@2522
+work/dis/classes8.txt-2143469-54e56a: 0c03                                   |0007: move-result-object v3
+work/dis/classes8.txt-2143470-54e56c: 1f03 f213                              |0008: check-cast v3, LX/0Bwv; // type@13f2
+work/dis/classes8.txt-2143471-54e570: 5442 7fd2                              |000a: iget-object v2, v4, LX/0lAm;.A00:Landroid/view/View; // field@d27f
+work/dis/classes8.txt-2143472-54e574: 7110 2803 0200                         |000c: invoke-static {v2}, LX/0112;.A04:(Landroid/view/View;)F // method@0328
+work/dis/classes8.txt-2143473-54e57a: 0a01                                   |000f: move-result v1
+work/dis/classes8.txt-2143474-54e57c: 1500 0040                              |0010: const/high16 v0, #int 1073741824 // #4000
+work/dis/classes8.txt-2143475-54e580: c901                                   |0012: div-float/2addr v1, v0
+work/dis/classes8.txt-2143476-54e582: 7110 9f03 0200                         |0013: invoke-static {v2}, LX/0129;.A09:(Landroid/view/View;)F // method@039f
+work/dis/classes8.txt-2143477-54e588: 0a00                                   |0016: move-result v0
+work/dis/classes8.txt-2143478-54e58a: 6e30 ba22 1300                         |0017: invoke-virtual {v3, v1, v0}, LX/0Bwv;.A0q:(FF)V // method@22ba
+work/dis/classes8.txt-2143479-54e590: 0e00                                   |001a: return-void
+work/dis/classes8.txt-2143480-      catches       : (none)
+work/dis/classes8.txt-2143481-      positions     :
+work/dis/classes8.txt-2143482-      locals        :
+work/dis/classes8.txt-2143483-
+
+===== direct video_performance_points references =====
+work/dis/classes8.txt-1581579-675be2: 0c02                                   |00b1: move-result-object v2
+work/dis/classes8.txt-1581580-675be4: 7210 c8eb 0200                         |00b2: invoke-interface {v2}, Ljava/util/Iterator;.hasNext:()Z // method@ebc8
+work/dis/classes8.txt-1581581-675bea: 0a00                                   |00b5: move-result v0
+work/dis/classes8.txt-1581582-675bec: 3800 f4ff                              |00b6: if-eqz v0, 00aa // -000c
+work/dis/classes8.txt-1581583-675bf0: 7210 c9eb 0200                         |00b8: invoke-interface {v2}, Ljava/util/Iterator;.next:()Ljava/lang/Object; // method@ebc9
+work/dis/classes8.txt-1581584-675bf6: 0c00                                   |00bb: move-result-object v0
+work/dis/classes8.txt-1581585-675bf8: 1f00 0566                              |00bc: check-cast v0, Landroid/media/MediaCodecInfo$VideoCapabilities$PerformancePoint; // type@6605
+work/dis/classes8.txt-1581586-675bfc: 6e20 c4cc 4000                         |00be: invoke-virtual {v0, v4}, Landroid/media/MediaCodecInfo$VideoCapabilities$PerformancePoint;.covers:(Landroid/media/MediaCodecInfo$VideoCapabilities$PerformancePoint;)Z // method@ccc4
+work/dis/classes8.txt-1581587-675c02: 0a00                                   |00c1: move-result v0
+work/dis/classes8.txt-1581588-675c04: 3800 f0ff                              |00c2: if-eqz v0, 00b2 // -0010
+work/dis/classes8.txt-1581589-675c08: 1213                                   |00c4: const/4 v3, #int 1 // #1
+work/dis/classes8.txt-1581590-675c0a: 28e5                                   |00c5: goto 00aa // -001b
+work/dis/classes8.txt-1581591-675c0c: 6207 2007                              |00c6: sget-object v7, LX/02tQ;.A00:LX/02tQ; // field@0720
+work/dis/classes8.txt-1581592-675c10: 1107                                   |00c8: return-object v7
+work/dis/classes8.txt-1581593-      catches       : (none)
+work/dis/classes8.txt-1581594-      positions     :
+work/dis/classes8.txt-1581595-      locals        :
+work/dis/classes8.txt-1581596-
+work/dis/classes8.txt-1581597-  Virtual methods   -
+work/dis/classes8.txt-1581598-    #0              : (in LX/0cby;)
+work/dis/classes8.txt-1581599-      name          : 'A02'
+work/dis/classes8.txt-1581600-      type          : '(Landroid/media/MediaCodecInfo$CodecCapabilities;Landroid/media/MediaCodecInfo;)Ljava/util/LinkedHashMap;'
+work/dis/classes8.txt-1581601-      access        : 0x0011 (PUBLIC FINAL)
+work/dis/classes8.txt-1581602-      method_idx    : 36020
+work/dis/classes8.txt-1581603-      code          -
+work/dis/classes8.txt-1581604-      registers     : 6
+work/dis/classes8.txt-1581605-      ins           : 3
+work/dis/classes8.txt-1581606-      outs          : 3
+work/dis/classes8.txt-1581607-      insns size    : 86 16-bit code units
+work/dis/classes8.txt-1581608-653e5c:                                        |[653e5c] X.0cby.A02:(Landroid/media/MediaCodecInfo$CodecCapabilities;Landroid/media/MediaCodecInfo;)Ljava/util/LinkedHashMap;
+work/dis/classes8.txt-1581609-653e6c: 6e10 becc 0400                         |0000: invoke-virtual {v4}, Landroid/media/MediaCodecInfo$CodecCapabilities;.getMaxSupportedInstances:()I // method@ccbe
+work/dis/classes8.txt-1581610-653e72: 0a00                                   |0003: move-result v0
+work/dis/classes8.txt-1581611-653e74: 7110 0cea 0000                         |0004: invoke-static {v0}, Ljava/lang/Integer;.valueOf:(I)Ljava/lang/Integer; // method@ea0c
+work/dis/classes8.txt-1581612-653e7a: 0c01                                   |0007: move-result-object v1
+work/dis/classes8.txt-1581613-653e7c: 1300 4204                              |0008: const/16 v0, #int 1090 // #442
+work/dis/classes8.txt-1581614-653e80: 7110 9603 0000                         |000a: invoke-static {v0}, LX/0120;.A00:(I)Ljava/lang/String; // method@0396
+work/dis/classes8.txt-1581615-653e86: 0c00                                   |000d: move-result-object v0
+work/dis/classes8.txt-1581616-653e88: 7120 0e08 1000                         |000e: invoke-static {v0, v1}, LX/0226;.A0l:(Ljava/lang/Object;Ljava/lang/Object;)Ljava/util/LinkedHashMap; // method@080e
+work/dis/classes8.txt-1581617-653e8e: 0c02                                   |0011: move-result-object v2
+work/dis/classes8.txt-1581618-653e90: 6001 72e3                              |0012: sget v1, Landroid/os/Build$VERSION;.SDK_INT:I // field@e372
+work/dis/classes8.txt-1581619-653e94: 1300 1d00                              |0014: const/16 v0, #int 29 // #1d
+work/dis/classes8.txt-1581620-653e98: 3401 3f00                              |0016: if-lt v1, v0, 0055 // +003f
+work/dis/classes8.txt-1581621-653e9c: 6e10 d5cc 0500                         |0018: invoke-virtual {v5}, Landroid/media/MediaCodecInfo;.isAlias:()Z // method@ccd5
+work/dis/classes8.txt-1581622-653ea2: 0a00                                   |001b: move-result v0
+work/dis/classes8.txt-1581623-653ea4: 7110 b8e9 0000                         |001c: invoke-static {v0}, Ljava/lang/Boolean;.valueOf:(Z)Ljava/lang/Boolean; // method@e9b8
+work/dis/classes8.txt-1581624-653eaa: 0c01                                   |001f: move-result-object v1
+work/dis/classes8.txt-1581625-653eac: 1a00 79d2                              |0020: const-string v0, "is_alias" // string@d279
+work/dis/classes8.txt-1581626-653eb0: 6e30 6beb 0201                         |0022: invoke-virtual {v2, v0, v1}, Ljava/util/AbstractMap;.put:(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object; // method@eb6b
+work/dis/classes8.txt-1581627-653eb6: 6e10 d7cc 0500                         |0025: invoke-virtual {v5}, Landroid/media/MediaCodecInfo;.isHardwareAccelerated:()Z // method@ccd7
+work/dis/classes8.txt-1581628-653ebc: 0a00                                   |0028: move-result v0
+work/dis/classes8.txt-1581629-653ebe: 7110 b8e9 0000                         |0029: invoke-static {v0}, Ljava/lang/Boolean;.valueOf:(Z)Ljava/lang/Boolean; // method@e9b8
+work/dis/classes8.txt-1581630-653ec4: 0c01                                   |002c: move-result-object v1
+work/dis/classes8.txt-1581631-653ec6: 1a00 abd2                              |002d: const-string v0, "is_hardware" // string@d2ab
+work/dis/classes8.txt-1581632-653eca: 6e30 6beb 0201                         |002f: invoke-virtual {v2, v0, v1}, Ljava/util/AbstractMap;.put:(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object; // method@eb6b
+work/dis/classes8.txt-1581633-653ed0: 6e10 d8cc 0500                         |0032: invoke-virtual {v5}, Landroid/media/MediaCodecInfo;.isSoftwareOnly:()Z // method@ccd8
+work/dis/classes8.txt-1581634-653ed6: 0a00                                   |0035: move-result v0
+work/dis/classes8.txt-1581635-653ed8: 7110 b8e9 0000                         |0036: invoke-static {v0}, Ljava/lang/Boolean;.valueOf:(Z)Ljava/lang/Boolean; // method@e9b8
+work/dis/classes8.txt-1581636-653ede: 0c01                                   |0039: move-result-object v1
+work/dis/classes8.txt-1581637-653ee0: 1a00 dcd2                              |003a: const-string v0, "is_software_only" // string@d2dc
+work/dis/classes8.txt-1581638-653ee4: 6e30 6beb 0201                         |003c: invoke-virtual {v2, v0, v1}, Ljava/util/AbstractMap;.put:(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object; // method@eb6b
+work/dis/classes8.txt-1581639-653eea: 6e10 d9cc 0500                         |003f: invoke-virtual {v5}, Landroid/media/MediaCodecInfo;.isVendor:()Z // method@ccd9
+work/dis/classes8.txt-1581640-653ef0: 0a00                                   |0042: move-result v0
+work/dis/classes8.txt-1581641-653ef2: 7110 b8e9 0000                         |0043: invoke-static {v0}, Ljava/lang/Boolean;.valueOf:(Z)Ljava/lang/Boolean; // method@e9b8
+work/dis/classes8.txt-1581642-653ef8: 0c01                                   |0046: move-result-object v1
+work/dis/classes8.txt-1581643-653efa: 1a00 ebd2                              |0047: const-string v0, "is_vendor" // string@d2eb
+work/dis/classes8.txt-1581644-653efe: 6e30 6beb 0201                         |0049: invoke-virtual {v2, v0, v1}, Ljava/util/AbstractMap;.put:(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object; // method@eb6b
+work/dis/classes8.txt-1581645-653f04: 1a01 a9c0                              |004c: const-string v1, "canonical_name" // string@c0a9
+work/dis/classes8.txt-1581646-653f08: 6e10 d1cc 0500                         |004e: invoke-virtual {v5}, Landroid/media/MediaCodecInfo;.getCanonicalName:()Ljava/lang/String; // method@ccd1
+work/dis/classes8.txt-1581647-653f0e: 0c00                                   |0051: move-result-object v0
+work/dis/classes8.txt-1581648-653f10: 6e30 6beb 1200                         |0052: invoke-virtual {v2, v1, v0}, Ljava/util/AbstractMap;.put:(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object; // method@eb6b
+work/dis/classes8.txt-1581649-653f16: 1102                                   |0055: return-object v2
+work/dis/classes8.txt-1581650-      catches       : (none)
+work/dis/classes8.txt-1581651-      positions     :
+work/dis/classes8.txt-1581652-      locals        :
+work/dis/classes8.txt-1581653-
+work/dis/classes8.txt-1581654-    #1              : (in LX/0cby;)
+work/dis/classes8.txt-1581655-      name          : 'A03'
+work/dis/classes8.txt-1581656-      type          : '(Landroid/media/MediaCodecInfo$VideoCapabilities;)Ljava/util/Map;'
+work/dis/classes8.txt-1581657-      access        : 0x0011 (PUBLIC FINAL)
+work/dis/classes8.txt-1581658-      method_idx    : 36021
+work/dis/classes8.txt-1581659-      code          -
+work/dis/classes8.txt-1581660-      registers     : 10
+work/dis/classes8.txt-1581661-      ins           : 2
+work/dis/classes8.txt-1581662-      outs          : 3
+work/dis/classes8.txt-1581663-      insns size    : 155 16-bit code units
+work/dis/classes8.txt-1581664-6b6ac8:                                        |[6b6ac8] X.0cby.A03:(Landroid/media/MediaCodecInfo$VideoCapabilities;)Ljava/util/Map;
+work/dis/classes8.txt-1581665-6b6ad8: 3909 0500                              |0000: if-nez v9, 0005 // +0005
+work/dis/classes8.txt-1581666-6b6adc: 6203 2007                              |0002: sget-object v3, LX/02tQ;.A00:LX/02tQ; // field@0720
+work/dis/classes8.txt-1581667-6b6ae0: 1103                                   |0004: return-object v3
+work/dis/classes8.txt-1581668-6b6ae2: 6e10 c8cc 0900                         |0005: invoke-virtual {v9}, Landroid/media/MediaCodecInfo$VideoCapabilities;.getHeightAlignment:()I // method@ccc8
+work/dis/classes8.txt-1581669-6b6ae8: 0a00                                   |0008: move-result v0
+work/dis/classes8.txt-1581670-6b6aea: 7110 0cea 0000                         |0009: invoke-static {v0}, Ljava/lang/Integer;.valueOf:(I)Ljava/lang/Integer; // method@ea0c
+work/dis/classes8.txt-1581671-6b6af0: 0c01                                   |000c: move-result-object v1
+work/dis/classes8.txt-1581672-6b6af2: 1a00 92ec                              |000d: const-string v0, "video_height_alignment" // string@ec92
+work/dis/classes8.txt-1581673-6b6af6: 7120 2300 1000                         |000f: invoke-static {v0, v1}, LX/000H;.A0Z:(Ljava/lang/Object;Ljava/lang/Object;)LX/04oE; // method@0023
+work/dis/classes8.txt-1581674-6b6afc: 0c02                                   |0012: move-result-object v2
+work/dis/classes8.txt-1581675-6b6afe: 6e10 cfcc 0900                         |0013: invoke-virtual {v9}, Landroid/media/MediaCodecInfo$VideoCapabilities;.getWidthAlignment:()I // method@cccf
+work/dis/classes8.txt-1581676-6b6b04: 0a00                                   |0016: move-result v0
+work/dis/classes8.txt-1581677-6b6b06: 7110 0cea 0000                         |0017: invoke-static {v0}, Ljava/lang/Integer;.valueOf:(I)Ljava/lang/Integer; // method@ea0c
+work/dis/classes8.txt-1581678-6b6b0c: 0c01                                   |001a: move-result-object v1
+work/dis/classes8.txt-1581679-6b6b0e: 1a00 a7ec                              |001b: const-string v0, "video_width_alignment" // string@eca7
+work/dis/classes8.txt-1581680-6b6b12: 7120 2300 1000                         |001d: invoke-static {v0, v1}, LX/000H;.A0Z:(Ljava/lang/Object;Ljava/lang/Object;)LX/04oE; // method@0023
+work/dis/classes8.txt-1581681-6b6b18: 0c03                                   |0020: move-result-object v3
+work/dis/classes8.txt-1581682-6b6b1a: 6e10 c7cc 0900                         |0021: invoke-virtual {v9}, Landroid/media/MediaCodecInfo$VideoCapabilities;.getBitrateRange:()Landroid/util/Range; // method@ccc7
+work/dis/classes8.txt-1581683-6b6b20: 0c00                                   |0024: move-result-object v0
+work/dis/classes8.txt-1581684-6b6b22: 7110 fe07 0000                         |0025: invoke-static {v0}, LX/0225;.A0r:(Ljava/lang/Object;)Ljava/lang/String; // method@07fe
+work/dis/classes8.txt-1581685-6b6b28: 0c01                                   |0028: move-result-object v1
+work/dis/classes8.txt-1581686-6b6b2a: 1a00 77ec                              |0029: const-string v0, "video_bitrate_range" // string@ec77
+work/dis/classes8.txt-1581687-6b6b2e: 7120 2300 1000                         |002b: invoke-static {v0, v1}, LX/000H;.A0Z:(Ljava/lang/Object;Ljava/lang/Object;)LX/04oE; // method@0023
+work/dis/classes8.txt-1581688-6b6b34: 0c04                                   |002e: move-result-object v4
+work/dis/classes8.txt-1581689-6b6b36: 6e10 c9cc 0900                         |002f: invoke-virtual {v9}, Landroid/media/MediaCodecInfo$VideoCapabilities;.getSupportedFrameRates:()Landroid/util/Range; // method@ccc9
+work/dis/classes8.txt-1581690-6b6b3c: 0c00                                   |0032: move-result-object v0
+work/dis/classes8.txt-1581691-6b6b3e: 7110 fe07 0000                         |0033: invoke-static {v0}, LX/0225;.A0r:(Ljava/lang/Object;)Ljava/lang/String; // method@07fe
+work/dis/classes8.txt-1581692-6b6b44: 0c01                                   |0036: move-result-object v1
+work/dis/classes8.txt-1581693-6b6b46: 1a00 8cec                              |0037: const-string v0, "video_frame_rates" // string@ec8c
+work/dis/classes8.txt-1581694-6b6b4a: 7120 2300 1000                         |0039: invoke-static {v0, v1}, LX/000H;.A0Z:(Ljava/lang/Object;Ljava/lang/Object;)LX/04oE; // method@0023
+work/dis/classes8.txt-1581695-6b6b50: 0c05                                   |003c: move-result-object v5
+work/dis/classes8.txt-1581696-6b6b52: 6e10 cbcc 0900                         |003d: invoke-virtual {v9}, Landroid/media/MediaCodecInfo$VideoCapabilities;.getSupportedHeights:()Landroid/util/Range; // method@cccb
+work/dis/classes8.txt-1581697-6b6b58: 0c00                                   |0040: move-result-object v0
+work/dis/classes8.txt-1581698-6b6b5a: 7110 fe07 0000                         |0041: invoke-static {v0}, LX/0225;.A0r:(Ljava/lang/Object;)Ljava/lang/String; // method@07fe
+work/dis/classes8.txt-1581699-6b6b60: 0c01                                   |0044: move-result-object v1
+work/dis/classes8.txt-1581700-6b6b62: 1a00 a0ec                              |0045: const-string v0, "video_supported_heights" // string@eca0
+work/dis/classes8.txt-1581701-6b6b66: 7120 2300 1000                         |0047: invoke-static {v0, v1}, LX/000H;.A0Z:(Ljava/lang/Object;Ljava/lang/Object;)LX/04oE; // method@0023
+work/dis/classes8.txt-1581702-6b6b6c: 0c06                                   |004a: move-result-object v6
+work/dis/classes8.txt-1581703-6b6b6e: 6e10 cecc 0900                         |004b: invoke-virtual {v9}, Landroid/media/MediaCodecInfo$VideoCapabilities;.getSupportedWidths:()Landroid/util/Range; // method@ccce
+work/dis/classes8.txt-1581704-6b6b74: 0c00                                   |004e: move-result-object v0
+work/dis/classes8.txt-1581705-6b6b76: 7110 fe07 0000                         |004f: invoke-static {v0}, LX/0225;.A0r:(Ljava/lang/Object;)Ljava/lang/String; // method@07fe
+work/dis/classes8.txt-1581706-6b6b7c: 0c01                                   |0052: move-result-object v1
+work/dis/classes8.txt-1581707-6b6b7e: 1a00 a1ec                              |0053: const-string v0, "video_supported_widths" // string@eca1
+work/dis/classes8.txt-1581708-6b6b82: 7120 2300 1000                         |0055: invoke-static {v0, v1}, LX/000H;.A0Z:(Ljava/lang/Object;Ljava/lang/Object;)LX/04oE; // method@0023
+work/dis/classes8.txt-1581709-6b6b88: 0c07                                   |0058: move-result-object v7
+work/dis/classes8.txt-1581710-6b6b8a: 2506 bf6f 0200                         |0059: filled-new-array/range {v2, v3, v4, v5, v6, v7}, [LX/04oE; // type@6fbf
+work/dis/classes8.txt-1581711-6b6b90: 0c00                                   |005c: move-result-object v0
+work/dis/classes8.txt-1581712-6b6b92: 7110 710b 0000                         |005d: invoke-static {v0}, LX/02pX;.A09:([LX/04oE;)Ljava/util/LinkedHashMap; // method@0b71
+work/dis/classes8.txt-1581713-6b6b98: 0c03                                   |0060: move-result-object v3
+work/dis/classes8.txt-1581714-6b6b9a: 1302 0005                              |0061: const/16 v2, #int 1280 // #500
+work/dis/classes8.txt-1581715-6b6b9e: 1301 d002                              |0063: const/16 v1, #int 720 // #2d0
+work/dis/classes8.txt-1581716-6b6ba2: 6e30 d0cc 2901                         |0065: invoke-virtual {v9, v2, v1}, Landroid/media/MediaCodecInfo$VideoCapabilities;.isSizeSupported:(II)Z // method@ccd0
+work/dis/classes8.txt-1581717-6b6ba8: 0a00                                   |0068: move-result v0
+work/dis/classes8.txt-1581718-6b6baa: 3800 1800                              |0069: if-eqz v0, 0081 // +0018
+work/dis/classes8.txt-1581719-6b6bae: 6e30 cacc 2901                         |006b: invoke-virtual {v9, v2, v1}, Landroid/media/MediaCodecInfo$VideoCapabilities;.getSupportedFrameRatesFor:(II)Landroid/util/Range; // method@ccca
+work/dis/classes8.txt-1581720-6b6bb4: 0c00                                   |006e: move-result-object v0
+work/dis/classes8.txt-1581721-6b6bb6: 6e10 d8ce 0000                         |006f: invoke-virtual {v0}, Landroid/util/Range;.getUpper:()Ljava/lang/Comparable; // method@ced8
+work/dis/classes8.txt-1581722-6b6bbc: 0c00                                   |0072: move-result-object v0
+work/dis/classes8.txt-1581723-6b6bbe: 7110 4207 0000                         |0073: invoke-static {v0}, LX/021Q;.A00:(Ljava/lang/Object;)D // method@0742
+work/dis/classes8.txt-1581724-6b6bc4: 0b01                                   |0076: move-result-wide v1
+work/dis/classes8.txt-1581725-6b6bc6: 8a10                                   |0077: double-to-int v0, v1
+work/dis/classes8.txt-1581726-6b6bc8: 7110 0cea 0000                         |0078: invoke-static {v0}, Ljava/lang/Integer;.valueOf:(I)Ljava/lang/Integer; // method@ea0c
+work/dis/classes8.txt-1581727-6b6bce: 0c01                                   |007b: move-result-object v1
+work/dis/classes8.txt-1581728-6b6bd0: 1a00 91ec                              |007c: const-string v0, "video_hd_frame_rate" // string@ec91
+work/dis/classes8.txt-1581729-6b6bd4: 6e30 6beb 0301                         |007e: invoke-virtual {v3, v0, v1}, Ljava/util/AbstractMap;.put:(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object; // method@eb6b
+work/dis/classes8.txt-1581730-6b6bda: 6001 72e3                              |0081: sget v1, Landroid/os/Build$VERSION;.SDK_INT:I // field@e372
+work/dis/classes8.txt-1581731-6b6bde: 1300 1d00                              |0083: const/16 v0, #int 29 // #1d
+work/dis/classes8.txt-1581732-6b6be2: 3401 7fff                              |0085: if-lt v1, v0, 0004 // -0081
+work/dis/classes8.txt-1581733-6b6be6: 6e10 cdcc 0900                         |0087: invoke-virtual {v9}, Landroid/media/MediaCodecInfo$VideoCapabilities;.getSupportedPerformancePoints:()Ljava/util/List; // method@cccd
+work/dis/classes8.txt-1581734-6b6bec: 0c01                                   |008a: move-result-object v1
+work/dis/classes8.txt-1581735-6b6bee: 3801 0e00                              |008b: if-eqz v1, 0099 // +000e
+work/dis/classes8.txt-1581736-6b6bf2: 1a00 da01                              |008d: const-string v0, "," // string@01da
+work/dis/classes8.txt-1581737-6b6bf6: 7120 b507 1000                         |008f: invoke-static {v0, v1}, LX/0222;.A0j:(Ljava/lang/CharSequence;Ljava/lang/Iterable;)Ljava/lang/String; // method@07b5
+work/dis/classes8.txt-1581738-6b6bfc: 0c01                                   |0092: move-result-object v1
+work/dis/classes8.txt:1581739:6b6bfe: 1a00 98ec                              |0093: const-string v0, "video_performance_points" // string@ec98
+work/dis/classes8.txt-1581740-6b6c02: 6e30 6beb 0301                         |0095: invoke-virtual {v3, v0, v1}, Ljava/util/AbstractMap;.put:(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object; // method@eb6b
+work/dis/classes8.txt-1581741-6b6c08: 1103                                   |0098: return-object v3
+work/dis/classes8.txt-1581742-6b6c0a: 1201                                   |0099: const/4 v1, #int 0 // #0
+work/dis/classes8.txt-1581743-6b6c0c: 28f9                                   |009a: goto 0093 // -0007
+work/dis/classes8.txt-1581744-      catches       : (none)
+work/dis/classes8.txt-1581745-      positions     :
+work/dis/classes8.txt-1581746-      locals        :
+work/dis/classes8.txt-1581747-
+work/dis/classes8.txt-1581748-  source_file_idx   : 0 ()
+work/dis/classes8.txt-1581749-
+work/dis/classes8.txt-1581750-Class #7723 header:
+work/dis/classes8.txt-1581751-class_idx           : 27278
+work/dis/classes8.txt-1581752-access_flags        : 17 (0x0011)
+work/dis/classes8.txt-1581753-superclass_idx      : 28336
+work/dis/classes8.txt-1581754-interfaces_off      : 0 (0x000000)
+work/dis/classes8.txt-1581755-source_file_idx     : 0
+work/dis/classes8.txt-1581756-annotations_off     : 0 (0x000000)
+work/dis/classes8.txt-1581757-class_data_off      : 9994058 (0x987f4a)
+work/dis/classes8.txt-1581758-static_fields_size  : 4
+work/dis/classes8.txt-1581759-instance_fields_size: 0
+work/dis/classes8.txt-1581760-direct_methods_size : 4
+work/dis/classes8.txt-1581761-virtual_methods_size: 2
+work/dis/classes8.txt-1581762-
+work/dis/classes8.txt-1581763-Class #7723            -
+work/dis/classes8.txt-1581764-  Class descriptor  : 'Lcom/instagram/common/ui/base/BadgingUtil;'
+work/dis/classes8.txt-1581765-  Access flags      : 0x0011 (PUBLIC FINAL)
+work/dis/classes8.txt-1581766-  Superclass        : 'Ljava/lang/Object;'
+work/dis/classes8.txt-1581767-  Interfaces        -
+work/dis/classes8.txt-1581768-  Static fields     -
+work/dis/classes8.txt-1581769-    #0              : (in Lcom/instagram/common/ui/base/BadgingUtil;)
+work/dis/classes8.txt-1581770-      name          : 'INSTANCE'
+work/dis/classes8.txt-1581771-      type          : 'Lcom/instagram/common/ui/base/BadgingUtil;'
+work/dis/classes8.txt-1581772-      access        : 0x0019 (PUBLIC STATIC FINAL)
+work/dis/classes8.txt-1581773-    #1              : (in Lcom/instagram/common/ui/base/BadgingUtil;)
+work/dis/classes8.txt-1581774-      name          : 'badgeLabelBgPaint'
+work/dis/classes8.txt-1581775-      type          : 'Landroid/graphics/Paint;'
+work/dis/classes8.txt-1581776-      access        : 0x0019 (PUBLIC STATIC FINAL)
+work/dis/classes8.txt-1581777-    #2              : (in Lcom/instagram/common/ui/base/BadgingUtil;)
+work/dis/classes8.txt-1581778-      name          : 'badgeLabelPaint'
+work/dis/classes8.txt-1581779-      type          : 'Landroid/graphics/Paint;'
+work/dis/classes8.txt-1581780-      access        : 0x0019 (PUBLIC STATIC FINAL)
+work/dis/classes8.txt-1581781-    #3              : (in Lcom/instagram/common/ui/base/BadgingUtil;)
+work/dis/classes8.txt-1581782-      name          : 'bounds'
+work/dis/classes8.txt-1581783-      type          : 'Landroid/graphics/Rect;'
+work/dis/classes8.txt-1581784-      access        : 0x0019 (PUBLIC STATIC FINAL)
+work/dis/classes8.txt-1581785-  Instance fields   -
+work/dis/classes8.txt-1581786-  Direct methods    -
+work/dis/classes8.txt-1581787-    #0              : (in Lcom/instagram/common/ui/base/BadgingUtil;)
+work/dis/classes8.txt-1581788-      name          : '<clinit>'
+work/dis/classes8.txt-1581789-      type          : '()V'
+work/dis/classes8.txt-1581790-      access        : 0x10009 (PUBLIC STATIC CONSTRUCTOR)
+work/dis/classes8.txt-1581791-      method_idx    : 56970
+work/dis/classes8.txt-1581792-      code          -
+work/dis/classes8.txt-1581793-      registers     : 2
+work/dis/classes8.txt-1581794-      ins           : 0
+work/dis/classes8.txt-1581795-      outs          : 1
+work/dis/classes8.txt-1581796-      insns size    : 27 16-bit code units
+work/dis/classes8.txt-1581797-33db18:                                        |[33db18] com.instagram.common.ui.base.BadgingUtil.<clinit>:()V
+work/dis/classes8.txt-1581798-33db28: 2200 8e6a                              |0000: new-instance v0, Lcom/instagram/common/ui/base/BadgingUtil; // type@6a8e
+work/dis/classes8.txt-1581799-33db2c: 7010 3cea 0000                         |0002: invoke-direct {v0}, Ljava/lang/Object;.<init>:()V // method@ea3c
+work/dis/classes8.txt-1581800-33db32: 6900 3aeb                              |0005: sput-object v0, Lcom/instagram/common/ui/base/BadgingUtil;.INSTANCE:Lcom/instagram/common/ui/base/BadgingUtil; // field@eb3a
+work/dis/classes8.txt-1581801-33db36: 1211                                   |0007: const/4 v1, #int 1 // #1
+work/dis/classes8.txt-1581802-33db38: 7110 af03 0100                         |0008: invoke-static {v1}, LX/0129;.A0Q:(I)Landroid/graphics/Paint; // method@03af
+work/dis/classes8.txt-1581803-33db3e: 0c00                                   |000b: move-result-object v0
+work/dis/classes8.txt-1581804-33db40: 6900 3ceb                              |000c: sput-object v0, Lcom/instagram/common/ui/base/BadgingUtil;.badgeLabelPaint:Landroid/graphics/Paint; // field@eb3c
+work/dis/classes8.txt-1581805-33db44: 7110 af03 0100                         |000e: invoke-static {v1}, LX/0129;.A0Q:(I)Landroid/graphics/Paint; // method@03af
+work/dis/classes8.txt-1581806-33db4a: 0c00                                   |0011: move-result-object v0
+work/dis/classes8.txt-1581807-33db4c: 6900 3beb                              |0012: sput-object v0, Lcom/instagram/common/ui/base/BadgingUtil;.badgeLabelBgPaint:Landroid/graphics/Paint; // field@eb3b
+work/dis/classes8.txt-1581808-33db50: 7100 b003 0000                         |0014: invoke-static {}, LX/0129;.A0R:()Landroid/graphics/Rect; // method@03b0
+work/dis/classes8.txt-1581809-33db56: 0c00                                   |0017: move-result-object v0
+work/dis/classes8.txt-1581810-33db58: 6900 3deb                              |0018: sput-object v0, Lcom/instagram/common/ui/base/BadgingUtil;.bounds:Landroid/graphics/Rect; // field@eb3d
+work/dis/classes8.txt-1581811-33db5c: 0e00                                   |001a: return-void
+work/dis/classes8.txt-1581812-      catches       : (none)
+work/dis/classes8.txt-1581813-      positions     :
+work/dis/classes8.txt-1581814-      locals        :
+work/dis/classes8.txt-1581815-
+work/dis/classes8.txt-1581816-    #1              : (in Lcom/instagram/common/ui/base/BadgingUtil;)
+work/dis/classes8.txt-1581817-      name          : '<init>'
+work/dis/classes8.txt-1581818-      type          : '()V'
+work/dis/classes8.txt-1581819-      access        : 0x10001 (PUBLIC CONSTRUCTOR)
+work/dis/classes8.txt-1581820-      method_idx    : 56971
+work/dis/classes8.txt-1581821-      code          -
+work/dis/classes8.txt-1581822-      registers     : 1
+work/dis/classes8.txt-1581823-      ins           : 1
+work/dis/classes8.txt-1581824-      outs          : 1
+work/dis/classes8.txt-1581825-      insns size    : 4 16-bit code units
+work/dis/classes8.txt-1581826-4aefc0:                                        |[4aefc0] com.instagram.common.ui.base.BadgingUtil.<init>:()V
+work/dis/classes8.txt-1581827-4aefd0: 7010 3cea 0000                         |0000: invoke-direct {v0}, Ljava/lang/Object;.<init>:()V // method@ea3c
+work/dis/classes8.txt-1581828-4aefd6: 0e00                                   |0003: return-void
+work/dis/classes8.txt-1581829-      catches       : (none)
+work/dis/classes8.txt-1581830-      positions     :
+work/dis/classes8.txt-1581831-      locals        :
+work/dis/classes8.txt-1581832-
+work/dis/classes8.txt-1581833-    #2              : (in Lcom/instagram/common/ui/base/BadgingUtil;)
+work/dis/classes8.txt-1581834-      name          : 'drawBadge$default'
+work/dis/classes8.txt-1581835-      type          : '(Lcom/instagram/common/ui/base/BadgingUtil;Landroid/view/View;Landroid/graphics/Canvas;Landroid/content/Context;Ljava/lang/String;FILandroid/graphics/Typeface;FFFFILjava/lang/Object;)V'
+work/dis/classes8.txt-1581836-      access        : 0x1009 (PUBLIC STATIC SYNTHETIC)
+work/dis/classes8.txt-1581837-      method_idx    : 56973
+work/dis/classes8.txt-1581838-      code          -
+work/dis/classes8.txt-1581839-      registers     : 15
+work/dis/classes8.txt-1581840-      ins           : 14
+work/dis/classes8.txt-1581841-      outs          : 12
+work/dis/classes8.txt-1581842-      insns size    : 29 16-bit code units
+work/dis/classes8.txt-1581843-55d59c:                                        |[55d59c] com.instagram.common.ui.base.BadgingUtil.drawBadge$default:(Lcom/instagram/common/ui/base/BadgingUtil;Landroid/view/View;Landroid/graphics/Canvas;Landroid/content/Context;Ljava/lang/String;FILandroid/graphics/Typeface;FFFFILjava/lang/Object;)V
+work/dis/classes8.txt-1581844-55d5ac: dd00 0d40                              |0000: and-int/lit8 v0, v13, #int 64 // #40
+work/dis/classes8.txt-1581845-55d5b0: 3800 0300                              |0002: if-eqz v0, 0005 // +0003
+work/dis/classes8.txt-1581846-55d5b4: 1208                                   |0004: const/4 v8, #int 0 // #0
+work/dis/classes8.txt-1581847-55d5b6: d5d0 8000                              |0005: and-int/lit16 v0, v13, #int 128 // #0080
+work/dis/classes8.txt-1581848-55d5ba: 3800 0300                              |0007: if-eqz v0, 000a // +0003
+work/dis/classes8.txt-1581849-55d5be: 1209                                   |0009: const/4 v9, #int 0 // #0
+work/dis/classes8.txt-1581850-55d5c0: d5d0 0001                              |000a: and-int/lit16 v0, v13, #int 256 // #0100
+work/dis/classes8.txt-1581851-55d5c4: 3800 0300                              |000c: if-eqz v0, 000f // +0003
+work/dis/classes8.txt-1581852-55d5c8: 120a                                   |000e: const/4 v10, #int 0 // #0
+work/dis/classes8.txt-1581853-55d5ca: d5d0 0002                              |000f: and-int/lit16 v0, v13, #int 512 // #0200
+work/dis/classes8.txt-1581854-55d5ce: 3800 0300                              |0011: if-eqz v0, 0014 // +0003
+work/dis/classes8.txt-1581855-55d5d2: 120b                                   |0013: const/4 v11, #int 0 // #0
+work/dis/classes8.txt-1581856-55d5d4: d5d0 0004                              |0014: and-int/lit16 v0, v13, #int 1024 // #0400
+work/dis/classes8.txt-1581857-55d5d8: 3800 0300                              |0016: if-eqz v0, 0019 // +0003
+work/dis/classes8.txt-1581858-55d5dc: 120c                                   |0018: const/4 v12, #int 0 // #0
+work/dis/classes8.txt-1581859-55d5de: 740c 8cde 0100                         |0019: invoke-virtual/range {v1, v2, v3, v4, v5, v6, v7, v8, v9, v10, v11, v12}, Lcom/instagram/common/ui/base/BadgingUtil;.drawBadge:(Landroid/view/View;Landroid/graphics/Canvas;Landroid/content/Context;Ljava/lang/String;FILandroid/graphics/Typeface;FFFF)V // method@de8c
+work/dis/classes8.txt-1581860-55d5e4: 0e00                                   |001c: return-void
+work/dis/classes8.txt-1581861-      catches       : (none)
+work/dis/classes8.txt-1581862-      positions     :
+work/dis/classes8.txt-1581863-      locals        :
+work/dis/classes8.txt-1581864-
+work/dis/classes8.txt-1581865-    #3              : (in Lcom/instagram/common/ui/base/BadgingUtil;)
+work/dis/classes8.txt-1581866-      name          : 'drawBaselNewBadge$default'
+work/dis/classes8.txt-1581867-      type          : '(Lcom/instagram/common/ui/base/BadgingUtil;Landroid/view/View;Landroid/graphics/Canvas;Ljava/lang/String;FILjava/lang/Object;)V'
+work/dis/classes8.txt-1581868-      access        : 0x1009 (PUBLIC STATIC SYNTHETIC)
+work/dis/classes8.txt-1581869-      method_idx    : 56975
+work/dis/classes8.txt-1581870-      code          -
+work/dis/classes8.txt-1581871-      registers     : 8
+work/dis/classes8.txt-1581872-      ins           : 7
+work/dis/classes8.txt-1581873-      outs          : 5
+work/dis/classes8.txt-1581874-      insns size    : 16 16-bit code units
+work/dis/classes8.txt-1581875-567794:                                        |[567794] com.instagram.common.ui.base.BadgingUtil.drawBaselNewBadge$default:(Lcom/instagram/common/ui/base/BadgingUtil;Landroid/view/View;Landroid/graphics/Canvas;Ljava/lang/String;FILjava/lang/Object;)V
+work/dis/classes8.txt-1581876-5677a4: dd00 0608                              |0000: and-int/lit8 v0, v6, #int 8 // #08
+work/dis/classes8.txt-1581877-5677a8: 3800 0a00                              |0002: if-eqz v0, 000c // +000a
+work/dis/classes8.txt-1581878-5677ac: 7110 8100 0200                         |0004: invoke-static {v2}, LX/002L;.A06:(Landroid/view/View;)Landroid/content/Context; // method@0081
+work/dis/classes8.txt-1581879-5677b2: 0c00                                   |0007: move-result-object v0
+work/dis/classes8.txt-1581880-5677b4: 7110 d60e 0000                         |0008: invoke-static {v0}, LX/03ds;.A01:(Landroid/content/Context;)F // method@0ed6
+work/dis/classes8.txt-1581881-5677ba: 0a05                                   |000b: move-result v5
+work/dis/classes8.txt-1581882-5677bc: 6e55 8ede 2143                         |000c: invoke-virtual {v1, v2, v3, v4, v5}, Lcom/instagram/common/ui/base/BadgingUtil;.drawBaselNewBadge:(Landroid/view/View;Landroid/graphics/Canvas;Ljava/lang/String;F)V // method@de8e
+work/dis/classes8.txt-1581883-5677c2: 0e00                                   |000f: return-void
+work/dis/classes8.txt-1581884-      catches       : (none)
+work/dis/classes8.txt-1581885-      positions     :
+work/dis/classes8.txt-1581886-      locals        :
+work/dis/classes8.txt-1581887-
+work/dis/classes8.txt-1581888-  Virtual methods   -
+work/dis/classes8.txt-1581889-    #0              : (in Lcom/instagram/common/ui/base/BadgingUtil;)
+work/dis/classes8.txt-1581890-      name          : 'drawBadge'
+work/dis/classes8.txt-1581891-      type          : '(Landroid/view/View;Landroid/graphics/Canvas;Landroid/content/Context;Ljava/lang/String;FILandroid/graphics/Typeface;FFFF)V'
+work/dis/classes8.txt-1581892-      access        : 0x0011 (PUBLIC FINAL)
+work/dis/classes8.txt-1581893-      method_idx    : 56972
+work/dis/classes8.txt-1581894-      code          -
+work/dis/classes8.txt-1581895-      registers     : 21
+work/dis/classes8.txt-1581896-      ins           : 12
+work/dis/classes8.txt-1581897-      outs          : 5
+work/dis/classes8.txt-1581898-      insns size    : 90 16-bit code units
+work/dis/classes8.txt-1581899-610344:                                        |[610344] com.instagram.common.ui.base.BadgingUtil.drawBadge:(Landroid/view/View;Landroid/graphics/Canvas;Landroid/content/Context;Ljava/lang/String;FILandroid/graphics/Typeface;FFFF)V
+work/dis/classes8.txt-1581900-610354: 1202                                   |0000: const/4 v2, #int 0 // #0
+work/dis/classes8.txt-1581901-610356: 715d 401e a2cb                         |0001: invoke-static {v2, v10, v11, v12, v13}, LX/0BPE;.A0t:(ILjava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;)V // method@1e40
+work/dis/classes8.txt-1581902-61035c: 6205 3ceb                              |0004: sget-object v5, Lcom/instagram/common/ui/base/BadgingUtil;.badgeLabelPaint:Landroid/graphics/Paint; // field@eb3c
+work/dis/classes8.txt-1581903-610360: 7110 0c10 0c00                         |0006: invoke-static {v12}, LX/03ys;.A0M:(Landroid/content/Context;)I // method@100c
+work/dis/classes8.txt-1581904-610366: 0a00                                   |0009: move-result v0
+work/dis/classes8.txt-1581905-610368: 7130 4e03 5c00                         |000a: invoke-static {v12, v5, v0}, LX/0112;.A14:(Landroid/content/Context;Landroid/graphics/Paint;I)V // method@034e
+work/dis/classes8.txt-1581906-61036e: 6e10 a3cf 0a00                         |000d: invoke-virtual {v10}, Landroid/view/View;.getResources:()Landroid/content/res/Resources; // method@cfa3
+work/dis/classes8.txt-1581907-610374: 0c01                                   |0010: move-result-object v1
+work/dis/classes8.txt-1581908-610376: 1400 0a00 077f                         |0011: const v0, #float 1.79446e+38 // #7f07000a
+work/dis/classes8.txt-1581909-61037c: 6e20 74ca 0100                         |0014: invoke-virtual {v1, v0}, Landroid/content/res/Resources;.getDimension:(I)F // method@ca74
+work/dis/classes8.txt-1581910-610382: 0a00                                   |0017: move-result v0
+work/dis/classes8.txt-1581911-610384: 6e20 64cb 0500                         |0018: invoke-virtual {v5, v0}, Landroid/graphics/Paint;.setTextSize:(F)V // method@cb64
+work/dis/classes8.txt-1581912-61038a: 6204 3beb                              |001b: sget-object v4, Lcom/instagram/common/ui/base/BadgingUtil;.badgeLabelBgPaint:Landroid/graphics/Paint; // field@eb3b
+work/dis/classes8.txt-1581913-61038e: 7130 4e03 4c0f                         |001d: invoke-static {v12, v4, v15}, LX/0112;.A14:(Landroid/content/Context;Landroid/graphics/Paint;I)V // method@034e
+work/dis/classes8.txt-1581914-610394: 0800 1000                              |0020: move-object/from16 v0, v16
+work/dis/classes8.txt-1581915-610398: 3810 0500                              |0022: if-eqz v16, 0027 // +0005
+work/dis/classes8.txt-1581916-61039c: 6e20 65cb 0500                         |0024: invoke-virtual {v5, v0}, Landroid/graphics/Paint;.setTypeface:(Landroid/graphics/Typeface;)Landroid/graphics/Typeface; // method@cb65
+work/dis/classes8.txt-1581917-6103a2: 6e10 68ea 0d00                         |0027: invoke-virtual {v13}, Ljava/lang/String;.length:()I // method@ea68
+work/dis/classes8.txt-1581918-6103a8: 0a01                                   |002a: move-result v1
+work/dis/classes8.txt-1581919-6103aa: 6200 3deb                              |002b: sget-object v0, Lcom/instagram/common/ui/base/BadgingUtil;.bounds:Landroid/graphics/Rect; // field@eb3d
+work/dis/classes8.txt-1581920-6103ae: 6e50 46cb d512                         |002d: invoke-virtual {v5, v13, v2, v1, v0}, Landroid/graphics/Paint;.getTextBounds:(Ljava/lang/String;IILandroid/graphics/Rect;)V // method@cb46
+work/dis/classes8.txt-1581921-6103b4: 6e10 98cb 0000                         |0030: invoke-virtual {v0}, Landroid/graphics/Rect;.height:()I // method@cb98
+work/dis/classes8.txt-1581922-6103ba: 0a00                                   |0033: move-result v0
+work/dis/classes8.txt-1581923-6103bc: 8207                                   |0034: int-to-float v7, v0
+work/dis/classes8.txt-1581924-6103be: 6e20 4acb d500                         |0035: invoke-virtual {v5, v13}, Landroid/graphics/Paint;.measureText:(Ljava/lang/String;)F // method@cb4a
+work/dis/classes8.txt-1581925-6103c4: 0a06                                   |0038: move-result v6
+work/dis/classes8.txt-1581926-6103c6: 6e10 afcf 0a00                         |0039: invoke-virtual {v10}, Landroid/view/View;.getTranslationX:()F // method@cfaf
+work/dis/classes8.txt-1581927-6103cc: 0a03                                   |003c: move-result v3
+work/dis/classes8.txt-1581928-6103ce: a603 0311                              |003d: add-float v3, v3, v17
+work/dis/classes8.txt-1581929-6103d2: 6e10 b0cf 0a00                         |003f: invoke-virtual {v10}, Landroid/view/View;.getTranslationY:()F // method@cfb0
+work/dis/classes8.txt-1581930-6103d8: 0a00                                   |0042: move-result v0
+work/dis/classes8.txt-1581931-6103da: a600 0012                              |0043: add-float v0, v0, v18
+work/dis/classes8.txt-1581932-6103de: a602 0314                              |0045: add-float v2, v3, v20
+work/dis/classes8.txt-1581933-6103e2: 0208 1300                              |0047: move/from16 v8, v19
+work/dis/classes8.txt-1581934-6103e6: a601 0013                              |0049: add-float v1, v0, v19
+work/dis/classes8.txt-1581935-6103ea: c671                                   |004b: add-float/2addr v1, v7
+work/dis/classes8.txt-1581936-6103ec: c626                                   |004c: add-float/2addr v6, v2
+work/dis/classes8.txt-1581937-6103ee: a606 0614                              |004d: add-float v6, v6, v20
+work/dis/classes8.txt-1581938-6103f2: 7156 3d1f 1803                         |004f: invoke-static {v8, v1, v3, v0, v6}, LX/0BSG;.A0G:(FFFFF)Landroid/graphics/RectF; // method@1f3d
+work/dis/classes8.txt-1581939-6103f8: 0c00                                   |0052: move-result-object v0
+work/dis/classes8.txt-1581940-6103fa: 6e54 d9ca 0bee                         |0053: invoke-virtual {v11, v0, v14, v14, v4}, Landroid/graphics/Canvas;.drawRoundRect:(Landroid/graphics/RectF;FFLandroid/graphics/Paint;)V // method@cad9
+work/dis/classes8.txt-1581941-610400: 6e55 dbca db12                         |0056: invoke-virtual {v11, v13, v2, v1, v5}, Landroid/graphics/Canvas;.drawText:(Ljava/lang/String;FFLandroid/graphics/Paint;)V // method@cadb
+work/dis/classes8.txt-1581942-610406: 0e00                                   |0059: return-void
+work/dis/classes8.txt-1581943-      catches       : (none)
+work/dis/classes8.txt-1581944-      positions     :
+work/dis/classes8.txt-1581945-      locals        :
+work/dis/classes8.txt-1581946-
+work/dis/classes8.txt-1581947-    #1              : (in Lcom/instagram/common/ui/base/BadgingUtil;)
+work/dis/classes8.txt-1581948-      name          : 'drawBaselNewBadge'
+work/dis/classes8.txt-1581949-      type          : '(Landroid/view/View;Landroid/graphics/Canvas;Ljava/lang/String;F)V'
+work/dis/classes8.txt-1581950-      access        : 0x0011 (PUBLIC FINAL)
+work/dis/classes8.txt-1581951-      method_idx    : 56974
+work/dis/classes8.txt-1581952-      code          -
+work/dis/classes8.txt-1581953-      registers     : 16
+work/dis/classes8.txt-1581954-      ins           : 5
+work/dis/classes8.txt-1581955-      outs          : 5
+work/dis/classes8.txt-1581956-      insns size    : 117 16-bit code units
+work/dis/classes8.txt-1581957-610408:                                        |[610408] com.instagram.common.ui.base.BadgingUtil.drawBaselNewBadge:(Landroid/view/View;Landroid/graphics/Canvas;Ljava/lang/String;F)V
+work/dis/classes8.txt-1581958-610418: 7120 b812 dc00                         |0000: invoke-static {v12, v13}, LX/04l9;.A1A:(Ljava/lang/Object;Ljava/lang/Object;)Z // method@12b8
+work/dis/classes8.txt-1581959-61041e: 0a02                                   |0003: move-result v2
+work/dis/classes8.txt-1581960-610420: 1220                                   |0004: const/4 v0, #int 2 // #2
+work/dis/classes8.txt-1581961-610422: 7120 a612 0e00                         |0005: invoke-static {v14, v0}, LX/04l9;.A0j:(Ljava/lang/Object;I)V // method@12a6
+work/dis/classes8.txt-1581962-610428: 7110 8100 0c00                         |0008: invoke-static {v12}, LX/002L;.A06:(Landroid/view/View;)Landroid/content/Context; // method@0081
+work/dis/classes8.txt-1581963-61042e: 0c03                                   |000b: move-result-object v3
+work/dis/classes8.txt-1581964-610430: 7120 dc0e 0300                         |000c: invoke-static {v3, v0}, LX/03ds;.A07:(Landroid/content/Context;I)F // method@0edc
+work/dis/classes8.txt-1581965-610436: 0a09                                   |000f: move-result v9
+work/dis/classes8.txt-1581966-610438: 1230                                   |0010: const/4 v0, #int 3 // #3
+work/dis/classes8.txt-1581967-61043a: 7120 dc0e 0300                         |0011: invoke-static {v3, v0}, LX/03ds;.A07:(Landroid/content/Context;I)F // method@0edc
+work/dis/classes8.txt-1581968-610440: 0a0a                                   |0014: move-result v10
+work/dis/classes8.txt-1581969-610442: 1240                                   |0015: const/4 v0, #int 4 // #4
+work/dis/classes8.txt-1581970-610444: 7120 dc0e 0300                         |0016: invoke-static {v3, v0}, LX/03ds;.A07:(Landroid/content/Context;I)F // method@0edc
+work/dis/classes8.txt-1581971-61044a: 0a08                                   |0019: move-result v8
+work/dis/classes8.txt-1581972-61044c: 6207 3ceb                              |001a: sget-object v7, Lcom/instagram/common/ui/base/BadgingUtil;.badgeLabelPaint:Landroid/graphics/Paint; // field@eb3c
+work/dis/classes8.txt-1581973-610450: 7110 0710 0300                         |001c: invoke-static {v3}, LX/03ys;.A0H:(Landroid/content/Context;)I // method@1007
+work/dis/classes8.txt-1581974-610456: 0a00                                   |001f: move-result v0
+work/dis/classes8.txt-1581975-610458: 6e20 51cb 0700                         |0020: invoke-virtual {v7, v0}, Landroid/graphics/Paint;.setColor:(I)V // method@cb51
+work/dis/classes8.txt-1581976-61045e: 6e10 a3cf 0c00                         |0023: invoke-virtual {v12}, Landroid/view/View;.getResources:()Landroid/content/res/Resources; // method@cfa3
+work/dis/classes8.txt-1581977-610464: 0c01                                   |0026: move-result-object v1
+work/dis/classes8.txt-1581978-610466: 1400 0a00 077f                         |0027: const v0, #float 1.79446e+38 // #7f07000a
+work/dis/classes8.txt-1581979-61046c: 6e20 74ca 0100                         |002a: invoke-virtual {v1, v0}, Landroid/content/res/Resources;.getDimension:(I)F // method@ca74
