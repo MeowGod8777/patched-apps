@@ -1,0 +1,129 @@
+name: IG 439 HDR Server Classification Fast R19i2
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - .github/workflows/ig-hdr-server-classification-fast-r19i2.yml
+
+permissions:
+  contents: write
+
+jobs:
+  trace:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    env:
+      APK_NAME: instagram-piko-v439.0.0.37.89-arm64-v8a.apk
+      APK_SHA256: 4015b171ac59f3e7172134d194ec2dcf701f64c3339f127c19d7a04c13d529c8
+    steps:
+      - uses: actions/checkout@v6
+        with: {fetch-depth: 0}
+      - uses: actions/setup-java@v5
+        with: {distribution: zulu, java-version: '21'}
+      - name: Fetch and disassemble only high-signal dexes
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          set -euo pipefail
+          mkdir -p work/apk work/smali research/generated
+          gh release download 8 --pattern "$APK_NAME" --dir work
+          echo "$APK_SHA256  work/$APK_NAME" | sha256sum -c -
+          gh release download 3.0.10 --repo baksmali/smali --pattern 'baksmali-3.0.10-fat.jar' --dir work
+          unzip -q "work/$APK_NAME" 'classes*.dex' -d work/apk
+          python3 - <<'PY'
+          from pathlib import Path
+          import subprocess
+          terms=['com.facebook.devicesegmentation','ig_device_static_attributes','key_display_hdr_supported',
+                 'key_video_decoder_hdr_supported','display_hdr_supported','video_decoder_hdr_supported',
+                 'is_av1_hdr_supported','is_hevc_hdr_supported','supported_display_hdr_types','hdr_supported_types',
+                 'client_device_model','chipset_platform','media_codec_info','profile_levels']
+          hit=[]; rows=[]
+          for p in sorted(Path('work/apk').glob('classes*.dex')):
+              s=subprocess.run(['strings','-a',str(p)],capture_output=True,text=True,errors='replace').stdout
+              hs=[t for t in terms if t.lower() in s.lower()]
+              if hs: hit.append(p.name); rows.append(f'{p.name}: '+', '.join(hs))
+          Path('work/hitdex.txt').write_text('\n'.join(hit)+'\n')
+          print('\n'.join(rows)); print('HITDEX',hit)
+          PY
+          while read d; do [ -n "$d" ] && java -jar work/baksmali-3.0.10-fat.jar d "work/apk/$d" -o "work/smali/${d%.dex}" >/dev/null & done < work/hitdex.txt
+          wait
+      - name: Extract exact producers and network callers
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          from pathlib import Path
+          import re
+          R=Path('work/smali'); OUT=Path('research/generated/instagram_439_hdr_server_classification_fast_r19i2.txt')
+          cr=re.compile(r'^\.class\s+.*\s+(L[^;]+;)$'); sr=re.compile(r'^\s*const-string(?:/jumbo)?\s+[^,]+,\s+"(.*)"')
+          methods=[]
+          for p in R.rglob('*.smali'):
+              ls=p.read_text(errors='replace').splitlines(); cls='?'
+              for x in ls[:50]:
+                  m=cr.match(x)
+                  if m: cls=m.group(1); break
+              i=0
+              while i<len(ls):
+                  if not ls[i].startswith('.method'): i+=1; continue
+                  s=i; sig=ls[i]; i+=1
+                  while i<len(ls) and not ls[i].startswith('.end method'): i+=1
+                  methods.append((cls,sig,p,ls[s:min(i+1,len(ls))])); i+=1
+          caps=['com.facebook.devicesegmentation','ig_device_static_attributes','key_display_hdr_supported','key_video_decoder_hdr_supported',
+                'display_hdr_supported','video_decoder_hdr_supported','is_av1_hdr_supported','is_hevc_hdr_supported',
+                'supported_display_hdr_types','hdr_supported_types','client_device_model','chipset_platform','media_codec_info','profile_levels']
+          net=['GraphQlCallInput','PandoGraphQLRequest','/api/v1/','/api/v2/','LX/03u7;','LX/01pg;','LX/05xm;','LX/05yb;','signed_body','query_id','doc_id']
+          O=['Instagram 439 HDR server classification fast R19i2','===================================================','']
+          seeds=[]
+          for cls,sig,p,b in methods:
+              low='\n'.join(b).lower(); ch=[c for c in caps if c.lower() in low]
+              if ch: seeds.append((cls,sig,p,b,ch))
+          O += [f'SEEDS={len(seeds)}','']
+          O += ['===== SEED SUMMARY =====']
+          for cls,sig,p,b,ch in seeds:
+              low='\n'.join(b).lower(); nh=[n for n in net if n.lower() in low]
+              strings=[m.group(1) for l in b if (m:=sr.match(l))]
+              O += [f'{cls} {sig} FILE={p}',f'CAP={ch}',f'NET={nh}',f'STRINGS={strings[:160]}','']
+          # exact caller graph one and two hops
+          keys=[]
+          for cls,sig,p,b,ch in seeds:
+              mm=re.search(r'\s([^\s(]+)\(([^)]*)\)(\S+)$',sig)
+              if mm: keys.append((cls,mm.group(1),mm.group(2),mm.group(3),ch))
+          hop1=[]
+          for ccls,csig,cp,cb in methods:
+              text='\n'.join(cb); low=text.lower(); nh=[n for n in net if n.lower() in low]
+              for k in keys:
+                  if f'{k[0]}->{k[1]}({k[2]}){k[3]}' in text:
+                      hop1.append((k,ccls,csig,cp,cb,nh)); break
+          O += [f'===== HOP1 CALLERS ({len(hop1)}) =====']
+          for k,ccls,csig,cp,cb,nh in hop1:
+              strings=[m.group(1) for l in cb if (m:=sr.match(l))]
+              O += [f'CALLS={k[:4]} CAP={k[4]}',f'CALLER={ccls} {csig} FILE={cp}',f'NET={nh}',f'STRINGS={strings[:180]}']
+              if nh: O += cb
+              O += ['']
+          # network-bearing hop2 callers of hop1 methods
+          h1keys=[]
+          for _,ccls,csig,cp,cb,nh in hop1:
+              mm=re.search(r'\s([^\s(]+)\(([^)]*)\)(\S+)$',csig)
+              if mm: h1keys.append((ccls,mm.group(1),mm.group(2),mm.group(3)))
+          O += ['===== NETWORK-BEARING HOP2 =====']
+          h2c=0
+          for ccls,csig,cp,cb in methods:
+              text='\n'.join(cb); low=text.lower(); nh=[n for n in net if n.lower() in low]
+              if not nh: continue
+              for k in h1keys:
+                  if f'{k[0]}->{k[1]}({k[2]}){k[3]}' in text:
+                      h2c+=1; strings=[m.group(1) for l in cb if (m:=sr.match(l))]
+                      O += [f'CALLS={k}',f'CALLER={ccls} {csig} FILE={cp}',f'NET={nh}',f'STRINGS={strings[:180]}']+cb+['']; break
+          O += [f'HOP2_NETWORK_COUNT={h2c}','']
+          OUT.write_text('\n'.join(O)+'\n')
+          print('\n'.join(O[:7000])); print('bytes',OUT.stat().st_size)
+          PY
+      - name: Commit
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add research/generated/instagram_439_hdr_server_classification_fast_r19i2.txt
+          git commit -m 'Add high-signal server classification trace R19i2' || exit 0
+          git pull --rebase origin main
+          git push origin HEAD:main
