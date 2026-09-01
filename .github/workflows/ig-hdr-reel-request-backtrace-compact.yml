@@ -124,7 +124,6 @@ jobs:
               if k in t or k in s: score+=w
             return score
 
-          # exact seed groups
           mpc=[m for m in methods if 'Landroid/os/Build$VERSION;->MEDIA_PERFORMANCE_CLASS:I' in text(m)]
           perfpoints=[m for m in methods if 'LX/0cby;->A03(Landroid/media/MediaCodecInfo$VideoCapabilities;)' in text(m)]
           headers=[m for m in methods if any(x in strs(m) for x in (
@@ -161,7 +160,6 @@ jobs:
           for m in reels[:180]:
             if is_requestish(m)>=7: emit(out,m,f'REEL score={is_requestish(m)}',depth=1)
 
-          # Build call graph distances: reverse and forward BFS up to 4 hops.
           def bfs_forward(starts,maxd=4):
             dist={m:0 for m in starts}; q=collections.deque(starts)
             while q:
@@ -188,18 +186,15 @@ jobs:
 
           out += ['===== 5. CAPABILITY/IDENTITY ↔ REEL REQUEST GRAPH INTERSECTIONS <=4 HOPS =====','']
           hits=[]
-          universe=set(methods)
-          for m in universe:
-            # Any node reachable from both sides in either direction is a bridge candidate.
+          for m in methods:
             a=min(cap_f.get(m,99),cap_r.get(m,99)); b=min(req_f.get(m,99),req_r.get(m,99))
-            if a<=4 and b<=4:
-              hits.append((a+b,a,b,m))
+            if a<=4 and b<=4: hits.append((a+b,a,b,m))
           hits=sorted(hits)[:300]
           for total,a,b,m in hits:
             out.append(f'BRIDGE total={total} capdist={a} reqdist={b} {m}')
             out.append('  STRINGS: '+' | '.join(dict.fromkeys(methods[m]['strings'])))
             out.append('  CALLERS: '+' | '.join(sorted(callers.get(m,()))[:16]))
-            out.append('  CALLEES: '+' | '.join(dict.fromkeys(methods[m]['invokes'])[:16]))
+            out.append('  CALLEES: '+' | '.join(list(dict.fromkeys(methods[m]['invokes']))[:16]))
           out.append('')
 
           out += ['===== 6. ANDROID BUILD IDENTITY READERS NEAR REQUEST GRAPH =====','']
@@ -210,20 +205,17 @@ jobs:
           out += ['===== 7. video_dash_manifest GETTER + DIRECT CALLERS =====','']
           if manifest_get in methods: emit(out,manifest_get,'MANIFEST_GETTER',depth=2)
 
-          # Exact string cross inventory for likely delivery/classification names.
           terms=(
             'media_performance_class','video_performance_points','device_class','device_level','device_tier',
             'clips_delivery_parameters','feed_delivery_parameters','delivery_class','is_dash_eligible',
             'supported_capabilities','playback_capabilities','media_capabilities','client_hints',
-            'device_capabilities','device_model','device_name'
+            'device_capabilities','device_model','device_name','startbenchmarks','runminibenchmark','reportbenchmark'
           )
           out += ['===== 8. DELIVERY / CLASSIFICATION STRING OWNERS =====','']
           owners=[]
           for m in methods:
-            s=strs(m)
-            matched=[t for t in terms if t in s]
-            if matched:
-              owners.append((-(is_requestish(m)),m,matched))
+            s=strs(m); matched=[t for t in terms if t in s]
+            if matched: owners.append((-(is_requestish(m)),m,matched))
           for _,m,matched in sorted(owners)[:220]:
             out.append(f'{m} MATCH={",".join(matched)}')
             out.append('  FILE: '+methods[m]['file'])
