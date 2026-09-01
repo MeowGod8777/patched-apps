@@ -27,7 +27,7 @@ jobs:
           distribution: zulu
           java-version: '21'
 
-      - name: Download exact R8 and install smali tools
+      - name: Download exact R8 and install tools
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
@@ -36,7 +36,7 @@ jobs:
           gh release download 8 --pattern "$BASE_APK" --dir work
           echo "$BASE_SHA256  work/$BASE_APK" | sha256sum -c -
           sudo apt-get update -qq
-          sudo apt-get install -y -qq smali
+          sudo apt-get install -y -qq smali libbcprov-java
           command -v baksmali
           command -v smali
 
@@ -65,7 +65,7 @@ jobs:
           PY
           smali a work/smali2 -o work/classes2-patched.dex
 
-      - name: Repack, align, and sign with R8 key
+      - name: Repack, align, and sign with exact R8 key
         run: |
           set -euo pipefail
           cp "work/$BASE_APK" work/unsigned.apk
@@ -75,10 +75,27 @@ jobs:
           (cd work && zip -q -0 unsigned.apk classes2.dex)
           ZIPALIGN="$(find "$ANDROID_HOME/build-tools" -type f -name zipalign | sort -V | tail -1)"
           "$ZIPALIGN" -f -p 4 work/unsigned.apk work/aligned.apk
-          keytool -list -keystore ks.keystore -storetype JKS -storepass 123456789 -alias andrewliang >/dev/null
+
+          # Morphe's ks.keystore is Bouncy Castle BKS v2. Convert it transiently
+          # to PKCS12 so Android apksigner can use the exact same key/certificate.
+          BCJAR="$(find /usr/share/java -maxdepth 1 -type f -name 'bcprov*.jar' | head -1)"
+          test -n "$BCJAR"
+          keytool -list \
+            -keystore ks.keystore -storetype BKS -storepass 123456789 \
+            -providerclass org.bouncycastle.jce.provider.BouncyCastleProvider \
+            -providerpath "$BCJAR" | tee out/keystore.txt
+          rm -f work/ks-r8.p12
+          keytool -importkeystore \
+            -srckeystore ks.keystore -srcstoretype BKS -srcstorepass 123456789 \
+            -srcalias andrewliang -srckeypass 123456789 \
+            -destkeystore work/ks-r8.p12 -deststoretype PKCS12 \
+            -deststorepass 123456789 -destkeypass 123456789 -destalias andrewliang \
+            -providerclass org.bouncycastle.jce.provider.BouncyCastleProvider \
+            -providerpath "$BCJAR" -noprompt
+
           java -jar bin/apksigner.jar sign \
-            --ks ks.keystore \
-            --ks-type JKS \
+            --ks work/ks-r8.p12 \
+            --ks-type PKCS12 \
             --ks-pass pass:123456789 \
             --key-pass pass:123456789 \
             --ks-key-alias andrewliang \
@@ -91,8 +108,8 @@ jobs:
           java -jar bin/apksigner.jar verify --verbose --print-certs "out/$OUT_APK" | tee out/verify.txt
           ORIG_CERT=$(java -jar bin/apksigner.jar verify --print-certs "work/$BASE_APK" | sed -n 's/^Signer #1 certificate SHA-256 digest: //p' | head -1)
           NEW_CERT=$(java -jar bin/apksigner.jar verify --print-certs "out/$OUT_APK" | sed -n 's/^Signer #1 certificate SHA-256 digest: //p' | head -1)
-          echo "original_cert=$ORIG_CERT"
-          echo "new_cert=$NEW_CERT"
+          echo "original_cert=$ORIG_CERT" | tee out/cert-match.txt
+          echo "new_cert=$NEW_CERT" | tee -a out/cert-match.txt
           test -n "$ORIG_CERT" && test "$ORIG_CERT" = "$NEW_CERT"
           unzip -p "out/$OUT_APK" classes2.dex > work/verify-classes2.dex
           rm -rf work/verify-smali2
@@ -117,6 +134,7 @@ jobs:
             out/${{ env.OUT_APK }}
             out/sha256.txt
             out/verify.txt
+            out/cert-match.txt
           retention-days: 14
 
       - name: Publish prerelease
@@ -124,10 +142,10 @@ jobs:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           set -euo pipefail
-          NOTES='Test R1: exact Release 8 Instagram 439 + one change only: X.08oh.A0b(List) returns the original DASH representation list, bypassing the HeroPlayer AV1/non-AV1 manifest filter. Same signing certificate as Release 8. This is a diagnostic HDR build, not a final release.'
+          NOTES='Test R1: exact Release 8 Instagram 439 + one change only: X.08oh.A0b(List) returns the original DASH representation list, bypassing the HeroPlayer AV1/non-AV1 manifest filter. Same signing certificate as Release 8, verified before publishing. Diagnostic HDR build.'
           if gh release view "$TAG" >/dev/null 2>&1; then
-            gh release upload "$TAG" "out/$OUT_APK" out/sha256.txt out/verify.txt --clobber
+            gh release upload "$TAG" "out/$OUT_APK" out/sha256.txt out/verify.txt out/cert-match.txt --clobber
             gh release edit "$TAG" --notes "$NOTES" --prerelease
           else
-            gh release create "$TAG" "out/$OUT_APK" out/sha256.txt out/verify.txt --title 'Instagram HDR Test R1' --notes "$NOTES" --prerelease
+            gh release create "$TAG" "out/$OUT_APK" out/sha256.txt out/verify.txt out/cert-match.txt --title 'Instagram HDR Test R1' --notes "$NOTES" --prerelease
           fi
