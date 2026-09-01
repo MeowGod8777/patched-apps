@@ -1,0 +1,222 @@
+name: IG 439 Reel Media Request Backtrace
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - .github/workflows/ig-hdr-reel-request-backtrace.yml
+
+permissions:
+  contents: write
+
+jobs:
+  trace:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    env:
+      APK_NAME: instagram-piko-v439.0.0.37.89-arm64-v8a.apk
+      APK_SHA256: 4015b171ac59f3e7172134d194ec2dcf701f64c3339f127c19d7a04c13d529c8
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-java@v5
+        with:
+          distribution: zulu
+          java-version: '21'
+      - name: Download exact APK and baksmali
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          set -euo pipefail
+          mkdir -p work/apk work/smali research/generated
+          gh release download 8 --pattern "$APK_NAME" --dir work
+          echo "$APK_SHA256  work/$APK_NAME" | sha256sum -c -
+          gh release download 3.0.10 --repo baksmali/smali --pattern 'baksmali-3.0.10-fat.jar' --dir work
+          unzip -q "work/$APK_NAME" 'classes*.dex' -d work/apk
+          for d in work/apk/classes*.dex; do
+            n="$(basename "$d" .dex)"
+            java -jar work/baksmali-3.0.10-fat.jar d "$d" -o "work/smali/$n" >/dev/null
+          done
+
+      - name: Build exact cross-DEX method graph
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          from pathlib import Path
+          import re, collections
+
+          ROOT=Path('work/smali')
+          OUT=Path('research/generated/instagram_439_hdr_reel_request_backtrace.txt')
+
+          class_re=re.compile(r'^\.class\s+.*\s+(L[^;]+;)$')
+          method_re=re.compile(r'^\.method\s+.*?([^\s]+\([^)]*\).+)$')
+          invoke_re=re.compile(r'invoke-[^\s]+\s+\{[^}]*\},\s+(L[^;]+;->[^\s]+)')
+          str_re=re.compile(r'^\s*const-string(?:/jumbo)?\s+[^,]+,\s+"(.*)"')
+
+          methods={}
+          callers=collections.defaultdict(set)
+          class_files={}
+
+          for p in ROOT.rglob('*.smali'):
+            lines=p.read_text(errors='replace').splitlines()
+            cls=None
+            for l in lines[:20]:
+              m=class_re.match(l)
+              if m:
+                cls=m.group(1); break
+            if not cls: continue
+            class_files[cls]=str(p)
+            i=0
+            while i < len(lines):
+              mm=method_re.match(lines[i])
+              if not mm:
+                i+=1; continue
+              sig=mm.group(1)
+              ref=f'{cls}->{sig}'
+              s=i; i+=1
+              while i < len(lines) and not lines[i].startswith('.end method'):
+                i+=1
+              e=min(i,len(lines)-1)
+              body=lines[s:e+1]
+              strings=[]; invokes=[]
+              for l in body:
+                sm=str_re.match(l)
+                if sm: strings.append(sm.group(1))
+                im=invoke_re.search(l)
+                if im: invokes.append(im.group(1))
+              methods[ref]={'file':str(p),'body':body,'strings':strings,'invokes':invokes}
+              for callee in invokes: callers[callee].add(ref)
+              i=e+1
+
+          def lowstrings(m): return '\n'.join(methods[m]['strings']).lower()
+          def bodytxt(m): return '\n'.join(methods[m]['body'])
+
+          response_terms=('video_dash_manifest','video_versions','media_has_video_versions')
+          reel_terms=(
+            'reels_media','clips_media','feed/reels','reels/feed','clips/feed','clips/items',
+            'reels/tray','reels_media','reel_media','reels_media_info','clips_media_info',
+            'instagram__reels','instagram__clips','clips_home','clips_timeline','reels_timeline',
+            'clips_tab','reels_tab','reels_viewer','clips_viewer'
+          )
+          identity_terms=(
+            'x-ig-capabilities','x-ig-device-id','x-ig-android-id','x-ig-family-device-id',
+            'user-agent','device_id','family_device_id','device_model','device_name','manufacturer',
+            'model','product','hardware','x-ig-app-id','x-bloks-version-id'
+          )
+          class_terms=(
+            'media_performance_class','sdk_mpc','performance_class','device_level','device_tier',
+            'device_class','device_capabilities','playback_capabilities','media_capabilities',
+            'supported_capabilities','supported_capabilities_new','video_decoder_hdr_supported',
+            'display_hdr_supported','is_av1_hdr_supported','is_hevc_hdr_supported'
+          )
+
+          response=[m for m in methods if any(t in lowstrings(m) for t in response_terms)]
+          reel=[m for m in methods if any(t in lowstrings(m) for t in reel_terms)]
+          identity=[m for m in methods if any(t in lowstrings(m) for t in identity_terms)]
+          classification=[m for m in methods if any(t in lowstrings(m) for t in class_terms)]
+
+          def interesting_line(l):
+            x=l.lower()
+            return (l.startswith('.method') or l.startswith('.end method') or
+                    'const-string' in l or 'invoke-' in l or 'sget-' in l or 'iget-' in l or
+                    'sput-' in l or 'iput-' in l or 'return-' in l or 'if-' in l or
+                    'new-instance' in l or 'check-cast' in l or 'new-array' in l or
+                    'filled-new-array' in l or 'build;' in x or 'graphql' in x or 'http' in x)
+
+          def emit_method(out, m, full=False, caller_depth=1):
+            d=methods[m]
+            out.append(f'===== {m} :: {d["file"]} =====')
+            out.append('STRINGS: '+' | '.join(dict.fromkeys(d['strings'])))
+            c=sorted(callers.get(m,()))
+            out.append('DIRECT_CALLERS: '+(' | '.join(c) if c else '<none>'))
+            out.append('DIRECT_CALLEES: '+(' | '.join(dict.fromkeys(d['invokes'])) if d['invokes'] else '<none>'))
+            for l in d['body']:
+              if full or interesting_line(l): out.append(l)
+            out.append('')
+
+          out=[
+            'Instagram 439 Reel media request / backend eligibility backtrace',
+            '===============================================================',
+            'Exact R8 SHA256: 4015b171ac59f3e7172134d194ec2dcf701f64c3339f127c19d7a04c13d529c8',
+            f'methods indexed: {len(methods)}',
+            ''
+          ]
+
+          out += [f'===== A. RESPONSE MODEL SEEDS count={len(response)} =====','']
+          for m in response[:80]: emit_method(out,m,full=False)
+
+          out += [f'===== B. REEL / CLIPS REQUEST-LIKE SEEDS count={len(reel)} =====','']
+          # rank methods containing obvious request-building types/invocations first
+          def request_score(m):
+            t=bodytxt(m).lower(); s=lowstrings(m)
+            score=0
+            for k,w in [('graphql',8),('graphQlCallInput'.lower(),8),('http',6),('request',5),('/api/',5),('query',3),('cursor',2),('page_size',2),('media_id',2)]:
+              if k in t or k in s: score+=w
+            return score
+          reel_sorted=sorted(reel,key=lambda m:(-request_score(m),m))
+          for m in reel_sorted[:160]: emit_method(out,m,full=False)
+
+          out += [f'===== C. DEVICE IDENTITY / GLOBAL REQUEST HEADER SEEDS count={len(identity)} =====','']
+          # only methods whose literal set has a strong header/identity clue, to avoid generic "model" noise
+          strong_identity=[]
+          for m in identity:
+            s=lowstrings(m)
+            if any(t in s for t in ('x-ig-capabilities','x-ig-device-id','x-ig-android-id','x-ig-family-device-id','user-agent','family_device_id','device_id','device_model','manufacturer')):
+              strong_identity.append(m)
+          for m in strong_identity[:180]: emit_method(out,m,full=False)
+
+          out += [f'===== D. CLASSIFICATION / CAPABILITY SEEDS count={len(classification)} =====','']
+          for m in classification[:180]: emit_method(out,m,full=False)
+
+          # Cross-section: Reel request methods that directly/indirectly (1 hop) touch identity/classification methods.
+          idset=set(strong_identity); clsset=set(classification); reelset=set(reel)
+          out += ['===== E. REEL REQUEST ↔ IDENTITY/CAPABILITY 1-HOP INTERSECTIONS =====','']
+          intersections=0
+          for m in reel_sorted:
+            callees=set(methods[m]['invokes'])
+            hits=(callees & (idset|clsset))
+            # Also if a common caller calls both the reel method and a capability/identity method.
+            siblings=[]
+            for c in callers.get(m,()):
+              if c in methods:
+                ci=set(methods[c]['invokes'])
+                sh=ci & (idset|clsset)
+                if sh: siblings.append((c,sorted(sh)))
+            if hits or siblings:
+              intersections+=1
+              out.append(f'REEL={m}')
+              if hits: out.append('  direct capability/identity callees: '+' | '.join(sorted(hits)))
+              for c,sh in siblings[:12]: out.append(f'  common caller {c} also calls: '+' | '.join(sh))
+              out.append('')
+          out.append(f'intersection_count={intersections}')
+          out.append('')
+
+          # Exact references to Android Build identity APIs, whether or not literals are nearby.
+          out += ['===== F. ANDROID BUILD IDENTITY READERS =====','']
+          for m,d in methods.items():
+            t=bodytxt(m)
+            if any(x in t for x in ('Landroid/os/Build;->MODEL','Landroid/os/Build;->MANUFACTURER','Landroid/os/Build;->DEVICE','Landroid/os/Build;->PRODUCT','Landroid/os/Build;->BRAND','Landroid/os/Build;->HARDWARE')):
+              emit_method(out,m,full=False)
+
+          text='\n'.join(out)
+          # Keep report useful rather than silently truncating in the middle of the highest-priority sections.
+          if len(text)>900000:
+            text=text[:900000]+'\n\n[TRUNCATED AT 900000 BYTES]\n'
+          OUT.write_text(text,encoding='utf-8')
+          print(f'response={len(response)} reel={len(reel)} identity={len(strong_identity)} classification={len(classification)} intersections={intersections} bytes={OUT.stat().st_size}')
+          print(text[:180000])
+          PY
+
+      - name: Commit report
+        run: |
+          set -euo pipefail
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add research/generated/instagram_439_hdr_reel_request_backtrace.txt
+          if ! git diff --cached --quiet; then
+            git commit -m 'Backtrace Instagram 439 Reel media request eligibility'
+            git pull --rebase origin main
+            git push origin HEAD:main
+          fi
