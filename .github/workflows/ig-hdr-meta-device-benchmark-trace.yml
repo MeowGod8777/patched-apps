@@ -1,0 +1,139 @@
+name: IG 439 Meta Device Benchmark HDR Trace
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - .github/workflows/ig-hdr-meta-device-benchmark-trace.yml
+
+permissions:
+  contents: write
+
+jobs:
+  trace:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    env:
+      APK_NAME: instagram-piko-v439.0.0.37.89-arm64-v8a.apk
+      APK_SHA256: 4015b171ac59f3e7172134d194ec2dcf701f64c3339f127c19d7a04c13d529c8
+    steps:
+      - uses: actions/checkout@v6
+        with: {fetch-depth: 0}
+      - uses: actions/setup-java@v5
+        with:
+          distribution: zulu
+          java-version: '21'
+      - name: Prepare exact smali
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          set -euo pipefail
+          mkdir -p work/apk work/smali research/generated
+          gh release download 8 --pattern "$APK_NAME" --dir work
+          echo "$APK_SHA256  work/$APK_NAME" | sha256sum -c -
+          gh release download 3.0.10 --repo baksmali/smali --pattern 'baksmali-3.0.10-fat.jar' --dir work
+          unzip -q "work/$APK_NAME" 'classes*.dex' -d work/apk
+          for d in work/apk/classes*.dex; do
+            n="$(basename "$d" .dex)"
+            java -jar work/baksmali-3.0.10-fat.jar d "$d" -o "work/smali/$n" >/dev/null
+          done
+      - name: Trace proprietary benchmark and score flow
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          import re, collections
+          ROOT=Path('work/smali'); OUT=Path('research/generated/instagram_439_hdr_meta_device_benchmark_trace.txt')
+          cr=re.compile(r'^\.class\s+.*\s+(L[^;]+;)$'); mr=re.compile(r'^\.method\s+.*?([^\s]+\([^)]*\).+)$')
+          ir=re.compile(r'invoke-[^\s]+\s+\{[^}]*\},\s+(L[^;]+;->[^\s]+)'); sr=re.compile(r'^\s*const-string(?:/jumbo)?\s+[^,]+,\s+"(.*)"')
+          M={}; C=collections.defaultdict(set)
+          for p in ROOT.rglob('*.smali'):
+            L=p.read_text(errors='replace').splitlines(); cls=None
+            for x in L[:20]:
+              z=cr.match(x)
+              if z: cls=z.group(1); break
+            if not cls: continue
+            i=0
+            while i<len(L):
+              z=mr.match(L[i])
+              if not z: i+=1; continue
+              ref=cls+'->'+z.group(1); s=i; i+=1
+              while i<len(L) and not L[i].startswith('.end method'): i+=1
+              b=L[s:min(i+1,len(L))]; ss=[]; inv=[]
+              for x in b:
+                q=sr.match(x)
+                if q: ss.append(q.group(1))
+                q=ir.search(x)
+                if q: inv.append(q.group(1))
+              M[ref]={'file':str(p),'body':b,'strings':ss,'invokes':inv}
+              for n in inv: C[n].add(ref)
+              i+=1
+          def body(m): return '\n'.join(M[m]['body'])
+          def strings(m): return '\n'.join(M[m]['strings']).lower()
+          terms=('startbenchmarks','runbenchmark','runminibenchmark','reportbenchmark','performance_score','benchmark_score','device_performance','performance_class','device_class','device_tier')
+          seeds=[m for m in M if any(t in strings(m) or t in body(m).lower() for t in terms)]
+          mpc=[m for m in M if 'Landroid/os/Build$VERSION;->MEDIA_PERFORMANCE_CLASS:I' in body(m)]
+          perf=[m for m in M if 'LX/0cby;->A03(Landroid/media/MediaCodecInfo$VideoCapabilities;)' in body(m)]
+          network_terms=('graphql','http','request','x-ig-','user-agent','i.instagram.com','feed/reels','clips/feed','reels_media','clips_media')
+          net=[m for m in M if any(t in strings(m) for t in network_terms)]
+          def short(m):
+            out=[]
+            for x in M[m]['body']:
+              l=x.lower()
+              if (x.startswith('.method') or x.startswith('.end method') or 'const-string' in x or 'invoke-' in x or 'sget-' in x or 'iget-' in x or 'iput-' in x or 'sput-' in x or 'return-' in x or 'if-' in x or 'move-result' in x or 'sharedpreferences' in l or 'graphql' in l or 'http' in l): out.append(x)
+            return out[:260]
+          def emit(O,m,label):
+            O += [f'===== {label} {m} =====','FILE: '+M[m]['file'],'STRINGS: '+' | '.join(dict.fromkeys(M[m]['strings'])),'CALLERS: '+' | '.join(sorted(C.get(m,()))[:30]),'CALLEES: '+' | '.join(dict.fromkeys(M[m]['invokes'])[:40])]
+            O += short(m); O.append('')
+          def rev(starts,d=5):
+            D={x:0 for x in starts}; q=collections.deque(starts)
+            while q:
+              x=q.popleft()
+              if D[x]>=d: continue
+              for n in C.get(x,()):
+                if n in M and n not in D: D[n]=D[x]+1;q.append(n)
+            return D
+          def fwd(starts,d=5):
+            D={x:0 for x in starts}; q=collections.deque(starts)
+            while q:
+              x=q.popleft()
+              if D[x]>=d: continue
+              for n in M.get(x,{}).get('invokes',[]):
+                if n in M and n not in D: D[n]=D[x]+1;q.append(n)
+            return D
+          O=['Instagram 439 Meta proprietary device benchmark / HDR delivery trace','===============================================================',f'methods={len(M)} seeds={len(seeds)} mpc={len(mpc)} perf={len(perf)} net={len(net)}','']
+          for m in seeds: emit(O,m,'BENCHMARK_SEED')
+          for m in mpc: emit(O,m,'MPC_READER')
+          for m in perf: emit(O,m,'PERFPOINT_CALLER')
+          # caller trees around proprietary benchmark seeds
+          R=rev(seeds,5); F=fwd(seeds,5)
+          O += ['===== BENCHMARK CALLER TREE <=5 =====']
+          for m,d in sorted(R.items(),key=lambda x:(x[1],x[0]))[:500]:
+            O.append(f'UP d={d} {m} STRINGS='+' | '.join(dict.fromkeys(M[m]['strings'])))
+          O += ['','===== BENCHMARK CALLEE TREE <=5 =====']
+          for m,d in sorted(F.items(),key=lambda x:(x[1],x[0]))[:500]:
+            O.append(f'DOWN d={d} {m} STRINGS='+' | '.join(dict.fromkeys(M[m]['strings'])))
+          # intersections with network/request methods
+          NR=rev(net,5); NF=fwd(net,5)
+          O += ['','===== BENCHMARK ↔ NETWORK INTERSECTIONS <=5 HOPS =====']
+          hits=[]
+          for m in set(M):
+            bd=min(R.get(m,99),F.get(m,99)); nd=min(NR.get(m,99),NF.get(m,99))
+            if bd<=5 and nd<=5: hits.append((bd+nd,bd,nd,m))
+          for total,bd,nd,m in sorted(hits)[:500]:
+            O.append(f'BRIDGE total={total} bench={bd} net={nd} {m} STRINGS='+' | '.join(dict.fromkeys(M[m]['strings'])))
+          OUT.write_text('\n'.join(O),encoding='utf-8')
+          print(f'bytes={OUT.stat().st_size} intersections={len(hits)}')
+          print('\n'.join(O[:3500]))
+          PY
+      - name: Commit report
+        run: |
+          set -euo pipefail
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add research/generated/instagram_439_hdr_meta_device_benchmark_trace.txt
+          if ! git diff --cached --quiet; then
+            git commit -m 'Trace Meta device benchmark path for Instagram HDR delivery'
+            git pull --rebase origin main
+            git push origin HEAD:main
+          fi
