@@ -1,0 +1,1944 @@
+Instagram 439 HDR S24-list owner R16b
+====================================
+
+===== FULL CLASS LX/0eEx; =====
+FILE: work/smali/classes12/X/0eEx.smali
+.class public abstract LX/0eEx;
+.super Ljava/lang/Object;
+.source ""
+
+
+# direct methods
+.method public static A00(LX/0dlb;LX/0cHK;)Z
+    .registers 7
+
+    const-string v4, "com.instagram.android"
+
+    const/16 v0, 0xb9b
+
+    invoke-static {v0}, LX/0000;->A00(I)Ljava/lang/String;
+
+    move-result-object v1
+
+    sget-object v0, Landroid/os/Build;->MANUFACTURER:Ljava/lang/String;
+
+    invoke-virtual {v1, v0}, Ljava/lang/String;->equals(Ljava/lang/Object;)Z
+
+    move-result v0
+
+    const/4 v3, 0x0
+
+    if-eqz v0, :cond_80
+
+    invoke-static {}, LX/038G;->A01()Z
+
+    move-result v0
+
+    const/4 v2, 0x1
+
+    if-eqz v0, :cond_7f
+
+    invoke-virtual {v4, v4}, Ljava/lang/String;->startsWith(Ljava/lang/String;)Z
+
+    move-result v0
+
+    if-eqz v0, :cond_80
+
+    sget v1, Landroid/os/Build$VERSION;->SDK_INT:I
+
+    const/16 v0, 0x24
+
+    if-ge v1, v0, :cond_80
+
+    const-string v0, "SM-S9280"
+
+    sget-object v1, Landroid/os/Build;->MODEL:Ljava/lang/String;
+
+    invoke-virtual {v0, v1}, Ljava/lang/String;->equals(Ljava/lang/Object;)Z
+
+    move-result v0
+
+    if-nez v0, :cond_6e
+
+    const-string v0, "SM-S928B"
+
+    invoke-virtual {v0, v1}, Ljava/lang/String;->equals(Ljava/lang/Object;)Z
+
+    move-result v0
+
+    if-nez v0, :cond_6e
+
+    const-string v0, "SM-S928BE"
+
+    invoke-virtual {v0, v1}, Ljava/lang/String;->equals(Ljava/lang/Object;)Z
+
+    move-result v0
+
+    if-nez v0, :cond_6e
+
+    const-string v0, "SM-S928N"
+
+    invoke-virtual {v0, v1}, Ljava/lang/String;->equals(Ljava/lang/Object;)Z
+
+    move-result v0
+
+    if-nez v0, :cond_6e
+
+    const-string v0, "SM-S928U"
+
+    invoke-virtual {v0, v1}, Ljava/lang/String;->equals(Ljava/lang/Object;)Z
+
+    move-result v0
+
+    if-nez v0, :cond_6e
+
+    const-string v0, "SM-S928U1"
+
+    invoke-virtual {v0, v1}, Ljava/lang/String;->equals(Ljava/lang/Object;)Z
+
+    move-result v0
+
+    if-nez v0, :cond_6e
+
+    const-string v0, "SM-S928W"
+
+    invoke-virtual {v0, v1}, Ljava/lang/String;->equals(Ljava/lang/Object;)Z
+
+    move-result v0
+
+    if-nez v0, :cond_6e
+
+    const-string v0, "SC-52E"
+
+    invoke-virtual {v0, v1}, Ljava/lang/String;->equals(Ljava/lang/Object;)Z
+
+    move-result v0
+
+    if-nez v0, :cond_6e
+
+    const-string v0, "SCG26"
+
+    invoke-virtual {v0, v1}, Ljava/lang/String;->equals(Ljava/lang/Object;)Z
+
+    move-result v0
+
+    if-eqz v0, :cond_80
+
+    :cond_6e
+    iget v1, p1, LX/0cHK;->A02:I
+
+    iget v0, p1, LX/0cHK;->A01:I
+
+    mul-int/2addr v1, v0
+
+    const v0, 0x5eec00
+
+    if-lt v1, v0, :cond_80
+
+    iget v1, p0, LX/0dlb;->A00:I
+
+    const v0, 0xea60
+
+    if-lt v1, v0, :cond_80
+
+    :cond_7f
+    return v2
+
+    :cond_80
+    return v3
+.end method
+
+===== FULL CLASS LX/0hhJ; =====
+FILE: work/smali/classes12/X/0hhJ.smali
+.class public final LX/0hhJ;
+.super Ljava/lang/Object;
+.source ""
+
+
+# instance fields
+.field public final A00:LX/037o;
+
+.field public final A01:Ljava/util/HashMap;
+
+
+# direct methods
+.method public constructor <init>(Landroid/content/Context;)V
+    .registers 5
+
+    invoke-direct {p0}, Ljava/lang/Object;-><init>()V
+
+    new-instance v0, Ljava/util/HashMap;
+
+    invoke-direct {v0}, Ljava/util/HashMap;-><init>()V
+
+    iput-object v0, p0, LX/0hhJ;->A01:Ljava/util/HashMap;
+
+    invoke-static {p1}, LX/01J3;->A08(Landroid/content/Context;)Landroid/util/DisplayMetrics;
+
+    move-result-object v0
+
+    invoke-virtual {p1}, Landroid/content/Context;->getPackageName()Ljava/lang/String;
+
+    iget v2, v0, Landroid/util/DisplayMetrics;->widthPixels:I
+
+    iget v1, v0, Landroid/util/DisplayMetrics;->heightPixels:I
+
+    new-instance v0, LX/037o;
+
+    invoke-direct {v0, v2, v1}, LX/037o;-><init>(II)V
+
+    iput-object v0, p0, LX/0hhJ;->A00:LX/037o;
+
+    return-void
+.end method
+
+.method public static A00(Ljava/util/List;FI)LX/0lOc;
+    .registers 12
+
+    const/16 v1, 0x7530
+
+    int-to-float v0, p2
+
+    div-float/2addr v0, p1
+
+    float-to-int v0, v0
+
+    mul-int/2addr p2, v0
+
+    mul-int/2addr p2, v1
+
+    div-int/lit16 v8, p2, 0x3e8
+
+    invoke-interface {p0}, Ljava/util/List;->size()I
+
+    move-result v7
+
+    const/4 v6, 0x0
+
+    const/4 v5, 0x0
+
+    :goto_f
+    if-ge v5, v7, :cond_45
+
+    invoke-interface {p0, v5}, Ljava/util/List;->get(I)Ljava/lang/Object;
+
+    move-result-object v4
+
+    check-cast v4, LX/0lOc;
+
+    if-eqz v6, :cond_41
+
+    iget-object v0, v4, LX/0lOc;->A02:LX/0cHK;
+
+    iget v2, v0, LX/0cHK;->A02:I
+
+    iget v1, v0, LX/0cHK;->A01:I
+
+    iget-object v0, v4, LX/0lOc;->A01:LX/0dlb;
+
+    iget v0, v0, LX/0dlb;->A00:I
+
+    mul-int/2addr v2, v1
+
+    mul-int/2addr v2, v0
+
+    div-int/lit16 v0, v2, 0x3e8
+
+    sub-int/2addr v0, v8
+
+    invoke-static {v0}, Ljava/lang/Math;->abs(I)I
+
+    move-result v3
+
+    iget-object v0, v6, LX/0lOc;->A02:LX/0cHK;
+
+    iget v2, v0, LX/0cHK;->A02:I
+
+    iget v1, v0, LX/0cHK;->A01:I
+
+    iget-object v0, v6, LX/0lOc;->A01:LX/0dlb;
+
+    iget v0, v0, LX/0dlb;->A00:I
+
+    mul-int/2addr v2, v1
+
+    mul-int/2addr v2, v0
+
+    div-int/lit16 v0, v2, 0x3e8
+
+    sub-int/2addr v0, v8
+
+    invoke-static {v0}, Ljava/lang/Math;->abs(I)I
+
+    move-result v0
+
+    if-gt v3, v0, :cond_42
+
+    :cond_41
+    move-object v6, v4
+
+    :cond_42
+    add-int/lit8 v5, v5, 0x1
+
+    goto :goto_f
+
+    :cond_45
+    if-eqz v6, :cond_48
+
+    return-object v6
+
+    :cond_48
+    const-string v1, "No supported profile found"
+
+    new-instance v0, Ljava/lang/RuntimeException;
+
+    invoke-direct {v0, v1}, Ljava/lang/RuntimeException;-><init>(Ljava/lang/String;)V
+
+    throw v0
+.end method
+
+.method public static A01(LX/0gQO;LX/0lOc;Ljava/util/List;Ljava/util/List;ZZ)V
+    .registers 19
+
+    invoke-interface {p2}, Ljava/util/List;->size()I
+
+    move-result v1
+
+    const/4 v0, 0x0
+
+    :goto_5
+    if-ge v0, v1, :cond_58
+
+    invoke-interface {p2, v0}, Ljava/util/List;->get(I)Ljava/lang/Object;
+
+    move-result-object v2
+
+    check-cast v2, LX/0lOc;
+
+    iget-object v3, v2, LX/0lOc;->A02:LX/0cHK;
+
+    iget v4, v3, LX/0cHK;->A01:I
+
+    iget-object v3, p1, LX/0lOc;->A02:LX/0cHK;
+
+    iget v3, v3, LX/0cHK;->A01:I
+
+    move-object v5, v2
+
+    if-lt v4, v3, :cond_19
+
+    move-object v5, p1
+
+    :cond_19
+    if-eqz p4, :cond_24
+
+    iget-object v3, v2, LX/0lOc;->A02:LX/0cHK;
+
+    iget v4, v3, LX/0cHK;->A01:I
+
+    const/16 v3, 0x438
+
+    const/4 v12, 0x1
+
+    if-le v4, v3, :cond_25
+
+    :cond_24
+    const/4 v12, 0x0
+
+    :cond_25
+    iget-object v10, v5, LX/0lOc;->A02:LX/0cHK;
+
+    sget-object v8, LX/0cES;->A04:LX/0cES;
+
+    iget-object v11, v2, LX/0lOc;->A02:LX/0cHK;
+
+    iget-object v9, v2, LX/0lOc;->A01:LX/0dlb;
+
+    sget-object v7, LX/0cEe;->A03:LX/0cEe;
+
+    new-instance v5, LX/0lOe;
+
+    move-object v6, p0
+
+    invoke-direct/range {v5 .. v12}, LX/0lOe;-><init>(LX/0gQO;LX/0cEe;LX/0cES;LX/0dlb;LX/0cHK;LX/0cHK;Z)V
+
+    move-object/from16 v3, p3
+
+    invoke-interface {v3, v5}, Ljava/util/List;->add(Ljava/lang/Object;)Z
+
+    if-eqz p5, :cond_55
+
+    iget-object v5, v2, LX/0lOc;->A02:LX/0cHK;
+
+    iget-object v4, v2, LX/0lOc;->A01:LX/0dlb;
+
+    invoke-static {v4, v5}, LX/0eEx;->A00(LX/0dlb;LX/0cHK;)Z
+
+    move-result v4
+
+    if-nez v4, :cond_55
+
+    iget-object v11, v2, LX/0lOc;->A02:LX/0cHK;
+
+    iget-object v9, v2, LX/0lOc;->A01:LX/0dlb;
+
+    const/4 v12, 0x0
+
+    sget-object v7, LX/0cEe;->A02:LX/0cEe;
+
+    new-instance v5, LX/0lOe;
+
+    invoke-direct/range {v5 .. v12}, LX/0lOe;-><init>(LX/0gQO;LX/0cEe;LX/0cES;LX/0dlb;LX/0cHK;LX/0cHK;Z)V
+
+    invoke-interface {v3, v5}, Ljava/util/List;->add(Ljava/lang/Object;)Z
+
+    :cond_55
+    add-int/lit8 v0, v0, 0x1
+
+    goto :goto_5
+
+    :cond_58
+    return-void
+.end method
+
+
+# virtual methods
+.method public final A02(LX/0gQO;Ljava/util/List;Ljava/util/List;Ljava/util/List;IZZ)Ljava/util/List;
+    .registers 27
+
+    move-object/from16 v10, p0
+
+    iget-object v3, v10, LX/0hhJ;->A01:Ljava/util/HashMap;
+
+    move-object/from16 v4, p1
+
+    invoke-virtual {v3, v4}, Ljava/util/AbstractMap;->get(Ljava/lang/Object;)Ljava/lang/Object;
+
+    move-result-object v0
+
+    check-cast v0, Ljava/util/List;
+
+    if-nez v0, :cond_27f
+
+    new-instance v8, Ljava/util/HashMap;
+
+    invoke-direct {v8}, Ljava/util/HashMap;-><init>()V
+
+    invoke-static {}, LX/0cEj;->values()[LX/0cEj;
+
+    move-result-object v7
+
+    invoke-interface/range {p3 .. p3}, Ljava/util/List;->iterator()Ljava/util/Iterator;
+
+    move-result-object v13
+
+    :cond_1b
+    :goto_1b
+    invoke-interface {v13}, Ljava/util/Iterator;->hasNext()Z
+
+    move-result v0
+
+    if-eqz v0, :cond_5b
+
+    invoke-interface {v13}, Ljava/util/Iterator;->next()Ljava/lang/Object;
+
+    move-result-object v11
+
+    check-cast v11, [I
+
+    array-length v12, v7
+
+    const/4 v9, 0x0
+
+    const/4 v2, 0x0
+
+    :goto_2a
+    if-ge v2, v12, :cond_1b
+
+    aget-object v6, v7, v2
+
+    iget v1, v6, LX/0cEj;->A00:I
+
+    const/4 v5, 0x1
+
+    aget v0, v11, v5
+
+    if-ne v0, v1, :cond_58
+
+    invoke-virtual {v8, v6}, Ljava/util/AbstractMap;->get(Ljava/lang/Object;)Ljava/lang/Object;
+
+    move-result-object v0
+
+    check-cast v0, LX/0dlb;
+
+    if-eqz v0, :cond_43
+
+    aget v1, v11, v9
+
+    iget v0, v0, LX/0dlb;->A01:I
+
+    if-ge v1, v0, :cond_1b
+
+    :cond_43
+    aget v2, v11, v9
+
+    aget v0, v11, v5
+
+    new-instance v1, LX/0dlb;
+
+    invoke-direct {v1}, Ljava/lang/Object;-><init>()V
+
+    iput-object v6, v1, LX/0dlb;->A02:LX/0cEj;
+
+    iput v2, v1, LX/0dlb;->A01:I
+
+    iput v0, v1, LX/0dlb;->A00:I
+
+    sput v9, Lredex/$StoreFenceHelper;->DUMMY_VOLATILE:I
+
+    invoke-virtual {v8, v6, v1}, Ljava/util/AbstractMap;->put(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;
+
+    goto :goto_1b
+
+    :cond_58
+    add-int/lit8 v2, v2, 0x1
+
+    goto :goto_2a
+
+    :cond_5b
+    invoke-virtual {v8}, Ljava/util/AbstractMap;->values()Ljava/util/Collection;
+
+    move-result-object v0
+
+    new-instance v5, Ljava/util/ArrayList;
+
+    invoke-direct {v5, v0}, Ljava/util/ArrayList;-><init>(Ljava/util/Collection;)V
+
+    new-instance v17, Ljava/util/HashSet;
+
+    invoke-direct/range {v17 .. v17}, Ljava/util/HashSet;-><init>()V
+
+    new-instance v14, Ljava/util/HashMap;
+
+    invoke-direct {v14}, Ljava/util/HashMap;-><init>()V
+
+    move-object/from16 v7, p2
+
+    invoke-interface {v7}, Ljava/util/List;->size()I
+
+    move-result v6
+
+    const/4 v2, 0x0
+
+    :goto_75
+    if-ge v2, v6, :cond_89
+
+    invoke-interface {v7, v2}, Ljava/util/List;->get(I)Ljava/lang/Object;
+
+    move-result-object v1
+
+    check-cast v1, LX/0LcM;
+
+    iget v0, v1, LX/0LcM;->A00:I
+
+    invoke-static {v0}, Ljava/lang/Integer;->valueOf(I)Ljava/lang/Integer;
+
+    move-result-object v0
+
+    invoke-virtual {v14, v0, v1}, Ljava/util/AbstractMap;->put(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;
+
+    add-int/lit8 v2, v2, 0x1
+
+    goto :goto_75
+
+    :cond_89
+    invoke-static {}, LX/0cHK;->values()[LX/0cHK;
+
+    move-result-object v0
+
+    array-length v13, v0
+
+    invoke-static {}, LX/0cHK;->values()[LX/0cHK;
+
+    move-result-object v16
+
+    const/4 v12, 0x0
+
+    :goto_93
+    if-ge v12, v13, :cond_dc
+
+    aget-object v11, v16, v12
+
+    iget-object v0, v11, LX/0cHK;->A03:[I
+
+    array-length v9, v0
+
+    const/4 v8, 0x0
+
+    :goto_9b
+    if-ge v8, v9, :cond_d9
+
+    iget-object v0, v11, LX/0cHK;->A03:[I
+
+    aget v0, v0, v8
+
+    invoke-static {v14, v0}, LX/0BSG;->A0l(Ljava/util/AbstractMap;I)Ljava/lang/Object;
+
+    move-result-object v0
+
+    check-cast v0, LX/0LcM;
+
+    if-eqz v0, :cond_d6
+
+    invoke-virtual {v0}, LX/0LcM;->A00()I
+
+    move-result v7
+
+    invoke-virtual {v5}, Ljava/util/AbstractCollection;->size()I
+
+    move-result v6
+
+    const/4 v2, 0x0
+
+    :goto_b2
+    if-ge v2, v6, :cond_d6
+
+    invoke-virtual {v5, v2}, Ljava/util/AbstractList;->get(I)Ljava/lang/Object;
+
+    move-result-object v15
+
+    check-cast v15, LX/0dlb;
+
+    iget v0, v15, LX/0dlb;->A00:I
+
+    if-gt v0, v7, :cond_d3
+
+    iget-object v0, v15, LX/0dlb;->A02:LX/0cEj;
+
+    new-instance v1, LX/0lOc;
+
+    invoke-direct {v1}, Ljava/lang/Object;-><init>()V
+
+    iput-object v11, v1, LX/0lOc;->A02:LX/0cHK;
+
+    iput-object v0, v1, LX/0lOc;->A00:LX/0cEj;
+
+    iput-object v15, v1, LX/0lOc;->A01:LX/0dlb;
+
+    const/4 v0, 0x0
+
+    sput v0, Lredex/$StoreFenceHelper;->DUMMY_VOLATILE:I
+
+    move-object/from16 v0, v17
+
+    invoke-virtual {v0, v1}, Ljava/util/AbstractCollection;->add(Ljava/lang/Object;)Z
+
+    :cond_d3
+    add-int/lit8 v2, v2, 0x1
+
+    goto :goto_b2
+
+    :cond_d6
+    add-int/lit8 v8, v8, 0x1
+
+    goto :goto_9b
+
+    :cond_d9
+    add-int/lit8 v12, v12, 0x1
+
+    goto :goto_93
+
+    :cond_dc
+    invoke-static/range {v17 .. v17}, LX/0345;->A10(Ljava/util/Collection;)Ljava/util/List;
+
+    move-result-object v8
+
+    iget-object v0, v4, LX/0gQO;->A02:LX/02Z8;
+
+    invoke-virtual {v0}, Ljava/lang/Enum;->ordinal()I
+
+    move-result v1
+
+    const/4 v13, 0x0
+
+    if-eqz v1, :cond_206
+
+    const/4 v0, 0x1
+
+    if-eq v1, v0, :cond_f4
+
+    const-string v1, "Unsupported camera mode"
+
+    new-instance v0, Ljava/lang/RuntimeException;
+
+    invoke-direct {v0, v1}, Ljava/lang/RuntimeException;-><init>(Ljava/lang/String;)V
+
+    throw v0
+
+    :cond_f4
+    const/4 v9, 0x1
+
+    iget-object v2, v10, LX/0hhJ;->A00:LX/037o;
+
+    new-instance v6, Ljava/util/ArrayList;
+
+    invoke-direct {v6}, Ljava/util/ArrayList;-><init>()V
+
+    iget v11, v4, LX/0gQO;->A00:F
+
+    new-instance v7, Ljava/util/ArrayList;
+
+    invoke-direct {v7}, Ljava/util/ArrayList;-><init>()V
+
+    invoke-interface {v8}, Ljava/util/List;->iterator()Ljava/util/Iterator;
+
+    move-result-object v10
+
+    :cond_107
+    :goto_107
+    invoke-interface {v10}, Ljava/util/Iterator;->hasNext()Z
+
+    move-result v0
+
+    if-eqz v0, :cond_11f
+
+    invoke-interface {v10}, Ljava/util/Iterator;->next()Ljava/lang/Object;
+
+    move-result-object v1
+
+    check-cast v1, LX/0lOc;
+
+    iget-object v0, v1, LX/0lOc;->A02:LX/0cHK;
+
+    iget v0, v0, LX/0cHK;->A00:F
+
+    cmpl-float v0, v0, v11
+
+    if-nez v0, :cond_107
+
+    invoke-virtual {v7, v1}, Ljava/util/AbstractCollection;->add(Ljava/lang/Object;)Z
+
+    goto :goto_107
+
+    :cond_11f
+    invoke-static {v7}, Ljava/util/Collections;->sort(Ljava/util/List;)V
+
+    iget v1, v2, LX/037o;->A02:I
+
+    iget v0, v2, LX/037o;->A01:I
+
+    invoke-static {v1, v0}, Ljava/lang/Math;->min(II)I
+
+    move-result v12
+
+    sget-object v10, LX/0cHK;->A05:LX/0cHK;
+
+    const/16 v0, 0x438
+
+    if-ge v12, v0, :cond_141
+
+    sub-int/2addr v0, v12
+
+    invoke-static {v0}, Ljava/lang/Math;->abs(I)I
+
+    move-result v2
+
+    sget-object v1, LX/0cHK;->A08:LX/0cHK;
+
+    const/16 v0, 0x2d0
+
+    sub-int/2addr v0, v12
+
+    invoke-static {v0}, Ljava/lang/Math;->abs(I)I
+
+    move-result v0
+
+    if-lt v2, v0, :cond_141
+
+    move-object v10, v1
+
+    :cond_141
+    iget v0, v10, LX/0cHK;->A01:I
+
+    invoke-static {v7, v11, v0}, LX/0hhJ;->A00(Ljava/util/List;FI)LX/0lOc;
+
+    move-result-object v10
+
+    move/from16 v1, p5
+
+    move/from16 v18, p6
+
+    if-eqz p5, :cond_1fc
+
+    const/4 v0, 0x4
+
+    if-eq v1, v0, :cond_1fc
+
+    if-eq v1, v9, :cond_182
+
+    const/4 v0, 0x3
+
+    if-eq v1, v0, :cond_182
+
+    invoke-virtual {v7}, Ljava/util/AbstractCollection;->size()I
+
+    move-result v9
+
+    const/4 v8, 0x0
+
+    :goto_15a
+    if-ge v8, v9, :cond_278
+
+    invoke-virtual {v7, v8}, Ljava/util/AbstractList;->get(I)Ljava/lang/Object;
+
+    move-result-object v5
+
+    check-cast v5, LX/0lOc;
+
+    iget-object v2, v5, LX/0lOc;->A02:LX/0cHK;
+
+    sget-object v14, LX/0cES;->A04:LX/0cES;
+
+    iget-object v1, v5, LX/0lOc;->A01:LX/0dlb;
+
+    sget-object v13, LX/0cEe;->A03:LX/0cEe;
+
+    new-instance v0, LX/0lOe;
+
+    move-object v11, v0
+
+    move-object v12, v4
+
+    move-object v15, v1
+
+    move-object/from16 v16, v2
+
+    move-object/from16 v17, v2
+
+    invoke-direct/range {v11 .. v18}, LX/0lOe;-><init>(LX/0gQO;LX/0cEe;LX/0cES;LX/0dlb;LX/0cHK;LX/0cHK;Z)V
+
+    invoke-virtual {v6, v0}, Ljava/util/AbstractCollection;->add(Ljava/lang/Object;)Z
+
+    invoke-virtual {v5, v10}, Ljava/lang/Object;->equals(Ljava/lang/Object;)Z
+
+    move-result v0
+
+    if-nez v0, :cond_278
+
+    add-int/lit8 v8, v8, 0x1
+
+    goto :goto_15a
+
+    :cond_182
+    new-instance v14, Ljava/util/ArrayList;
+
+    invoke-direct {v14}, Ljava/util/ArrayList;-><init>()V
+
+    new-instance v13, Ljava/util/HashMap;
+
+    invoke-direct {v13}, Ljava/util/HashMap;-><init>()V
+
+    invoke-static {}, LX/0cHK;->values()[LX/0cHK;
+
+    move-result-object v12
+
+    array-length v11, v12
+
+    const/4 v9, 0x0
+
+    :goto_192
+    if-ge v9, v11, :cond_1a5
+
+    aget-object v7, v12, v9
+
+    iget v2, v7, LX/0cHK;->A02:I
+
+    iget v1, v7, LX/0cHK;->A01:I
+
+    new-instance v0, LX/037o;
+
+    invoke-direct {v0, v2, v1}, LX/037o;-><init>(II)V
+
+    invoke-virtual {v13, v0, v7}, Ljava/util/AbstractMap;->put(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;
+
+    add-int/lit8 v9, v9, 0x1
+
+    goto :goto_192
+
+    :cond_1a5
+    move-object/from16 v16, p4
+
+    invoke-interface/range {v16 .. v16}, Ljava/util/List;->size()I
+
+    move-result v12
+
+    const/4 v11, 0x0
+
+    :goto_1ac
+    if-ge v11, v12, :cond_26a
+
+    move-object/from16 v0, v16
+
+    invoke-interface {v0, v11}, Ljava/util/List;->get(I)Ljava/lang/Object;
+
+    move-result-object v0
+
+    invoke-virtual {v13, v0}, Ljava/util/AbstractMap;->get(Ljava/lang/Object;)Ljava/lang/Object;
+
+    move-result-object v15
+
+    check-cast v15, LX/0cHK;
+
+    if-eqz v15, :cond_1f9
+
+    iget v1, v15, LX/0cHK;->A00:F
+
+    iget v0, v4, LX/0gQO;->A00:F
+
+    cmpl-float v0, v1, v0
+
+    if-nez v0, :cond_1f9
+
+    invoke-interface {v8}, Ljava/util/List;->size()I
+
+    move-result v2
+
+    if-lez v2, :cond_1da
+
+    const/4 v1, 0x0
+
+    :goto_1cb
+    invoke-interface {v8, v1}, Ljava/util/List;->get(I)Ljava/lang/Object;
+
+    move-result-object v0
+
+    check-cast v0, LX/0lOc;
+
+    iget-object v0, v0, LX/0lOc;->A02:LX/0cHK;
+
+    if-eq v15, v0, :cond_1da
+
+    add-int/lit8 v1, v1, 0x1
+
+    if-ge v1, v2, :cond_1f9
+
+    goto :goto_1cb
+
+    :cond_1da
+    invoke-virtual {v5}, Ljava/util/AbstractCollection;->size()I
+
+    move-result v9
+
+    const/4 v7, 0x0
+
+    :goto_1df
+    if-ge v7, v9, :cond_1f9
+
+    invoke-virtual {v5, v7}, Ljava/util/AbstractList;->get(I)Ljava/lang/Object;
+
+    move-result-object v2
+
+    check-cast v2, LX/0dlb;
+
+    iget-object v1, v2, LX/0dlb;->A02:LX/0cEj;
+
+    new-instance v0, LX/0lOc;
+
+    invoke-direct {v0}, Ljava/lang/Object;-><init>()V
+
+    iput-object v15, v0, LX/0lOc;->A02:LX/0cHK;
+
+    iput-object v1, v0, LX/0lOc;->A00:LX/0cEj;
+
+    iput-object v2, v0, LX/0lOc;->A01:LX/0dlb;
+
+    invoke-static {v0, v14, v7}, LX/0248;->A06(Ljava/lang/Object;Ljava/util/AbstractCollection;I)I
+
+    move-result v7
+
+    goto :goto_1df
+
+    :cond_1f9
+    add-int/lit8 v11, v11, 0x1
+
+    goto :goto_1ac
+
+    :cond_1fc
+    move-object v8, v4
+
+    move-object v9, v10
+
+    move-object v10, v7
+
+    move-object v11, v6
+
+    move/from16 v12, v18
+
+    invoke-static/range {v8 .. v13}, LX/0hhJ;->A01(LX/0gQO;LX/0lOc;Ljava/util/List;Ljava/util/List;ZZ)V
+
+    goto :goto_278
+
+    :cond_206
+    iget-object v5, v10, LX/0hhJ;->A00:LX/037o;
+
+    iget v9, v4, LX/0gQO;->A00:F
+
+    new-instance v7, Ljava/util/ArrayList;
+
+    invoke-direct {v7}, Ljava/util/ArrayList;-><init>()V
+
+    invoke-interface {v8}, Ljava/util/List;->iterator()Ljava/util/Iterator;
+
+    move-result-object v2
+
+    :cond_213
+    :goto_213
+    invoke-interface {v2}, Ljava/util/Iterator;->hasNext()Z
+
+    move-result v0
+
+    if-eqz v0, :cond_22b
+
+    invoke-interface {v2}, Ljava/util/Iterator;->next()Ljava/lang/Object;
+
+    move-result-object v1
+
+    check-cast v1, LX/0lOc;
+
+    iget-object v0, v1, LX/0lOc;->A02:LX/0cHK;
+
+    iget v0, v0, LX/0cHK;->A00:F
+
+    cmpl-float v0, v0, v9
+
+    if-nez v0, :cond_213
+
+    invoke-virtual {v7, v1}, Ljava/util/AbstractCollection;->add(Ljava/lang/Object;)Z
+
+    goto :goto_213
+
+    :cond_22b
+    invoke-static {v7}, Ljava/util/Collections;->sort(Ljava/util/List;)V
+
+    iget v1, v5, LX/037o;->A02:I
+
+    iget v0, v5, LX/037o;->A01:I
+
+    invoke-static {v1, v0}, Ljava/lang/Math;->min(II)I
+
+    move-result v6
+
+    sget-object v5, LX/0cHK;->A05:LX/0cHK;
+
+    const/16 v0, 0x438
+
+    if-ge v6, v0, :cond_24d
+
+    sub-int/2addr v0, v6
+
+    invoke-static {v0}, Ljava/lang/Math;->abs(I)I
+
+    move-result v2
+
+    sget-object v1, LX/0cHK;->A08:LX/0cHK;
+
+    const/16 v0, 0x2d0
+
+    sub-int/2addr v0, v6
+
+    invoke-static {v0}, Ljava/lang/Math;->abs(I)I
+
+    move-result v0
+
+    if-lt v2, v0, :cond_24d
+
+    move-object v5, v1
+
+    :cond_24d
+    iget v0, v5, LX/0cHK;->A01:I
+
+    invoke-static {v7, v9, v0}, LX/0hhJ;->A00(Ljava/util/List;FI)LX/0lOc;
+
+    move-result-object v0
+
+    iget-object v1, v0, LX/0lOc;->A02:LX/0cHK;
+
+    sget-object v9, LX/0cES;->A01:LX/0cES;
+
+    sget-object v12, LX/0cHK;->A0D:LX/0cHK;
+
+    iget-object v0, v0, LX/0lOc;->A01:LX/0dlb;
+
+    sget-object v8, LX/0cEe;->A03:LX/0cEe;
+
+    new-instance v6, LX/0lOe;
+
+    move-object v7, v4
+
+    move-object v10, v0
+
+    move-object v11, v1
+
+    invoke-direct/range {v6 .. v13}, LX/0lOe;-><init>(LX/0gQO;LX/0cEe;LX/0cES;LX/0dlb;LX/0cHK;LX/0cHK;Z)V
+
+    invoke-static {v6}, Ljava/util/Collections;->singletonList(Ljava/lang/Object;)Ljava/util/List;
+
+    move-result-object v0
+
+    goto :goto_27c
+
+    :cond_26a
+    invoke-static {v14}, Ljava/util/Collections;->sort(Ljava/util/List;)V
+
+    move/from16 v12, p7
+
+    move-object v7, v4
+
+    move-object v8, v10
+
+    move-object v9, v14
+
+    move-object v10, v6
+
+    move/from16 v11, v18
+
+    invoke-static/range {v7 .. v12}, LX/0hhJ;->A01(LX/0gQO;LX/0lOc;Ljava/util/List;Ljava/util/List;ZZ)V
+
+    :cond_278
+    :goto_278
+    invoke-static {v6}, Ljava/util/Collections;->unmodifiableList(Ljava/util/List;)Ljava/util/List;
+
+    move-result-object v0
+
+    :goto_27c
+    invoke-virtual {v3, v4, v0}, Ljava/util/AbstractMap;->put(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;
+
+    :cond_27f
+    return-object v0
+.end method
+
+===== DIRECT INVOKERS =====
+
+--- LX/0hhJ; .method public static A01(LX/0gQO;LX/0lOc;Ljava/util/List;Ljava/util/List;ZZ)V FILE=work/smali/classes12/X/0hhJ.smali ---
+.method public static A01(LX/0gQO;LX/0lOc;Ljava/util/List;Ljava/util/List;ZZ)V
+    .registers 19
+
+    invoke-interface {p2}, Ljava/util/List;->size()I
+
+    move-result v1
+
+    const/4 v0, 0x0
+
+    :goto_5
+    if-ge v0, v1, :cond_58
+
+    invoke-interface {p2, v0}, Ljava/util/List;->get(I)Ljava/lang/Object;
+
+    move-result-object v2
+
+    check-cast v2, LX/0lOc;
+
+    iget-object v3, v2, LX/0lOc;->A02:LX/0cHK;
+
+    iget v4, v3, LX/0cHK;->A01:I
+
+    iget-object v3, p1, LX/0lOc;->A02:LX/0cHK;
+
+    iget v3, v3, LX/0cHK;->A01:I
+
+    move-object v5, v2
+
+    if-lt v4, v3, :cond_19
+
+    move-object v5, p1
+
+    :cond_19
+    if-eqz p4, :cond_24
+
+    iget-object v3, v2, LX/0lOc;->A02:LX/0cHK;
+
+    iget v4, v3, LX/0cHK;->A01:I
+
+    const/16 v3, 0x438
+
+    const/4 v12, 0x1
+
+    if-le v4, v3, :cond_25
+
+    :cond_24
+    const/4 v12, 0x0
+
+    :cond_25
+    iget-object v10, v5, LX/0lOc;->A02:LX/0cHK;
+
+    sget-object v8, LX/0cES;->A04:LX/0cES;
+
+    iget-object v11, v2, LX/0lOc;->A02:LX/0cHK;
+
+    iget-object v9, v2, LX/0lOc;->A01:LX/0dlb;
+
+    sget-object v7, LX/0cEe;->A03:LX/0cEe;
+
+    new-instance v5, LX/0lOe;
+
+    move-object v6, p0
+
+    invoke-direct/range {v5 .. v12}, LX/0lOe;-><init>(LX/0gQO;LX/0cEe;LX/0cES;LX/0dlb;LX/0cHK;LX/0cHK;Z)V
+
+    move-object/from16 v3, p3
+
+    invoke-interface {v3, v5}, Ljava/util/List;->add(Ljava/lang/Object;)Z
+
+    if-eqz p5, :cond_55
+
+    iget-object v5, v2, LX/0lOc;->A02:LX/0cHK;
+
+    iget-object v4, v2, LX/0lOc;->A01:LX/0dlb;
+
+    invoke-static {v4, v5}, LX/0eEx;->A00(LX/0dlb;LX/0cHK;)Z
+
+    move-result v4
+
+    if-nez v4, :cond_55
+
+    iget-object v11, v2, LX/0lOc;->A02:LX/0cHK;
+
+    iget-object v9, v2, LX/0lOc;->A01:LX/0dlb;
+
+    const/4 v12, 0x0
+
+    sget-object v7, LX/0cEe;->A02:LX/0cEe;
+
+    new-instance v5, LX/0lOe;
+
+    invoke-direct/range {v5 .. v12}, LX/0lOe;-><init>(LX/0gQO;LX/0cEe;LX/0cES;LX/0dlb;LX/0cHK;LX/0cHK;Z)V
+
+    invoke-interface {v3, v5}, Ljava/util/List;->add(Ljava/lang/Object;)Z
+
+    :cond_55
+    add-int/lit8 v0, v0, 0x1
+
+    goto :goto_5
+
+    :cond_58
+    return-void
+.end method
+
+--- LX/0hhJ; .method public final A02(LX/0gQO;Ljava/util/List;Ljava/util/List;Ljava/util/List;IZZ)Ljava/util/List; FILE=work/smali/classes12/X/0hhJ.smali ---
+.method public final A02(LX/0gQO;Ljava/util/List;Ljava/util/List;Ljava/util/List;IZZ)Ljava/util/List;
+    .registers 27
+
+    move-object/from16 v10, p0
+
+    iget-object v3, v10, LX/0hhJ;->A01:Ljava/util/HashMap;
+
+    move-object/from16 v4, p1
+
+    invoke-virtual {v3, v4}, Ljava/util/AbstractMap;->get(Ljava/lang/Object;)Ljava/lang/Object;
+
+    move-result-object v0
+
+    check-cast v0, Ljava/util/List;
+
+    if-nez v0, :cond_27f
+
+    new-instance v8, Ljava/util/HashMap;
+
+    invoke-direct {v8}, Ljava/util/HashMap;-><init>()V
+
+    invoke-static {}, LX/0cEj;->values()[LX/0cEj;
+
+    move-result-object v7
+
+    invoke-interface/range {p3 .. p3}, Ljava/util/List;->iterator()Ljava/util/Iterator;
+
+    move-result-object v13
+
+    :cond_1b
+    :goto_1b
+    invoke-interface {v13}, Ljava/util/Iterator;->hasNext()Z
+
+    move-result v0
+
+    if-eqz v0, :cond_5b
+
+    invoke-interface {v13}, Ljava/util/Iterator;->next()Ljava/lang/Object;
+
+    move-result-object v11
+
+    check-cast v11, [I
+
+    array-length v12, v7
+
+    const/4 v9, 0x0
+
+    const/4 v2, 0x0
+
+    :goto_2a
+    if-ge v2, v12, :cond_1b
+
+    aget-object v6, v7, v2
+
+    iget v1, v6, LX/0cEj;->A00:I
+
+    const/4 v5, 0x1
+
+    aget v0, v11, v5
+
+    if-ne v0, v1, :cond_58
+
+    invoke-virtual {v8, v6}, Ljava/util/AbstractMap;->get(Ljava/lang/Object;)Ljava/lang/Object;
+
+    move-result-object v0
+
+    check-cast v0, LX/0dlb;
+
+    if-eqz v0, :cond_43
+
+    aget v1, v11, v9
+
+    iget v0, v0, LX/0dlb;->A01:I
+
+    if-ge v1, v0, :cond_1b
+
+    :cond_43
+    aget v2, v11, v9
+
+    aget v0, v11, v5
+
+    new-instance v1, LX/0dlb;
+
+    invoke-direct {v1}, Ljava/lang/Object;-><init>()V
+
+    iput-object v6, v1, LX/0dlb;->A02:LX/0cEj;
+
+    iput v2, v1, LX/0dlb;->A01:I
+
+    iput v0, v1, LX/0dlb;->A00:I
+
+    sput v9, Lredex/$StoreFenceHelper;->DUMMY_VOLATILE:I
+
+    invoke-virtual {v8, v6, v1}, Ljava/util/AbstractMap;->put(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;
+
+    goto :goto_1b
+
+    :cond_58
+    add-int/lit8 v2, v2, 0x1
+
+    goto :goto_2a
+
+    :cond_5b
+    invoke-virtual {v8}, Ljava/util/AbstractMap;->values()Ljava/util/Collection;
+
+    move-result-object v0
+
+    new-instance v5, Ljava/util/ArrayList;
+
+    invoke-direct {v5, v0}, Ljava/util/ArrayList;-><init>(Ljava/util/Collection;)V
+
+    new-instance v17, Ljava/util/HashSet;
+
+    invoke-direct/range {v17 .. v17}, Ljava/util/HashSet;-><init>()V
+
+    new-instance v14, Ljava/util/HashMap;
+
+    invoke-direct {v14}, Ljava/util/HashMap;-><init>()V
+
+    move-object/from16 v7, p2
+
+    invoke-interface {v7}, Ljava/util/List;->size()I
+
+    move-result v6
+
+    const/4 v2, 0x0
+
+    :goto_75
+    if-ge v2, v6, :cond_89
+
+    invoke-interface {v7, v2}, Ljava/util/List;->get(I)Ljava/lang/Object;
+
+    move-result-object v1
+
+    check-cast v1, LX/0LcM;
+
+    iget v0, v1, LX/0LcM;->A00:I
+
+    invoke-static {v0}, Ljava/lang/Integer;->valueOf(I)Ljava/lang/Integer;
+
+    move-result-object v0
+
+    invoke-virtual {v14, v0, v1}, Ljava/util/AbstractMap;->put(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;
+
+    add-int/lit8 v2, v2, 0x1
+
+    goto :goto_75
+
+    :cond_89
+    invoke-static {}, LX/0cHK;->values()[LX/0cHK;
+
+    move-result-object v0
+
+    array-length v13, v0
+
+    invoke-static {}, LX/0cHK;->values()[LX/0cHK;
+
+    move-result-object v16
+
+    const/4 v12, 0x0
+
+    :goto_93
+    if-ge v12, v13, :cond_dc
+
+    aget-object v11, v16, v12
+
+    iget-object v0, v11, LX/0cHK;->A03:[I
+
+    array-length v9, v0
+
+    const/4 v8, 0x0
+
+    :goto_9b
+    if-ge v8, v9, :cond_d9
+
+    iget-object v0, v11, LX/0cHK;->A03:[I
+
+    aget v0, v0, v8
+
+    invoke-static {v14, v0}, LX/0BSG;->A0l(Ljava/util/AbstractMap;I)Ljava/lang/Object;
+
+    move-result-object v0
+
+    check-cast v0, LX/0LcM;
+
+    if-eqz v0, :cond_d6
+
+    invoke-virtual {v0}, LX/0LcM;->A00()I
+
+    move-result v7
+
+    invoke-virtual {v5}, Ljava/util/AbstractCollection;->size()I
+
+    move-result v6
+
+    const/4 v2, 0x0
+
+    :goto_b2
+    if-ge v2, v6, :cond_d6
+
+    invoke-virtual {v5, v2}, Ljava/util/AbstractList;->get(I)Ljava/lang/Object;
+
+    move-result-object v15
+
+    check-cast v15, LX/0dlb;
+
+    iget v0, v15, LX/0dlb;->A00:I
+
+    if-gt v0, v7, :cond_d3
+
+    iget-object v0, v15, LX/0dlb;->A02:LX/0cEj;
+
+    new-instance v1, LX/0lOc;
+
+    invoke-direct {v1}, Ljava/lang/Object;-><init>()V
+
+    iput-object v11, v1, LX/0lOc;->A02:LX/0cHK;
+
+    iput-object v0, v1, LX/0lOc;->A00:LX/0cEj;
+
+    iput-object v15, v1, LX/0lOc;->A01:LX/0dlb;
+
+    const/4 v0, 0x0
+
+    sput v0, Lredex/$StoreFenceHelper;->DUMMY_VOLATILE:I
+
+    move-object/from16 v0, v17
+
+    invoke-virtual {v0, v1}, Ljava/util/AbstractCollection;->add(Ljava/lang/Object;)Z
+
+    :cond_d3
+    add-int/lit8 v2, v2, 0x1
+
+    goto :goto_b2
+
+    :cond_d6
+    add-int/lit8 v8, v8, 0x1
+
+    goto :goto_9b
+
+    :cond_d9
+    add-int/lit8 v12, v12, 0x1
+
+    goto :goto_93
+
+    :cond_dc
+    invoke-static/range {v17 .. v17}, LX/0345;->A10(Ljava/util/Collection;)Ljava/util/List;
+
+    move-result-object v8
+
+    iget-object v0, v4, LX/0gQO;->A02:LX/02Z8;
+
+    invoke-virtual {v0}, Ljava/lang/Enum;->ordinal()I
+
+    move-result v1
+
+    const/4 v13, 0x0
+
+    if-eqz v1, :cond_206
+
+    const/4 v0, 0x1
+
+    if-eq v1, v0, :cond_f4
+
+    const-string v1, "Unsupported camera mode"
+
+    new-instance v0, Ljava/lang/RuntimeException;
+
+    invoke-direct {v0, v1}, Ljava/lang/RuntimeException;-><init>(Ljava/lang/String;)V
+
+    throw v0
+
+    :cond_f4
+    const/4 v9, 0x1
+
+    iget-object v2, v10, LX/0hhJ;->A00:LX/037o;
+
+    new-instance v6, Ljava/util/ArrayList;
+
+    invoke-direct {v6}, Ljava/util/ArrayList;-><init>()V
+
+    iget v11, v4, LX/0gQO;->A00:F
+
+    new-instance v7, Ljava/util/ArrayList;
+
+    invoke-direct {v7}, Ljava/util/ArrayList;-><init>()V
+
+    invoke-interface {v8}, Ljava/util/List;->iterator()Ljava/util/Iterator;
+
+    move-result-object v10
+
+    :cond_107
+    :goto_107
+    invoke-interface {v10}, Ljava/util/Iterator;->hasNext()Z
+
+    move-result v0
+
+    if-eqz v0, :cond_11f
+
+    invoke-interface {v10}, Ljava/util/Iterator;->next()Ljava/lang/Object;
+
+    move-result-object v1
+
+    check-cast v1, LX/0lOc;
+
+    iget-object v0, v1, LX/0lOc;->A02:LX/0cHK;
+
+    iget v0, v0, LX/0cHK;->A00:F
+
+    cmpl-float v0, v0, v11
+
+    if-nez v0, :cond_107
+
+    invoke-virtual {v7, v1}, Ljava/util/AbstractCollection;->add(Ljava/lang/Object;)Z
+
+    goto :goto_107
+
+    :cond_11f
+    invoke-static {v7}, Ljava/util/Collections;->sort(Ljava/util/List;)V
+
+    iget v1, v2, LX/037o;->A02:I
+
+    iget v0, v2, LX/037o;->A01:I
+
+    invoke-static {v1, v0}, Ljava/lang/Math;->min(II)I
+
+    move-result v12
+
+    sget-object v10, LX/0cHK;->A05:LX/0cHK;
+
+    const/16 v0, 0x438
+
+    if-ge v12, v0, :cond_141
+
+    sub-int/2addr v0, v12
+
+    invoke-static {v0}, Ljava/lang/Math;->abs(I)I
+
+    move-result v2
+
+    sget-object v1, LX/0cHK;->A08:LX/0cHK;
+
+    const/16 v0, 0x2d0
+
+    sub-int/2addr v0, v12
+
+    invoke-static {v0}, Ljava/lang/Math;->abs(I)I
+
+    move-result v0
+
+    if-lt v2, v0, :cond_141
+
+    move-object v10, v1
+
+    :cond_141
+    iget v0, v10, LX/0cHK;->A01:I
+
+    invoke-static {v7, v11, v0}, LX/0hhJ;->A00(Ljava/util/List;FI)LX/0lOc;
+
+    move-result-object v10
+
+    move/from16 v1, p5
+
+    move/from16 v18, p6
+
+    if-eqz p5, :cond_1fc
+
+    const/4 v0, 0x4
+
+    if-eq v1, v0, :cond_1fc
+
+    if-eq v1, v9, :cond_182
+
+    const/4 v0, 0x3
+
+    if-eq v1, v0, :cond_182
+
+    invoke-virtual {v7}, Ljava/util/AbstractCollection;->size()I
+
+    move-result v9
+
+    const/4 v8, 0x0
+
+    :goto_15a
+    if-ge v8, v9, :cond_278
+
+    invoke-virtual {v7, v8}, Ljava/util/AbstractList;->get(I)Ljava/lang/Object;
+
+    move-result-object v5
+
+    check-cast v5, LX/0lOc;
+
+    iget-object v2, v5, LX/0lOc;->A02:LX/0cHK;
+
+    sget-object v14, LX/0cES;->A04:LX/0cES;
+
+    iget-object v1, v5, LX/0lOc;->A01:LX/0dlb;
+
+    sget-object v13, LX/0cEe;->A03:LX/0cEe;
+
+    new-instance v0, LX/0lOe;
+
+    move-object v11, v0
+
+    move-object v12, v4
+
+    move-object v15, v1
+
+    move-object/from16 v16, v2
+
+    move-object/from16 v17, v2
+
+    invoke-direct/range {v11 .. v18}, LX/0lOe;-><init>(LX/0gQO;LX/0cEe;LX/0cES;LX/0dlb;LX/0cHK;LX/0cHK;Z)V
+
+    invoke-virtual {v6, v0}, Ljava/util/AbstractCollection;->add(Ljava/lang/Object;)Z
+
+    invoke-virtual {v5, v10}, Ljava/lang/Object;->equals(Ljava/lang/Object;)Z
+
+    move-result v0
+
+    if-nez v0, :cond_278
+
+    add-int/lit8 v8, v8, 0x1
+
+    goto :goto_15a
+
+    :cond_182
+    new-instance v14, Ljava/util/ArrayList;
+
+    invoke-direct {v14}, Ljava/util/ArrayList;-><init>()V
+
+    new-instance v13, Ljava/util/HashMap;
+
+    invoke-direct {v13}, Ljava/util/HashMap;-><init>()V
+
+    invoke-static {}, LX/0cHK;->values()[LX/0cHK;
+
+    move-result-object v12
+
+    array-length v11, v12
+
+    const/4 v9, 0x0
+
+    :goto_192
+    if-ge v9, v11, :cond_1a5
+
+    aget-object v7, v12, v9
+
+    iget v2, v7, LX/0cHK;->A02:I
+
+    iget v1, v7, LX/0cHK;->A01:I
+
+    new-instance v0, LX/037o;
+
+    invoke-direct {v0, v2, v1}, LX/037o;-><init>(II)V
+
+    invoke-virtual {v13, v0, v7}, Ljava/util/AbstractMap;->put(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;
+
+    add-int/lit8 v9, v9, 0x1
+
+    goto :goto_192
+
+    :cond_1a5
+    move-object/from16 v16, p4
+
+    invoke-interface/range {v16 .. v16}, Ljava/util/List;->size()I
+
+    move-result v12
+
+    const/4 v11, 0x0
+
+    :goto_1ac
+    if-ge v11, v12, :cond_26a
+
+    move-object/from16 v0, v16
+
+    invoke-interface {v0, v11}, Ljava/util/List;->get(I)Ljava/lang/Object;
+
+    move-result-object v0
+
+    invoke-virtual {v13, v0}, Ljava/util/AbstractMap;->get(Ljava/lang/Object;)Ljava/lang/Object;
+
+    move-result-object v15
+
+    check-cast v15, LX/0cHK;
+
+    if-eqz v15, :cond_1f9
+
+    iget v1, v15, LX/0cHK;->A00:F
+
+    iget v0, v4, LX/0gQO;->A00:F
+
+    cmpl-float v0, v1, v0
+
+    if-nez v0, :cond_1f9
+
+    invoke-interface {v8}, Ljava/util/List;->size()I
+
+    move-result v2
+
+    if-lez v2, :cond_1da
+
+    const/4 v1, 0x0
+
+    :goto_1cb
+    invoke-interface {v8, v1}, Ljava/util/List;->get(I)Ljava/lang/Object;
+
+    move-result-object v0
+
+    check-cast v0, LX/0lOc;
+
+    iget-object v0, v0, LX/0lOc;->A02:LX/0cHK;
+
+    if-eq v15, v0, :cond_1da
+
+    add-int/lit8 v1, v1, 0x1
+
+    if-ge v1, v2, :cond_1f9
+
+    goto :goto_1cb
+
+    :cond_1da
+    invoke-virtual {v5}, Ljava/util/AbstractCollection;->size()I
+
+    move-result v9
+
+    const/4 v7, 0x0
+
+    :goto_1df
+    if-ge v7, v9, :cond_1f9
+
+    invoke-virtual {v5, v7}, Ljava/util/AbstractList;->get(I)Ljava/lang/Object;
+
+    move-result-object v2
+
+    check-cast v2, LX/0dlb;
+
+    iget-object v1, v2, LX/0dlb;->A02:LX/0cEj;
+
+    new-instance v0, LX/0lOc;
+
+    invoke-direct {v0}, Ljava/lang/Object;-><init>()V
+
+    iput-object v15, v0, LX/0lOc;->A02:LX/0cHK;
+
+    iput-object v1, v0, LX/0lOc;->A00:LX/0cEj;
+
+    iput-object v2, v0, LX/0lOc;->A01:LX/0dlb;
+
+    invoke-static {v0, v14, v7}, LX/0248;->A06(Ljava/lang/Object;Ljava/util/AbstractCollection;I)I
+
+    move-result v7
+
+    goto :goto_1df
+
+    :cond_1f9
+    add-int/lit8 v11, v11, 0x1
+
+    goto :goto_1ac
+
+    :cond_1fc
+    move-object v8, v4
+
+    move-object v9, v10
+
+    move-object v10, v7
+
+    move-object v11, v6
+
+    move/from16 v12, v18
+
+    invoke-static/range {v8 .. v13}, LX/0hhJ;->A01(LX/0gQO;LX/0lOc;Ljava/util/List;Ljava/util/List;ZZ)V
+
+    goto :goto_278
+
+    :cond_206
+    iget-object v5, v10, LX/0hhJ;->A00:LX/037o;
+
+    iget v9, v4, LX/0gQO;->A00:F
+
+    new-instance v7, Ljava/util/ArrayList;
+
+    invoke-direct {v7}, Ljava/util/ArrayList;-><init>()V
+
+    invoke-interface {v8}, Ljava/util/List;->iterator()Ljava/util/Iterator;
+
+    move-result-object v2
+
+    :cond_213
+    :goto_213
+    invoke-interface {v2}, Ljava/util/Iterator;->hasNext()Z
+
+    move-result v0
+
+    if-eqz v0, :cond_22b
+
+    invoke-interface {v2}, Ljava/util/Iterator;->next()Ljava/lang/Object;
+
+    move-result-object v1
+
+    check-cast v1, LX/0lOc;
+
+    iget-object v0, v1, LX/0lOc;->A02:LX/0cHK;
+
+    iget v0, v0, LX/0cHK;->A00:F
+
+    cmpl-float v0, v0, v9
+
+    if-nez v0, :cond_213
+
+    invoke-virtual {v7, v1}, Ljava/util/AbstractCollection;->add(Ljava/lang/Object;)Z
+
+    goto :goto_213
+
+    :cond_22b
+    invoke-static {v7}, Ljava/util/Collections;->sort(Ljava/util/List;)V
+
+    iget v1, v5, LX/037o;->A02:I
+
+    iget v0, v5, LX/037o;->A01:I
+
+    invoke-static {v1, v0}, Ljava/lang/Math;->min(II)I
+
+    move-result v6
+
+    sget-object v5, LX/0cHK;->A05:LX/0cHK;
+
+    const/16 v0, 0x438
+
+    if-ge v6, v0, :cond_24d
+
+    sub-int/2addr v0, v6
+
+    invoke-static {v0}, Ljava/lang/Math;->abs(I)I
+
+    move-result v2
+
+    sget-object v1, LX/0cHK;->A08:LX/0cHK;
+
+    const/16 v0, 0x2d0
+
+    sub-int/2addr v0, v6
+
+    invoke-static {v0}, Ljava/lang/Math;->abs(I)I
+
+    move-result v0
+
+    if-lt v2, v0, :cond_24d
+
+    move-object v5, v1
+
+    :cond_24d
+    iget v0, v5, LX/0cHK;->A01:I
+
+    invoke-static {v7, v9, v0}, LX/0hhJ;->A00(Ljava/util/List;FI)LX/0lOc;
+
+    move-result-object v0
+
+    iget-object v1, v0, LX/0lOc;->A02:LX/0cHK;
+
+    sget-object v9, LX/0cES;->A01:LX/0cES;
+
+    sget-object v12, LX/0cHK;->A0D:LX/0cHK;
+
+    iget-object v0, v0, LX/0lOc;->A01:LX/0dlb;
+
+    sget-object v8, LX/0cEe;->A03:LX/0cEe;
+
+    new-instance v6, LX/0lOe;
+
+    move-object v7, v4
+
+    move-object v10, v0
+
+    move-object v11, v1
+
+    invoke-direct/range {v6 .. v13}, LX/0lOe;-><init>(LX/0gQO;LX/0cEe;LX/0cES;LX/0dlb;LX/0cHK;LX/0cHK;Z)V
+
+    invoke-static {v6}, Ljava/util/Collections;->singletonList(Ljava/lang/Object;)Ljava/util/List;
+
+    move-result-object v0
+
+    goto :goto_27c
+
+    :cond_26a
+    invoke-static {v14}, Ljava/util/Collections;->sort(Ljava/util/List;)V
+
+    move/from16 v12, p7
+
+    move-object v7, v4
+
+    move-object v8, v10
+
+    move-object v9, v14
+
+    move-object v10, v6
+
+    move/from16 v11, v18
+
+    invoke-static/range {v7 .. v12}, LX/0hhJ;->A01(LX/0gQO;LX/0lOc;Ljava/util/List;Ljava/util/List;ZZ)V
+
+    :cond_278
+    :goto_278
+    invoke-static {v6}, Ljava/util/Collections;->unmodifiableList(Ljava/util/List;)Ljava/util/List;
+
+    move-result-object v0
+
+    :goto_27c
+    invoke-virtual {v3, v4, v0}, Ljava/util/AbstractMap;->put(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;
+
+    :cond_27f
+    return-object v0
+.end method
+
+===== SEMANTIC SUMMARY =====
+LX/0eEx; strings: com.instagram.android | SM-S9280 | SM-S928B | SM-S928BE | SM-S928N | SM-S928U | SM-S928U1 | SM-S928W | SC-52E | SCG26
+LX/0hhJ; strings: No supported profile found | Unsupported camera mode
