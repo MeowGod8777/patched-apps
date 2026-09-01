@@ -1,0 +1,59 @@
+name: IG 439 HDR Candidate Gate Fast
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - .github/workflows/ig-hdr-candidate-gate-fast.yml
+permissions:
+  contents: read
+jobs:
+  trace:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    env:
+      BASE_APK: instagram-piko-v439.0.0.37.89-arm64-v8a.apk
+      BASE_SHA256: 4015b171ac59f3e7172134d194ec2dcf701f64c3339f127c19d7a04c13d529c8
+    steps:
+      - uses: actions/checkout@v6
+      - name: Extract candidate support methods
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          set -euo pipefail
+          mkdir -p work/smali report
+          gh release download 8 --pattern "$BASE_APK" --dir work
+          echo "$BASE_SHA256  work/$BASE_APK" | sha256sum -c -
+          sudo apt-get update -qq
+          sudo apt-get install -y -qq smali
+          for dex in classes13.dex classes17.dex; do
+            unzip -p "work/$BASE_APK" "$dex" > "work/$dex"
+            mkdir -p "work/smali/${dex%.dex}"
+            baksmali d "work/$dex" -o "work/smali/${dex%.dex}"
+          done
+          python3 - <<'PY'
+          from pathlib import Path
+          roots=[Path('work/smali/classes13'),Path('work/smali/classes17')]
+          out=[]
+          sigs=['A0f(LX/03oR;LX/08ui;)I','A0g(LX/03oR;LX/08ui;Z)Ljava/util/List;']
+          def owner(lines,i):
+            s=i
+            while s>=0 and not lines[s].startswith('.method'): s-=1
+            e=i
+            while e<len(lines) and not lines[e].startswith('.end method'): e+=1
+            return '\n'.join(lines[s:e+1])
+          for root in roots:
+            for p in root.rglob('*.smali'):
+              lines=p.read_text(errors='ignore').splitlines()
+              for i,l in enumerate(lines):
+                if any(sig in l for sig in sigs):
+                  out.append(f'===== {p}:{i+1} =====\n{owner(lines,i)}\n\n')
+          Path('report/candidate-gate.txt').write_text(''.join(out))
+          print('bytes',Path('report/candidate-gate.txt').stat().st_size)
+          if Path('report/candidate-gate.txt').stat().st_size<500: raise SystemExit('too small')
+          PY
+      - uses: actions/upload-artifact@v4
+        with:
+          name: ig-candidate-gate-fast
+          path: report/candidate-gate.txt
+          retention-days: 7
