@@ -1,0 +1,132 @@
+name: IG 439 HDR Rendition Filter Minimal
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - .github/workflows/ig-hdr-rendition-filter-minimal.yml
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  probe:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    env:
+      APK_NAME: instagram-piko-v439.0.0.37.89-arm64-v8a.apk
+      APK_SHA256: 4015b171ac59f3e7172134d194ec2dcf701f64c3339f127c19d7a04c13d529c8
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+      - name: Download and disassemble exact R8
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          mkdir -p work/dex work/dis research/generated
+          gh release download 8 --pattern "$APK_NAME" --dir work
+          echo "$APK_SHA256  work/$APK_NAME" | sha256sum -c -
+          unzip -j "work/$APK_NAME" 'classes*.dex' -d work/dex
+          DEXDUMP="$(find "$ANDROID_HOME/build-tools" -type f -name dexdump | sort -V | tail -1)"
+          for d in work/dex/classes*.dex; do
+            b="$(basename "$d" .dex)"
+            "$DEXDUMP" -d -f -h "$d" > "work/dis/$b.txt"
+          done
+      - name: Extract only high-signal exact owners
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          import re
+
+          targets = [
+            'is_av1_hdr_supported',
+            'is_hevc_hdr_supported',
+            'display_hdr_supported',
+            'ALL_VALID_VIDEO_REPRESENTATION_FILTERED_OUT',
+            'NO_VALID_VIDEO_REPRESENTATION_FALLBACK_PROGRESSIVE',
+            'NO_VALID_VIDEO_REPRESENTATION',
+            'NO_VIDEO_REPRESENTATIONS',
+            'MANIFEST_REPRESENTATION_FORMAT_MISMATCH',
+            'MANIFEST_REPRESENTATION_COUNT',
+            'ENABLE_REPRESENTATION_ID_CHECK',
+            'MISSING_EXACT_VIDEO_REPRESENTATION',
+            'MANIFEST_MISSING_VIDEO_REPRESENTATION',
+            'MISSING_CANARY_VIDEO_REPRESENTATION',
+            'server_abr_enabled',
+            'is_dash_eligible',
+            'video_dash_manifest',
+          ]
+          mh = re.compile(r'\|\[[0-9a-f]+\]\s+([^\s]+):')
+          invoke_re = re.compile(r'(L[^;]+;\.[^:]+:\([^\s]*?\)[^\s/]+)')
+          methods=[]
+          for p in sorted(Path('work/dis').glob('classes*.txt')):
+              lines=p.read_text(errors='replace').splitlines()
+              starts=[]; heads=[]
+              for i,l in enumerate(lines):
+                  m=mh.search(l)
+                  if m:
+                      starts.append(i); heads.append(m.group(1))
+              for j,s in enumerate(starts):
+                  e=starts[j+1] if j+1<len(starts) else len(lines)
+                  methods.append((p.name,s+1,e,heads[j],lines[s:e]))
+
+          out=[
+            'Instagram 439 minimal HDR/rendition gate owners',
+            '===============================================',
+            'APK SHA256: 4015b171ac59f3e7172134d194ec2dcf701f64c3339f127c19d7a04c13d529c8',
+            ''
+          ]
+          total=0
+          owners=[]
+          for t in targets:
+              hits=[]
+              for rec in methods:
+                  if any(t in l for l in rec[4]): hits.append(rec)
+              out.append(f'##### TARGET {t} :: owner_count={len(hits)} #####')
+              for rec in hits:
+                  total += 1
+                  owners.append(rec)
+                  p,s,e,h,b=rec
+                  out.append(f'===== {p}:{s}-{e} :: {h} =====')
+                  idxs=[i for i,l in enumerate(b) if t in l]
+                  out.append('hit_offsets=' + ','.join(map(str,idxs)))
+                  invokes=[]
+                  for i in idxs:
+                      lo=max(0,i-45); hi=min(len(b),i+75)
+                      out.append(f'--- context {lo}..{hi} ---')
+                      for line in b[lo:hi]:
+                          out.append(line.rstrip())
+                          if 'invoke-' in line:
+                              invokes.extend(invoke_re.findall(line))
+                  out.append('DIRECT_INVOKES_IN_CONTEXT:')
+                  for x in sorted(set(invokes)): out.append('  '+x)
+                  out.append('')
+              out.append('')
+
+          # Deduplicated owner summary only, easy to read first.
+          out.append('##### UNIQUE OWNER SUMMARY #####')
+          seen=set()
+          for rec in owners:
+              key=(rec[0],rec[1],rec[3])
+              if key not in seen:
+                  seen.add(key)
+                  out.append(f'{rec[0]}:{rec[1]}-{rec[2]} :: {rec[3]}')
+          out.append(f'unique_owner_count={len(seen)} total_target_owner_hits={total}')
+          out.append('')
+
+          path=Path('research/generated/instagram_439_hdr_rendition_filter_minimal.txt')
+          path.write_text('\n'.join(out)+'\n')
+          print(path.read_text()[:180000])
+          PY
+      - name: Commit report
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add research/generated/instagram_439_hdr_rendition_filter_minimal.txt
+          if ! git diff --cached --quiet; then
+            git commit -m "Trace minimal Instagram 439 HDR rendition gates"
+          fi
+          git pull --rebase origin main
+          git push origin HEAD:main
