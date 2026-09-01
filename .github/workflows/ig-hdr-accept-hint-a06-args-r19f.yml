@@ -1,0 +1,179 @@
+name: IG 439 HDR Accept Hint A06 Args R19f
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - .github/workflows/ig-hdr-accept-hint-a06-args-r19f.yml
+
+permissions:
+  contents: write
+
+jobs:
+  trace:
+    runs-on: ubuntu-latest
+    timeout-minutes: 18
+    env:
+      APK_NAME: instagram-piko-v439.0.0.37.89-arm64-v8a.apk
+      APK_SHA256: 4015b171ac59f3e7172134d194ec2dcf701f64c3339f127c19d7a04c13d529c8
+    steps:
+      - uses: actions/checkout@v6
+        with: {fetch-depth: 0}
+      - uses: actions/setup-java@v5
+        with:
+          distribution: zulu
+          java-version: '21'
+
+      - name: Fetch exact APK and disassemble relevant dexes
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          set -euo pipefail
+          mkdir -p work/apk work/smali research/generated
+          gh release download 8 --pattern "$APK_NAME" --dir work
+          echo "$APK_SHA256  work/$APK_NAME" | sha256sum -c -
+          gh release download 3.0.10 --repo baksmali/smali --pattern 'baksmali-3.0.10-fat.jar' --dir work
+          unzip -q "work/$APK_NAME" 'classes*.dex' -d work/apk
+          python3 - <<'PY'
+          from pathlib import Path
+          import subprocess
+          needles=['X-IG-Accept-Hint','ClipsApiUtilHelper','ClipsViewerPrefetcher','ClipsHeadMediaInsertionHelper']
+          hit=[]; rows=[]
+          for p in sorted(Path('work/apk').glob('classes*.dex')):
+              s=subprocess.run(['strings','-a',str(p)],capture_output=True,text=True,errors='replace').stdout
+              hs=[n for n in needles if n in s]
+              if hs:
+                  hit.append(p.name); rows.append(f'{p.name}: '+', '.join(hs))
+          Path('work/hitdex.txt').write_text('\n'.join(hit)+'\n')
+          print('\n'.join(rows)); print('HITDEX',hit)
+          PY
+          while read d; do
+            [ -n "$d" ] || continue
+            n="${d%.dex}"
+            java -jar work/baksmali-3.0.10-fat.jar d "work/apk/$d" -o "work/smali/$n" >/dev/null &
+          done < work/hitdex.txt
+          wait
+
+      - name: Trace all Accept-Hint writes and A06 arguments
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          from pathlib import Path
+          import re
+
+          ROOT=Path('work/smali')
+          OUT=Path('research/generated/instagram_439_hdr_accept_hint_a06_args_r19f.txt')
+          cls_re=re.compile(r'^\.class\s+.*\s+(L[^;]+;)$')
+          str_re=re.compile(r'^\s*const-string(?:/jumbo)?\s+([^,]+),\s+"(.*)"')
+          target='Lcom/instagram/clips/api/ClipsApiUtilHelper;->A06(Lcom/instagram/common/session/UserSession;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;I)LX/02ue;'
+
+          methods=[]
+          for p in ROOT.rglob('*.smali'):
+              ls=p.read_text(errors='replace').splitlines(); cls='?'
+              for x in ls[:50]:
+                  m=cls_re.match(x)
+                  if m: cls=m.group(1); break
+              i=0
+              while i<len(ls):
+                  if not ls[i].startswith('.method'):
+                      i+=1; continue
+                  s=i; sig=ls[i]; i+=1
+                  while i<len(ls) and not ls[i].startswith('.end method'):
+                      i+=1
+                  e=min(i,len(ls)-1); b=ls[s:e+1]
+                  methods.append((cls,sig,p,b))
+                  i+=1
+
+          O=['Instagram 439 HDR Accept-Hint + A06 argument flow R19f','====================================================','']
+
+          # 1. Every method that contains the header literal.
+          hits=[]
+          for cls,sig,p,b in methods:
+              if any('X-IG-Accept-Hint' in l for l in b):
+                  hits.append((cls,sig,p,b))
+          O += [f'===== X-IG-Accept-Hint EXACT METHODS ({len(hits)}) =====','']
+          for cls,sig,p,b in hits:
+              vals=[]
+              for i,l in enumerate(b):
+                  if 'X-IG-Accept-Hint' in l:
+                      lo=max(0,i-25); hi=min(len(b),i+35)
+                      O += [f'--- {cls} {sig}',f'FILE={p}',f'HEADER_LINE_INDEX={i}']+b[lo:hi]+['']
+                      for j in range(max(0,i-10),min(len(b),i+15)):
+                          m=str_re.match(b[j])
+                          if m: vals.append((j,m.group(1),m.group(2)))
+              O += [f'NEARBY_CONST_STRINGS={vals}','']
+
+          # 2. Every exact A06 callsite; retain full high-value caller and context for all.
+          calls=[]
+          for cls,sig,p,b in methods:
+              for i,l in enumerate(b):
+                  if target in l:
+                      calls.append((cls,sig,p,b,i,l))
+          O += [f'===== EXACT ClipsApiUtilHelper.A06 CALLS ({len(calls)}) =====','']
+          for cls,sig,p,b,i,l in calls:
+              high = cls in ('LX/01Jw;','LX/01Jv;')
+              O += [f'--- CALLSITE {cls} {sig}',f'FILE={p}',f'CALL_INDEX={i}',f'CALL={l}']
+              # emit enough pre-call context to reconstruct registers, full method for the two Reels callers
+              if high:
+                  O += ['[FULL_METHOD]']+b
+              else:
+                  O += ['[CALL_CONTEXT]']+b[max(0,i-90):min(len(b),i+35)]
+              # crude backward register-definition trace for registers used by invoke line
+              m=re.search(r'\{([^}]+)\}',l)
+              regs=[]
+              if m:
+                  raw=m.group(1).strip()
+                  if '..' in raw:
+                      a,z=[x.strip() for x in raw.split('..')]
+                      def splitreg(r):
+                          mm=re.match(r'([vp])(\d+)$',r); return (mm.group(1),int(mm.group(2))) if mm else None
+                      aa,zz=splitreg(a),splitreg(z)
+                      if aa and zz and aa[0]==zz[0]: regs=[f'{aa[0]}{n}' for n in range(aa[1],zz[1]+1)]
+                  else:
+                      regs=[x.strip() for x in raw.split(',')]
+              O += [f'INVOKE_REGS={regs}','[BACKWARD_DEFS]']
+              for r in regs:
+                  found=[]
+                  for j in range(i-1,max(-1,i-140),-1):
+                      x=b[j]
+                      # capture likely assignments/loads into register
+                      if re.search(rf'(^|\s)(move(?:-object)?(?:/from16)?|const(?:/\S+)?|iget-object|iget|sget-object|new-instance)\s+{re.escape(r)}(?:,|\s)',x):
+                          found.append((j,x.strip()))
+                          if len(found)>=4: break
+                      if re.search(rf'^\s*move-result(?:-object)?\s+{re.escape(r)}$',x):
+                          prev=b[j-1].strip() if j>0 else ''
+                          found.append((j,prev+' || '+x.strip()))
+                          if len(found)>=4: break
+                  O += [f'{r}: {found}']
+              O += ['']
+
+          # 3. Scan all string values that look like Accept-* / media negotiation / rendition hints in relevant methods/classes.
+          keywords=('accept','hint','rendition','delivery','playback','codec','hdr','quality','dash','manifest','streaming','container_module','clips_media_ids')
+          O += ['===== NEGOTIATION / DELIVERY STRING INVENTORY IN RELEVANT CLASSES =====','']
+          relevant_classes={c[0] for c in calls}|{h[0] for h in hits}|{'Lcom/instagram/clips/api/ClipsApiUtilHelper;'}
+          for cls,sig,p,b in methods:
+              if cls not in relevant_classes: continue
+              vals=[]
+              for l in b:
+                  m=str_re.match(l)
+                  if m and any(k in m.group(2).lower() for k in keywords): vals.append(m.group(2))
+              if vals:
+                  O += [f'{cls} {sig}',f'FILE={p}',f'STRINGS={vals}','']
+
+          OUT.write_text('\n'.join(O),encoding='utf-8')
+          print('\n'.join(O[:7000]))
+          print('bytes',OUT.stat().st_size,'header_methods',len(hits),'a06_calls',len(calls))
+          PY
+
+      - name: Commit R19f report
+        run: |
+          set -euo pipefail
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add research/generated/instagram_439_hdr_accept_hint_a06_args_r19f.txt
+          if ! git diff --cached --quiet; then
+            git commit -m 'Add Reels Accept-Hint and A06 argument trace R19f'
+            git pull --rebase origin main
+            git push origin HEAD:main
+          fi
