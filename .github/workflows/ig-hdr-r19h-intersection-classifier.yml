@@ -1,0 +1,57 @@
+name: IG 439 HDR R19h Intersection Classifier
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - .github/workflows/ig-hdr-r19h-intersection-classifier.yml
+
+permissions:
+  contents: write
+
+jobs:
+  classify:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+        with: {fetch-depth: 0}
+      - name: Classify three intersections
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          from pathlib import Path
+          import re
+          src=Path('research/generated/instagram_439_hdr_clips_request_finalization_r19h.txt').read_text(errors='replace').splitlines()
+          start=src.index('===== REQUEST x HDR/CAPABILITY STRONG INTERSECTIONS =====')+1
+          end=next(i for i in range(start,len(src)) if src[i].startswith('INTERSECTION_COUNT='))
+          block=src[start:end]
+          chunks=[]; cur=[]
+          for l in block:
+              if l.startswith('--- ') and ' FILE=' in l:
+                  if cur: chunks.append(cur)
+                  cur=[l]
+              elif cur: cur.append(l)
+          if cur: chunks.append(cur)
+          O=['R19h intersection classifier','===========================',f'count={len(chunks)}','']
+          for n,c in enumerate(chunks,1):
+              text='\n'.join(c)
+              strings=[]
+              for l in c:
+                  m=re.search(r'const-string(?:/jumbo)?\s+[^,]+,\s+"([^"]*)"',l)
+                  if m: strings.append(m.group(1))
+              routes=[s for s in strings if '/' in s or any(k in s.lower() for k in ['feed','clips','reel','effect','device','hdr','capabil','media'])]
+              request_invokes=[l.strip() for l in c if any(x in l for x in ['LX/03u7;','LX/02pu;','LX/02ue;','LX/0AMH;','GraphQlCallInput','LX/05xm;'])]
+              caps=[l for l in c if l.startswith('CAP=')]
+              O += [f'===== #{n} =====',c[0]]+caps+[f'ROUTE/SEMANTIC_STRINGS={routes[:120]}','REQUEST_INVOKES:']+request_invokes[:160]+['']
+          Path('research/generated/instagram_439_hdr_r19h_intersection_classifier.txt').write_text('\n'.join(O)+'\n')
+          print('\n'.join(O))
+          PY
+      - name: Commit
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add research/generated/instagram_439_hdr_r19h_intersection_classifier.txt
+          git commit -m 'Classify R19h request capability intersections' || exit 0
+          git pull --rebase origin main
+          git push origin HEAD:main
