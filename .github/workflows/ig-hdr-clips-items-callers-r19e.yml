@@ -1,0 +1,169 @@
+name: IG 439 HDR Clips Items Callers R19e
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - .github/workflows/ig-hdr-clips-items-callers-r19e.yml
+
+permissions:
+  contents: write
+
+jobs:
+  trace:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    env:
+      APK_NAME: instagram-piko-v439.0.0.37.89-arm64-v8a.apk
+      APK_SHA256: 4015b171ac59f3e7172134d194ec2dcf701f64c3339f127c19d7a04c13d529c8
+    steps:
+      - uses: actions/checkout@v6
+        with: {fetch-depth: 0}
+      - uses: actions/setup-java@v5
+        with:
+          distribution: zulu
+          java-version: '21'
+      - name: Fetch exact APK and disassemble all dexes
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          set -euo pipefail
+          mkdir -p work/apk work/smali research/generated
+          gh release download 8 --pattern "$APK_NAME" --dir work
+          echo "$APK_SHA256  work/$APK_NAME" | sha256sum -c -
+          gh release download 3.0.10 --repo baksmali/smali --pattern 'baksmali-3.0.10-fat.jar' --dir work
+          unzip -q "work/$APK_NAME" 'classes*.dex' -d work/apk
+          for d in work/apk/classes*.dex; do
+            n="$(basename "${d%.dex}")"
+            java -jar work/baksmali-3.0.10-fat.jar d "$d" -o "work/smali/$n" >/dev/null &
+          done
+          wait
+
+      - name: Extract A06 exact body, request fields, callers and two-hop parents
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          from pathlib import Path
+          import re
+
+          ROOT=Path('work/smali')
+          OUT=Path('research/generated/instagram_439_hdr_clips_items_callers_r19e.txt')
+          target_cls='Lcom/instagram/clips/api/ClipsApiUtilHelper;'
+          target_name='A06'
+          target_args='Lcom/instagram/common/session/UserSession;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;I'
+          target_ret='LX/02ue;'
+
+          cls_re=re.compile(r'^\.class\s+.*\s+(L[^;]+;)$')
+          meth_re=re.compile(r'^\.method.*\s([^\s(]+)\(([^)]*)\)(\S+)$')
+          inv_re=re.compile(r'(L[^;]+;)->([^\s(]+)\(([^)]*)\)(\S+)')
+          str_re=re.compile(r'^\s*const-string(?:/jumbo)?\s+[^,]+,\s+"(.*)"')
+
+          methods={}
+          by_file={}
+          for p in ROOT.rglob('*.smali'):
+            ls=p.read_text(errors='replace').splitlines(); cls=None
+            for x in ls[:50]:
+              m=cls_re.match(x)
+              if m: cls=m.group(1); break
+            if not cls: continue
+            i=0
+            while i < len(ls):
+              if not ls[i].startswith('.method'): i+=1; continue
+              s=i; sig=ls[i]; i+=1
+              while i<len(ls) and not ls[i].startswith('.end method'): i+=1
+              e=min(i,len(ls)-1); b=ls[s:e+1]
+              mm=meth_re.match(sig)
+              if mm:
+                k=(cls,mm.group(1),mm.group(2),mm.group(3))
+                methods[k]=(p,s,e,b,sig)
+              i+=1
+
+          def strings(b):
+            o=[]
+            for l in b:
+              m=str_re.match(l)
+              if m:o.append(m.group(1))
+            return o
+          def invokes(b):
+            o=[]
+            for l in b:
+              if 'invoke-' not in l: continue
+              m=inv_re.search(l)
+              if m:o.append((m.group(1),m.group(2),m.group(3),m.group(4),l.strip()))
+            return o
+
+          target=(target_cls,target_name,target_args,target_ret)
+          O=['Instagram 439 HDR Clips Items Callers R19e','========================================','']
+          if target not in methods:
+            O += ['TARGET_NOT_FOUND']
+            OUT.write_text('\n'.join(O)); raise SystemExit(0)
+
+          p,s,e,b,sig=methods[target]
+          O += ['===== TARGET A06 EXACT BODY =====',f'FILE={p}',sig,''] + b + ['']
+          ss=strings(b); iv=invokes(b)
+          O += ['===== TARGET A06 STRING LITERALS ====='] + [x for x in ss] + ['']
+          O += ['===== TARGET A06 INVOKES ====='] + [str(x[:4]) for x in iv] + ['']
+
+          # Map direct callers of A06.
+          callers=[]
+          for k,(pp,ss0,ee,bb,sg) in methods.items():
+            if k==target: continue
+            for q in invokes(bb):
+              if q[:4]==target:
+                callers.append((k,pp,sg,bb))
+                break
+          O += [f'===== DIRECT CALLERS OF A06 ({len(callers)}) =====','']
+          for k,pp,sg,bb in callers:
+            lit=strings(bb); inv=invokes(bb)
+            O += [f'--- {k[0]} {sg}',f'FILE={pp}',f'STRINGS={lit}',f'INVOKES={[x[:4] for x in inv]}','---'] + bb + ['']
+
+          # Two-hop parents: methods invoking a direct caller.
+          caller_keys={k for k,_,_,_ in callers}
+          parents=[]
+          for k,(pp,ss0,ee,bb,sg) in methods.items():
+            if k in caller_keys or k==target: continue
+            hit=[]
+            for q in invokes(bb):
+              if q[:4] in caller_keys: hit.append(q[:4])
+            if hit:
+              parents.append((k,pp,sg,bb,hit))
+          O += [f'===== TWO-HOP PARENTS ({len(parents)}) =====','']
+          for k,pp,sg,bb,hit in parents:
+            lit=strings(bb); inv=invokes(bb)
+            interesting=[x for x in lit if any(t in x.lower() for t in ('clip','reel','feed','media','dash','video','hdr','codec','quality','device','playback','rank','session','container','module'))]
+            O += [f'--- {k[0]} {sg}',f'FILE={pp}',f'CALLS={hit}',f'INTERESTING_STRINGS={interesting}',f'INVOKES={[x[:4] for x in inv]}','---']
+            if len(bb)<=700: O += bb
+            O += ['']
+
+          # Sibling methods in the same helper, useful to distinguish item fetch variants.
+          O += ['===== ALL ClipsApiUtilHelper METHODS =====','']
+          siblings=[]
+          for k,(pp,ss0,ee,bb,sg) in methods.items():
+            if k[0]!=target_cls: continue
+            lit=strings(bb); inv=invokes(bb)
+            req=[x for x in lit if any(t in x.lower() for t in ('clips/','reels/','feed/','media','dash','video','hdr','codec','quality','device','playback','rank','session','container','module','x-ig-'))]
+            siblings.append((k,pp,sg,bb,req,inv))
+          for k,pp,sg,bb,req,inv in sorted(siblings,key=lambda x:x[0][1]):
+            O += [f'--- {k[0]} {sg}',f'FILE={pp}',f'REQUESTISH_STRINGS={req}',f'INVOKES={[x[:4] for x in inv]}','---']
+            if req or k==target:
+              O += bb
+            O += ['']
+
+          text='\n'.join(O)
+          OUT.write_text(text,encoding='utf-8')
+          print(text[:500000])
+          print('bytes',OUT.stat().st_size,'callers',len(callers),'parents',len(parents))
+          PY
+
+      - name: Commit R19e report
+        run: |
+          set -euo pipefail
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add research/generated/instagram_439_hdr_clips_items_callers_r19e.txt
+          if ! git diff --cached --quiet; then
+            git commit -m 'Add ClipsApiUtilHelper A06 caller trace R19e'
+            git pull --rebase origin main
+            git push origin HEAD:main
+          fi
