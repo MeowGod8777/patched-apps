@@ -1,0 +1,125 @@
+name: Trace IG HDR Server Eligibility
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - .github/workflows/ig-hdr-server-eligibility-trace.yml
+
+permissions:
+  contents: write
+
+jobs:
+  trace:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    env:
+      BASE_APK: instagram-piko-v439.0.0.37.89-arm64-v8a.apk
+      BASE_SHA256: 4015b171ac59f3e7172134d194ec2dcf701f64c3339f127c19d7a04c13d529c8
+    steps:
+      - uses: actions/checkout@v6
+      - uses: actions/setup-java@v5
+        with:
+          distribution: zulu
+          java-version: '21'
+      - name: Download exact R8 and baksmali
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          set -euo pipefail
+          mkdir -p work/apk work/smali research/generated
+          gh release download 8 --pattern "$BASE_APK" --dir work
+          echo "$BASE_SHA256  work/$BASE_APK" | sha256sum -c -
+          gh release download 3.0.10 --repo baksmali/smali --pattern 'baksmali-3.0.10-fat.jar' --dir work
+          unzip -q "work/$BASE_APK" 'classes*.dex' -d work/apk
+          for d in work/apk/classes*.dex; do
+            n="$(basename "$d" .dex)"
+            java -jar work/baksmali-3.0.10-fat.jar d "$d" -o "work/smali/$n" >/dev/null
+          done
+      - name: Extract request and eligibility methods
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          from pathlib import Path
+          kws = [
+            'video_dash_manifest',
+            'supported_capabilities_new',
+            'supported_capabilities',
+            'device_capabilities',
+            'playback_capabilities',
+            'media_capabilities',
+            'video_decoder_hdr_supported',
+            'key_video_decoder_hdr_supported',
+            'video_av1_hardware_decoder_supported',
+            'key_video_av1_hardware_decoder_supported',
+            'device_level',
+            'device_tier',
+            'media_performance_class',
+            'sdk_mpc',
+            'X-IG-Capabilities',
+            'x-ig-capabilities',
+            'media_has_video_versions',
+            'video_versions',
+            'clips_media',
+            'reels_media',
+            'is_hdr_source',
+            'key_is_hdr_source',
+          ]
+          root=Path('work/smali')
+          out=[]
+          count=0
+          for p in root.rglob('*.smali'):
+            txt=p.read_text(errors='ignore')
+            hits=[k for k in kws if k.lower() in txt.lower()]
+            if not hits:
+              continue
+            lines=txt.splitlines()
+            methods=[]
+            i=0
+            while i < len(lines):
+              if lines[i].startswith('.method'):
+                s=i
+                j=i+1
+                while j < len(lines) and not lines[j].startswith('.end method'):
+                  j+=1
+                j=min(j,len(lines)-1)
+                block='\n'.join(lines[s:j+1])
+                mh=[k for k in kws if k.lower() in block.lower()]
+                if mh:
+                  methods.append((mh, block))
+                i=j+1
+              else:
+                i+=1
+            if not methods:
+              # capture fields/annotations if keyword is outside methods
+              for idx,l in enumerate(lines):
+                if any(k.lower() in l.lower() for k in kws):
+                  a=max(0,idx-12); b=min(len(lines),idx+13)
+                  out.append(f'===== FILE {p} OUTSIDE_METHOD keywords={hits} =====\n'+ '\n'.join(lines[a:b])+'\n')
+                  count+=1
+                  if count>=200: break
+            else:
+              for mh,block in methods:
+                out.append(f'===== FILE {p} METHOD keywords={mh} =====\n{block}\n')
+                count+=1
+                if count>=200: break
+            if count>=200: break
+          report=Path('research/generated/instagram_439_server_eligibility_trace.txt')
+          report.write_text('\n'.join(out))
+          print(f'blocks={count} bytes={report.stat().st_size}')
+          if report.stat().st_size < 500:
+            raise SystemExit('report unexpectedly small')
+          PY
+      - name: Commit report
+        run: |
+          set -euo pipefail
+          git config user.name github-actions[bot]
+          git config user.email 41898282+github-actions[bot]@users.noreply.github.com
+          git add research/generated/instagram_439_server_eligibility_trace.txt
+          if git diff --cached --quiet; then
+            echo no-change
+          else
+            git commit -m 'Add Instagram 439 server HDR eligibility trace'
+            git push
+          fi
