@@ -1,0 +1,72 @@
+name: IG 439 HDR Streaming Core Fast R19h2
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - .github/workflows/ig-hdr-stream-core-fast-r19h2.yml
+
+permissions:
+  contents: write
+
+jobs:
+  trace:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    env:
+      APK_NAME: instagram-piko-v439.0.0.37.89-arm64-v8a.apk
+      APK_SHA256: 4015b171ac59f3e7172134d194ec2dcf701f64c3339f127c19d7a04c13d529c8
+    steps:
+      - uses: actions/checkout@v6
+        with: {fetch-depth: 0}
+      - uses: actions/setup-java@v5
+        with: {distribution: zulu, java-version: '21'}
+      - name: Disassemble classes2 request core only
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          set -euo pipefail
+          mkdir -p work/apk work/smali research/generated
+          gh release download 8 --pattern "$APK_NAME" --dir work
+          echo "$APK_SHA256  work/$APK_NAME" | sha256sum -c -
+          gh release download 3.0.10 --repo baksmali/smali --pattern 'baksmali-3.0.10-fat.jar' --dir work
+          unzip -q "work/$APK_NAME" classes2.dex -d work/apk
+          java -jar work/baksmali-3.0.10-fat.jar d work/apk/classes2.dex -o work/smali >/dev/null
+      - name: Extract request core
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          from pathlib import Path
+          import re
+          root=Path('work/smali')
+          names=['02pu','02ue','02pz','03u7','0AMH','02qb','02pp','02po']
+          O=['Instagram 439 HDR streaming core fast R19h2','==========================================','']
+          for n in names:
+              hits=list(root.rglob(n+'.smali'))
+              for p in hits:
+                  O += [f'===== {n} FILE={p} =====']+p.read_text(errors='replace').splitlines()+['']
+          # exact calls to A0K on 02pu / constructors and all X-IG literal writers in classes2
+          for p in root.rglob('*.smali'):
+              ls=p.read_text(errors='replace').splitlines(); txt='\n'.join(ls)
+              if ('LX/02pu;->A0K' in txt or 'LX/02pu;-><init>' in txt) and any(k in txt.lower() for k in ['device','capabil','codec','hdr','media','quality','delivery','playback','x-ig-']):
+                  O += [f'===== 02pu CALLER {p} =====']
+                  for i,x in enumerate(ls):
+                      if 'LX/02pu;->A0K' in x or 'LX/02pu;-><init>' in x:
+                          O += ls[max(0,i-45):min(len(ls),i+65)]
+                  O += ['']
+          out=Path('research/generated/instagram_439_hdr_stream_core_fast_r19h2.txt')
+          out.write_text('\n'.join(O),encoding='utf-8')
+          print('\n'.join(O[:10000])); print('bytes',out.stat().st_size)
+          PY
+      - name: Commit report
+        run: |
+          set -euo pipefail
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add research/generated/instagram_439_hdr_stream_core_fast_r19h2.txt
+          if ! git diff --cached --quiet; then
+            git commit -m 'Add fast Instagram streaming request core trace R19h2'
+            git pull --rebase origin main
+            git push origin HEAD:main
+          fi
