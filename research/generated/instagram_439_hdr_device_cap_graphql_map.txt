@@ -1,0 +1,1774 @@
+===== classes12.txt LX/0hkS;-><clinit> target_line=1308090 =====
+STRINGS: ram_total_kb | cpu_num_cores | cpu_max_frequency_mhz | display_size_pixels | display_max_refresh_rate_fps | display_hdr_supported | display_wide_colour_gamut_supported | camera_back_facing_present | camera_front_facing_present | camera_autofocus_supported | camera_motion_tracking_supported | camera_flash_supported | camera_is_full_hardware_level | camera_concurrent_capture_supported | camera_manual_post_processing_supported | camera_manual_sensor_supported | camera_raw_image_capture_supported | audio_is_low_latency | audio_is_pro_level | audio_midi_api_supported
+      name          : '<clinit>'
+      type          : '()V'
+      access        : 0x10009 (PUBLIC STATIC CONSTRUCTOR)
+      method_idx    : 36853
+      code          -
+      registers     : 239
+      ins           : 0
+      outs          : 5
+      insns size    : 3194 16-bit code units
+24a480:                                        |[24a480] X.0hkS.<clinit>:()V
+24a490: 1a02 b395                              |0000: const-string v2, "ram_total_kb" // string@95b3
+24a494: 1201                                   |0002: const/4 v1, #int 0 // #0
+24a496: 22cf 2e26                              |0003: new-instance v207, LX/0fKx; // type@262e
+24a49a: 0800 cf00                              |0005: move-object/from16 v0, v207
+24a49e: 7030 ae86 1002                         |0007: invoke-direct {v0, v1, v2}, LX/0fKx;.<init>:(ILjava/lang/String;)V // method@86ae
+24a4a4: 69cf 4e55                              |000a: sput-object v207, LX/0hkS;.A2s:LX/0fKx; // field@554e
+24a4a8: 1a02 007e                              |000c: const-string v2, "cpu_num_cores" // string@7e00
+24a4ac: 1211                                   |000e: const/4 v1, #int 1 // #1
+24a4ae: 22ce 2e26                              |000f: new-instance v206, LX/0fKx; // type@262e
+24a4b2: 0800 ce00                              |0011: move-object/from16 v0, v206
+24a4b6: 7030 ae86 1002                         |0013: invoke-direct {v0, v1, v2}, LX/0fKx;.<init>:(ILjava/lang/String;)V // method@86ae
+24a4bc: 69ce 3a55                              |0016: sput-object v206, LX/0hkS;.A2Y:LX/0fKx; // field@553a
+24a4c0: 1a02 ff7d                              |0018: const-string v2, "cpu_max_frequency_mhz" // string@7dff
+24a4c4: 1221                                   |001a: const/4 v1, #int 2 // #2
+24a4c6: 22cc 2e26                              |001b: new-instance v204, LX/0fKx; // type@262e
+24a4ca: 0800 cc00                              |001d: move-object/from16 v0, v204
+24a4ce: 7030 ae86 1002                         |001f: invoke-direct {v0, v1, v2}, LX/0fKx;.<init>:(ILjava/lang/String;)V // method@86ae
+24a4d4: 69cc 3955                              |0022: sput-object v204, LX/0hkS;.A2X:LX/0fKx; // field@5539
+24a4d8: 1a02 a67f                              |0024: const-string v2, "display_size_pixels" // string@7fa6
+24a4dc: 1231                                   |0026: const/4 v1, #int 3 // #3
+24a4de: 22cb 2e26                              |0027: new-instance v203, LX/0fKx; // type@262e
+24a4e2: 0800 cb00                              |0029: move-object/from16 v0, v203
+24a4e6: 7030 ae86 1002                         |002b: invoke-direct {v0, v1, v2}, LX/0fKx;.<init>:(ILjava/lang/String;)V // method@86ae
+24a4ec: 69cb 3d55                              |002e: sput-object v203, LX/0hkS;.A2b:LX/0fKx; // field@553d
+24a4f0: 1a02 a27f                              |0030: const-string v2, "display_max_refresh_rate_fps" // string@7fa2
+24a4f4: 1241                                   |0032: const/4 v1, #int 4 // #4
+24a4f6: 22c9 2e26                              |0033: new-instance v201, LX/0fKx; // type@262e
+24a4fa: 0800 c900                              |0035: move-object/from16 v0, v201
+24a4fe: 7030 ae86 1002                         |0037: invoke-direct {v0, v1, v2}, LX/0fKx;.<init>:(ILjava/lang/String;)V // method@86ae
+24a504: 69c9 3c55                              |003a: sput-object v201, LX/0hkS;.A2a:LX/0fKx; // field@553c
+24a508: 1a02 9f7f                              |003c: const-string v2, "display_hdr_supported" // string@7f9f
+24a50c: 1251                                   |003e: const/4 v1, #int 5 // #5
+24a50e: 22c8 2e26                              |003f: new-instance v200, LX/0fKx; // type@262e
+24a512: 0800 c800                              |0041: move-object/from16 v0, v200
+24a516: 7030 ae86 1002                         |0043: invoke-direct {v0, v1, v2}, LX/0fKx;.<init>:(ILjava/lang/String;)V // method@86ae
+24a51c: 69c8 3b55                              |0046: sput-object v200, LX/0hkS;.A2Z:LX/0fKx; // field@553b
+24a520: 1a02 ac7f                              |0048: const-string v2, "display_wide_colour_gamut_supported" // string@7fac
+24a524: 1261                                   |004a: const/4 v1, #int 6 // #6
+24a526: 22c6 2e26                              |004b: new-instance v198, LX/0fKx; // type@262e
+24a52a: 0800 c600                              |004d: move-object/from16 v0, v198
+24a52e: 7030 ae86 1002                         |004f: invoke-direct {v0, v1, v2}, LX/0fKx;.<init>:(ILjava/lang/String;)V // method@86ae
+24a534: 69c6 3e55                              |0052: sput-object v198, LX/0hkS;.A2c:LX/0fKx; // field@553e
+24a538: 1a02 557b                              |0054: const-string v2, "camera_back_facing_present" // string@7b55
+24a53c: 1271                                   |0056: const/4 v1, #int 7 // #7
+24a53e: 22c5 2e26                              |0057: new-instance v197, LX/0fKx; // type@262e
+24a542: 0800 c500                              |0059: move-object/from16 v0, v197
+24a546: 7030 ae86 1002                         |005b: invoke-direct {v0, v1, v2}, LX/0fKx;.<init>:(ILjava/lang/String;)V // method@86ae
+24a54c: 69c5 b654                              |005e: sput-object v197, LX/0hkS;.A0Q:LX/0fKx; // field@54b6
+24a550: 1a02 9c7b                              |0060: const-string v2, "camera_front_facing_present" // string@7b9c
+24a554: 1301 0800                              |0062: const/16 v1, #int 8 // #8
+24a558: 22c3 2e26                              |0064: new-instance v195, LX/0fKx; // type@262e
+24a55c: 0800 c300                              |0066: move-object/from16 v0, v195
+24a560: 7030 ae86 1002                         |0068: invoke-direct {v0, v1, v2}, LX/0fKx;.<init>:(ILjava/lang/String;)V // method@86ae
+24a566: 69c3 fd54                              |006b: sput-object v195, LX/0hkS;.A1Z:LX/0fKx; // field@54fd
+24a56a: 1a02 467b                              |006d: const-string v2, "camera_autofocus_supported" // string@7b46
+24a56e: 1301 0900                              |006f: const/16 v1, #int 9 // #9
+24a572: 22c2 2e26                              |0071: new-instance v194, LX/0fKx; // type@262e
+24a576: 0800 c200                              |0073: move-object/from16 v0, v194
+24a57a: 7030 ae86 1002                         |0075: invoke-direct {v0, v1, v2}, LX/0fKx;.<init>:(ILjava/lang/String;)V // method@86ae
+24a580: 69c2 a754                              |0078: sput-object v194, LX/0hkS;.A0B:LX/0fKx; // field@54a7
+24a584: 1a02 da7b                              |007a: const-string v2, "camera_motion_tracking_supported" // string@7bda
+24a588: 1301 0a00                              |007c: const/16 v1, #int 10 // #a
+24a58c: 22c0 2e26                              |007e: new-instance v192, LX/0fKx; // type@262e
+24a590: 0800 c000                              |0080: move-object/from16 v0, v192
+24a594: 7030 ae86 1002                         |0082: invoke-direct {v0, v1, v2}, LX/0fKx;.<init>:(ILjava/lang/String;)V // method@86ae
+24a59a: 69c0 3755                              |0085: sput-object v192, LX/0hkS;.A2V:LX/0fKx; // field@5537
+24a59e: 1a02 8d7b                              |0087: const-string v2, "camera_flash_supported" // string@7b8d
+24a5a2: 1301 0b00                              |0089: const/16 v1, #int 11 // #b
+24a5a6: 22bf 2e26                              |008b: new-instance v191, LX/0fKx; // type@262e
+24a5aa: 0800 bf00                              |008d: move-object/from16 v0, v191
+24a5ae: 7030 ae86 1002                         |008f: invoke-direct {v0, v1, v2}, LX/0fKx;.<init>:(ILjava/lang/String;)V // method@86ae
+24a5b4: 69bf ee54                              |0092: sput-object v191, LX/0hkS;.A1K:LX/0fKx; // field@54ee
+24a5b8: 1a02 d47b                              |0094: const-string v2, "camera_is_full_hardware_level" // string@7bd4
+24a5bc: 1301 0c00                              |0096: const/16 v1, #int 12 // #c
+24a5c0: 22bc 2e26                              |0098: new-instance v188, LX/0fKx; // type@262e
+24a5c4: 0800 bc00                              |009a: move-object/from16 v0, v188
+24a5c8: 7030 ae86 1002                         |009c: invoke-direct {v0, v1, v2}, LX/0fKx;.<init>:(ILjava/lang/String;)V // method@86ae
+24a5ce: 69bc 3455                              |009f: sput-object v188, LX/0hkS;.A2S:LX/0fKx; // field@5534
+24a5d2: 1a01 8c7b                              |00a1: const-string v1, "camera_concurrent_capture_supported" // string@7b8c
+24a5d6: 1300 0d00                              |00a3: const/16 v0, #int 13 // #d
+24a5da: 22b9 2e26                              |00a5: new-instance v185, LX/0fKx; // type@262e
+24a5de: 0802 b900                              |00a7: move-object/from16 v2, v185
+24a5e2: 7030 ae86 0201                         |00a9: invoke-direct {v2, v0, v1}, LX/0fKx;.<init>:(ILjava/lang/String;)V // method@86ae
+24a5e8: 69b9 ed54                              |00ac: sput-object v185, LX/0hkS;.A1J:LX/0fKx; // field@54ed
+24a5ec: 1a01 d87b                              |00ae: const-string v1, "camera_manual_post_processing_supported" // string@7bd8
+24a5f0: 1300 0e00                              |00b0: const/16 v0, #int 14 // #e
+24a5f4: 221d 2e26                              |00b2: new-instance v29, LX/0fKx; // type@262e
+24a5f8: 0802 1d00                              |00b4: move-object/from16 v2, v29
+24a5fc: 7030 ae86 0201                         |00b6: invoke-direct {v2, v0, v1}, LX/0fKx;.<init>:(ILjava/lang/String;)V // method@86ae
+24a602: 691d 3555                              |00b9: sput-object v29, LX/0hkS;.A2T:LX/0fKx; // field@5535
+24a606: 1a01 d97b                              |00bb: const-string v1, "camera_manual_sensor_supported" // string@7bd9
+24a60a: 1300 0f00                              |00bd: const/16 v0, #int 15 // #f
+24a60e: 221c 2e26                              |00bf: new-instance v28, LX/0fKx; // type@262e
+24a612: 0802 1c00                              |00c1: move-object/from16 v2, v28
+24a616: 7030 ae86 0201                         |00c3: invoke-direct {v2, v0, v1}, LX/0fKx;.<init>:(ILjava/lang/String;)V // method@86ae
+24a61c: 691c 3655                              |00c6: sput-object v28, LX/0hkS;.A2U:LX/0fKx; // field@5536
+24a620: 1a01 db7b                              |00c8: const-string v1, "camera_raw_image_capture_supported" // string@7bdb
+24a624: 1300 1000                              |00ca: const/16 v0, #int 16 // #10
+24a628: 221b 2e26                              |00cc: new-instance v27, LX/0fKx; // type@262e
+24a62c: 0802 1b00                              |00ce: move-object/from16 v2, v27
+24a630: 7030 ae86 0201                         |00d0: invoke-direct {v2, v0, v1}, LX/0fKx;.<init>:(ILjava/lang/String;)V // method@86ae
+24a636: 691b 3855                              |00d3: sput-object v27, LX/0hkS;.A2W:LX/0fKx; // field@5538
+24a63a: 1a01 b579                              |00d5: const-string v1, "audio_is_low_latency" // string@79b5
+24a63e: 1300 1100                              |00d7: const/16 v0, #int 17 // #11
+24a642: 221a 2e26                              |00d9: new-instance v26, LX/0fKx; // type@262e
+24a646: 0802 1a00                              |00db: move-object/from16 v2, v26
+24a64a: 7030 ae86 0201                         |00dd: invoke-direct {v2, v0, v1}, LX/0fKx;.<init>:(ILjava/lang/String;)V // method@86ae
+24a650: 691a a354                              |00e0: sput-object v26, LX/0hkS;.A07:LX/0fKx; // field@54a3
+24a654: 1a01 b679                              |00e2: const-string v1, "audio_is_pro_level" // string@79b6
+24a658: 1300 1200                              |00e4: const/16 v0, #int 18 // #12
+24a65c: 2219 2e26                              |00e6: new-instance v25, LX/0fKx; // type@262e
+24a660: 0802 1900                              |00e8: move-object/from16 v2, v25
+24a664: 7030 ae86 0201                         |00ea: invoke-direct {v2, v0, v1}, LX/0fKx;.<init>:(ILjava/lang/String;)V // method@86ae
+24a66a: 6919 a454                              |00ed: sput-object v25, LX/0hkS;.A08:LX/0fKx; // field@54a4
+24a66e: 1a01 ba79                              |00ef: const-string v1, "audio_midi_api_supported" // string@79ba
+24a672: 1300 1300                              |00f1: const/16 v0, #int 19 // #13
+24a676: 2218 2e26                              |00f3: new-instance v24, LX/0fKx; // type@262e
+24a67a: 0802 1800                              |00f5: move-object/from16 v2, v24
+24a67e: 7030 ae86 0201                         |00f7: invoke-direct {v2, v0, v1}, LX/0fKx;.<init>:(ILjava/lang/String;)V // method@86ae
+24a684: 6918 a654                              |00fa: sput-object v24, LX/0hkS;.A0A:LX/0fKx; // field@54a6
+
+===== classes18.txt LX/054F;->A00 target_line=327616 =====
+STRINGS: ad_media_id | device_capabilities | entry_point_qpl_instance_id | entry_point_qpl_marker_id | is_invalid_traffic_from_dawpt | is_item_sold_out | is_product_liked | is_product_saved | launch_date
+438772: 7701 eb16 3d00                         |0001: invoke-static/range {v61}, LX/02qP;.A01:(LX/04BG;)LX/00AT; // method@16eb
+438778: 0c02                                   |0004: move-result-object v2
+43877a: 1800 8902 1200 e300 8100               |0005: const-wide v0, #double 3.02672e-306 // #008100e300120289
+438784: 1f02 8e79                              |000a: check-cast v2, Lcom/facebook/mobileconfig/factory/MobileConfigUnsafeContext; // type@798e
+438788: 7230 d8df 0201                         |000c: invoke-interface {v2, v0, v1}, Lcom/facebook/mobileconfig/factory/MobileConfigUnsafeContext;.BTb:(J)Z // method@dfd8
+43878e: 0a03                                   |000f: move-result v3
+438790: 7701 eb16 3d00                         |0010: invoke-static/range {v61}, LX/02qP;.A01:(LX/04BG;)LX/00AT; // method@16eb
+438796: 0c02                                   |0013: move-result-object v2
+438798: 1800 9f02 3100 e300 8100               |0014: const-wide v0, #double 3.02672e-306 // #008100e30031029f
+4387a2: 1f02 8e79                              |0019: check-cast v2, Lcom/facebook/mobileconfig/factory/MobileConfigUnsafeContext; // type@798e
+4387a6: 7230 d8df 0201                         |001b: invoke-interface {v2, v0, v1}, Lcom/facebook/mobileconfig/factory/MobileConfigUnsafeContext;.BTb:(J)Z // method@dfd8
+4387ac: 0a00                                   |001e: move-result v0
+4387ae: 3800 1200                              |001f: if-eqz v0, 0031 // +0012
+4387b2: 6206 da28                              |0021: sget-object v6, LX/054G;.A00:LX/054G; // field@28da
+4387b6: 1205                                   |0023: const/4 v5, #int 0 // #0
+4387b8: 1300 0202                              |0024: const/16 v0, #int 514 // #202
+4387bc: 7110 1269 0000                         |0026: invoke-static {v0}, LX/0C0q;.A00:(I)Ljava/lang/String; // method@6912
+4387c2: 0c08                                   |0029: move-result-object v8
+4387c4: 121a                                   |002a: const/4 v10, #int 1 // #1
+4387c6: 0807 3d00                              |002b: move-object/from16 v7, v61
+4387ca: 0759                                   |002d: move-object v9, v5
+4387cc: 7706 b239 0500                         |002e: invoke-static/range {v5, v6, v7, v8, v9, v10}, LX/06XD;.A00:(LX/0Puw;LX/0mjZ;Lcom/instagram/common/session/UserSession;Ljava/lang/String;Ljava/util/concurrent/Executor;Z)V // method@39b2
+4387d2: 133b 0100                              |0031: const/16 v59, #int 1 // #1
+4387d6: 1206                                   |0033: const/4 v6, #int 0 // #0
+4387d8: 0539 3e00                              |0034: move-wide/from16 v57, v62
+4387dc: 3803 3404                              |0036: if-eqz v3, 046a // +0434
+4387e0: 1300 4900                              |0038: const/16 v0, #int 73 // #49
+4387e4: 2300 1383                              |003a: new-array v0, v0, [LX/04oE; // type@8313
+4387e8: 083c 0000                              |003c: move-object/from16 v60, v0
+4387ec: 1a01 86d3                              |003e: const-string v1, "ad_media_id" // string@d386
+4387f0: 221d 381a                              |0040: new-instance v29, LX/04oE; // type@1a38
+4387f4: 0800 1d00                              |0042: move-object/from16 v0, v29
+4387f8: 7030 6c2b 1006                         |0044: invoke-direct {v0, v1, v6}, LX/04oE;.<init>:(Ljava/lang/Object;Ljava/lang/Object;)V // method@2b6c
+4387fe: 1300 aa00                              |0047: const/16 v0, #int 170 // #aa
+438802: 7110 0000 0000                         |0049: invoke-static {v0}, LX/0000;.A00:(I)Ljava/lang/String; // method@0000
+438808: 0c01                                   |004c: move-result-object v1
+43880a: 221c 381a                              |004d: new-instance v28, LX/04oE; // type@1a38
+43880e: 0800 1c00                              |004f: move-object/from16 v0, v28
+438812: 7030 6c2b 1006                         |0051: invoke-direct {v0, v1, v6}, LX/04oE;.<init>:(Ljava/lang/Object;Ljava/lang/Object;)V // method@2b6c
+438818: 1300 c000                              |0054: const/16 v0, #int 192 // #c0
+43881c: 7110 1269 0000                         |0056: invoke-static {v0}, LX/0C0q;.A00:(I)Ljava/lang/String; // method@6912
+438822: 0c01                                   |0059: move-result-object v1
+438824: 221b 381a                              |005a: new-instance v27, LX/04oE; // type@1a38
+438828: 0800 1b00                              |005c: move-object/from16 v0, v27
+43882c: 7030 6c2b 1006                         |005e: invoke-direct {v0, v1, v6}, LX/04oE;.<init>:(Ljava/lang/Object;Ljava/lang/Object;)V // method@2b6c
+438832: 1a01 31e0                              |0061: const-string v1, "device_capabilities" // string@e031
+438836: 221a 381a                              |0063: new-instance v26, LX/04oE; // type@1a38
+43883a: 0800 1a00                              |0065: move-object/from16 v0, v26
+43883e: 7030 6c2b 1006                         |0067: invoke-direct {v0, v1, v6}, LX/04oE;.<init>:(Ljava/lang/Object;Ljava/lang/Object;)V // method@2b6c
+438844: 1300 0d02                              |006a: const/16 v0, #int 525 // #20d
+438848: 7110 1269 0000                         |006c: invoke-static {v0}, LX/0C0q;.A00:(I)Ljava/lang/String; // method@6912
+43884e: 0c01                                   |006f: move-result-object v1
+438850: 2219 381a                              |0070: new-instance v25, LX/04oE; // type@1a38
+438854: 0800 1900                              |0072: move-object/from16 v0, v25
+438858: 7030 6c2b 1006                         |0074: invoke-direct {v0, v1, v6}, LX/04oE;.<init>:(Ljava/lang/Object;Ljava/lang/Object;)V // method@2b6c
+43885e: 1a01 82e2                              |0077: const-string v1, "entry_point_qpl_instance_id" // string@e282
+438862: 2218 381a                              |0079: new-instance v24, LX/04oE; // type@1a38
+438866: 0800 1800                              |007b: move-object/from16 v0, v24
+43886a: 7030 6c2b 1006                         |007d: invoke-direct {v0, v1, v6}, LX/04oE;.<init>:(Ljava/lang/Object;Ljava/lang/Object;)V // method@2b6c
+438870: 1a01 83e2                              |0080: const-string v1, "entry_point_qpl_marker_id" // string@e283
+438874: 2217 381a                              |0082: new-instance v23, LX/04oE; // type@1a38
+438878: 0800 1700                              |0084: move-object/from16 v0, v23
+43887c: 7030 6c2b 1006                         |0086: invoke-direct {v0, v1, v6}, LX/04oE;.<init>:(Ljava/lang/Object;Ljava/lang/Object;)V // method@2b6c
+438882: 1300 1d00                              |0089: const/16 v0, #int 29 // #1d
+438886: 7110 1269 0000                         |008b: invoke-static {v0}, LX/0C0q;.A00:(I)Ljava/lang/String; // method@6912
+43888c: 0c01                                   |008e: move-result-object v1
+43888e: 2216 381a                              |008f: new-instance v22, LX/04oE; // type@1a38
+438892: 0800 1600                              |0091: move-object/from16 v0, v22
+438896: 7030 6c2b 1006                         |0093: invoke-direct {v0, v1, v6}, LX/04oE;.<init>:(Ljava/lang/Object;Ljava/lang/Object;)V // method@2b6c
+43889c: 1300 3a02                              |0096: const/16 v0, #int 570 // #23a
+4388a0: 7110 1269 0000                         |0098: invoke-static {v0}, LX/0C0q;.A00:(I)Ljava/lang/String; // method@6912
+4388a6: 0c01                                   |009b: move-result-object v1
+4388a8: 2215 381a                              |009c: new-instance v21, LX/04oE; // type@1a38
+4388ac: 0800 1500                              |009e: move-object/from16 v0, v21
+4388b0: 7030 6c2b 1006                         |00a0: invoke-direct {v0, v1, v6}, LX/04oE;.<init>:(Ljava/lang/Object;Ljava/lang/Object;)V // method@2b6c
+4388b6: 1300 4002                              |00a3: const/16 v0, #int 576 // #240
+4388ba: 7110 1269 0000                         |00a5: invoke-static {v0}, LX/0C0q;.A00:(I)Ljava/lang/String; // method@6912
+4388c0: 0c01                                   |00a8: move-result-object v1
+4388c2: 2214 381a                              |00a9: new-instance v20, LX/04oE; // type@1a38
+4388c6: 0800 1400                              |00ab: move-object/from16 v0, v20
+4388ca: 7030 6c2b 1006                         |00ad: invoke-direct {v0, v1, v6}, LX/04oE;.<init>:(Ljava/lang/Object;Ljava/lang/Object;)V // method@2b6c
+4388d0: 1300 6905                              |00b0: const/16 v0, #int 1385 // #569
+4388d4: 7110 2101 0000                         |00b2: invoke-static {v0}, LX/0055;.A00:(I)Ljava/lang/String; // method@0121
+4388da: 0c01                                   |00b5: move-result-object v1
+4388dc: 2213 381a                              |00b6: new-instance v19, LX/04oE; // type@1a38
+4388e0: 0800 1300                              |00b8: move-object/from16 v0, v19
+4388e4: 7030 6c2b 1006                         |00ba: invoke-direct {v0, v1, v6}, LX/04oE;.<init>:(Ljava/lang/Object;Ljava/lang/Object;)V // method@2b6c
+4388ea: 1300 7202                              |00bd: const/16 v0, #int 626 // #272
+4388ee: 7110 1269 0000                         |00bf: invoke-static {v0}, LX/0C0q;.A00:(I)Ljava/lang/String; // method@6912
+4388f4: 0c01                                   |00c2: move-result-object v1
+4388f6: 2212 381a                              |00c3: new-instance v18, LX/04oE; // type@1a38
+4388fa: 0800 1200                              |00c5: move-object/from16 v0, v18
+4388fe: 7030 6c2b 1006                         |00c7: invoke-direct {v0, v1, v6}, LX/04oE;.<init>:(Ljava/lang/Object;Ljava/lang/Object;)V // method@2b6c
+438904: 1a01 77f0                              |00ca: const-string v1, "is_invalid_traffic_from_dawpt" // string@f077
+438908: 2211 381a                              |00cc: new-instance v17, LX/04oE; // type@1a38
+43890c: 0800 1100                              |00ce: move-object/from16 v0, v17
+438910: 7030 6c2b 1006                         |00d0: invoke-direct {v0, v1, v6}, LX/04oE;.<init>:(Ljava/lang/Object;Ljava/lang/Object;)V // method@2b6c
+438916: 1300 7a02                              |00d3: const/16 v0, #int 634 // #27a
+43891a: 7110 1269 0000                         |00d5: invoke-static {v0}, LX/0C0q;.A00:(I)Ljava/lang/String; // method@6912
+438920: 0c01                                   |00d8: move-result-object v1
+438922: 2210 381a                              |00d9: new-instance v16, LX/04oE; // type@1a38
+438926: 0800 1000                              |00db: move-object/from16 v0, v16
+43892a: 7030 6c2b 1006                         |00dd: invoke-direct {v0, v1, v6}, LX/04oE;.<init>:(Ljava/lang/Object;Ljava/lang/Object;)V // method@2b6c
+438930: 1300 7b02                              |00e0: const/16 v0, #int 635 // #27b
+438934: 7110 1269 0000                         |00e2: invoke-static {v0}, LX/0C0q;.A00:(I)Ljava/lang/String; // method@6912
+43893a: 0c00                                   |00e5: move-result-object v0
+43893c: 220f 381a                              |00e6: new-instance v15, LX/04oE; // type@1a38
+438940: 7030 6c2b 0f06                         |00e8: invoke-direct {v15, v0, v6}, LX/04oE;.<init>:(Ljava/lang/Object;Ljava/lang/Object;)V // method@2b6c
+438946: 1a00 79f0                              |00eb: const-string v0, "is_item_sold_out" // string@f079
+43894a: 220e 381a                              |00ed: new-instance v14, LX/04oE; // type@1a38
+43894e: 7030 6c2b 0e06                         |00ef: invoke-direct {v14, v0, v6}, LX/04oE;.<init>:(Ljava/lang/Object;Ljava/lang/Object;)V // method@2b6c
+438954: 1a00 b3f0                              |00f2: const-string v0, "is_product_liked" // string@f0b3
+438958: 220d 381a                              |00f4: new-instance v13, LX/04oE; // type@1a38
+43895c: 7030 6c2b 0d06                         |00f6: invoke-direct {v13, v0, v6}, LX/04oE;.<init>:(Ljava/lang/Object;Ljava/lang/Object;)V // method@2b6c
+438962: 1a00 b4f0                              |00f9: const-string v0, "is_product_saved" // string@f0b4
+438966: 220c 381a                              |00fb: new-instance v12, LX/04oE; // type@1a38
+43896a: 7030 6c2b 0c06                         |00fd: invoke-direct {v12, v0, v6}, LX/04oE;.<init>:(Ljava/lang/Object;Ljava/lang/Object;)V // method@2b6c
+438970: 1300 7f02                              |0100: const/16 v0, #int 639 // #27f
+438974: 7110 1269 0000                         |0102: invoke-static {v0}, LX/0C0q;.A00:(I)Ljava/lang/String; // method@6912
+43897a: 0c00                                   |0105: move-result-object v0
+43897c: 220b 381a                              |0106: new-instance v11, LX/04oE; // type@1a38
+438980: 7030 6c2b 0b06                         |0108: invoke-direct {v11, v0, v6}, LX/04oE;.<init>:(Ljava/lang/Object;Ljava/lang/Object;)V // method@2b6c
+438986: 1300 8102                              |010b: const/16 v0, #int 641 // #281
+43898a: 7110 1269 0000                         |010d: invoke-static {v0}, LX/0C0q;.A00:(I)Ljava/lang/String; // method@6912
+438990: 0c00                                   |0110: move-result-object v0
+438992: 220a 381a                              |0111: new-instance v10, LX/04oE; // type@1a38
+438996: 7030 6c2b 0a06                         |0113: invoke-direct {v10, v0, v6}, LX/04oE;.<init>:(Ljava/lang/Object;Ljava/lang/Object;)V // method@2b6c
+43899c: 1300 8202                              |0116: const/16 v0, #int 642 // #282
+4389a0: 7110 1269 0000                         |0118: invoke-static {v0}, LX/0C0q;.A00:(I)Ljava/lang/String; // method@6912
+4389a6: 0c00                                   |011b: move-result-object v0
+4389a8: 2209 381a                              |011c: new-instance v9, LX/04oE; // type@1a38
+4389ac: 7030 6c2b 0906                         |011e: invoke-direct {v9, v0, v6}, LX/04oE;.<init>:(Ljava/lang/Object;Ljava/lang/Object;)V // method@2b6c
+4389b2: 1a00 8ef1                              |0121: const-string v0, "launch_date" // string@f18e
+4389b6: 2208 381a                              |0123: new-instance v8, LX/04oE; // type@1a38
+4389ba: 7030 6c2b 0806                         |0125: invoke-direct {v8, v0, v6}, LX/04oE;.<init>:(Ljava/lang/Object;Ljava/lang/Object;)V // method@2b6c
+
+===== classes18.txt Lcom/instagram/ar/core/effectcollection/EffectCollectionService;->A02 target_line=769540 =====
+STRINGS: effect_id | crypto_hash | device_capabilities | requested_effect_ids | target_effect_id | include_preview_image | TAR_BROTLI | ZIP | INSTAGRAM__DIRECT__RTC__EFFECTS_BY_ID | surface_identity | target_effect_params | supported_texture_formats | IGAREffectsByIdQuery
+52614a: 6e10 1302 0000                         |003b: invoke-virtual {v0}, LX/00Gs;.A0B:()Z // method@0213
+526150: 0a00                                   |003e: move-result v0
+526152: df00 0001                              |003f: xor-int/lit8 v0, v0, #int 1 // #01
+526156: 3900 0a00                              |0041: if-nez v0, 004b // +000a
+52615a: 6200 a599                              |0043: sget-object v0, LX/0Kmr;.A00:LX/0Kmr; // field@99a5
+52615e: 2206 370b                              |0045: new-instance v6, LX/02dJ; // type@0b37
+526162: 7020 5e15 0600                         |0047: invoke-direct {v6, v0}, LX/02dJ;.<init>:(Ljava/lang/Object;)V // method@155e
+526168: 1106                                   |004a: return-object v6
+52616a: 5451 f5c3                              |004b: iget-object v1, v5, Lcom/instagram/ar/core/effectcollection/EffectCollectionService;.A04:Lcom/instagram/common/session/UserSession; // field@c3f5
+52616e: 5450 f6c3                              |004d: iget-object v0, v5, Lcom/instagram/ar/core/effectcollection/EffectCollectionService;.A05:LX/01ys; // field@c3f6
+526172: 2203 830d                              |004f: new-instance v3, LX/033o; // type@0d83
+526176: 7030 ff1a 1300                         |0051: invoke-direct {v3, v1, v0}, LX/033o;.<init>:(Lcom/instagram/common/session/UserSession;LX/01ys;)V // method@1aff
+52617c: 0801 1400                              |0054: move-object/from16 v1, v20
+526180: 541c 49a5                              |0056: iget-object v12, v1, LX/0Lwa;.A02:Ljava/lang/String; // field@a549
+526184: 5412 48a5                              |0058: iget-object v2, v1, LX/0Lwa;.A01:LX/074j; // field@a548
+526188: 541a 4aa5                              |005a: iget-object v10, v1, LX/0Lwa;.A03:Ljava/lang/String; // field@a54a
+52618c: 5419 4ba5                              |005c: iget-object v9, v1, LX/0Lwa;.A04:Ljava/lang/String; // field@a54b
+526190: 5410 4ca5                              |005e: iget-object v0, v1, LX/0Lwa;.A05:Ljava/util/List; // field@a54c
+526194: 0815 0000                              |0060: move-object/from16 v21, v0
+526198: 5310 47a5                              |0062: iget-wide v0, v1, LX/0Lwa;.A00:J // field@a547
+52619c: 0513 0000                              |0064: move-wide/from16 v19, v0
+5261a0: 120e                                   |0066: const/4 v14, #int 0 // #0
+5261a2: 543b 8716                              |0067: iget-object v11, v3, LX/033o;.A01:Lcom/instagram/common/session/UserSession; // field@1687
+5261a6: 1312 0000                              |0069: const/16 v18, #int 0 // #0
+5261aa: 7110 c81d 0b00                         |006b: invoke-static {v11}, LX/03Lk;.A01:(Lcom/instagram/common/session/UserSession;)LX/05xq; // method@1dc8
+5261b0: 0c11                                   |006e: move-result-object v17
+5261b2: 5420 a239                              |006f: iget-object v0, v2, LX/074j;.A00:LX/0Aqt; // field@39a2
+5261b6: 7120 112b e000                         |0071: invoke-static {v0, v14}, LX/04l9;.A0j:(Ljava/lang/Object;I)V // method@2b11
+5261bc: 6e10 b1fc 0000                         |0074: invoke-virtual {v0}, Ljava/lang/Enum;.ordinal:()I // method@fcb1
+5261c2: 0a00                                   |0077: move-result v0
+5261c4: 3380 bb00                              |0078: if-ne v0, v8, 0133 // +00bb
+5261c8: 6210 0000                              |007a: sget-object v16, LX/000A;.A00:Ljava/lang/Integer; // field@0000
+5261cc: 6201 7bc1                              |007c: sget-object v1, Lcom/facebook/graphql/calls/GraphQlCallInput;.A02:LX/000m; // field@c17b
+5261d0: 1a00 bde1                              |007e: const-string v0, "effect_id" // string@e1bd
+5261d4: 6e10 3300 0100                         |0080: invoke-virtual {v1}, LX/000m;.A02:()LX/000q; // method@0033
+5261da: 0c0d                                   |0083: move-result-object v13
+5261dc: 7130 3500 cd00                         |0084: invoke-static {v13, v12, v0}, LX/000q;.A00:(LX/000q;Ljava/lang/Object;Ljava/lang/String;)V // method@0035
+5261e2: 1a00 fcde                              |0087: const-string v0, "crypto_hash" // string@defc
+5261e6: 7130 3500 ad00                         |0089: invoke-static {v13, v10, v0}, LX/000q;.A00:(LX/000q;Ljava/lang/Object;Ljava/lang/String;)V // method@0035
+5261ec: 1300 5b00                              |008c: const/16 v0, #int 91 // #5b
+5261f0: 7110 fd04 0000                         |008e: invoke-static {v0}, LX/0120;.A00:(I)Ljava/lang/String; // method@04fd
+5261f6: 0c00                                   |0091: move-result-object v0
+5261f8: 7130 3500 9d00                         |0092: invoke-static {v13, v9, v0}, LX/000q;.A00:(LX/000q;Ljava/lang/Object;Ljava/lang/String;)V // method@0035
+5261fe: 2201 ab20                              |0095: new-instance v1, LX/05xm; // type@20ab
+526202: 7010 a632 0100                         |0097: invoke-direct {v1}, LX/05xm;.<init>:()V // method@32a6
+526208: 1a0f 31e0                              |009a: const-string v15, "device_capabilities" // string@e031
+52620c: 0800 1100                              |009c: move-object/from16 v0, v17
+526210: 6e30 a732 010f                         |009e: invoke-virtual {v1, v0, v15}, LX/05xm;.A00:(Lcom/facebook/graphql/calls/GraphQlCallInput;Ljava/lang/String;)V // method@32a7
+526216: 1300 f000                              |00a1: const/16 v0, #int 240 // #f0
+52621a: 7110 d3fc 0000                         |00a3: invoke-static {v0}, Ljava/lang/Integer;.valueOf:(I)Ljava/lang/Integer; // method@fcd3
+526220: 0c0f                                   |00a6: move-result-object v15
+526222: 1300 ba00                              |00a7: const/16 v0, #int 186 // #ba
+526226: 7110 fd04 0000                         |00a9: invoke-static {v0}, LX/0120;.A00:(I)Ljava/lang/String; // method@04fd
+52622c: 0c00                                   |00ac: move-result-object v0
+52622e: 6e30 aa32 010f                         |00ad: invoke-virtual {v1, v0, v15}, LX/05xm;.A04:(Ljava/lang/String;Ljava/lang/Number;)V // method@32aa
+526234: 1300 b900                              |00b0: const/16 v0, #int 185 // #b9
+526238: 7110 fd04 0000                         |00b2: invoke-static {v0}, LX/0120;.A00:(I)Ljava/lang/String; // method@04fd
+52623e: 0c00                                   |00b5: move-result-object v0
+526240: 6e30 aa32 010f                         |00b6: invoke-virtual {v1, v0, v15}, LX/05xm;.A04:(Ljava/lang/String;Ljava/lang/Number;)V // method@32aa
+526246: 7701 e1e3 1500                         |00b9: invoke-static/range {v21}, Lcom/google/common/collect/ImmutableList;.copyOf:(Ljava/util/Collection;)Lcom/google/common/collect/ImmutableList; // method@e3e1
+52624c: 0c0f                                   |00bc: move-result-object v15
+52624e: 1a00 b3fd                              |00bd: const-string v0, "requested_effect_ids" // string@fdb3
+526252: 6e30 ac32 010f                         |00bf: invoke-virtual {v1, v0, v15}, LX/05xm;.A06:(Ljava/lang/String;Ljava/util/List;)V // method@32ac
+526258: 1b00 7006 0100                         |00c2: const-string/jumbo v0, "target_effect_id" // string@00010670
+52625e: 6e30 ab32 010c                         |00c5: invoke-virtual {v1, v0, v12}, LX/05xm;.A05:(Ljava/lang/String;Ljava/lang/String;)V // method@32ab
+526264: 1a00 56ee                              |00c8: const-string v0, "include_preview_image" // string@ee56
+526268: 6e20 a832 0100                         |00ca: invoke-virtual {v1, v0}, LX/05xm;.A02:(Ljava/lang/String;)V // method@32a8
+52626e: 1a0f 79c7                              |00cd: const-string v15, "TAR_BROTLI" // string@c779
+526272: 1a00 79cf                              |00cf: const-string v0, "ZIP" // string@cf79
+526276: 7120 e6e3 0f00                         |00d1: invoke-static {v15, v0}, Lcom/google/common/collect/ImmutableList;.of:(Ljava/lang/Object;Ljava/lang/Object;)Lcom/google/common/collect/ImmutableList; // method@e3e6
+52627c: 0c0f                                   |00d4: move-result-object v15
+52627e: 1300 d101                              |00d5: const/16 v0, #int 465 // #1d1
+526282: 7110 fd04 0000                         |00d7: invoke-static {v0}, LX/0120;.A00:(I)Ljava/lang/String; // method@04fd
+526288: 0c00                                   |00da: move-result-object v0
+52628a: 6e30 ac32 010f                         |00db: invoke-virtual {v1, v0, v15}, LX/05xm;.A06:(Ljava/lang/String;Ljava/util/List;)V // method@32ac
+526290: 3810 5300                              |00de: if-eqz v16, 0131 // +0053
+526294: 1a0f cd34                              |00e0: const-string v15, "INSTAGRAM__DIRECT__RTC__EFFECTS_BY_ID" // string@34cd
+526298: 1b00 4705 0100                         |00e2: const-string/jumbo v0, "surface_identity" // string@00010547
+52629e: 6e30 ab32 010f                         |00e5: invoke-virtual {v1, v0, v15}, LX/05xm;.A05:(Ljava/lang/String;Ljava/lang/String;)V // method@32ab
+5262a4: 1b0f 7106 0100                         |00e8: const-string/jumbo v15, "target_effect_params" // string@00010671
+5262aa: 5410 2932                              |00eb: iget-object v0, v1, LX/05xm;.A00:LX/05xq; // field@3229
+5262ae: 6e10 aadf 0000                         |00ed: invoke-virtual {v0}, Lcom/facebook/graphql/calls/GraphQlCallInput;.A03:()LX/000q; // method@dfaa
+5262b4: 0c00                                   |00f0: move-result-object v0
+5262b6: 6e30 3800 d00f                         |00f1: invoke-virtual {v0, v13, v15}, LX/000q;.A0E:(LX/001A;Ljava/lang/String;)V // method@0038
+5262bc: 1300 d403                              |00f4: const/16 v0, #int 980 // #3d4
+5262c0: 7110 fd04 0000                         |00f6: invoke-static {v0}, LX/0120;.A00:(I)Ljava/lang/String; // method@04fd
+5262c6: 0c00                                   |00f9: move-result-object v0
+5262c8: 6e20 a832 0100                         |00fa: invoke-virtual {v1, v0}, LX/05xm;.A02:(Ljava/lang/String;)V // method@32a8
+5262ce: 7401 abdf 1100                         |00fd: invoke-virtual/range {v17}, Lcom/facebook/graphql/calls/GraphQlCallInput;.A04:()Ljava/util/TreeMap; // method@dfab
+5262d4: 0c0f                                   |0100: move-result-object v15
+5262d6: 1b0d 4405 0100                         |0101: const-string/jumbo v13, "supported_texture_formats" // string@00010544
+5262dc: 6e20 e5fd df00                         |0104: invoke-virtual {v15, v13}, Ljava/util/AbstractMap;.containsKey:(Ljava/lang/Object;)Z // method@fde5
+5262e2: 0a00                                   |0107: move-result v0
+5262e4: 3800 3600                              |0108: if-eqz v0, 013e // +0036
+5262e8: 6e20 e7fd df00                         |010a: invoke-virtual {v15, v13}, Ljava/util/AbstractMap;.get:(Ljava/lang/Object;)Ljava/lang/Object; // method@fde7
+5262ee: 0c00                                   |010d: move-result-object v0
+5262f0: 200f 2b82                              |010e: instance-of v15, v0, Ljava/util/List; // type@822b
+5262f4: 380f 2e00                              |0110: if-eqz v15, 013e // +002e
+5262f8: 1f00 c381                              |0112: check-cast v0, Ljava/lang/Iterable; // type@81c3
+5262fc: 2211 1882                              |0114: new-instance v17, Ljava/util/ArrayList; // type@8218
+526300: 7601 f5fd 1100                         |0116: invoke-direct/range {v17}, Ljava/util/ArrayList;.<init>:()V // method@fdf5
+526306: 7210 d5fc 0000                         |0119: invoke-interface {v0}, Ljava/lang/Iterable;.iterator:()Ljava/util/Iterator; // method@fcd5
+52630c: 0c10                                   |011c: move-result-object v16
+52630e: 7801 57fe 1000                         |011d: invoke-interface/range {v16}, Ljava/util/Iterator;.hasNext:()Z // method@fe57
+526314: 0a00                                   |0120: move-result v0
+526316: 3800 1600                              |0121: if-eqz v0, 0137 // +0016
+52631a: 7801 58fe 1000                         |0123: invoke-interface/range {v16}, Ljava/util/Iterator;.next:()Ljava/lang/Object; // method@fe58
+526320: 0c0f                                   |0126: move-result-object v15
+526322: 20f0 d481                              |0127: instance-of v0, v15, Ljava/lang/String; // type@81d4
+526326: 3800 f4ff                              |0129: if-eqz v0, 011d // -000c
+52632a: 0800 1100                              |012b: move-object/from16 v0, v17
+52632e: 6e20 d0fd f000                         |012d: invoke-virtual {v0, v15}, Ljava/util/AbstractCollection;.add:(Ljava/lang/Object;)Z // method@fdd0
+526334: 28ed                                   |0130: goto 011d // -0013
+526336: 120f                                   |0131: const/4 v15, #int 0 // #0
+526338: 28b0                                   |0132: goto 00e2 // -0050
+52633a: 1310 0000                              |0133: const/16 v16, #int 0 // #0
+52633e: 2900 47ff                              |0135: goto/16 007c // -00b9
+526342: 7701 e1e3 1100                         |0137: invoke-static/range {v17}, Lcom/google/common/collect/ImmutableList;.copyOf:(Ljava/util/Collection;)Lcom/google/common/collect/ImmutableList; // method@e3e1
+526348: 0c00                                   |013a: move-result-object v0
+52634a: 6e30 ac32 d100                         |013b: invoke-virtual {v1, v13, v0}, LX/05xm;.A06:(Ljava/lang/String;Ljava/util/List;)V // method@32ac
+526350: 1c0f 115a                              |013e: const-class v15, LX/0JtI; // type@5a11
+526354: 1a00 c832                              |0140: const-string v0, "IGAREffectsByIdQuery" // string@32c8
+526358: 220d fd00                              |0142: new-instance v13, LX/00K8; // type@00fd
+52635c: 705e 3d02 1d0f                         |0144: invoke-direct {v13, v1, v15, v0, v14}, LX/00K8;.<init>:(LX/05xm;Ljava/lang/Class;Ljava/lang/String;Z)V // method@023d
+526362: 2201 d681                              |0147: new-instance v1, Ljava/lang/StringBuilder; // type@81d6
+526366: 7010 44fd 0100                         |0149: invoke-direct {v1}, Ljava/lang/StringBuilder;.<init>:()V // method@fd44
+52636c: 54b0 cbc6                              |014c: iget-object v0, v11, Lcom/instagram/common/session/UserSession;.userId:Ljava/lang/String; // field@c6cb
+526370: 6e20 50fd 0100                         |014e: invoke-virtual {v1, v0}, Ljava/lang/StringBuilder;.append:(Ljava/lang/String;)Ljava/lang/StringBuilder; // method@fd50
+526376: 1300 5f00                              |0151: const/16 v0, #int 95 // #5f
+52637a: 6e20 48fd 0100                         |0153: invoke-virtual {v1, v0}, Ljava/lang/StringBuilder;.append:(C)Ljava/lang/StringBuilder; // method@fd48
+526380: 6e20 50fd c100                         |0156: invoke-virtual {v1, v12}, Ljava/lang/StringBuilder;.append:(Ljava/lang/String;)Ljava/lang/StringBuilder; // method@fd50
+526386: 6e20 48fd 0100                         |0159: invoke-virtual {v1, v0}, Ljava/lang/StringBuilder;.append:(C)Ljava/lang/StringBuilder; // method@fd48
+52638c: 6e20 50fd a100                         |015c: invoke-virtual {v1, v10}, Ljava/lang/StringBuilder;.append:(Ljava/lang/String;)Ljava/lang/StringBuilder; // method@fd50
+526392: 6e20 48fd 0100                         |015f: invoke-virtual {v1, v0}, Ljava/lang/StringBuilder;.append:(C)Ljava/lang/StringBuilder; // method@fd48
+526398: 6e20 50fd 9100                         |0162: invoke-virtual {v1, v9}, Ljava/lang/StringBuilder;.append:(Ljava/lang/String;)Ljava/lang/StringBuilder; // method@fd50
+
+===== classes18.txt Lcom/facebook/cameracore/ardelivery/xplat/async/XplatAsyncMetadataFetcher;->fetchAsyncAssetMetadata target_line=869979 =====
+STRINGS: beta_min_version | beta_max_version | texture_compression | etc2_compression | ETC | pvr_compression | PVR | UNCOMPRESSED | device_capabilities | ZIP | TAR_BROTLI | astc_compression | ASTC | none | supported_texture_formats | effect_id | no maximum beta version found | Required value was null. | no maximum version found | no minimum version found
+56aaa6: 1a00 23d9                              |013f: const-string v0, "beta_min_version" // string@d923
+56aaaa: 7220 8afe 0100                         |0141: invoke-interface {v1, v0}, Ljava/util/Map;.get:(Ljava/lang/Object;)Ljava/lang/Object; // method@fe8a
+56aab0: 0c00                                   |0144: move-result-object v0
+56aab2: 3800 2701                              |0145: if-eqz v0, 026c // +0127
+56aab6: 1f00 cb81                              |0147: check-cast v0, Ljava/lang/Number; // type@81cb
+56aaba: 6e10 fcfc 0000                         |0149: invoke-virtual {v0}, Ljava/lang/Number;.doubleValue:()D // method@fcfc
+56aac0: 0b10                                   |014c: move-result-wide v16
+56aac2: 7702 adfc 1000                         |014d: invoke-static/range {v16, v17}, Ljava/lang/Double;.valueOf:(D)Ljava/lang/Double; // method@fcad
+56aac8: 0c00                                   |0150: move-result-object v0
+56aaca: 7401 3300 1200                         |0151: invoke-virtual/range {v18}, LX/000m;.A02:()LX/000q; // method@0033
+56aad0: 0c0b                                   |0154: move-result-object v11
+56aad2: 7130 3500 0b0f                         |0155: invoke-static {v11, v0, v15}, LX/000q;.A00:(LX/000q;Ljava/lang/Object;Ljava/lang/String;)V // method@0035
+56aad8: 1a00 22d9                              |0158: const-string v0, "beta_max_version" // string@d922
+56aadc: 7220 8afe 0100                         |015a: invoke-interface {v1, v0}, Ljava/util/Map;.get:(Ljava/lang/Object;)Ljava/lang/Object; // method@fe8a
+56aae2: 0c00                                   |015d: move-result-object v0
+56aae4: 3800 de00                              |015e: if-eqz v0, 023c // +00de
+56aae8: 1f00 cb81                              |0160: check-cast v0, Ljava/lang/Number; // type@81cb
+56aaec: 6e10 fcfc 0000                         |0162: invoke-virtual {v0}, Ljava/lang/Number;.doubleValue:()D // method@fcfc
+56aaf2: 0b00                                   |0165: move-result-wide v0
+56aaf4: 7120 adfc 1000                         |0166: invoke-static {v0, v1}, Ljava/lang/Double;.valueOf:(D)Ljava/lang/Double; // method@fcad
+56aafa: 0c00                                   |0169: move-result-object v0
+56aafc: 7130 3500 0b0e                         |016a: invoke-static {v11, v0, v14}, LX/000q;.A00:(LX/000q;Ljava/lang/Object;Ljava/lang/String;)V // method@0035
+56ab02: 6e10 aadf 0a00                         |016d: invoke-virtual {v10}, Lcom/facebook/graphql/calls/GraphQlCallInput;.A03:()LX/000q; // method@dfaa
+56ab08: 0c00                                   |0170: move-result-object v0
+56ab0a: 6e30 3800 b00d                         |0171: invoke-virtual {v0, v11, v13}, LX/000q;.A0E:(LX/001A;Ljava/lang/String;)V // method@0038
+56ab10: 1b0b 9b06 0100                         |0174: const-string/jumbo v11, "texture_compression" // string@0001069b
+56ab16: 7220 8afe bc00                         |0177: invoke-interface {v12, v11}, Ljava/util/Map;.get:(Ljava/lang/Object;)Ljava/lang/Object; // method@fe8a
+56ab1c: 0c01                                   |017a: move-result-object v1
+56ab1e: 1f01 d481                              |017b: check-cast v1, Ljava/lang/String; // type@81d4
+56ab22: 1a0c b3e2                              |017d: const-string v12, "etc2_compression" // string@e2b3
+56ab26: 6e20 1ffd 1c00                         |017f: invoke-virtual {v12, v1}, Ljava/lang/String;.equals:(Ljava/lang/Object;)Z // method@fd1f
+56ab2c: 0a00                                   |0182: move-result v0
+56ab2e: 3800 0800                              |0183: if-eqz v0, 018b // +0008
+56ab32: 1a00 7123                              |0185: const-string v0, "ETC" // string@2371
+56ab36: 6e30 aedf ba00                         |0187: invoke-virtual {v10, v11, v0}, Lcom/facebook/graphql/calls/GraphQlCallInput;.A0B:(Ljava/lang/String;Ljava/lang/String;)V // method@dfae
+56ab3c: 280f                                   |018a: goto 0199 // +000f
+56ab3e: 1a00 b2fb                              |018b: const-string v0, "pvr_compression" // string@fbb2
+56ab42: 6e20 1ffd 1000                         |018d: invoke-virtual {v0, v1}, Ljava/lang/String;.equals:(Ljava/lang/Object;)Z // method@fd1f
+56ab48: 0a00                                   |0190: move-result v0
+56ab4a: 3800 0500                              |0191: if-eqz v0, 0196 // +0005
+56ab4e: 1a00 51c0                              |0193: const-string v0, "PVR" // string@c051
+56ab52: 28f2                                   |0195: goto 0187 // -000e
+56ab54: 1a00 d4c8                              |0196: const-string v0, "UNCOMPRESSED" // string@c8d4
+56ab58: 28ef                                   |0198: goto 0187 // -0011
+56ab5a: 1e13                                   |0199: monitor-exit v19
+56ab5c: 1a00 31e0                              |019a: const-string v0, "device_capabilities" // string@e031
+56ab60: 6e30 a732 a300                         |019c: invoke-virtual {v3, v10, v0}, LX/05xm;.A00:(Lcom/facebook/graphql/calls/GraphQlCallInput;Ljava/lang/String;)V // method@32a7
+56ab66: 5c49 dbaa                              |019f: iput-boolean v9, v4, LX/0Mib;.A01:Z // field@aadb
+56ab6a: 1a01 79cf                              |01a1: const-string v1, "ZIP" // string@cf79
+56ab6e: 1a00 79c7                              |01a3: const-string v0, "TAR_BROTLI" // string@c779
+56ab72: 7120 e6e3 0100                         |01a5: invoke-static {v1, v0}, Lcom/google/common/collect/ImmutableList;.of:(Ljava/lang/Object;Ljava/lang/Object;)Lcom/google/common/collect/ImmutableList; // method@e3e6
+56ab78: 0c01                                   |01a8: move-result-object v1
+56ab7a: 1300 d101                              |01a9: const/16 v0, #int 465 // #1d1
+56ab7e: 7110 fd04 0000                         |01ab: invoke-static {v0}, LX/0120;.A00:(I)Ljava/lang/String; // method@04fd
+56ab84: 0c00                                   |01ae: move-result-object v0
+56ab86: 6e30 ac32 0301                         |01af: invoke-virtual {v3, v0, v1}, LX/05xm;.A06:(Ljava/lang/String;Ljava/util/List;)V // method@32ac
+56ab8c: 5c49 dcaa                              |01b2: iput-boolean v9, v4, LX/0Mib;.A02:Z // field@aadc
+56ab90: 2201 c47a                              |01b4: new-instance v1, Lcom/google/common/collect/ImmutableList$Builder; // type@7ac4
+56ab94: 7010 dce3 0100                         |01b6: invoke-direct {v1}, Lcom/google/common/collect/ImmutableList$Builder;.<init>:()V // method@e3dc
+56ab9a: 7100 7834 0000                         |01b9: invoke-static {}, LX/066L;.A00:()Ljava/util/Map; // method@3478
+56aba0: 0c0b                                   |01bc: move-result-object v11
+56aba2: 7110 002b 0b00                         |01bd: invoke-static {v11}, LX/04l9;.A0R:(Ljava/lang/Object;)V // method@2b00
+56aba8: 7110 8cfc 0900                         |01c0: invoke-static {v9}, Ljava/lang/Boolean;.valueOf:(Z)Ljava/lang/Boolean; // method@fc8c
+56abae: 0c0a                                   |01c3: move-result-object v10
+56abb0: 7220 8afe cb00                         |01c4: invoke-interface {v11, v12}, Ljava/util/Map;.get:(Ljava/lang/Object;)Ljava/lang/Object; // method@fe8a
+56abb6: 0c00                                   |01c7: move-result-object v0
+56abb8: 6e20 03fd 0a00                         |01c8: invoke-virtual {v10, v0}, Ljava/lang/Object;.equals:(Ljava/lang/Object;)Z // method@fd03
+56abbe: 0a00                                   |01cb: move-result v0
+56abc0: 3800 0700                              |01cc: if-eqz v0, 01d3 // +0007
+56abc4: 1a00 7123                              |01ce: const-string v0, "ETC" // string@2371
+56abc8: 6e20 dde3 0100                         |01d0: invoke-virtual {v1, v0}, Lcom/google/common/collect/ImmutableList$Builder;.add:(Ljava/lang/Object;)Lcom/google/common/collect/ImmutableList$Builder; // method@e3dd
+56abce: 1a00 b2fb                              |01d3: const-string v0, "pvr_compression" // string@fbb2
+56abd2: 7220 8afe 0b00                         |01d5: invoke-interface {v11, v0}, Ljava/util/Map;.get:(Ljava/lang/Object;)Ljava/lang/Object; // method@fe8a
+56abd8: 0c00                                   |01d8: move-result-object v0
+56abda: 6e20 03fd 0a00                         |01d9: invoke-virtual {v10, v0}, Ljava/lang/Object;.equals:(Ljava/lang/Object;)Z // method@fd03
+56abe0: 0a00                                   |01dc: move-result v0
+56abe2: 3800 0700                              |01dd: if-eqz v0, 01e4 // +0007
+56abe6: 1a00 51c0                              |01df: const-string v0, "PVR" // string@c051
+56abea: 6e20 dde3 0100                         |01e1: invoke-virtual {v1, v0}, Lcom/google/common/collect/ImmutableList$Builder;.add:(Ljava/lang/Object;)Lcom/google/common/collect/ImmutableList$Builder; // method@e3dd
+56abf0: 1a00 eed7                              |01e4: const-string v0, "astc_compression" // string@d7ee
+56abf4: 7220 8afe 0b00                         |01e6: invoke-interface {v11, v0}, Ljava/util/Map;.get:(Ljava/lang/Object;)Ljava/lang/Object; // method@fe8a
+56abfa: 0c00                                   |01e9: move-result-object v0
+56abfc: 6e20 03fd 0a00                         |01ea: invoke-virtual {v10, v0}, Ljava/lang/Object;.equals:(Ljava/lang/Object;)Z // method@fd03
+56ac02: 0a00                                   |01ed: move-result v0
+56ac04: 3800 0700                              |01ee: if-eqz v0, 01f5 // +0007
+56ac08: 1a00 690f                              |01f0: const-string v0, "ASTC" // string@0f69
+56ac0c: 6e20 dde3 0100                         |01f2: invoke-virtual {v1, v0}, Lcom/google/common/collect/ImmutableList$Builder;.add:(Ljava/lang/Object;)Lcom/google/common/collect/ImmutableList$Builder; // method@e3dd
+56ac12: 1a00 7df6                              |01f5: const-string v0, "none" // string@f67d
+56ac16: 7220 8afe 0b00                         |01f7: invoke-interface {v11, v0}, Ljava/util/Map;.get:(Ljava/lang/Object;)Ljava/lang/Object; // method@fe8a
+56ac1c: 0c00                                   |01fa: move-result-object v0
+56ac1e: 6e20 03fd 0a00                         |01fb: invoke-virtual {v10, v0}, Ljava/lang/Object;.equals:(Ljava/lang/Object;)Z // method@fd03
+56ac24: 0a00                                   |01fe: move-result v0
+56ac26: 3800 0700                              |01ff: if-eqz v0, 0206 // +0007
+56ac2a: 1a00 d4c8                              |0201: const-string v0, "UNCOMPRESSED" // string@c8d4
+56ac2e: 6e20 dde3 0100                         |0203: invoke-virtual {v1, v0}, Lcom/google/common/collect/ImmutableList$Builder;.add:(Ljava/lang/Object;)Lcom/google/common/collect/ImmutableList$Builder; // method@e3dd
+56ac34: 6e10 dee3 0100                         |0206: invoke-virtual {v1}, Lcom/google/common/collect/ImmutableList$Builder;.build:()Lcom/google/common/collect/ImmutableList; // method@e3de
+56ac3a: 0c01                                   |0209: move-result-object v1
+56ac3c: 7110 002b 0100                         |020a: invoke-static {v1}, LX/04l9;.A0R:(Ljava/lang/Object;)V // method@2b00
+56ac42: 1b00 4405 0100                         |020d: const-string/jumbo v0, "supported_texture_formats" // string@00010544
+56ac48: 6e30 ac32 0301                         |0210: invoke-virtual {v3, v0, v1}, LX/05xm;.A06:(Ljava/lang/String;Ljava/util/List;)V // method@32ac
+56ac4e: 5c49 ddaa                              |0213: iput-boolean v9, v4, LX/0Mib;.A03:Z // field@aadd
+56ac52: 1a00 bde1                              |0215: const-string v0, "effect_id" // string@e1bd
+56ac56: 6e30 ab32 0305                         |0217: invoke-virtual {v3, v0, v5}, LX/05xm;.A05:(Ljava/lang/String;Ljava/lang/String;)V // method@32ab
+56ac5c: 6e10 e4b5 0400                         |021a: invoke-virtual {v4}, LX/0Mib;.build:()LX/08OZ; // method@b5e4
+56ac62: 0c05                                   |021d: move-result-object v5
+56ac64: 2200 e43a                              |021e: new-instance v0, LX/0AvM; // type@3ae4
+56ac68: 7030 935c 7006                         |0220: invoke-direct {v0, v7, v6}, LX/0AvM;.<init>:(Ljava/lang/Object;I)V // method@5c93
+56ac6e: 5424 c256                              |0223: iget-object v4, v2, LX/0BKn;.A01:LX/0Arh; // field@56c2
+56ac72: 2203 c662                              |0225: new-instance v3, LX/0MYs; // type@62c6
+56ac76: 070b                                   |0227: move-object v11, v0
+56ac78: 078c                                   |0228: move-object v12, v8
+56ac7a: 016d                                   |0229: move v13, v6
+56ac7c: 0738                                   |022a: move-object v8, v3
+56ac7e: 0729                                   |022b: move-object v9, v2
+56ac80: 077a                                   |022c: move-object v10, v7
+56ac82: 7606 76b2 0800                         |022d: invoke-direct/range {v8, v9, v10, v11, v12, v13}, LX/0MYs;.<init>:(Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/String;I)V // method@b276
+56ac88: 2201 d763                              |0230: new-instance v1, LX/0Mht; // type@63d7
+56ac8c: 7030 cfb5 0106                         |0232: invoke-direct {v1, v0, v6}, LX/0Mht;.<init>:(Lkotlin/jvm/functions/Function1;I)V // method@b5cf
+56ac92: 6200 3d14                              |0235: sget-object v0, LX/02sh;.A01:LX/02sh; // field@143d
+56ac96: 7250 365c 1453                         |0237: invoke-interface {v4, v1, v3, v5, v0}, LX/0Arh;.BA7:(LX/0Puw;LX/0mjZ;LX/08OZ;Ljava/util/concurrent/Executor;)LX/0Pux; // method@5c36
+56ac9c: 1e02                                   |023a: monitor-exit v2
+56ac9e: 0e00                                   |023b: return-void
+56aca0: 1a00 5af6                              |023c: const-string v0, "no maximum beta version found" // string@f65a
+56aca4: 2201 bd81                              |023e: new-instance v1, Ljava/lang/IllegalStateException; // type@81bd
+56aca8: 7020 c5fc 0100                         |0240: invoke-direct {v1, v0}, Ljava/lang/IllegalStateException;.<init>:(Ljava/lang/String;)V // method@fcc5
+56acae: 2830                                   |0243: goto 0273 // +0030
+56acb0: 1a00 1fc3                              |0244: const-string v0, "Required value was null." // string@c31f
+56acb4: 2201 bd81                              |0246: new-instance v1, Ljava/lang/IllegalStateException; // type@81bd
+56acb8: 7020 c5fc 0100                         |0248: invoke-direct {v1, v0}, Ljava/lang/IllegalStateException;.<init>:(Ljava/lang/String;)V // method@fcc5
+56acbe: 2828                                   |024b: goto 0273 // +0028
+56acc0: 1a00 5bf6                              |024c: const-string v0, "no maximum version found" // string@f65b
+56acc4: 2201 bd81                              |024e: new-instance v1, Ljava/lang/IllegalStateException; // type@81bd
+56acc8: 7020 c5fc 0100                         |0250: invoke-direct {v1, v0}, Ljava/lang/IllegalStateException;.<init>:(Ljava/lang/String;)V // method@fcc5
+56acce: 2820                                   |0253: goto 0273 // +0020
+56acd0: 1a00 5df6                              |0254: const-string v0, "no minimum version found" // string@f65d
+
+===== classes18.txt LX/0Lhp;->A00 target_line=1937137 =====
+STRINGS: max_version | supported_sdk_versions | supported_beta_sdk_versions | etc2_compression | pvr_compression | _compression | 2 | texture_compression | device_capabilities | requested_effect_ids | surface | IGAREffectPreviewByIdQuery
+8341e8: 7130 3500 0209                         |003a: invoke-static {v2, v0, v9}, LX/000q;.A00:(LX/000q;Ljava/lang/Object;Ljava/lang/String;)V // method@0035
+8341ee: 5410 34bf                              |003d: iget-object v0, v1, Landroid/util/Pair;.second:Ljava/lang/Object; // field@bf34
+8341f2: 1a08 e5f3                              |003f: const-string v8, "max_version" // string@f3e5
+8341f6: 7130 3500 0208                         |0041: invoke-static {v2, v0, v8}, LX/000q;.A00:(LX/000q;Ljava/lang/Object;Ljava/lang/String;)V // method@0035
+8341fc: 1b01 4305 0100                         |0044: const-string/jumbo v1, "supported_sdk_versions" // string@00010543
+834202: 6e10 aadf 0700                         |0047: invoke-virtual {v7}, Lcom/facebook/graphql/calls/GraphQlCallInput;.A03:()LX/000q; // method@dfaa
+834208: 0c00                                   |004a: move-result-object v0
+83420a: 6e30 3800 2001                         |004b: invoke-virtual {v0, v2, v1}, LX/000q;.A0E:(LX/001A;Ljava/lang/String;)V // method@0038
+834210: 7100 cc25 0000                         |004e: invoke-static {}, LX/049I;.A00:()Landroid/util/Pair; // method@25cc
+834216: 0c01                                   |0051: move-result-object v1
+834218: 5410 33bf                              |0052: iget-object v0, v1, Landroid/util/Pair;.first:Ljava/lang/Object; // field@bf33
+83421c: 6e10 3300 0a00                         |0054: invoke-virtual {v10}, LX/000m;.A02:()LX/000q; // method@0033
+834222: 0c02                                   |0057: move-result-object v2
+834224: 7130 3500 0209                         |0058: invoke-static {v2, v0, v9}, LX/000q;.A00:(LX/000q;Ljava/lang/Object;Ljava/lang/String;)V // method@0035
+83422a: 5410 34bf                              |005b: iget-object v0, v1, Landroid/util/Pair;.second:Ljava/lang/Object; // field@bf34
+83422e: 7130 3500 0208                         |005d: invoke-static {v2, v0, v8}, LX/000q;.A00:(LX/000q;Ljava/lang/Object;Ljava/lang/String;)V // method@0035
+834234: 1b01 4205 0100                         |0060: const-string/jumbo v1, "supported_beta_sdk_versions" // string@00010542
+83423a: 6e10 aadf 0700                         |0063: invoke-virtual {v7}, Lcom/facebook/graphql/calls/GraphQlCallInput;.A03:()LX/000q; // method@dfaa
+834240: 0c00                                   |0066: move-result-object v0
+834242: 6e30 3800 2001                         |0067: invoke-virtual {v0, v2, v1}, LX/000q;.A0E:(LX/001A;Ljava/lang/String;)V // method@0038
+834248: 7100 7834 0000                         |006a: invoke-static {}, LX/066L;.A00:()Ljava/util/Map; // method@3478
+83424e: 0c09                                   |006d: move-result-object v9
+834250: 6208 b6d1                              |006e: sget-object v8, Ljava/lang/Boolean;.TRUE:Ljava/lang/Boolean; // field@d1b6
+834254: 1a01 b3e2                              |0070: const-string v1, "etc2_compression" // string@e2b3
+834258: 7220 8afe 1900                         |0072: invoke-interface {v9, v1}, Ljava/util/Map;.get:(Ljava/lang/Object;)Ljava/lang/Object; // method@fe8a
+83425e: 0c00                                   |0075: move-result-object v0
+834260: 6e20 03fd 0800                         |0076: invoke-virtual {v8, v0}, Ljava/lang/Object;.equals:(Ljava/lang/Object;)Z // method@fd03
+834266: 0a00                                   |0079: move-result v0
+834268: 1a02 0000                              |007a: const-string v2, "" // string@0000
+83426c: 3900 0f00                              |007c: if-nez v0, 008b // +000f
+834270: 1a01 b2fb                              |007e: const-string v1, "pvr_compression" // string@fbb2
+834274: 7220 8afe 1900                         |0080: invoke-interface {v9, v1}, Ljava/util/Map;.get:(Ljava/lang/Object;)Ljava/lang/Object; // method@fe8a
+83427a: 0c00                                   |0083: move-result-object v0
+83427c: 6e20 03fd 0800                         |0084: invoke-virtual {v8, v0}, Ljava/lang/Object;.equals:(Ljava/lang/Object;)Z // method@fd03
+834282: 0a00                                   |0087: move-result v0
+834284: 3900 0300                              |0088: if-nez v0, 008b // +0003
+834288: 0721                                   |008a: move-object v1, v2
+83428a: 1a00 a1d2                              |008b: const-string v0, "_compression" // string@d2a1
+83428e: 6e30 31fd 0102                         |008d: invoke-virtual {v1, v0, v2}, Ljava/lang/String;.replace:(Ljava/lang/CharSequence;Ljava/lang/CharSequence;)Ljava/lang/String; // method@fd31
+834294: 0c01                                   |0090: move-result-object v1
+834296: 1a00 9604                              |0091: const-string v0, "2" // string@0496
+83429a: 6e30 31fd 0102                         |0093: invoke-virtual {v1, v0, v2}, Ljava/lang/String;.replace:(Ljava/lang/CharSequence;Ljava/lang/CharSequence;)Ljava/lang/String; // method@fd31
+8342a0: 0c01                                   |0096: move-result-object v1
+8342a2: 1b00 9b06 0100                         |0097: const-string/jumbo v0, "texture_compression" // string@0001069b
+8342a8: 6e30 aedf 0701                         |009a: invoke-virtual {v7, v0, v1}, Lcom/facebook/graphql/calls/GraphQlCallInput;.A0B:(Ljava/lang/String;Ljava/lang/String;)V // method@dfae
+8342ae: 1a00 31e0                              |009d: const-string v0, "device_capabilities" // string@e031
+8342b2: 6e30 a732 7500                         |009f: invoke-virtual {v5, v7, v0}, LX/05xm;.A00:(Lcom/facebook/graphql/calls/GraphQlCallInput;Ljava/lang/String;)V // method@32a7
+8342b8: 1a00 b3fd                              |00a2: const-string v0, "requested_effect_ids" // string@fdb3
+8342bc: 6e30 ac32 0506                         |00a4: invoke-virtual {v5, v0, v6}, LX/05xm;.A06:(Ljava/lang/String;Ljava/util/List;)V // method@32ac
+8342c2: 1b00 4605 0100                         |00a7: const-string/jumbo v0, "surface" // string@00010546
+8342c8: 6e30 ab32 050d                         |00aa: invoke-virtual {v5, v0, v13}, LX/05xm;.A05:(Ljava/lang/String;Ljava/lang/String;)V // method@32ab
+8342ce: 1c02 af31                              |00ad: const-class v2, LX/0987; // type@31af
+8342d2: 1a01 c732                              |00af: const-string v1, "IGAREffectPreviewByIdQuery" // string@32c7
+8342d6: 2200 fd00                              |00b1: new-instance v0, LX/00K8; // type@00fd
+8342da: 7054 3d02 5012                         |00b3: invoke-direct {v0, v5, v2, v1, v4}, LX/00K8;.<init>:(LX/05xm;Ljava/lang/Class;Ljava/lang/String;Z)V // method@023d
+8342e0: 6e20 4202 0300                         |00b6: invoke-virtual {v3, v0}, LX/00K9;.A06:(LX/08OZ;)V // method@0242
+8342e6: 1103                                   |00b9: return-object v3
+      catches       : (none)
+      positions     :
+      locals        :
+
+  source_file_idx   : 0 ()
+
+Class #9114 header:
+class_idx           : 24650
+access_flags        : 17 (0x0011)
+superclass_idx      : 33229
+interfaces_off      : 0 (0x000000)
+source_file_idx     : 0
+annotations_off     : 9261020 (0x8d4fdc)
+class_data_off      : 9144552 (0x8b88e8)
+static_fields_size  : 0
+instance_fields_size: 2
+direct_methods_size : 0
+virtual_methods_size: 1
+
+Class #9114            -
+  Class descriptor  : 'LX/0Lhq;'
+  Access flags      : 0x0011 (PUBLIC FINAL)
+  Superclass        : 'Ljava/lang/Object;'
+  Interfaces        -
+  Static fields     -
+  Instance fields   -
+    #0              : (in LX/0Lhq;)
+      name          : 'A00'
+      type          : 'Lcom/instagram/common/ui/base/IgFrameLayout;'
+      access        : 0x0001 (PUBLIC)
+    #1              : (in LX/0Lhq;)
+      name          : 'A01'
+      type          : 'Lcom/instagram/common/ui/widget/imageview/IgImageView;'
+      access        : 0x0001 (PUBLIC)
+  Direct methods    -
+  Virtual methods   -
+    #0              : (in LX/0Lhq;)
+      name          : 'A00'
+      type          : '()V'
+      access        : 0x0011 (PUBLIC FINAL)
+      method_idx    : 44818
+      code          -
+      registers     : 3
+      ins           : 1
+      outs          : 2
+      insns size    : 17 16-bit code units
+8457b4:                                        |[8457b4] X.0Lhq.A00:()V
+8457c4: 5421 17a3                              |0000: iget-object v1, v2, LX/0Lhq;.A00:Lcom/instagram/common/ui/base/IgFrameLayout; // field@a317
+8457c8: 1400 1d99 cb29                         |0002: const v0, #float 9.04157e-14 // #29cb991d
+8457ce: 7120 0621 0100                         |0005: invoke-static {v1, v0}, LX/03dC;.A0Q:(Landroid/view/View;I)V // method@2106
+8457d4: 5421 18a3                              |0008: iget-object v1, v2, LX/0Lhq;.A01:Lcom/instagram/common/ui/widget/imageview/IgImageView; // field@a318
+8457d8: 1400 1487 9f98                         |000a: const v0, #float -4.12369e-24 // #989f8714
+8457de: 7120 0621 0100                         |000d: invoke-static {v1, v0}, LX/03dC;.A0Q:(Landroid/view/View;I)V // method@2106
+8457e4: 0e00                                   |0010: return-void
+      catches       : (none)
+      positions     :
+      locals        :
+
+  source_file_idx   : 0 ()
+
+Class #9115 header:
+class_idx           : 24651
+access_flags        : 17 (0x0011)
+superclass_idx      : 33229
+interfaces_off      : 0 (0x000000)
+source_file_idx     : 0
+annotations_off     : 0 (0x000000)
+class_data_off      : 9144570 (0x8b88fa)
+static_fields_size  : 0
+instance_fields_size: 2
+direct_methods_size : 0
+virtual_methods_size: 1
+
+Class #9115            -
+  Class descriptor  : 'LX/0Lhr;'
+  Access flags      : 0x0011 (PUBLIC FINAL)
+  Superclass        : 'Ljava/lang/Object;'
+  Interfaces        -
+
+===== classes19.txt LX/0120;->A00 target_line=143 =====
+STRINGS: android:query-arg-limit | android:query-arg-sql-selection | attributed_device_name | country_name | formatted_media_count | null cannot be cast to non-null type androidx.coordinatorlayout.widget.CoordinatorLayout.LayoutParams | post_tap_variant | primary_click | prompt_sticker_bundle_id | search_query_length | ui_component |  of  | , text= | 2282005535164995 | ALL_WITH_BLACKLIST | ARGS_DEFAULT_FOLDER_NAME | MultiClassSegmentation | PREFERENCE_REELS_AUTO_RECOMMEND_ON_FACEBOOK_LAST_CHANGED_MS | Uninitialized | android:query-arg-sql-selection-args | coefficient_besties_list_ranking | creation_flow_is_ncs_ad | device_capabilities | exit_reason | ig_reels_gallery | ig_sharing_creation_genai_oil | mimicry_save_browsing | not_activity_or_fragment | null cannot be cast to non-null type com.instagram.igds.components.mediabutton.IgdsMediaButton | null cannot be cast to non-null type kotlin.CharSequence | product_share_sticker | section_name | seller_igid | sticker_template_id | tint_shadows_intensity | users/{user_id}/info/ | , lineHeight= | , operation= | , scaleFactor= | <init>(Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;)V | AD_RESPONSES | ARGS_HIGHLIGHTED_CREATION_TOOL | AUTO_CROSSPOST_SETTING | An operation is not implemented. | ClipsCaptionRepository | ClipsConstants.ARG_IS_CLIPS_ENTRY_POINT | DirectPrivateStoryRecipientFragment.DIRECT_SHOULD_SHARE_TO_FB | DirectPrivateStoryRecipientFragment.IS_DISPLAYED_IN_BOTTOM_SHEET | MMMM d, yyyy | NOT_SUPPORTED | PREFERENCE_SETTINGS_AUTO_XPOSTING_DEBUG_TOAST_ENABLED | RenderBufferTimelineFrameExtractor | android:query-arg-sort-columns | android:query-arg-sort-direction | application/zip | args_clips_drafts_fragment_should_use_dark_mode | audio_file_path | autocomplete_user_list | clips_creator_invite | destination_surface | elapsed_time | follower_status | gen_ai_request_id | gen_ai_response_id | genai_imagine_me_sticker_bundle_id | genai_sharing_source_id | high_quality_media_upload
+370004: 1100                                   |003e: return-object v0
+370006: 1a00 9ea5                              |003f: const-string v0, "android:query-arg-limit" // string@a59e
+37000a: 1100                                   |0041: return-object v0
+37000c: 1a00 a1a5                              |0042: const-string v0, "android:query-arg-sql-selection" // string@a5a1
+370010: 1100                                   |0044: return-object v0
+370012: 1a00 7aa7                              |0045: const-string v0, "attributed_device_name" // string@a77a
+370016: 1100                                   |0047: return-object v0
+370018: 1a00 1aae                              |0048: const-string v0, "country_name" // string@ae1a
+37001c: 1100                                   |004a: return-object v0
+37001e: 1a00 d5b5                              |004b: const-string v0, "formatted_media_count" // string@b5d5
+370022: 1100                                   |004d: return-object v0
+370024: 1a00 55c9                              |004e: const-string v0, "null cannot be cast to non-null type androidx.coordinatorlayout.widget.CoordinatorLayout.LayoutParams" // string@c955
+370028: 1100                                   |0050: return-object v0
+37002a: 1a00 33ce                              |0051: const-string v0, "post_tap_variant" // string@ce33
+37002e: 1100                                   |0053: return-object v0
+370030: 1a00 d5ce                              |0054: const-string v0, "primary_click" // string@ced5
+370034: 1100                                   |0056: return-object v0
+370036: 1a00 3fcf                              |0057: const-string v0, "prompt_sticker_bundle_id" // string@cf3f
+37003a: 1100                                   |0059: return-object v0
+37003c: 1a00 23d3                              |005a: const-string v0, "search_query_length" // string@d323
+370040: 1100                                   |005c: return-object v0
+370042: 1a00 b2dd                              |005d: const-string v0, "ui_component" // string@ddb2
+370046: 1100                                   |005f: return-object v0
+370048: 1a00 c200                              |0060: const-string v0, " of " // string@00c2
+37004c: 1100                                   |0062: return-object v0
+37004e: 1a00 1904                              |0063: const-string v0, ", text=" // string@0419
+370052: 1100                                   |0065: return-object v0
+370054: 1a00 0305                              |0066: const-string v0, "2282005535164995" // string@0503
+370058: 1100                                   |0068: return-object v0
+37005a: 1a00 0709                              |0069: const-string v0, "ALL_WITH_BLACKLIST" // string@0907
+37005e: 1100                                   |006b: return-object v0
+370060: 1a00 f509                              |006c: const-string v0, "ARGS_DEFAULT_FOLDER_NAME" // string@09f5
+370064: 1100                                   |006e: return-object v0
+370066: 1a00 0f8b                              |006f: const-string v0, "MultiClassSegmentation" // string@8b0f
+37006a: 1100                                   |0071: return-object v0
+37006c: 1a00 458e                              |0072: const-string v0, "PREFERENCE_REELS_AUTO_RECOMMEND_ON_FACEBOOK_LAST_CHANGED_MS" // string@8e45
+370070: 1100                                   |0074: return-object v0
+370072: 1a00 d598                              |0075: const-string v0, "Uninitialized" // string@98d5
+370076: 1100                                   |0077: return-object v0
+370078: 1a00 a2a5                              |0078: const-string v0, "android:query-arg-sql-selection-args" // string@a5a2
+37007c: 1100                                   |007a: return-object v0
+37007e: 1a00 0eac                              |007b: const-string v0, "coefficient_besties_list_ranking" // string@ac0e
+370082: 1100                                   |007d: return-object v0
+370084: 1a00 94ae                              |007e: const-string v0, "creation_flow_is_ncs_ad" // string@ae94
+370088: 1100                                   |0080: return-object v0
+37008a: 1a00 66b0                              |0081: const-string v0, "device_capabilities" // string@b066
+37008e: 1100                                   |0083: return-object v0
+370090: 1a00 76b3                              |0084: const-string v0, "exit_reason" // string@b376
+370094: 1100                                   |0086: return-object v0
+370096: 1a00 b1be                              |0087: const-string v0, "ig_reels_gallery" // string@beb1
+37009a: 1100                                   |0089: return-object v0
+37009c: 1a00 cbbe                              |008a: const-string v0, "ig_sharing_creation_genai_oil" // string@becb
+3700a0: 1100                                   |008c: return-object v0
+3700a2: 1a00 b0c6                              |008d: const-string v0, "mimicry_save_browsing" // string@c6b0
+3700a6: 1100                                   |008f: return-object v0
+3700a8: 1a00 e2c8                              |0090: const-string v0, "not_activity_or_fragment" // string@c8e2
+3700ac: 1100                                   |0092: return-object v0
+3700ae: 1a00 b8c9                              |0093: const-string v0, "null cannot be cast to non-null type com.instagram.igds.components.mediabutton.IgdsMediaButton" // string@c9b8
+3700b2: 1100                                   |0095: return-object v0
+3700b4: 1a00 e7c9                              |0096: const-string v0, "null cannot be cast to non-null type kotlin.CharSequence" // string@c9e7
+3700b8: 1100                                   |0098: return-object v0
+3700ba: 1a00 18cf                              |0099: const-string v0, "product_share_sticker" // string@cf18
+3700be: 1100                                   |009b: return-object v0
+3700c0: 1a00 3cd3                              |009c: const-string v0, "section_name" // string@d33c
+3700c4: 1100                                   |009e: return-object v0
+3700c6: 1a00 90d3                              |009f: const-string v0, "seller_igid" // string@d390
+3700ca: 1100                                   |00a1: return-object v0
+3700cc: 1a00 3cd9                              |00a2: const-string v0, "sticker_template_id" // string@d93c
+3700d0: 1100                                   |00a4: return-object v0
+3700d2: 1a00 49dc                              |00a5: const-string v0, "tint_shadows_intensity" // string@dc49
+3700d6: 1100                                   |00a7: return-object v0
+3700d8: 1a00 e1de                              |00a8: const-string v0, "users/{user_id}/info/" // string@dee1
+3700dc: 1100                                   |00aa: return-object v0
+3700de: 1a00 e702                              |00ab: const-string v0, ", lineHeight=" // string@02e7
+3700e2: 1100                                   |00ad: return-object v0
+3700e4: 1a00 3903                              |00ae: const-string v0, ", operation=" // string@0339
+3700e8: 1100                                   |00b0: return-object v0
+3700ea: 1a00 7f03                              |00b1: const-string v0, ", scaleFactor=" // string@037f
+3700ee: 1100                                   |00b3: return-object v0
+3700f0: 1a00 f205                              |00b4: const-string v0, "<init>(Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;)V" // string@05f2
+3700f4: 1100                                   |00b6: return-object v0
+3700f6: 1a00 aa08                              |00b7: const-string v0, "AD_RESPONSES" // string@08aa
+3700fa: 1100                                   |00b9: return-object v0
+3700fc: 1a00 f909                              |00ba: const-string v0, "ARGS_HIGHLIGHTED_CREATION_TOOL" // string@09f9
+370100: 1100                                   |00bc: return-object v0
+370102: 1a00 9d0a                              |00bd: const-string v0, "AUTO_CROSSPOST_SETTING" // string@0a9d
+370106: 1100                                   |00bf: return-object v0
+370108: 1a00 880b                              |00c0: const-string v0, "An operation is not implemented." // string@0b88
+37010c: 1100                                   |00c2: return-object v0
+37010e: 1a00 0615                              |00c3: const-string v0, "ClipsCaptionRepository" // string@1506
+370112: 1100                                   |00c5: return-object v0
+370114: 1a00 2915                              |00c6: const-string v0, "ClipsConstants.ARG_IS_CLIPS_ENTRY_POINT" // string@1529
+370118: 1100                                   |00c8: return-object v0
+37011a: 1a00 9d19                              |00c9: const-string v0, "DirectPrivateStoryRecipientFragment.DIRECT_SHOULD_SHARE_TO_FB" // string@199d
+37011e: 1100                                   |00cb: return-object v0
+370120: 1a00 a219                              |00cc: const-string v0, "DirectPrivateStoryRecipientFragment.IS_DISPLAYED_IN_BOTTOM_SHEET" // string@19a2
+370124: 1100                                   |00ce: return-object v0
+370126: 1a00 6e89                              |00cf: const-string v0, "MMMM d, yyyy" // string@896e
+37012a: 1100                                   |00d1: return-object v0
+37012c: 1a00 b58b                              |00d2: const-string v0, "NOT_SUPPORTED" // string@8bb5
+370130: 1100                                   |00d4: return-object v0
+370132: 1a00 478e                              |00d5: const-string v0, "PREFERENCE_SETTINGS_AUTO_XPOSTING_DEBUG_TOAST_ENABLED" // string@8e47
+370136: 1100                                   |00d7: return-object v0
+370138: 1a00 ef90                              |00d8: const-string v0, "RenderBufferTimelineFrameExtractor" // string@90ef
+37013c: 1100                                   |00da: return-object v0
+37013e: 1a00 9fa5                              |00db: const-string v0, "android:query-arg-sort-columns" // string@a59f
+370142: 1100                                   |00dd: return-object v0
+370144: 1a00 a0a5                              |00de: const-string v0, "android:query-arg-sort-direction" // string@a5a0
+370148: 1100                                   |00e0: return-object v0
+37014a: 1a00 c2a6                              |00e1: const-string v0, "application/zip" // string@a6c2
+37014e: 1100                                   |00e3: return-object v0
+370150: 1a00 0ca7                              |00e4: const-string v0, "args_clips_drafts_fragment_should_use_dark_mode" // string@a70c
+370154: 1100                                   |00e6: return-object v0
+370156: 1a00 c3a7                              |00e7: const-string v0, "audio_file_path" // string@a7c3
+37015a: 1100                                   |00e9: return-object v0
+37015c: 1a00 04a8                              |00ea: const-string v0, "autocomplete_user_list" // string@a804
+370160: 1100                                   |00ec: return-object v0
+370162: 1a00 a9ab                              |00ed: const-string v0, "clips_creator_invite" // string@aba9
+370166: 1100                                   |00ef: return-object v0
+370168: 1a00 42b0                              |00f0: const-string v0, "destination_surface" // string@b042
+37016c: 1100                                   |00f2: return-object v0
+37016e: 1a00 4cb2                              |00f3: const-string v0, "elapsed_time" // string@b24c
+370172: 1100                                   |00f5: return-object v0
+370174: 1a00 a5b5                              |00f6: const-string v0, "follower_status" // string@b5a5
+370178: 1100                                   |00f8: return-object v0
+37017a: 1a00 aeb6                              |00f9: const-string v0, "gen_ai_request_id" // string@b6ae
+37017e: 1100                                   |00fb: return-object v0
+370180: 1a00 afb6                              |00fc: const-string v0, "gen_ai_response_id" // string@b6af
+370184: 1100                                   |00fe: return-object v0
+370186: 1a00 b7b6                              |00ff: const-string v0, "genai_imagine_me_sticker_bundle_id" // string@b6b7
+37018a: 1100                                   |0101: return-object v0
+37018c: 1a00 bbb6                              |0102: const-string v0, "genai_sharing_source_id" // string@b6bb
+370190: 1100                                   |0104: return-object v0
+370192: 1a00 9abd                              |0105: const-string v0, "high_quality_media_upload" // string@bd9a
+370196: 1100                                   |0107: return-object v0
+
+===== classes19.txt LX/028u;->EVz target_line=50075 =====
+STRINGS: is_av1_hdr_editing_supported | null | is_hevc_hdr_editing_supported | hlg-editing | is_av1_hlg_editing_supported | is_hevc_hlg_editing_supported | is_av1_hdr_supported | mediatek | is_hevc_hdr_supported | optic_recording_info | FRONT | is_realtime_timestamp_supported | recording_camera_produces_realtime_timestamps | BACK | CameraEventLoggerImpl | previous_product_name
+38c01c: 0c03                                   |001c: move-result-object v3
+38c01e: 7120 db0d 0400                         |001d: invoke-static {v4, v0}, LX/038M;.A04:(Ljava/lang/String;Ljava/lang/String;)Ljava/lang/Boolean; // method@0ddb
+38c024: 0c02                                   |0020: move-result-object v2
+38c026: 1a01 76c1                              |0021: const-string v1, "is_av1_hdr_editing_supported" // string@c176
+38c02a: 1a05 37c9                              |0023: const-string v5, "null" // string@c937
+38c02e: 0750                                   |0025: move-object v0, v5
+38c030: 3803 0600                              |0026: if-eqz v3, 002c // +0006
+38c034: 6e10 97ee 0300                         |0028: invoke-virtual {v3}, Ljava/lang/Object;.toString:()Ljava/lang/String; // method@ee97
+38c03a: 0c00                                   |002b: move-result-object v0
+38c03c: 7230 90f0 1c00                         |002c: invoke-interface {v12, v1, v0}, Ljava/util/Map;.put:(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object; // method@f090
+38c042: 1a01 c7c1                              |002f: const-string v1, "is_hevc_hdr_editing_supported" // string@c1c7
+38c046: 0750                                   |0031: move-object v0, v5
+38c048: 3802 0600                              |0032: if-eqz v2, 0038 // +0006
+38c04c: 6e10 97ee 0200                         |0034: invoke-virtual {v2}, Ljava/lang/Object;.toString:()Ljava/lang/String; // method@ee97
+38c052: 0c00                                   |0037: move-result-object v0
+38c054: 7230 90f0 1c00                         |0038: invoke-interface {v12, v1, v0}, Ljava/util/Map;.put:(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object; // method@f090
+38c05a: 1300 2300                              |003b: const/16 v0, #int 35 // #23
+38c05e: 3407 ae00                              |003d: if-lt v7, v0, 00eb // +00ae
+38c062: 1a00 b8bd                              |003f: const-string v0, "hlg-editing" // string@bdb8
+38c066: 7120 db0d 0600                         |0041: invoke-static {v6, v0}, LX/038M;.A04:(Ljava/lang/String;Ljava/lang/String;)Ljava/lang/Boolean; // method@0ddb
+38c06c: 0c03                                   |0044: move-result-object v3
+38c06e: 7120 db0d 0400                         |0045: invoke-static {v4, v0}, LX/038M;.A04:(Ljava/lang/String;Ljava/lang/String;)Ljava/lang/Boolean; // method@0ddb
+38c074: 0c02                                   |0048: move-result-object v2
+38c076: 1a01 78c1                              |0049: const-string v1, "is_av1_hlg_editing_supported" // string@c178
+38c07a: 0750                                   |004b: move-object v0, v5
+38c07c: 3803 0600                              |004c: if-eqz v3, 0052 // +0006
+38c080: 6e10 97ee 0300                         |004e: invoke-virtual {v3}, Ljava/lang/Object;.toString:()Ljava/lang/String; // method@ee97
+38c086: 0c00                                   |0051: move-result-object v0
+38c088: 7230 90f0 1c00                         |0052: invoke-interface {v12, v1, v0}, Ljava/util/Map;.put:(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object; // method@f090
+38c08e: 1a01 c9c1                              |0055: const-string v1, "is_hevc_hlg_editing_supported" // string@c1c9
+38c092: 0750                                   |0057: move-object v0, v5
+38c094: 3802 0600                              |0058: if-eqz v2, 005e // +0006
+38c098: 6e10 97ee 0200                         |005a: invoke-virtual {v2}, Ljava/lang/Object;.toString:()Ljava/lang/String; // method@ee97
+38c09e: 0c00                                   |005d: move-result-object v0
+38c0a0: 7230 90f0 1c00                         |005e: invoke-interface {v12, v1, v0}, Ljava/util/Map;.put:(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object; // method@f090
+38c0a6: 1300 1d00                              |0061: const/16 v0, #int 29 // #1d
+38c0aa: 3407 0f00                              |0063: if-lt v7, v0, 0072 // +000f
+38c0ae: 1213                                   |0065: const/4 v3, #int 1 // #1
+38c0b0: 1202                                   |0066: const/4 v2, #int 0 // #0
+38c0b2: 1221                                   |0067: const/4 v1, #int 2 // #2
+38c0b4: 1300 0002                              |0068: const/16 v0, #int 512 // #200
+38c0b8: 7152 94c7 1630                         |006a: invoke-static {v6, v1, v0, v3, v2}, LX/0ZNo;.A00:(Ljava/lang/String;IIZZ)Z // method@c794
+38c0be: 0a00                                   |006d: move-result v0
+38c0c0: 7110 06ee 0000                         |006e: invoke-static {v0}, Ljava/lang/Boolean;.valueOf:(Z)Ljava/lang/Boolean; // method@ee06
+38c0c6: 0c08                                   |0071: move-result-object v8
+38c0c8: 1a00 77c1                              |0072: const-string v0, "is_av1_hdr_supported" // string@c177
+38c0cc: 3808 0600                              |0074: if-eqz v8, 007a // +0006
+38c0d0: 6e10 97ee 0800                         |0076: invoke-virtual {v8}, Ljava/lang/Object;.toString:()Ljava/lang/String; // method@ee97
+38c0d6: 0c05                                   |0079: move-result-object v5
+38c0d8: 7230 90f0 0c05                         |007a: invoke-interface {v12, v0, v5}, Ljava/util/Map;.put:(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object; // method@f090
+38c0de: 2200 3600                              |007d: new-instance v0, LX/005s; // type@0036
+38c0e2: 7010 d900 0000                         |007f: invoke-direct {v0}, LX/005s;.<init>:()V // method@00d9
+38c0e8: 5401 4100                              |0082: iget-object v1, v0, LX/005s;.A01:Ljava/lang/String; // field@0041
+38c0ec: 1a00 30c6                              |0084: const-string v0, "mediatek" // string@c630
+38c0f0: 6e20 b6ee 1000                         |0086: invoke-virtual {v0, v1}, Ljava/lang/String;.equals:(Ljava/lang/Object;)Z // method@eeb6
+38c0f6: 0a00                                   |0089: move-result v0
+38c0f8: df03 0001                              |008a: xor-int/lit8 v3, v0, #int 1 // #01
+38c0fc: 1202                                   |008c: const/4 v2, #int 0 // #0
+38c0fe: 1221                                   |008d: const/4 v1, #int 2 // #2
+38c100: 1500 0400                              |008e: const/high16 v0, #int 262144 // #4
+38c104: 7152 94c7 1430                         |0090: invoke-static {v4, v1, v0, v3, v2}, LX/0ZNo;.A00:(Ljava/lang/String;IIZZ)Z // method@c794
+38c10a: 0a00                                   |0093: move-result v0
+38c10c: 7110 06ee 0000                         |0094: invoke-static {v0}, Ljava/lang/Boolean;.valueOf:(Z)Ljava/lang/Boolean; // method@ee06
+38c112: 0c00                                   |0097: move-result-object v0
+38c114: 1a01 c8c1                              |0098: const-string v1, "is_hevc_hdr_supported" // string@c1c8
+38c118: 6e10 97ee 0000                         |009a: invoke-virtual {v0}, Ljava/lang/Object;.toString:()Ljava/lang/String; // method@ee97
+38c11e: 0c00                                   |009d: move-result-object v0
+38c120: 7230 90f0 1c00                         |009e: invoke-interface {v12, v1, v0}, Ljava/util/Map;.put:(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object; // method@f090
+38c126: 1211                                   |00a1: const/4 v1, #int 1 // #1
+38c128: 0202 1000                              |00a2: move/from16 v2, v16
+38c12c: 3810 3400                              |00a4: if-eqz v16, 00d8 // +0034
+38c130: 3312 1800                              |00a6: if-ne v2, v1, 00be // +0018
+38c134: 6300 6e06                              |00a8: sget-boolean v0, LX/028u;.A0A:Z // field@066e
+38c138: 3900 1400                              |00aa: if-nez v0, 00be // +0014
+38c13c: 6a01 6e06                              |00ac: sput-boolean v1, LX/028u;.A0A:Z // field@066e
+38c140: 54f6 6606                              |00ae: iget-object v6, v15, LX/028u;.A02:LX/0HCG; // field@0666
+38c144: 6e10 94ee 0f00                         |00b0: invoke-virtual {v15}, Ljava/lang/Object;.hashCode:()I // method@ee94
+38c14a: 0a00                                   |00b3: move-result v0
+38c14c: 810d                                   |00b4: int-to-long v13, v0
+38c14e: 1207                                   |00b5: const/4 v7, #int 0 // #0
+38c150: 1a08 31cc                              |00b6: const-string v8, "optic_recording_info" // string@cc31
+38c154: 1a0a 1923                              |00b8: const-string v10, "FRONT" // string@2319
+38c158: 077b                                   |00ba: move-object v11, v7
+38c15a: 7809 0571 0600                         |00bb: invoke-interface/range {v6, v7, v8, v9, v10, v11, v12, v13, v14}, LX/0HCG;.EVw:(LX/0KwJ;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/util/Map;J)V // method@7105
+38c160: 1a01 0ac2                              |00be: const-string v1, "is_realtime_timestamp_supported" // string@c20a
+38c164: 7220 87f0 1c00                         |00c0: invoke-interface {v12, v1}, Ljava/util/Map;.containsKey:(Ljava/lang/Object;)Z // method@f087
+38c16a: 0a00                                   |00c3: move-result v0
+38c16c: 3800 1300                              |00c4: if-eqz v0, 00d7 // +0013
+38c170: 54f3 6606                              |00c6: iget-object v3, v15, LX/028u;.A02:LX/0HCG; // field@0666
+38c174: 7220 8bf0 1c00                         |00c8: invoke-interface {v12, v1}, Ljava/util/Map;.get:(Ljava/lang/Object;)Ljava/lang/Object; // method@f08b
+38c17a: 0c00                                   |00cb: move-result-object v0
+38c17c: 7110 d8ee 0000                         |00cc: invoke-static {v0}, Ljava/lang/String;.valueOf:(Ljava/lang/Object;)Ljava/lang/String; // method@eed8
+38c182: 0c02                                   |00cf: move-result-object v2
+38c184: 1301 1300                              |00d0: const/16 v1, #int 19 // #13
+38c188: 1a00 70d0                              |00d2: const-string v0, "recording_camera_produces_realtime_timestamps" // string@d070
+38c18c: 7240 0871 1320                         |00d4: invoke-interface {v3, v1, v0, v2}, LX/0HCG;.Eka:(ILjava/lang/String;Ljava/lang/String;)V // method@7108
+38c192: 0e00                                   |00d7: return-void
+38c194: 6300 6d06                              |00d8: sget-boolean v0, LX/028u;.A09:Z // field@066d
+38c198: 3900 e4ff                              |00da: if-nez v0, 00be // -001c
+38c19c: 6a01 6d06                              |00dc: sput-boolean v1, LX/028u;.A09:Z // field@066d
+38c1a0: 54f6 6606                              |00de: iget-object v6, v15, LX/028u;.A02:LX/0HCG; // field@0666
+38c1a4: 6e10 94ee 0f00                         |00e0: invoke-virtual {v15}, Ljava/lang/Object;.hashCode:()I // method@ee94
+38c1aa: 0a00                                   |00e3: move-result v0
+38c1ac: 810d                                   |00e4: int-to-long v13, v0
+38c1ae: 1207                                   |00e5: const/4 v7, #int 0 // #0
+38c1b0: 1a08 31cc                              |00e6: const-string v8, "optic_recording_info" // string@cc31
+38c1b4: 1a0a eb0c                              |00e8: const-string v10, "BACK" // string@0ceb
+38c1b8: 28d0                                   |00ea: goto 00ba // -0030
+38c1ba: 0782                                   |00eb: move-object v2, v8
+38c1bc: 0783                                   |00ec: move-object v3, v8
+38c1be: 2900 5cff                              |00ed: goto/16 0049 // -00a4
+38c1c2: 0782                                   |00ef: move-object v2, v8
+38c1c4: 0783                                   |00f0: move-object v3, v8
+38c1c6: 2900 30ff                              |00f1: goto/16 0021 // -00d0
+      catches       : (none)
+      positions     :
+      locals        :
+
+    #2              : (in LX/028u;)
+      name          : 'EqB'
+      type          : '(Ljava/lang/String;Ljava/lang/String;)V'
+      access        : 0x0011 (PUBLIC FINAL)
+      method_idx    : 2391
+      code          -
+      registers     : 10
+      ins           : 3
+      outs          : 6
+      insns size    : 32 16-bit code units
+38c1cc:                                        |[38c1cc] X.028u.EqB:(Ljava/lang/String;Ljava/lang/String;)V
+38c1dc: 1a05 b813                              |0000: const-string v5, "CameraEventLoggerImpl" // string@13b8
+38c1e0: 5471 6606                              |0002: iget-object v1, v7, LX/028u;.A02:LX/0HCG; // field@0666
+38c1e4: 7210 f470 0100                         |0004: invoke-interface {v1}, LX/0HCG;.AL1:()Ljava/util/Map; // method@70f4
+38c1ea: 0c06                                   |0007: move-result-object v6
+38c1ec: 1a00 cbce                              |0008: const-string v0, "previous_product_name" // string@cecb
+38c1f0: 7230 90f0 0608                         |000a: invoke-interface {v6, v0, v8}, Ljava/util/Map;.put:(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object; // method@f090
+
+===== classes19.txt LX/028u;->EVz target_line=50094 =====
+STRINGS: is_av1_hlg_editing_supported | is_hevc_hlg_editing_supported | is_av1_hdr_supported | mediatek | is_hevc_hdr_supported | optic_recording_info | FRONT | is_realtime_timestamp_supported | recording_camera_produces_realtime_timestamps | BACK | CameraEventLoggerImpl | previous_product_name | new_product_name | camera_evicted
+38c066: 7120 db0d 0600                         |0041: invoke-static {v6, v0}, LX/038M;.A04:(Ljava/lang/String;Ljava/lang/String;)Ljava/lang/Boolean; // method@0ddb
+38c06c: 0c03                                   |0044: move-result-object v3
+38c06e: 7120 db0d 0400                         |0045: invoke-static {v4, v0}, LX/038M;.A04:(Ljava/lang/String;Ljava/lang/String;)Ljava/lang/Boolean; // method@0ddb
+38c074: 0c02                                   |0048: move-result-object v2
+38c076: 1a01 78c1                              |0049: const-string v1, "is_av1_hlg_editing_supported" // string@c178
+38c07a: 0750                                   |004b: move-object v0, v5
+38c07c: 3803 0600                              |004c: if-eqz v3, 0052 // +0006
+38c080: 6e10 97ee 0300                         |004e: invoke-virtual {v3}, Ljava/lang/Object;.toString:()Ljava/lang/String; // method@ee97
+38c086: 0c00                                   |0051: move-result-object v0
+38c088: 7230 90f0 1c00                         |0052: invoke-interface {v12, v1, v0}, Ljava/util/Map;.put:(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object; // method@f090
+38c08e: 1a01 c9c1                              |0055: const-string v1, "is_hevc_hlg_editing_supported" // string@c1c9
+38c092: 0750                                   |0057: move-object v0, v5
+38c094: 3802 0600                              |0058: if-eqz v2, 005e // +0006
+38c098: 6e10 97ee 0200                         |005a: invoke-virtual {v2}, Ljava/lang/Object;.toString:()Ljava/lang/String; // method@ee97
+38c09e: 0c00                                   |005d: move-result-object v0
+38c0a0: 7230 90f0 1c00                         |005e: invoke-interface {v12, v1, v0}, Ljava/util/Map;.put:(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object; // method@f090
+38c0a6: 1300 1d00                              |0061: const/16 v0, #int 29 // #1d
+38c0aa: 3407 0f00                              |0063: if-lt v7, v0, 0072 // +000f
+38c0ae: 1213                                   |0065: const/4 v3, #int 1 // #1
+38c0b0: 1202                                   |0066: const/4 v2, #int 0 // #0
+38c0b2: 1221                                   |0067: const/4 v1, #int 2 // #2
+38c0b4: 1300 0002                              |0068: const/16 v0, #int 512 // #200
+38c0b8: 7152 94c7 1630                         |006a: invoke-static {v6, v1, v0, v3, v2}, LX/0ZNo;.A00:(Ljava/lang/String;IIZZ)Z // method@c794
+38c0be: 0a00                                   |006d: move-result v0
+38c0c0: 7110 06ee 0000                         |006e: invoke-static {v0}, Ljava/lang/Boolean;.valueOf:(Z)Ljava/lang/Boolean; // method@ee06
+38c0c6: 0c08                                   |0071: move-result-object v8
+38c0c8: 1a00 77c1                              |0072: const-string v0, "is_av1_hdr_supported" // string@c177
+38c0cc: 3808 0600                              |0074: if-eqz v8, 007a // +0006
+38c0d0: 6e10 97ee 0800                         |0076: invoke-virtual {v8}, Ljava/lang/Object;.toString:()Ljava/lang/String; // method@ee97
+38c0d6: 0c05                                   |0079: move-result-object v5
+38c0d8: 7230 90f0 0c05                         |007a: invoke-interface {v12, v0, v5}, Ljava/util/Map;.put:(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object; // method@f090
+38c0de: 2200 3600                              |007d: new-instance v0, LX/005s; // type@0036
+38c0e2: 7010 d900 0000                         |007f: invoke-direct {v0}, LX/005s;.<init>:()V // method@00d9
+38c0e8: 5401 4100                              |0082: iget-object v1, v0, LX/005s;.A01:Ljava/lang/String; // field@0041
+38c0ec: 1a00 30c6                              |0084: const-string v0, "mediatek" // string@c630
+38c0f0: 6e20 b6ee 1000                         |0086: invoke-virtual {v0, v1}, Ljava/lang/String;.equals:(Ljava/lang/Object;)Z // method@eeb6
+38c0f6: 0a00                                   |0089: move-result v0
+38c0f8: df03 0001                              |008a: xor-int/lit8 v3, v0, #int 1 // #01
+38c0fc: 1202                                   |008c: const/4 v2, #int 0 // #0
+38c0fe: 1221                                   |008d: const/4 v1, #int 2 // #2
+38c100: 1500 0400                              |008e: const/high16 v0, #int 262144 // #4
+38c104: 7152 94c7 1430                         |0090: invoke-static {v4, v1, v0, v3, v2}, LX/0ZNo;.A00:(Ljava/lang/String;IIZZ)Z // method@c794
+38c10a: 0a00                                   |0093: move-result v0
+38c10c: 7110 06ee 0000                         |0094: invoke-static {v0}, Ljava/lang/Boolean;.valueOf:(Z)Ljava/lang/Boolean; // method@ee06
+38c112: 0c00                                   |0097: move-result-object v0
+38c114: 1a01 c8c1                              |0098: const-string v1, "is_hevc_hdr_supported" // string@c1c8
+38c118: 6e10 97ee 0000                         |009a: invoke-virtual {v0}, Ljava/lang/Object;.toString:()Ljava/lang/String; // method@ee97
+38c11e: 0c00                                   |009d: move-result-object v0
+38c120: 7230 90f0 1c00                         |009e: invoke-interface {v12, v1, v0}, Ljava/util/Map;.put:(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object; // method@f090
+38c126: 1211                                   |00a1: const/4 v1, #int 1 // #1
+38c128: 0202 1000                              |00a2: move/from16 v2, v16
+38c12c: 3810 3400                              |00a4: if-eqz v16, 00d8 // +0034
+38c130: 3312 1800                              |00a6: if-ne v2, v1, 00be // +0018
+38c134: 6300 6e06                              |00a8: sget-boolean v0, LX/028u;.A0A:Z // field@066e
+38c138: 3900 1400                              |00aa: if-nez v0, 00be // +0014
+38c13c: 6a01 6e06                              |00ac: sput-boolean v1, LX/028u;.A0A:Z // field@066e
+38c140: 54f6 6606                              |00ae: iget-object v6, v15, LX/028u;.A02:LX/0HCG; // field@0666
+38c144: 6e10 94ee 0f00                         |00b0: invoke-virtual {v15}, Ljava/lang/Object;.hashCode:()I // method@ee94
+38c14a: 0a00                                   |00b3: move-result v0
+38c14c: 810d                                   |00b4: int-to-long v13, v0
+38c14e: 1207                                   |00b5: const/4 v7, #int 0 // #0
+38c150: 1a08 31cc                              |00b6: const-string v8, "optic_recording_info" // string@cc31
+38c154: 1a0a 1923                              |00b8: const-string v10, "FRONT" // string@2319
+38c158: 077b                                   |00ba: move-object v11, v7
+38c15a: 7809 0571 0600                         |00bb: invoke-interface/range {v6, v7, v8, v9, v10, v11, v12, v13, v14}, LX/0HCG;.EVw:(LX/0KwJ;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/util/Map;J)V // method@7105
+38c160: 1a01 0ac2                              |00be: const-string v1, "is_realtime_timestamp_supported" // string@c20a
+38c164: 7220 87f0 1c00                         |00c0: invoke-interface {v12, v1}, Ljava/util/Map;.containsKey:(Ljava/lang/Object;)Z // method@f087
+38c16a: 0a00                                   |00c3: move-result v0
+38c16c: 3800 1300                              |00c4: if-eqz v0, 00d7 // +0013
+38c170: 54f3 6606                              |00c6: iget-object v3, v15, LX/028u;.A02:LX/0HCG; // field@0666
+38c174: 7220 8bf0 1c00                         |00c8: invoke-interface {v12, v1}, Ljava/util/Map;.get:(Ljava/lang/Object;)Ljava/lang/Object; // method@f08b
+38c17a: 0c00                                   |00cb: move-result-object v0
+38c17c: 7110 d8ee 0000                         |00cc: invoke-static {v0}, Ljava/lang/String;.valueOf:(Ljava/lang/Object;)Ljava/lang/String; // method@eed8
+38c182: 0c02                                   |00cf: move-result-object v2
+38c184: 1301 1300                              |00d0: const/16 v1, #int 19 // #13
+38c188: 1a00 70d0                              |00d2: const-string v0, "recording_camera_produces_realtime_timestamps" // string@d070
+38c18c: 7240 0871 1320                         |00d4: invoke-interface {v3, v1, v0, v2}, LX/0HCG;.Eka:(ILjava/lang/String;Ljava/lang/String;)V // method@7108
+38c192: 0e00                                   |00d7: return-void
+38c194: 6300 6d06                              |00d8: sget-boolean v0, LX/028u;.A09:Z // field@066d
+38c198: 3900 e4ff                              |00da: if-nez v0, 00be // -001c
+38c19c: 6a01 6d06                              |00dc: sput-boolean v1, LX/028u;.A09:Z // field@066d
+38c1a0: 54f6 6606                              |00de: iget-object v6, v15, LX/028u;.A02:LX/0HCG; // field@0666
+38c1a4: 6e10 94ee 0f00                         |00e0: invoke-virtual {v15}, Ljava/lang/Object;.hashCode:()I // method@ee94
+38c1aa: 0a00                                   |00e3: move-result v0
+38c1ac: 810d                                   |00e4: int-to-long v13, v0
+38c1ae: 1207                                   |00e5: const/4 v7, #int 0 // #0
+38c1b0: 1a08 31cc                              |00e6: const-string v8, "optic_recording_info" // string@cc31
+38c1b4: 1a0a eb0c                              |00e8: const-string v10, "BACK" // string@0ceb
+38c1b8: 28d0                                   |00ea: goto 00ba // -0030
+38c1ba: 0782                                   |00eb: move-object v2, v8
+38c1bc: 0783                                   |00ec: move-object v3, v8
+38c1be: 2900 5cff                              |00ed: goto/16 0049 // -00a4
+38c1c2: 0782                                   |00ef: move-object v2, v8
+38c1c4: 0783                                   |00f0: move-object v3, v8
+38c1c6: 2900 30ff                              |00f1: goto/16 0021 // -00d0
+      catches       : (none)
+      positions     :
+      locals        :
+
+    #2              : (in LX/028u;)
+      name          : 'EqB'
+      type          : '(Ljava/lang/String;Ljava/lang/String;)V'
+      access        : 0x0011 (PUBLIC FINAL)
+      method_idx    : 2391
+      code          -
+      registers     : 10
+      ins           : 3
+      outs          : 6
+      insns size    : 32 16-bit code units
+38c1cc:                                        |[38c1cc] X.028u.EqB:(Ljava/lang/String;Ljava/lang/String;)V
+38c1dc: 1a05 b813                              |0000: const-string v5, "CameraEventLoggerImpl" // string@13b8
+38c1e0: 5471 6606                              |0002: iget-object v1, v7, LX/028u;.A02:LX/0HCG; // field@0666
+38c1e4: 7210 f470 0100                         |0004: invoke-interface {v1}, LX/0HCG;.AL1:()Ljava/util/Map; // method@70f4
+38c1ea: 0c06                                   |0007: move-result-object v6
+38c1ec: 1a00 cbce                              |0008: const-string v0, "previous_product_name" // string@cecb
+38c1f0: 7230 90f0 0608                         |000a: invoke-interface {v6, v0, v8}, Ljava/util/Map;.put:(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object; // method@f090
+38c1f6: 1a00 95c8                              |000d: const-string v0, "new_product_name" // string@c895
+38c1fa: 7230 90f0 0609                         |000f: invoke-interface {v6, v0, v9}, Ljava/util/Map;.put:(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object; // method@f090
+38c200: 6e10 94ee 0700                         |0012: invoke-virtual {v7}, Ljava/lang/Object;.hashCode:()I // method@ee94
+38c206: 0a00                                   |0015: move-result v0
+38c208: 8102                                   |0016: int-to-long v2, v0
+38c20a: 1a04 41aa                              |0017: const-string v4, "camera_evicted" // string@aa41
+38c20e: 7806 0071 0100                         |0019: invoke-interface/range {v1, v2, v3, v4, v5, v6}, LX/0HCG;.ERP:(JLjava/lang/String;Ljava/lang/String;Ljava/util/Map;)V // method@7100
+38c214: 7220 1071 6100                         |001c: invoke-interface {v1, v6}, LX/0HCG;.GLa:(Ljava/util/Map;)V // method@7110
+38c21a: 0e00                                   |001f: return-void
+      catches       : (none)
+      positions     :
+      locals        :
+
+    #3              : (in LX/028u;)
+      name          : 'EqO'
+      type          : '(Ljava/lang/Throwable;IJ)V'
+      access        : 0x0011 (PUBLIC FINAL)
+      method_idx    : 2392
+      code          -
+
+===== classes19.txt LX/0Gsv;->invokeSuspend target_line=1439834 =====
+STRINGS: device_capabilities | TAR_BROTLI | ZIP | supported_compression_types | cursor | preview_width | preview_height | product_category_identifier | product | thumbnail_width | thumbnail_height | include_preview_image | include_flm_effects | CAMERA | effect_action_sheet_surface | formatted_media_count_enabled | is_ads_mode | supported_texture_formats | IGAREffectCollectionQuery | effect_collection_
+6cab24: 3800 1e00                              |00c6: if-eqz v0, 00e4 // +001e
+6cab28: 54b9 ff76                              |00c8: iget-object v9, v11, LX/0Gsv;.A01:Ljava/lang/Object; // field@76ff
+6cab2c: 1f09 a30d                              |00ca: check-cast v9, LX/074q; // type@0da3
+6cab30: 54b8 0277                              |00cc: iget-object v8, v11, LX/0Gsv;.A04:Ljava/lang/Object; // field@7702
+6cab34: 1f08 6026                              |00ce: check-cast v8, LX/0HcA; // type@2660
+6cab38: 7100 6001 0000                         |00d0: invoke-static {}, LX/00Gs;.A01:()LX/00Gs; // method@0160
+6cab3e: 0c00                                   |00d3: move-result-object v0
+6cab40: 6e10 6201 0000                         |00d4: invoke-virtual {v0}, LX/00Gs;.A0B:()Z // method@0162
+6cab46: 0a00                                   |00d7: move-result v0
+6cab48: df00 0001                              |00d8: xor-int/lit8 v0, v0, #int 1 // #01
+6cab4c: 3900 0d00                              |00da: if-nez v0, 00e7 // +000d
+6cab50: 6200 a685                              |00dc: sget-object v0, LX/0IUi;.A00:LX/0IUi; // field@85a6
+6cab54: 2204 a503                              |00de: new-instance v4, LX/02dJ; // type@03a5
+6cab58: 7020 e10a 0400                         |00e0: invoke-direct {v4, v0}, LX/02dJ;.<init>:(Ljava/lang/Object;)V // method@0ae1
+6cab5e: 28c6                                   |00e3: goto 00a9 // -003a
+6cab60: 6200 a785                              |00e4: sget-object v0, LX/0IUj;.A00:LX/0IUj; // field@85a7
+6cab64: 28f8                                   |00e6: goto 00de // -0008
+6cab66: 54a3 0cc6                              |00e7: iget-object v3, v10, Lcom/instagram/ar/core/effectcollection/EffectCollectionService;.A04:Lcom/instagram/common/session/UserSession; // field@c60c
+6cab6a: 54a0 0dc6                              |00e9: iget-object v0, v10, Lcom/instagram/ar/core/effectcollection/EffectCollectionService;.A05:LX/01ys; // field@c60d
+6cab6e: 120d                                   |00eb: const/4 v13, #int 0 // #0
+6cab70: 2207 c404                              |00ec: new-instance v7, LX/033o; // type@04c4
+6cab74: 7030 3e0d 3700                         |00ee: invoke-direct {v7, v3, v0}, LX/033o;.<init>:(Lcom/instagram/common/session/UserSession;LX/01ys;)V // method@0d3e
+6cab7a: 5496 c823                              |00f1: iget-object v6, v9, LX/074q;.A01:LX/074j; // field@23c8
+6cab7e: 5490 ca23                              |00f3: iget-object v0, v9, LX/074q;.A03:Ljava/lang/String; // field@23ca
+6cab82: 0819 0000                              |00f5: move-object/from16 v25, v0
+6cab86: 54a0 0ec6                              |00f7: iget-object v0, v10, Lcom/instagram/ar/core/effectcollection/EffectCollectionService;.A06:LX/0C8T; // field@c60e
+6cab8a: 7210 8841 0000                         |00f9: invoke-interface {v0}, LX/0C8T;.getValue:()Ljava/lang/Object; // method@4188
+6cab90: 0c00                                   |00fc: move-result-object v0
+6cab92: 7110 0b00 0000                         |00fd: invoke-static {v0}, LX/000H;.A07:(Ljava/lang/Object;)J // method@000b
+6cab98: 0b12                                   |0100: move-result-wide v18
+6cab9a: 5590 cd23                              |0101: iget-boolean v0, v9, LX/074q;.A06:Z // field@23cd
+6cab9e: 0217 0000                              |0103: move/from16 v23, v0
+6caba2: 5590 cc23                              |0105: iget-boolean v0, v9, LX/074q;.A05:Z // field@23cc
+6caba6: 0214 0000                              |0107: move/from16 v20, v0
+6cabaa: 5590 ce23                              |0109: iget-boolean v0, v9, LX/074q;.A07:Z // field@23ce
+6cabae: 0211 0000                              |010b: move/from16 v17, v0
+6cabb2: 7120 d016 d600                         |010d: invoke-static {v6, v13}, LX/04l9;.A0j:(Ljava/lang/Object;I)V // method@16d0
+6cabb8: 1205                                   |0110: const/4 v5, #int 0 // #0
+6cabba: 5474 5109                              |0111: iget-object v4, v7, LX/033o;.A01:Lcom/instagram/common/session/UserSession; // field@0951
+6cabbe: 5460 ad23                              |0113: iget-object v0, v6, LX/074j;.A02:Ljava/lang/String; // field@23ad
+6cabc2: 0815 0000                              |0115: move-object/from16 v21, v0
+6cabc6: 7110 e90e 0400                         |0117: invoke-static {v4}, LX/03Lk;.A01:(Lcom/instagram/common/session/UserSession;)LX/05xq; // method@0ee9
+6cabcc: 0c10                                   |011a: move-result-object v16
+6cabce: 2203 ff0a                              |011b: new-instance v3, LX/05xm; // type@0aff
+6cabd2: 7010 cf1b 0300                         |011d: invoke-direct {v3}, LX/05xm;.<init>:()V // method@1bcf
+6cabd8: 1a0e 66b0                              |0120: const-string v14, "device_capabilities" // string@b066
+6cabdc: 0800 1000                              |0122: move-object/from16 v0, v16
+6cabe0: 6e30 d01b 030e                         |0124: invoke-virtual {v3, v0, v14}, LX/05xm;.A00:(Lcom/facebook/graphql/calls/GraphQlCallInput;Ljava/lang/String;)V // method@1bd0
+6cabe6: 1a0e b796                              |0127: const-string v14, "TAR_BROTLI" // string@96b7
+6cabea: 1a00 e79f                              |0129: const-string v0, "ZIP" // string@9fe7
+6cabee: 7120 5bdc 0e00                         |012b: invoke-static {v14, v0}, Lcom/google/common/collect/ImmutableList;.of:(Ljava/lang/Object;Ljava/lang/Object;)Lcom/google/common/collect/ImmutableList; // method@dc5b
+6cabf4: 0c0e                                   |012e: move-result-object v14
+6cabf6: 1a00 82da                              |012f: const-string v0, "supported_compression_types" // string@da82
+6cabfa: 6e30 d61b 030e                         |0131: invoke-virtual {v3, v0, v14}, LX/05xm;.A06:(Ljava/lang/String;Ljava/util/List;)V // method@1bd6
+6cac00: 1a0e 57af                              |0134: const-string v14, "cursor" // string@af57
+6cac04: 0800 1900                              |0136: move-object/from16 v0, v25
+6cac08: 6e30 d51b e300                         |0138: invoke-virtual {v3, v14, v0}, LX/05xm;.A05:(Ljava/lang/String;Ljava/lang/String;)V // method@1bd5
+6cac0e: 1300 f000                              |013b: const/16 v0, #int 240 // #f0
+6cac12: 7110 5cee 0000                         |013d: invoke-static {v0}, Ljava/lang/Integer;.valueOf:(I)Ljava/lang/Integer; // method@ee5c
+6cac18: 0c0e                                   |0140: move-result-object v14
+6cac1a: 1a00 c3ce                              |0141: const-string v0, "preview_width" // string@cec3
+6cac1e: 6e30 d41b 030e                         |0143: invoke-virtual {v3, v0, v14}, LX/05xm;.A04:(Ljava/lang/String;Ljava/lang/Number;)V // method@1bd4
+6cac24: 1a00 bcce                              |0146: const-string v0, "preview_height" // string@cebc
+6cac28: 6e30 d41b 030e                         |0148: invoke-virtual {v3, v0, v14}, LX/05xm;.A04:(Ljava/lang/String;Ljava/lang/Number;)V // method@1bd4
+6cac2e: 5460 ac23                              |014b: iget-object v0, v6, LX/074j;.A01:Ljava/lang/String; // field@23ac
+6cac32: 0816 0000                              |014d: move-object/from16 v22, v0
+6cac36: 1a0f 05cf                              |014f: const-string v15, "product_category_identifier" // string@cf05
+6cac3a: 6e30 d51b f300                         |0151: invoke-virtual {v3, v15, v0}, LX/05xm;.A05:(Ljava/lang/String;Ljava/lang/String;)V // method@1bd5
+6cac40: 1a0f fece                              |0154: const-string v15, "product" // string@cefe
+6cac44: 0800 1500                              |0156: move-object/from16 v0, v21
+6cac48: 6e30 d51b f300                         |0158: invoke-virtual {v3, v15, v0}, LX/05xm;.A05:(Ljava/lang/String;Ljava/lang/String;)V // method@1bd5
+6cac4e: 1a00 14dc                              |015b: const-string v0, "thumbnail_width" // string@dc14
+6cac52: 6e30 d41b 030e                         |015d: invoke-virtual {v3, v0, v14}, LX/05xm;.A04:(Ljava/lang/String;Ljava/lang/Number;)V // method@1bd4
+6cac58: 1a00 0edc                              |0160: const-string v0, "thumbnail_height" // string@dc0e
+6cac5c: 6e30 d41b 030e                         |0162: invoke-virtual {v3, v0, v14}, LX/05xm;.A04:(Ljava/lang/String;Ljava/lang/Number;)V // method@1bd4
+6cac62: 1a0e 89bf                              |0165: const-string v14, "include_preview_image" // string@bf89
+6cac66: 7701 06ee 1700                         |0167: invoke-static/range {v23}, Ljava/lang/Boolean;.valueOf:(Z)Ljava/lang/Boolean; // method@ee06
+6cac6c: 0c00                                   |016a: move-result-object v0
+6cac6e: 6e30 d31b e300                         |016b: invoke-virtual {v3, v14, v0}, LX/05xm;.A03:(Ljava/lang/String;Ljava/lang/Boolean;)V // method@1bd3
+6cac74: 1a0e 82bf                              |016e: const-string v14, "include_flm_effects" // string@bf82
+6cac78: 7701 06ee 1400                         |0170: invoke-static/range {v20}, Ljava/lang/Boolean;.valueOf:(Z)Ljava/lang/Boolean; // method@ee06
+6cac7e: 0c00                                   |0173: move-result-object v0
+6cac80: 6e30 d31b e300                         |0174: invoke-virtual {v3, v14, v0}, LX/05xm;.A03:(Ljava/lang/String;Ljava/lang/Boolean;)V // method@1bd3
+6cac86: 1a0e 9010                              |0177: const-string v14, "CAMERA" // string@1090
+6cac8a: 1a00 08b2                              |0179: const-string v0, "effect_action_sheet_surface" // string@b208
+6cac8e: 6e30 d51b 030e                         |017b: invoke-virtual {v3, v0, v14}, LX/05xm;.A05:(Ljava/lang/String;Ljava/lang/String;)V // method@1bd5
+6cac94: 1a00 d6b5                              |017e: const-string v0, "formatted_media_count_enabled" // string@b5d6
+6cac98: 6e20 d21b 0300                         |0180: invoke-virtual {v3, v0}, LX/05xm;.A02:(Ljava/lang/String;)V // method@1bd2
+6cac9e: 1a0e 6ec1                              |0183: const-string v14, "is_ads_mode" // string@c16e
+6caca2: 7701 06ee 1100                         |0185: invoke-static/range {v17}, Ljava/lang/Boolean;.valueOf:(Z)Ljava/lang/Boolean; // method@ee06
+6caca8: 0c00                                   |0188: move-result-object v0
+6cacaa: 6e30 d31b e300                         |0189: invoke-virtual {v3, v14, v0}, LX/05xm;.A03:(Ljava/lang/String;Ljava/lang/Boolean;)V // method@1bd3
+6cacb0: 7401 0cda 1000                         |018c: invoke-virtual/range {v16}, Lcom/facebook/graphql/calls/GraphQlCallInput;.A04:()Ljava/util/TreeMap; // method@da0c
+6cacb6: 0c0f                                   |018f: move-result-object v15
+6cacb8: 1a0e 87da                              |0190: const-string v14, "supported_texture_formats" // string@da87
+6cacbc: 6e20 cfef ef00                         |0192: invoke-virtual {v15, v14}, Ljava/util/AbstractMap;.containsKey:(Ljava/lang/Object;)Z // method@efcf
+6cacc2: 0a00                                   |0195: move-result v0
+6cacc4: 3800 2f00                              |0196: if-eqz v0, 01c5 // +002f
+6cacc8: 6e20 d2ef ef00                         |0198: invoke-virtual {v15, v14}, Ljava/util/AbstractMap;.get:(Ljava/lang/Object;)Ljava/lang/Object; // method@efd2
+6cacce: 0c00                                   |019b: move-result-object v0
+6cacd0: 200f 7353                              |019c: instance-of v15, v0, Ljava/util/List; // type@5373
+6cacd4: 380f 2700                              |019e: if-eqz v15, 01c5 // +0027
+6cacd8: 1f00 f652                              |01a0: check-cast v0, Ljava/lang/Iterable; // type@52f6
+6cacdc: 7100 1e00 0000                         |01a2: invoke-static {}, LX/000H;.A0U:()Ljava/util/ArrayList; // method@001e
+6cace2: 0c11                                   |01a5: move-result-object v17
+6cace4: 7210 5eee 0000                         |01a6: invoke-interface {v0}, Ljava/lang/Iterable;.iterator:()Ljava/util/Iterator; // method@ee5e
+6cacea: 0c10                                   |01a9: move-result-object v16
+6cacec: 7801 52f0 1000                         |01aa: invoke-interface/range {v16}, Ljava/util/Iterator;.hasNext:()Z // method@f052
+6cacf2: 0a00                                   |01ad: move-result v0
+6cacf4: 3800 1000                              |01ae: if-eqz v0, 01be // +0010
+6cacf8: 7801 53f0 1000                         |01b0: invoke-interface/range {v16}, Ljava/util/Iterator;.next:()Ljava/lang/Object; // method@f053
+6cacfe: 0c0f                                   |01b3: move-result-object v15
+6cad00: 20f0 0b53                              |01b4: instance-of v0, v15, Ljava/lang/String; // type@530b
+6cad04: 3800 f4ff                              |01b6: if-eqz v0, 01aa // -000c
+6cad08: 0800 1100                              |01b8: move-object/from16 v0, v17
+6cad0c: 6e20 b9ef f000                         |01ba: invoke-virtual {v0, v15}, Ljava/util/AbstractCollection;.add:(Ljava/lang/Object;)Z // method@efb9
+6cad12: 28ed                                   |01bd: goto 01aa // -0013
+6cad14: 7701 58dc 1100                         |01be: invoke-static/range {v17}, Lcom/google/common/collect/ImmutableList;.copyOf:(Ljava/util/Collection;)Lcom/google/common/collect/ImmutableList; // method@dc58
+6cad1a: 0c00                                   |01c1: move-result-object v0
+6cad1c: 6e30 d61b e300                         |01c2: invoke-virtual {v3, v14, v0}, LX/05xm;.A06:(Ljava/lang/String;Ljava/util/List;)V // method@1bd6
+6cad22: 1c0f c604                              |01c5: const-class v15, LX/033q; // type@04c6
+6cad26: 1a0e 882d                              |01c7: const-string v14, "IGAREffectCollectionQuery" // string@2d88
+6cad2a: 2200 9700                              |01c9: new-instance v0, LX/00K8; // type@0097
+6cad2e: 705d 9f01 30ef                         |01cb: invoke-direct {v0, v3, v15, v14, v13}, LX/00K8;.<init>:(LX/05xm;Ljava/lang/Class;Ljava/lang/String;Z)V // method@019f
+6cad34: 5443 78c7                              |01ce: iget-object v3, v4, Lcom/instagram/common/session/UserSession;.userId:Ljava/lang/String; // field@c778
+6cad38: 1318 5f00                              |01d0: const/16 v24, #int 95 // #5f
+6cad3c: 0814 0300                              |01d2: move-object/from16 v20, v3
+6cad40: 0817 1900                              |01d4: move-object/from16 v23, v25
+6cad44: 0219 1800                              |01d6: move/from16 v25, v24
+6cad48: 021a 1800                              |01d8: move/from16 v26, v24
+6cad4c: 7707 ba00 1400                         |01da: invoke-static/range {v20, v21, v22, v23, v24, v25, v26}, LX/002b;.A1E:(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;CCC)Ljava/lang/String; // method@00ba
+6cad52: 0c03                                   |01dd: move-result-object v3
+6cad54: 6e10 bcee 0300                         |01de: invoke-virtual {v3}, Ljava/lang/String;.hashCode:()I // method@eebc
+6cad5a: 0a0d                                   |01e1: move-result v13
+6cad5c: 1a03 0ab2                              |01e2: const-string v3, "effect_collection_" // string@b20a
+
+===== classes19.txt LX/0Hh4;->FBz target_line=1530760 =====
+STRINGS: true | supported_display_hdr_types | has_hevc_encoder_with_hdr | false | error | player_session_id | stack_trace | empty | error_details
+82a850: 7020 1f77 9000                         |0006: invoke-direct {v0, v9}, LX/0Hke;.<init>:(LX/0CPM;)V // method@771f
+82a856: 7110 920b 0000                         |0009: invoke-static {v0}, LX/02pR;.A01:(Ljava/lang/Runnable;)V // method@0b92
+82a85c: 5490 cf4e                              |000c: iget-object v0, v9, LX/0CPM;.A0g:Landroid/app/Activity; // field@4ecf
+82a860: 7110 7582 0000                         |000e: invoke-static {v0}, LX/0J0S;.A01:(Landroid/app/Activity;)Ljava/lang/String; // method@8275
+82a866: 0c08                                   |0011: move-result-object v8
+82a868: 5490 af4e                              |0012: iget-object v0, v9, LX/0CPM;.A0A:LX/0CJy; // field@4eaf
+82a86c: 5400 b94d                              |0014: iget-object v0, v0, LX/0CJy;.A0B:Landroid/view/SurfaceView; // field@4db9
+82a870: 7110 7682 0000                         |0016: invoke-static {v0}, LX/0J0S;.A02:(Landroid/view/SurfaceView;)Ljava/lang/String; // method@8276
+82a876: 0c06                                   |0019: move-result-object v6
+82a878: 6300 074f                              |001a: sget-boolean v0, LX/0CPM;.A1a:Z // field@4f07
+82a87c: 3900 6200                              |001c: if-nez v0, 007e // +0062
+82a880: 1210                                   |001e: const/4 v0, #int 1 // #1
+82a882: 6a00 074f                              |001f: sput-boolean v0, LX/0CPM;.A1a:Z // field@4f07
+82a886: 7100 7482 0000                         |0021: invoke-static {}, LX/0J0S;.A00:()Ljava/lang/String; // method@8274
+82a88c: 0c00                                   |0024: move-result-object v0
+82a88e: 3800 5600                              |0025: if-eqz v0, 007b // +0056
+82a892: 1a07 6bdd                              |0027: const-string v7, "true" // string@dd6b
+82a896: 549a d44e                              |0029: iget-object v10, v9, LX/0CPM;.A0l:Lcom/instagram/common/session/UserSession; // field@4ed4
+82a89a: 7110 7f53 0a00                         |002b: invoke-static {v10}, LX/0Dk8;.A01:(Lcom/instagram/common/session/UserSession;)LX/0Dk8; // method@537f
+82a8a0: 0c00                                   |002e: move-result-object v0
+82a8a2: 5404 115d                              |002f: iget-object v4, v0, LX/0Dk8;.A0P:Ljava/util/concurrent/atomic/AtomicLong; // field@5d11
+82a8a6: 5403 0f5d                              |0031: iget-object v3, v0, LX/0Dk8;.A0N:LX/06aV; // field@5d0f
+82a8aa: 6e10 30f1 0400                         |0033: invoke-virtual {v4}, Ljava/util/concurrent/atomic/AtomicLong;.get:()J // method@f130
+82a8b0: 0b01                                   |0036: move-result-wide v1
+82a8b2: 1400 7e22 fc31                         |0037: const v0, #float 7.33809e-09 // #31fc227e
+82a8b8: 1a05 0000                              |003a: const-string v5, "" // string@0000
+82a8bc: 6e55 cb1f 1302                         |003c: invoke-virtual {v3, v1, v2, v0, v5}, LX/06aV;.A07:(JILjava/lang/String;)J // method@1fcb
+82a8c2: 0b00                                   |003f: move-result-wide v0
+82a8c4: 6e30 32f1 0401                         |0040: invoke-virtual {v4, v0, v1}, Ljava/util/concurrent/atomic/AtomicLong;.set:(J)V // method@f132
+82a8ca: 7110 a710 0a00                         |0043: invoke-static {v10}, LX/03dY;.A02:(Lcom/instagram/common/session/UserSession;)LX/03dZ; // method@10a7
+82a8d0: 0c00                                   |0046: move-result-object v0
+82a8d2: 5404 450d                              |0047: iget-object v4, v0, LX/03dZ;.A0g:LX/06ak; // field@0d45
+82a8d6: 5492 e34e                              |0049: iget-object v2, v9, LX/0CPM;.A10:LX/01BR; // field@4ee3
+82a8da: 1300 7c00                              |004b: const/16 v0, #int 124 // #7c
+82a8de: 7130 a200 6800                         |004d: invoke-static {v8, v6, v0}, LX/002b;.A0Z:(Ljava/lang/String;Ljava/lang/String;C)Ljava/lang/String; // method@00a2
+82a8e4: 0c06                                   |0050: move-result-object v6
+82a8e6: 5440 aa22                              |0051: iget-object v0, v4, LX/06ak;.A05:LX/0Ped; // field@22aa
+82a8ea: 7210 77bb 0000                         |0053: invoke-interface {v0}, LX/0Ped;.BXI:()LX/06aD; // method@bb77
+82a8f0: 0c01                                   |0056: move-result-object v1
+82a8f2: 6200 7a22                              |0057: sget-object v0, LX/06aD;.A02:LX/06aD; // field@227a
+82a8f6: 3301 2100                              |0059: if-ne v1, v0, 007a // +0021
+82a8fa: 6200 3d01                              |005b: sget-object v0, LX/01BR;.A05:LX/01BR; // field@013d
+82a8fe: 3302 1d00                              |005d: if-ne v2, v0, 007a // +001d
+82a902: 5443 a922                              |005f: iget-object v3, v4, LX/06ak;.A04:LX/06aV; // field@22a9
+82a906: 5341 a722                              |0061: iget-wide v1, v4, LX/06ak;.A01:J // field@22a7
+82a90a: 1a00 84da                              |0063: const-string v0, "supported_display_hdr_types" // string@da84
+82a90e: 6e56 d31f 1302                         |0065: invoke-virtual {v3, v1, v2, v0, v6}, LX/06aV;.A0F:(JLjava/lang/String;Ljava/lang/String;)V // method@1fd3
+82a914: 5341 a722                              |0068: iget-wide v1, v4, LX/06ak;.A01:J // field@22a7
+82a918: 1a00 14bd                              |006a: const-string v0, "has_hevc_encoder_with_hdr" // string@bd14
+82a91c: 6e57 d31f 1302                         |006c: invoke-virtual {v3, v1, v2, v0, v7}, LX/06aV;.A0F:(JLjava/lang/String;Ljava/lang/String;)V // method@1fd3
+82a922: 5341 a722                              |006f: iget-wide v1, v4, LX/06ak;.A01:J // field@22a7
+82a926: 1400 cc39 e122                         |0071: const v0, #float 6.10476e-18 // #22e139cc
+82a92c: 6e55 cb1f 1302                         |0074: invoke-virtual {v3, v1, v2, v0, v5}, LX/06aV;.A07:(JILjava/lang/String;)J // method@1fcb
+82a932: 0b00                                   |0077: move-result-wide v0
+82a934: 5a40 a722                              |0078: iput-wide v0, v4, LX/06ak;.A01:J // field@22a7
+82a938: 0e00                                   |007a: return-void
+82a93a: 1a07 1cb4                              |007b: const-string v7, "false" // string@b41c
+82a93e: 28ac                                   |007d: goto 0029 // -0054
+82a940: 1a07 0000                              |007e: const-string v7, "" // string@0000
+82a944: 28a9                                   |0080: goto 0029 // -0057
+      catches       : (none)
+      positions     :
+      locals        :
+
+    #3              : (in LX/0Hh4;)
+      name          : 'Fjl'
+      type          : '(Ljava/lang/Throwable;Ljava/lang/String;)V'
+      access        : 0x0011 (PUBLIC FINAL)
+      method_idx    : 30210
+      code          -
+      registers     : 18
+      ins           : 3
+      outs          : 7
+      insns size    : 143 16-bit code units
+82a948:                                        |[82a948] X.0Hh4.Fjl:(Ljava/lang/Throwable;Ljava/lang/String;)V
+82a958: 54f8 ee7d                              |0000: iget-object v8, v15, LX/0Hh4;.A00:LX/0CPM; // field@7dee
+82a95c: 5489 d44e                              |0002: iget-object v9, v8, LX/0CPM;.A0l:Lcom/instagram/common/session/UserSession; // field@4ed4
+82a960: 7110 7f53 0900                         |0004: invoke-static {v9}, LX/0Dk8;.A01:(Lcom/instagram/common/session/UserSession;)LX/0Dk8; // method@537f
+82a966: 0c00                                   |0007: move-result-object v0
+82a968: 5403 0f5d                              |0008: iget-object v3, v0, LX/0Dk8;.A0N:LX/06aV; // field@5d0f
+82a96c: 5405 115d                              |000a: iget-object v5, v0, LX/0Dk8;.A0P:Ljava/util/concurrent/atomic/AtomicLong; // field@5d11
+82a970: 6e10 30f1 0500                         |000c: invoke-virtual {v5}, Ljava/util/concurrent/atomic/AtomicLong;.get:()J // method@f130
+82a976: 0b00                                   |000f: move-result-wide v0
+82a978: 1302 e504                              |0010: const/16 v2, #int 1253 // #4e5
+82a97c: 7110 3a00 0200                         |0012: invoke-static {v2}, LX/0018;.A00:(I)Ljava/lang/String; // method@003a
+82a982: 0c04                                   |0015: move-result-object v4
+82a984: 6e40 d11f 0341                         |0016: invoke-virtual {v3, v0, v1, v4}, LX/06aV;.A0D:(JLjava/lang/String;)V // method@1fd1
+82a98a: 6e10 30f1 0500                         |0019: invoke-virtual {v5}, Ljava/util/concurrent/atomic/AtomicLong;.get:()J // method@f130
+82a990: 0b00                                   |001c: move-result-wide v0
+82a992: 7401 0eef 1000                         |001d: invoke-virtual/range {v16}, Ljava/lang/Throwable;.getMessage:()Ljava/lang/String; // method@ef0e
+82a998: 0c02                                   |0020: move-result-object v2
+82a99a: 3902 0400                              |0021: if-nez v2, 0025 // +0004
+82a99e: 1a02 0eb3                              |0023: const-string v2, "error" // string@b30e
+82a9a2: 6e52 d31f 0341                         |0025: invoke-virtual {v3, v0, v1, v4, v2}, LX/06aV;.A0F:(JLjava/lang/String;Ljava/lang/String;)V // method@1fd3
+82a9a8: 6e10 30f1 0500                         |0028: invoke-virtual {v5}, Ljava/util/concurrent/atomic/AtomicLong;.get:()J // method@f130
+82a9ae: 0b00                                   |002b: move-result-wide v0
+82a9b0: 1a04 c5cd                              |002c: const-string v4, "player_session_id" // string@cdc5
+82a9b4: 0807 1100                              |002e: move-object/from16 v7, v17
+82a9b8: 6e57 d31f 0341                         |0030: invoke-virtual {v3, v0, v1, v4, v7}, LX/06aV;.A0F:(JLjava/lang/String;Ljava/lang/String;)V // method@1fd3
+82a9be: 6e10 30f1 0500                         |0033: invoke-virtual {v5}, Ljava/util/concurrent/atomic/AtomicLong;.get:()J // method@f130
+82a9c4: 0b00                                   |0036: move-result-wide v0
+82a9c6: 7701 0101 1000                         |0037: invoke-static/range {v16}, LX/009i;.A00:(Ljava/lang/Throwable;)Ljava/lang/String; // method@0101
+82a9cc: 0c02                                   |003a: move-result-object v2
+82a9ce: 1306 e803                              |003b: const/16 v6, #int 1000 // #3e8
+82a9d2: 7120 4041 6200                         |003d: invoke-static {v2, v6}, LX/0C2E;.A1A:(Ljava/lang/String;I)Ljava/lang/String; // method@4140
+82a9d8: 0c02                                   |0040: move-result-object v2
+82a9da: 1a05 a5d8                              |0041: const-string v5, "stack_trace" // string@d8a5
+82a9de: 6e52 d31f 0351                         |0043: invoke-virtual {v3, v0, v1, v5, v2}, LX/06aV;.A0F:(JLjava/lang/String;Ljava/lang/String;)V // method@1fd3
+82a9e4: 7110 a710 0900                         |0046: invoke-static {v9}, LX/03dY;.A02:(Lcom/instagram/common/session/UserSession;)LX/03dZ; // method@10a7
+82a9ea: 0c00                                   |0049: move-result-object v0
+82a9ec: 5403 450d                              |004a: iget-object v3, v0, LX/03dZ;.A0g:LX/06ak; // field@0d45
+82a9f0: 5482 e34e                              |004c: iget-object v2, v8, LX/0CPM;.A10:LX/01BR; // field@4ee3
+82a9f4: 5430 aa22                              |004e: iget-object v0, v3, LX/06ak;.A05:LX/0Ped; // field@22aa
+82a9f8: 7210 77bb 0000                         |0050: invoke-interface {v0}, LX/0Ped;.BXI:()LX/06aD; // method@bb77
+82a9fe: 0c01                                   |0053: move-result-object v1
+82aa00: 6200 7a22                              |0054: sget-object v0, LX/06aD;.A02:LX/06aD; // field@227a
+82aa04: 3301 3800                              |0056: if-ne v1, v0, 008e // +0038
+82aa08: 6200 3d01                              |0058: sget-object v0, LX/01BR;.A05:LX/01BR; // field@013d
+82aa0c: 3302 3400                              |005a: if-ne v2, v0, 008e // +0034
+82aa10: 5438 a922                              |005c: iget-object v8, v3, LX/06ak;.A04:LX/06aV; // field@22a9
+82aa14: 5330 a722                              |005e: iget-wide v0, v3, LX/06ak;.A01:J // field@22a7
+82aa18: 6e57 d31f 0841                         |0060: invoke-virtual {v8, v0, v1, v4, v7}, LX/06aV;.A0F:(JLjava/lang/String;Ljava/lang/String;)V // method@1fd3
+82aa1e: 5331 a722                              |0063: iget-wide v1, v3, LX/06ak;.A01:J // field@22a7
+82aa22: 7401 0eef 1000                         |0065: invoke-virtual/range {v16}, Ljava/lang/Throwable;.getMessage:()Ljava/lang/String; // method@ef0e
+82aa28: 0c04                                   |0068: move-result-object v4
+82aa2a: 3904 0400                              |0069: if-nez v4, 006d // +0004
+82aa2e: 1a04 6db2                              |006b: const-string v4, "empty" // string@b26d
+82aa32: 1a00 1cb3                              |006d: const-string v0, "error_details" // string@b31c
+82aa36: 6e54 d31f 1802                         |006f: invoke-virtual {v8, v1, v2, v0, v4}, LX/06aV;.A0F:(JLjava/lang/String;Ljava/lang/String;)V // method@1fd3
+82aa3c: 5331 a722                              |0072: iget-wide v1, v3, LX/06ak;.A01:J // field@22a7
+82aa40: 7701 0101 1000                         |0074: invoke-static/range {v16}, LX/009i;.A00:(Ljava/lang/Throwable;)Ljava/lang/String; // method@0101
+82aa46: 0c00                                   |0077: move-result-object v0
+82aa48: 7120 4041 6000                         |0078: invoke-static {v0, v6}, LX/0C2E;.A1A:(Ljava/lang/String;I)Ljava/lang/String; // method@4140
+82aa4e: 0c00                                   |007b: move-result-object v0
+82aa50: 6e50 d31f 1852                         |007c: invoke-virtual {v8, v1, v2, v5, v0}, LX/06aV;.A0F:(JLjava/lang/String;Ljava/lang/String;)V // method@1fd3
+
+===== classes19.txt LX/0LbF;->A00 target_line=1868981 =====
+STRINGS: query | INSTAGRAM__STORIES__PRECAPTURE__SEARCH_V2 | surface | device_capabilities | preview_width | preview_height | context | cursor | TAR_BROTLI | ZIP | supported_compression_types | page_size | formatted_media_count_enabled | CommonAREffectSearchQuery | INSTAGRAM__STORIES__POSTCAPTURE__SEARCH | INSTAGRAM__LIVE__PRECAPTURE__SEARCH_V2 | INSTAGRAM__REELS__PRECAPTURE__SEARCH_V2 | INSTAGRAM__REELS__POSTCAPTURE__SEARCH_V2 | INSTAGRAM__DIRECT__RTC__SEARCH_V2 | INSTAGRAM__DIRECT__PRECAPTURE__SEARCH_V2 | INSTAGRAM__DIRECT__POSTCAPTURE__SEARCH_V2
+      name          : 'A00'
+      type          : '(Lcom/instagram/common/session/UserSession;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)LX/0C4V;'
+      access        : 0x0011 (PUBLIC FINAL)
+      method_idx    : 39119
+      code          -
+      registers     : 12
+      ins           : 5
+      outs          : 5
+      insns size    : 220 16-bit code units
+7c3b08:                                        |[7c3b08] X.0LbF.A00:(Lcom/instagram/common/session/UserSession;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)LX/0C4V;
+7c3b18: 1204                                   |0000: const/4 v4, #int 0 // #0
+7c3b1a: 7110 e90e 0800                         |0001: invoke-static {v8}, LX/03Lk;.A01:(Lcom/instagram/common/session/UserSession;)LX/05xq; // method@0ee9
+7c3b20: 0c06                                   |0004: move-result-object v6
+7c3b22: 6201 ebc4                              |0005: sget-object v1, Lcom/facebook/graphql/calls/GraphQlCallInput;.A02:LX/000m; // field@c4eb
+7c3b26: 1203                                   |0007: const/4 v3, #int 0 // #0
+7c3b28: 7100 326b 0000                         |0008: invoke-static {}, LX/0Ged;.A00:()Ljava/lang/String; // method@6b32
+7c3b2e: 0c00                                   |000b: move-result-object v0
+7c3b30: 6e10 3000 0100                         |000c: invoke-virtual {v1}, LX/000m;.A02:()LX/000q; // method@0030
+7c3b36: 0c02                                   |000f: move-result-object v2
+7c3b38: 7130 3100 9200                         |0010: invoke-static {v2, v9, v0}, LX/000q;.A00:(LX/000q;Ljava/lang/Object;Ljava/lang/String;)V // method@0031
+7c3b3e: 2205 ff0a                              |0013: new-instance v5, LX/05xm; // type@0aff
+7c3b42: 7010 cf1b 0500                         |0015: invoke-direct {v5}, LX/05xm;.<init>:()V // method@1bcf
+7c3b48: 1a00 9ccf                              |0018: const-string v0, "query" // string@cf9c
+7c3b4c: 6e30 d51b 050a                         |001a: invoke-virtual {v5, v0, v10}, LX/05xm;.A05:(Ljava/lang/String;Ljava/lang/String;)V // method@1bd5
+7c3b52: 5470 7a9b                              |001d: iget-object v0, v7, LX/0LbF;.A00:Ljava/lang/Integer; // field@9b7a
+7c3b56: 6e10 8dee 0000                         |001f: invoke-virtual {v0}, Ljava/lang/Number;.intValue:()I // method@ee8d
+7c3b5c: 0a00                                   |0022: move-result v0
+7c3b5e: 2b00 a700 0000                         |0023: packed-switch v0, 000000ca // +000000a7
+7c3b64: 1a01 0130                              |0026: const-string v1, "INSTAGRAM__STORIES__PRECAPTURE__SEARCH_V2" // string@3001
+7c3b68: 1a00 94da                              |0028: const-string v0, "surface" // string@da94
+7c3b6c: 6e30 d51b 0501                         |002a: invoke-virtual {v5, v0, v1}, LX/05xm;.A05:(Ljava/lang/String;Ljava/lang/String;)V // method@1bd5
+7c3b72: 1a00 66b0                              |002d: const-string v0, "device_capabilities" // string@b066
+7c3b76: 6e30 d01b 6500                         |002f: invoke-virtual {v5, v6, v0}, LX/05xm;.A00:(Lcom/facebook/graphql/calls/GraphQlCallInput;Ljava/lang/String;)V // method@1bd0
+7c3b7c: 1300 f000                              |0032: const/16 v0, #int 240 // #f0
+7c3b80: 7110 5cee 0000                         |0034: invoke-static {v0}, Ljava/lang/Integer;.valueOf:(I)Ljava/lang/Integer; // method@ee5c
+7c3b86: 0c01                                   |0037: move-result-object v1
+7c3b88: 1a00 c3ce                              |0038: const-string v0, "preview_width" // string@cec3
+7c3b8c: 6e30 d41b 0501                         |003a: invoke-virtual {v5, v0, v1}, LX/05xm;.A04:(Ljava/lang/String;Ljava/lang/Number;)V // method@1bd4
+7c3b92: 1a00 bcce                              |003d: const-string v0, "preview_height" // string@cebc
+7c3b96: 6e30 d41b 0501                         |003f: invoke-virtual {v5, v0, v1}, LX/05xm;.A04:(Ljava/lang/String;Ljava/lang/Number;)V // method@1bd4
+7c3b9c: 1a01 c9ad                              |0042: const-string v1, "context" // string@adc9
+7c3ba0: 5450 f718                              |0044: iget-object v0, v5, LX/05xm;.A00:LX/05xq; // field@18f7
+7c3ba4: 6e10 0bda 0000                         |0046: invoke-virtual {v0}, Lcom/facebook/graphql/calls/GraphQlCallInput;.A03:()LX/000q; // method@da0b
+7c3baa: 0c00                                   |0049: move-result-object v0
+7c3bac: 6e30 3200 2001                         |004a: invoke-virtual {v0, v2, v1}, LX/000q;.A0E:(LX/001A;Ljava/lang/String;)V // method@0032
+7c3bb2: 1a00 57af                              |004d: const-string v0, "cursor" // string@af57
+7c3bb6: 6e30 d51b 050b                         |004f: invoke-virtual {v5, v0, v11}, LX/05xm;.A05:(Ljava/lang/String;Ljava/lang/String;)V // method@1bd5
+7c3bbc: 1a01 b796                              |0052: const-string v1, "TAR_BROTLI" // string@96b7
+7c3bc0: 1a00 e79f                              |0054: const-string v0, "ZIP" // string@9fe7
+7c3bc4: 7120 5bdc 0100                         |0056: invoke-static {v1, v0}, Lcom/google/common/collect/ImmutableList;.of:(Ljava/lang/Object;Ljava/lang/Object;)Lcom/google/common/collect/ImmutableList; // method@dc5b
+7c3bca: 0c01                                   |0059: move-result-object v1
+7c3bcc: 1a00 82da                              |005a: const-string v0, "supported_compression_types" // string@da82
+7c3bd0: 6e30 d61b 0501                         |005c: invoke-virtual {v5, v0, v1}, LX/05xm;.A06:(Ljava/lang/String;Ljava/util/List;)V // method@1bd6
+7c3bd6: 1300 1800                              |005f: const/16 v0, #int 24 // #18
+7c3bda: 7110 5cee 0000                         |0061: invoke-static {v0}, Ljava/lang/Integer;.valueOf:(I)Ljava/lang/Integer; // method@ee5c
+7c3be0: 0c01                                   |0064: move-result-object v1
+7c3be2: 1a00 c1cc                              |0065: const-string v0, "page_size" // string@ccc1
+7c3be6: 6e30 d41b 0501                         |0067: invoke-virtual {v5, v0, v1}, LX/05xm;.A04:(Ljava/lang/String;Ljava/lang/Number;)V // method@1bd4
+7c3bec: 1a00 d6b5                              |006a: const-string v0, "formatted_media_count_enabled" // string@b5d6
+7c3bf0: 6e20 d21b 0500                         |006c: invoke-virtual {v5, v0}, LX/05xm;.A02:(Ljava/lang/String;)V // method@1bd2
+7c3bf6: 1c02 7029                              |006f: const-class v2, LX/0ITM; // type@2970
+7c3bfa: 1a01 ae15                              |0071: const-string v1, "CommonAREffectSearchQuery" // string@15ae
+7c3bfe: 2200 9700                              |0073: new-instance v0, LX/00K8; // type@0097
+7c3c02: 7054 9f01 5012                         |0075: invoke-direct {v0, v5, v2, v1, v4}, LX/00K8;.<init>:(LX/05xm;Ljava/lang/Class;Ljava/lang/String;Z)V // method@019f
+7c3c08: 2202 9800                              |0078: new-instance v2, LX/00K9; // type@0098
+7c3c0c: 7020 a001 8200                         |007a: invoke-direct {v2, v8}, LX/00K9;.<init>:(LX/04BG;)V // method@01a0
+7c3c12: 6e20 a301 0200                         |007d: invoke-virtual {v2, v0}, LX/00K9;.A06:(LX/08OZ;)V // method@01a3
+7c3c18: 6200 0000                              |0080: sget-object v0, LX/000A;.A00:Ljava/lang/Integer; // field@0000
+7c3c1c: 5b20 9600                              |0082: iput-object v0, v2, LX/00K9;.A03:Ljava/lang/Integer; // field@0096
+7c3c20: 5b23 9800                              |0084: iput-object v3, v2, LX/00K9;.A05:Ljava/lang/String; // field@0098
+7c3c24: 1600 ffff                              |0086: const-wide/16 v0, #int -1 // #ffff
+7c3c28: 7120 65ee 1000                         |0088: invoke-static {v0, v1}, Ljava/lang/Long;.valueOf:(J)Ljava/lang/Long; // method@ee65
+7c3c2e: 0c00                                   |008b: move-result-object v0
+7c3c30: 5b20 9700                              |008c: iput-object v0, v2, LX/00K9;.A04:Ljava/lang/Long; // field@0097
+7c3c34: 6e10 a101 0200                         |008e: invoke-virtual {v2}, LX/00K9;.A04:()LX/03Da; // method@01a1
+7c3c3a: 0c02                                   |0091: move-result-object v2
+7c3c3c: 1301 e802                              |0092: const/16 v1, #int 744 // #2e8
+7c3c40: 1230                                   |0094: const/4 v0, #int 3 // #3
+7c3c42: 6e30 740e 1200                         |0095: invoke-virtual {v2, v1, v0}, LX/03Da;.A06:(II)LX/0F0k; // method@0e74
+7c3c48: 0c02                                   |0098: move-result-object v2
+7c3c4a: 1301 0b00                              |0099: const/16 v1, #int 11 // #b
+7c3c4e: 2200 c62b                              |009b: new-instance v0, LX/0IzS; // type@2bc6
+7c3c52: 7030 5382 1003                         |009d: invoke-direct {v0, v1, v3}, LX/0IzS;.<init>:(ILX/09oa;)V // method@8253
+7c3c58: 7120 3809 2000                         |00a0: invoke-static {v0, v2}, LX/028Z;.A01:(LX/0nvI;LX/0F0k;)LX/0661; // method@0938
+7c3c5e: 0c01                                   |00a3: move-result-object v1
+7c3c60: 2200 8a24                              |00a4: new-instance v0, LX/0GpK; // type@248a
+7c3c64: 7040 cc6d 7043                         |00a6: invoke-direct {v0, v7, v3, v4}, LX/0GpK;.<init>:(Ljava/lang/Object;LX/09oa;I)V // method@6dcc
+7c3c6a: 7120 3709 1000                         |00a9: invoke-static {v0, v1}, LX/028Z;.A00:(LX/0nvI;LX/0F0k;)LX/0C4V; // method@0937
+7c3c70: 0c00                                   |00ac: move-result-object v0
+7c3c72: 1100                                   |00ad: return-object v0
+7c3c74: 1a01 0030                              |00ae: const-string v1, "INSTAGRAM__STORIES__POSTCAPTURE__SEARCH" // string@3000
+7c3c78: 2900 78ff                              |00b0: goto/16 0028 // -0088
+7c3c7c: 1a01 fd2f                              |00b2: const-string v1, "INSTAGRAM__LIVE__PRECAPTURE__SEARCH_V2" // string@2ffd
+7c3c80: 2900 74ff                              |00b4: goto/16 0028 // -008c
+7c3c84: 1a01 ff2f                              |00b6: const-string v1, "INSTAGRAM__REELS__PRECAPTURE__SEARCH_V2" // string@2fff
+7c3c88: 2900 70ff                              |00b8: goto/16 0028 // -0090
+7c3c8c: 1a01 fe2f                              |00ba: const-string v1, "INSTAGRAM__REELS__POSTCAPTURE__SEARCH_V2" // string@2ffe
+7c3c90: 2900 6cff                              |00bc: goto/16 0028 // -0094
+7c3c94: 1a01 fc2f                              |00be: const-string v1, "INSTAGRAM__DIRECT__RTC__SEARCH_V2" // string@2ffc
+7c3c98: 2900 68ff                              |00c0: goto/16 0028 // -0098
+7c3c9c: 1a01 fb2f                              |00c2: const-string v1, "INSTAGRAM__DIRECT__PRECAPTURE__SEARCH_V2" // string@2ffb
+7c3ca0: 2900 64ff                              |00c4: goto/16 0028 // -009c
+7c3ca4: 1a01 fa2f                              |00c6: const-string v1, "INSTAGRAM__DIRECT__POSTCAPTURE__SEARCH_V2" // string@2ffa
+7c3ca8: 2900 60ff                              |00c8: goto/16 0028 // -00a0
+7c3cac: 0001 0700 0100 0000 8b00 0000 8f00 ... |00ca: packed-switch-data (18 units)
+      catches       : (none)
+      positions     :
+      locals        :
+
+  source_file_idx   : 0 ()
+
+Class #8003 header:
+class_idx           : 13139
+access_flags        : 17 (0x0011)
+superclass_idx      : 21249
+interfaces_off      : 0 (0x000000)
+source_file_idx     : 0
+annotations_off     : 0 (0x000000)
+class_data_off      : 9134484 (0x8b6194)
+static_fields_size  : 0
+instance_fields_size: 1
+
+===== classes4.txt LX/0Uiy;->run target_line=1708167 =====
+STRINGS: key_ram_total_kb | key_cpu_num_cores | key_cpu_max_frequency_mhz | key_display_size_pixels | key_display_max_refresh_rate_fps | key_display_hdr_supported | key_display_wide_colour_gamut_supported | key_camera_back_facing_present | key_camera_front_facing_present | key_camera_autofocus_supported | key_camera_motion_tracking_supported | key_camera_flash_supported | key_camera_is_full_hardware_level | key_camera_concurrent_capture_supported | key_camera_manual_post_processing_supported | key_camera_manual_sensor_supported | key_camera_raw_image_capture_supported | key_audio_is_low_latency | key_audio_is_pro_level | key_audio_midi_api_supported | key_audio_microphone_present | key_opengles_deqp_test_date | key_opengles_android_extension_pack_supported
+      registers     : 7
+      ins           : 1
+      outs          : 3
+      insns size    : 2396 16-bit code units
+637ec4:                                        |[637ec4] X.0Uiy.run:()V
+637ed4: 5464 6786                              |0000: iget-object v4, v6, LX/0Uiy;.A00:Ljava/lang/Object; // field@8667
+637ed8: 1f04 474f                              |0002: check-cast v4, [Ljava/lang/Object; // type@4f47
+637edc: 5463 6886                              |0004: iget-object v3, v6, LX/0Uiy;.A01:LX/03Tz; // field@8668
+637ee0: 7110 5f00 0300                         |0006: invoke-static {v3}, LX/0020;.A1Z:(LX/00vy;)Z // method@005f
+637ee6: 0a00                                   |0009: move-result v0
+637ee8: 3800 5109                              |000a: if-eqz v0, 095b // +0951
+637eec: 3804 4f09                              |000c: if-eqz v4, 095b // +094f
+637ef0: 1200                                   |000e: const/4 v0, #int 0 // #0
+637ef2: 4601 0400                              |000f: aget-object v1, v4, v0
+637ef6: 1f01 d84a                              |0011: check-cast v1, Ljava/lang/Long; // type@4ad8
+637efa: 1a00 4acf                              |0013: const-string v0, "key_ram_total_kb" // string@cf4a
+637efe: 6e30 8202 0301                         |0015: invoke-virtual {v3, v0, v1}, LX/00vy;.A0p:(Ljava/lang/String;Ljava/lang/Long;)V // method@0282
+637f04: 1212                                   |0018: const/4 v2, #int 1 // #1
+637f06: 4600 0402                              |0019: aget-object v0, v4, v2
+637f0a: 1f00 e04a                              |001b: check-cast v0, Ljava/lang/Number; // type@4ae0
+637f0e: 1205                                   |001d: const/4 v5, #int 0 // #0
+637f10: 7110 6400 0000                         |001e: invoke-static {v0}, LX/0021;.A06:(Ljava/lang/Number;)Ljava/lang/Long; // method@0064
+637f16: 0c01                                   |0021: move-result-object v1
+637f18: 1a00 34cf                              |0022: const-string v0, "key_cpu_num_cores" // string@cf34
+637f1c: 6e30 8202 0301                         |0024: invoke-virtual {v3, v0, v1}, LX/00vy;.A0p:(Ljava/lang/String;Ljava/lang/Long;)V // method@0282
+637f22: 1220                                   |0027: const/4 v0, #int 2 // #2
+637f24: 7120 396e 0400                         |0028: invoke-static {v4, v0}, LX/0Uiy;.A00:([Ljava/lang/Object;I)Ljava/lang/Long; // method@6e39
+637f2a: 0c01                                   |002b: move-result-object v1
+637f2c: 1a00 33cf                              |002c: const-string v0, "key_cpu_max_frequency_mhz" // string@cf33
+637f30: 6e30 8202 0301                         |002e: invoke-virtual {v3, v0, v1}, LX/00vy;.A0p:(Ljava/lang/String;Ljava/lang/Long;)V // method@0282
+637f36: 1230                                   |0031: const/4 v0, #int 3 // #3
+637f38: 7120 3a6e 4000                         |0032: invoke-static {v0, v4}, LX/0Uiy;.A01:(I[Ljava/lang/Object;)Ljava/lang/String; // method@6e3a
+637f3e: 0c01                                   |0035: move-result-object v1
+637f40: 1a00 38cf                              |0036: const-string v0, "key_display_size_pixels" // string@cf38
+637f44: 6e30 8302 0301                         |0038: invoke-virtual {v3, v0, v1}, LX/00vy;.A0q:(Ljava/lang/String;Ljava/lang/String;)V // method@0283
+637f4a: 1240                                   |003b: const/4 v0, #int 4 // #4
+637f4c: 4600 0400                              |003c: aget-object v0, v4, v0
+637f50: 1f00 e04a                              |003e: check-cast v0, Ljava/lang/Number; // type@4ae0
+637f54: 7110 6300 0000                         |0040: invoke-static {v0}, LX/0021;.A04:(Ljava/lang/Number;)Ljava/lang/Double; // method@0063
+637f5a: 0c01                                   |0043: move-result-object v1
+637f5c: 1a00 37cf                              |0044: const-string v0, "key_display_max_refresh_rate_fps" // string@cf37
+637f60: 6e30 8102 0301                         |0046: invoke-virtual {v3, v0, v1}, LX/00vy;.A0o:(Ljava/lang/String;Ljava/lang/Double;)V // method@0281
+637f66: 1250                                   |0049: const/4 v0, #int 5 // #5
+637f68: 4601 0400                              |004a: aget-object v1, v4, v0
+637f6c: 1f01 be4a                              |004c: check-cast v1, Ljava/lang/Boolean; // type@4abe
+637f70: 1a00 36cf                              |004e: const-string v0, "key_display_hdr_supported" // string@cf36
+637f74: 6e30 8002 0301                         |0050: invoke-virtual {v3, v0, v1}, LX/00vy;.A0n:(Ljava/lang/String;Ljava/lang/Boolean;)V // method@0280
+637f7a: 1260                                   |0053: const/4 v0, #int 6 // #6
+637f7c: 4601 0400                              |0054: aget-object v1, v4, v0
+637f80: 1f01 be4a                              |0056: check-cast v1, Ljava/lang/Boolean; // type@4abe
+637f84: 1a00 39cf                              |0058: const-string v0, "key_display_wide_colour_gamut_supported" // string@cf39
+637f88: 6e30 8002 0301                         |005a: invoke-virtual {v3, v0, v1}, LX/00vy;.A0n:(Ljava/lang/String;Ljava/lang/Boolean;)V // method@0280
+637f8e: 1270                                   |005d: const/4 v0, #int 7 // #7
+637f90: 4601 0400                              |005e: aget-object v1, v4, v0
+637f94: 1f01 be4a                              |0060: check-cast v1, Ljava/lang/Boolean; // type@4abe
+637f98: 1a00 b0ce                              |0062: const-string v0, "key_camera_back_facing_present" // string@ceb0
+637f9c: 6e30 8002 0301                         |0064: invoke-virtual {v3, v0, v1}, LX/00vy;.A0n:(Ljava/lang/String;Ljava/lang/Boolean;)V // method@0280
+637fa2: 1300 0800                              |0067: const/16 v0, #int 8 // #8
+637fa6: 4601 0400                              |0069: aget-object v1, v4, v0
+637faa: 1f01 be4a                              |006b: check-cast v1, Ljava/lang/Boolean; // type@4abe
+637fae: 1a00 f7ce                              |006d: const-string v0, "key_camera_front_facing_present" // string@cef7
+637fb2: 6e30 8002 0301                         |006f: invoke-virtual {v3, v0, v1}, LX/00vy;.A0n:(Ljava/lang/String;Ljava/lang/Boolean;)V // method@0280
+637fb8: 1300 0900                              |0072: const/16 v0, #int 9 // #9
+637fbc: 4601 0400                              |0074: aget-object v1, v4, v0
+637fc0: 1f01 be4a                              |0076: check-cast v1, Ljava/lang/Boolean; // type@4abe
+637fc4: 1a00 a1ce                              |0078: const-string v0, "key_camera_autofocus_supported" // string@cea1
+637fc8: 6e30 8002 0301                         |007a: invoke-virtual {v3, v0, v1}, LX/00vy;.A0n:(Ljava/lang/String;Ljava/lang/Boolean;)V // method@0280
+637fce: 1300 0a00                              |007d: const/16 v0, #int 10 // #a
+637fd2: 4601 0400                              |007f: aget-object v1, v4, v0
+637fd6: 1f01 be4a                              |0081: check-cast v1, Ljava/lang/Boolean; // type@4abe
+637fda: 1a00 31cf                              |0083: const-string v0, "key_camera_motion_tracking_supported" // string@cf31
+637fde: 6e30 8002 0301                         |0085: invoke-virtual {v3, v0, v1}, LX/00vy;.A0n:(Ljava/lang/String;Ljava/lang/Boolean;)V // method@0280
+637fe4: 1300 0b00                              |0088: const/16 v0, #int 11 // #b
+637fe8: 4601 0400                              |008a: aget-object v1, v4, v0
+637fec: 1f01 be4a                              |008c: check-cast v1, Ljava/lang/Boolean; // type@4abe
+637ff0: 1a00 e8ce                              |008e: const-string v0, "key_camera_flash_supported" // string@cee8
+637ff4: 6e30 8002 0301                         |0090: invoke-virtual {v3, v0, v1}, LX/00vy;.A0n:(Ljava/lang/String;Ljava/lang/Boolean;)V // method@0280
+637ffa: 1300 0c00                              |0093: const/16 v0, #int 12 // #c
+637ffe: 4601 0400                              |0095: aget-object v1, v4, v0
+638002: 1f01 be4a                              |0097: check-cast v1, Ljava/lang/Boolean; // type@4abe
+638006: 1a00 2ecf                              |0099: const-string v0, "key_camera_is_full_hardware_level" // string@cf2e
+63800a: 6e30 8002 0301                         |009b: invoke-virtual {v3, v0, v1}, LX/00vy;.A0n:(Ljava/lang/String;Ljava/lang/Boolean;)V // method@0280
+638010: 1300 0d00                              |009e: const/16 v0, #int 13 // #d
+638014: 4601 0400                              |00a0: aget-object v1, v4, v0
+638018: 1f01 be4a                              |00a2: check-cast v1, Ljava/lang/Boolean; // type@4abe
+63801c: 1a00 e7ce                              |00a4: const-string v0, "key_camera_concurrent_capture_supported" // string@cee7
+638020: 6e30 8002 0301                         |00a6: invoke-virtual {v3, v0, v1}, LX/00vy;.A0n:(Ljava/lang/String;Ljava/lang/Boolean;)V // method@0280
+638026: 1300 0e00                              |00a9: const/16 v0, #int 14 // #e
+63802a: 4601 0400                              |00ab: aget-object v1, v4, v0
+63802e: 1f01 be4a                              |00ad: check-cast v1, Ljava/lang/Boolean; // type@4abe
+638032: 1a00 2fcf                              |00af: const-string v0, "key_camera_manual_post_processing_supported" // string@cf2f
+638036: 6e30 8002 0301                         |00b1: invoke-virtual {v3, v0, v1}, LX/00vy;.A0n:(Ljava/lang/String;Ljava/lang/Boolean;)V // method@0280
+63803c: 1300 0f00                              |00b4: const/16 v0, #int 15 // #f
+638040: 4601 0400                              |00b6: aget-object v1, v4, v0
+638044: 1f01 be4a                              |00b8: check-cast v1, Ljava/lang/Boolean; // type@4abe
+638048: 1a00 30cf                              |00ba: const-string v0, "key_camera_manual_sensor_supported" // string@cf30
+63804c: 6e30 8002 0301                         |00bc: invoke-virtual {v3, v0, v1}, LX/00vy;.A0n:(Ljava/lang/String;Ljava/lang/Boolean;)V // method@0280
+638052: 1300 1000                              |00bf: const/16 v0, #int 16 // #10
+638056: 4601 0400                              |00c1: aget-object v1, v4, v0
+63805a: 1f01 be4a                              |00c3: check-cast v1, Ljava/lang/Boolean; // type@4abe
+63805e: 1a00 32cf                              |00c5: const-string v0, "key_camera_raw_image_capture_supported" // string@cf32
+638062: 6e30 8002 0301                         |00c7: invoke-virtual {v3, v0, v1}, LX/00vy;.A0n:(Ljava/lang/String;Ljava/lang/Boolean;)V // method@0280
+638068: 1300 1100                              |00ca: const/16 v0, #int 17 // #11
+63806c: 4601 0400                              |00cc: aget-object v1, v4, v0
+638070: 1f01 be4a                              |00ce: check-cast v1, Ljava/lang/Boolean; // type@4abe
+638074: 1a00 9dce                              |00d0: const-string v0, "key_audio_is_low_latency" // string@ce9d
+638078: 6e30 8002 0301                         |00d2: invoke-virtual {v3, v0, v1}, LX/00vy;.A0n:(Ljava/lang/String;Ljava/lang/Boolean;)V // method@0280
+63807e: 1300 1200                              |00d5: const/16 v0, #int 18 // #12
+638082: 4601 0400                              |00d7: aget-object v1, v4, v0
+638086: 1f01 be4a                              |00d9: check-cast v1, Ljava/lang/Boolean; // type@4abe
+63808a: 1a00 9ece                              |00db: const-string v0, "key_audio_is_pro_level" // string@ce9e
+63808e: 6e30 8002 0301                         |00dd: invoke-virtual {v3, v0, v1}, LX/00vy;.A0n:(Ljava/lang/String;Ljava/lang/Boolean;)V // method@0280
+638094: 1300 1300                              |00e0: const/16 v0, #int 19 // #13
+638098: 4601 0400                              |00e2: aget-object v1, v4, v0
+63809c: 1f01 be4a                              |00e4: check-cast v1, Ljava/lang/Boolean; // type@4abe
+6380a0: 1a00 a0ce                              |00e6: const-string v0, "key_audio_midi_api_supported" // string@cea0
+6380a4: 6e30 8002 0301                         |00e8: invoke-virtual {v3, v0, v1}, LX/00vy;.A0n:(Ljava/lang/String;Ljava/lang/Boolean;)V // method@0280
+6380aa: 1300 1400                              |00eb: const/16 v0, #int 20 // #14
+6380ae: 4601 0400                              |00ed: aget-object v1, v4, v0
+6380b2: 1f01 be4a                              |00ef: check-cast v1, Ljava/lang/Boolean; // type@4abe
+6380b6: 1a00 9fce                              |00f1: const-string v0, "key_audio_microphone_present" // string@ce9f
+6380ba: 6e30 8002 0301                         |00f3: invoke-virtual {v3, v0, v1}, LX/00vy;.A0n:(Ljava/lang/String;Ljava/lang/Boolean;)V // method@0280
+6380c0: 1300 1500                              |00f6: const/16 v0, #int 21 // #15
+6380c4: 7120 3a6e 4000                         |00f8: invoke-static {v0, v4}, LX/0Uiy;.A01:(I[Ljava/lang/Object;)Ljava/lang/String; // method@6e3a
+6380ca: 0c01                                   |00fb: move-result-object v1
+6380cc: 1a00 3dcf                              |00fc: const-string v0, "key_opengles_deqp_test_date" // string@cf3d
+6380d0: 6e30 8302 0301                         |00fe: invoke-virtual {v3, v0, v1}, LX/00vy;.A0q:(Ljava/lang/String;Ljava/lang/String;)V // method@0283
+6380d6: 1300 1600                              |0101: const/16 v0, #int 22 // #16
+6380da: 4601 0400                              |0103: aget-object v1, v4, v0
+6380de: 1f01 be4a                              |0105: check-cast v1, Ljava/lang/Boolean; // type@4abe
+6380e2: 1a00 3ccf                              |0107: const-string v0, "key_opengles_android_extension_pack_supported" // string@cf3c
+6380e6: 6e30 8002 0301                         |0109: invoke-virtual {v3, v0, v1}, LX/00vy;.A0n:(Ljava/lang/String;Ljava/lang/Boolean;)V // method@0280
+6380ec: 1300 1700                              |010c: const/16 v0, #int 23 // #17
+6380f0: 7120 3a6e 4000                         |010e: invoke-static {v0, v4}, LX/0Uiy;.A01:(I[Ljava/lang/Object;)Ljava/lang/String; // method@6e3a
+6380f6: 0c01                                   |0111: move-result-object v1
+
+===== classes8.txt LX/0cby;->A00 target_line=1581436 =====
+STRINGS: display_name | display_refresh_rate | hdr_desired_max_luminance | hdr_desired_min_luminance | , | hdr_supported_types | is_hdr | is_hdr_sdr_ratio_available | hdr_sdr_ratio | 2160p@24 | 2160p@25 | 2160p@30 | 2160p@60 | 1080p@24 | 1080p@25 | 1080p@30
+82230e: 6e30 b7ce 5200                         |0057: invoke-virtual {v2, v5, v0}, Landroid/util/ArrayMap;.put:(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object; // method@ceb7
+822314: 7210 94d0 0600                         |005a: invoke-interface {v6}, Landroid/view/WindowManager;.getDefaultDisplay:()Landroid/view/Display; // method@d094
+82231a: 0c06                                   |005d: move-result-object v6
+82231c: 1a01 cfc5                              |005e: const-string v1, "display_name" // string@c5cf
+822320: 6e10 f8ce 0600                         |0060: invoke-virtual {v6}, Landroid/view/Display;.getName:()Ljava/lang/String; // method@cef8
+822326: 0c00                                   |0063: move-result-object v0
+822328: 6e30 b7ce 1200                         |0064: invoke-virtual {v2, v1, v0}, Landroid/util/ArrayMap;.put:(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object; // method@ceb7
+82232e: 6e10 fbce 0600                         |0067: invoke-virtual {v6}, Landroid/view/Display;.getRefreshRate:()F // method@cefb
+822334: 0a00                                   |006a: move-result v0
+822336: 7110 f9e9 0000                         |006b: invoke-static {v0}, Ljava/lang/Float;.valueOf:(F)Ljava/lang/Float; // method@e9f9
+82233c: 0c01                                   |006e: move-result-object v1
+82233e: 1a00 d1c5                              |006f: const-string v0, "display_refresh_rate" // string@c5d1
+822342: 6e30 b7ce 0201                         |0071: invoke-virtual {v2, v0, v1}, Landroid/util/ArrayMap;.put:(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object; // method@ceb7
+822348: 6e10 f7ce 0600                         |0074: invoke-virtual {v6}, Landroid/view/Display;.getMode:()Landroid/view/Display$Mode; // method@cef7
+82234e: 0c00                                   |0077: move-result-object v0
+822350: 6e10 43ea 0000                         |0078: invoke-virtual {v0}, Ljava/lang/Object;.toString:()Ljava/lang/String; // method@ea43
+822356: 0c01                                   |007b: move-result-object v1
+822358: 1300 3301                              |007c: const/16 v0, #int 307 // #133
+82235c: 7110 2107 0000                         |007e: invoke-static {v0}, LX/0213;.A00:(I)Ljava/lang/String; // method@0721
+822362: 0c00                                   |0081: move-result-object v0
+822364: 6e30 b7ce 0201                         |0082: invoke-virtual {v2, v0, v1}, Landroid/util/ArrayMap;.put:(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object; // method@ceb7
+82236a: 6e10 f5ce 0600                         |0085: invoke-virtual {v6}, Landroid/view/Display;.getHdrCapabilities:()Landroid/view/Display$HdrCapabilities; // method@cef5
+822370: 0c05                                   |0088: move-result-object v5
+822372: 3805 3400                              |0089: if-eqz v5, 00bd // +0034
+822376: 6e10 f1ce 0500                         |008b: invoke-virtual {v5}, Landroid/view/Display$HdrCapabilities;.getDesiredMaxLuminance:()F // method@cef1
+82237c: 0a00                                   |008e: move-result v0
+82237e: 7110 f9e9 0000                         |008f: invoke-static {v0}, Ljava/lang/Float;.valueOf:(F)Ljava/lang/Float; // method@e9f9
+822384: 0c01                                   |0092: move-result-object v1
+822386: 1a00 e3ce                              |0093: const-string v0, "hdr_desired_max_luminance" // string@cee3
+82238a: 6e30 b7ce 0201                         |0095: invoke-virtual {v2, v0, v1}, Landroid/util/ArrayMap;.put:(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object; // method@ceb7
+822390: 6e10 f2ce 0500                         |0098: invoke-virtual {v5}, Landroid/view/Display$HdrCapabilities;.getDesiredMinLuminance:()F // method@cef2
+822396: 0a00                                   |009b: move-result v0
+822398: 7110 f9e9 0000                         |009c: invoke-static {v0}, Ljava/lang/Float;.valueOf:(F)Ljava/lang/Float; // method@e9f9
+82239e: 0c01                                   |009f: move-result-object v1
+8223a0: 1a00 e4ce                              |00a0: const-string v0, "hdr_desired_min_luminance" // string@cee4
+8223a4: 6e30 b7ce 0201                         |00a2: invoke-virtual {v2, v0, v1}, Landroid/util/ArrayMap;.put:(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object; // method@ceb7
+8223aa: 1a01 da01                              |00a5: const-string v1, "," // string@01da
+8223ae: 3434 4000                              |00a7: if-lt v4, v3, 00e7 // +0040
+8223b2: 6e10 f7ce 0600                         |00a9: invoke-virtual {v6}, Landroid/view/Display;.getMode:()Landroid/view/Display$Mode; // method@cef7
+8223b8: 0c00                                   |00ac: move-result-object v0
+8223ba: 6e10 f4ce 0000                         |00ad: invoke-virtual {v0}, Landroid/view/Display$Mode;.getSupportedHdrTypes:()[I // method@cef4
+8223c0: 0c00                                   |00b0: move-result-object v0
+8223c2: 7110 9512 0000                         |00b1: invoke-static {v0}, LX/04l9;.A0R:(Ljava/lang/Object;)V // method@1295
+8223c8: 7120 3d0b 0100                         |00b4: invoke-static {v1, v0}, LX/02oI;.A0C:(Ljava/lang/CharSequence;[I)Ljava/lang/String; // method@0b3d
+8223ce: 0c01                                   |00b7: move-result-object v1
+8223d0: 1a00 e6ce                              |00b8: const-string v0, "hdr_supported_types" // string@cee6
+8223d4: 6e30 b7ce 0201                         |00ba: invoke-virtual {v2, v0, v1}, Landroid/util/ArrayMap;.put:(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object; // method@ceb7
+8223da: 6e10 fdce 0600                         |00bd: invoke-virtual {v6}, Landroid/view/Display;.isHdr:()Z // method@cefd
+8223e0: 0a00                                   |00c0: move-result v0
+8223e2: 7110 b8e9 0000                         |00c1: invoke-static {v0}, Ljava/lang/Boolean;.valueOf:(Z)Ljava/lang/Boolean; // method@e9b8
+8223e8: 0c01                                   |00c4: move-result-object v1
+8223ea: 1a00 acd2                              |00c5: const-string v0, "is_hdr" // string@d2ac
+8223ee: 6e30 b7ce 0201                         |00c7: invoke-virtual {v2, v0, v1}, Landroid/util/ArrayMap;.put:(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object; // method@ceb7
+8223f4: 3434 1c00                              |00ca: if-lt v4, v3, 00e6 // +001c
+8223f8: 6e10 fece 0600                         |00cc: invoke-virtual {v6}, Landroid/view/Display;.isHdrSdrRatioAvailable:()Z // method@cefe
+8223fe: 0a00                                   |00cf: move-result v0
+822400: 7110 b8e9 0000                         |00d0: invoke-static {v0}, Ljava/lang/Boolean;.valueOf:(Z)Ljava/lang/Boolean; // method@e9b8
+822406: 0c01                                   |00d3: move-result-object v1
+822408: 1a00 add2                              |00d4: const-string v0, "is_hdr_sdr_ratio_available" // string@d2ad
+82240c: 6e30 b7ce 0201                         |00d6: invoke-virtual {v2, v0, v1}, Landroid/util/ArrayMap;.put:(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object; // method@ceb7
+822412: 6e10 f6ce 0600                         |00d9: invoke-virtual {v6}, Landroid/view/Display;.getHdrSdrRatio:()F // method@cef6
+822418: 0a00                                   |00dc: move-result v0
+82241a: 7110 f9e9 0000                         |00dd: invoke-static {v0}, Ljava/lang/Float;.valueOf:(F)Ljava/lang/Float; // method@e9f9
+822420: 0c01                                   |00e0: move-result-object v1
+822422: 1a00 e5ce                              |00e1: const-string v0, "hdr_sdr_ratio" // string@cee5
+822426: 6e30 b7ce 0201                         |00e3: invoke-virtual {v2, v0, v1}, Landroid/util/ArrayMap;.put:(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object; // method@ceb7
+82242c: 1102                                   |00e6: return-object v2
+82242e: 6e10 f3ce 0500                         |00e7: invoke-virtual {v5}, Landroid/view/Display$HdrCapabilities;.getSupportedHdrTypes:()[I // method@cef3
+822434: 0c00                                   |00ea: move-result-object v0
+822436: 28c6                                   |00eb: goto 00b1 // -003a
+822438: 7110 dd04 0900                         |00ec: invoke-static {v9}, LX/01J3;.A08:(Landroid/content/Context;)Landroid/util/DisplayMetrics; // method@04dd
+82243e: 0c01                                   |00ef: move-result-object v1
+822440: 7210 94d0 0600                         |00f0: invoke-interface {v6}, Landroid/view/WindowManager;.getDefaultDisplay:()Landroid/view/Display; // method@d094
+822446: 0c00                                   |00f3: move-result-object v0
+822448: 6e20 f9ce 1000                         |00f4: invoke-virtual {v0, v1}, Landroid/view/Display;.getRealMetrics:(Landroid/util/DisplayMetrics;)V // method@cef9
+82244e: 5210 8fe3                              |00f7: iget v0, v1, Landroid/util/DisplayMetrics;.widthPixels:I // field@e38f
+822452: 7110 0cea 0000                         |00f9: invoke-static {v0}, Ljava/lang/Integer;.valueOf:(I)Ljava/lang/Integer; // method@ea0c
+822458: 0c00                                   |00fc: move-result-object v0
+82245a: 6e30 b7ce 8200                         |00fd: invoke-virtual {v2, v8, v0}, Landroid/util/ArrayMap;.put:(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object; // method@ceb7
+822460: 5210 8de3                              |0100: iget v0, v1, Landroid/util/DisplayMetrics;.heightPixels:I // field@e38d
+822464: 7110 0cea 0000                         |0102: invoke-static {v0}, Ljava/lang/Integer;.valueOf:(I)Ljava/lang/Integer; // method@ea0c
+82246a: 0c00                                   |0105: move-result-object v0
+82246c: 6e30 b7ce 7200                         |0106: invoke-virtual {v2, v7, v0}, Landroid/util/ArrayMap;.put:(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object; // method@ceb7
+822472: 5210 8be3                              |0109: iget v0, v1, Landroid/util/DisplayMetrics;.density:F // field@e38b
+822476: 2900 48ff                              |010b: goto/16 0053 // -00b8
+      catches       : (none)
+      positions     :
+      locals        :
+
+    #3              : (in LX/0cby;)
+      name          : 'A01'
+      type          : '(Landroid/media/MediaCodecInfo$CodecCapabilities;)Ljava/util/Map;'
+      access        : 0x0019 (PUBLIC STATIC FINAL)
+      method_idx    : 36019
+      code          -
+      registers     : 16
+      ins           : 1
+      outs          : 3
+      insns size    : 201 16-bit code units
+675a70:                                        |[675a70] X.0cby.A01:(Landroid/media/MediaCodecInfo$CodecCapabilities;)Ljava/util/Map;
+675a80: 6001 72e3                              |0000: sget v1, Landroid/os/Build$VERSION;.SDK_INT:I // field@e372
+675a84: 1300 1d00                              |0002: const/16 v0, #int 29 // #1d
+675a88: 3401 c200                              |0004: if-lt v1, v0, 00c6 // +00c2
+675a8c: 6e10 bfcc 0f00                         |0006: invoke-virtual {v15}, Landroid/media/MediaCodecInfo$CodecCapabilities;.getVideoCapabilities:()Landroid/media/MediaCodecInfo$VideoCapabilities; // method@ccbf
+675a92: 0c00                                   |0009: move-result-object v0
+675a94: 3800 bc00                              |000a: if-eqz v0, 00c6 // +00bc
+675a98: 6e10 cdcc 0000                         |000c: invoke-virtual {v0}, Landroid/media/MediaCodecInfo$VideoCapabilities;.getSupportedPerformancePoints:()Ljava/util/List; // method@cccd
+675a9e: 0c01                                   |000f: move-result-object v1
+675aa0: 3801 b600                              |0010: if-eqz v1, 00c6 // +00b6
+675aa4: 1a02 b10a                              |0012: const-string v2, "2160p@24" // string@0ab1
+675aa8: 6200 69e3                              |0014: sget-object v0, Landroid/media/MediaCodecInfo$VideoCapabilities$PerformancePoint;.UHD_24:Landroid/media/MediaCodecInfo$VideoCapabilities$PerformancePoint; // field@e369
+675aac: 7120 2300 0200                         |0016: invoke-static {v2, v0}, LX/000H;.A0Z:(Ljava/lang/Object;Ljava/lang/Object;)LX/04oE; // method@0023
+675ab2: 0c04                                   |0019: move-result-object v4
+675ab4: 1a02 b20a                              |001a: const-string v2, "2160p@25" // string@0ab2
+675ab8: 6200 6ae3                              |001c: sget-object v0, Landroid/media/MediaCodecInfo$VideoCapabilities$PerformancePoint;.UHD_25:Landroid/media/MediaCodecInfo$VideoCapabilities$PerformancePoint; // field@e36a
+675abc: 7120 2300 0200                         |001e: invoke-static {v2, v0}, LX/000H;.A0Z:(Ljava/lang/Object;Ljava/lang/Object;)LX/04oE; // method@0023
+675ac2: 0c05                                   |0021: move-result-object v5
+675ac4: 1a02 b30a                              |0022: const-string v2, "2160p@30" // string@0ab3
+675ac8: 6200 6be3                              |0024: sget-object v0, Landroid/media/MediaCodecInfo$VideoCapabilities$PerformancePoint;.UHD_30:Landroid/media/MediaCodecInfo$VideoCapabilities$PerformancePoint; // field@e36b
+675acc: 7120 2300 0200                         |0026: invoke-static {v2, v0}, LX/000H;.A0Z:(Ljava/lang/Object;Ljava/lang/Object;)LX/04oE; // method@0023
+675ad2: 0c06                                   |0029: move-result-object v6
+675ad4: 1a02 b40a                              |002a: const-string v2, "2160p@60" // string@0ab4
+675ad8: 6200 6ce3                              |002c: sget-object v0, Landroid/media/MediaCodecInfo$VideoCapabilities$PerformancePoint;.UHD_60:Landroid/media/MediaCodecInfo$VideoCapabilities$PerformancePoint; // field@e36c
+675adc: 7120 2300 0200                         |002e: invoke-static {v2, v0}, LX/000H;.A0Z:(Ljava/lang/Object;Ljava/lang/Object;)LX/04oE; // method@0023
+675ae2: 0c07                                   |0031: move-result-object v7
+675ae4: 1a02 a20a                              |0032: const-string v2, "1080p@24" // string@0aa2
+675ae8: 6200 61e3                              |0034: sget-object v0, Landroid/media/MediaCodecInfo$VideoCapabilities$PerformancePoint;.FHD_24:Landroid/media/MediaCodecInfo$VideoCapabilities$PerformancePoint; // field@e361
+675aec: 7120 2300 0200                         |0036: invoke-static {v2, v0}, LX/000H;.A0Z:(Ljava/lang/Object;Ljava/lang/Object;)LX/04oE; // method@0023
+675af2: 0c08                                   |0039: move-result-object v8
+675af4: 1a02 a30a                              |003a: const-string v2, "1080p@25" // string@0aa3
+675af8: 6200 62e3                              |003c: sget-object v0, Landroid/media/MediaCodecInfo$VideoCapabilities$PerformancePoint;.FHD_25:Landroid/media/MediaCodecInfo$VideoCapabilities$PerformancePoint; // field@e362
+675afc: 7120 2300 0200                         |003e: invoke-static {v2, v0}, LX/000H;.A0Z:(Ljava/lang/Object;Ljava/lang/Object;)LX/04oE; // method@0023
+675b02: 0c09                                   |0041: move-result-object v9
+675b04: 1a02 a40a                              |0042: const-string v2, "1080p@30" // string@0aa4
+675b08: 6200 63e3                              |0044: sget-object v0, Landroid/media/MediaCodecInfo$VideoCapabilities$PerformancePoint;.FHD_30:Landroid/media/MediaCodecInfo$VideoCapabilities$PerformancePoint; // field@e363
