@@ -1,0 +1,130 @@
+name: IG 439 HDR Clips Discover Stream R19j
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - .github/workflows/ig-hdr-clips-discover-stream-r19j.yml
+
+permissions:
+  contents: write
+
+jobs:
+  trace:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    env:
+      APK_NAME: instagram-piko-v439.0.0.37.89-arm64-v8a.apk
+      APK_SHA256: 4015b171ac59f3e7172134d194ec2dcf701f64c3339f127c19d7a04c13d529c8
+    steps:
+      - uses: actions/checkout@v6
+        with: {fetch-depth: 0}
+      - uses: actions/setup-java@v5
+        with: {distribution: zulu, java-version: '21'}
+      - name: Fetch exact APK and disassemble target plus reference dexes
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          set -euo pipefail
+          mkdir -p work/apk work/smali research/generated
+          gh release download 8 --pattern "$APK_NAME" --dir work
+          echo "$APK_SHA256  work/$APK_NAME" | sha256sum -c -
+          gh release download 3.0.10 --repo baksmali/smali --pattern 'baksmali-3.0.10-fat.jar' --dir work
+          unzip -q "work/$APK_NAME" 'classes*.dex' -d work/apk
+          : > work/hitdex.txt
+          for d in work/apk/classes*.dex; do
+            if [ "$(basename "$d")" = classes15.dex ] || strings -a "$d" | grep -Fq 'LX/04tC;'; then basename "$d" >> work/hitdex.txt; fi
+          done
+          sort -u work/hitdex.txt -o work/hitdex.txt
+          echo HITDEX; cat work/hitdex.txt
+          while read d; do [ -n "$d" ] || continue; n="${d%.dex}"; java -jar work/baksmali-3.0.10-fat.jar d "work/apk/$d" -o "work/smali/$n" >/dev/null & done < work/hitdex.txt
+          wait
+      - name: Extract exact builder callers and wire writes
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          from pathlib import Path
+          import re
+          root=Path('work/smali'); out=Path('research/generated/instagram_439_hdr_clips_discover_stream_r19j.txt')
+          target_cls='LX/04tC;'
+          target_sig='A0A(Landroid/content/Context;LX/0Aev;LX/0Iwp;LX/0Ciw;Lcom/instagram/common/session/UserSession;LX/08Rs;Ljava/lang/Integer;Ljava/lang/Long;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/util/List;Lkotlin/jvm/functions/Function0;ZZZZZZZZZZZ)LX/02ue;'
+          class_re=re.compile(r'^\.class\s+.*\s+(L[^;]+;)$')
+          str_re=re.compile(r'^\s*const-string(?:/jumbo)?\s+([^,]+),\s+"(.*)"')
+          invoke_re=re.compile(r'invoke-\w+(?:/range)?\s+\{[^}]*\},\s+(L[^;]+;)->([^\(]+)\(([^)]*)\)(\S+)')
+
+          def methods(p):
+            ls=p.read_text(errors='replace').splitlines(); i=0
+            while i<len(ls):
+              if not ls[i].startswith('.method'): i+=1; continue
+              s=i; sig=ls[i]; i+=1
+              while i<len(ls) and not ls[i].startswith('.end method'): i+=1
+              yield sig,ls[s:min(i+1,len(ls))]
+              i+=1
+          def cls_of(p):
+            for x in p.read_text(errors='replace').splitlines()[:40]:
+              m=class_re.match(x)
+              if m:return m.group(1)
+            return '?'
+
+          tf=None
+          for p in root.rglob('04tC.smali'):
+            if cls_of(p)==target_cls: tf=p; break
+          if not tf: raise SystemExit('LX/04tC not found')
+          body=None; sig=None
+          for s,b in methods(tf):
+            if ' A0A(' in s: sig=s; body=b; break
+          if body is None: raise SystemExit('A0A not found')
+          text='\n'.join(body)
+          strings=[m.group(2) for line in body if (m:=str_re.match(line))]
+          O=['Instagram 439 HDR Clips discover stream R19j','============================================','',f'TARGET_FILE={tf}',f'TARGET_SIG={sig}',f'STRINGS={strings}','', '===== EXACT LX/04tC.A0A =====']+body+['']
+
+          # MobileConfig reads and request setter contexts.
+          O += ['===== MOBILECONFIG / WIRE WRITE CONTEXTS =====','']
+          for i,line in enumerate(body):
+            if ('MobileConfigUnsafeContext;->' in line or 'LX/03u7;->' in line or '->A0G:Ljava/lang/String;' in line or 'clips/discover/stream/' in line or 'clips/homecoming/' in line):
+              a=max(0,i-10); z=min(len(body),i+11)
+              O += [f'--- target lines {a+1}-{z} ---']+body[a:z]+['']
+
+          # direct callers across reference dexes
+          needle='LX/04tC;->'+target_sig
+          callers=[]
+          for p in root.rglob('*.smali'):
+            cls=cls_of(p)
+            for s,b in methods(p):
+              t='\n'.join(b)
+              if needle in t:
+                ss=[m.group(2) for line in b if (m:=str_re.match(line))]
+                rel=[x for x in ss if any(k in x.lower() for k in ('clip','reel','feed','media','rank','session','source','module','quality','hdr','codec','dash','device','performance','playback','delivery'))]
+                callers.append((cls,s,str(p),rel,b))
+          O += [f'===== DIRECT CALLERS ({len(callers)}) =====','']
+          for cls,s,p,rel,b in callers:
+            O += [f'--- {cls} {s}',f'FILE={p}',f'RELEVANT_STRINGS={rel}']+b+['']
+
+          # callee methods in disassembled dexes that look like request/capability helpers
+          invs=[]
+          for line in body:
+            m=invoke_re.search(line)
+            if m: invs.append((m.group(1),m.group(2),m.group(3),m.group(4)))
+          O += ['===== REQUEST-RELEVANT CALLEES =====','']
+          for ic,im,ia,ir in invs:
+            if ic.startswith(('Ljava/','Landroid/','Lkotlin/')): continue
+            for p in root.rglob('*.smali'):
+              if cls_of(p)!=ic: continue
+              for s,b in methods(p):
+                if re.search(r'\s'+re.escape(im)+r'\('+re.escape(ia)+r'\)'+re.escape(ir),s):
+                  tt='\n'.join(b).lower()
+                  if any(k in tt for k in ('lx/03u7;','mobileconfigunsafecontext','hdr','codec','av1','hevc','dash','quality','device','playback','delivery','capabil','media')):
+                    O += [f'--- {ic} {s}',f'FILE={p}']+b+['']
+              break
+          result='\n'.join(O)
+          if len(result)>950000: result=result[:950000]+'\n[TRUNCATED]\n'
+          out.write_text(result,encoding='utf-8')
+          print(result[:300000]); print('callers',len(callers),'bytes',out.stat().st_size)
+          PY
+      - name: Commit R19j report
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add research/generated/instagram_439_hdr_clips_discover_stream_r19j.txt
+          if ! git diff --cached --quiet; then git commit -m 'Add exact Clips discover stream trace R19j'; git pull --rebase origin main; git push origin HEAD:main; fi
