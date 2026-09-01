@@ -1,0 +1,245 @@
+name: Build IG HDR Test R5
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - .github/workflows/build-ig-hdr-test-r5.yml
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    env:
+      BASE_APK: instagram-piko-v439.0.0.37.89-arm64-v8a.apk
+      BASE_SHA256: 4015b171ac59f3e7172134d194ec2dcf701f64c3339f127c19d7a04c13d529c8
+      OUT_APK: instagram-piko-v439.0.0.37.89-hdr-test-r5.apk
+      TAG: ig-hdr-test-r5
+    steps:
+      - uses: actions/checkout@v6
+      - uses: actions/setup-java@v5
+        with:
+          distribution: zulu
+          java-version: '21'
+
+      - name: Download exact R8 and tools
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          set -euo pipefail
+          mkdir -p work/smali2 out
+          gh release download 8 --pattern "$BASE_APK" --dir work
+          echo "$BASE_SHA256  work/$BASE_APK" | sha256sum -c -
+          sudo apt-get update -qq
+          sudo apt-get install -y -qq smali libbcprov-java
+          unzip -p "work/$BASE_APK" classes2.dex > work/classes2.dex
+          baksmali d work/classes2.dex -o work/smali2
+          test -f work/smali2/X/08oh.smali
+
+      - name: Inject pre/post representation-tree logger
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          from pathlib import Path
+          p=Path('work/smali2/X/08oh.smali')
+          lines=p.read_text().splitlines()
+          needle='.method public final A0b(Ljava/util/List;)Ljava/util/List;'
+          starts=[i for i,l in enumerate(lines) if l.strip()==needle]
+          if len(starts)!=1:
+              raise SystemExit(f'A0b target count={len(starts)}')
+          if any('hdrTreeDump439' in l for l in lines):
+              raise SystemExit('helper already exists')
+          s=starts[0]
+          e=next(i for i in range(s+1,len(lines)) if lines[i].startswith('.end method'))
+          directive=next(i for i in range(s+1,min(s+12,e)) if lines[i].strip().startswith(('.registers','.locals')))
+          lines[directive+1:directive+1]=[
+            '',
+            '    const-string v0, "IG_HDR_PREFILTER"',
+            '    invoke-static {v0, p1}, LX/08oh;->hdrTreeDump439(Ljava/lang/String;Ljava/util/List;)V',
+            '    invoke-static {p0}, LX/08oh;->hdrFilterFlags439(LX/08oh;)V',
+            ''
+          ]
+          e += 5
+          out=[]; post=0; bypass=0
+          for l in lines[s:e+1]:
+              st=l.strip()
+              indent=l[:len(l)-len(l.lstrip())]
+              if st=='return-object v4':
+                  out.extend([
+                    f'{indent}const-string v0, "IG_HDR_POSTFILTER"',
+                    f'{indent}invoke-static {{v0, v4}}, LX/08oh;->hdrTreeDump439(Ljava/lang/String;Ljava/util/List;)V'
+                  ])
+                  post+=1
+              elif st in ('return-object v11','return-object p1'):
+                  out.extend([
+                    f'{indent}const-string v0, "IG_HDR_BYPASS"',
+                    f'{indent}invoke-static {{v0, p1}}, LX/08oh;->hdrTreeDump439(Ljava/lang/String;Ljava/util/List;)V'
+                  ])
+                  bypass+=1
+              out.append(l)
+          if post!=1 or bypass!=1:
+              raise SystemExit(f'expected post=1 bypass=1, got post={post} bypass={bypass}')
+          lines[s:e+1]=out
+
+          helper=[
+            '',
+            '.method private static hdrTreeDump439(Ljava/lang/String;Ljava/util/List;)V',
+            '    .registers 12',
+            '',
+            '    move-object/from16 v0, p0',
+            '    move-object/from16 v1, p1',
+            '    if-eqz v1, :done',
+            '    invoke-interface {v1}, Ljava/util/List;->iterator()Ljava/util/Iterator;',
+            '    move-result-object v2',
+            '',
+            ':top_loop',
+            '    invoke-interface {v2}, Ljava/util/Iterator;->hasNext()Z',
+            '    move-result v3',
+            '    if-eqz v3, :done',
+            '    invoke-interface {v2}, Ljava/util/Iterator;->next()Ljava/lang/Object;',
+            '    move-result-object v4',
+            '    check-cast v4, LX/08tp;',
+            '    if-eqz v4, :top_loop',
+            '    iget-object v5, v4, LX/08tp;->A03:Ljava/util/List;',
+            '    if-eqz v5, :top_loop',
+            '    invoke-interface {v5}, Ljava/util/List;->iterator()Ljava/util/Iterator;',
+            '    move-result-object v5',
+            '',
+            ':adapt_loop',
+            '    invoke-interface {v5}, Ljava/util/Iterator;->hasNext()Z',
+            '    move-result v3',
+            '    if-eqz v3, :top_loop',
+            '    invoke-interface {v5}, Ljava/util/Iterator;->next()Ljava/lang/Object;',
+            '    move-result-object v6',
+            '    check-cast v6, LX/08ti;',
+            '    if-eqz v6, :adapt_loop',
+            '    iget-object v7, v6, LX/08ti;->A0E:Ljava/util/List;',
+            '    if-eqz v7, :adapt_loop',
+            '    invoke-interface {v7}, Ljava/util/List;->iterator()Ljava/util/Iterator;',
+            '    move-result-object v7',
+            '',
+            ':repr_loop',
+            '    invoke-interface {v7}, Ljava/util/Iterator;->hasNext()Z',
+            '    move-result v3',
+            '    if-eqz v3, :adapt_loop',
+            '    invoke-interface {v7}, Ljava/util/Iterator;->next()Ljava/lang/Object;',
+            '    move-result-object v8',
+            '    check-cast v8, LX/096x;',
+            '    if-eqz v8, :repr_loop',
+            '    iget-object v9, v8, LX/096x;->A03:LX/03oR;',
+            '    if-eqz v9, :repr_loop',
+            '    invoke-static {v9}, LX/03oR;->A00(LX/03oR;)Ljava/lang/String;',
+            '    move-result-object v9',
+            '    invoke-static {v0, v9}, Landroid/util/Log;->i(Ljava/lang/String;Ljava/lang/String;)I',
+            '    goto :repr_loop',
+            '',
+            ':done',
+            '    return-void',
+            '.end method',
+            '',
+            '.method private static hdrFilterFlags439(LX/08oh;)V',
+            '    .registers 5',
+            '',
+            '    iget-object v0, p0, LX/08oh;->A00:Lcom/facebook/video/heroplayer/setting/HeroPlayerSetting;',
+            '    if-eqz v0, :flags_done',
+            '    iget-boolean v1, v0, Lcom/facebook/video/heroplayer/setting/HeroPlayerSetting;->A23:Z',
+            '    iget-object v0, v0, Lcom/facebook/video/heroplayer/setting/HeroPlayerSetting;->A1R:LX/05xw;',
+            '    const/4 v2, 0x0',
+            '    if-eqz v0, :flags_build',
+            '    iget-boolean v2, v0, LX/05xw;->A74:Z',
+            '',
+            ':flags_build',
+            '    new-instance v0, Ljava/lang/StringBuilder;',
+            '    invoke-direct {v0}, Ljava/lang/StringBuilder;-><init>()V',
+            '    const-string v3, "A23="',
+            '    invoke-virtual {v0, v3}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;',
+            '    invoke-virtual {v0, v1}, Ljava/lang/StringBuilder;->append(Z)Ljava/lang/StringBuilder;',
+            '    const-string v3, " A74="',
+            '    invoke-virtual {v0, v3}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;',
+            '    invoke-virtual {v0, v2}, Ljava/lang/StringBuilder;->append(Z)Ljava/lang/StringBuilder;',
+            '    invoke-virtual {v0}, Ljava/lang/Object;->toString()Ljava/lang/String;',
+            '    move-result-object v0',
+            '    const-string v1, "IG_HDR_FILTER_FLAGS"',
+            '    invoke-static {v1, v0}, Landroid/util/Log;->i(Ljava/lang/String;Ljava/lang/String;)I',
+            '',
+            ':flags_done',
+            '    return-void',
+            '.end method',
+            ''
+          ]
+          lines += helper
+          p.write_text('\n'.join(lines)+'\n')
+          print('patched X.08oh.A0b pre/post/bypass representation logger')
+          PY
+          smali a work/smali2 -o work/classes2-patched.dex
+          test -s work/classes2-patched.dex
+
+      - name: Repack align and sign with exact R8 key
+        run: |
+          set -euo pipefail
+          cp "work/$BASE_APK" work/unsigned.apk
+          zip -q -d work/unsigned.apk classes2.dex || true
+          zip -q -d work/unsigned.apk 'META-INF/*' || true
+          cp work/classes2-patched.dex work/classes2.dex
+          (cd work && zip -q -0 unsigned.apk classes2.dex)
+          ZIPALIGN="$(find "$ANDROID_HOME/build-tools" -type f -name zipalign | sort -V | tail -1)"
+          "$ZIPALIGN" -f -p 4 work/unsigned.apk work/aligned.apk
+          BCJAR="$(find /usr/share/java -maxdepth 1 -type f -name 'bcprov*.jar' | head -1)"
+          test -n "$BCJAR"
+          keytool -importkeystore \
+            -srckeystore ks.keystore -srcstoretype BKS -srcstorepass 123456789 \
+            -srcalias andrewliang -srckeypass 123456789 \
+            -destkeystore work/ks-r8.p12 -deststoretype PKCS12 \
+            -deststorepass 123456789 -destkeypass 123456789 -destalias andrewliang \
+            -providerclass org.bouncycastle.jce.provider.BouncyCastleProvider \
+            -providerpath "$BCJAR" -noprompt
+          java -jar bin/apksigner.jar sign \
+            --ks work/ks-r8.p12 --ks-type PKCS12 \
+            --ks-pass pass:123456789 --key-pass pass:123456789 \
+            --ks-key-alias andrewliang \
+            --out "out/$OUT_APK" work/aligned.apk
+          rm -f "out/$OUT_APK.idsig"
+
+      - name: Verify instrumentation and signing identity
+        run: |
+          set -euo pipefail
+          java -jar bin/apksigner.jar verify --verbose --print-certs "out/$OUT_APK" | tee out/verify.txt
+          ORIG_CERT=$(java -jar bin/apksigner.jar verify --print-certs "work/$BASE_APK" | sed -n 's/^Signer #1 certificate SHA-256 digest: //p' | head -1)
+          NEW_CERT=$(java -jar bin/apksigner.jar verify --print-certs "out/$OUT_APK" | sed -n 's/^Signer #1 certificate SHA-256 digest: //p' | head -1)
+          printf 'original_cert=%s\nnew_cert=%s\n' "$ORIG_CERT" "$NEW_CERT" | tee out/cert-match.txt
+          test -n "$ORIG_CERT" && test "$ORIG_CERT" = "$NEW_CERT"
+          unzip -p "out/$OUT_APK" classes2.dex > work/verify-classes2.dex
+          rm -rf work/verify-smali2
+          baksmali d work/verify-classes2.dex -o work/verify-smali2
+          grep -q 'IG_HDR_PREFILTER' work/verify-smali2/X/08oh.smali
+          grep -q 'IG_HDR_POSTFILTER' work/verify-smali2/X/08oh.smali
+          grep -q 'IG_HDR_BYPASS' work/verify-smali2/X/08oh.smali
+          grep -q 'IG_HDR_FILTER_FLAGS' work/verify-smali2/X/08oh.smali
+          sha256sum "out/$OUT_APK" | tee out/sha256.txt
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: instagram-hdr-test-r5
+          path: |
+            out/${{ env.OUT_APK }}
+            out/sha256.txt
+            out/verify.txt
+            out/cert-match.txt
+          retention-days: 14
+
+      - name: Publish prerelease
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          set -euo pipefail
+          NOTES='R5 diagnostic: exact Release 8 Instagram 439. Observation-only probe at X.08oh.A0b, an upstream HeroPlayer representation-tree filter before the renderer. Logs every X.03oR Format at method entry (IG_HDR_PREFILTER), transformed return (IG_HDR_POSTFILTER), untouched bypass return (IG_HDR_BYPASS), plus A23/A74 filter booleans (IG_HDR_FILTER_FLAGS). No selection or playback behavior is changed. Same signing certificate as Release 8, verified.'
+          if gh release view "$TAG" >/dev/null 2>&1; then
+            gh release upload "$TAG" "out/$OUT_APK" out/sha256.txt out/verify.txt out/cert-match.txt --clobber
+            gh release edit "$TAG" --notes "$NOTES" --prerelease
+          else
+            gh release create "$TAG" "out/$OUT_APK" out/sha256.txt out/verify.txt out/cert-match.txt --title 'Instagram HDR Test R5' --notes "$NOTES" --prerelease
+          fi
