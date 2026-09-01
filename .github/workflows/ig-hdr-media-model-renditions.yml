@@ -1,0 +1,136 @@
+name: IG 439 HDR Media Model Renditions
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - .github/workflows/ig-hdr-media-model-renditions.yml
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  probe:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    env:
+      APK_NAME: instagram-piko-v439.0.0.37.89-arm64-v8a.apk
+      APK_SHA256: 4015b171ac59f3e7172134d194ec2dcf701f64c3339f127c19d7a04c13d529c8
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+      - name: Download and disassemble exact R8
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          mkdir -p work/dex work/dis research/generated
+          gh release download 8 --pattern "$APK_NAME" --dir work
+          echo "$APK_SHA256  work/$APK_NAME" | sha256sum -c -
+          unzip -j "work/$APK_NAME" 'classes*.dex' -d work/dex
+          DEXDUMP="$(find "$ANDROID_HOME/build-tools" -type f -name dexdump | sort -V | tail -1)"
+          for d in work/dex/classes*.dex; do
+            b="$(basename "$d" .dex)"
+            "$DEXDUMP" -d -f -h "$d" > "work/dis/$b.txt"
+          done
+      - name: Extract media model / rendition methods
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          import re
+
+          # Keep this exact-string driven so we don't get another giant fuzzy report.
+          needles = [
+            'video_versions','video_dash_manifest','dash_manifest','dash_info','manifest_url',
+            'playback_url','video_url','url_expire_at_secs','video_duration','video_codec',
+            'codec','codecs','bitrate','bandwidth','resolution','width','height','fps','frame_rate',
+            'representation','adaptation','rendition','track','quality','abr',
+            'hdr','is_hdr','hdr_type','hdr_format','hdr_source','bit_depth','bitdepth','10_bit','10bit',
+            'color_standard','color_transfer','color_range','bt2020','st2084','hlg',
+            'av01','av1','h265','hevc','vp9','dolby_vision','dolby-vision'
+          ]
+          strong = [
+            'video_versions','video_dash_manifest','dash_manifest','dash_info','manifest_url',
+            'playback_url','video_codec','hdr','is_hdr','hdr_type','bit_depth','10_bit','10bit',
+            'representation','adaptation','rendition','av01','dolby-vision'
+          ]
+
+          mh = re.compile(r'\|\[[0-9a-f]+\]\s+([^\s]+):')
+          strings = re.compile(r'const-string(?:/jumbo)?\s+[^,]+,\s+"(.*)"')
+          methods=[]
+          for p in sorted(Path('work/dis').glob('classes*.txt')):
+              lines=p.read_text(errors='replace').splitlines()
+              starts=[]; heads=[]
+              for i,l in enumerate(lines):
+                  m=mh.search(l)
+                  if m: starts.append(i); heads.append(m.group(1))
+              for j,s in enumerate(starts):
+                  e=starts[j+1] if j+1<len(starts) else len(lines)
+                  methods.append((p.name,s+1,e,heads[j],lines[s:e]))
+
+          out=[
+            'Instagram 439 media model / rendition field trace',
+            '=================================================',
+            'Exact R8 SHA256: 4015b171ac59f3e7172134d194ec2dcf701f64c3339f127c19d7a04c13d529c8',
+            ''
+          ]
+
+          # First inventory exact const-strings, grouped by method, requiring at least one strong clue.
+          matched=[]
+          for rec in methods:
+              vals=[]
+              for l in rec[4]:
+                  sm=strings.search(l)
+                  if sm:
+                      v=sm.group(1)
+                      low=v.lower()
+                      if any(n in low for n in needles): vals.append((v,l.rstrip()))
+              if vals and any(any(n in v.lower() for n in strong) for v,_ in vals):
+                  matched.append((rec,vals))
+
+          out.append(f'methods with strong media/rendition literals: {len(matched)}')
+          out.append('')
+          for rec,vals in matched[:240]:
+              p,s,e,h,b=rec
+              out.append(f'===== {p}:{s}-{e} :: {h} =====')
+              out.append('MATCHED STRINGS: ' + ' | '.join(dict.fromkeys(v for v,_ in vals)))
+              for l in b:
+                  if ('const-string' in l or 'invoke-' in l or 'new-instance' in l or
+                      'check-cast' in l or 'instance-of' in l or 'return-' in l or 'if-' in l or
+                      'LX/03oR;' in l or 'MediaFormat' in l or 'Uri;' in l or
+                      'JSONArray' in l or 'JSONObject' in l or 'JsonParser' in l or
+                      'Parser' in l or 'ImmutableList' in l):
+                      out.append(l.rstrip())
+              out.append('')
+          if len(matched)>240: out.append(f'... omitted {len(matched)-240} methods ...\n')
+
+          # Exact methods that touch Media3 Format X.03oR AND common upstream network/media strings.
+          bridge=[]
+          for rec in methods:
+              txt='\n'.join(rec[4])
+              if 'LX/03oR;' in txt and any(n in txt.lower() for n in ('manifest','video','codec','format','uri','track')):
+                  bridge.append(rec)
+          out.append(f'===== X.03oR bridge methods count={len(bridge)} =====')
+          for rec in bridge[:160]:
+              p,s,e,h,b=rec
+              out.append(f'--- {p}:{s}-{e} :: {h} ---')
+              for l in b:
+                  if ('LX/03oR;' in l or 'const-string' in l or 'invoke-' in l or 'new-instance' in l or
+                      'MediaFormat' in l or 'Uri;' in l or 'return-' in l or 'if-' in l):
+                      out.append(l.rstrip())
+              out.append('')
+          if len(bridge)>160: out.append(f'... omitted {len(bridge)-160} X.03oR bridge methods ...\n')
+
+          path=Path('research/generated/instagram_439_hdr_media_model_renditions.txt')
+          path.write_text('\n'.join(out)+'\n')
+          print(path.read_text()[:180000])
+          PY
+      - name: Commit report
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add research/generated/instagram_439_hdr_media_model_renditions.txt
+          if ! git diff --cached --quiet; then git commit -m "Trace Instagram 439 media rendition model fields"; fi
+          git pull --rebase origin main
+          git push origin HEAD:main
