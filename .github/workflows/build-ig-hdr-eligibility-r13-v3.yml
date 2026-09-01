@@ -1,0 +1,136 @@
+name: Build IG HDR Eligibility R13v3
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - .github/workflows/build-ig-hdr-eligibility-r13-v3.yml
+      - research/tools/ig_hdr_r13_patch.py
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    env:
+      BASE_APK: instagram-piko-v439.0.0.37.89-arm64-v8a.apk
+      BASE_SHA256: 4015b171ac59f3e7172134d194ec2dcf701f64c3339f127c19d7a04c13d529c8
+      OUT_APK: instagram-piko-v439.0.0.37.89-hdr-eligibility-r13v3.apk
+      TAG: ig-hdr-eligibility-r13v3
+    steps:
+      - uses: actions/checkout@v6
+      - uses: actions/setup-java@v5
+        with:
+          distribution: zulu
+          java-version: '21'
+
+      - name: Fast fetch exact APK and smali tools
+        run: |
+          set -euo pipefail
+          mkdir -p work out
+          curl -fL --retry 3 --connect-timeout 20 --max-time 180 \
+            'https://github.com/MeowGod8777/patched-apps/releases/download/8/instagram-piko-v439.0.0.37.89-arm64-v8a.apk' \
+            -o "work/$BASE_APK"
+          echo "$BASE_SHA256  work/$BASE_APK" | sha256sum -c -
+          curl -fL --retry 3 --connect-timeout 20 --max-time 120 \
+            'https://github.com/baksmali/smali/releases/download/3.0.10/baksmali-3.0.10-fat.jar' \
+            -o work/baksmali.jar
+          curl -fL --retry 3 --connect-timeout 20 --max-time 120 \
+            'https://github.com/baksmali/smali/releases/download/3.0.10/smali-3.0.10-fat.jar' \
+            -o work/smali.jar
+          for n in 2 4 12 13; do unzip -p "work/$BASE_APK" "classes${n}.dex" > "work/classes${n}.dex"; done
+
+      - name: Parallel disassemble only four target dexes
+        run: |
+          set -euo pipefail
+          for n in 2 4 12 13; do
+            java -jar work/baksmali.jar d "work/classes${n}.dex" -o "work/smali${n}" &
+          done
+          wait
+          test -f work/smali2/X/02rk.smali
+          test -f work/smali4/X/0Uiy.smali
+          test -f work/smali12/X/0hTo.smali
+          test -f work/smali13/com/instagram/feed/media/LiveTreeMediaDict.smali
+
+      - name: Apply exact R13v3 eligibility patch
+        run: |
+          set -euo pipefail
+          python3 research/tools/ig_hdr_r13_patch.py work
+
+      - name: Parallel assemble patched dexes
+        run: |
+          set -euo pipefail
+          for n in 2 4 12 13; do
+            java -jar work/smali.jar a "work/smali${n}" -o "work/classes${n}-patched.dex" &
+          done
+          wait
+
+      - name: Repack align and sign
+        run: |
+          set -euo pipefail
+          cp "work/$BASE_APK" work/unsigned.apk
+          zip -q -d work/unsigned.apk classes2.dex classes4.dex classes12.dex classes13.dex || true
+          zip -q -d work/unsigned.apk 'META-INF/*' || true
+          for n in 2 4 12 13; do cp "work/classes${n}-patched.dex" "work/classes${n}.dex"; done
+          (cd work && zip -q -0 unsigned.apk classes2.dex classes4.dex classes12.dex classes13.dex)
+          ZIPALIGN="$(find "$ANDROID_HOME/build-tools" -type f -name zipalign | sort -V | tail -1)"
+          "$ZIPALIGN" -f -p 4 work/unsigned.apk work/aligned.apk
+          sudo timeout 120 apt-get install -y -qq libbcprov-java
+          BCJAR="$(find /usr/share/java -maxdepth 1 -type f -name 'bcprov*.jar' | head -1)"
+          keytool -importkeystore \
+            -srckeystore ks.keystore -srcstoretype BKS -srcstorepass 123456789 \
+            -srcalias andrewliang -srckeypass 123456789 \
+            -destkeystore work/ks-r8.p12 -deststoretype PKCS12 \
+            -deststorepass 123456789 -destkeypass 123456789 -destalias andrewliang \
+            -providerclass org.bouncycastle.jce.provider.BouncyCastleProvider \
+            -providerpath "$BCJAR" -noprompt
+          java -jar bin/apksigner.jar sign \
+            --ks work/ks-r8.p12 --ks-type PKCS12 --ks-pass pass:123456789 \
+            --key-pass pass:123456789 --ks-key-alias andrewliang \
+            --out "out/$OUT_APK" work/aligned.apk
+          rm -f "out/$OUT_APK.idsig"
+
+      - name: Verify signer and exact patch markers
+        run: |
+          set -euo pipefail
+          unzip -t "out/$OUT_APK" >/dev/null
+          java -jar bin/apksigner.jar verify --verbose --print-certs "out/$OUT_APK" | tee out/verify.txt
+          ORIG_CERT=$(java -jar bin/apksigner.jar verify --print-certs "work/$BASE_APK" | sed -n 's/^Signer #1 certificate SHA-256 digest: //p' | head -1)
+          NEW_CERT=$(java -jar bin/apksigner.jar verify --print-certs "out/$OUT_APK" | sed -n 's/^Signer #1 certificate SHA-256 digest: //p' | head -1)
+          printf 'original_cert=%s\nnew_cert=%s\n' "$ORIG_CERT" "$NEW_CERT" | tee out/cert-match.txt
+          test -n "$ORIG_CERT" && test "$ORIG_CERT" = "$NEW_CERT"
+          for n in 2 4 12 13; do
+            unzip -p "out/$OUT_APK" "classes${n}.dex" > "work/v${n}.dex"
+            java -jar work/baksmali.jar d "work/v${n}.dex" -o "work/v${n}"
+          done
+          grep -q 'SM-S928B' work/v2/X/02rk.smali
+          grep -q 'samsung' work/v2/X/02rk.smali
+          grep -A7 -B7 'key_display_hdr_supported' work/v4/X/0Uiy.smali | grep -q 'Boolean;->TRUE'
+          grep -A7 -B7 'key_video_decoder_hdr_supported' work/v4/X/0Uiy.smali | grep -q 'Boolean;->TRUE'
+          grep -A12 -B6 'video_decoder_hdr_supported' work/v12/X/0hTo.smali | grep -q 'const/4'
+          grep -q 'IG_HDR_R13_RAW' work/v13/com/instagram/feed/media/LiveTreeMediaDict.smali
+          printf 'ua_device=SM-S928B\nua_manufacturer=samsung\nodc_display_hdr=true\nodc_decoder_hdr=true\npersisted_decoder_hdr=true\nraw_logger=IG_HDR_R13_RAW\n' | tee out/patches.txt
+          sha256sum "out/$OUT_APK" | tee out/sha256.txt
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: instagram-hdr-eligibility-r13v3
+          path: |
+            out/${{ env.OUT_APK }}
+            out/sha256.txt
+            out/verify.txt
+            out/cert-match.txt
+            out/patches.txt
+          retention-days: 14
+
+      - name: Publish prerelease
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          set -euo pipefail
+          NOTES='R13v3 concrete backend HDR eligibility patch for exact Instagram 439/Piko 3.9.0. It scopes Instagram network User-Agent identity to Galaxy S24 Ultra SM-S928B, forces ODC display/decoder HDR capability true, forces persisted video_decoder_hdr_supported true, and retains only the proven RAW video_dash_manifest logger IG_HDR_R13_RAW. Renderer, selector, MediaCodec, Surface and display path are untouched.'
+          gh release create "$TAG" "out/$OUT_APK" out/sha256.txt out/verify.txt out/cert-match.txt out/patches.txt \
+            --title 'Instagram HDR Eligibility R13v3' --notes "$NOTES" --prerelease
