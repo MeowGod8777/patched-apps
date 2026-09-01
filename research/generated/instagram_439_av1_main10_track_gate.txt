@@ -1,0 +1,11 @@
+Instagram 439 AV1 Main10 / track eligibility trace
+================================================
+APK SHA256: 4015b171ac59f3e7172134d194ec2dcf701f64c3339f127c19d7a04c13d529c8
+Runtime: V2329A selected video/av01 profile=1 Main8, 720x1280@60, BT.709 SDR.
+Goal: find code that bridges MediaCodecInfo/profile capability to AV1 representation/track selection.
+
+===== RANKED METHODS =====
+
+===== TOP BRIDGE METHOD BODIES =====
+
+===== EXACT PROFILE/CAPABILITY REFERENCES =====
