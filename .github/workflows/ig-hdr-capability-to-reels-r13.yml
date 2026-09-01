@@ -1,0 +1,210 @@
+name: IG 439 Capability To Reels Gate R13
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths: [.github/workflows/ig-hdr-capability-to-reels-r13.yml]
+
+permissions:
+  contents: write
+
+jobs:
+  trace:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    env:
+      APK_NAME: instagram-piko-v439.0.0.37.89-arm64-v8a.apk
+      APK_SHA256: 4015b171ac59f3e7172134d194ec2dcf701f64c3339f127c19d7a04c13d529c8
+    steps:
+      - uses: actions/checkout@v6
+        with: {fetch-depth: 0}
+      - uses: actions/setup-java@v5
+        with:
+          distribution: zulu
+          java-version: '21'
+      - name: Prepare exact smali
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          set -euo pipefail
+          mkdir -p work/apk work/smali research/generated
+          gh release download 8 --pattern "$APK_NAME" --dir work
+          echo "$APK_SHA256  work/$APK_NAME" | sha256sum -c -
+          gh release download 3.0.10 --repo baksmali/smali --pattern 'baksmali-3.0.10-fat.jar' --dir work
+          unzip -q "work/$APK_NAME" 'classes*.dex' -d work/apk
+          for d in work/apk/classes*.dex; do
+            n="$(basename "$d" .dex)"
+            java -jar work/baksmali-3.0.10-fat.jar d "$d" -o "work/smali/$n" >/dev/null
+          done
+
+      - name: Exact capability-to-Reels dataflow
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          from pathlib import Path
+          import re, collections
+
+          ROOT=Path('work/smali')
+          OUT=Path('research/generated/instagram_439_capability_to_reels_r13.txt')
+          cr=re.compile(r'^\.class\s+.*\s+(L[^;]+;)$')
+          mr=re.compile(r'^\.method\s+.*?([^\s]+\([^)]*\).+)$')
+          ir=re.compile(r'invoke-[^\s]+\s+\{[^}]*\},\s+(L[^;]+;->[^\s]+)')
+          sr=re.compile(r'^\s*const-string(?:/jumbo)?\s+[^,]+,\s+"(.*)"')
+          M={}; C=collections.defaultdict(set)
+          for p in ROOT.rglob('*.smali'):
+            ls=p.read_text(errors='replace').splitlines(); cls=None
+            for x in ls[:30]:
+              z=cr.match(x)
+              if z: cls=z.group(1); break
+            if not cls: continue
+            i=0
+            while i<len(ls):
+              z=mr.match(ls[i])
+              if not z: i+=1; continue
+              ref=cls+'->'+z.group(1); s=i; i+=1
+              while i<len(ls) and not ls[i].startswith('.end method'): i+=1
+              b=ls[s:min(i+1,len(ls))]; inv=[]; ss=[]
+              for x in b:
+                q=ir.search(x)
+                if q: inv.append(q.group(1))
+                q=sr.match(x)
+                if q: ss.append(q.group(1))
+              M[ref]={'file':str(p),'body':b,'invokes':inv,'strings':ss}
+              for n in inv: C[n].add(ref)
+              i+=1
+
+          def txt(m): return '\n'.join(M[m]['body'])
+          def low(m): return txt(m).lower()
+          def emit(O,m,label,body=True):
+            d=M[m]
+            O += [f'===== {label}: {m} =====', 'FILE: '+d['file'],
+                  'STRINGS: '+' | '.join(dict.fromkeys(d['strings'])),
+                  'CALLERS: '+' | '.join(sorted(C.get(m,()))[:80]),
+                  'CALLEES: '+' | '.join(list(dict.fromkeys(d['invokes']))[:100])]
+            if body: O += d['body']
+            O.append('')
+
+          # Exact capability producers / serializers / descriptors.
+          core_refs=(
+            'LX/03Lk;->A01(Lcom/instagram/common/session/UserSession;)LX/05xq;',
+            'LX/0hCN;->A01(Lcom/instagram/common/session/UserSession;)LX/0kr3;',
+            'LX/0kr3;->A00()LX/0fNi;',
+            'LX/0hCN;->A00(LX/0fNi;)Ljava/lang/String;',
+            'LX/02rk;->A00()Ljava/lang/String;',
+          )
+          hdr_terms=(
+            'display_hdr_supported','supported_display_hdr_types','hdr_supported_types',
+            'is_av1_hdr_supported','is_hevc_hdr_supported','key_display_hdr_supported',
+            'key_video_decoder_hdr_supported','video_decoder_hdr_supported',
+            'video_av1_hardware_decoder_supported','video_hevc_hardware_decoder_supported'
+          )
+          reel_terms=(
+            'clips_viewer_feed_timeline','clips_viewer_reel_feed_timeline','reel_feed_timeline',
+            'clips_viewer_homecoming_fyp','clips_viewer_reel','clips_fetch','clips/feed',
+            'reels/feed','feed/reels','is_cold_start_reel_tab','starting_clips_media_id',
+            'ig_reels_consumption','video_dash_manifest','dash_manifest'
+          )
+
+          core=set()
+          devcap=set()
+          hdr=set()
+          reels=set()
+          xig=set()
+          for m in M:
+            t=txt(m); l=t.lower()
+            if any(r in t for r in core_refs): core.add(m)
+            if 'device_capabilities' in l or 'LX/03Lk;->A01(Lcom/instagram/common/session/UserSession;)LX/05xq;' in t: devcap.add(m)
+            if any(x in l for x in hdr_terms) or 'LX/0hkS;->A2Z' in t: hdr.add(m)
+            if any(x in l for x in reel_terms): reels.add(m)
+            if 'x-ig-capabilities' in l or 'LX/0hCN;->A00(LX/0fNi;)Ljava/lang/String;' in t: xig.add(m)
+
+          # Add exact owner methods themselves when present.
+          for wanted in core_refs:
+            if wanted in M: core.add(wanted)
+          for m in list(M):
+            if m.startswith('LX/03Lk;->A01(') or m.startswith('LX/0hCN;->A0') or m.startswith('LX/0kr3;->A00(') or m.startswith('LX/02rk;->A00('):
+              core.add(m)
+
+          def bfs(starts, reverse=False, maxd=8):
+            D={x:0 for x in starts}; q=collections.deque(starts)
+            while q:
+              x=q.popleft(); d=D[x]
+              if d>=maxd: continue
+              ns=C.get(x,()) if reverse else M[x]['invokes']
+              for n in ns:
+                if n in M and n not in D:
+                  D[n]=d+1; q.append(n)
+            return D
+
+          cap_all=set(core)|set(devcap)|set(hdr)
+          cf=bfs(cap_all,False,8); crv=bfs(cap_all,True,8)
+          rf=bfs(reels,False,8); rrv=bfs(reels,True,8)
+          bridges=[]
+          for m in M:
+            cd=min(cf.get(m,99),crv.get(m,99)); rd=min(rf.get(m,99),rrv.get(m,99))
+            if cd<=8 and rd<=8:
+              bridges.append((cd+rd,cd,rd,m))
+
+          # Direct cross-domain methods are highest value.
+          direct=[]
+          for m in M:
+            flags=[]; l=low(m)
+            if m in devcap: flags.append('DEVCAP')
+            if m in hdr: flags.append('HDR')
+            if m in reels: flags.append('REELS')
+            if m in xig: flags.append('XIG')
+            if len(flags)>=2: direct.append((len(flags),flags,m))
+
+          O=['Instagram 439 exact capability -> Reels request trace R13',
+             '========================================================',
+             f'methods={len(M)} core={len(core)} devcap={len(devcap)} hdr={len(hdr)} reels={len(reels)} xig={len(xig)} bridges={len(bridges)}','']
+
+          O += ['===== 1. EXACT CORE PRODUCER / SERIALIZER METHODS =====','']
+          for m in sorted(core): emit(O,m,'CORE',True)
+
+          O += ['===== 2. ALL device_capabilities CONSUMERS =====','']
+          for m in sorted(devcap): emit(O,m,'DEVICE_CAPABILITIES',True)
+
+          O += ['===== 3. HDR CAPABILITY OWNER / READER METHODS =====','']
+          for m in sorted(hdr): emit(O,m,'HDR_CAP',True)
+
+          O += ['===== 4. DIRECT CROSS-DOMAIN METHODS =====','']
+          for _,flags,m in sorted(direct, key=lambda x:(-x[0],x[2])):
+            emit(O,m,'+'.join(flags),True)
+
+          O += ['===== 5. CAPABILITY <-> REELS GRAPH BRIDGES <=8 HOPS =====','']
+          for total,cd,rd,m in sorted(bridges)[:800]:
+            O.append(f'BRIDGE total={total} cap={cd} reels={rd} {m}')
+            O.append('  STRINGS: '+' | '.join(dict.fromkeys(M[m]['strings'])))
+            O.append('  CALLERS: '+' | '.join(sorted(C.get(m,()))[:30]))
+            O.append('  CALLEES: '+' | '.join(list(dict.fromkeys(M[m]['invokes']))[:30]))
+          O.append('')
+
+          O += ['===== 6. TOP BRIDGE FULL BODIES =====','']
+          seen=set()
+          for total,cd,rd,m in sorted(bridges)[:120]:
+            if m not in seen:
+              emit(O,m,f'BRIDGE_BODY total={total} cap={cd} reels={rd}',True); seen.add(m)
+
+          O += ['===== 7. REELS REQUEST SEEDS (metadata) =====','']
+          for m in sorted(reels): emit(O,m,'REELS_SEED',False)
+
+          text='\n'.join(O)
+          if len(text)>980000: text=text[:980000]+'\n[TRUNCATED 980KB]\n'
+          OUT.write_text(text,encoding='utf-8')
+          print(f'bytes={OUT.stat().st_size} methods={len(M)} devcap={len(devcap)} hdr={len(hdr)} reels={len(reels)} bridges={len(bridges)}')
+          print(text[:350000])
+          PY
+
+      - name: Commit report
+        run: |
+          set -euo pipefail
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add research/generated/instagram_439_capability_to_reels_r13.txt
+          if ! git diff --cached --quiet; then
+            git commit -m 'Trace Instagram HDR capability dataflow into Reels requests R13'
+            git pull --rebase origin main
+            git push origin HEAD:main
+          fi
