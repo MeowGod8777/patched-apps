@@ -1,0 +1,69 @@
+name: IG HDR R6 Selector Map
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - .github/workflows/ig-hdr-r6-selector-map.yml
+
+permissions:
+  contents: read
+
+jobs:
+  map:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    env:
+      BASE_APK: instagram-piko-v439.0.0.37.89-arm64-v8a.apk
+      BASE_SHA256: 4015b171ac59f3e7172134d194ec2dcf701f64c3339f127c19d7a04c13d529c8
+    steps:
+      - uses: actions/checkout@v6
+      - uses: actions/setup-java@v5
+        with:
+          distribution: zulu
+          java-version: '21'
+      - name: Map X.00PV exact methods
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          set -euo pipefail
+          mkdir -p work/smali13 out
+          gh release download 8 --pattern "$BASE_APK" --dir work
+          echo "$BASE_SHA256  work/$BASE_APK" | sha256sum -c -
+          gh release download 3.0.10 --repo baksmali/smali --pattern 'baksmali-3.0.10-fat.jar' --dir work
+          unzip -p "work/$BASE_APK" classes13.dex > work/classes13.dex
+          java -jar work/baksmali-3.0.10-fat.jar d work/classes13.dex -o work/smali13
+          python3 - <<'PY' | tee out/selector-map.txt
+          from pathlib import Path
+          p=Path('work/smali13/X/00PV.smali')
+          lines=p.read_text(errors='ignore').splitlines()
+          print('===== ALL A0n METHODS IN X.00PV =====')
+          for i,l in enumerate(lines):
+              if l.startswith('.method') and ' A0n(' in l:
+                  print(f'{i+1}: {l}')
+                  e=next((j for j in range(i+1,len(lines)) if lines[j].startswith('.end method')), min(len(lines)-1,i+220))
+                  for j in range(i,min(e+1,i+220)):
+                      print(f'{j+1:06d}: {lines[j]}')
+          print('\n===== METHODS USING MediaFormat / configure =====')
+          seen=set()
+          for i,l in enumerate(lines):
+              if 'Landroid/media/MediaFormat;' in l or '->configure(' in l or 'createDecoderByType' in l:
+                  s=i
+                  while s>=0 and not lines[s].startswith('.method'): s-=1
+                  if s<0 or s in seen: continue
+                  seen.add(s)
+                  e=next((j for j in range(s+1,len(lines)) if lines[j].startswith('.end method')), min(len(lines)-1,s+260))
+                  print(f'\n--- {s+1}: {lines[s]} ---')
+                  for j in range(s,min(e+1,s+260)):
+                      print(f'{j+1:06d}: {lines[j]}')
+          print('\n===== X.03oR ARGUMENT METHODS =====')
+          for i,l in enumerate(lines):
+              if l.startswith('.method') and 'LX/03oR;' in l:
+                  print(f'{i+1}: {l}')
+          PY
+      - uses: actions/upload-artifact@v4
+        with:
+          name: ig-hdr-r6-selector-map
+          path: out/selector-map.txt
+          retention-days: 14
