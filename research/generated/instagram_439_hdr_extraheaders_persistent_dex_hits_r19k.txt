@@ -1,0 +1,14 @@
+classes12.dex: LX/0Uiy;, com.facebook.devicesegmentation, devicesegmentation, display_hdr_supported, video_decoder_hdr_supported
+classes13.dex: LX/04qU;, LX/0Uiy;, devicesegmentation
+classes14.dex: devicesegmentation
+classes15.dex: LX/04qU;, LX/0Uiy;
+classes16.dex: LX/04qU;
+classes17.dex: LX/04qU;
+classes18.dex: LX/04qU;
+classes19.dex: supported_display_hdr_types
+classes2.dex: LX/04qU;, devicesegmentation
+classes4.dex: LX/04qU;, LX/0Uiy;, key_display_hdr_supported, key_video_decoder_hdr_supported, display_hdr_supported, video_decoder_hdr_supported
+classes5.dex: LX/04qU;, LX/0Uiy;
+classes6.dex: LX/0Uiy;
+classes8.dex: hdr_supported_types
+classes9.dex: LX/0Uiy;
