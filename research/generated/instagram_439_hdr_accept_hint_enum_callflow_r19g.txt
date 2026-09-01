@@ -1,0 +1,614 @@
+Instagram 439 HDR Accept-Hint Enum + Reels A06 Callflow R19g
+===========================================================
+
+===== ACCEPT_HINT_MAPPER .method public static A00(Ljava/lang/Integer;)Ljava/lang/String; =====
+FILE=work/smali/classes2/X/02qh.smali
+.method public static A00(Ljava/lang/Integer;)Ljava/lang/String;
+    .registers 2
+
+    .line 0
+    invoke-virtual {p0}, Ljava/lang/Number;->intValue()I
+
+    .line 1
+    .line 2
+    .line 3
+    move-result p0
+
+    .line 4
+    const/4 v0, 0x1
+
+    .line 5
+    if-eq p0, v0, :cond_a
+
+    .line 6
+    .line 7
+    const-string v0, "feed"
+
+    .line 8
+    .line 9
+    return-object v0
+
+    .line 10
+    :cond_a
+    const-string v0, "image-grid"
+
+    .line 11
+    .line 12
+    return-object v0
+.end method
+
+===== ACCEPT_HINT_MAPPER_CALLERS (4) =====
+
+--- LX/02qb; .method public static final A01(Landroid/content/Context;LX/03u7;LX/04qU;Lcom/instagram/common/session/UserSession;LX/02pp;LX/02uX;)V
+FILE=work/smali/classes2/X/02qb.smali
+    .line 356
+    .line 357
+    if-eqz v0, :cond_174
+
+    .line 358
+    .line 359
+    iget-object v0, v0, LX/02po;->A00:Ljava/lang/Integer;
+
+    .line 360
+    .line 361
+    if-eqz v0, :cond_174
+
+    .line 362
+    .line 363
+    const-string v1, "X-IG-Accept-Hint"
+
+    .line 364
+    .line 365
+    invoke-static {v0}, LX/02qh;->A00(Ljava/lang/Integer;)Ljava/lang/String;
+
+    .line 366
+    .line 367
+    .line 368
+    move-result-object v0
+
+    .line 369
+    invoke-virtual {v5, v1, v0}, LX/03u7;->AMu(Ljava/lang/String;Ljava/lang/String;)V
+
+    .line 370
+    .line 371
+    .line 372
+    :cond_174
+    iget-object v0, v4, LX/02pp;->A0C:Ljava/lang/Long;
+
+    .line 373
+    .line 374
+
+--- LX/03Hy; .method public static final A00(Lcom/instagram/common/session/UserSession;LX/07b1;LX/02po;Ljava/lang/String;Ljava/lang/String;Ljava/util/Map;Ljava/util/Set;)LX/02ue;
+FILE=work/smali/classes15/X/03Hy.smali
+    long-to-int v4, v0
+
+    const-string v0, "batch_size"
+
+    invoke-virtual {v2, v0, v4}, LX/03u7;->A0C(Ljava/lang/String;I)V
+
+    invoke-virtual {p1}, Ljava/lang/Object;->toString()Ljava/lang/String;
+
+    move-result-object v0
+
+    invoke-virtual {v2, v3, v0}, LX/03u7;->AOA(Ljava/lang/String;Ljava/lang/String;)V
+
+    iget-object v0, p2, LX/02po;->A00:Ljava/lang/Integer;
+
+    if-eqz v0, :cond_82
+
+    const-string v1, "X-IG-Accept-Hint"
+
+    invoke-static {v0}, LX/02qh;->A00(Ljava/lang/Integer;)Ljava/lang/String;
+
+    move-result-object v0
+
+    invoke-virtual {v2, v1, v0}, LX/03u7;->AMu(Ljava/lang/String;Ljava/lang/String;)V
+
+    :cond_82
+    move-object/from16 v1, p4
+
+    if-eqz p4, :cond_8c
+
+    const-string/jumbo v0, "reel_id_to_media_ids_dict"
+
+    invoke-virtual {v2, v0, v1}, LX/03u7;->AOQ(Ljava/lang/String;Ljava/lang/String;)V
+
+    :cond_8c
+    move-object/from16 v1, p5
+
+
+--- LX/0Fqy; .method public final A05(Ljava/lang/Integer;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Z)V
+FILE=work/smali/classes19/X/0Fqy.smali
+
+    move-result-object v10
+
+    const-wide v1, 0x8107a2000527c7L
+
+    check-cast v10, Lcom/facebook/mobileconfig/factory/MobileConfigUnsafeContext;
+
+    invoke-interface {v10, v1, v2}, Lcom/facebook/mobileconfig/factory/MobileConfigUnsafeContext;->BTb(J)Z
+
+    move-result v1
+
+    if-eqz v1, :cond_ac
+
+    invoke-virtual {v8, v6, v0}, LX/03u7;->A0G(Ljava/lang/String;Z)V
+
+    sget-object v4, LX/0Frs;->A07:LX/0Frs;
+
+    :cond_ac
+    invoke-static {v5}, LX/02qh;->A00(Ljava/lang/Integer;)Ljava/lang/String;
+
+    move-result-object v2
+
+    const-string v1, "X-IG-Accept-Hint"
+
+    invoke-virtual {v8, v1, v2}, LX/03u7;->AMu(Ljava/lang/String;Ljava/lang/String;)V
+
+    sget-object v1, LX/02uV;->A05:LX/02uV;
+
+    iput-object v1, v8, LX/03u7;->A07:LX/02uV;
+
+    invoke-virtual {v8}, LX/02pu;->A0K()LX/02ue;
+
+    move-result-object v14
+
+    invoke-static {v9}, LX/02xV;->A00(Lcom/instagram/common/session/UserSession;)LX/02xV;
+
+
+--- Lcom/instagram/repository/storyhighlights/StoryHighlightsRepository$fetchMoreStoryHighlights$1; .method public final invokeSuspend(Ljava/lang/Object;)Ljava/lang/Object;
+FILE=work/smali/classes19/com/instagram/repository/storyhighlights/StoryHighlightsRepository$fetchMoreStoryHighlights$1.smali
+    invoke-static {v13}, Ljava/lang/Integer;->valueOf(I)Ljava/lang/Integer;
+
+    move-result-object v2
+
+    invoke-virtual {v3, v2, v6}, LX/03u7;->A08(Ljava/lang/Integer;Ljava/lang/String;)V
+
+    const-string v2, "cursor"
+
+    invoke-virtual {v3, v2, v11}, LX/03u7;->A0F(Ljava/lang/String;Ljava/lang/String;)V
+
+    const-string v2, "fetch_high_res_cover_image"
+
+    invoke-virtual {v3, v2, v10}, LX/03u7;->A0E(Ljava/lang/String;Ljava/lang/Boolean;)V
+
+    const-string v2, "only_fetch_archived_highlights"
+
+    invoke-virtual {v3, v2, v9}, LX/03u7;->A0E(Ljava/lang/String;Ljava/lang/Boolean;)V
+
+    invoke-static {v0}, LX/02qh;->A00(Ljava/lang/Integer;)Ljava/lang/String;
+
+    move-result-object v6
+
+    const-string v2, "X-IG-Accept-Hint"
+
+    invoke-virtual {v3, v2, v6}, LX/03u7;->AMu(Ljava/lang/String;Ljava/lang/String;)V
+
+    invoke-virtual {v3}, LX/02pu;->A0K()LX/02ue;
+
+    move-result-object v20
+
+    if-nez v7, :cond_ac
+
+    move-object v7, v14
+
+    :cond_ac
+    sget-object v22, LX/000A;->A1G:Ljava/lang/Integer;
+
+===== A06 EXACT CALLERS (3) =====
+
+--- LX/01Jw; .method public final A06(LX/0ASB;)Z
+FILE=work/smali/classes16/X/01Jw.smali
+INVOKE=invoke-virtual/range {v15 .. v20}, Lcom/instagram/clips/api/ClipsApiUtilHelper;->A06(Lcom/instagram/common/session/UserSession;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;I)LX/02ue;
+INVOKE_REGS=['v15', 'v16', 'v17', 'v18', 'v19', 'v20']
+LAST_DEFINITIONS_BEFORE_INVOKE:
+0085:     sget-object v15, Lcom/instagram/clips/api/ClipsApiUtilHelper;->A00:Lcom/instagram/clips/api/ClipsApiUtilHelper;
+0093:     move-object/from16 v16, v6
+0079:     move-result-object v17
+0089:     move-object/from16 v18, v13
+0091:     move-object/from16 v19, v13
+0087:     const v20, 0xa59b6f5
+LOCAL_SLICE:
+0040: 
+0041:     invoke-static {v8}, Ljava/util/Collections;->singleton(Ljava/lang/Object;)Ljava/util/Set;
+0042: 
+0043:     move-result-object v9
+0044: 
+0045:     const/16 v0, 0xe
+0046: 
+0047:     new-instance v7, LX/0AdO;
+0048: 
+0049:     invoke-direct {v7, v5, v0}, LX/0AdO;-><init>(Ljava/lang/Object;I)V
+0050: 
+0051:     const-string v0, "android_purge_26_q2_ClipsViewerPrefetcher_createStreamingCallback"
+0052: 
+0053:     invoke-static {v0}, LX/03zu;->A00(Ljava/lang/String;)V
+0054: 
+0055:     iget-object v6, v4, LX/01Jw;->A02:Lcom/instagram/common/session/UserSession;
+0056: 
+0057:     invoke-static {v6}, LX/02qP;->A01(LX/04BG;)LX/00AT;
+0058: 
+0059:     move-result-object v5
+0060: 
+0061:     const-wide v0, 0x810d0c001f4931L
+0062: 
+0063:     check-cast v5, Lcom/facebook/mobileconfig/factory/MobileConfigUnsafeContext;
+0064: 
+0065:     invoke-interface {v5, v0, v1}, Lcom/facebook/mobileconfig/factory/MobileConfigUnsafeContext;->BTb(J)Z
+0066: 
+0067:     move-result v0
+0068: 
+0069:     new-instance v14, LX/06Lf;
+0070: 
+0071:     invoke-direct {v14, v4, v9, v7, v0}, LX/06Lf;-><init>(LX/01Jw;Ljava/util/Set;Lkotlin/jvm/functions/Function1;Z)V
+0072: 
+0073:     const-string v1, "[\""
+0074: 
+0075:     const-string v0, "\"]"
+0076: 
+0077:     invoke-static {v1, v8, v0}, LX/002b;->A0q(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)Ljava/lang/String;
+0078: 
+0079:     move-result-object v17
+0080: 
+0081:     invoke-static {v2, v3}, LX/04l9;->A0j(Ljava/lang/Object;I)V
+0082: 
+0083:     const/4 v13, 0x0
+0084: 
+0085:     sget-object v15, Lcom/instagram/clips/api/ClipsApiUtilHelper;->A00:Lcom/instagram/clips/api/ClipsApiUtilHelper;
+0086: 
+0087:     const v20, 0xa59b6f5
+0088: 
+0089:     move-object/from16 v18, v13
+0090: 
+0091:     move-object/from16 v19, v13
+0092: 
+0093:     move-object/from16 v16, v6
+0094: 
+0095:     invoke-virtual/range {v15 .. v20}, Lcom/instagram/clips/api/ClipsApiUtilHelper;->A06(Lcom/instagram/common/session/UserSession;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;I)LX/02ue;
+0096: 
+0097:     move-result-object v15
+0098: 
+0099:     sget-object v12, LX/06Mx;->A00:LX/06Mx;
+0100: 
+0101:     invoke-static {v4}, LX/01Jw;->A00(LX/01Jw;)J
+0102: 
+0103:     move-result-wide v18
+0104: 
+0105:     invoke-virtual {v11, v2}, LX/03v0;->A08(Ljava/lang/String;)Z
+0106: 
+
+--- LX/01Jv; .method public static final A03(Lcom/instagram/clips/intf/ClipsViewerSource;LX/01Jv;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Z)LX/0F0k;
+FILE=work/smali/classes16/X/01Jv.smali
+INVOKE=invoke-virtual/range {v13 .. v18}, Lcom/instagram/clips/api/ClipsApiUtilHelper;->A06(Lcom/instagram/common/session/UserSession;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;I)LX/02ue;
+INVOKE_REGS=['v13', 'v14', 'v15', 'v16', 'v17', 'v18']
+LAST_DEFINITIONS_BEFORE_INVOKE:
+0116:     sget-object v13, Lcom/instagram/clips/api/ClipsApiUtilHelper;->A00:Lcom/instagram/clips/api/ClipsApiUtilHelper;
+0128:     move-object v14, v4
+0036:     move-result-object v15
+0124:     move-result-object v15
+LOCAL_SLICE:
+0077: 
+0078:     :cond_48
+0079:     if-eqz v2, :cond_9f
+0080: 
+0081:     invoke-static {v2}, Lcom/instagram/feed/media/MediaExtKt;->A1C(Ljava/lang/String;)Ljava/lang/String;
+0082: 
+0083:     move-result-object v2
+0084: 
+0085:     :goto_4e
+0086:     iput-object v2, v6, LX/01Jv;->A01:Ljava/lang/String;
+0087: 
+0088:     iget-boolean v0, v14, LX/01Ju;->A04:Z
+0089: 
+0090:     move-object/from16 v3, p7
+0091: 
+0092:     if-eqz v0, :cond_89
+0093: 
+0094:     if-eqz v2, :cond_b0
+0095: 
+0096:     iget-object v1, v6, LX/01Jv;->A08:LX/01Jw;
+0097: 
+0098:     invoke-virtual {v1, v2, v11}, LX/01Jw;->A07(Ljava/lang/String;Z)Z
+0099: 
+0100:     move-result v0
+0101: 
+0102:     if-eqz v0, :cond_6a
+0103: 
+0104:     new-instance v5, LX/0Ash;
+0105: 
+0106:     invoke-direct {v5, v1, v2, v7, v11}, LX/0Ash;-><init>(Ljava/lang/Object;Ljava/lang/String;LX/09oa;I)V
+0107: 
+0108:     :goto_65
+0109:     invoke-static {v5}, LX/07cz;->A00(LX/0nvI;)LX/07db;
+0110: 
+0111:     move-result-object v0
+0112: 
+0113:     return-object v0
+0114: 
+0115:     :cond_6a
+0116:     sget-object v13, Lcom/instagram/clips/api/ClipsApiUtilHelper;->A00:Lcom/instagram/clips/api/ClipsApiUtilHelper;
+0117: 
+0118:     const-string v1, "[\""
+0119: 
+0120:     const-string v0, "\"]"
+0121: 
+0122:     invoke-static {v1, v2, v0}, LX/002b;->A0q(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)Ljava/lang/String;
+0123: 
+0124:     move-result-object v15
+0125: 
+0126:     const p2, 0xa59b6f5
+0127: 
+0128:     move-object v14, v4
+0129: 
+0130:     move-object/from16 p1, v3
+0131: 
+0132:     invoke-virtual/range {v13 .. v18}, Lcom/instagram/clips/api/ClipsApiUtilHelper;->A06(Lcom/instagram/common/session/UserSession;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;I)LX/02ue;
+0133: 
+0134:     move-result-object v6
+0135: 
+0136:     const v8, 0x518fd50f
+0137: 
+0138:     const/4 v9, 0x2
+0139: 
+0140:     const/4 v10, 0x3
+0141: 
+0142:     new-instance v5, LX/0Apd;
+0143: 
+
+--- LX/05PG; .method public final A01(Ljava/lang/String;Ljava/util/List;Z)V
+FILE=work/smali/classes16/X/05PG.smali
+INVOKE=invoke-virtual/range {v15 .. v20}, Lcom/instagram/clips/api/ClipsApiUtilHelper;->A06(Lcom/instagram/common/session/UserSession;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;I)LX/02ue;
+INVOKE_REGS=['v15', 'v16', 'v17', 'v18', 'v19', 'v20']
+LAST_DEFINITIONS_BEFORE_INVOKE:
+0611:     sget-object v15, Lcom/instagram/clips/api/ClipsApiUtilHelper;->A00:Lcom/instagram/clips/api/ClipsApiUtilHelper;
+0615:     move-object/from16 v16, v7
+0609:     move-result-object v17
+0617:     move-object/from16 v18, v13
+0619:     move-object/from16 v19, v13
+0613:     const v20, 0xa59b6f5
+LOCAL_SLICE:
+0566: 
+0567:     const/4 v13, 0x0
+0568: 
+0569:     const-string v0, ""
+0570: 
+0571:     invoke-static {v7, v0, v0, v5, v1}, LX/04k4;->A1A(Ljava/lang/CharSequence;Ljava/lang/CharSequence;Ljava/lang/CharSequence;Ljava/lang/Iterable;Lkotlin/jvm/functions/Function1;)Ljava/lang/String;
+0572: 
+0573:     move-result-object v8
+0574: 
+0575:     const/16 v0, 0xd
+0576: 
+0577:     new-instance v10, LX/0AdO;
+0578: 
+0579:     invoke-direct {v10, v9, v0}, LX/0AdO;-><init>(Ljava/lang/Object;I)V
+0580: 
+0581:     const-string v0, "android_purge_26_q2_ClipsViewerPrefetcher_createStreamingCallback"
+0582: 
+0583:     invoke-static {v0}, LX/03zu;->A00(Ljava/lang/String;)V
+0584: 
+0585:     iget-object v7, v6, LX/01Jw;->A02:Lcom/instagram/common/session/UserSession;
+0586: 
+0587:     invoke-static {v7}, LX/02qP;->A01(LX/04BG;)LX/00AT;
+0588: 
+0589:     move-result-object v9
+0590: 
+0591:     const-wide v0, 0x810d0c001f4931L
+0592: 
+0593:     check-cast v9, Lcom/facebook/mobileconfig/factory/MobileConfigUnsafeContext;
+0594: 
+0595:     invoke-interface {v9, v0, v1}, Lcom/facebook/mobileconfig/factory/MobileConfigUnsafeContext;->BTb(J)Z
+0596: 
+0597:     move-result v0
+0598: 
+0599:     new-instance v14, LX/06Lf;
+0600: 
+0601:     invoke-direct {v14, v6, v5, v10, v0}, LX/06Lf;-><init>(LX/01Jw;Ljava/util/Set;Lkotlin/jvm/functions/Function1;Z)V
+0602: 
+0603:     const/16 v1, 0x5b
+0604: 
+0605:     const/16 v0, 0x5d
+0606: 
+0607:     invoke-static {v8, v1, v0}, LX/002b;->A0G(Ljava/lang/String;CC)Ljava/lang/String;
+0608: 
+0609:     move-result-object v17
+0610: 
+0611:     sget-object v15, Lcom/instagram/clips/api/ClipsApiUtilHelper;->A00:Lcom/instagram/clips/api/ClipsApiUtilHelper;
+0612: 
+0613:     const v20, 0xa59b6f5
+0614: 
+0615:     move-object/from16 v16, v7
+0616: 
+0617:     move-object/from16 v18, v13
+0618: 
+0619:     move-object/from16 v19, v13
+0620: 
+0621:     invoke-virtual/range {v15 .. v20}, Lcom/instagram/clips/api/ClipsApiUtilHelper;->A06(Lcom/instagram/common/session/UserSession;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;I)LX/02ue;
+0622: 
+0623:     move-result-object v15
+0624: 
+0625:     sget-object v12, LX/06Mx;->A00:LX/06Mx;
+0626: 
+0627:     invoke-static {v6}, LX/01Jw;->A00(LX/01Jw;)J
+0628: 
+0629:     move-result-wide v18
+0630: 
+0631:     invoke-virtual {v11, v4}, LX/03v0;->A08(Ljava/lang/String;)Z
+0632: 
+
+===== LITERAL X-IG-Accept-Hint WRITES =====
+
+--- LX/02qb; .method public static final A01(Landroid/content/Context;LX/03u7;LX/04qU;Lcom/instagram/common/session/UserSession;LX/02pp;LX/02uX;)V FILE=work/smali/classes2/X/02qb.smali
+0743:     .line 360
+0744:     .line 361
+0745:     if-eqz v0, :cond_174
+0746: 
+0747:     .line 362
+0748:     .line 363
+0749:     const-string v1, "X-IG-Accept-Hint"
+0750: 
+0751:     .line 364
+0752:     .line 365
+0753:     invoke-static {v0}, LX/02qh;->A00(Ljava/lang/Integer;)Ljava/lang/String;
+0754: 
+0755:     .line 366
+0756:     .line 367
+0757:     .line 368
+0758:     move-result-object v0
+0759: 
+0760:     .line 369
+0761:     invoke-virtual {v5, v1, v0}, LX/03u7;->AMu(Ljava/lang/String;Ljava/lang/String;)V
+0762: 
+
+--- LX/0000; .method public static A00(I)Ljava/lang/String; FILE=work/smali/classes2/X/0000.smali
+5665:     :pswitch_e52
+5666:     const-string p0, "WhatsAppCrosspostPrefetcher"
+5667: 
+5668:     return-object p0
+5669: 
+5670:     :pswitch_e55
+5671:     const-string p0, "X-IG-Accept-Hint"
+5672: 
+5673:     return-object p0
+5674: 
+5675:     :pswitch_e58
+5676:     const-string p0, "X-IG-Nav-Chain"
+5677: 
+5678:     return-object p0
+5679: 
+5680:     :pswitch_e5b
+5681:     const-string p0, "XDTAdminedPage"
+5682: 
+5683:     return-object p0
+5684: 
+
+--- LX/03Hy; .method public static final A00(Lcom/instagram/common/session/UserSession;LX/07b1;LX/02po;Ljava/lang/String;Ljava/lang/String;Ljava/util/Map;Ljava/util/Set;)LX/02ue; FILE=work/smali/classes15/X/03Hy.smali
+0106:     invoke-virtual {v2, v3, v0}, LX/03u7;->AOA(Ljava/lang/String;Ljava/lang/String;)V
+0107: 
+0108:     iget-object v0, p2, LX/02po;->A00:Ljava/lang/Integer;
+0109: 
+0110:     if-eqz v0, :cond_82
+0111: 
+0112:     const-string v1, "X-IG-Accept-Hint"
+0113: 
+0114:     invoke-static {v0}, LX/02qh;->A00(Ljava/lang/Integer;)Ljava/lang/String;
+0115: 
+0116:     move-result-object v0
+0117: 
+0118:     invoke-virtual {v2, v1, v0}, LX/03u7;->AMu(Ljava/lang/String;Ljava/lang/String;)V
+0119: 
+0120:     :cond_82
+0121:     move-object/from16 v1, p4
+0122: 
+0123:     if-eqz p4, :cond_8c
+0124: 
+0125:     const-string/jumbo v0, "reel_id_to_media_ids_dict"
+
+--- LX/04tC; .method public final A0A(Landroid/content/Context;LX/0Aev;LX/0Iwp;LX/0Ciw;Lcom/instagram/common/session/UserSession;LX/08Rs;Ljava/lang/Integer;Ljava/lang/Long;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/util/List;Lkotlin/jvm/functions/Function0;ZZZZZZZZZZZ)LX/02ue; FILE=work/smali/classes15/X/04tC.smali
+0245: 
+0246:     :cond_fd
+0247:     invoke-static {v3, v4, v7}, LX/04u9;->A00(LX/03u7;Lcom/instagram/common/session/UserSession;Ljava/lang/String;)LX/0ABi;
+0248: 
+0249:     if-eqz p33, :cond_109
+0250: 
+0251:     const-string v1, "X-IG-Accept-Hint"
+0252: 
+0253:     const-string v0, "feed"
+0254: 
+0255:     invoke-virtual {v3, v1, v0}, LX/03u7;->AMu(Ljava/lang/String;Ljava/lang/String;)V
+0256: 
+0257:     :cond_109
+0258:     invoke-virtual {v3}, LX/02pu;->A0K()LX/02ue;
+0259: 
+0260:     move-result-object v0
+0261: 
+0262:     return-object v0
+0263: 
+0264:     :cond_10e
+
+--- Lcom/instagram/clips/api/ClipsApiUtilHelper; .method public final A06(Lcom/instagram/common/session/UserSession;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;I)LX/02ue; FILE=work/smali/classes15/com/instagram/clips/api/ClipsApiUtilHelper.smali
+0221:     invoke-interface {v3, v0, v1}, Lcom/facebook/mobileconfig/factory/MobileConfigUnsafeContext;->BTb(J)Z
+0222: 
+0223:     move-result v0
+0224: 
+0225:     if-eqz v0, :cond_f3
+0226: 
+0227:     const-string v1, "X-IG-Accept-Hint"
+0228: 
+0229:     const-string v0, "feed"
+0230: 
+0231:     invoke-virtual {v2, v1, v0}, LX/03u7;->AMu(Ljava/lang/String;Ljava/lang/String;)V
+0232: 
+0233:     :cond_f3
+0234:     invoke-virtual {v2}, LX/02pu;->A0K()LX/02ue;
+0235: 
+0236:     move-result-object v0
+0237: 
+0238:     return-object v0
+0239: 
+0240:     :cond_f8
+
+--- LX/0Fsw; .method public static final A03(Lcom/instagram/common/session/UserSession;Ljava/lang/Boolean;Ljava/lang/Boolean;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/String;Ljava/lang/String;)LX/03su; FILE=work/smali/classes19/X/0Fsw.smali
+0122:     iput-object v3, v2, LX/03u7;->A0B:Ljava/lang/String;
+0123: 
+0124:     iput-object v13, v2, LX/03u7;->A08:Ljava/lang/Integer;
+0125: 
+0126:     iput-object v5, v2, LX/02pu;->A00:LX/0AOo;
+0127: 
+0128:     const-string v3, "X-IG-Accept-Hint"
+0129: 
+0130:     const-string v0, "feed"
+0131: 
+0132:     invoke-virtual {v2, v3, v0}, LX/03u7;->AMu(Ljava/lang/String;Ljava/lang/String;)V
+0133: 
+0134:     invoke-static {v1}, LX/03Lk;->A00(Lcom/instagram/common/session/UserSession;)Landroid/util/Pair;
+0135: 
+0136:     move-result-object v0
+0137: 
+0138:     iget-object v3, v0, Landroid/util/Pair;->first:Ljava/lang/Object;
+0139: 
+0140:     invoke-static {v3}, LX/04l9;->A0Q(Ljava/lang/Object;)V
+0141: 
+
+--- LX/0Fqy; .method public final A05(Ljava/lang/Integer;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Z)V FILE=work/smali/classes19/X/0Fqy.smali
+0174: 
+0175:     :cond_ac
+0176:     invoke-static {v5}, LX/02qh;->A00(Ljava/lang/Integer;)Ljava/lang/String;
+0177: 
+0178:     move-result-object v2
+0179: 
+0180:     const-string v1, "X-IG-Accept-Hint"
+0181: 
+0182:     invoke-virtual {v8, v1, v2}, LX/03u7;->AMu(Ljava/lang/String;Ljava/lang/String;)V
+0183: 
+0184:     sget-object v1, LX/02uV;->A05:LX/02uV;
+0185: 
+0186:     iput-object v1, v8, LX/03u7;->A07:LX/02uV;
+0187: 
+0188:     invoke-virtual {v8}, LX/02pu;->A0K()LX/02ue;
+0189: 
+0190:     move-result-object v14
+0191: 
+0192:     invoke-static {v9}, LX/02xV;->A00(Lcom/instagram/common/session/UserSession;)LX/02xV;
+0193: 
+
+--- Lcom/instagram/repository/storyhighlights/StoryHighlightsRepository$fetchMoreStoryHighlights$1; .method public final invokeSuspend(Ljava/lang/Object;)Ljava/lang/Object; FILE=work/smali/classes19/com/instagram/repository/storyhighlights/StoryHighlightsRepository$fetchMoreStoryHighlights$1.smali
+0148:     invoke-virtual {v3, v2, v9}, LX/03u7;->A0E(Ljava/lang/String;Ljava/lang/Boolean;)V
+0149: 
+0150:     invoke-static {v0}, LX/02qh;->A00(Ljava/lang/Integer;)Ljava/lang/String;
+0151: 
+0152:     move-result-object v6
+0153: 
+0154:     const-string v2, "X-IG-Accept-Hint"
+0155: 
+0156:     invoke-virtual {v3, v2, v6}, LX/03u7;->AMu(Ljava/lang/String;Ljava/lang/String;)V
+0157: 
+0158:     invoke-virtual {v3}, LX/02pu;->A0K()LX/02ue;
+0159: 
+0160:     move-result-object v20
+0161: 
+0162:     if-nez v7, :cond_ac
+0163: 
+0164:     move-object v7, v14
+0165: 
+0166:     :cond_ac
+0167:     sget-object v22, LX/000A;->A1G:Ljava/lang/Integer;
