@@ -1,0 +1,93 @@
+name: IG HDR Selector List Producer
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - .github/workflows/ig-hdr-selector-list-producer.yml
+
+permissions:
+  contents: write
+
+jobs:
+  probe:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    env:
+      APK_NAME: instagram-piko-v439.0.0.37.89-arm64-v8a.apk
+      APK_SHA256: 4015b171ac59f3e7172134d194ec2dcf701f64c3339f127c19d7a04c13d529c8
+    steps:
+      - uses: actions/checkout@v6
+      - name: Prepare
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          set -euo pipefail
+          mkdir -p work/dex work/smali research/generated
+          gh release download 8 --pattern "$APK_NAME" --dir work
+          echo "$APK_SHA256  work/$APK_NAME" | sha256sum -c -
+          sudo apt-get update -qq
+          sudo apt-get install -y -qq smali
+          unzip -j "work/$APK_NAME" 'classes*.dex' -d work/dex
+          for d in work/dex/classes*.dex; do
+            b=$(basename "$d" .dex)
+            mkdir -p "work/smali/$b"
+            baksmali d "$d" -o "work/smali/$b"
+          done
+      - name: Trace producers
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          import re
+          roots=list(Path('work/smali').glob('classes*'))
+          out=[]
+          def methods(text):
+              ls=text.splitlines(); starts=[i for i,l in enumerate(ls) if l.startswith('.method')]
+              for n,s in enumerate(starts):
+                  e=starts[n+1] if n+1<len(starts) else len(ls)
+                  yield ls[s:e]
+          # class field summaries
+          for cls in ['X/08ur.smali','X/08lb.smali','X/08xk.smali','X/08td.smali']:
+              hits=[]
+              for r in roots:
+                  p=r/cls
+                  if p.exists(): hits.append(p)
+              out.append(f'===== {cls} fields =====')
+              for p in hits:
+                  for l in p.read_text(errors='replace').splitlines():
+                      if l.startswith('.field'): out.append(l)
+              out.append('')
+          # exact producers/consumers of 08ur A00/A01 and constructor
+          needles=['LX/08ur;->A00:Ljava/util/List;','LX/08ur;->A01:Ljava/util/List;','LX/08ur;-><init>']
+          for r in roots:
+              for p in r.rglob('*.smali'):
+                  t=p.read_text(errors='replace')
+                  if not any(n in t for n in needles): continue
+                  for m in methods(t):
+                      body='\n'.join(m)
+                      if not any(n in body for n in needles): continue
+                      out.append(f'===== {p.relative_to(r)} :: {m[0]} =====')
+                      # Keep control-flow and semantic data accesses only.
+                      for l in m:
+                          s=l.strip()
+                          if (s.startswith(':') or s.startswith('if-') or s.startswith('goto') or
+                              s.startswith('iget') or s.startswith('iput') or s.startswith('sget') or
+                              s.startswith('invoke-') or s.startswith('move-result') or
+                              s.startswith('const-string') or s.startswith('const/4') or s.startswith('const/16') or
+                              'LX/08ur;' in s or 'LX/08td;' in s or 'LX/08lb;' in s or 'LX/08xk;' in s or
+                              'MediaCodec' in s or 'video/' in s or 'codec' in s.lower() or 'profile' in s.lower() or 'hdr' in s.lower()):
+                              out.append(l)
+                      out.append('')
+          # Methods that construct ArrayLists and then construct 08ur are especially important.
+          Path('research/generated/instagram_439_hdr_selector_list_producer.txt').write_text('\n'.join(out))
+          print(Path('research/generated/instagram_439_hdr_selector_list_producer.txt').read_text()[:180000])
+          PY
+      - name: Commit
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add research/generated/instagram_439_hdr_selector_list_producer.txt
+          git commit -m 'Trace Instagram DASH representation list producers' || true
+          git pull --rebase origin main
+          git push origin HEAD:main
