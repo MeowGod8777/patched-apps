@@ -1,0 +1,177 @@
+name: IG 439 HDR Clips Items A06 R19e
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - .github/workflows/ig-hdr-clips-items-a06-r19e.yml
+
+permissions:
+  contents: write
+
+jobs:
+  trace:
+    runs-on: ubuntu-latest
+    timeout-minutes: 18
+    env:
+      APK_NAME: instagram-piko-v439.0.0.37.89-arm64-v8a.apk
+      APK_SHA256: 4015b171ac59f3e7172134d194ec2dcf701f64c3339f127c19d7a04c13d529c8
+    steps:
+      - uses: actions/checkout@v6
+        with: {fetch-depth: 0}
+      - uses: actions/setup-java@v5
+        with:
+          distribution: zulu
+          java-version: '21'
+
+      - name: Fetch exact APK and disassemble ClipsApiUtilHelper reference dexes
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          set -euo pipefail
+          mkdir -p work/apk work/smali research/generated
+          gh release download 8 --pattern "$APK_NAME" --dir work
+          echo "$APK_SHA256  work/$APK_NAME" | sha256sum -c -
+          gh release download 3.0.10 --repo baksmali/smali --pattern 'baksmali-3.0.10-fat.jar' --dir work
+          unzip -q "work/$APK_NAME" 'classes*.dex' -d work/apk
+          python3 - <<'PY'
+          from pathlib import Path
+          import subprocess
+          needle='ClipsApiUtilHelper'
+          hit=[]
+          for p in sorted(Path('work/apk').glob('classes*.dex')):
+              s=subprocess.run(['strings','-a',str(p)],capture_output=True,text=True,errors='replace').stdout
+              if needle in s:
+                  hit.append(p.name)
+          Path('work/hitdex.txt').write_text('\n'.join(hit)+'\n')
+          print('HITDEX',hit)
+          PY
+          while read d; do
+            [ -n "$d" ] || continue
+            n="${d%.dex}"
+            java -jar work/baksmali-3.0.10-fat.jar d "work/apk/$d" -o "work/smali/$n" >/dev/null &
+          done < work/hitdex.txt
+          wait
+
+      - name: Extract A06 body fields MobileConfig branches and exact callers
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          from pathlib import Path
+          import re
+
+          ROOT=Path('work/smali')
+          OUT=Path('research/generated/instagram_439_hdr_clips_items_a06_r19e.txt')
+          TARGET='Lcom/instagram/clips/api/ClipsApiUtilHelper;'
+          SIG='A06(Lcom/instagram/common/session/UserSession;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;I)LX/02ue;'
+          cls_re=re.compile(r'^\.class\s+.*\s+(L[^;]+;)$')
+          invoke_re=re.compile(r'(L[^;]+;)->([^\s(]+)\(([^)]*)\)(\S+)')
+          str_re=re.compile(r'^\s*const-string(?:/jumbo)?\s+([^,]+),\s+"(.*)"')
+
+          methods=[]
+          for p in ROOT.rglob('*.smali'):
+              ls=p.read_text(errors='replace').splitlines(); cls='?'
+              for x in ls[:50]:
+                  m=cls_re.match(x)
+                  if m: cls=m.group(1); break
+              i=0
+              while i < len(ls):
+                  if not ls[i].startswith('.method'):
+                      i+=1; continue
+                  s=i; sig=ls[i]; i+=1
+                  while i<len(ls) and not ls[i].startswith('.end method'):
+                      i+=1
+                  e=min(i,len(ls)-1); b=ls[s:e+1]
+                  methods.append((cls,sig,p,b))
+                  i+=1
+
+          O=['Instagram 439 HDR ClipsApiUtilHelper A06 R19e','===============================================','']
+
+          # Full helper class, emphasizing A06 and sibling clips/items builders.
+          helper=[m for m in methods if m[0]==TARGET]
+          O += [f'helper_methods={len(helper)}','']
+          for cls,sig,p,b in helper:
+              if any(k in sig for k in [' A02(',' A03(',' A04(',' A05(',' A06(']):
+                  O += [f'===== HELPER {sig} =====',f'FILE={p}'] + b + ['']
+
+          # Compact semantic extraction specifically from A06.
+          a06=[]
+          for cls,sig,p,b in helper:
+              if ' A06(' in sig:
+                  a06=b; break
+          O += ['===== A06 SEMANTIC SUMMARY =====']
+          if not a06:
+              O += ['A06_NOT_FOUND','']
+          else:
+              strings=[]; invokes=[]
+              for idx,l in enumerate(a06):
+                  sm=str_re.match(l)
+                  if sm: strings.append((idx,sm.group(1),sm.group(2)))
+                  if 'invoke-' in l:
+                      im=invoke_re.search(l)
+                      if im: invokes.append((idx,im.group(1),im.group(2),im.group(3),im.group(4)))
+              O += ['STRINGS:'] + [f'{i}: {reg} = {val}' for i,reg,val in strings] + ['']
+              O += ['REQUEST_WRITES:']
+              for idx,owner,name,args,ret in invokes:
+                  if owner=='LX/03u7;' and name in ('AOA','A0F','AMu','A07'):
+                      lo=max(0,idx-8); hi=min(len(a06),idx+3)
+                      O += [f'--- around {name} line_index={idx} ---'] + a06[lo:hi]
+              O += ['','MOBILECONFIG_CALLS:']
+              for idx,owner,name,args,ret in invokes:
+                  if 'MobileConfigUnsafeContext;' in owner and name in ('BTb','CUf','BTE','CUs'):
+                      lo=max(0,idx-10); hi=min(len(a06),idx+4)
+                      O += [f'--- around {owner}->{name} line_index={idx} ---'] + a06[lo:hi]
+              O += ['']
+
+          # Exact reverse callers of A06.
+          callers=[]
+          needle=TARGET+'->'+SIG
+          for cls,sig,p,b in methods:
+              text='\n'.join(b)
+              if needle in text:
+                  callers.append((cls,sig,p,b))
+          O += [f'===== EXACT A06 CALLERS ({len(callers)}) =====','']
+          for cls,sig,p,b in callers:
+              O += [f'--- CALLER {cls} {sig}',f'FILE={p}']
+              ss=[]; inv=[]
+              for l in b:
+                  sm=str_re.match(l)
+                  if sm: ss.append(sm.group(2))
+                  if 'invoke-' in l:
+                      im=invoke_re.search(l)
+                      if im: inv.append(im.groups())
+              O += [f'STRINGS={ss}',f'INVOKES={inv}','---'] + b + ['']
+
+          # One hop upstream: callers of exact A06-caller methods when locally resolvable.
+          caller_keys=[]
+          for cls,sig,p,b in callers:
+              mm=re.search(r'\s([^\s(]+)\(([^)]*)\)(\S+)$',sig)
+              if mm: caller_keys.append((cls,mm.group(1),mm.group(2),mm.group(3)))
+          upstream=[]
+          for cls,sig,p,b in methods:
+              text='\n'.join(b)
+              for k in caller_keys:
+                  n=f'{k[0]}->{k[1]}({k[2]}){k[3]}'
+                  if n in text:
+                      upstream.append((k,cls,sig,p,b)); break
+          O += [f'===== ONE-HOP UPSTREAM OF A06 CALLERS ({len(upstream)}) =====','']
+          for k,cls,sig,p,b in upstream:
+              O += [f'--- UPSTREAM -> {k}: {cls} {sig}',f'FILE={p}'] + b + ['']
+
+          OUT.write_text('\n'.join(O),encoding='utf-8')
+          print('\n'.join(O[:5000]))
+          print('bytes',OUT.stat().st_size,'callers',len(callers),'upstream',len(upstream))
+          PY
+
+      - name: Commit R19e report
+        run: |
+          set -euo pipefail
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add research/generated/instagram_439_hdr_clips_items_a06_r19e.txt
+          if ! git diff --cached --quiet; then
+            git commit -m 'Add exact ClipsApiUtilHelper A06 trace R19e'
+            git pull --rebase origin main
+            git push origin HEAD:main
+          fi
