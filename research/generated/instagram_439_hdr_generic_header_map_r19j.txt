@@ -1,0 +1,591 @@
+Instagram 439 HDR Generic Dynamic Header Map R19j
+================================================
+
+FILE=work/smali/classes2/X/02qb.smali
+.method public static final A01(Landroid/content/Context;LX/03u7;LX/04qU;Lcom/instagram/common/session/UserSession;LX/02pp;LX/02uX;)V
+
+AMU_COUNT=7
+
+===== AMU_AT 546 =====
+0511:     .line 251
+0512:     goto :goto_e0
+0513: 
+0514:     .line 252
+0515:     :cond_fc
+0516:     sget-object v1, LX/02pk;->A0A:LX/02pk;
+0517: 
+0518:     .line 253
+0519:     .line 254
+0520:     const/4 v0, 0x0
+0521: 
+0522:     .line 255
+0523:     if-ne v7, v1, :cond_102
+0524: 
+0525:     .line 256
+0526:     .line 257
+0527:     const/4 v0, 0x1
+0528:     :try_end_102
+0529:     .catchall {:try_start_7c .. :try_end_102} :catchall_565
+0530: 
+0531:     .line 258
+0532:     :cond_102
+0533:     const-string v2, "1"
+0534: 
+0535:     .line 259
+0536:     .line 260
+0537:     if-eqz v0, :cond_10b
+0538: 
+0539:     .line 261
+0540:     .line 262
+0541:     :try_start_106
+0542:     const-string v0, "X-IG-APP-START-REQUEST"
+0543: 
+0544:     .line 263
+0545:     .line 264
+0546:     invoke-virtual {v5, v0, v2}, LX/03u7;->AMu(Ljava/lang/String;Ljava/lang/String;)V
+0547: 
+0548:     .line 265
+0549:     .line 266
+0550:     .line 267
+0551:     :cond_10b
+0552:     iget-boolean v0, v4, LX/02pp;->A03:Z
+0553: 
+0554:     .line 268
+0555:     .line 269
+0556:     move-object/from16 v6, p0
+0557: 
+
+===== AMU_AT 568 =====
+0533:     const-string v2, "1"
+0534: 
+0535:     .line 259
+0536:     .line 260
+0537:     if-eqz v0, :cond_10b
+0538: 
+0539:     .line 261
+0540:     .line 262
+0541:     :try_start_106
+0542:     const-string v0, "X-IG-APP-START-REQUEST"
+0543: 
+0544:     .line 263
+0545:     .line 264
+0546:     invoke-virtual {v5, v0, v2}, LX/03u7;->AMu(Ljava/lang/String;Ljava/lang/String;)V
+0547: 
+0548:     .line 265
+0549:     .line 266
+0550:     .line 267
+0551:     :cond_10b
+0552:     iget-boolean v0, v4, LX/02pp;->A03:Z
+0553: 
+0554:     .line 268
+0555:     .line 269
+0556:     move-object/from16 v6, p0
+0557: 
+0558:     .line 270
+0559:     .line 271
+0560:     if-eqz v0, :cond_148
+0561: 
+0562:     .line 272
+0563:     .line 273
+0564:     const-string v0, "X-IG-PRIMED-FEED-REQUEST"
+0565: 
+0566:     .line 274
+0567:     .line 275
+0568:     invoke-virtual {v5, v0, v2}, LX/03u7;->AMu(Ljava/lang/String;Ljava/lang/String;)V
+0569: 
+0570:     .line 276
+0571:     .line 277
+0572:     .line 278
+0573:     invoke-static {v8}, LX/02qP;->A01(LX/04BG;)LX/00AT;
+0574: 
+0575:     .line 279
+0576:     .line 280
+0577:     .line 281
+0578:     move-result-object v9
+0579: 
+
+===== AMU_AT 673 =====
+0638:     .catchall {:try_start_129 .. :try_end_137} :catchall_565
+0639: 
+0640:     .line 310
+0641:     .line 311
+0642:     :catch_137
+0643:     move-object v11, v9
+0644: 
+0645:     .line 312
+0646:     :cond_138
+0647:     :try_start_138
+0648:     const-string/jumbo v10, "x-fb-product-log"
+0649: 
+0650:     .line 313
+0651:     .line 314
+0652:     .line 315
+0653:     const-string v9, "debug:feed_primed:"
+0654: 
+0655:     .line 316
+0656:     .line 317
+0657:     const/16 v1, 0x5f
+0658: 
+0659:     .line 318
+0660:     .line 319
+0661:     iget-object v0, v4, LX/02pp;->A0I:Ljava/lang/String;
+0662: 
+0663:     .line 320
+0664:     .line 321
+0665:     invoke-static {v9, v11, v0, v1}, LX/002b;->A0u(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;C)Ljava/lang/String;
+0666: 
+0667:     .line 322
+0668:     .line 323
+0669:     .line 324
+0670:     move-result-object v0
+0671: 
+0672:     .line 325
+0673:     invoke-virtual {v5, v10, v0}, LX/03u7;->AMu(Ljava/lang/String;Ljava/lang/String;)V
+0674: 
+0675:     .line 326
+0676:     .line 327
+0677:     .line 328
+0678:     :cond_148
+0679:     iget-object v10, v4, LX/02pp;->A0L:Ljava/util/Map;
+0680: 
+0681:     .line 329
+0682:     .line 330
+0683:     const-string v0, "is_retry_request"
+0684: 
+
+===== AMU_AT 703 =====
+0668:     .line 323
+0669:     .line 324
+0670:     move-result-object v0
+0671: 
+0672:     .line 325
+0673:     invoke-virtual {v5, v10, v0}, LX/03u7;->AMu(Ljava/lang/String;Ljava/lang/String;)V
+0674: 
+0675:     .line 326
+0676:     .line 327
+0677:     .line 328
+0678:     :cond_148
+0679:     iget-object v10, v4, LX/02pp;->A0L:Ljava/util/Map;
+0680: 
+0681:     .line 329
+0682:     .line 330
+0683:     const-string v0, "is_retry_request"
+0684: 
+0685:     .line 331
+0686:     .line 332
+0687:     invoke-interface {v10, v0}, Ljava/util/Map;->containsKey(Ljava/lang/Object;)Z
+0688: 
+0689:     .line 333
+0690:     .line 334
+0691:     .line 335
+0692:     move-result v0
+0693: 
+0694:     .line 336
+0695:     if-eqz v0, :cond_157
+0696: 
+0697:     .line 337
+0698:     .line 338
+0699:     const-string v0, "X-IG-FEED-RETRY"
+0700: 
+0701:     .line 339
+0702:     .line 340
+0703:     invoke-virtual {v5, v0, v2}, LX/03u7;->AMu(Ljava/lang/String;Ljava/lang/String;)V
+0704: 
+0705:     .line 341
+0706:     .line 342
+0707:     .line 343
+0708:     :cond_157
+0709:     const-string v1, "X-Ig-Tail-Load-Request"
+0710: 
+0711:     .line 344
+0712:     .line 345
+0713:     const/4 v9, 0x0
+0714: 
+
+===== AMU_AT 728 =====
+0693: 
+0694:     .line 336
+0695:     if-eqz v0, :cond_157
+0696: 
+0697:     .line 337
+0698:     .line 338
+0699:     const-string v0, "X-IG-FEED-RETRY"
+0700: 
+0701:     .line 339
+0702:     .line 340
+0703:     invoke-virtual {v5, v0, v2}, LX/03u7;->AMu(Ljava/lang/String;Ljava/lang/String;)V
+0704: 
+0705:     .line 341
+0706:     .line 342
+0707:     .line 343
+0708:     :cond_157
+0709:     const-string v1, "X-Ig-Tail-Load-Request"
+0710: 
+0711:     .line 344
+0712:     .line 345
+0713:     const/4 v9, 0x0
+0714: 
+0715:     .line 346
+0716:     xor-int/lit8 v0, v14, 0x1
+0717: 
+0718:     .line 347
+0719:     .line 348
+0720:     invoke-static {v0}, Ljava/lang/String;->valueOf(Z)Ljava/lang/String;
+0721: 
+0722:     .line 349
+0723:     .line 350
+0724:     .line 351
+0725:     move-result-object v0
+0726: 
+0727:     .line 352
+0728:     invoke-virtual {v5, v1, v0}, LX/03u7;->AMu(Ljava/lang/String;Ljava/lang/String;)V
+0729: 
+0730:     .line 353
+0731:     .line 354
+0732:     .line 355
+0733:     iget-object v0, v4, LX/02pp;->A0B:LX/02po;
+0734: 
+0735:     .line 356
+0736:     .line 357
+0737:     if-eqz v0, :cond_174
+0738: 
+0739:     .line 358
+
+===== AMU_AT 761 =====
+0726: 
+0727:     .line 352
+0728:     invoke-virtual {v5, v1, v0}, LX/03u7;->AMu(Ljava/lang/String;Ljava/lang/String;)V
+0729: 
+0730:     .line 353
+0731:     .line 354
+0732:     .line 355
+0733:     iget-object v0, v4, LX/02pp;->A0B:LX/02po;
+0734: 
+0735:     .line 356
+0736:     .line 357
+0737:     if-eqz v0, :cond_174
+0738: 
+0739:     .line 358
+0740:     .line 359
+0741:     iget-object v0, v0, LX/02po;->A00:Ljava/lang/Integer;
+0742: 
+0743:     .line 360
+0744:     .line 361
+0745:     if-eqz v0, :cond_174
+0746: 
+0747:     .line 362
+0748:     .line 363
+0749:     const-string v1, "X-IG-Accept-Hint"
+0750: 
+0751:     .line 364
+0752:     .line 365
+0753:     invoke-static {v0}, LX/02qh;->A00(Ljava/lang/Integer;)Ljava/lang/String;
+0754: 
+0755:     .line 366
+0756:     .line 367
+0757:     .line 368
+0758:     move-result-object v0
+0759: 
+0760:     .line 369
+0761:     invoke-virtual {v5, v1, v0}, LX/03u7;->AMu(Ljava/lang/String;Ljava/lang/String;)V
+0762: 
+0763:     .line 370
+0764:     .line 371
+0765:     .line 372
+0766:     :cond_174
+0767:     iget-object v0, v4, LX/02pp;->A0C:Ljava/lang/Long;
+0768: 
+0769:     .line 373
+0770:     .line 374
+0771:     if-eqz v0, :cond_18b
+0772: 
+
+===== AMU_AT 2110 =====
+2075: 
+2076:     .line 1005
+2077:     .line 1006
+2078:     .line 1007
+2079:     move-result-object v0
+2080: 
+2081:     .line 1008
+2082:     check-cast v0, Ljava/util/Map$Entry;
+2083: 
+2084:     .line 1009
+2085:     .line 1010
+2086:     invoke-interface {v0}, Ljava/util/Map$Entry;->getKey()Ljava/lang/Object;
+2087: 
+2088:     .line 1011
+2089:     .line 1012
+2090:     .line 1013
+2091:     move-result-object v1
+2092: 
+2093:     .line 1014
+2094:     check-cast v1, Ljava/lang/String;
+2095: 
+2096:     .line 1015
+2097:     .line 1016
+2098:     invoke-interface {v0}, Ljava/util/Map$Entry;->getValue()Ljava/lang/Object;
+2099: 
+2100:     .line 1017
+2101:     .line 1018
+2102:     .line 1019
+2103:     move-result-object v0
+2104: 
+2105:     .line 1020
+2106:     check-cast v0, Ljava/lang/String;
+2107: 
+2108:     .line 1021
+2109:     .line 1022
+2110:     invoke-virtual {v5, v1, v0}, LX/03u7;->AMu(Ljava/lang/String;Ljava/lang/String;)V
+2111: 
+2112:     .line 1023
+2113:     .line 1024
+2114:     .line 1025
+2115:     goto :goto_3e6
+2116: 
+2117:     .line 1026
+2118:     :cond_402
+2119:     const v0, 0x480c7
+2120: 
+2121:     .line 1027
+
+===== LAST_DYNAMIC_AMU_WIDE_CONTEXT =====
+1930:     .line 935
+1931:     invoke-static {v4, v0}, LX/02qb;->A00(LX/02pp;Ljava/lang/String;)Ljava/lang/String;
+1932: 
+1933:     .line 936
+1934:     .line 937
+1935:     .line 938
+1936:     move-result-object v0
+1937: 
+1938:     .line 939
+1939:     invoke-virtual {v5, v1, v0}, LX/03u7;->AOA(Ljava/lang/String;Ljava/lang/String;)V
+1940: 
+1941:     .line 940
+1942:     .line 941
+1943:     .line 942
+1944:     goto :goto_3b2
+1945: 
+1946:     .line 943
+1947:     :cond_3af
+1948:     invoke-virtual {v5, v1, v0}, LX/03u7;->AOA(Ljava/lang/String;Ljava/lang/String;)V
+1949: 
+1950:     .line 944
+1951:     .line 945
+1952:     .line 946
+1953:     :cond_3b2
+1954:     :goto_3b2
+1955:     move-object/from16 v7, p2
+1956: 
+1957:     .line 947
+1958:     .line 948
+1959:     if-eqz p2, :cond_402
+1960: 
+1961:     .line 949
+1962:     .line 950
+1963:     iget-object v0, v7, LX/04qU;->A01:Ljava/util/Map;
+1964: 
+1965:     .line 951
+1966:     .line 952
+1967:     invoke-interface {v0}, Ljava/util/Map;->entrySet()Ljava/util/Set;
+1968: 
+1969:     .line 953
+1970:     .line 954
+1971:     .line 955
+1972:     move-result-object v0
+1973: 
+1974:     .line 956
+1975:     invoke-interface {v0}, Ljava/util/Set;->iterator()Ljava/util/Iterator;
+1976: 
+1977:     .line 957
+1978:     .line 958
+1979:     .line 959
+1980:     move-result-object v10
+1981: 
+1982:     .line 960
+1983:     :goto_3c0
+1984:     invoke-interface {v10}, Ljava/util/Iterator;->hasNext()Z
+1985: 
+1986:     .line 961
+1987:     .line 962
+1988:     .line 963
+1989:     move-result v0
+1990: 
+1991:     .line 964
+1992:     if-eqz v0, :cond_3dc
+1993: 
+1994:     .line 965
+1995:     .line 966
+1996:     invoke-interface {v10}, Ljava/util/Iterator;->next()Ljava/lang/Object;
+1997: 
+1998:     .line 967
+1999:     .line 968
+2000:     .line 969
+2001:     move-result-object v0
+2002: 
+2003:     .line 970
+2004:     check-cast v0, Ljava/util/Map$Entry;
+2005: 
+2006:     .line 971
+2007:     .line 972
+2008:     invoke-interface {v0}, Ljava/util/Map$Entry;->getKey()Ljava/lang/Object;
+2009: 
+2010:     .line 973
+2011:     .line 974
+2012:     .line 975
+2013:     move-result-object v1
+2014: 
+2015:     .line 976
+2016:     check-cast v1, Ljava/lang/String;
+2017: 
+2018:     .line 977
+2019:     .line 978
+2020:     invoke-interface {v0}, Ljava/util/Map$Entry;->getValue()Ljava/lang/Object;
+2021: 
+2022:     .line 979
+2023:     .line 980
+2024:     .line 981
+2025:     move-result-object v0
+2026: 
+2027:     .line 982
+2028:     check-cast v0, Ljava/lang/String;
+2029: 
+2030:     .line 983
+2031:     .line 984
+2032:     invoke-virtual {v5, v1, v0}, LX/03u7;->AOA(Ljava/lang/String;Ljava/lang/String;)V
+2033: 
+2034:     .line 985
+2035:     .line 986
+2036:     .line 987
+2037:     goto :goto_3c0
+2038: 
+2039:     .line 988
+2040:     :cond_3dc
+2041:     iget-object v0, v7, LX/04qU;->A00:Ljava/util/Map;
+2042: 
+2043:     .line 989
+2044:     .line 990
+2045:     invoke-interface {v0}, Ljava/util/Map;->entrySet()Ljava/util/Set;
+2046: 
+2047:     .line 991
+2048:     .line 992
+2049:     .line 993
+2050:     move-result-object v0
+2051: 
+2052:     .line 994
+2053:     invoke-interface {v0}, Ljava/util/Set;->iterator()Ljava/util/Iterator;
+2054: 
+2055:     .line 995
+2056:     .line 996
+2057:     .line 997
+2058:     move-result-object v7
+2059: 
+2060:     .line 998
+2061:     :goto_3e6
+2062:     invoke-interface {v7}, Ljava/util/Iterator;->hasNext()Z
+2063: 
+2064:     .line 999
+2065:     .line 1000
+2066:     .line 1001
+2067:     move-result v0
+2068: 
+2069:     .line 1002
+2070:     if-eqz v0, :cond_410
+2071: 
+2072:     .line 1003
+2073:     .line 1004
+2074:     invoke-interface {v7}, Ljava/util/Iterator;->next()Ljava/lang/Object;
+2075: 
+2076:     .line 1005
+2077:     .line 1006
+2078:     .line 1007
+2079:     move-result-object v0
+2080: 
+2081:     .line 1008
+2082:     check-cast v0, Ljava/util/Map$Entry;
+2083: 
+2084:     .line 1009
+2085:     .line 1010
+2086:     invoke-interface {v0}, Ljava/util/Map$Entry;->getKey()Ljava/lang/Object;
+2087: 
+2088:     .line 1011
+2089:     .line 1012
+2090:     .line 1013
+2091:     move-result-object v1
+2092: 
+2093:     .line 1014
+2094:     check-cast v1, Ljava/lang/String;
+2095: 
+2096:     .line 1015
+2097:     .line 1016
+2098:     invoke-interface {v0}, Ljava/util/Map$Entry;->getValue()Ljava/lang/Object;
+2099: 
+2100:     .line 1017
+2101:     .line 1018
+2102:     .line 1019
+2103:     move-result-object v0
+2104: 
+2105:     .line 1020
+2106:     check-cast v0, Ljava/lang/String;
+2107: 
+2108:     .line 1021
+2109:     .line 1022
+2110:     invoke-virtual {v5, v1, v0}, LX/03u7;->AMu(Ljava/lang/String;Ljava/lang/String;)V
+2111: 
+2112:     .line 1023
+2113:     .line 1024
+2114:     .line 1025
+2115:     goto :goto_3e6
+2116: 
+2117:     .line 1026
+2118:     :cond_402
+2119:     const v0, 0x480c7
+2120: 
+2121:     .line 1027
+2122:     .line 1028
+2123:     .line 1029
+2124:     invoke-static {v0}, LX/04oL;->A01(I)Ljava/lang/Object;
+2125: 
+2126:     .line 1030
+2127:     .line 1031
+2128:     .line 1032
+2129:     move-result-object v0
+2130: 
+2131:     .line 1033
+2132:     check-cast v0, LX/02ez;
+2133: 
+2134:     .line 1034
+2135:     .line 1035
+2136:     move-object/from16 v1, p5
+2137: 
+2138:     .line 1036
+2139:     .line 1037
+2140:     invoke-virtual {v0, v6, v5, v8, v1}, LX/02ez;->A00(Landroid/content/Context;LX/0Pch;Lcom/instagram/common/session/UserSession;LX/02uX;)V
+2141: 
+2142:     .line 1038
+2143:     .line 1039
+2144:     .line 1040
+
+===== LAST_DYNAMIC_AMU_UPSTREAM_INVOKES =====
+1871: invoke-static {v14, v15}, Ljava/lang/String;->valueOf(J)Ljava/lang/String;
+1879: invoke-virtual {v5, v1, v0}, LX/03u7;->AOA(Ljava/lang/String;Ljava/lang/String;)V
+1892: invoke-interface {v10, v13}, Ljava/util/Map;->containsKey(Ljava/lang/Object;)Z
+1911: invoke-interface {v10, v13}, Ljava/util/Map;->get(Ljava/lang/Object;)Ljava/lang/Object;
+1919: invoke-static {v10, v7}, LX/04l9;->areEqual(Ljava/lang/Object;Ljava/lang/Object;)Z
+1931: invoke-static {v4, v0}, LX/02qb;->A00(LX/02pp;Ljava/lang/String;)Ljava/lang/String;
+1939: invoke-virtual {v5, v1, v0}, LX/03u7;->AOA(Ljava/lang/String;Ljava/lang/String;)V
+1948: invoke-virtual {v5, v1, v0}, LX/03u7;->AOA(Ljava/lang/String;Ljava/lang/String;)V
+1967: invoke-interface {v0}, Ljava/util/Map;->entrySet()Ljava/util/Set;
+1975: invoke-interface {v0}, Ljava/util/Set;->iterator()Ljava/util/Iterator;
+1984: invoke-interface {v10}, Ljava/util/Iterator;->hasNext()Z
+1996: invoke-interface {v10}, Ljava/util/Iterator;->next()Ljava/lang/Object;
+2008: invoke-interface {v0}, Ljava/util/Map$Entry;->getKey()Ljava/lang/Object;
+2020: invoke-interface {v0}, Ljava/util/Map$Entry;->getValue()Ljava/lang/Object;
+2032: invoke-virtual {v5, v1, v0}, LX/03u7;->AOA(Ljava/lang/String;Ljava/lang/String;)V
+2045: invoke-interface {v0}, Ljava/util/Map;->entrySet()Ljava/util/Set;
+2053: invoke-interface {v0}, Ljava/util/Set;->iterator()Ljava/util/Iterator;
+2062: invoke-interface {v7}, Ljava/util/Iterator;->hasNext()Z
+2074: invoke-interface {v7}, Ljava/util/Iterator;->next()Ljava/lang/Object;
+2086: invoke-interface {v0}, Ljava/util/Map$Entry;->getKey()Ljava/lang/Object;
+2098: invoke-interface {v0}, Ljava/util/Map$Entry;->getValue()Ljava/lang/Object;
+2110: invoke-virtual {v5, v1, v0}, LX/03u7;->AMu(Ljava/lang/String;Ljava/lang/String;)V
