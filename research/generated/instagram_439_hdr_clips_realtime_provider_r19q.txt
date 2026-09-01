@@ -1,0 +1,1498 @@
+Instagram 439 Clips realtime provider R19q
+======================================
+
+===== FULL 04GW FILE=work/smali/X/04GW.smali =====
+.class public final LX/04GW;
+.super Ljava/lang/Object;
+.source ""
+
+# interfaces
+.implements LX/0Iwp;
+
+
+# instance fields
+.field public final A00:Ljava/util/Map;
+
+.field public final A01:Ljava/util/Set;
+
+.field public final A02:LX/0C8T;
+
+.field public final A03:LX/0C8T;
+
+.field public final A04:LX/0C8T;
+
+.field public final A05:LX/0C8T;
+
+.field public final A06:LX/0C8T;
+
+.field public final A07:LX/0C8T;
+
+.field public final A08:LX/0C8T;
+
+.field public final A09:LX/0C8T;
+
+.field public final A0A:LX/0C8T;
+
+.field public final A0B:LX/0C8T;
+
+.field public final A0C:LX/0C8T;
+
+.field public final A0D:LX/0C8T;
+
+.field public final A0E:LX/0C8T;
+
+.field public final A0F:LX/0C8T;
+
+.field public final A0G:LX/0C8T;
+
+.field public final A0H:LX/0C8T;
+
+.field public final A0I:LX/0C8T;
+
+.field public final A0J:LX/0C8T;
+
+.field public final A0K:LX/0C8T;
+
+.field public final A0L:LX/0C8T;
+
+.field public final A0M:LX/0C8T;
+
+.field public final A0N:LX/0C8T;
+
+.field public final A0O:LX/0C8T;
+
+.field public final A0P:LX/0C8T;
+
+.field public final A0Q:LX/0C8T;
+
+.field public final A0R:LX/0C8T;
+
+.field public final A0S:LX/0C8T;
+
+.field public final A0T:LX/0C8T;
+
+.field public final A0U:LX/0C8T;
+
+.field public final A0V:LX/0Auo;
+
+.field public final A0W:LX/0AaQ;
+
+.field public final A0X:LX/0Ago;
+
+.field public final A0Y:Z
+
+.field public final A0Z:Z
+
+
+# direct methods
+.method public constructor <init>(LX/0Auo;LX/0AaQ;LX/0Ago;Lkotlin/jvm/functions/Function0;Lkotlin/jvm/functions/Function0;Lkotlin/jvm/functions/Function0;Lkotlin/jvm/functions/Function0;Lkotlin/jvm/functions/Function0;Lkotlin/jvm/functions/Function0;Lkotlin/jvm/functions/Function0;Lkotlin/jvm/functions/Function0;Lkotlin/jvm/functions/Function0;Lkotlin/jvm/functions/Function0;Lkotlin/jvm/functions/Function0;Lkotlin/jvm/functions/Function0;Lkotlin/jvm/functions/Function0;Lkotlin/jvm/functions/Function0;Lkotlin/jvm/functions/Function0;Lkotlin/jvm/functions/Function0;Lkotlin/jvm/functions/Function0;Lkotlin/jvm/functions/Function0;Lkotlin/jvm/functions/Function0;Lkotlin/jvm/functions/Function0;Lkotlin/jvm/functions/Function0;Lkotlin/jvm/functions/Function0;Lkotlin/jvm/functions/Function0;Lkotlin/jvm/functions/Function0;Lkotlin/jvm/functions/Function0;Lkotlin/jvm/functions/Function0;Lkotlin/jvm/functions/Function0;Lkotlin/jvm/functions/Function0;Lkotlin/jvm/functions/Function0;ZZ)V
+    .registers 62
+
+    const/16 v25, 0x0
+
+    const/16 v24, 0x1
+
+    const/4 v14, 0x2
+
+    const/4 v13, 0x3
+
+    const/4 v12, 0x4
+
+    const/4 v11, 0x5
+
+    const/4 v10, 0x6
+
+    const/4 v9, 0x7
+
+    const/16 v23, 0x8
+
+    const/16 v22, 0x9
+
+    const/16 v8, 0xa
+
+    const/16 v21, 0xb
+
+    const/16 v20, 0xc
+
+    const/16 v19, 0xd
+
+    const/16 v7, 0xe
+
+    const/16 v6, 0xf
+
+    const/16 v18, 0x10
+
+    const/16 v17, 0x11
+
+    const/16 v5, 0x12
+
+    const/16 v16, 0x13
+
+    const/16 v4, 0x14
+
+    const/16 v3, 0x15
+
+    const/16 v2, 0x16
+
+    const/16 v0, 0x21
+
+    move-object/from16 v15, p3
+
+    invoke-static {v15, v0}, LX/04l9;->A0j(Ljava/lang/Object;I)V
+
+    move-object/from16 v0, p0
+
+    invoke-direct {v0}, Ljava/lang/Object;-><init>()V
+
+    move/from16 v1, p33
+
+    iput-boolean v1, v0, LX/04GW;->A0Y:Z
+
+    move/from16 v1, p34
+
+    iput-boolean v1, v0, LX/04GW;->A0Z:Z
+
+    move-object/from16 v1, p2
+
+    iput-object v1, v0, LX/04GW;->A0W:LX/0AaQ;
+
+    move-object/from16 v1, p1
+
+    iput-object v1, v0, LX/04GW;->A0V:LX/0Auo;
+
+    iput-object v15, v0, LX/04GW;->A0X:LX/0Ago;
+
+    new-instance v15, LX/0AYO;
+
+    move-object/from16 v1, p4
+
+    invoke-direct {v15, v1, v2}, LX/0AYO;-><init>(Ljava/lang/Object;I)V
+
+    new-instance v1, LX/04i7;
+
+    invoke-direct {v1, v15}, LX/04i7;-><init>(Lkotlin/jvm/functions/Function0;)V
+
+    iput-object v1, v0, LX/04GW;->A0U:LX/0C8T;
+
+    new-instance v2, LX/0AYO;
+
+    move-object/from16 v1, p5
+
+    invoke-direct {v2, v1, v7}, LX/0AYO;-><init>(Ljava/lang/Object;I)V
+
+    new-instance v1, LX/04i7;
+
+    invoke-direct {v1, v2}, LX/04i7;-><init>(Lkotlin/jvm/functions/Function0;)V
+
+    iput-object v1, v0, LX/04GW;->A0M:LX/0C8T;
+
+    new-instance v2, LX/0AYO;
+
+    move-object/from16 v1, p14
+
+    invoke-direct {v2, v1, v10}, LX/0AYO;-><init>(Ljava/lang/Object;I)V
+
+    new-instance v1, LX/04i7;
+
+    invoke-direct {v1, v2}, LX/04i7;-><init>(Lkotlin/jvm/functions/Function0;)V
+
+    iput-object v1, v0, LX/04GW;->A0E:LX/0C8T;
+
+    new-instance v2, LX/0AYO;
+
+    move-object/from16 v1, p15
+
+    invoke-direct {v2, v1, v12}, LX/0AYO;-><init>(Ljava/lang/Object;I)V
+
+    new-instance v1, LX/04i7;
+
+    invoke-direct {v1, v2}, LX/04i7;-><init>(Lkotlin/jvm/functions/Function0;)V
+
+    iput-object v1, v0, LX/04GW;->A0C:LX/0C8T;
+
+    new-instance v2, LX/0AYO;
+
+    move-object/from16 v1, p16
+
+    invoke-direct {v2, v1, v11}, LX/0AYO;-><init>(Ljava/lang/Object;I)V
+
+    new-instance v1, LX/04i7;
+
+    invoke-direct {v1, v2}, LX/04i7;-><init>(Lkotlin/jvm/functions/Function0;)V
+
+    iput-object v1, v0, LX/04GW;->A0D:LX/0C8T;
+
+    new-instance v2, LX/0AYO;
+
+    move-object/from16 v1, p17
+
+    invoke-direct {v2, v1, v13}, LX/0AYO;-><init>(Ljava/lang/Object;I)V
+
+    new-instance v1, LX/04i7;
+
+    invoke-direct {v1, v2}, LX/04i7;-><init>(Lkotlin/jvm/functions/Function0;)V
+
+    iput-object v1, v0, LX/04GW;->A0B:LX/0C8T;
+
+    new-instance v2, LX/0AYO;
+
+    move-object/from16 v1, p18
+
+    invoke-direct {v2, v1, v9}, LX/0AYO;-><init>(Ljava/lang/Object;I)V
+
+    new-instance v1, LX/04i7;
+
+    invoke-direct {v1, v2}, LX/04i7;-><init>(Lkotlin/jvm/functions/Function0;)V
+
+    iput-object v1, v0, LX/04GW;->A0F:LX/0C8T;
+
+    new-instance v2, LX/0AYO;
+
+    move-object/from16 v1, p19
+
+    invoke-direct {v2, v1, v14}, LX/0AYO;-><init>(Ljava/lang/Object;I)V
+
+    new-instance v1, LX/04i7;
+
+    invoke-direct {v1, v2}, LX/04i7;-><init>(Lkotlin/jvm/functions/Function0;)V
+
+    iput-object v1, v0, LX/04GW;->A0A:LX/0C8T;
+
+    const/16 v1, 0x41
+
+    new-instance v2, LX/0AVN;
+
+    move-object/from16 v7, p20
+
+    invoke-direct {v2, v7, v1}, LX/0AVN;-><init>(Ljava/lang/Object;I)V
+
+    new-instance v1, LX/04i7;
+
+    invoke-direct {v1, v2}, LX/04i7;-><init>(Lkotlin/jvm/functions/Function0;)V
+
+    iput-object v1, v0, LX/04GW;->A02:LX/0C8T;
+
+    new-instance v2, LX/0AYO;
+
+    move-object/from16 v1, p6
+
+    invoke-direct {v2, v1, v6}, LX/0AYO;-><init>(Ljava/lang/Object;I)V
+
+    new-instance v1, LX/04i7;
+
+    invoke-direct {v1, v2}, LX/04i7;-><init>(Lkotlin/jvm/functions/Function0;)V
+
+    iput-object v1, v0, LX/04GW;->A0N:LX/0C8T;
+
+    const/16 v1, 0x42
+
+    new-instance v2, LX/0AVN;
+
+    move-object/from16 v6, p32
+
+    invoke-direct {v2, v6, v1}, LX/0AVN;-><init>(Ljava/lang/Object;I)V
+
+    new-instance v1, LX/04i7;
+
+    invoke-direct {v1, v2}, LX/04i7;-><init>(Lkotlin/jvm/functions/Function0;)V
+
+    iput-object v1, v0, LX/04GW;->A03:LX/0C8T;
+
+    new-instance v2, LX/0AYO;
+
+    move-object/from16 v1, p7
+
+    invoke-direct {v2, v1, v8}, LX/0AYO;-><init>(Ljava/lang/Object;I)V
+
+    new-instance v1, LX/04i7;
+
+    invoke-direct {v1, v2}, LX/04i7;-><init>(Lkotlin/jvm/functions/Function0;)V
+
+    iput-object v1, v0, LX/04GW;->A0I:LX/0C8T;
+
+    const/16 v1, 0x46
+
+    new-instance v2, LX/0AVN;
+
+    move-object/from16 v6, p8
+
+    invoke-direct {v2, v6, v1}, LX/0AVN;-><init>(Ljava/lang/Object;I)V
+
+    new-instance v1, LX/04i7;
+
+    invoke-direct {v1, v2}, LX/04i7;-><init>(Lkotlin/jvm/functions/Function0;)V
+
+    iput-object v1, v0, LX/04GW;->A07:LX/0C8T;
+
+    new-instance v2, LX/0AYO;
+
+    move-object/from16 v6, p9
+
+    move/from16 v1, v25
+
+    invoke-direct {v2, v6, v1}, LX/0AYO;-><init>(Ljava/lang/Object;I)V
+
+    new-instance v1, LX/04i7;
+
+    invoke-direct {v1, v2}, LX/04i7;-><init>(Lkotlin/jvm/functions/Function0;)V
+
+    iput-object v1, v0, LX/04GW;->A08:LX/0C8T;
+
+    const/16 v1, 0x45
+
+    new-instance v2, LX/0AVN;
+
+    move-object/from16 v6, p10
+
+    invoke-direct {v2, v6, v1}, LX/0AVN;-><init>(Ljava/lang/Object;I)V
+
+    new-instance v1, LX/04i7;
+
+    invoke-direct {v1, v2}, LX/04i7;-><init>(Lkotlin/jvm/functions/Function0;)V
+
+    iput-object v1, v0, LX/04GW;->A06:LX/0C8T;
+
+    const/16 v1, 0x44
+
+    new-instance v2, LX/0AVN;
+
+    move-object/from16 v6, p11
+
+    invoke-direct {v2, v6, v1}, LX/0AVN;-><init>(Ljava/lang/Object;I)V
+
+    new-instance v1, LX/04i7;
+
+    invoke-direct {v1, v2}, LX/04i7;-><init>(Lkotlin/jvm/functions/Function0;)V
+
+    iput-object v1, v0, LX/04GW;->A05:LX/0C8T;
+
+    new-instance v2, LX/0AYO;
+
+    move-object/from16 v1, p12
+
+    invoke-direct {v2, v1, v5}, LX/0AYO;-><init>(Ljava/lang/Object;I)V
+
+    new-instance v1, LX/04i7;
+
+    invoke-direct {v1, v2}, LX/04i7;-><init>(Lkotlin/jvm/functions/Function0;)V
+
+    iput-object v1, v0, LX/04GW;->A0Q:LX/0C8T;
+
+    const/16 v1, 0x43
+
+    new-instance v2, LX/0AVN;
+
+    move-object/from16 v5, p13
+
+    invoke-direct {v2, v5, v1}, LX/0AVN;-><init>(Ljava/lang/Object;I)V
+
+    new-instance v1, LX/04i7;
+
+    invoke-direct {v1, v2}, LX/04i7;-><init>(Lkotlin/jvm/functions/Function0;)V
+
+    iput-object v1, v0, LX/04GW;->A04:LX/0C8T;
+
+    new-instance v2, LX/0AYO;
+
+    move-object/from16 v1, p21
+
+    invoke-direct {v2, v1, v3}, LX/0AYO;-><init>(Ljava/lang/Object;I)V
+
+    new-instance v1, LX/04i7;
+
+    invoke-direct {v1, v2}, LX/04i7;-><init>(Lkotlin/jvm/functions/Function0;)V
+
+    iput-object v1, v0, LX/04GW;->A0T:LX/0C8T;
+
+    new-instance v2, LX/0AYO;
+
+    move-object/from16 v3, p22
+
+    move/from16 v1, v21
+
+    invoke-direct {v2, v3, v1}, LX/0AYO;-><init>(Ljava/lang/Object;I)V
+
+    new-instance v1, LX/04i7;
+
+    invoke-direct {v1, v2}, LX/04i7;-><init>(Lkotlin/jvm/functions/Function0;)V
+
+    iput-object v1, v0, LX/04GW;->A0J:LX/0C8T;
+
+    new-instance v2, LX/0AYO;
+
+    move-object/from16 v3, p23
+
+    move/from16 v1, v19
+
+    invoke-direct {v2, v3, v1}, LX/0AYO;-><init>(Ljava/lang/Object;I)V
+
+    new-instance v1, LX/04i7;
+
+    invoke-direct {v1, v2}, LX/04i7;-><init>(Lkotlin/jvm/functions/Function0;)V
+
+    iput-object v1, v0, LX/04GW;->A0L:LX/0C8T;
+
+    new-instance v2, LX/0AYO;
+
+    move-object/from16 v3, p24
+
+    move/from16 v1, v17
+
+    invoke-direct {v2, v3, v1}, LX/0AYO;-><init>(Ljava/lang/Object;I)V
+
+    new-instance v1, LX/04i7;
+
+    invoke-direct {v1, v2}, LX/04i7;-><init>(Lkotlin/jvm/functions/Function0;)V
+
+    iput-object v1, v0, LX/04GW;->A0P:LX/0C8T;
+
+    new-instance v2, LX/0AYO;
+
+    move-object/from16 v1, p25
+
+    invoke-direct {v2, v1, v4}, LX/0AYO;-><init>(Ljava/lang/Object;I)V
+
+    new-instance v1, LX/04i7;
+
+    invoke-direct {v1, v2}, LX/04i7;-><init>(Lkotlin/jvm/functions/Function0;)V
+
+    iput-object v1, v0, LX/04GW;->A0S:LX/0C8T;
+
+    new-instance v2, LX/0AYO;
+
+    move-object/from16 v3, p26
+
+    move/from16 v1, v23
+
+    invoke-direct {v2, v3, v1}, LX/0AYO;-><init>(Ljava/lang/Object;I)V
+
+    new-instance v1, LX/04i7;
+
+    invoke-direct {v1, v2}, LX/04i7;-><init>(Lkotlin/jvm/functions/Function0;)V
+
+    iput-object v1, v0, LX/04GW;->A0G:LX/0C8T;
+
+    new-instance v2, LX/0AYO;
+
+    move-object/from16 v3, p27
+
+    move/from16 v1, v16
+
+    invoke-direct {v2, v3, v1}, LX/0AYO;-><init>(Ljava/lang/Object;I)V
+
+    new-instance v1, LX/04i7;
+
+    invoke-direct {v1, v2}, LX/04i7;-><init>(Lkotlin/jvm/functions/Function0;)V
+
+    iput-object v1, v0, LX/04GW;->A0R:LX/0C8T;
+
+    new-instance v2, LX/0AYO;
+
+    move-object/from16 v3, p28
+
+    move/from16 v1, v20
+
+    invoke-direct {v2, v3, v1}, LX/0AYO;-><init>(Ljava/lang/Object;I)V
+
+    new-instance v1, LX/04i7;
+
+    invoke-direct {v1, v2}, LX/04i7;-><init>(Lkotlin/jvm/functions/Function0;)V
+
+    iput-object v1, v0, LX/04GW;->A0K:LX/0C8T;
+
+    new-instance v2, LX/0AYO;
+
+    move-object/from16 v3, p29
+
+    move/from16 v1, v22
+
+    invoke-direct {v2, v3, v1}, LX/0AYO;-><init>(Ljava/lang/Object;I)V
+
+    new-instance v1, LX/04i7;
+
+    invoke-direct {v1, v2}, LX/04i7;-><init>(Lkotlin/jvm/functions/Function0;)V
+
+    iput-object v1, v0, LX/04GW;->A0H:LX/0C8T;
+
+    new-instance v2, LX/0AYO;
+
+    move-object/from16 v3, p30
+
+    move/from16 v1, v18
+
+    invoke-direct {v2, v3, v1}, LX/0AYO;-><init>(Ljava/lang/Object;I)V
+
+    new-instance v1, LX/04i7;
+
+    invoke-direct {v1, v2}, LX/04i7;-><init>(Lkotlin/jvm/functions/Function0;)V
+
+    iput-object v1, v0, LX/04GW;->A0O:LX/0C8T;
+
+    new-instance v2, LX/0AYO;
+
+    move-object/from16 v3, p31
+
+    move/from16 v1, v24
+
+    invoke-direct {v2, v3, v1}, LX/0AYO;-><init>(Ljava/lang/Object;I)V
+
+    new-instance v1, LX/04i7;
+
+    invoke-direct {v1, v2}, LX/04i7;-><init>(Lkotlin/jvm/functions/Function0;)V
+
+    iput-object v1, v0, LX/04GW;->A09:LX/0C8T;
+
+    sget-object v1, LX/03ub;->A0U:LX/03ub;
+
+    sget-object v2, LX/03ub;->A0w:LX/03ub;
+
+    sget-object v3, LX/03ub;->A0v:LX/03ub;
+
+    sget-object v4, LX/03ub;->A13:LX/03ub;
+
+    sget-object v5, LX/03ub;->A0J:LX/03ub;
+
+    sget-object v6, LX/03ub;->A15:LX/03ub;
+
+    sget-object v7, LX/03ub;->A0n:LX/03ub;
+
+    sget-object v8, LX/03ub;->A11:LX/03ub;
+
+    sget-object v9, LX/03ub;->A0V:LX/03ub;
+
+    sget-object v10, LX/03ub;->A1Z:LX/03ub;
+
+    sget-object v11, LX/03ub;->A0p:LX/03ub;
+
+    sget-object v12, LX/03ub;->A0g:LX/03ub;
+
+    sget-object v13, LX/03ub;->A08:LX/03ub;
+
+    sget-object v14, LX/03ub;->A0E:LX/03ub;
+
+    sget-object v15, LX/03ub;->A0F:LX/03ub;
+
+    sget-object v16, LX/03ub;->A0H:LX/03ub;
+
+    sget-object v17, LX/03ub;->A0P:LX/03ub;
+
+    sget-object v18, LX/03ub;->A0K:LX/03ub;
+
+    sget-object v19, LX/03ub;->A0N:LX/03ub;
+
+    sget-object v20, LX/03ub;->A0G:LX/03ub;
+
+    sget-object v21, LX/03ub;->A0B:LX/03ub;
+
+    sget-object v22, LX/03ub;->A0Q:LX/03ub;
+
+    sget-object v23, LX/03ub;->A0R:LX/03ub;
+
+    sget-object v24, LX/03ub;->A1p:LX/03ub;
+
+    sget-object v25, LX/03ub;->A0O:LX/03ub;
+
+    sget-object v26, LX/03ub;->A16:LX/03ub;
+
+    filled-new-array/range {v1 .. v26}, [LX/03ub;
+
+    move-result-object v1
+
+    invoke-static {v1}, LX/02oI;->A0T([Ljava/lang/Object;)Ljava/util/Set;
+
+    move-result-object v1
+
+    iput-object v1, v0, LX/04GW;->A01:Ljava/util/Set;
+
+    sget-object v2, LX/03ub;->A0D:LX/03ub;
+
+    iget-object v1, v0, LX/04GW;->A05:LX/0C8T;
+
+    invoke-interface {v1}, LX/0C8T;->getValue()Ljava/lang/Object;
+
+    move-result-object v1
+
+    new-instance v3, LX/04oE;
+
+    invoke-direct {v3, v2, v1}, LX/04oE;-><init>(Ljava/lang/Object;Ljava/lang/Object;)V
+
+    sget-object v2, LX/03ub;->A0I:LX/03ub;
+
+    iget-object v1, v0, LX/04GW;->A06:LX/0C8T;
+
+    invoke-interface {v1}, LX/0C8T;->getValue()Ljava/lang/Object;
+
+    move-result-object v1
+
+    new-instance v4, LX/04oE;
+
+    invoke-direct {v4, v2, v1}, LX/04oE;-><init>(Ljava/lang/Object;Ljava/lang/Object;)V
+
+    sget-object v2, LX/03ub;->A0T:LX/03ub;
+
+    iget-object v1, v0, LX/04GW;->A08:LX/0C8T;
+
+    invoke-interface {v1}, LX/0C8T;->getValue()Ljava/lang/Object;
+
+    move-result-object v1
+
+    new-instance v5, LX/04oE;
+
+    invoke-direct {v5, v2, v1}, LX/04oE;-><init>(Ljava/lang/Object;Ljava/lang/Object;)V
+
+    sget-object v2, LX/03ub;->A0e:LX/03ub;
+
+    iget-object v1, v0, LX/04GW;->A0G:LX/0C8T;
+
+    invoke-interface {v1}, LX/0C8T;->getValue()Ljava/lang/Object;
+
+    move-result-object v1
+
+    new-instance v6, LX/04oE;
+
+    invoke-direct {v6, v2, v1}, LX/04oE;-><init>(Ljava/lang/Object;Ljava/lang/Object;)V
+
+    sget-object v2, LX/03ub;->A0k:LX/03ub;
+
+    iget-object v1, v0, LX/04GW;->A0J:LX/0C8T;
+
+    invoke-interface {v1}, LX/0C8T;->getValue()Ljava/lang/Object;
+
+    move-result-object v1
+
+    new-instance v7, LX/04oE;
+
+    invoke-direct {v7, v2, v1}, LX/04oE;-><init>(Ljava/lang/Object;Ljava/lang/Object;)V
+
+    sget-object v2, LX/03ub;->A0m:LX/03ub;
+
+    iget-object v1, v0, LX/04GW;->A0L:LX/0C8T;
+
+    invoke-interface {v1}, LX/0C8T;->getValue()Ljava/lang/Object;
+
+    move-result-object v1
+
+    new-instance v8, LX/04oE;
+
+    invoke-direct {v8, v2, v1}, LX/04oE;-><init>(Ljava/lang/Object;Ljava/lang/Object;)V
+
+    sget-object v2, LX/03ub;->A0x:LX/03ub;
+
+    iget-object v1, v0, LX/04GW;->A0O:LX/0C8T;
+
+    invoke-interface {v1}, LX/0C8T;->getValue()Ljava/lang/Object;
+
+    move-result-object v1
+
+    new-instance v9, LX/04oE;
+
+    invoke-direct {v9, v2, v1}, LX/04oE;-><init>(Ljava/lang/Object;Ljava/lang/Object;)V
+
+    sget-object v2, LX/03ub;->A0y:LX/03ub;
+
+    iget-object v1, v0, LX/04GW;->A0P:LX/0C8T;
+
+    invoke-interface {v1}, LX/0C8T;->getValue()Ljava/lang/Object;
+
+    move-result-object v1
+
+    new-instance v10, LX/04oE;
+
+    invoke-direct {v10, v2, v1}, LX/04oE;-><init>(Ljava/lang/Object;Ljava/lang/Object;)V
+
+    sget-object v2, LX/03ub;->A12:LX/03ub;
+
+    iget-object v1, v0, LX/04GW;->A0Q:LX/0C8T;
+
+    invoke-interface {v1}, LX/0C8T;->getValue()Ljava/lang/Object;
+
+    move-result-object v1
+
+    new-instance v11, LX/04oE;
+
+    invoke-direct {v11, v2, v1}, LX/04oE;-><init>(Ljava/lang/Object;Ljava/lang/Object;)V
+
+    sget-object v2, LX/03ub;->A1b:LX/03ub;
+
+    iget-object v1, v0, LX/04GW;->A0R:LX/0C8T;
+
+    invoke-interface {v1}, LX/0C8T;->getValue()Ljava/lang/Object;
+
+    move-result-object v1
+
+    new-instance v12, LX/04oE;
+
+    invoke-direct {v12, v2, v1}, LX/04oE;-><init>(Ljava/lang/Object;Ljava/lang/Object;)V
+
+    sget-object v2, LX/03ub;->A1c:LX/03ub;
+
+    iget-object v1, v0, LX/04GW;->A0S:LX/0C8T;
+
+    invoke-interface {v1}, LX/0C8T;->getValue()Ljava/lang/Object;
+
+    move-result-object v1
+
+    new-instance v13, LX/04oE;
+
+    invoke-direct {v13, v2, v1}, LX/04oE;-><init>(Ljava/lang/Object;Ljava/lang/Object;)V
+
+    sget-object v2, LX/03ub;->A0l:LX/03ub;
+
+    iget-object v1, v0, LX/04GW;->A0K:LX/0C8T;
+
+    invoke-interface {v1}, LX/0C8T;->getValue()Ljava/lang/Object;
+
+    move-result-object v1
+
+    new-instance v14, LX/04oE;
+
+    invoke-direct {v14, v2, v1}, LX/04oE;-><init>(Ljava/lang/Object;Ljava/lang/Object;)V
+
+    sget-object v2, LX/03ub;->A0f:LX/03ub;
+
+    iget-object v1, v0, LX/04GW;->A0H:LX/0C8T;
+
+    invoke-interface {v1}, LX/0C8T;->getValue()Ljava/lang/Object;
+
+    move-result-object v1
+
+    new-instance v15, LX/04oE;
+
+    invoke-direct {v15, v2, v1}, LX/04oE;-><init>(Ljava/lang/Object;Ljava/lang/Object;)V
+
+    filled-new-array/range {v3 .. v15}, [LX/04oE;
+
+    move-result-object v1
+
+    invoke-static {v1}, LX/02pX;->A0G([LX/04oE;)Ljava/util/Map;
+
+    move-result-object v1
+
+    iput-object v1, v0, LX/04GW;->A00:Ljava/util/Map;
+
+    return-void
+.end method
+
+
+# virtual methods
+.method public final BBr(Ljava/lang/String;)Ljava/util/Map;
+    .registers 15
+
+    const/4 v0, 0x0
+
+    move-object v8, p1
+
+    invoke-static {p1, v0}, LX/04l9;->A0j(Ljava/lang/Object;I)V
+
+    const-string v0, "android_purge_26_q2_RealtimeSignalProviderClipsImpl_extractPayload"
+
+    invoke-static {v0}, LX/03zu;->A00(Ljava/lang/String;)V
+
+    invoke-static {}, Ljava/lang/System;->currentTimeMillis()J
+
+    move-result-wide v3
+
+    new-instance v2, Ljava/util/LinkedHashMap;
+
+    invoke-direct {v2}, Ljava/util/LinkedHashMap;-><init>()V
+
+    iget-object v0, p0, LX/04GW;->A0T:LX/0C8T;
+
+    invoke-interface {v0}, LX/0C8T;->getValue()Ljava/lang/Object;
+
+    move-result-object v0
+
+    check-cast v0, LX/0nFz;
+
+    invoke-interface {v0, p1}, LX/0nFz;->BC6(Ljava/lang/String;)Ljava/util/Map;
+
+    move-result-object v0
+
+    invoke-virtual {v2, v0}, Ljava/util/AbstractMap;->putAll(Ljava/util/Map;)V
+
+    iget-boolean v0, p0, LX/04GW;->A0Y:Z
+
+    if-nez v0, :cond_39
+
+    iget-boolean v0, p0, LX/04GW;->A0Z:Z
+
+    if-eqz v0, :cond_67
+
+    iget-object v0, p0, LX/04GW;->A03:LX/0C8T;
+
+    :goto_2c
+    invoke-interface {v0}, LX/0C8T;->getValue()Ljava/lang/Object;
+
+    move-result-object v0
+
+    check-cast v0, LX/0Jqv;
+
+    invoke-interface {v0, p1}, LX/0Jqv;->CoI(Ljava/lang/String;)Ljava/util/Map;
+
+    move-result-object v0
+
+    invoke-virtual {v2, v0}, Ljava/util/AbstractMap;->putAll(Ljava/util/Map;)V
+
+    :cond_39
+    iget-object v1, p0, LX/04GW;->A0X:LX/0Ago;
+
+    sget-object v0, LX/04ji;->A04:LX/04ji;
+
+    invoke-interface {v1, v0, p1}, LX/0Ago;->DHu(LX/04ji;Ljava/lang/String;)Ljava/util/Map;
+
+    move-result-object v0
+
+    invoke-virtual {v2, v0}, Ljava/util/AbstractMap;->putAll(Ljava/util/Map;)V
+
+    iget-object v5, p0, LX/04GW;->A0W:LX/0AaQ;
+
+    iget-object v0, p0, LX/04GW;->A0V:LX/0Auo;
+
+    invoke-interface {v0}, LX/07YW;->getModuleName()Ljava/lang/String;
+
+    move-result-object v7
+
+    invoke-static {v2}, LX/02pX;->A0D(Ljava/util/Map;)Ljava/util/Map;
+
+    move-result-object v10
+
+    invoke-static {}, Ljava/lang/System;->currentTimeMillis()J
+
+    move-result-wide v0
+
+    sub-long/2addr v0, v3
+
+    long-to-double v11, v0
+
+    new-instance v6, LX/03Pr;
+
+    invoke-direct {v6}, Ljava/lang/Object;-><init>()V
+
+    invoke-virtual {v2}, Ljava/util/AbstractMap;->keySet()Ljava/util/Set;
+
+    move-result-object v0
+
+    invoke-static {v0}, LX/04k4;->A1O(Ljava/lang/Iterable;)Ljava/util/List;
+
+    move-result-object v9
+
+    invoke-interface/range {v5 .. v12}, LX/0AaQ;->GQb(LX/03Pr;Ljava/lang/String;Ljava/lang/String;Ljava/util/List;Ljava/util/Map;D)V
+
+    return-object v2
+
+    :cond_67
+    iget-object v0, p0, LX/04GW;->A0N:LX/0C8T;
+
+    goto :goto_2c
+.end method
+
+.method public final BBs(Ljava/lang/String;Ljava/lang/String;)Ljava/util/Map;
+    .registers 4
+
+    invoke-static {p1}, LX/04l9;->A0g(Ljava/lang/Object;)V
+
+    invoke-interface {p0, p1}, LX/0Omv;->BBr(Ljava/lang/String;)Ljava/util/Map;
+
+    move-result-object v0
+
+    return-object v0
+.end method
+
+.method public final FOP(Z)V
+    .registers 2
+
+    return-void
+.end method
+
+.method public final bridge synthetic FV1(LX/04W9;LX/03ub;Ljava/lang/Object;Ljava/lang/Object;)V
+    .registers 15
+
+    check-cast p3, LX/00RR;
+
+    move-object v6, p2
+
+    invoke-static {p2}, LX/04l9;->A0f(Ljava/lang/Object;)V
+
+    invoke-static {p3}, LX/04l9;->A0g(Ljava/lang/Object;)V
+
+    move-object v8, p4
+
+    invoke-static {p4}, LX/04l9;->A0X(Ljava/lang/Object;)V
+
+    invoke-static {p1}, LX/04l9;->A0Y(Ljava/lang/Object;)V
+
+    const-string v0, "android_purge_26_q2_RealtimeSignalProviderClipsImpl_onNewSignal"
+
+    invoke-static {v0}, LX/03zu;->A00(Ljava/lang/String;)V
+
+    invoke-virtual {p2}, Ljava/lang/Enum;->ordinal()I
+
+    move-result v1
+
+    const/4 v7, 0x0
+
+    packed-switch v1, :pswitch_data_218
+
+    :pswitch_1d
+    const/4 v0, 0x2
+
+    if-eq v1, v0, :cond_107
+
+    const/4 v0, 0x5
+
+    if-eq v1, v0, :cond_e1
+
+    const/4 v0, 0x7
+
+    if-eq v1, v0, :cond_bb
+
+    const/16 v0, 0xd
+
+    if-eq v1, v0, :cond_e1
+
+    const/16 v0, 0x10
+
+    if-eq v1, v0, :cond_96
+
+    iget-object v0, p0, LX/04GW;->A00:Ljava/util/Map;
+
+    invoke-interface {v0, p2}, Ljava/util/Map;->get(Ljava/lang/Object;)Ljava/lang/Object;
+
+    move-result-object v5
+
+    check-cast v5, LX/0Omv;
+
+    if-eqz v5, :cond_58
+
+    iget-object v0, p3, LX/00RR;->A0U:Lcom/instagram/feed/media/Media;
+
+    if-eqz v0, :cond_54
+
+    const v4, -0x4c6f1185
+
+    const-string v3, "itas-android"
+
+    invoke-virtual {v0, v3, v4}, Lcom/instagram/feed/media/Media;->ARa(Ljava/lang/String;I)LX/0UsO;
+
+    move-result-object v2
+
+    invoke-static {v2}, LX/04l9;->A0f(Ljava/lang/Object;)V
+
+    sget-object v1, LX/04k5;->A00:LX/04k5;
+
+    new-instance v0, LX/02tI;
+
+    invoke-direct {v0, v1, v4, v3}, LX/02tI;-><init>(Ljava/util/List;ILjava/lang/String;)V
+
+    new-instance v7, LX/0Twe;
+
+    invoke-direct {v7, v0, v2}, LX/0ANX;-><init>(LX/02tI;LX/0UsO;)V
+
+    :cond_54
+    :goto_54
+    invoke-interface {v5, p1, p2, v7, p4}, LX/0Omv;->FV1(LX/04W9;LX/03ub;Ljava/lang/Object;Ljava/lang/Object;)V
+
+    :cond_57
+    return-void
+
+    :cond_58
+    iget-object v0, p0, LX/04GW;->A01:Ljava/util/Set;
+
+    invoke-interface {v0, p2}, Ljava/util/Set;->contains(Ljava/lang/Object;)Z
+
+    move-result v0
+
+    if-eqz v0, :cond_57
+
+    iget-object v0, p3, LX/00RR;->A0U:Lcom/instagram/feed/media/Media;
+
+    if-eqz v0, :cond_7c
+
+    const v4, -0x4c6f1185
+
+    const-string v3, "itas-android"
+
+    invoke-virtual {v0, v3, v4}, Lcom/instagram/feed/media/Media;->ARa(Ljava/lang/String;I)LX/0UsO;
+
+    move-result-object v2
+
+    invoke-static {v2}, LX/04l9;->A0f(Ljava/lang/Object;)V
+
+    sget-object v1, LX/04k5;->A00:LX/04k5;
+
+    new-instance v0, LX/02tI;
+
+    invoke-direct {v0, v1, v4, v3}, LX/02tI;-><init>(Ljava/util/List;ILjava/lang/String;)V
+
+    new-instance v7, LX/0Twe;
+
+    invoke-direct {v7, v0, v2}, LX/0ANX;-><init>(LX/02tI;LX/0UsO;)V
+
+    :cond_7c
+    iget-object v0, p0, LX/04GW;->A09:LX/0C8T;
+
+    invoke-interface {v0}, LX/0C8T;->getValue()Ljava/lang/Object;
+
+    move-result-object v4
+
+    check-cast v4, LX/04Gq;
+
+    if-eqz v7, :cond_93
+
+    invoke-virtual {v7}, LX/0Twe;->A00()LX/05Q5;
+
+    move-result-object v0
+
+    invoke-static {v0}, LX/01Xh;->A05(LX/05Q5;)LX/01cK;
+
+    move-result-object v5
+
+    :goto_8e
+    const/4 v9, 0x0
+
+    invoke-virtual/range {v4 .. v9}, LX/04Gq;->A00(LX/01cK;LX/03ub;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/String;)V
+
+    return-void
+
+    :cond_93
+    sget-object v5, LX/01cK;->A06:LX/01cK;
+
+    goto :goto_8e
+
+    :cond_96
+    iget-object v0, p0, LX/04GW;->A0U:LX/0C8T;
+
+    invoke-interface {v0}, LX/0C8T;->getValue()Ljava/lang/Object;
+
+    move-result-object v5
+
+    check-cast v5, LX/0Omv;
+
+    iget-object v0, p3, LX/00RR;->A0U:Lcom/instagram/feed/media/Media;
+
+    if-eqz v0, :cond_54
+
+    const v4, 0x2282787
+
+    const-string v3, "itas-android"
+
+    invoke-virtual {v0, v3, v4}, Lcom/instagram/feed/media/Media;->ARa(Ljava/lang/String;I)LX/0UsO;
+
+    move-result-object v2
+
+    invoke-static {v2}, LX/04l9;->A0f(Ljava/lang/Object;)V
+
+    sget-object v1, LX/04k5;->A00:LX/04k5;
+
+    new-instance v0, LX/02tI;
+
+    invoke-direct {v0, v1, v4, v3}, LX/02tI;-><init>(Ljava/util/List;ILjava/lang/String;)V
+
+    new-instance v7, LX/0Hb6;
+
+    invoke-direct {v7, v0, v2}, LX/0ANX;-><init>(LX/02tI;LX/0UsO;)V
+
+    goto :goto_54
+
+    :cond_bb
+    iget-object v0, p0, LX/04GW;->A0M:LX/0C8T;
+
+    invoke-interface {v0}, LX/0C8T;->getValue()Ljava/lang/Object;
+
+    move-result-object v5
+
+    check-cast v5, LX/0Omv;
+
+    iget-object v0, p3, LX/00RR;->A0U:Lcom/instagram/feed/media/Media;
+
+    if-eqz v0, :cond_54
+
+    const v4, -0x7a1aa455    # -2.156873E-35f
+
+    const-string v3, "itas-android"
+
+    invoke-virtual {v0, v3, v4}, Lcom/instagram/feed/media/Media;->ARa(Ljava/lang/String;I)LX/0UsO;
+
+    move-result-object v2
+
+    invoke-static {v2}, LX/04l9;->A0f(Ljava/lang/Object;)V
+
+    sget-object v1, LX/04k5;->A00:LX/04k5;
+
+    new-instance v0, LX/02tI;
+
+    invoke-direct {v0, v1, v4, v3}, LX/02tI;-><init>(Ljava/util/List;ILjava/lang/String;)V
+
+    new-instance v7, LX/0Hb5;
+
+    invoke-direct {v7, v0, v2}, LX/0ANX;-><init>(LX/02tI;LX/0UsO;)V
+
+    goto/16 :goto_54
+
+    :cond_e1
+    iget-object v0, p0, LX/04GW;->A0I:LX/0C8T;
+
+    invoke-interface {v0}, LX/0C8T;->getValue()Ljava/lang/Object;
+
+    move-result-object v5
+
+    check-cast v5, LX/0Omv;
+
+    iget-object v0, p3, LX/00RR;->A0U:Lcom/instagram/feed/media/Media;
+
+    if-eqz v0, :cond_54
+
+    const v4, 0xe03e8d8
+
+    const-string v3, "itas-android"
+
+    invoke-virtual {v0, v3, v4}, Lcom/instagram/feed/media/Media;->ARa(Ljava/lang/String;I)LX/0UsO;
+
+    move-result-object v2
+
+    invoke-static {v2}, LX/04l9;->A0f(Ljava/lang/Object;)V
+
+    sget-object v1, LX/04k5;->A00:LX/04k5;
+
+    new-instance v0, LX/02tI;
+
+    invoke-direct {v0, v1, v4, v3}, LX/02tI;-><init>(Ljava/util/List;ILjava/lang/String;)V
+
+    new-instance v7, LX/0Hb4;
+
+    invoke-direct {v7, v0, v2}, LX/0ANX;-><init>(LX/02tI;LX/0UsO;)V
+
+    goto/16 :goto_54
+
+    :cond_107
+    iget-object v0, p0, LX/04GW;->A07:LX/0C8T;
+
+    invoke-interface {v0}, LX/0C8T;->getValue()Ljava/lang/Object;
+
+    move-result-object v5
+
+    check-cast v5, LX/0Omv;
+
+    iget-object v0, p3, LX/00RR;->A0U:Lcom/instagram/feed/media/Media;
+
+    if-eqz v0, :cond_54
+
+    const v4, 0x61c86e09
+
+    const-string v3, "itas-android"
+
+    invoke-virtual {v0, v3, v4}, Lcom/instagram/feed/media/Media;->ARa(Ljava/lang/String;I)LX/0UsO;
+
+    move-result-object v2
+
+    invoke-static {v2}, LX/04l9;->A0f(Ljava/lang/Object;)V
+
+    sget-object v1, LX/04k5;->A00:LX/04k5;
+
+    new-instance v0, LX/02tI;
+
+    invoke-direct {v0, v1, v4, v3}, LX/02tI;-><init>(Ljava/util/List;ILjava/lang/String;)V
+
+    new-instance v7, LX/0Har;
+
+    invoke-direct {v7, v0, v2}, LX/0ANX;-><init>(LX/02tI;LX/0UsO;)V
+
+    goto/16 :goto_54
+
+    :pswitch_12d
+    iget-object v0, p0, LX/04GW;->A04:LX/0C8T;
+
+    invoke-interface {v0}, LX/0C8T;->getValue()Ljava/lang/Object;
+
+    move-result-object v5
+
+    check-cast v5, LX/0Omv;
+
+    iget-object v0, p3, LX/00RR;->A0U:Lcom/instagram/feed/media/Media;
+
+    if-eqz v0, :cond_54
+
+    const v4, 0x1bedaeef
+
+    const-string v3, "itas-android"
+
+    invoke-virtual {v0, v3, v4}, Lcom/instagram/feed/media/Media;->ARa(Ljava/lang/String;I)LX/0UsO;
+
+    move-result-object v2
+
+    invoke-static {v2}, LX/04l9;->A0f(Ljava/lang/Object;)V
+
+    sget-object v1, LX/04k5;->A00:LX/04k5;
+
+    new-instance v0, LX/02tI;
+
+    invoke-direct {v0, v1, v4, v3}, LX/02tI;-><init>(Ljava/util/List;ILjava/lang/String;)V
+
+    new-instance v7, LX/0Haq;
+
+    invoke-direct {v7, v0, v2}, LX/0ANX;-><init>(LX/02tI;LX/0UsO;)V
+
+    goto/16 :goto_54
+
+    :pswitch_153
+    iget-object v0, p0, LX/04GW;->A0E:LX/0C8T;
+
+    invoke-interface {v0}, LX/0C8T;->getValue()Ljava/lang/Object;
+
+    move-result-object v5
+
+    check-cast v5, LX/0Omv;
+
+    iget-object v0, p3, LX/00RR;->A0U:Lcom/instagram/feed/media/Media;
+
+    if-eqz v0, :cond_54
+
+    const v4, 0x162bb9de
+
+    const-string v3, "itas-android"
+
+    invoke-virtual {v0, v3, v4}, Lcom/instagram/feed/media/Media;->ARa(Ljava/lang/String;I)LX/0UsO;
+
+    move-result-object v2
+
+    invoke-static {v2}, LX/04l9;->A0f(Ljava/lang/Object;)V
+
+    sget-object v1, LX/04k5;->A00:LX/04k5;
+
+    new-instance v0, LX/02tI;
+
+    invoke-direct {v0, v1, v4, v3}, LX/02tI;-><init>(Ljava/util/List;ILjava/lang/String;)V
+
+    new-instance v7, LX/0Hb3;
+
+    invoke-direct {v7, v0, v2}, LX/0ANX;-><init>(LX/02tI;LX/0UsO;)V
+
+    goto/16 :goto_54
+
+    :pswitch_179
+    iget-object v0, p0, LX/04GW;->A0D:LX/0C8T;
+
+    invoke-interface {v0}, LX/0C8T;->getValue()Ljava/lang/Object;
+
+    move-result-object v5
+
+    check-cast v5, LX/0Omv;
+
+    iget-object v0, p3, LX/00RR;->A0U:Lcom/instagram/feed/media/Media;
+
+    if-eqz v0, :cond_54
+
+    const v4, -0x3d2aadb7
+
+    const-string v3, "itas-android"
+
+    invoke-virtual {v0, v3, v4}, Lcom/instagram/feed/media/Media;->ARa(Ljava/lang/String;I)LX/0UsO;
+
+    move-result-object v2
+
+    invoke-static {v2}, LX/04l9;->A0f(Ljava/lang/Object;)V
+
+    sget-object v1, LX/04k5;->A00:LX/04k5;
+
+    new-instance v0, LX/02tI;
+
+    invoke-direct {v0, v1, v4, v3}, LX/02tI;-><init>(Ljava/util/List;ILjava/lang/String;)V
+
+    new-instance v7, LX/0Hb2;
+
+    invoke-direct {v7, v0, v2}, LX/0ANX;-><init>(LX/02tI;LX/0UsO;)V
+
+    goto/16 :goto_54
+
+    :pswitch_19f
+    iget-object v0, p0, LX/04GW;->A0C:LX/0C8T;
+
+    invoke-interface {v0}, LX/0C8T;->getValue()Ljava/lang/Object;
+
+    move-result-object v5
+
+    check-cast v5, LX/0Omv;
+
+    iget-object v0, p3, LX/00RR;->A0U:Lcom/instagram/feed/media/Media;
+
+    if-eqz v0, :cond_54
+
+    const v4, -0x5afe889a
+
+    const-string v3, "itas-android"
+
+    invoke-virtual {v0, v3, v4}, Lcom/instagram/feed/media/Media;->ARa(Ljava/lang/String;I)LX/0UsO;
+
+    move-result-object v2
+
+    invoke-static {v2}, LX/04l9;->A0f(Ljava/lang/Object;)V
+
+    sget-object v1, LX/04k5;->A00:LX/04k5;
+
+    new-instance v0, LX/02tI;
+
+    invoke-direct {v0, v1, v4, v3}, LX/02tI;-><init>(Ljava/util/List;ILjava/lang/String;)V
+
+    new-instance v7, LX/0Hb1;
+
+    invoke-direct {v7, v0, v2}, LX/0ANX;-><init>(LX/02tI;LX/0UsO;)V
+
+    goto/16 :goto_54
+
+    :pswitch_1c5
+    iget-object v0, p0, LX/04GW;->A0A:LX/0C8T;
+
+    goto :goto_1cd
+
+    :pswitch_1c8
+    iget-object v0, p0, LX/04GW;->A0F:LX/0C8T;
+
+    goto :goto_1cd
+
+    :pswitch_1cb
+    iget-object v0, p0, LX/04GW;->A0B:LX/0C8T;
+
+    :goto_1cd
+    invoke-interface {v0}, LX/0C8T;->getValue()Ljava/lang/Object;
+
+    move-result-object v5
+
+    check-cast v5, LX/0Omv;
+
+    iget-object v0, p3, LX/00RR;->A0U:Lcom/instagram/feed/media/Media;
+
+    if-eqz v0, :cond_54
+
+    const v4, -0x41f00cd9
+
+    const-string v3, "itas-android"
+
+    invoke-virtual {v0, v3, v4}, Lcom/instagram/feed/media/Media;->ARa(Ljava/lang/String;I)LX/0UsO;
+
+    move-result-object v2
+
+    invoke-static {v2}, LX/04l9;->A0f(Ljava/lang/Object;)V
+
+    sget-object v1, LX/04k5;->A00:LX/04k5;
+
+    new-instance v0, LX/02tI;
+
+    invoke-direct {v0, v1, v4, v3}, LX/02tI;-><init>(Ljava/util/List;ILjava/lang/String;)V
+
+    new-instance v7, LX/0Hb0;
+
+    invoke-direct {v7, v0, v2}, LX/0ANX;-><init>(LX/02tI;LX/0UsO;)V
+
+    goto/16 :goto_54
+
+    :pswitch_1f1
+    iget-object v0, p0, LX/04GW;->A02:LX/0C8T;
+
+    invoke-interface {v0}, LX/0C8T;->getValue()Ljava/lang/Object;
+
+    move-result-object v5
+
+    check-cast v5, LX/0Omv;
+
+    iget-object v0, p3, LX/00RR;->A0U:Lcom/instagram/feed/media/Media;
+
+    if-eqz v0, :cond_54
+
+    const v4, 0x4b0101f0    # 8454640.0f
+
+    const-string v3, "itas-android"
+
+    invoke-virtual {v0, v3, v4}, Lcom/instagram/feed/media/Media;->ARa(Ljava/lang/String;I)LX/0UsO;
+
+    move-result-object v2
+
+    invoke-static {v2}, LX/04l9;->A0f(Ljava/lang/Object;)V
+
+    sget-object v1, LX/04k5;->A00:LX/04k5;
+
+    new-instance v0, LX/02tI;
+
+    invoke-direct {v0, v1, v4, v3}, LX/02tI;-><init>(Ljava/util/List;ILjava/lang/String;)V
+
+    new-instance v7, LX/0Hac;
+
+    invoke-direct {v7, v0, v2}, LX/0ANX;-><init>(LX/02tI;LX/0UsO;)V
+
+    goto/16 :goto_54
+
+    nop
+
+    :pswitch_data_218
+    .packed-switch 0x1c
+        :pswitch_1f1
+        :pswitch_1d
+        :pswitch_1d
+        :pswitch_153
+        :pswitch_19f
+        :pswitch_1cb
+        :pswitch_1c8
+        :pswitch_1c5
+        :pswitch_179
+        :pswitch_1d
+        :pswitch_1d
+        :pswitch_12d
+    .end packed-switch
+.end method
+
+.method public final Fhi(Z)V
+    .registers 2
+
+    return-void
+.end method
+
+.method public final Fhj(ZI)V
+    .registers 3
+
+    return-void
+.end method
+
+.method public final Fhk(Ljava/lang/String;ZZI)V
+    .registers 5
+
+    return-void
+.end method
+
+.method public final Fhl(IZZ)V
+    .registers 4
+
+    return-void
+.end method
+
+===== BBr SUMMARY =====
+LITERALS=['android_purge_26_q2_RealtimeSignalProviderClipsImpl_extractPayload']
+CALLS=[('LX/04l9;', 'A0j', 'Ljava/lang/Object;I', 'V'), ('LX/03zu;', 'A00', 'Ljava/lang/String;', 'V'), ('Ljava/lang/System;', 'currentTimeMillis', '', 'J'), ('Ljava/util/LinkedHashMap;', '<init>', '', 'V'), ('LX/0C8T;', 'getValue', '', 'Ljava/lang/Object;'), ('LX/0nFz;', 'BC6', 'Ljava/lang/String;', 'Ljava/util/Map;'), ('Ljava/util/AbstractMap;', 'putAll', 'Ljava/util/Map;', 'V'), ('LX/0C8T;', 'getValue', '', 'Ljava/lang/Object;'), ('LX/0Jqv;', 'CoI', 'Ljava/lang/String;', 'Ljava/util/Map;'), ('Ljava/util/AbstractMap;', 'putAll', 'Ljava/util/Map;', 'V'), ('LX/0Ago;', 'DHu', 'LX/04ji;Ljava/lang/String;', 'Ljava/util/Map;'), ('Ljava/util/AbstractMap;', 'putAll', 'Ljava/util/Map;', 'V'), ('LX/07YW;', 'getModuleName', '', 'Ljava/lang/String;'), ('LX/02pX;', 'A0D', 'Ljava/util/Map;', 'Ljava/util/Map;'), ('Ljava/lang/System;', 'currentTimeMillis', '', 'J'), ('Ljava/lang/Object;', '<init>', '', 'V'), ('Ljava/util/AbstractMap;', 'keySet', '', 'Ljava/util/Set;'), ('LX/04k4;', 'A1O', 'Ljava/lang/Iterable;', 'Ljava/util/List;'), ('LX/0AaQ;', 'GQb', 'LX/03Pr;Ljava/lang/String;Ljava/lang/String;Ljava/util/List;Ljava/util/Map;D', 'V')]
+
+===== DIRECT CALLEE CLASS LX/0Jqv; FILE=work/smali/X/0Jqv.smali =====
+.class public interface abstract LX/0Jqv;
+.super Ljava/lang/Object;
+.source ""
+
+
+# virtual methods
+.method public abstract CoI(Ljava/lang/String;)Ljava/util/Map;
+.end method
+
+===== DIRECT CALLEE CLASS LX/07YW; FILE=work/smali/X/07YW.smali =====
+.class public interface abstract LX/07YW;
+.super Ljava/lang/Object;
+.source ""
+
+
+# static fields
+.field public static final __redex_internal_original_name:Ljava/lang/String; = "AnalyticsModule"
+
+
+# virtual methods
+.method public abstract getModuleClass()Ljava/lang/Class;
+.end method
+
+.method public abstract getModuleName()Ljava/lang/String;
+.end method
+
+.method public abstract getModuleNameV2()Ljava/lang/String;
+.end method
