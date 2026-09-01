@@ -1,0 +1,136 @@
+name: IG 439 HDR R5 Upstream Map Fast
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - .github/workflows/ig-hdr-r5-upstream-map-fast.yml
+
+permissions:
+  contents: write
+
+jobs:
+  map:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    env:
+      APK_NAME: instagram-piko-v439.0.0.37.89-arm64-v8a.apk
+      APK_SHA256: 4015b171ac59f3e7172134d194ec2dcf701f64c3339f127c19d7a04c13d529c8
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-java@v5
+        with:
+          distribution: zulu
+          java-version: '21'
+      - name: Fetch exact APK and tools
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          set -euo pipefail
+          mkdir -p work/dex work/dis research/generated
+          gh release download 8 --pattern "$APK_NAME" --dir work
+          echo "$APK_SHA256  work/$APK_NAME" | sha256sum -c -
+          unzip -j "work/$APK_NAME" 'classes*.dex' -d work/dex
+          gh release download 3.0.10 --repo baksmali/smali --pattern 'baksmali-3.0.10-fat.jar' --dir work
+      - name: Disassemble only DEXes that reference X.08td or X.08tc
+        run: |
+          set -euo pipefail
+          : > work/targets.txt
+          for d in work/dex/classes*.dex; do
+            if grep -a -q -E 'LX/08td;|LX/08tc;' "$d"; then echo "$d" >> work/targets.txt; fi
+          done
+          echo TARGETS
+          cat work/targets.txt
+          test -s work/targets.txt
+          while read -r d; do
+            b="$(basename "$d" .dex)"
+            mkdir -p "work/dis/$b"
+            java -jar work/baksmali-3.0.10-fat.jar d "$d" -o "work/dis/$b"
+          done < work/targets.txt
+      - name: Extract constructors writers readers and parser callers
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          from pathlib import Path
+          import re
+
+          out=['Instagram 439 HDR R5 focused upstream map','==========================================','']
+          files=list(Path('work/dis').glob('classes*/X/*.smali'))
+          alltxt={p:p.read_text(errors='replace') for p in files}
+
+          def methods(txt):
+              ls=txt.splitlines(); s=None
+              for i,l in enumerate(ls):
+                  if l.startswith('.method'): s=i
+                  elif l.startswith('.end method') and s is not None:
+                      yield ls[s], '\n'.join(ls[s:i+1])
+                      s=None
+
+          for cls in ('08tc','08td'):
+              hits=[p for p in files if p.name==cls+'.smali']
+              out.append(f'FULL_CLASS_{cls}_COUNT={len(hits)}')
+              for p in hits:
+                  out.append(f'===== FULL {p} =====')
+                  out.extend(alltxt[p].splitlines())
+                  out.append('')
+
+          refs=[]
+          for p,txt in alltxt.items():
+              for head,block in methods(txt):
+                  if 'LX/08td;' not in block and 'LX/08tc;' not in block: continue
+                  score=0
+                  for tok,w in [
+                      ('new-instance',4),('LX/08td;-><init>',8),('LX/08tc;-><init>',8),
+                      ('iput',2),('iget',1),('video/av01',12),('av01',8),('representation',10),
+                      ('manifest',10),('SupplementalProperty',12),('EssentialProperty',12),
+                      ('schemeIdUri',12),('hdr',12),('st2084',12),('hlg',12),('bt2020',12),
+                      ('color',5),('transfer',6),('codec',5),('bitDepth',10),('10-bit',10)
+                  ]:
+                      score += block.lower().count(tok.lower())*w
+                  refs.append((score,p,head,block))
+          refs.sort(key=lambda x:(-x[0],str(x[1]),x[2]))
+          out.append(f'METADATA_METHOD_COUNT={len(refs)}')
+          for i,(score,p,head,block) in enumerate(refs,1):
+              out.append(f'===== META #{i} SCORE={score} {p} :: {head} =====')
+              out.extend(block.splitlines())
+              out.append('')
+
+          # Build field index and show exact methods touching each immutable metadata field.
+          fre=re.compile(r'LX/08td;->([A-Za-z0-9_$]+):([^\s]+)')
+          field_methods={}
+          for score,p,head,block in refs:
+              for f,t in fre.findall(block):
+                  field_methods.setdefault((f,t),[]).append((p,head,block))
+          out.append('===== FIELD INDEX =====')
+          for (f,t),ms in sorted(field_methods.items()):
+              out.append(f'{f}:{t} methods={len(ms)}')
+          out.append('')
+          for (f,t),ms in sorted(field_methods.items()):
+              out.append(f'===== FIELD {f}:{t} TOUCHERS =====')
+              seen=set()
+              for p,head,block in ms:
+                  k=(str(p),head)
+                  if k in seen: continue
+                  seen.add(k)
+                  out.append(f'--- {p} :: {head} ---')
+                  out.extend(block.splitlines())
+              out.append('')
+
+          path=Path('research/generated/instagram_439_hdr_r5_upstream_map_fast.txt')
+          path.write_text('\n'.join(out)+'\n',encoding='utf-8')
+          print(f'BYTES={path.stat().st_size} META_METHODS={len(refs)}')
+          print('\n'.join(out[:1500]))
+          if path.stat().st_size < 7000: raise SystemExit('focused report unexpectedly small')
+          PY
+      - name: Commit report
+        run: |
+          set -euo pipefail
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add research/generated/instagram_439_hdr_r5_upstream_map_fast.txt
+          if ! git diff --cached --quiet; then git commit -m 'Trace Instagram 439 R5 representation metadata'; fi
+          git pull --rebase origin main
+          git push origin HEAD:main
