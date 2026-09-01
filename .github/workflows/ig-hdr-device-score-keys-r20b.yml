@@ -1,0 +1,71 @@
+name: IG 439 HDR Device Score Keys R20b
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - .github/workflows/ig-hdr-device-score-keys-r20b.yml
+
+permissions:
+  contents: write
+
+jobs:
+  trace:
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    env:
+      APK_NAME: instagram-piko-v439.0.0.37.89-arm64-v8a.apk
+      APK_SHA256: 4015b171ac59f3e7172134d194ec2dcf701f64c3339f127c19d7a04c13d529c8
+    steps:
+      - uses: actions/checkout@v6
+        with: {fetch-depth: 0}
+      - name: Extract exact score-related strings
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          set -euo pipefail
+          mkdir -p work/apk research/generated
+          gh release download 8 --pattern "$APK_NAME" --dir work
+          echo "$APK_SHA256  work/$APK_NAME" | sha256sum -c -
+          unzip -q "work/$APK_NAME" 'classes*.dex' -d work/apk
+          python3 - <<'PY'
+          from pathlib import Path
+          import subprocess,re
+          pats=[
+            r'performance.{0,40}(score|class|tier|bucket|segment|level)',
+            r'(score|class|tier|bucket|segment|level).{0,40}performance',
+            r'device.{0,30}(score|class|tier|bucket|segment)',
+            r'(score|class|tier|bucket|segment).{0,30}device',
+            r'benchmark.{0,40}(score|class|tier|bucket|result)',
+            r'(score|class|tier|bucket|result).{0,40}benchmark',
+            r'device.?segmentation', r'perf.?benchmark', r'hdr.{0,30}(eligible|support|delivery|playback)',
+            r'(eligible|support|delivery|playback).{0,30}hdr', r'10.?bit.{0,30}(eligible|support|playback|delivery)',
+            r'(av1|hevc).{0,30}(score|tier|class|hdr|eligible)'
+          ]
+          rx=[re.compile(x,re.I) for x in pats]
+          O=['Instagram 439 device score key inventory R20b','==========================================','']
+          for p in sorted(Path('work/apk').glob('classes*.dex')):
+            s=subprocess.run(['strings','-a',str(p)],capture_output=True,text=True,errors='replace').stdout.splitlines()
+            hits=[]
+            for x in s:
+              if any(r.search(x) for r in rx): hits.append(x)
+            if hits:
+              O += [f'===== {p.name} ({len(hits)}) =====']
+              O += sorted(dict.fromkeys(hits))
+              O.append('')
+          text='\n'.join(O)
+          Path('research/generated/instagram_439_hdr_device_score_keys_r20b.txt').write_text(text,encoding='utf-8')
+          print(text)
+          PY
+      - name: Commit report
+        run: |
+          set -euo pipefail
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add research/generated/instagram_439_hdr_device_score_keys_r20b.txt
+          if ! git diff --cached --quiet; then
+            git commit -m 'Add exact device score key inventory R20b'
+            git pull --rebase origin main
+            git push origin HEAD:main
+          fi
