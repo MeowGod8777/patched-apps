@@ -1,0 +1,81 @@
+name: IG 439 HDR Capability Serializer
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - .github/workflows/ig-hdr-capability-serializer.yml
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  probe:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    env:
+      APK_NAME: instagram-piko-v439.0.0.37.89-arm64-v8a.apk
+      APK_SHA256: 4015b171ac59f3e7172134d194ec2dcf701f64c3339f127c19d7a04c13d529c8
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+      - name: Download exact APK and classes4
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          mkdir -p work research/generated
+          gh release download 8 --pattern "$APK_NAME" --dir work
+          echo "$APK_SHA256  work/$APK_NAME" | sha256sum -c -
+          unzip -j "work/$APK_NAME" classes4.dex -d work
+          DEXDUMP="$(find "$ANDROID_HOME/build-tools" -type f -name dexdump | sort -V | tail -1)"
+          "$DEXDUMP" -d -f -h work/classes4.dex > work/classes4.txt
+      - name: Identify serializer method and references
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          import re
+          lines=Path('work/classes4.txt').read_text(errors='ignore').splitlines()
+          needle='key_video_decoder_hdr_supported'
+          hits=[i for i,l in enumerate(lines) if needle in l]
+          out=[]
+          out += ['Instagram 439 HDR capability serializer trace','============================================','']
+          for hi in hits:
+              # nearest class descriptor and method metadata/header before hit
+              cls=None; meth_name=None; meth_type=None; method_idx=None; code_header=None
+              for i in range(hi, max(-1,hi-2500), -1):
+                  l=lines[i]
+                  if code_header is None and '|[' in l and '] ' in l and ':(' in l:
+                      code_header=l.strip()
+                  if method_idx is None and "method_idx" in l:
+                      m=re.search(r'method_idx\s*:\s*(\d+)',l)
+                      if m: method_idx=m.group(1)
+                  if meth_type is None and "type          : '" in l:
+                      meth_type=l.split("type          : '",1)[1].rsplit("'",1)[0]
+                  if meth_name is None and "name          : '" in l:
+                      meth_name=l.split("name          : '",1)[1].rsplit("'",1)[0]
+                  if "Class descriptor  : '" in l:
+                      cls=l.split("Class descriptor  : '",1)[1].rsplit("'",1)[0]
+                      break
+              out += [f'HIT line={hi+1}',f'class={cls}',f'method={meth_name}{meth_type or ""}',f'method_idx={method_idx}',f'code_header={code_header}','--- METHOD CONTEXT ---']
+              start=max(0,hi-500); end=min(len(lines),hi+500)
+              out += lines[start:end]
+              out += ['']
+              if cls and meth_name:
+                  refpat=f'{cls}.{meth_name}:'
+                  refs=[(i,l) for i,l in enumerate(lines) if refpat in l and i < start or refpat in l and i >= end]
+                  out += [f'--- REFERENCES TO {refpat} IN classes4 ---']
+                  for i,l in refs[:100]:
+                      out += [f'line {i+1}: {l}']
+          Path('research/generated/instagram_439_hdr_capability_serializer.txt').write_text('\n'.join(out),encoding='utf-8')
+          print('\n'.join(out[:1600]))
+          PY
+      - name: Commit report
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add research/generated/instagram_439_hdr_capability_serializer.txt
+          if ! git diff --cached --quiet; then git commit -m "Identify Instagram 439 HDR capability serializer"; fi
+          git pull --rebase origin main
+          git push origin HEAD:main
