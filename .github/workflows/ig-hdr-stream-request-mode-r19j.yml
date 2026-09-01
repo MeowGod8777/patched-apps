@@ -1,0 +1,99 @@
+name: IG 439 HDR Streaming Request Mode R19j
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - .github/workflows/ig-hdr-stream-request-mode-r19j.yml
+
+permissions:
+  contents: write
+
+jobs:
+  trace:
+    runs-on: ubuntu-latest
+    timeout-minutes: 18
+    env:
+      APK_NAME: instagram-piko-v439.0.0.37.89-arm64-v8a.apk
+      APK_SHA256: 4015b171ac59f3e7172134d194ec2dcf701f64c3339f127c19d7a04c13d529c8
+    steps:
+      - uses: actions/checkout@v6
+        with: {fetch-depth: 0}
+      - uses: actions/setup-java@v5
+        with: {distribution: zulu, java-version: '21'}
+      - name: Fetch and disassemble exact request-infra dexes
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          set -euo pipefail
+          mkdir -p work/apk work/smali research/generated
+          gh release download 8 --pattern "$APK_NAME" --dir work
+          echo "$APK_SHA256  work/$APK_NAME" | sha256sum -c -
+          gh release download 3.0.10 --repo baksmali/smali --pattern 'baksmali-3.0.10-fat.jar' --dir work
+          unzip -q "work/$APK_NAME" 'classes*.dex' -d work/apk
+          python3 - <<'PY'
+          from pathlib import Path
+          import subprocess
+          terms=['LX/02pu;','LX/02ue;','0xa59b6f5','ClipsApiUtilHelper']
+          hit=[]
+          for p in sorted(Path('work/apk').glob('classes*.dex')):
+              s=subprocess.run(['strings','-a',str(p)],capture_output=True,text=True,errors='replace').stdout
+              if any(t.lower() in s.lower() for t in terms): hit.append(p.name)
+          for x in ['classes2.dex','classes15.dex','classes16.dex']:
+              if (Path('work/apk')/x).exists() and x not in hit: hit.append(x)
+          Path('work/hitdex.txt').write_text('\n'.join(sorted(set(hit)))+'\n')
+          print('HITDEX',sorted(set(hit)))
+          PY
+          while read d; do [ -n "$d" ] && java -jar work/baksmali-3.0.10-fat.jar d "work/apk/$d" -o "work/smali/${d%.dex}" >/dev/null & done < work/hitdex.txt
+          wait
+      - name: Resolve p5 semantics
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          from pathlib import Path
+          import re
+          R=Path('work/smali'); O=['Instagram 439 HDR streaming request mode R19j','============================================','']
+          cr=re.compile(r'^\.class\s+.*\s+(L[^;]+;)$')
+          methods=[]
+          for p in R.rglob('*.smali'):
+              ls=p.read_text(errors='replace').splitlines(); cls='?'
+              for x in ls[:50]:
+                  m=cr.match(x)
+                  if m: cls=m.group(1); break
+              i=0
+              while i<len(ls):
+                  if not ls[i].startswith('.method'): i+=1; continue
+                  s=i; sig=ls[i]; i+=1
+                  while i<len(ls) and not ls[i].startswith('.end method'): i+=1
+                  methods.append((cls,sig,p,ls[s:min(i+1,len(ls))])); i+=1
+          for t in ['LX/02pu;','LX/02ue;']:
+              O += [f'===== FULL CORE {t} =====']
+              for cls,sig,p,b in methods:
+                  if cls==t: O += [f'FILE={p}',sig]+b+['']
+          O += ['===== ALL 02pu CTOR CALLS + IMMEDIATE INT SOURCE =====']
+          for cls,sig,p,b in methods:
+              for i,l in enumerate(b):
+                  if 'LX/02pu;-><init>(LX/04BG;IIZ)V' in l:
+                      O += [f'--- {cls} {sig} FILE={p} INDEX={i}']+b[max(0,i-35):min(len(b),i+30)]+['']
+          O += ['===== ALL 02ue FIELD/CTOR CONSUMERS =====']
+          for cls,sig,p,b in methods:
+              text='\n'.join(b)
+              if 'LX/02ue;' in text and cls!='LX/02ue;':
+                  O += [f'--- {cls} {sig} FILE={p}']+b+['']
+          O += ['===== EXACT DECIMAL/HEX CONSTANT NEIGHBORHOOD =====']
+          for cls,sig,p,b in methods:
+              for i,l in enumerate(b):
+                  if '0xa59b6f5' in l.lower() or '173651701' in l:
+                      O += [f'--- {cls} {sig} FILE={p} INDEX={i}']+b[max(0,i-40):min(len(b),i+40)]+['']
+          Path('research/generated/instagram_439_hdr_stream_request_mode_r19j.txt').write_text('\n'.join(O)+'\n')
+          print('\n'.join(O[:7000]))
+          PY
+      - name: Commit
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add research/generated/instagram_439_hdr_stream_request_mode_r19j.txt
+          git commit -m 'Add Clips streaming request mode trace R19j' || exit 0
+          git pull --rebase origin main
+          git push origin HEAD:main
