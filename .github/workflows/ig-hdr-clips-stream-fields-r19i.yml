@@ -1,0 +1,106 @@
+name: IG 439 HDR Clips Stream Fields R19i
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - .github/workflows/ig-hdr-clips-stream-fields-r19i.yml
+
+permissions:
+  contents: write
+
+jobs:
+  trace:
+    runs-on: ubuntu-latest
+    timeout-minutes: 18
+    env:
+      APK_NAME: instagram-piko-v439.0.0.37.89-arm64-v8a.apk
+      APK_SHA256: 4015b171ac59f3e7172134d194ec2dcf701f64c3339f127c19d7a04c13d529c8
+    steps:
+      - uses: actions/checkout@v6
+        with: {fetch-depth: 0}
+      - uses: actions/setup-java@v5
+        with:
+          distribution: zulu
+          java-version: '21'
+      - name: Fetch exact APK and disassemble focused dexes
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          set -euo pipefail
+          mkdir -p work/apk work/smali research/generated
+          gh release download 8 --pattern "$APK_NAME" --dir work
+          echo "$APK_SHA256  work/$APK_NAME" | sha256sum -c -
+          gh release download 3.0.10 --repo baksmali/smali --pattern 'baksmali-3.0.10-fat.jar' --dir work
+          unzip -q "work/$APK_NAME" 'classes*.dex' -d work/apk
+          for d in classes2.dex classes15.dex; do
+            n="${d%.dex}"
+            java -jar work/baksmali-3.0.10-fat.jar d "work/apk/$d" -o "work/smali/$n" >/dev/null &
+          done
+          wait
+
+      - name: Extract shared field producers
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          from pathlib import Path
+          import re
+          ROOT=Path('work/smali')
+          OUT=Path('research/generated/instagram_439_hdr_clips_stream_fields_r19i.txt')
+          cls_re=re.compile(r'^\.class\s+.*\s+(L[^;]+;)$')
+          str_re=re.compile(r'^\s*const-string(?:/jumbo)?\s+([^,]+),\s+"(.*)"')
+          methods=[]
+          for p in ROOT.rglob('*.smali'):
+              ls=p.read_text(errors='replace').splitlines(); cls='?'
+              for x in ls[:50]:
+                  m=cls_re.match(x)
+                  if m: cls=m.group(1); break
+              i=0
+              while i<len(ls):
+                  if not ls[i].startswith('.method'): i+=1; continue
+                  s=i; sig=ls[i]; i+=1
+                  while i<len(ls) and not ls[i].startswith('.end method'): i+=1
+                  e=min(i,len(ls)-1); methods.append((cls,sig,p,ls[s:e+1])); i+=1
+
+          O=['Instagram 439 HDR Clips Stream Field Producers R19i','================================================','']
+          targets=[('LX/04tC;',' A02('),('LX/04tC;',' A04('),('LX/04u9;',' A00('),('LX/02sx;',' A00(')]
+          for tc,ts in targets:
+              for cls,sig,p,b in methods:
+                  if cls==tc and ts in sig:
+                      O += [f'===== TARGET {cls} {sig} =====',f'FILE={p}']
+                      strings=[(i,m.group(1),m.group(2)) for i,l in enumerate(b) if (m:=str_re.match(l))]
+                      O += ['STRINGS:']+[f'{i}: {r}={s}' for i,r,s in strings]+['REQUEST_WRITES:']
+                      for i,l in enumerate(b):
+                          if any(x in l for x in ['LX/03u7;->AOA(','LX/03u7;->AOQ(','LX/03u7;->A0F(','LX/03u7;->A0G(','LX/03u7;->A0C(','LX/03u7;->A0E(','LX/03u7;->AMu(']):
+                              O += [f'--- WRITE {i} ---']+[f'{j:04d}: {b[j]}' for j in range(max(0,i-10),min(len(b),i+4))]
+                      O += ['MOBILECONFIG_IDS:']+[f'{i}: {l.strip()}' for i,l in enumerate(b) if 'const-wide' in l and '0x8' in l]+['','FULL_BODY:']+b+['']
+
+          # Generic augmenter: emit only all string literals and AMu writes so header names are visible.
+          for cls,sig,p,b in methods:
+              if cls=='LX/02qb;' and ' A01(' in sig:
+                  O += [f'===== GENERIC_HEADER_AUGMENTER {sig} =====',f'FILE={p}','STRINGS:']
+                  for i,l in enumerate(b):
+                      m=str_re.match(l)
+                      if m: O.append(f'{i}: {m.group(1)}={m.group(2)}')
+                  O += ['AMU_WRITES:']
+                  for i,l in enumerate(b):
+                      if 'LX/03u7;->AMu(' in l:
+                          O += [f'--- {i} ---']+[f'{j:04d}: {b[j]}' for j in range(max(0,i-12),min(len(b),i+4))]
+                  O += ['']
+
+          OUT.write_text('\n'.join(O),encoding='utf-8')
+          print('\n'.join(O[:10000])); print('bytes',OUT.stat().st_size)
+          PY
+
+      - name: Commit R19i report
+        run: |
+          set -euo pipefail
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add research/generated/instagram_439_hdr_clips_stream_fields_r19i.txt
+          if ! git diff --cached --quiet; then
+            git commit -m 'Add Clips stream field producer trace R19i'
+            git pull --rebase origin main
+            git push origin HEAD:main
+          fi
