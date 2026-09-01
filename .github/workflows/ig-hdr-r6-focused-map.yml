@@ -1,0 +1,109 @@
+name: IG HDR R6 Focused Map
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - .github/workflows/ig-hdr-r6-focused-map.yml
+
+permissions:
+  contents: write
+
+jobs:
+  map:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    env:
+      BASE_APK: instagram-piko-v439.0.0.37.89-arm64-v8a.apk
+      BASE_SHA256: 4015b171ac59f3e7172134d194ec2dcf701f64c3339f127c19d7a04c13d529c8
+    steps:
+      - uses: actions/checkout@v6
+      - uses: actions/setup-java@v5
+        with:
+          distribution: zulu
+          java-version: '21'
+
+      - name: Download exact R8 and baksmali
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          set -euo pipefail
+          mkdir -p work/smali report
+          gh release download 8 --pattern "$BASE_APK" --dir work
+          echo "$BASE_SHA256  work/$BASE_APK" | sha256sum -c -
+          gh release download 3.0.10 --repo baksmali/smali --pattern 'baksmali-3.0.10-fat.jar' --dir work
+          for n in $(seq 1 30); do
+            entry="classes${n}.dex"; [ "$n" = 1 ] && entry="classes.dex"
+            if unzip -l "work/$BASE_APK" "$entry" | grep -q "$entry"; then
+              unzip -p "work/$BASE_APK" "$entry" > "work/$entry"
+              java -jar work/baksmali-3.0.10-fat.jar d "work/$entry" -o "work/smali/$n"
+            fi
+          done
+
+      - name: Extract only parser-source and selector boundaries
+        run: |
+          set -euo pipefail
+          python3 - <<'PY' | tee report/r6-focused-map.txt
+          from pathlib import Path
+          import re
+
+          root=Path('work/smali')
+          files=list(root.rglob('*.smali'))
+          print(f'SMALI_FILES={len(files)}')
+
+          def method_block(lines, idx):
+              s=idx
+              while s>=0 and not lines[s].startswith('.method'): s-=1
+              e=idx
+              while e<len(lines) and not lines[e].startswith('.end method'): e+=1
+              if s<0: s=max(0,idx-40)
+              if e>=len(lines): e=min(len(lines)-1,idx+80)
+              return s,e
+
+          def dump_hits(title, needles, max_hits=30):
+              print('\n===== '+title+' =====')
+              count=0; seen=set()
+              for p in files:
+                  try: lines=p.read_text(errors='ignore').splitlines()
+                  except: continue
+                  for i,l in enumerate(lines):
+                      if any(n in l for n in needles):
+                          s,e=method_block(lines,i)
+                          key=(str(p),s,e)
+                          if key in seen: continue
+                          seen.add(key); count+=1
+                          print(f'\n--- FILE {p} HIT_LINE {i+1} ---')
+                          for j in range(s,min(e+1,s+260)):
+                              print(f'{j+1:06d}: {lines[j]}')
+                          if count>=max_hits:
+                              print(f'\n[TRUNCATED after {count} method hits]')
+                              return
+              print(f'\nTOTAL_METHOD_HITS={count}')
+
+          # Exact already-known targets, find regardless of dex number.
+          dump_hits('X.09z5 A0S DASH PARSER', ['A0S(Landroid/net/Uri;Lorg/xmlpull/v1/XmlPullParser;)LX/08rn;'], 2)
+          dump_hits('X.00PV A0n FINAL SELECTED FORMAT', ['A0n(LX/00R5;LX/03oR;Landroid/media/MediaFormat;'], 2)
+
+          # Find where XmlPullParser is created/fed before X.09z5.A0S and where raw MPD/source exists.
+          dump_hits('CALLERS OF X.09z5 A0S', ['LX/09z5;->A0S(Landroid/net/Uri;Lorg/xmlpull/v1/XmlPullParser;)LX/08rn;'], 20)
+          dump_hits('RAW DASH / MANIFEST SOURCE LITERALS', [
+              'video_dash_manifest','VideoDashManifest','VideoDashManifestUrl',
+              'DashManifestFetcher','InlineVideoViewsVideoDashManifest',
+              'XmlPullParserFactory;->newPullParser','XmlPullParser;->setInput'
+          ], 40)
+
+          # Representation parser/model anchors.
+          dump_hits('REPRESENTATION PARSER MODEL', [
+              'Representation$MultiSegmentRepresentation',
+              'SingleSegmentRepresentation',
+              "LX/0I7Y;->A03:()Lcom/google/common/collect/ImmutableList;"
+          ], 30)
+          PY
+          test -s report/r6-focused-map.txt
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: ig-hdr-r6-focused-map
+          path: report/r6-focused-map.txt
+          retention-days: 14
