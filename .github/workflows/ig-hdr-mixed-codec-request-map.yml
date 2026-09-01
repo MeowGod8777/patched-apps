@@ -1,0 +1,69 @@
+name: IG 439 Mixed Codec Request Map
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - .github/workflows/ig-hdr-mixed-codec-request-map.yml
+
+permissions:
+  contents: write
+
+jobs:
+  probe:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    env:
+      APK_NAME: instagram-piko-v439.0.0.37.89-arm64-v8a.apk
+      APK_SHA256: 4015b171ac59f3e7172134d194ec2dcf701f64c3339f127c19d7a04c13d529c8
+    steps:
+      - uses: actions/checkout@v6
+        with: {fetch-depth: 0}
+      - name: Download and dexdump
+        env: {GH_TOKEN: "${{ secrets.GITHUB_TOKEN }}"}
+        run: |
+          set -euo pipefail
+          mkdir -p work/dex work/dis research/generated
+          gh release download 8 --pattern "$APK_NAME" --dir work
+          echo "$APK_SHA256  work/$APK_NAME" | sha256sum -c -
+          unzip -j "work/$APK_NAME" 'classes*.dex' -d work/dex
+          DEXDUMP="$(find "$ANDROID_HOME/build-tools" -type f -name dexdump | sort -V | tail -1)"
+          for d in work/dex/classes*.dex; do b="$(basename "$d" .dex)"; "$DEXDUMP" -d -f -h "$d" > "work/dis/$b.txt"; done
+      - name: Extract mixed codec request methods
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          from pathlib import Path
+          import re
+          targets=('MIXED_CODEC_MANIFEST','VIDEO_MEDIA_CODEC_CAPABILITY','MEDIA_CODEC_CAPABILITY','is_mixed_codec_manifest','mixed_codec_manifest','supported_codecs','codec_capabilities','codec_capability','av1_score','device_score','performance_score')
+          out=[]
+          for p in sorted(Path('work/dis').glob('classes*.txt')):
+              L=p.read_text(errors='ignore').splitlines(); cls='?'; method='?'; mstart=0
+              for i,line in enumerate(L):
+                  m=re.search(r"^\s*Class descriptor\s+: '([^']+)'",line)
+                  if m: cls=m.group(1)
+                  m=re.search(r"^\s*name\s+: '([^']+)'",line)
+                  if m:
+                      look='\n'.join(L[i:i+10])
+                      if 'code          -' in look or ('method_idx' in look and 'type          :' in look): method=m.group(1); mstart=i
+                  hits=[x for x in targets if x.lower() in line.lower()]
+                  if hits:
+                      lo=max(mstart,i-100); hi=min(len(L),i+170); block=L[lo:hi]
+                      strings=[]
+                      for b in block:
+                          s=re.search(r'const-string(?:/jumbo)?\s+v\d+, "([^"]+)"',b)
+                          if s: strings.append(s.group(1))
+                      out += [f'===== {p.name} {cls}->{method} hits={hits} line={i+1} =====','STRINGS: '+' | '.join(dict.fromkeys(strings)),*block,'']
+          s='\n'.join(out); s=''.join(c for c in s if c in '\n\r\t' or 32<=ord(c)<=126)
+          Path('research/generated/instagram_439_hdr_mixed_codec_request_map.txt').write_text(s[:450000])
+          print(s[:180000])
+          PY
+      - name: Commit report
+        run: |
+          set -euo pipefail
+          git config user.name 'github-actions[bot]'; git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add research/generated/instagram_439_hdr_mixed_codec_request_map.txt
+          if ! git diff --cached --quiet; then git commit -m 'Trace Instagram 439 mixed codec manifest request path'; fi
+          git pull --rebase origin main
+          git push origin HEAD:main
