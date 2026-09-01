@@ -37,61 +37,32 @@ jobs:
           test -n "$DEXDUMP"
           echo "DEXDUMP=$DEXDUMP" >> "$GITHUB_ENV"
 
-      - name: Resolve A08 lazy selector and consumers
+      - name: Resolve A08 selector payload
         shell: bash
         run: |
-          REPORT=research/generated/instagram_439_hdr_type1_selector_trace.txt
-          : > "$REPORT"
-
-          # X.0D2R is defined in classes10. Disassemble all DEXes that reference it.
-          for d in work/dex/classes*.dex; do
-            if strings "$d" | grep -Fq 'LX/0D2R;'; then
-              b="$(basename "$d" .dex)"
-              "$DEXDUMP" -d -f -h "$d" > "work/dis/$b.txt"
-            fi
-          done
-
+          REPORT=research/generated/instagram_439_hdr_a08_switch_payload.txt
+          "$DEXDUMP" -d -f -h work/dex/classes10.dex > work/dis/classes10.txt
           {
-            echo "Instagram 439 X.0D2R.A08 selector/consumer trace"
-            echo "================================================="
-            echo "A08() = Boolean(has HDR type 1 / Dolby Vision). Need determine the synthetic Function0 selector and where that lazy is consumed."
+            echo "Instagram 439 X.0D2R.invoke switch payload"
+            echo "=========================================="
+            echo "Exact APK SHA256: $APK_SHA256"
             echo
-            echo "===== A0E FACTORY CALL SITES ====="
-            grep -Hn -B 28 -A 38 -E 'LX/0D2R;\.A0E:\(I\)LX/04i7;' work/dis/*.txt || true
+            echo "===== INVOKE HEAD ====="
+            grep -n -A 45 'X.0D2R.invoke:()Ljava/lang/Object;' work/dis/classes10.txt | head -n 55
             echo
-            echo "===== DIRECT X.0D2R CONSTRUCTOR CALL SITES ====="
-            grep -Hn -B 28 -A 38 -E 'LX/0D2R;\.<init>:\(I\)V' work/dis/*.txt || true
-            echo
-            echo "===== X.0D2R STATIC/FIELD NEIGHBORHOOD ====="
-            grep -Hn -B 50 -A 80 -E 'LX/0D2R;' work/dis/*.txt | head -n 16000 || true
-          } >> "$REPORT"
-
-          # Parse packed-switch payload from the dexdump around invoke() and annotate target offsets.
-          python3 - <<'PY' >> "$REPORT"
-          from pathlib import Path
-          import re
-          p=Path('work/dis/classes10.txt')
-          t=p.read_text(errors='ignore').splitlines()
-          start=next((i for i,l in enumerate(t) if 'X.0D2R.invoke:()Ljava/lang/Object;' in l),None)
-          if start is not None:
-              print('\n===== INVOKE METHOD / SWITCH PAYLOAD =====')
-              for l in t[start:start+2300]:
-                  if ('packed-switch' in l or 'invoke-static' in l and 'LX/0D2R;.A0' in l or 'packed-switch-data' in l):
-                      print(l)
-              print('\n===== RAW END OF INVOKE METHOD =====')
-              for l in t[start+2050:start+2140]:
-                  print(l)
-          PY
-
-          sed -n '1,1800p' "$REPORT"
+            echo "===== PACKED SWITCH PAYLOAD BYTES ====="
+            echo "invoke code_item=0x368da0, insns=0x368db0, payload code-unit offset=0x322 => file offset 0x3693f4"
+            xxd -g 2 -s 0x3693f4 -l 192 work/dex/classes10.dex
+          } > "$REPORT"
+          cat "$REPORT"
 
       - name: Commit report
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add research/generated/instagram_439_hdr_type1_selector_trace.txt
+          git add research/generated/instagram_439_hdr_a08_switch_payload.txt
           if ! git diff --cached --quiet; then
-            git commit -m "Resolve Instagram 439 HDR type1 lazy selector"
+            git commit -m "Dump Instagram 439 HDR A08 switch payload"
           fi
           git pull --rebase origin main
           git push origin HEAD:main
