@@ -51,8 +51,18 @@ jobs:
           if len(starts)!=1: raise SystemExit(f'A0n target count={len(starts)}')
           if any('hdrTrackDump439' in l for l in lines): raise SystemExit('helper already exists')
           s=starts[0]
-          directive=next(i for i in range(s+1,min(s+12,len(lines))) if lines[i].strip().startswith(('.registers','.locals')))
-          lines[directive+1:directive+1]=['','    invoke-static {p0, p2}, LX/00PV;->hdrTrackDump439(LX/00PV;LX/03oR;)V','']
+          e=next(i for i in range(s+1,len(lines)) if lines[i].startswith('.end method'))
+          body=lines[s:e]
+          anchors=[i for i in range(s,e) if 'move-object/from16' in lines[i] and 'v6' in lines[i] and 'p0' in lines[i]]
+          if len(anchors)!=1: raise SystemExit(f'p0 low-register anchor count={len(anchors)}')
+          a=anchors[0]
+          # p0 maps above v15 in this 23-register method, so never use p0/p2 directly in a 35c invoke.
+          # Reuse low locals: v6 already holds p0; copy p2 into v5 and call helper with {v6,v5}.
+          lines[a+1:a+1]=[
+            '    move-object/from16 v5, p2',
+            '    invoke-static {v6, v5}, LX/00PV;->hdrTrackDump439(LX/00PV;LX/03oR;)V',
+            ''
+          ]
           helper=[
             '.method private static hdrTrackDump439(LX/00PV;LX/03oR;)V',
             '    .registers 7','',
@@ -115,6 +125,7 @@ jobs:
           grep -q 'hdrTrackDump439' work/verify-smali13/X/00PV.smali
           grep -q 'IG_HDR_SELECTED' work/verify-smali13/X/00PV.smali
           grep -q 'IG_HDR_CANDIDATE' work/verify-smali13/X/00PV.smali
+          grep -q 'invoke-static {v6, v5}, LX/00PV;->hdrTrackDump439' work/verify-smali13/X/00PV.smali
           sha256sum "out/$OUT_APK" | tee out/sha256.txt
       - uses: actions/upload-artifact@v4
         with:
