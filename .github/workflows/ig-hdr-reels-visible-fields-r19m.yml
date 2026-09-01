@@ -1,0 +1,170 @@
+name: IG 439 HDR Reels Visible Fields R19m
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - .github/workflows/ig-hdr-reels-visible-fields-r19m.yml
+
+permissions:
+  contents: write
+
+jobs:
+  trace:
+    runs-on: ubuntu-latest
+    timeout-minutes: 18
+    env:
+      APK_NAME: instagram-piko-v439.0.0.37.89-arm64-v8a.apk
+      APK_SHA256: 4015b171ac59f3e7172134d194ec2dcf701f64c3339f127c19d7a04c13d529c8
+    steps:
+      - uses: actions/checkout@v6
+        with: {fetch-depth: 0}
+      - uses: actions/setup-java@v5
+        with:
+          distribution: zulu
+          java-version: '21'
+
+      - name: Fetch exact APK and disassemble Reels request path dexes
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          set -euo pipefail
+          mkdir -p work/apk work/smali research/generated
+          gh release download 8 --pattern "$APK_NAME" --dir work
+          echo "$APK_SHA256  work/$APK_NAME" | sha256sum -c -
+          gh release download 3.0.10 --repo baksmali/smali --pattern 'baksmali-3.0.10-fat.jar' --dir work
+          unzip -q "work/$APK_NAME" 'classes*.dex' -d work/apk
+          python3 - <<'PY'
+          from pathlib import Path
+          import subprocess
+          needles=['LX/04tC;','LX/04u9;','LX/03Mf;','LX/08nW;','LX/02qb;','clips/discover/stream/']
+          hit=[]; rows=[]
+          for p in sorted(Path('work/apk').glob('classes*.dex')):
+              s=subprocess.run(['strings','-a',str(p)],capture_output=True,text=True,errors='replace').stdout
+              hs=[n for n in needles if n in s]
+              if hs:
+                  hit.append(p.name); rows.append(f'{p.name}: '+', '.join(hs))
+          Path('work/hitdex.txt').write_text('\n'.join(hit)+'\n')
+          Path('research/generated/instagram_439_hdr_reels_visible_fields_dex_hits_r19m.txt').write_text('\n'.join(rows)+'\n')
+          print('\n'.join(rows)); print('HITDEX',hit)
+          PY
+          while read d; do
+            [ -n "$d" ] || continue
+            java -jar work/baksmali-3.0.10-fat.jar d "work/apk/$d" -o "work/smali/${d%.dex}" >/dev/null &
+          done < work/hitdex.txt
+          wait
+
+      - name: Build exact server-visible field inventory
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          from pathlib import Path
+          import re
+
+          ROOT=Path('work/smali')
+          OUT=Path('research/generated/instagram_439_hdr_reels_visible_fields_r19m.txt')
+          cls_re=re.compile(r'^\.class\s+.*\s+(L[^;]+;)$')
+          invoke_re=re.compile(r'^\s*invoke-\S+\s+\{([^}]*)\},\s+(\S+)->([^\s(]+)\(([^)]*)\)(\S+)')
+          cstr_re=re.compile(r'^\s*const-string(?:/jumbo)?\s+([^,]+),\s+"(.*)"')
+          const_re=re.compile(r'^\s*const(?:/\w+)?(?:/high16)?\s+([^,]+),\s+([^#]+)')
+
+          methods=[]
+          for p in ROOT.rglob('*.smali'):
+              ls=p.read_text(errors='replace').splitlines(); cls='?'
+              for x in ls[:50]:
+                  m=cls_re.match(x)
+                  if m: cls=m.group(1); break
+              i=0
+              while i<len(ls):
+                  if not ls[i].startswith('.method'):
+                      i+=1; continue
+                  s=i; sig=ls[i]; i+=1
+                  while i<len(ls) and not ls[i].startswith('.end method'):
+                      i+=1
+                  e=min(i,len(ls)-1); methods.append((cls,sig,p,ls[s:e+1])); i+=1
+
+          owners={'LX/04tC;','LX/04u9;','LX/03Mf;','LX/08nW;','LX/02qb;'}
+          builder_writes={'AOA','AOQ','A0F','A0C','A0G','A08','A0E','AMu','A07'}
+          high_words=('hdr','av1','hevc','codec','quality','resolution','bandwidth','network','device','screen','display','media','video','playback','dash','manifest','delivery','capabil','performance','battery','data_saver','wifi','cell','prefetch','stream','feed','accept','hint')
+
+          O=['Instagram 439 HDR exact Reels server-visible field inventory R19m','===========================================================','']
+
+          def strings_in(b):
+              out=[]
+              for i,l in enumerate(b):
+                  m=cstr_re.match(l)
+                  if m: out.append((i,m.group(1),m.group(2)))
+              return out
+
+          # Request-path methods only.
+          selected=[]
+          for cls,sig,p,b in methods:
+              text='\n'.join(b)
+              if cls not in owners: continue
+              if cls=='LX/04tC;' and not any(x in sig for x in [' A04(',' A05(',' A0A(',' A0B(']):
+                  continue
+              if cls=='LX/04u9;' and ' A00(' not in sig: continue
+              if cls=='LX/03Mf;' and ' A00(' not in sig: continue
+              if cls in {'LX/08nW;','LX/02qb;'} and ' A0' not in sig and ' A01(' not in sig: continue
+              if 'LX/03u7;' in text or 'clips/discover/stream/' in text:
+                  selected.append((cls,sig,p,b))
+
+          O += [f'PATH_METHODS={len(selected)}','']
+          for cls,sig,p,b in selected:
+              ss=strings_in(b)
+              writes=[]
+              for i,l in enumerate(b):
+                  im=invoke_re.match(l)
+                  if not im: continue
+                  regs,owner,name,args,ret=im.groups()
+                  if owner=='LX/03u7;' and name in builder_writes:
+                      lo=max(0,i-14); hi=min(len(b),i+5)
+                      writes.append((i,name,regs,b[lo:hi]))
+              if not writes and 'clips/discover/stream/' not in '\n'.join(b):
+                  continue
+              O += [f'===== {cls} {sig}',f'FILE={p}']
+              O += ['ALL_LITERAL_STRINGS:']+[f'{i}: {reg}={val}' for i,reg,val in ss]
+              O += ['REQUEST_WRITES:']
+              for i,name,regs,win in writes:
+                  O += [f'--- {name} idx={i} regs={regs} ---']+win
+              O += ['']
+
+          # Compact high-signal literals across exactly these request-path methods.
+          O += ['===== HIGH-SIGNAL LITERALS IN REQUEST PATH =====']
+          seen=[]
+          for cls,sig,p,b in selected:
+              for i,reg,val in strings_in(b):
+                  lv=val.lower()
+                  if any(w in lv for w in high_words):
+                      row=(cls,sig,val)
+                      if row not in seen: seen.append(row)
+          for cls,sig,val in seen:
+              O.append(f'{cls} | {sig} | {val}')
+          O += ['']
+
+          # Main A0A: every parameter reference and every MobileConfig ID so branches can be named later.
+          for cls,sig,p,b in selected:
+              if cls=='LX/04tC;' and ' A0A(' in sig:
+                  O += ['===== MAIN A0A PARAMETER / CONFIG USAGE =====']
+                  for i,l in enumerate(b):
+                      if re.search(r'\bp(?:[1-9]|[12][0-9]|3[0-3])\b',l) or 'MobileConfigUnsafeContext' in l or 'const-wide' in l:
+                          O.append(f'{i:04d}: {l}')
+                  O += ['']
+
+          OUT.write_text('\n'.join(O),encoding='utf-8')
+          print('\n'.join(O[:10000]))
+          print('bytes',OUT.stat().st_size)
+          PY
+
+      - name: Commit R19m reports
+        run: |
+          set -euo pipefail
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add research/generated/instagram_439_hdr_reels_visible_fields_dex_hits_r19m.txt research/generated/instagram_439_hdr_reels_visible_fields_r19m.txt
+          if ! git diff --cached --quiet; then
+            git commit -m 'Add exact Reels server-visible field inventory R19m'
+            git pull --rebase origin main
+            git push origin HEAD:main
+          fi
