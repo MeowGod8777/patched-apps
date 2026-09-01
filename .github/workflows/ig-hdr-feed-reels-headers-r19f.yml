@@ -1,0 +1,140 @@
+name: IG 439 HDR Feed Reels Headers R19f
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - .github/workflows/ig-hdr-feed-reels-headers-r19f.yml
+
+permissions:
+  contents: write
+
+jobs:
+  trace:
+    runs-on: ubuntu-latest
+    timeout-minutes: 18
+    env:
+      APK_NAME: instagram-piko-v439.0.0.37.89-arm64-v8a.apk
+      APK_SHA256: 4015b171ac59f3e7172134d194ec2dcf701f64c3339f127c19d7a04c13d529c8
+    steps:
+      - uses: actions/checkout@v6
+        with: {fetch-depth: 0}
+      - uses: actions/setup-java@v5
+        with:
+          distribution: zulu
+          java-version: '21'
+      - name: Fetch exact APK and disassemble targeted dexes
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          set -euo pipefail
+          mkdir -p work/apk work/smali research/generated
+          gh release download 8 --pattern "$APK_NAME" --dir work
+          echo "$APK_SHA256  work/$APK_NAME" | sha256sum -c -
+          gh release download 3.0.10 --repo baksmali/smali --pattern 'baksmali-3.0.10-fat.jar' --dir work
+          unzip -q "work/$APK_NAME" 'classes*.dex' -d work/apk
+          for d in classes2.dex classes13.dex classes15.dex classes17.dex classes18.dex; do
+            java -jar work/baksmali-3.0.10-fat.jar d "work/apk/$d" -o "work/smali/${d%.dex}" >/dev/null &
+          done
+          wait
+
+      - name: Dump exact feed reels builders and header call sites
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          from pathlib import Path
+          import re
+
+          ROOT=Path('work/smali')
+          OUT=Path('research/generated/instagram_439_hdr_feed_reels_headers_r19f.txt')
+          cls_re=re.compile(r'^\.class\s+.*\s+(L[^;]+;)$')
+          meth_re=re.compile(r'^\.method.*\s([^\s(]+)\(([^)]*)\)(\S+)$')
+          str_re=re.compile(r'^\s*const-string(?:/jumbo)?\s+([^,]+),\s+"(.*)"')
+          inv_re=re.compile(r'(L[^;]+;)->([^\s(]+)\(([^)]*)\)(\S+)')
+          const_re=re.compile(r'^\s*const(?:/\w+)?\s+([^,]+),\s+(-?0x[0-9a-fA-F]+|-?\d+)')
+
+          methods={}
+          for p in ROOT.rglob('*.smali'):
+            ls=p.read_text(errors='replace').splitlines(); cls=None
+            for x in ls[:50]:
+              m=cls_re.match(x)
+              if m: cls=m.group(1); break
+            if not cls: continue
+            i=0
+            while i<len(ls):
+              if not ls[i].startswith('.method'): i+=1; continue
+              s=i; sig=ls[i]; i+=1
+              while i<len(ls) and not ls[i].startswith('.end method'): i+=1
+              e=min(i,len(ls)-1); b=ls[s:e+1]
+              mm=meth_re.match(sig)
+              if mm: methods[(cls,mm.group(1),mm.group(2),mm.group(3))]=(p,b,sig)
+              i+=1
+
+          wanted=[
+            ('LX/03sA;','A05'),('LX/03sA;','A07'),('LX/03sA;','A08'),
+            ('LX/05uL;','BCw'),('LX/03Hy;','A00'),('LX/0Aeq;','run'),
+            ('LX/08T8;','Duf'),('LX/02qh;','A00'),('LX/03sa;','A00'),('LX/03sa;','A01'),
+            ('LX/03Mf;','A00'),('LX/0Giz;','A00'),('LX/0Giz;','A02')]
+          O=['Instagram 439 HDR feed/reels headers R19f','=========================================','']
+
+          def lits(b):
+            out=[]
+            for l in b:
+              m=str_re.match(l)
+              if m: out.append((m.group(1),m.group(2)))
+            return out
+          def invs(b):
+            out=[]
+            for i,l in enumerate(b):
+              if 'invoke-' not in l: continue
+              m=inv_re.search(l)
+              if m: out.append((i,m.group(1),m.group(2),m.group(3),m.group(4),l.strip()))
+            return out
+
+          selected=[]
+          for k,(p,b,sig) in methods.items():
+            if any(k[0]==c and k[1]==n for c,n in wanted):
+              selected.append((k,p,b,sig))
+          selected.sort()
+          for k,p,b,sig in selected:
+            O += [f'===== {k[0]} {sig} =====',f'FILE={p}',f'LITERALS={[v for _,v in lits(b)]}','']
+            # Print full body for the compact helpers; for giant methods still print AMu/AOA/A0F windows.
+            if len(b)<=650:
+              O += b+['']
+            O += ['-- REQUEST WRITE WINDOWS --']
+            for i,own,name,args,ret,line in invs(b):
+              if own=='LX/03u7;' and name in ('AMu','AOA','A0F','A0G','A0C','AOQ','A07'):
+                O += [f'@{i}: {line}'] + b[max(0,i-8):min(len(b),i+5)] + ['']
+            O += ['']
+
+          # Find reverse callers of the central builders within targeted dexes.
+          target_keys={(k[0],k[1],k[2],k[3]) for k,_,_,_ in selected if k[0] in ('LX/03sA;','LX/05uL;','LX/03Hy;')}
+          O += ['===== DIRECT CALLERS OF CENTRAL BUILDERS =====','']
+          for k,(p,b,sig) in methods.items():
+            hits=[]
+            for i,own,name,args,ret,line in invs(b):
+              q=(own,name,args,ret)
+              if q in target_keys: hits.append(q)
+            if hits:
+              interesting=[v for _,v in lits(b) if any(t in v.lower() for t in ('clip','reel','feed','media','video','hdr','codec','quality','device','playback','session'))]
+              O += [f'--- {k[0]} {sig}',f'FILE={p}',f'CALLS={hits}',f'INTERESTING_STRINGS={interesting}','---']
+              if len(b)<=500: O += b
+              O += ['']
+
+          OUT.write_text('\n'.join(O),encoding='utf-8')
+          print('\n'.join(O[:6000]))
+          print('bytes',OUT.stat().st_size,'selected',len(selected))
+          PY
+
+      - name: Commit R19f report
+        run: |
+          set -euo pipefail
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add research/generated/instagram_439_hdr_feed_reels_headers_r19f.txt
+          if ! git diff --cached --quiet; then
+            git commit -m 'Add exact feed reels header trace R19f'
+            git pull --rebase origin main
+            git push origin HEAD:main
+          fi
