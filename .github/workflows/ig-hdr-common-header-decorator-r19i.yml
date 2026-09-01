@@ -67,14 +67,12 @@ jobs:
           OUT=Path('research/generated/instagram_439_hdr_common_header_decorator_r19i.txt')
           cr=re.compile(r'^\.class\s+.*\s+(L[^;]+;)$')
           sr=re.compile(r'^\s*const-string(?:/jumbo)?\s+([^,]+),\s+"(.*)"')
-          invr=re.compile(r'(L[^;]+;)->([^\s(]+)\(([^)]*)\)(\S+)')
-          methods=[]; classes={}
+          methods=[]
           for p in ROOT.rglob('*.smali'):
               ls=p.read_text(errors='replace').splitlines(); cls='?'
               for x in ls[:60]:
                   m=cr.match(x)
                   if m: cls=m.group(1); break
-              classes[cls]=(p,ls)
               i=0
               while i<len(ls):
                   if not ls[i].startswith('.method'):
@@ -85,8 +83,6 @@ jobs:
                   e=min(i,len(ls)-1); methods.append((cls,sig,p,ls[s:e+1])); i+=1
 
           O=['Instagram 439 HDR common request-header decorator R19i','================================================','']
-
-          # Full target decorator and finalizers.
           for cls,sig,p,b in methods:
               if cls=='LX/02qb;' and ' A01(' in sig:
                   O += [f'===== TARGET {cls} {sig} =====',f'FILE={p}']+b+['']
@@ -95,7 +91,6 @@ jobs:
               if cls=='LX/03u7;' and any(k in sig for k in (' AMu(',' AOA(',' A0F(',' A07(')):
                   O += [f'===== BUILDER_METHOD {cls} {sig} =====',f'FILE={p}']+b+['']
 
-          # Extract every AMu header write from 02qb.A01 and nearby source/value producer.
           target=None
           for m in methods:
               if m[0]=='LX/02qb;' and ' A01(' in m[1]: target=m; break
@@ -105,7 +100,6 @@ jobs:
               for i,l in enumerate(b):
                   if 'LX/03u7;->AMu(' in l:
                       O += [f'--- AMu index={i} ---']+[f'{j:04d}: {b[j]}' for j in range(max(0,i-28),min(len(b),i+8))]+['']
-              # All literals in target, with emphasis on headers/device/media/capability/network.
               vals=[]
               for i,l in enumerate(b):
                   sm=sr.match(l)
@@ -113,7 +107,6 @@ jobs:
               O += ['ALL_CONST_STRINGS:']+[f'{i}: {v}' for i,v in vals]+['']
               O += ['HIGH_VALUE_CONST_STRINGS:']+[f'{i}: {v}' for i,v in vals if any(k in v.lower() for k in ('x-ig','device','capab','codec','hdr','video','media','quality','bandwidth','network','connection','screen','display','model','family','accept','hint'))]+['']
 
-          # Exact callers of 02qb.A01.
           needle='LX/02qb;->A01('
           calls=[]
           for cls,sig,p,b in methods:
@@ -123,13 +116,11 @@ jobs:
           for cls,sig,p,b,i,l in calls:
               O += [f'--- {cls} {sig}',f'FILE={p}',f'CALL={l}',f'INDEX={i}']+[f'{j:04d}: {b[j]}' for j in range(max(0,i-45),min(len(b),i+25))]+['']
 
-          # Search request-finalizer related methods for headers/capability/device fields, not telemetry-only classes.
           O += ['===== REQUEST PATH HIGH-VALUE HEADER/FIELD METHODS =====','']
           keyterms=('x-ig-','device','capab','hdr','codec','video','quality','bandwidth','connection','display','screen','family-device','media')
           for cls,sig,p,b in methods:
               text='\n'.join(b); low=text.lower()
               if not any(k in low for k in keyterms): continue
-              # Require actual request builder/header interaction or direct 02qb/02pu/03u7 ownership.
               if not ('LX/03u7;->' in text or 'LX/02pu;->' in text or cls in ('LX/02qb;','LX/02pu;','LX/03u7;')): continue
               vals=[]
               for l in b:
@@ -158,3 +149,4 @@ jobs:
             git pull --rebase origin main
             git push origin HEAD:main
           fi
+# retrigger
