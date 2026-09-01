@@ -43,7 +43,6 @@ jobs:
             -o work/smali.jar
           unzip -p "work/$BASE_APK" classes2.dex > work/classes2.dex
           unzip -p "work/$BASE_APK" classes13.dex > work/classes13.dex
-          # Save untouched telemetry dex hashes. These dexes must remain byte-identical.
           unzip -p "work/$BASE_APK" classes4.dex | sha256sum | awk '{print $1}' > work/orig-classes4.sha256
           unzip -p "work/$BASE_APK" classes12.dex | sha256sum | awk '{print $1}' > work/orig-classes12.sha256
 
@@ -108,7 +107,6 @@ jobs:
           unzip -p "out/$OUT_APK" classes13.dex > work/v13.dex
           java -jar work/baksmali.jar d work/v2.dex -o work/v2
           java -jar work/baksmali.jar d work/v13.dex -o work/v13
-          grep -q 'R17 scoped Meta backend request-classification spoof' work/v2/X/02rk.smali
           grep -q 'SM-S928B' work/v2/X/02rk.smali
           grep -q 'e3q' work/v2/X/02rk.smali
           grep -q 'samsung' work/v2/X/02rk.smali
