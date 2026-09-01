@@ -13,7 +13,7 @@ permissions:
 jobs:
   probe:
     runs-on: ubuntu-latest
-    timeout-minutes: 15
+    timeout-minutes: 10
     env:
       APK_NAME: instagram-piko-v439.0.0.37.89-arm64-v8a.apk
       APK_SHA256: 4015b171ac59f3e7172134d194ec2dcf701f64c3339f127c19d7a04c13d529c8
@@ -26,79 +26,36 @@ jobs:
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          mkdir -p work/dex work/dis research/generated
+          mkdir -p work research/generated
           gh release download 8 --pattern "$APK_NAME" --dir work
           echo "$APK_SHA256  work/$APK_NAME" | sha256sum -c -
-          unzip -j "work/$APK_NAME" 'classes*.dex' -d work/dex
+          unzip -p "work/$APK_NAME" classes10.dex > work/classes10.dex
 
-      - name: Find dexdump
-        run: |
-          DEXDUMP="$(find "$ANDROID_HOME/build-tools" -type f -name dexdump | sort -V | tail -1)"
-          test -n "$DEXDUMP"
-          echo "DEXDUMP=$DEXDUMP" >> "$GITHUB_ENV"
-
-      - name: Resolve A08 selector and exact consumers
+      - name: Resolve A08 packed-switch selector
         shell: bash
         run: |
-          REPORT=research/generated/instagram_439_hdr_a08_switch_payload.txt
-          for d in work/dex/classes*.dex; do
-            if strings "$d" | grep -Fq 'LX/0D2R;'; then
-              b="$(basename "$d" .dex)"
-              "$DEXDUMP" -d -f -h "$d" > "work/dis/$b.txt"
-            fi
-          done
-
           python3 - <<'PY'
           from pathlib import Path
           import struct
-          dex=Path('work/dex/classes10.dex').read_bytes()
+          dex=Path('work/classes10.dex').read_bytes()
           payload=0x3693f4
           ident,size=struct.unpack_from('<HH',dex,payload)
           first_key=struct.unpack_from('<i',dex,payload+4)[0]
           targets=struct.unpack_from('<'+'i'*size,dex,payload+8)
           switch_off=0x2
           branches={'A0C':0x0a,'A0B':0x0f,'A0A':0x14,'A09':0x19,'A08':0x1e,'A07':0x23,'A06':0x28,'A05':0x2d,'A04':0x32}
-          lines=[]
-          lines.append(f'ident=0x{ident:04x} size={size} first_key={first_key}')
-          for name,off in branches.items():
-              rel=off-switch_off
-              keys=[first_key+i for i,t in enumerate(targets) if t==rel]
-              lines.append(f'{name}: branch=0x{off:x} rel=0x{rel:x} selectors={keys}')
-              if name=='A08':
-                  Path('work/a08_selector').write_text(str(keys[0]) if len(keys)==1 else '')
-          Path('work/switch_map').write_text('\n'.join(lines)+'\n')
+          out=Path('research/generated/instagram_439_hdr_a08_switch_payload.txt')
+          with out.open('w') as f:
+              f.write('Instagram 439 X.0D2R.A08 exact selector\n')
+              f.write('======================================\n')
+              f.write('Exact APK SHA256: 4015b171ac59f3e7172134d194ec2dcf701f64c3339f127c19d7a04c13d529c8\n')
+              f.write(f'ident=0x{ident:04x} size={size} first_key={first_key}\n')
+              for name,off in branches.items():
+                  rel=off-switch_off
+                  keys=[first_key+i for i,t in enumerate(targets) if t==rel]
+                  f.write(f'{name}: branch=0x{off:x} rel=0x{rel:x} selectors={keys}\n')
+          print(out.read_text())
           PY
-
-          SEL="$(cat work/a08_selector)"
-          test -n "$SEL"
-
-          {
-            echo "Instagram 439 X.0D2R.A08 exact selector trace"
-            echo "============================================"
-            echo "Exact APK SHA256: $APK_SHA256"
-            echo "A08() returns whether Display HDR type 1 (Dolby Vision) exists."
-            echo
-            echo "===== SWITCH MAP ====="
-            cat work/switch_map
-            echo
-            echo "===== EXACT SELECTOR CONTEXTS ====="
-            echo "A08 selector=$SEL"
-            for f in work/dis/*.txt; do
-              python3 - "$f" "$SEL" <<'PY'
-          import sys,re
-          from pathlib import Path
-          f=Path(sys.argv[1]); sel=int(sys.argv[2]); lines=f.read_text(errors='ignore').splitlines()
-          pats=[rf'#int {sel}(?:\s|$)',rf'#int {sel} //',rf'#int {sel} \(',rf'#int {sel}\b']
-          for i,l in enumerate(lines):
-              if not any(re.search(p,l) for p in pats): continue
-              lo=max(0,i-28); hi=min(len(lines),i+55); block=lines[lo:hi]; joined='\n'.join(block)
-              if 'LX/0D2R;.A0E:(I)LX/04i7;' in joined or 'LX/0D2R;.<init>:(I)V' in joined:
-                  print(f'--- {f}:{i+1} ---')
-                  print('\n'.join(block))
-          PY
-            done
-          } > "$REPORT"
-          cat "$REPORT"
 
       - name: Commit report
         run: |
@@ -106,7 +63,7 @@ jobs:
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add research/generated/instagram_439_hdr_a08_switch_payload.txt
           if ! git diff --cached --quiet; then
-            git commit -m "Resolve Instagram 439 HDR A08 selector consumer"
+            git commit -m "Resolve Instagram 439 HDR A08 selector"
           fi
           git pull --rebase origin main
           git push origin HEAD:main
