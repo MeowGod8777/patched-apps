@@ -1,0 +1,61 @@
+name: IG 439 Reels HDR Request Fast R8b
+
+on:
+  push:
+    branches: [main]
+    paths: [.github/workflows/ig-hdr-request-fast-r8b.yml]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  trace:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    env:
+      APK_NAME: instagram-piko-v439.0.0.37.89-arm64-v8a.apk
+      APK_SHA256: 4015b171ac59f3e7172134d194ec2dcf701f64c3339f127c19d7a04c13d529c8
+    steps:
+      - uses: actions/checkout@v6
+        with: {fetch-depth: 0}
+      - name: Dexdump exact APK
+        env: {GH_TOKEN: '${{ secrets.GITHUB_TOKEN }}'}
+        run: |
+          set -euo pipefail
+          mkdir -p work/dex work/dis research/generated
+          gh release download 8 --pattern "$APK_NAME" --dir work
+          echo "$APK_SHA256  work/$APK_NAME" | sha256sum -c -
+          unzip -j "work/$APK_NAME" 'classes*.dex' -d work/dex
+          DEXDUMP="$(find "$ANDROID_HOME/build-tools" -type f -name dexdump | sort -V | tail -1)"
+          for d in work/dex/classes*.dex; do "$DEXDUMP" -d -f -h "$d" > "work/dis/$(basename "$d" .dex).txt"; done
+      - name: Focused request grep
+        run: |
+          set -euo pipefail
+          O=research/generated/instagram_439_reels_hdr_request_fast_r8b.txt
+          : > "$O"
+          for p in \
+            '"manifest_capabilities"' '"mixed_codec_manifest"' '"supported_codecs"' \
+            '"codec_capabilities"' '"media_capabilities"' '"playback_capabilities"' \
+            '"device_tier"' '"device_class"' '"device_score"' \
+            '"feed/reels' '"reels_media' '"media_info' '"video_dash_manifest"' \
+            '"av1"' '"hevc"' '"hdr"'; do
+            printf '\n===== %s =====\n' "$p" >> "$O"
+            grep -aHn -B 80 -A 130 -F "$p" work/dis/*.txt >> "$O" || true
+          done
+          python3 - <<'PY'
+          from pathlib import Path
+          p=Path('research/generated/instagram_439_reels_hdr_request_fast_r8b.txt')
+          b=p.read_bytes()
+          if len(b)>1000000: p.write_bytes(b[:1000000])
+          PY
+          wc -c "$O"
+      - name: Commit
+        run: |
+          set -euo pipefail
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add research/generated/instagram_439_reels_hdr_request_fast_r8b.txt
+          if ! git diff --cached --quiet; then git commit -m 'Add fast Instagram Reels HDR request trace'; fi
+          git pull --rebase origin main
+          git push origin HEAD:main
