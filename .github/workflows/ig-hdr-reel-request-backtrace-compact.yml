@@ -1,0 +1,250 @@
+name: IG 439 Reel Request Eligibility Compact
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - .github/workflows/ig-hdr-reel-request-backtrace-compact.yml
+
+permissions:
+  contents: write
+
+jobs:
+  trace:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    env:
+      APK_NAME: instagram-piko-v439.0.0.37.89-arm64-v8a.apk
+      APK_SHA256: 4015b171ac59f3e7172134d194ec2dcf701f64c3339f127c19d7a04c13d529c8
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-java@v5
+        with:
+          distribution: zulu
+          java-version: '21'
+      - name: Download exact APK and baksmali
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          set -euo pipefail
+          mkdir -p work/apk work/smali research/generated
+          gh release download 8 --pattern "$APK_NAME" --dir work
+          echo "$APK_SHA256  work/$APK_NAME" | sha256sum -c -
+          gh release download 3.0.10 --repo baksmali/smali --pattern 'baksmali-3.0.10-fat.jar' --dir work
+          unzip -q "work/$APK_NAME" 'classes*.dex' -d work/apk
+          for d in work/apk/classes*.dex; do
+            n="$(basename "$d" .dex)"
+            java -jar work/baksmali-3.0.10-fat.jar d "$d" -o "work/smali/$n" >/dev/null
+          done
+
+      - name: Build compact exact call graph
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          from pathlib import Path
+          import re, collections
+
+          ROOT=Path('work/smali')
+          OUT=Path('research/generated/instagram_439_hdr_reel_request_backtrace_compact.txt')
+          class_re=re.compile(r'^\.class\s+.*\s+(L[^;]+;)$')
+          method_re=re.compile(r'^\.method\s+.*?([^\s]+\([^)]*\).+)$')
+          invoke_re=re.compile(r'invoke-[^\s]+\s+\{[^}]*\},\s+(L[^;]+;->[^\s]+)')
+          str_re=re.compile(r'^\s*const-string(?:/jumbo)?\s+[^,]+,\s+"(.*)"')
+
+          methods={}; callers=collections.defaultdict(set)
+          for p in ROOT.rglob('*.smali'):
+            lines=p.read_text(errors='replace').splitlines()
+            cls=None
+            for l in lines[:20]:
+              m=class_re.match(l)
+              if m: cls=m.group(1); break
+            if not cls: continue
+            i=0
+            while i<len(lines):
+              mm=method_re.match(lines[i])
+              if not mm: i+=1; continue
+              ref=f'{cls}->{mm.group(1)}'; s=i; i+=1
+              while i<len(lines) and not lines[i].startswith('.end method'): i+=1
+              e=min(i,len(lines)-1); body=lines[s:e+1]
+              strings=[]; invokes=[]
+              for l in body:
+                sm=str_re.match(l)
+                if sm: strings.append(sm.group(1))
+                im=invoke_re.search(l)
+                if im: invokes.append(im.group(1))
+              methods[ref]={'file':str(p),'body':body,'strings':strings,'invokes':invokes}
+              for x in invokes: callers[x].add(ref)
+              i=e+1
+
+          def text(m): return '\n'.join(methods[m]['body'])
+          def strs(m): return '\n'.join(methods[m]['strings']).lower()
+          def short_body(m, maxlines=220):
+            keep=[]
+            for l in methods[m]['body']:
+              lo=l.lower()
+              if (l.startswith('.method') or l.startswith('.end method') or
+                  'const-string' in l or 'invoke-' in l or 'sget-' in l or 'iget-' in l or
+                  'sput-' in l or 'iput-' in l or 'return-' in l or 'if-' in l or
+                  'new-instance' in l or 'check-cast' in l or 'move-result' in l or
+                  'media_performance_class' in lo or 'build;' in lo or 'request' in lo or
+                  'graphql' in lo or 'http' in lo):
+                keep.append(l)
+            if len(keep)>maxlines: keep=keep[:maxlines]+[f'... [{len(keep)-maxlines} lines omitted]']
+            return keep
+
+          def emit(out,m,title=None,depth=1):
+            d=methods[m]
+            out.append(f'===== {title+" :: " if title else ""}{m} =====')
+            out.append('FILE: '+d['file'])
+            out.append('STRINGS: '+' | '.join(dict.fromkeys(d['strings'])))
+            cs=sorted(callers.get(m,()))
+            out.append('DIRECT_CALLERS: '+(' | '.join(cs) if cs else '<none>'))
+            out.append('DIRECT_CALLEES: '+(' | '.join(dict.fromkeys(d['invokes'])) if d['invokes'] else '<none>'))
+            if depth>=2:
+              for c in cs[:20]:
+                out.append(f'  CALLER {c}')
+                out.append('    STRINGS: '+' | '.join(dict.fromkeys(methods.get(c,{}).get('strings',[]))))
+                out.append('    CALLERS: '+' | '.join(sorted(callers.get(c,()))[:12]))
+            out.extend(short_body(m))
+            out.append('')
+
+          def is_requestish(m):
+            t=text(m).lower(); s=strs(m)
+            score=0
+            weights=[
+              ('graphqlcallinput',12),('graphql',9),('/api/',9),('http',7),('request',5),
+              ('clips/feed',14),('reels/feed',14),('feed/reels',14),('clips/items',12),
+              ('reels_media',10),('clips_media',10),('clips_viewer',7),('clips_timeline',7),
+              ('starting_clips_media_id',8),('feed_request_id',7),('cursor',2),('page_size',2)
+            ]
+            for k,w in weights:
+              if k in t or k in s: score+=w
+            return score
+
+          # exact seed groups
+          mpc=[m for m in methods if 'Landroid/os/Build$VERSION;->MEDIA_PERFORMANCE_CLASS:I' in text(m)]
+          perfpoints=[m for m in methods if 'LX/0cby;->A03(Landroid/media/MediaCodecInfo$VideoCapabilities;)' in text(m)]
+          headers=[m for m in methods if any(x in strs(m) for x in (
+            'x-ig-capabilities','x-ig-device-id','x-ig-android-id','x-ig-family-device-id',
+            'user-agent','x-ig-app-id','x-bloks-version-id'))]
+          buildid=[m for m in methods if any(x in text(m) for x in (
+            'Landroid/os/Build;->MODEL','Landroid/os/Build;->MANUFACTURER','Landroid/os/Build;->DEVICE',
+            'Landroid/os/Build;->PRODUCT','Landroid/os/Build;->BRAND','Landroid/os/Build;->HARDWARE'))]
+          reel_terms=('clips/feed','reels/feed','feed/reels','clips/items','reels_media','clips_media',
+                      'clips_viewer','clips_timeline','reels_timeline','clips_tab','reels_tab',
+                      'starting_clips_media_id','feed_request_id','clips_home','reels_viewer')
+          reels=[m for m in methods if any(x in strs(m) for x in reel_terms)]
+          reels=sorted(reels,key=lambda m:(-is_requestish(m),m))
+          manifest_get='Lcom/instagram/feed/media/LiveTreeMediaDict;->A7q()Ljava/lang/String;'
+
+          out=[
+            'Instagram 439 HDR Reel request/backend eligibility compact trace',
+            '===============================================================',
+            'Exact APK SHA256: 4015b171ac59f3e7172134d194ec2dcf701f64c3339f127c19d7a04c13d529c8',
+            f'methods={len(methods)} mpc={len(mpc)} perfpoint_callers={len(perfpoints)} headers={len(headers)} build_identity_readers={len(buildid)} reel_seeds={len(reels)}',
+            ''
+          ]
+
+          out += ['===== 1. MEDIA_PERFORMANCE_CLASS READERS (highest priority) =====','']
+          for m in mpc: emit(out,m,'MPC',depth=2)
+
+          out += ['===== 2. X.0cby.A03(VideoCapabilities) CALL SITES =====','']
+          for m in perfpoints: emit(out,m,'PERFPOINT_CALLSITE',depth=2)
+
+          out += ['===== 3. GLOBAL REQUEST HEADER / IDENTITY LITERAL OWNERS =====','']
+          for m in sorted(headers,key=lambda x:(-is_requestish(x),x))[:180]: emit(out,m,'HEADER',depth=1)
+
+          out += ['===== 4. HIGH-SCORE REELS/CLIPS REQUEST SEEDS =====','']
+          for m in reels[:180]:
+            if is_requestish(m)>=7: emit(out,m,f'REEL score={is_requestish(m)}',depth=1)
+
+          # Build call graph distances: reverse and forward BFS up to 4 hops.
+          def bfs_forward(starts,maxd=4):
+            dist={m:0 for m in starts}; q=collections.deque(starts)
+            while q:
+              m=q.popleft(); d=dist[m]
+              if d>=maxd: continue
+              for n in methods.get(m,{}).get('invokes',[]):
+                if n in methods and n not in dist:
+                  dist[n]=d+1; q.append(n)
+            return dist
+          def bfs_reverse(starts,maxd=4):
+            dist={m:0 for m in starts}; q=collections.deque(starts)
+            while q:
+              m=q.popleft(); d=dist[m]
+              if d>=maxd: continue
+              for n in callers.get(m,()):
+                if n in methods and n not in dist:
+                  dist[n]=d+1; q.append(n)
+            return dist
+
+          capseeds=set(mpc)|set(perfpoints)|set(headers)|set(buildid)
+          reqseeds={m for m in reels if is_requestish(m)>=7}
+          cap_f=bfs_forward(capseeds,4); cap_r=bfs_reverse(capseeds,4)
+          req_f=bfs_forward(reqseeds,4); req_r=bfs_reverse(reqseeds,4)
+
+          out += ['===== 5. CAPABILITY/IDENTITY ↔ REEL REQUEST GRAPH INTERSECTIONS <=4 HOPS =====','']
+          hits=[]
+          universe=set(methods)
+          for m in universe:
+            # Any node reachable from both sides in either direction is a bridge candidate.
+            a=min(cap_f.get(m,99),cap_r.get(m,99)); b=min(req_f.get(m,99),req_r.get(m,99))
+            if a<=4 and b<=4:
+              hits.append((a+b,a,b,m))
+          hits=sorted(hits)[:300]
+          for total,a,b,m in hits:
+            out.append(f'BRIDGE total={total} capdist={a} reqdist={b} {m}')
+            out.append('  STRINGS: '+' | '.join(dict.fromkeys(methods[m]['strings'])))
+            out.append('  CALLERS: '+' | '.join(sorted(callers.get(m,()))[:16]))
+            out.append('  CALLEES: '+' | '.join(dict.fromkeys(methods[m]['invokes'])[:16]))
+          out.append('')
+
+          out += ['===== 6. ANDROID BUILD IDENTITY READERS NEAR REQUEST GRAPH =====','']
+          for m in buildid:
+            rd=min(req_f.get(m,99),req_r.get(m,99))
+            if rd<=4: emit(out,m,f'BUILD_IDENTITY reqdist={rd}',depth=1)
+
+          out += ['===== 7. video_dash_manifest GETTER + DIRECT CALLERS =====','']
+          if manifest_get in methods: emit(out,manifest_get,'MANIFEST_GETTER',depth=2)
+
+          # Exact string cross inventory for likely delivery/classification names.
+          terms=(
+            'media_performance_class','video_performance_points','device_class','device_level','device_tier',
+            'clips_delivery_parameters','feed_delivery_parameters','delivery_class','is_dash_eligible',
+            'supported_capabilities','playback_capabilities','media_capabilities','client_hints',
+            'device_capabilities','device_model','device_name'
+          )
+          out += ['===== 8. DELIVERY / CLASSIFICATION STRING OWNERS =====','']
+          owners=[]
+          for m in methods:
+            s=strs(m)
+            matched=[t for t in terms if t in s]
+            if matched:
+              owners.append((-(is_requestish(m)),m,matched))
+          for _,m,matched in sorted(owners)[:220]:
+            out.append(f'{m} MATCH={",".join(matched)}')
+            out.append('  FILE: '+methods[m]['file'])
+            out.append('  STRINGS: '+' | '.join(dict.fromkeys(methods[m]['strings'])))
+            out.append('  CALLERS: '+' | '.join(sorted(callers.get(m,()))[:16]))
+          out.append('')
+
+          textout='\n'.join(out)
+          OUT.write_text(textout,encoding='utf-8')
+          print(f'bytes={OUT.stat().st_size} bridges={len(hits)}')
+          print(textout[:220000])
+          PY
+
+      - name: Commit compact report
+        run: |
+          set -euo pipefail
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add research/generated/instagram_439_hdr_reel_request_backtrace_compact.txt
+          if ! git diff --cached --quiet; then
+            git commit -m 'Trace exact Instagram 439 Reel HDR request eligibility compact'
+            git pull --rebase origin main
+            git push origin HEAD:main
+          fi
