@@ -1,0 +1,52 @@
+R19h intersection classifier
+===========================
+count=3
+
+===== #1 =====
+--- LX/0Gsv; .method public final invokeSuspend(Ljava/lang/Object;)Ljava/lang/Object; FILE=work/smali/classes19/X/0Gsv.smali
+CAP=['device_capabilities']
+ROUTE/SEMANTIC_STRINGS=['device_capabilities', 'include_flm_effects', 'effect_action_sheet_surface', 'formatted_media_count_enabled', 'IGAREffectCollectionQuery', 'effect_collection_']
+REQUEST_INVOKES:
+new-instance v3, LX/05xm;
+invoke-direct {v3}, LX/05xm;-><init>()V
+invoke-virtual {v3, v0, v14}, LX/05xm;->A00(Lcom/facebook/graphql/calls/GraphQlCallInput;Ljava/lang/String;)V
+invoke-virtual {v3, v0, v14}, LX/05xm;->A06(Ljava/lang/String;Ljava/util/List;)V
+invoke-virtual {v3, v14, v0}, LX/05xm;->A05(Ljava/lang/String;Ljava/lang/String;)V
+invoke-virtual {v3, v0, v14}, LX/05xm;->A04(Ljava/lang/String;Ljava/lang/Number;)V
+invoke-virtual {v3, v0, v14}, LX/05xm;->A04(Ljava/lang/String;Ljava/lang/Number;)V
+invoke-virtual {v3, v15, v0}, LX/05xm;->A05(Ljava/lang/String;Ljava/lang/String;)V
+invoke-virtual {v3, v15, v0}, LX/05xm;->A05(Ljava/lang/String;Ljava/lang/String;)V
+invoke-virtual {v3, v0, v14}, LX/05xm;->A04(Ljava/lang/String;Ljava/lang/Number;)V
+invoke-virtual {v3, v0, v14}, LX/05xm;->A04(Ljava/lang/String;Ljava/lang/Number;)V
+invoke-virtual {v3, v14, v0}, LX/05xm;->A03(Ljava/lang/String;Ljava/lang/Boolean;)V
+invoke-virtual {v3, v14, v0}, LX/05xm;->A03(Ljava/lang/String;Ljava/lang/Boolean;)V
+invoke-virtual {v3, v0, v14}, LX/05xm;->A05(Ljava/lang/String;Ljava/lang/String;)V
+invoke-virtual {v3, v0}, LX/05xm;->A02(Ljava/lang/String;)V
+invoke-virtual {v3, v14, v0}, LX/05xm;->A03(Ljava/lang/String;Ljava/lang/Boolean;)V
+invoke-virtual/range {v16 .. v16}, Lcom/facebook/graphql/calls/GraphQlCallInput;->A04()Ljava/util/TreeMap;
+invoke-virtual {v3, v14, v0}, LX/05xm;->A06(Ljava/lang/String;Ljava/util/List;)V
+invoke-direct {v0, v3, v15, v14, v13}, LX/00K8;-><init>(LX/05xm;Ljava/lang/Class;Ljava/lang/String;Z)V
+
+===== #2 =====
+--- LX/0Hh4; .method public final FBz(Z)V FILE=work/smali/classes19/X/0Hh4.smali
+CAP=['supported_display_hdr_types']
+ROUTE/SEMANTIC_STRINGS=['supported_display_hdr_types', 'has_hevc_encoder_with_hdr']
+REQUEST_INVOKES:
+
+===== #3 =====
+--- Lcom/facebook/cameracore/ardelivery/xplat/async/XplatAsyncMetadataFetcher; .method public fetchAsyncAssetMetadata(Ljava/lang/String;Ljava/lang/String;Lcom/facebook/cameracore/ardelivery/xplat/async/XplatAsyncMetadataCompletionCallback;)V FILE=work/smali/classes18/com/facebook/cameracore/ardelivery/xplat/async/XplatAsyncMetadataFetcher.smali
+CAP=['device_capabilities']
+ROUTE/SEMANTIC_STRINGS=['manifest_capabilities', 'manifest_capabilities', 'device_capabilities', 'effect_id']
+REQUEST_INVOKES:
+iget-object v3, v4, LX/0Mib;->A04:LX/05xm;
+invoke-virtual {v3, v0, v1}, LX/05xm;->A06(Ljava/lang/String;Ljava/util/List;)V
+invoke-virtual {v10, v1, v0}, Lcom/facebook/graphql/calls/GraphQlCallInput;->put(Ljava/lang/String;Ljava/util/List;)V
+sget-object v18, Lcom/facebook/graphql/calls/GraphQlCallInput;->A02:LX/000m;
+invoke-virtual {v10}, Lcom/facebook/graphql/calls/GraphQlCallInput;->A03()LX/000q;
+invoke-virtual {v10}, Lcom/facebook/graphql/calls/GraphQlCallInput;->A03()LX/000q;
+invoke-virtual {v10, v11, v0}, Lcom/facebook/graphql/calls/GraphQlCallInput;->A0B(Ljava/lang/String;Ljava/lang/String;)V
+invoke-virtual {v3, v10, v0}, LX/05xm;->A00(Lcom/facebook/graphql/calls/GraphQlCallInput;Ljava/lang/String;)V
+invoke-virtual {v3, v0, v1}, LX/05xm;->A06(Ljava/lang/String;Ljava/util/List;)V
+invoke-virtual {v3, v0, v1}, LX/05xm;->A06(Ljava/lang/String;Ljava/util/List;)V
+invoke-virtual {v3, v0, v5}, LX/05xm;->A05(Ljava/lang/String;Ljava/lang/String;)V
+
