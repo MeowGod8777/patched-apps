@@ -1,0 +1,168 @@
+name: IG 439 HDR Reels Route Builders R19d
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - .github/workflows/ig-hdr-reels-route-builders-r19d.yml
+
+permissions:
+  contents: write
+
+jobs:
+  trace:
+    runs-on: ubuntu-latest
+    timeout-minutes: 18
+    env:
+      APK_NAME: instagram-piko-v439.0.0.37.89-arm64-v8a.apk
+      APK_SHA256: 4015b171ac59f3e7172134d194ec2dcf701f64c3339f127c19d7a04c13d529c8
+    steps:
+      - uses: actions/checkout@v6
+        with: {fetch-depth: 0}
+      - uses: actions/setup-java@v5
+        with:
+          distribution: zulu
+          java-version: '21'
+      - name: Fetch exact APK and disassemble route-hit dexes
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          set -euo pipefail
+          mkdir -p work/apk work/smali research/generated
+          gh release download 8 --pattern "$APK_NAME" --dir work
+          echo "$APK_SHA256  work/$APK_NAME" | sha256sum -c -
+          gh release download 3.0.10 --repo baksmali/smali --pattern 'baksmali-3.0.10-fat.jar' --dir work
+          unzip -q "work/$APK_NAME" 'classes*.dex' -d work/apk
+          python3 - <<'PY'
+          from pathlib import Path
+          import subprocess
+          toks=['clips_fetch','clips/items','clips/feed','reels/feed','feed/reels','clips_viewer_feed_timeline','clips_viewer_reel_feed_timeline','reel_feed_timeline']
+          hit=[]
+          for p in sorted(Path('work/apk').glob('classes*.dex')):
+            s=subprocess.run(['strings','-a',str(p)],capture_output=True,text=True,errors='replace').stdout.lower()
+            if any(t.lower() in s for t in toks): hit.append(p.name)
+          Path('work/hitdex.txt').write_text('\n'.join(hit)+'\n')
+          print('HITDEX',hit)
+          PY
+          while read d; do
+            [ -n "$d" ] || continue
+            n="${d%.dex}"
+            java -jar work/baksmali-3.0.10-fat.jar d "work/apk/$d" -o "work/smali/$n" >/dev/null &
+          done < work/hitdex.txt
+          wait
+
+      - name: Extract compact route/request builder candidates
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          from pathlib import Path
+          import re, collections
+          ROOT=Path('work/smali')
+          OUT=Path('research/generated/instagram_439_hdr_reels_route_builders_r19d.txt')
+          route_tokens=('clips_fetch','clips/items','clips/feed','reels/feed','feed/reels')
+          ctx_tokens=('clips_viewer_feed_timeline','clips_viewer_reel_feed_timeline','reel_feed_timeline')
+          request_strings=('doc_id','query_id','query_hash','variables','signed_body','client_doc_id','friendly_name','operation_name',
+                           'device','capabil','hdr','codec','av1','hevc','vp9','dash','quality','delivery','playback','bandwidth','resolution',
+                           'network','screen','media_delivery','is_dash_eligible','video_dash_manifest','max_id','rank_token','session_id')
+          request_owners=('Lcom/instagram/api','Lcom/instagram/service/tigon','Lcom/facebook/graphql','Lcom/facebook/pando',
+                          'LX/03u7;','LX/03ci;','LX/03Lk;','LX/03Kx;','LX/0G4a;')
+          cls_re=re.compile(r'^\.class\s+.*\s+(L[^;]+;)$')
+          str_re=re.compile(r'^\s*const-string(?:/jumbo)?\s+[^,]+,\s+"(.*)"')
+          ref_re=re.compile(r'(L[^;]+;)->([^\s(]+)\(([^)]*)\)(\S+)')
+          methods={}; files={}
+          for p in ROOT.rglob('*.smali'):
+            ls=p.read_text(errors='replace').splitlines(); cls=None
+            for x in ls[:50]:
+              m=cls_re.match(x)
+              if m: cls=m.group(1); break
+            if not cls: continue
+            files[cls]=(p,ls)
+            i=0
+            while i<len(ls):
+              if not ls[i].startswith('.method'): i+=1; continue
+              s=i; sig=ls[i]; i+=1
+              while i<len(ls) and not ls[i].startswith('.end method'): i+=1
+              e=min(i,len(ls)-1); b=ls[s:e+1]
+              mm=re.search(r'\s([^\s(]+)\(([^)]*)\)(\S+)$',sig)
+              if mm: methods[(cls,mm.group(1),mm.group(2),mm.group(3))]=(p,s,e,b,sig)
+              i+=1
+
+          def strings(b):
+            out=[]
+            for l in b:
+              m=str_re.match(l)
+              if m: out.append(m.group(1))
+            return out
+          def refs(b):
+            out=[]
+            for l in b:
+              if 'invoke-' not in l: continue
+              m=ref_re.search(l)
+              if m: out.append((m.group(1),m.group(2),m.group(3),m.group(4)))
+            return out
+
+          candidates=[]
+          for mk,(p,s,e,b,sig) in methods.items():
+            ss=strings(b); low='\n'.join(b).lower()
+            rh=sorted({t for t in route_tokens if any(t.lower() in x.lower() for x in ss)})
+            ch=sorted({t for t in ctx_tokens if any(t.lower() in x.lower() for x in ss)})
+            if not rh and not ch: continue
+            # Drop obvious enum/context initializers unless they also expose route/request construction evidence.
+            rfs=refs(b)
+            reqs=sorted({x for x in ss for t in request_strings if t.lower() in x.lower()})
+            reqrefs=[r for r in rfs if any(o in r[0] for o in request_owners)]
+            route_bonus=20*len(rh); req_bonus=4*len(reqs)+6*len(reqrefs)
+            invoke_bonus=min(len(rfs),20)
+            penalty=25 if '<clinit>' in sig else 0
+            penalty+=20 if len(b)>900 else 0
+            score=route_bonus+req_bonus+invoke_bonus-penalty
+            candidates.append((score,mk,p,sig,rh,ch,reqs,reqrefs,rfs,b))
+
+          candidates.sort(key=lambda x:(-x[0],x[1]))
+          O=['Instagram 439 HDR Reels Route Builders R19d','========================================','',
+             f'candidate_count={len(candidates)}','']
+          seed_keys=set()
+          for score,mk,p,sig,rh,ch,reqs,reqrefs,rfs,b in candidates:
+            if score<10: continue
+            seed_keys.add(mk)
+            O += [f'===== SCORE {score} {mk[0]} {sig} =====',f'FILE={p}',f'ROUTES={rh}',f'CONTEXTS={ch}',
+                  f'REQUEST_STRINGS={reqs}',f'REQUEST_REFS={reqrefs}',f'ALL_INVOKES={rfs}','']
+            if len(b)<=450:
+              O += b+['']
+
+          # One-hop exact method bodies only when a candidate invokes another disassembled method with request-ish evidence.
+          onehop=[]
+          seen=set()
+          for item in candidates:
+            score,mk,p,sig,rh,ch,reqs,reqrefs,rfs,b=item
+            if mk not in seed_keys: continue
+            for r in rfs:
+              if r not in methods or r in seen: continue
+              pp,ss0,ee,bb,sg=methods[r]; st=strings(bb); low='\n'.join(bb).lower()
+              rs=sorted({x for x in st for t in request_strings if t.lower() in x.lower()})
+              rr=refs(bb); rrq=[q for q in rr if any(o in q[0] for o in request_owners)]
+              if rs or rrq or any('/api/' in x.lower() for x in st):
+                seen.add(r); onehop.append((r,pp,sg,rs,rrq,rr,bb))
+          O += [f'===== REQUESTISH ONE-HOP CALLEES ({len(onehop)}) =====','']
+          for r,pp,sg,rs,rrq,rr,bb in onehop:
+            O += [f'--- {r[0]} {sg}',f'FILE={pp}',f'REQUEST_STRINGS={rs}',f'REQUEST_REFS={rrq}',f'ALL_INVOKES={rr}','---']
+            if len(bb)<=500: O+=bb
+            O+=['']
+
+          OUT.write_text('\n'.join(O),encoding='utf-8')
+          print('\n'.join(O[:3500]))
+          print('bytes',OUT.stat().st_size)
+          PY
+
+      - name: Commit R19d report
+        run: |
+          set -euo pipefail
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add research/generated/instagram_439_hdr_reels_route_builders_r19d.txt
+          if ! git diff --cached --quiet; then
+            git commit -m 'Add exact Reels route builder trace R19d'
+            git pull --rebase origin main
+            git push origin HEAD:main
+          fi
