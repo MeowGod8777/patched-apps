@@ -1,0 +1,173 @@
+name: IG 439 HDR Benchmark Classification R19p
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - .github/workflows/ig-hdr-benchmark-classification-r19p.yml
+
+permissions:
+  contents: write
+
+jobs:
+  trace:
+    runs-on: ubuntu-latest
+    timeout-minutes: 18
+    env:
+      APK_NAME: instagram-piko-v439.0.0.37.89-arm64-v8a.apk
+      APK_SHA256: 4015b171ac59f3e7172134d194ec2dcf701f64c3339f127c19d7a04c13d529c8
+    steps:
+      - uses: actions/checkout@v6
+        with: {fetch-depth: 0}
+      - uses: actions/setup-java@v5
+        with:
+          distribution: zulu
+          java-version: '21'
+
+      - name: Fetch exact APK and find benchmark classification dexes
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          set -euo pipefail
+          mkdir -p work/apk work/smali research/generated
+          gh release download 8 --pattern "$APK_NAME" --dir work
+          echo "$APK_SHA256  work/$APK_NAME" | sha256sum -c -
+          gh release download 3.0.10 --repo baksmali/smali --pattern 'baksmali-3.0.10-fat.jar' --dir work
+          unzip -q "work/$APK_NAME" 'classes*.dex' -d work/apk
+          python3 - <<'PY'
+          from pathlib import Path
+          import subprocess
+          needles=[
+            'ig_device_perf_benchmark','preference_logged_performance_benchmarks','PerfMetricRunnerJni',
+            'com.facebook.devicesegmentation','performance_score','performance score','performance_class',
+            'performance class','device_performance','device_tier','device tier','device_segment',
+            'device segment','classification','benchmark_median','benchmark_arithmeticmean',
+            'key_display_hdr_supported','key_video_decoder_hdr_supported','av1','10bit','10-bit hdr'
+          ]
+          hit=[]; rows=[]
+          for p in sorted(Path('work/apk').glob('classes*.dex')):
+              s=subprocess.run(['strings','-a',str(p)],capture_output=True,text=True,errors='replace').stdout
+              hs=[n for n in needles if n.lower() in s.lower()]
+              if hs:
+                  hit.append(p.name); rows.append(f'{p.name}: '+', '.join(hs))
+          # always include classes13: exact benchmark runner path is known there
+          if 'classes13.dex' not in hit: hit.append('classes13.dex')
+          Path('work/hitdex.txt').write_text('\n'.join(sorted(set(hit)))+'\n')
+          Path('research/generated/instagram_439_hdr_benchmark_classification_dex_hits_r19p.txt').write_text('\n'.join(rows)+'\n')
+          print('\n'.join(rows)); print('HITDEX',sorted(set(hit)))
+          PY
+          while read d; do
+            [ -n "$d" ] || continue
+            java -jar work/baksmali-3.0.10-fat.jar d "work/apk/$d" -o "work/smali/${d%.dex}" >/dev/null &
+          done < work/hitdex.txt
+          wait
+
+      - name: Resolve benchmark enum score group storage and event sink
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          from pathlib import Path
+          import re
+          R=Path('work/smali'); OUT=Path('research/generated/instagram_439_hdr_benchmark_classification_r19p.txt')
+          cr=re.compile(r'^\.class\s+.*\s+(L[^;]+;)$')
+          sr=re.compile(r'^\s*const-string(?:/jumbo)?\s+[^,]+,\s+"(.*)"')
+          inv=re.compile(r'(L[^;]+;)->([^\s(]+)\(([^)]*)\)(\S+)')
+          methods=[]; classes={}
+          for p in R.rglob('*.smali'):
+              ls=p.read_text(errors='replace').splitlines(); cls='?'
+              for x in ls[:50]:
+                  m=cr.match(x)
+                  if m: cls=m.group(1); break
+              classes[cls]=(p,ls)
+              i=0
+              while i<len(ls):
+                  if not ls[i].startswith('.method'): i+=1; continue
+                  s=i; sig=ls[i]; i+=1
+                  while i<len(ls) and not ls[i].startswith('.end method'): i+=1
+                  methods.append((cls,sig,p,ls[s:min(i+1,len(ls))])); i+=1
+
+          O=['Instagram 439 HDR benchmark -> performance classification R19p','==========================================================','']
+
+          # Full enum/class structures critical to benchmark identity.
+          for t in ['LX/0Aix;','LX/07lX;']:
+              O += [f'===== FULL CLASS {t} =====']
+              if t in classes:
+                  p,ls=classes[t]; O += [f'FILE={p}']+ls
+              else: O += ['NOT_FOUND']
+              O += ['']
+
+          # Exact benchmark runner method, including event finalization.
+          O += ['===== EXACT BENCHMARK RUNNER METHODS =====','']
+          for cls,sig,p,b in methods:
+              text='\n'.join(b)
+              if 'ig_device_perf_benchmark' in text or 'PerfMetricRunnerJni' in text:
+                  strings=[m.group(1) for l in b if (m:=sr.match(l))]
+                  invokes=[]
+                  for l in b:
+                      if 'invoke-' in l:
+                          m=inv.search(l)
+                          if m: invokes.append(m.groups())
+                  O += [f'--- {cls} {sig}',f'FILE={p}',f'STRINGS={strings}',f'INVOKES={invokes}']+b+['']
+
+          # Methods likely to compute/read/write performance score/tier/group.
+          score_terms=('performance_score','performance score','performance_class','performance class',
+                       'device_performance','device_tier','device tier','device_segment','device segment',
+                       'classification','perf_score','perf_class','benchmark_score','benchmark score',
+                       'device_class','device class')
+          O += ['===== SCORE / TIER / GROUP CANDIDATE METHODS =====','']
+          score_rows=0
+          for cls,sig,p,b in methods:
+              text='\n'.join(b); low=text.lower()
+              hits=[x for x in score_terms if x in low]
+              if not hits: continue
+              strings=[m.group(1) for l in b if (m:=sr.match(l))]
+              # keep only methods with deviceseg/benchmark/media-ish context or persistence
+              context=[x for x in ('device','benchmark','segment','hdr','video','media','codec','sharedpreferences','preference','score','class','tier') if x in low]
+              if not any(x in context for x in ('benchmark','segment','hdr','video','media','codec','score','tier')): continue
+              score_rows+=1
+              O += [f'--- {cls} {sig}',f'FILE={p}',f'HITS={hits}',f'CONTEXT={context}',f'STRINGS={strings}']+b+['']
+          O += [f'SCORE_CANDIDATE_COUNT={score_rows}','']
+
+          # Device-segmentation preference readers/writers; distinguish local storage from event transport.
+          O += ['===== DEVICESEG PREFERENCE READ / WRITE METHODS =====','']
+          for cls,sig,p,b in methods:
+              text='\n'.join(b); low=text.lower()
+              if 'com.facebook.devicesegmentation' not in low and 'devicesegmentation' not in low: continue
+              prefhits=[x for x in ('getString','getInt','getLong','getBoolean','putString','putInt','putLong','putBoolean','SharedPreferences','B73','apply','commit') if x.lower() in low]
+              if not prefhits: continue
+              strings=[m.group(1) for l in b if (m:=sr.match(l))]
+              O += [f'--- {cls} {sig}',f'FILE={p}',f'PREF_HITS={prefhits}',f'STRINGS={strings}']+b+['']
+
+          # Every use of benchmark result field names outside runner = potential score consumer.
+          result_keys=['benchmark_median','benchmark_arithmeticmean','benchmark_min','benchmark_max','benchmark_quartile1','benchmark_quartile3','benchmark_standarddeviation']
+          O += ['===== BENCHMARK RESULT KEY CONSUMERS =====','']
+          for cls,sig,p,b in methods:
+              text='\n'.join(b)
+              hits=[k for k in result_keys if k in text]
+              if hits:
+                  O += [f'--- {cls} {sig}',f'FILE={p}',f'HITS={hits}']+b+['']
+
+          # HDR/device segment co-location: only methods where both appear.
+          O += ['===== HDR x DEVICESEG / BENCHMARK INTERSECTIONS =====','']
+          for cls,sig,p,b in methods:
+              low='\n'.join(b).lower()
+              if 'hdr' in low and ('deviceseg' in low or 'benchmark' in low or 'performance' in low or 'device' in low):
+                  strings=[m.group(1) for l in b if (m:=sr.match(l))]
+                  O += [f'--- {cls} {sig}',f'FILE={p}',f'STRINGS={strings}']+b+['']
+
+          OUT.write_text('\n'.join(O),encoding='utf-8')
+          print('\n'.join(O[:10000])); print('bytes',OUT.stat().st_size,'score_candidates',score_rows)
+          PY
+
+      - name: Commit R19p reports
+        run: |
+          set -euo pipefail
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add research/generated/instagram_439_hdr_benchmark_classification_dex_hits_r19p.txt research/generated/instagram_439_hdr_benchmark_classification_r19p.txt
+          if ! git diff --cached --quiet; then
+            git commit -m 'Add Reels benchmark performance classification trace R19p'
+            git pull --rebase origin main
+            git push origin HEAD:main
+          fi
