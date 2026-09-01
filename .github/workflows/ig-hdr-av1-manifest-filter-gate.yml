@@ -1,0 +1,149 @@
+name: IG 439 AV1 Manifest Filter Gate
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - .github/workflows/ig-hdr-av1-manifest-filter-gate.yml
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  probe:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    env:
+      APK_NAME: instagram-piko-v439.0.0.37.89-arm64-v8a.apk
+      APK_SHA256: 4015b171ac59f3e7172134d194ec2dcf701f64c3339f127c19d7a04c13d529c8
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+
+      - name: Download and disassemble exact R8
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          set -euo pipefail
+          mkdir -p work/dex work/dis research/generated
+          gh release download 8 --pattern "$APK_NAME" --dir work
+          echo "$APK_SHA256  work/$APK_NAME" | sha256sum -c -
+          unzip -j "work/$APK_NAME" 'classes*.dex' -d work/dex
+          DEXDUMP="$(find "$ANDROID_HOME/build-tools" -type f -name dexdump | sort -V | tail -1)"
+          for d in work/dex/classes*.dex; do
+            b="$(basename "$d" .dex)"
+            "$DEXDUMP" -d -f -h "$d" > "work/dis/$b.txt"
+          done
+
+      - name: Extract AV1 manifest filter gate
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          from pathlib import Path
+          import re
+          from collections import defaultdict
+
+          header_re=re.compile(r'\|\[[0-9a-f]+\]\s+([^\s]+):')
+          invoke_re=re.compile(r'invoke-[^,]+.*?\s(L[^;]+;\.[^:]+:\([^\n ]*?\)[^\s/]+)')
+          methods=[]
+          def sig(h):
+              m=re.match(r'X\.([^.]+)\.([^:]+):(.*)$',h)
+              return f'LX/{m.group(1)};.{m.group(2)}:{m.group(3)}' if m else None
+          for p in sorted(Path('work/dis').glob('classes*.txt')):
+              lines=p.read_text(errors='replace').splitlines()
+              starts=[]; heads=[]
+              for i,l in enumerate(lines):
+                  m=header_re.search(l)
+                  if m:
+                      starts.append(i); heads.append(m.group(1))
+              for j,s in enumerate(starts):
+                  e=starts[j+1] if j+1<len(starts) else len(lines)
+                  methods.append({'file':p.name,'s':s+1,'e':e,'head':heads[j],'sig':sig(heads[j]),'body':lines[s:e]})
+
+          reverse=defaultdict(set)
+          for i,m in enumerate(methods):
+              for t in invoke_re.findall('\n'.join(m['body'])):
+                  reverse[t].add(i)
+
+          out=['Instagram 439 AV1 manifest filter gate trace','============================================','APK SHA256: 4015b171ac59f3e7172134d194ec2dcf701f64c3339f127c19d7a04c13d529c8','']
+          def emit(m,label,cap=1800):
+              out.append(f'===== {label} :: {m["file"]}:{m["s"]}-{m["e"]} :: {m["head"]} =====')
+              out.extend(x.rstrip() for x in m['body'][:cap])
+              if len(m['body'])>cap: out.append(f'... omitted {len(m["body"])-cap} raw lines ...')
+              out.append('')
+
+          # Exact gate method and all direct callers.
+          gate=[]
+          for i,m in enumerate(methods):
+              if m['head'].startswith('X.08oh.A0b:'):
+                  gate.append(i); emit(m,'X.08oh.A0b FULL RAW',2200)
+          gate_sigs=[methods[i]['sig'] for i in gate if methods[i]['sig']]
+          callers=set()
+          for s in gate_sigs: callers.update(reverse.get(s,()))
+          out.append(f'X_08oh_A0b_CALLER_COUNT={len(callers)}')
+          for i in sorted(callers): emit(methods[i],'DIRECT CALLER X.08oh.A0b',1200)
+
+          # AV1 support helper and direct callers.
+          pm=[]
+          for i,m in enumerate(methods):
+              if m['head'].startswith('X.00PM.A02:'):
+                  pm.append(i); emit(m,'X.00PM.A02 FULL RAW',1600)
+          pm_sigs=[methods[i]['sig'] for i in pm if methods[i]['sig']]
+          pmcall=set()
+          for s in pm_sigs: pmcall.update(reverse.get(s,()))
+          out.append(f'X_00PM_A02_CALLER_COUNT={len(pmcall)}')
+          for i in sorted(pmcall): emit(methods[i],'DIRECT CALLER X.00PM.A02',900)
+
+          # Every new X.0XPs / X.0XQ2, so constructor/setup fields cannot hide elsewhere.
+          for typ in ('LX/0XPs;','LX/0XQ2;'):
+              hits=[]
+              for i,m in enumerate(methods):
+                  txt='\n'.join(m['body'])
+                  if f'new-instance' in txt and typ in txt:
+                      hits.append(i); emit(m,f'NEW {typ} OWNER FULL RAW',1800)
+              out.append(f'NEW_{typ.replace("/","_").replace(";","")}_OWNER_COUNT={len(hits)}')
+
+          # Exact methods referencing the Hero setting fields controlling this branch.
+          field_needles={
+              'HeroPlayerSetting.A23':'Lcom/facebook/video/heroplayer/setting/HeroPlayerSetting;.A23:Z',
+              'LX/05xw.A74':'LX/05xw;.A74:Z',
+          }
+          for label,needle in field_needles.items():
+              ids=[]
+              for i,m in enumerate(methods):
+                  if needle in '\n'.join(m['body']):
+                      ids.append(i)
+              out.append(f'{label}_REFERENCE_COUNT={len(ids)}')
+              for i in ids[:120]: emit(methods[i],f'{label} REFERENCE',1000)
+
+          # Definitions/static construction/config mapping around classes owning the fields.
+          for owner in ('HeroPlayerSetting','X.05xw','X.08oh','X.00PM'):
+              ids=[i for i,m in enumerate(methods) if m['head'].startswith(owner+'.')]
+              out.append(f'{owner}_METHOD_COUNT={len(ids)}')
+              # Keep constructors/static init plus any method with AV1/manifest/config strings.
+              for i in ids:
+                  m=methods[i]; txt='\n'.join(m['body']); lo=txt.lower()
+                  if '.<init>:' in m['head'] or '.<clinit>:' in m['head'] or any(k in lo for k in ('av01','av1','manifest','codec','groot','mobileconfig')):
+                      emit(m,f'{owner} RELEVANT DEF',1800)
+
+          # Search for exact field names in raw dex text to expose class fields/context where dexdump emits them.
+          path=Path('research/generated/instagram_439_hdr_av1_manifest_filter_gate.txt')
+          path.write_text('\n'.join(out)+'\n',encoding='utf-8')
+          if path.stat().st_size < 3000:
+              raise SystemExit('report unexpectedly small')
+          print(path.read_text()[:240000])
+          PY
+
+      - name: Commit report
+        run: |
+          set -euo pipefail
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add research/generated/instagram_439_hdr_av1_manifest_filter_gate.txt
+          if ! git diff --cached --quiet; then
+            git commit -m "Trace Instagram 439 AV1 manifest filter gate"
+          fi
+          git pull --rebase origin main
+          git push origin HEAD:main
