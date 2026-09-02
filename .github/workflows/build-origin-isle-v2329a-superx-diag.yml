@@ -1,0 +1,389 @@
+name: Build Origin Isle V2329A SuperX diagnostic
+
+on:
+  push:
+    branches:
+      - origin-isle-v2329a-superx-diag
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+
+    steps:
+      - name: Checkout diagnostic branch
+        uses: actions/checkout@v4
+
+      - name: Set up Java 17
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+
+      - name: Set up Android SDK
+        uses: android-actions/setup-android@v3
+
+      - name: Install Android 36 platform
+        run: sdkmanager "platforms;android-36" "build-tools;36.0.0"
+
+      - name: Fetch upstream Origin Isle v1.4.0
+        run: git clone --depth 1 --branch v1.4.0 https://github.com/fvhde/origin-isle.git origin-isle-C
+
+      - name: Add V2329A SuperX diagnostics tab
+        run: |
+          cat > origin-isle-C/app/src/main/java/com/originisle/android/ui/DiagnosticsTab.kt <<'KOTLIN'
+          package com.originisle.android.ui
+
+          import android.app.NotificationManager
+          import android.app.PendingIntent
+          import android.content.ClipData
+          import android.content.ClipboardManager
+          import android.content.Context
+          import android.content.Intent
+          import android.content.pm.PackageManager
+          import android.os.Build
+          import android.os.Handler
+          import android.os.Looper
+          import androidx.compose.foundation.layout.Arrangement
+          import androidx.compose.foundation.layout.Column
+          import androidx.compose.foundation.layout.Row
+          import androidx.compose.foundation.layout.fillMaxSize
+          import androidx.compose.foundation.layout.fillMaxWidth
+          import androidx.compose.foundation.layout.padding
+          import androidx.compose.foundation.rememberScrollState
+          import androidx.compose.foundation.text.selection.SelectionContainer
+          import androidx.compose.foundation.verticalScroll
+          import androidx.compose.material3.Button
+          import androidx.compose.material3.Card
+          import androidx.compose.material3.MaterialTheme
+          import androidx.compose.material3.Text
+          import androidx.compose.runtime.Composable
+          import androidx.compose.runtime.getValue
+          import androidx.compose.runtime.mutableStateOf
+          import androidx.compose.runtime.remember
+          import androidx.compose.runtime.setValue
+          import androidx.compose.ui.Modifier
+          import androidx.compose.ui.text.font.FontFamily
+          import androidx.compose.ui.unit.dp
+          import com.originisle.android.MainActivity
+          import com.originisle.android.R
+          import com.originisle.android.island.OriginIslandConstants
+          import com.originisle.android.island.PlaygroundService
+          import java.lang.reflect.InvocationTargetException
+          import java.security.MessageDigest
+
+          @Composable
+          fun DiagnosticsTab(context: Context) {
+              var report by remember { mutableStateOf(runSuperXDiagnostics(context)) }
+              val scroll = rememberScrollState()
+
+              Column(
+                  Modifier.fillMaxSize().verticalScroll(scroll).padding(14.dp),
+                  verticalArrangement = Arrangement.spacedBy(10.dp),
+              ) {
+                  Text("V2329A SuperX diagnostics", style = MaterialTheme.typography.titleLarge)
+                  Text("Run this after a Sample card fails to surface. The report probes vivo's hidden SuperX APIs and this app's own active notifications.")
+
+                  Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                      Button(onClick = { report = runSuperXDiagnostics(context) }, modifier = Modifier.weight(1f)) {
+                          Text("Refresh")
+                      }
+                      Button(onClick = {
+                          postMinimalProbe(context)
+                          Handler(Looper.getMainLooper()).postDelayed({
+                              report = runSuperXDiagnostics(context)
+                          }, 900L)
+                      }, modifier = Modifier.weight(1f)) {
+                          Text("Post probe")
+                      }
+                  }
+
+                  Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                      Button(onClick = {
+                          val cm = context.getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
+                          cm.setPrimaryClip(ClipData.newPlainText("Origin Isle SuperX diagnostics", report))
+                      }, modifier = Modifier.weight(1f)) {
+                          Text("Copy report")
+                      }
+                      Button(onClick = {
+                          context.startService(
+                              Intent(context, PlaygroundService::class.java)
+                                  .setAction(PlaygroundService.ACTION_STOP),
+                          )
+                          Handler(Looper.getMainLooper()).postDelayed({
+                              report = runSuperXDiagnostics(context)
+                          }, 500L)
+                      }, modifier = Modifier.weight(1f)) {
+                          Text("Stop cards")
+                      }
+                  }
+
+                  Card(Modifier.fillMaxWidth()) {
+                      SelectionContainer {
+                          Text(
+                              report,
+                              Modifier.padding(12.dp),
+                              fontFamily = FontFamily.Monospace,
+                              style = MaterialTheme.typography.bodySmall,
+                          )
+                      }
+                  }
+              }
+          }
+
+          private fun runSuperXDiagnostics(context: Context): String {
+              val nm = context.getSystemService(NotificationManager::class.java)
+              val out = StringBuilder()
+
+              fun line(s: String = "") { out.append(s).append('\n') }
+              fun describe(t: Throwable): String {
+                  var x: Throwable = t
+                  while (x is InvocationTargetException && x.targetException != null) x = x.targetException
+                  return "${x.javaClass.name}: ${x.message ?: "<no message>"}"
+              }
+
+              line("=== DEVICE ===")
+              line("package = ${context.packageName}")
+              line("label = ${runCatching { context.applicationInfo.loadLabel(context.packageManager) }.getOrNull()}")
+              line("manufacturer = ${Build.MANUFACTURER}")
+              line("brand = ${Build.BRAND}")
+              line("model = ${Build.MODEL}")
+              line("device = ${Build.DEVICE}")
+              line("sdk = ${Build.VERSION.SDK_INT}")
+              line("release = ${Build.VERSION.RELEASE}")
+              line("fingerprint = ${Build.FINGERPRINT}")
+              line("signingCertSha256 = ${signingCertSha256(context)}")
+              line()
+
+              val sceneMethod = runCatching {
+                  NotificationManager::class.java.getMethod(
+                      "getSceneStatus",
+                      String::class.java,
+                      String::class.java,
+                  )
+              }.getOrNull()
+              val customMethod = runCatching {
+                  NotificationManager::class.java.getMethod(
+                      "isSupportCustomFun",
+                      String::class.java,
+                      String::class.java,
+                  )
+              }.getOrNull()
+
+              fun sceneStatus(scene: String): String = if (sceneMethod == null) {
+                  "METHOD_NOT_FOUND"
+              } else {
+                  try {
+                      sceneMethod.invoke(nm, context.packageName, scene).toString()
+                  } catch (t: Throwable) {
+                      "EXCEPTION ${describe(t)}"
+                  }
+              }
+
+              line("=== HIDDEN API DISCOVERY ===")
+              val candidateMethods = NotificationManager::class.java.methods
+                  .filter {
+                      it.name.contains("superx", ignoreCase = true) ||
+                          it.name.contains("scene", ignoreCase = true) ||
+                          it.name.contains("customfun", ignoreCase = true)
+                  }
+                  .map { m ->
+                      val args = m.parameterTypes.joinToString(",") { it.simpleName }
+                      "${m.name}($args):${m.returnType.simpleName}"
+                  }
+                  .distinct()
+                  .sorted()
+              if (candidateMethods.isEmpty()) line("candidate methods = <none>")
+              else candidateMethods.forEach { line("method = $it") }
+              line()
+
+              line("=== SCENE STATUS BEFORE GRANT ===")
+              OriginIslandConstants.SUPERX_SCENES.forEach { scene ->
+                  line("$scene = ${sceneStatus(scene)}")
+              }
+              line()
+
+              line("=== setSuperXInfosSceneList ===")
+              val grantResult = try {
+                  val method = NotificationManager::class.java.getMethod(
+                      "setSuperXInfosSceneList",
+                      List::class.java,
+                      List::class.java,
+                      List::class.java,
+                      List::class.java,
+                  )
+                  val scenes = ArrayList(OriginIslandConstants.SUPERX_SCENES)
+                  val enabled = ArrayList<String>()
+                  val pkgs = ArrayList<String>()
+                  val allowed = ArrayList<String>()
+                  repeat(scenes.size) {
+                      enabled.add("true")
+                      pkgs.add(context.packageName)
+                      allowed.add("true")
+                  }
+                  val ret = method.invoke(nm, scenes, enabled, pkgs, allowed)
+                  "SUCCESS return=${ret ?: "null"}"
+              } catch (t: Throwable) {
+                  "EXCEPTION ${describe(t)}"
+              }
+              line("invoke = $grantResult")
+              line()
+
+              line("=== SCENE STATUS AFTER GRANT ===")
+              OriginIslandConstants.SUPERX_SCENES.forEach { scene ->
+                  line("$scene = ${sceneStatus(scene)}")
+              }
+              line()
+
+              line("=== isSupportCustomFun ===")
+              if (customMethod == null) {
+                  line("method = METHOD_NOT_FOUND")
+              } else {
+                  OriginIslandConstants.SUPERX_SCENES.forEach { scene ->
+                      val value = try {
+                          customMethod.invoke(nm, context.packageName, scene).toString()
+                      } catch (t: Throwable) {
+                          "EXCEPTION ${describe(t)}"
+                      }
+                      line("$scene = $value")
+                  }
+              }
+              line()
+
+              line("=== ORIGIN CHANNEL ===")
+              val channel = runCatching { nm.getNotificationChannel(PlaygroundService.ORIGIN_CHANNEL_ID) }.getOrNull()
+              if (channel == null) {
+                  line("channel = NOT_CREATED")
+              } else {
+                  line("id = ${channel.id}")
+                  line("name = ${channel.name}")
+                  line("importance = ${channel.importance} (${importanceName(channel.importance)})")
+                  line("sound = ${channel.sound}")
+                  line("vibration = ${channel.shouldVibrate()}")
+                  line("canBypassDnd = ${channel.canBypassDnd()}")
+              }
+              line()
+
+              line("=== ACTIVE NOTIFICATIONS OWNED BY THIS PACKAGE ===")
+              val active = try {
+                  nm.activeNotifications.toList()
+              } catch (t: Throwable) {
+                  line("getActiveNotifications = EXCEPTION ${describe(t)}")
+                  emptyList()
+              }
+              line("count = ${active.size}")
+              val superx = active.filter { it.tag == OriginIslandConstants.SUPERX_TAG }
+              line("SuperX-tag count = ${superx.size}")
+              active.sortedBy { it.id }.forEach { sbn ->
+                  val n = sbn.notification
+                  val e = n.extras
+                  line("---")
+                  line("id=${sbn.id} tag=${sbn.tag ?: "<null>"} channel=${n.channelId}")
+                  line("title=${e.getCharSequence("android.title") ?: ""}")
+                  line("text=${e.getCharSequence("android.text") ?: ""}")
+                  line("superx.scene=${e.getString(OriginIslandConstants.BUNDLE_KEY_SCENE) ?: "<none>"}")
+                  line("superx.template=${if (e.containsKey(OriginIslandConstants.BUNDLE_KEY_TEMPLATE)) e.getInt(OriginIslandConstants.BUNDLE_KEY_TEMPLATE) else "<none>"}")
+                  line("superx.operation=${if (e.containsKey(OriginIslandConstants.BUNDLE_KEY_OPERATION)) e.getInt(OriginIslandConstants.BUNDLE_KEY_OPERATION) else "<none>"}")
+                  line("superx.showNotify=${if (e.containsKey(OriginIslandConstants.BUNDLE_KEY_SHOW_NOTIFY)) e.getBoolean(OriginIslandConstants.BUNDLE_KEY_SHOW_NOTIFY) else "<none>"}")
+                  line("island.forceShow=${if (e.containsKey(OriginIslandConstants.BUNDLE_KEY_ISLAND_FORCE_SHOW)) e.getBoolean(OriginIslandConstants.BUNDLE_KEY_ISLAND_FORCE_SHOW) else "<none>"}")
+              }
+              line()
+              line("=== END ===")
+              return out.toString()
+          }
+
+          private fun postMinimalProbe(context: Context) {
+              val click = PendingIntent.getActivity(
+                  context,
+                  49991,
+                  Intent(context, MainActivity::class.java),
+                  PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE,
+              )
+              val intent = Intent(context, PlaygroundService::class.java).apply {
+                  action = PlaygroundService.ACTION_START
+                  putExtra("id", 49991)
+                  putExtra("oi_scene", "NAVIGATION")
+                  putExtra("oi_template", OriginIslandConstants.TEMPLATE_BASE)
+                  putExtra("oi_right_template", OriginIslandConstants.TEMPLATE_RIGHT_ISLAND_CAPSULE_TEXT)
+                  putExtra("title", "V2329A SuperX probe")
+                  putExtra("text", "Minimal diagnostic card")
+                  putExtra("oi_left_content", "Probe")
+                  putExtra("status_chip_text", "TEST")
+                  putExtra("oi_force_show", true)
+                  putExtra("oi_dismiss_when_kill", true)
+                  putExtra("click_resp", click)
+                  putExtra("icon_res", R.drawable.ic_alert)
+              }
+              context.startService(intent)
+          }
+
+          private fun signingCertSha256(context: Context): String = runCatching {
+              val info = context.packageManager.getPackageInfo(
+                  context.packageName,
+                  PackageManager.PackageInfoFlags.of(PackageManager.GET_SIGNING_CERTIFICATES.toLong()),
+              )
+              val signer = info.signingInfo?.apkContentsSigners?.firstOrNull() ?: return@runCatching "<none>"
+              MessageDigest.getInstance("SHA-256").digest(signer.toByteArray())
+                  .joinToString("") { "%02x".format(it) }
+          }.getOrElse { "EXCEPTION ${it.javaClass.simpleName}: ${it.message}" }
+
+          private fun importanceName(value: Int): String = when (value) {
+              NotificationManager.IMPORTANCE_NONE -> "NONE"
+              NotificationManager.IMPORTANCE_MIN -> "MIN"
+              NotificationManager.IMPORTANCE_LOW -> "LOW"
+              NotificationManager.IMPORTANCE_DEFAULT -> "DEFAULT"
+              NotificationManager.IMPORTANCE_HIGH -> "HIGH"
+              NotificationManager.IMPORTANCE_MAX -> "MAX"
+              else -> "UNKNOWN"
+          }
+          KOTLIN
+
+          python3 - <<'PY'
+          from pathlib import Path
+
+          main = Path('origin-isle-C/app/src/main/java/com/originisle/android/MainActivity.kt')
+          s = main.read_text()
+          s = s.replace(
+              'import com.originisle.android.ui.CastTab\n',
+              'import com.originisle.android.ui.CastTab\nimport com.originisle.android.ui.DiagnosticsTab\n',
+              1,
+          )
+          s = s.replace(
+              '                Tab(selected = tab == 2, onClick = { tab = 2 }, text = { Text("Log") })\n',
+              '                Tab(selected = tab == 2, onClick = { tab = 2 }, text = { Text("Log") })\n'
+              '                Tab(selected = tab == 3, onClick = { tab = 3 }, text = { Text("Diag") })\n',
+              1,
+          )
+          s = s.replace(
+              '                2 -> LogTab(context)\n',
+              '                2 -> LogTab(context)\n                3 -> DiagnosticsTab(context)\n',
+              1,
+          )
+          main.write_text(s)
+
+          gradle = Path('origin-isle-C/app/build.gradle.kts')
+          g = gradle.read_text()
+          g = g.replace('versionCode = 13', 'versionCode = 14', 1)
+          g = g.replace('versionName = "1.4.0"', 'versionName = "1.4.0-v2329a-C-superx-diag"', 1)
+          gradle.write_text(g)
+          PY
+
+      - name: Build C diagnostic APK
+        working-directory: origin-isle-C
+        run: |
+          chmod +x gradlew
+          ./gradlew --no-daemon :app:assembleDebug
+
+      - name: Collect APK
+        run: |
+          mkdir -p out
+          cp origin-isle-C/app/build/outputs/apk/debug/app-debug.apk out/origin-isle-1.4.0-v2329a-C-superx-diag.apk
+          sha256sum out/*.apk > out/SHA256SUMS.txt
+
+      - name: Upload diagnostic APK
+        uses: actions/upload-artifact@v4
+        with:
+          name: origin-isle-v2329a-superx-diagnostic
+          path: out/*
+          if-no-files-found: error
