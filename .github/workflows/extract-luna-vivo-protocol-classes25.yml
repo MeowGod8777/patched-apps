@@ -32,16 +32,40 @@ jobs:
             https://repo1.maven.org/maven2/org/bouncycastle/bcprov-jdk18on/1.82/bcprov-jdk18on-1.82.jar
           sha256sum input/base.apk tools/apktool.jar tools/bcprov.jar | tee out/input-sha256.txt
 
-      - name: Decode and patch existing MusicBrowserService
+      - name: Decode, inspect native media types, and patch existing MusicBrowserService
         shell: bash
         run: |
           set -euo pipefail
           java -jar tools/apktool.jar d -f input/base.apk -o decoded
+          BROWSER_SMALI=$(find decoded -type f -path '*/com/google/android/apps/youtube/music/mediabrowser/MusicBrowserService.smali' -print -quit)
+          test -n "$BROWSER_SMALI"
+          {
+            echo '=== MusicBrowserService header ==='
+            sed -n '1,90p' "$BROWSER_SMALI"
+            echo
+            echo '=== MusicBrowserService f()/b() signatures and bodies ==='
+            grep -n -A120 -B5 '^\.method public final f(Ljava/lang/String;Landroid/os/Bundle;)Lbze;' "$BROWSER_SMALI" || true
+            grep -n -A180 -B5 '^\.method public final b(Ljava/lang/String;Lbzu;Landroid/os/Bundle;)V' "$BROWSER_SMALI" || true
+            echo
+            echo '=== bzu result wrapper ==='
+            BZU=$(find decoded -type f -name 'bzu.smali' -print -quit)
+            echo "BZU=$BZU"
+            test -n "$BZU" && sed -n '1,260p' "$BZU" || true
+            echo
+            echo '=== bze root wrapper ==='
+            BZE=$(find decoded -type f -name 'bze.smali' -print -quit)
+            echo "BZE=$BZE"
+            test -n "$BZE" && sed -n '1,220p' "$BZE" || true
+            echo
+            echo '=== media type references in MusicBrowserService and wrappers ==='
+            grep -nE 'MediaDescription|MediaBrowser|MediaItem|MediaBrowserService|Lbzu;|Lbze;' "$BROWSER_SMALI" || true
+            test -n "$BZU" && grep -nE 'MediaDescription|MediaBrowser|MediaItem|MediaBrowserService|sendResult|Parcelable|List' "$BZU" || true
+            test -n "$BZE" && grep -nE 'MediaDescription|MediaBrowser|MediaItem|MediaBrowserService|BrowserRoot|Bundle' "$BZE" || true
+          } | tee out/native-media-type-inspection.txt
+
           python3 tools/ytmusic_vivo_c0_probe_v0.py decoded
           grep -n -A16 -B4 'com.vivo.musicwidgetmix.support.service' decoded/AndroidManifest.xml \
             | tee out/patched-manifest-context.txt
-          BROWSER_SMALI=$(find decoded -type f -path '*/com/google/android/apps/youtube/music/mediabrowser/MusicBrowserService.smali' -print -quit)
-          test -n "$BROWSER_SMALI"
           grep -n -A28 -B4 'VIVO_MUSIC_MIX_ROOT' "$BROWSER_SMALI" | tee out/patched-root-context.txt
           grep -n -A70 -B5 'vivo_probe_1' "$BROWSER_SMALI" | tee out/patched-list-context.txt
 
@@ -132,6 +156,7 @@ jobs:
             out/zipalign-final.txt
             out/badging.txt
             out/manifest-xmltree.txt
+            out/native-media-type-inspection.txt
             out/patched-manifest-context.txt
             out/patched-root-context.txt
             out/patched-list-context.txt
