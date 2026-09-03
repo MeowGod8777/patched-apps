@@ -1,66 +1,139 @@
-name: Extract Luna Vivo protocol classes25
+name: Build YT Music Luna Vivo c0 browser probe v0
 
 on:
   push:
     paths:
       - .github/workflows/extract-luna-vivo-protocol-classes25.yml
+      - tools/ytmusic_vivo_c0_probe_v0.py
   workflow_dispatch:
 
 permissions:
   contents: read
 
 jobs:
-  extract:
+  build:
     runs-on: ubuntu-latest
-    timeout-minutes: 20
+    timeout-minutes: 30
     steps:
       - uses: actions/checkout@v4
 
-      - name: Download official Luna classes25.dex and JADX
+      - name: Download validated Luna base and tools
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         shell: bash
         run: |
           set -euo pipefail
-          mkdir -p work/apk work/out work/jadx
-          UA='Mozilla/5.0 (Linux; Android 16; V2329A) AppleWebKit/537.36 Chrome/143 Mobile Safari/537.36'
-          curl -L --retry 3 --connect-timeout 15 --max-time 240 -A "$UA" 'https://ugapk.com/GMg3' -o work/luna.apk
-          unzip -q work/luna.apk classes25.dex -d work/apk
-          curl -L --fail --retry 3 'https://github.com/skylot/jadx/releases/download/v1.5.6/jadx-1.5.6.zip' -o work/jadx.zip
-          unzip -q work/jadx.zip -d work/jadx
-          chmod +x work/jadx/bin/jadx
+          mkdir -p input tools out
+          gh release download ytmusic-originplayer-luna-33729902415 --pattern '*.apk' --dir input
+          mv input/*.apk input/base.apk
+          curl -L --fail --retry 3 -o tools/apktool.jar \
+            https://github.com/iBotPeaches/Apktool/releases/download/v3.0.3/apktool_3.0.3.jar
+          curl -L --fail --retry 3 -o tools/bcprov.jar \
+            https://repo1.maven.org/maven2/org/bouncycastle/bcprov-jdk18on/1.82/bcprov-jdk18on-1.82.jar
+          sha256sum input/base.apk tools/apktool.jar tools/bcprov.jar | tee out/input-sha256.txt
 
-      - name: Decompile target dex only
+      - name: Decode and patch existing MusicBrowserService
         shell: bash
         run: |
           set -euo pipefail
-          work/jadx/bin/jadx --no-res --show-bad-code --threads-count 2 -d work/jadx25 work/apk/classes25.dex
+          java -jar tools/apktool.jar d -f input/base.apk -o decoded
+          python3 tools/ytmusic_vivo_c0_probe_v0.py decoded
+          grep -n -A16 -B4 'com.vivo.musicwidgetmix.support.service' decoded/AndroidManifest.xml \
+            | tee out/patched-manifest-context.txt
+          BROWSER_SMALI=$(find decoded -type f -path '*/com/google/android/apps/youtube/music/mediabrowser/MusicBrowserService.smali' -print -quit)
+          test -n "$BROWSER_SMALI"
+          grep -n -A28 -B4 'VIVO_MUSIC_MIX_ROOT' "$BROWSER_SMALI" | tee out/patched-root-context.txt
+          grep -n -A70 -B5 'vivo_probe_1' "$BROWSER_SMALI" | tee out/patched-list-context.txt
 
-      - name: Extract exact Vivo protocol source
+      - name: Rebuild and 16K align
         shell: bash
         run: |
-          set -uo pipefail
-          SRC=work/jadx25/sources
-          mkdir -p work/out/sources
-          : > work/out/hits.txt
-          : > work/out/files.txt
-          grep -RIn --binary-files=without-match -E 'vivomusicmix|VIVO_MEDIA_|VivoOriginRemoteControl|VivoRemoteControlListener|VIVOSupportUtil|VivoConstant' "$SRC" > work/out/hits.txt 2>/dev/null || true
-          grep -Rl --binary-files=without-match -E 'vivomusicmix|VIVO_MEDIA_|VivoOriginRemoteControl|VivoRemoteControlListener|VIVOSupportUtil|VivoConstant' "$SRC" > work/out/files.txt 2>/dev/null || true
-          while IFS= read -r f; do
-            [ -f "$f" ] || continue
-            rel="${f#$SRC/}"
-            mkdir -p "work/out/sources/$(dirname "$rel")"
-            cp "$f" "work/out/sources/$rel"
-          done < work/out/files.txt
-          strings -a work/apk/classes25.dex | grep -Ei 'vivomusicmix|VIVO_MEDIA_|vivo.*(list|play|media)' | sort -u > work/out/strings.txt || true
-          echo '===== MATCHED FILES ====='
-          cat work/out/files.txt || true
-          echo '===== EXACT HITS ====='
-          cat work/out/hits.txt || true
-          test -s work/out/files.txt
+          set -euo pipefail
+          java -jar tools/apktool.jar b decoded -o out/unsigned.apk
+          BUILD_TOOLS="${ANDROID_HOME}/build-tools/$(ls "${ANDROID_HOME}/build-tools" | sort -V | tail -1)"
+          "$BUILD_TOOLS/zipalign" -P 16 -f 4 out/unsigned.apk out/aligned.apk
+          "$BUILD_TOOLS/zipalign" -c -P 16 -v 4 out/aligned.apk | tee out/zipalign-before-sign.txt
 
-      - name: Upload exact protocol sources
+      - name: Sign with validated ReVanced certificate and verify
+        shell: bash
+        run: |
+          set -euo pipefail
+          norm() { tr -d ':[:space:]' | tr '[:upper:]' '[:lower:]'; }
+          BASE_CERT=$(java -jar bin/apksigner.jar verify --print-certs input/base.apk \
+            | sed -n 's/^Signer #1 certificate SHA-256 digest: //p' | norm)
+          BKS_CERT=$(keytool -list -v \
+            -keystore ks.keystore -storetype BKS -storepass 123456789 \
+            -alias andrewliang \
+            -providerclass org.bouncycastle.jce.provider.BouncyCastleProvider \
+            -providerpath tools/bcprov.jar \
+            | sed -n 's/^[[:space:]]*SHA256: //p' | norm)
+          echo "base=$BASE_CERT" | tee out/cert.txt
+          echo "bks=$BKS_CERT" | tee -a out/cert.txt
+          test -n "$BASE_CERT"
+          test "$BASE_CERT" = "$BKS_CERT"
+
+          keytool -importkeystore \
+            -srckeystore ks.keystore -srcstoretype BKS -srcstorepass 123456789 \
+            -srcalias andrewliang -srckeypass 123456789 \
+            -destkeystore out/signer.p12 -deststoretype PKCS12 \
+            -deststorepass 123456789 -destkeypass 123456789 \
+            -destalias andrewliang -noprompt \
+            -providerclass org.bouncycastle.jce.provider.BouncyCastleProvider \
+            -providerpath tools/bcprov.jar
+
+          java -jar bin/apksigner.jar sign \
+            --ks out/signer.p12 --ks-type PKCS12 \
+            --ks-pass pass:123456789 --key-pass pass:123456789 \
+            --ks-key-alias andrewliang \
+            --out out/YouTube_Music_9.15.51_Luna_VIVO_C0_BROWSER_PROBE_V0.apk \
+            out/aligned.apk
+          rm -f out/*.idsig
+
+          java -jar bin/apksigner.jar verify --verbose --print-certs \
+            out/YouTube_Music_9.15.51_Luna_VIVO_C0_BROWSER_PROBE_V0.apk \
+            | tee out/signature-verify.txt
+          OUT_CERT=$(java -jar bin/apksigner.jar verify --print-certs \
+            out/YouTube_Music_9.15.51_Luna_VIVO_C0_BROWSER_PROBE_V0.apk \
+            | sed -n 's/^Signer #1 certificate SHA-256 digest: //p' | norm)
+          test "$OUT_CERT" = "$BASE_CERT"
+
+          BUILD_TOOLS="${ANDROID_HOME}/build-tools/$(ls "${ANDROID_HOME}/build-tools" | sort -V | tail -1)"
+          "$BUILD_TOOLS/zipalign" -c -P 16 -v 4 \
+            out/YouTube_Music_9.15.51_Luna_VIVO_C0_BROWSER_PROBE_V0.apk \
+            | tee out/zipalign-final.txt
+          sha256sum out/YouTube_Music_9.15.51_Luna_VIVO_C0_BROWSER_PROBE_V0.apk | tee out/SHA256.txt
+
+      - name: Static manifest verification
+        shell: bash
+        run: |
+          set -euo pipefail
+          BUILD_TOOLS="${ANDROID_HOME}/build-tools/$(ls "${ANDROID_HOME}/build-tools" | sort -V | tail -1)"
+          "$BUILD_TOOLS/aapt" dump badging \
+            out/YouTube_Music_9.15.51_Luna_VIVO_C0_BROWSER_PROBE_V0.apk \
+            | tee out/badging.txt
+          grep -q "package: name='com.luna.music'" out/badging.txt
+          grep -q "versionName='9.15.51'" out/badging.txt
+          "$BUILD_TOOLS/aapt" dump xmltree \
+            out/YouTube_Music_9.15.51_Luna_VIVO_C0_BROWSER_PROBE_V0.apk AndroidManifest.xml \
+            | tee out/manifest-xmltree.txt
+          grep -q 'com.vivo.musicwidgetmix.support.service' out/manifest-xmltree.txt
+          grep -q 'com.google.android.apps.youtube.music.mediabrowser.MusicBrowserService' out/manifest-xmltree.txt
+
+      - name: Upload c0 probe APK
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: luna-vivo-protocol-classes25
-          path: work/out
-          retention-days: 7
+          name: ytmusic-luna-vivo-c0-browser-probe-v0
+          path: |
+            out/YouTube_Music_9.15.51_Luna_VIVO_C0_BROWSER_PROBE_V0.apk
+            out/SHA256.txt
+            out/cert.txt
+            out/signature-verify.txt
+            out/zipalign-final.txt
+            out/badging.txt
+            out/manifest-xmltree.txt
+            out/patched-manifest-context.txt
+            out/patched-root-context.txt
+            out/patched-list-context.txt
+          if-no-files-found: warn
+          retention-days: 14
