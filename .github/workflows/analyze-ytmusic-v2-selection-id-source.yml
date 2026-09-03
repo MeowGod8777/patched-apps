@@ -1,0 +1,108 @@
+name: Analyze YT Music V2 selection mediaId source
+
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - .github/workflows/analyze-ytmusic-v2-selection-id-source.yml
+
+permissions:
+  contents: read
+  actions: read
+
+jobs:
+  analyze:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Decode exact V2 runtime-PASS APK
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p input tools out
+          gh api /repos/${GITHUB_REPOSITORY}/actions/artifacts/9896185089/zip > input/v2.zip
+          unzip -q input/v2.zip -d input/v2
+          V2=$(find input/v2 -maxdepth 1 -name '*.apk' -print -quit)
+          curl -L --fail --retry 3 -o tools/apktool.jar https://github.com/iBotPeaches/Apktool/releases/download/v3.0.3/apktool_3.0.3.jar
+          java -jar tools/apktool.jar d -f "$V2" -o decoded
+
+      - name: Extract media session wrapper classes
+        shell: bash
+        run: |
+          set -euo pipefail
+          for cls in iq ie ii id bazk; do
+            P=$(find decoded -type f -name "$cls.smali" -print -quit)
+            if [ -n "$P" ]; then cp "$P" "out/$cls.smali"; fi
+          done
+          grep -n '^\.class\|^\.super\|^\.field\|^\.method' out/iq.smali > out/iq-structure.txt || true
+          grep -n '^\.class\|^\.super\|^\.field\|^\.method' out/ie.smali > out/ie-structure.txt || true
+          grep -n -A80 -B20 'onPlayFromMediaId(Ljava/lang/String;Landroid/os/Bundle;)V' out/id.smali > out/id-playfrommediaid.txt || true
+          grep -n -A80 -B20 'onSkipToQueueItem(J)V' out/id.smali > out/id-skipqueue.txt || true
+          grep -n -A120 -B20 '^\.method.* g(Ljava/lang/String;Landroid/os/Bundle;)V' out/ie.smali > out/ie-playfrommediaid.txt || true
+          grep -n -A120 -B20 '^\.method.* t(J)V' out/ie.smali > out/ie-skipqueue.txt || true
+
+      - name: Find every QueueItem construction and MediaDescription source
+        shell: bash
+        run: |
+          set -euo pipefail
+          grep -R -n -E 'MediaSessionCompat\$QueueItem;-><init>|new-instance .*MediaSessionCompat\$QueueItem' decoded/smali* > out/queueitem-constructor-hits.txt || true
+          python3 - <<'PY'
+          from pathlib import Path
+          hits=[]
+          for p in Path('decoded').glob('smali*/**/*.smali'):
+              try: lines=p.read_text(errors='ignore').splitlines()
+              except: continue
+              for i,l in enumerate(lines):
+                  if 'MediaSessionCompat$QueueItem;-><init>' in l or ('new-instance' in l and 'MediaSessionCompat$QueueItem' in l):
+                      hits.append((p,i,lines))
+          with open('out/queueitem-constructor-contexts.txt','w') as o:
+              for p,i,lines in hits:
+                  o.write(f'===== {p}:{i+1} =====\n')
+                  o.write('\n'.join(lines[max(0,i-80):min(len(lines),i+90)])+'\n')
+          print('queueitem construction sites',len(hits))
+          PY
+
+      - name: Find queue sink callers and upstream queue producers
+        shell: bash
+        run: |
+          set -euo pipefail
+          grep -R -n -E 'Lii;->q\(Ljava/util/List;\)V|MediaSession;->setQueue\(Ljava/util/List;\)V' decoded/smali* > out/queue-sink-callers.txt || true
+          python3 - <<'PY'
+          from pathlib import Path
+          targets=['Lii;->q(Ljava/util/List;)V','MediaSession;->setQueue(Ljava/util/List;)V']
+          with open('out/queue-sink-contexts.txt','w') as o:
+              for p in Path('decoded').glob('smali*/**/*.smali'):
+                  try: lines=p.read_text(errors='ignore').splitlines()
+                  except: continue
+                  for i,l in enumerate(lines):
+                      if any(t in l for t in targets):
+                          o.write(f'===== {p}:{i+1} =====\n')
+                          o.write('\n'.join(lines[max(0,i-100):min(len(lines),i+100)])+'\n')
+          PY
+
+      - name: Search QueueItem descriptions for stable playable identifiers
+        shell: bash
+        run: |
+          set -euo pipefail
+          grep -R -n -E 'VIDEO_ID|video_id|videoId|playable|Playable|MEDIA_ID|media_id|mediaId|android.media.metadata.MEDIA_ID|MediaDescriptionCompat;->a:Ljava/lang/String;|MediaDescriptionCompat;->f:Landroid/os/Bundle;|MediaDescriptionCompat;->e:Landroid/net/Uri;' decoded/smali* > out/mediaid-global-hits.txt || true
+          grep -R -n -E 'putString\(|putLong\(|putParcelable\(' decoded/smali* | grep -E 'media|video|play|queue' > out/mediaid-bundle-hits.txt || true
+
+      - name: Extract iq token/callback behavior
+        shell: bash
+        run: |
+          set -euo pipefail
+          grep -n -A100 -B20 'MediaSessionCompat\$Token' out/iq.smali > out/iq-token-contexts.txt || true
+          grep -n -A100 -B20 'Lii;->h(Lie;Landroid/os/Handler;)V' out/iq.smali > out/iq-callback-contexts.txt || true
+          grep -n -A100 -B20 'Lii;-><init>' out/iq.smali > out/iq-init-contexts.txt || true
+
+      - name: Upload selection-ID evidence
+        uses: actions/upload-artifact@v4
+        with:
+          name: ytmusic-v2-selection-id-source
+          path: out/
+          if-no-files-found: error
+          retention-days: 14
