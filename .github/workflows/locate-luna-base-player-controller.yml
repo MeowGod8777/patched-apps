@@ -1,0 +1,59 @@
+name: Locate Luna BasePlayerControllerService
+
+on:
+  push:
+    paths:
+      - .github/workflows/locate-luna-base-player-controller.yml
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  locate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - name: Download Luna classes22 and JADX
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p work/apk work/out work/jadx
+          UA='Mozilla/5.0 (Linux; Android 16; V2329A) AppleWebKit/537.36 Chrome/143 Mobile Safari/537.36'
+          curl -L --retry 3 --connect-timeout 15 --max-time 240 -A "$UA" 'https://ugapk.com/GMg3' -o work/luna.apk
+          unzip -q work/luna.apk classes22.dex -d work/apk
+          curl -L --fail --retry 3 'https://github.com/skylot/jadx/releases/download/v1.5.6/jadx-1.5.6.zip' -o work/jadx.zip
+          unzip -q work/jadx.zip -d work/jadx
+          chmod +x work/jadx/bin/jadx
+      - name: Decompile classes22
+        run: work/jadx/bin/jadx --no-res --show-bad-code --threads-count 2 -d work/jadx22 work/apk/classes22.dex
+      - name: Locate and save all BasePlayerControllerService references
+        shell: bash
+        run: |
+          set -uo pipefail
+          SRC=work/jadx22/sources
+          mkdir -p work/out/sources
+          find "$SRC" -type f -iname '*BasePlayerControllerService*' -print > work/out/name_hits.txt || true
+          grep -RIl --binary-files=without-match 'BasePlayerControllerService' "$SRC" > work/out/ref_files.txt || true
+          grep -RIn --binary-files=without-match -E 'BasePlayerControllerService|MediaBrowserServiceCompat|onLoadChildren|onGetRoot|setSessionToken|notifyChildrenChanged' "$SRC" > work/out/ref_lines.txt || true
+          cat work/out/name_hits.txt
+          cat work/out/ref_files.txt
+          while IFS= read -r f; do
+            [ -f "$f" ] || continue
+            rel="${f#$SRC/}"
+            dest="work/out/sources/$rel"
+            mkdir -p "$(dirname "$dest")"
+            cp "$f" "$dest"
+          done < <(cat work/out/name_hits.txt work/out/ref_files.txt 2>/dev/null | sort -u)
+          find work/out/sources -type f -printf '%P\n' | sort > work/out/saved_files.txt || true
+          echo '===== REFS ====='
+          cat work/out/ref_lines.txt || true
+          test -s work/out/ref_files.txt
+      - name: Upload locate results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: luna-base-player-controller-locate
+          path: work/out
+          retention-days: 7
