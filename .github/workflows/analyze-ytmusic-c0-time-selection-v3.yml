@@ -32,6 +32,7 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
+          # rerun checkpoint after v2 device PASS
           java -jar tools/apktool.jar d -f input/base.apk -o decoded
 
           ID=$(find decoded -type f -name 'id.smali' -print | while read f; do grep -q 'onPlayFromMediaId(Ljava/lang/String;Landroid/os/Bundle;)V' "$f" && echo "$f" && break; done)
@@ -43,18 +44,18 @@ jobs:
 
           {
             echo '=== exact callback methods ==='
-            grep -n -A60 -B8 'onPlayFromMediaId(Ljava/lang/String;Landroid/os/Bundle;)V' "$ID" || true
-            grep -n -A50 -B8 'onSkipToQueueItem(J)V' "$ID" || true
+            grep -n -A80 -B12 'onPlayFromMediaId(Ljava/lang/String;Landroid/os/Bundle;)V' "$ID" || true
+            grep -n -A80 -B12 'onSkipToQueueItem(J)V' "$ID" || true
             echo
             echo '=== exact ii metadata/playback sinks ==='
-            grep -n -A220 -B30 '^\.method public final m(Landroid/support/v4/media/MediaMetadataCompat;)V' "$II" || true
-            grep -n -A340 -B30 '^\.method public final n(Landroid/support/v4/media/session/PlaybackStateCompat;)V' "$II" || true
+            grep -n -A240 -B30 '^\.method public final m(Landroid/support/v4/media/MediaMetadataCompat;)V' "$II" || true
+            grep -n -A360 -B30 '^\.method public final n(Landroid/support/v4/media/session/PlaybackStateCompat;)V' "$II" || true
             echo
             echo '=== DURATION literal references ==='
             grep -RniF 'android.media.metadata.DURATION' decoded/smali* 2>/dev/null | head -n 800 || true
             echo
-            echo '=== MediaMetadataCompat.Builder duration puts ==='
-            grep -RniE 'putLong\(Ljava/lang/String;J\)|MediaMetadataCompat\$Builder|android.media.metadata.DURATION' decoded/smali* 2>/dev/null | grep -Ei 'DURATION|MediaMetadataCompat\$Builder' | head -n 1600 || true
+            echo '=== playback-state builder/sink references ==='
+            grep -RniE 'setState\(IJFJ\)|PlaybackStateCompat\$Builder|android.media.metadata.DURATION' decoded/smali* 2>/dev/null | head -n 1600 || true
           } > out/timing-selection-inspection.txt
 
           grep -RlF 'android.media.metadata.DURATION' decoded/smali* 2>/dev/null | head -n 120 > out/duration-class-files.txt || true
