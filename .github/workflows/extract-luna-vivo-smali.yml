@@ -1,0 +1,66 @@
+name: Extract Luna Vivo smali
+
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - '.github/workflows/extract-luna-vivo-smali.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  extract:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+      - name: Fetch official APK and locate target dex
+        shell: bash
+        run: |
+          set -euxo pipefail
+          mkdir -p work/apk work/out
+          UA='Mozilla/5.0 (Linux; Android 16; V2329A) AppleWebKit/537.36 Chrome/143 Mobile Safari/537.36'
+          curl -L --retry 3 --connect-timeout 15 --max-time 240 -A "$UA" 'https://ugapk.com/GMg3' -o work/luna.apk
+          unzip -q work/luna.apk 'classes*.dex' -d work/apk
+          ls -lh work/apk/classes*.dex
+          for f in work/apk/classes*.dex; do
+            if grep -aq 'VivoOriginRemoteControl' "$f" || grep -aq 'BachMediaButtonReceiver' "$f"; then
+              echo "$f" | tee -a work/out/target_dexes.txt
+            fi
+          done
+          test -s work/out/target_dexes.txt
+      - name: Download baksmali
+        shell: bash
+        run: |
+          set -euxo pipefail
+          curl -L --retry 3 'https://repo1.maven.org/maven2/org/smali/baksmali/2.5.2/baksmali-2.5.2.jar' -o work/baksmali.jar
+          test -s work/baksmali.jar
+      - name: Disassemble target dexes
+        shell: bash
+        run: |
+          set -euxo pipefail
+          n=0
+          while IFS= read -r dex; do
+            n=$((n+1))
+            out="work/smali_$n"
+            mkdir -p "$out"
+            java -jar work/baksmali.jar disassemble "$dex" -o "$out"
+            find "$out" -type f \( -path '*com/luna/biz/playing/player/remote/control/VivoOriginRemoteControl*.smali' -o -path '*com/luna/biz/playing/player/BachMediaButtonReceiver*.smali' \) -print | tee -a work/out/exact_smali_files.txt
+          done < work/out/target_dexes.txt
+          while IFS= read -r f; do
+            [ -f "$f" ] || continue
+            rel=$(basename "$f")
+            cp "$f" "work/out/$rel"
+            echo "===== $f =====" >> work/out/exact_smali.txt
+            cat "$f" >> work/out/exact_smali.txt
+            echo >> work/out/exact_smali.txt
+          done < work/out/exact_smali_files.txt
+          sed -n '1,8000p' work/out/exact_smali.txt
+      - name: Upload smali
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: luna-vivo-exact-smali
+          path: work/out
+          retention-days: 7
