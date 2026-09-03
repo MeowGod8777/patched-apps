@@ -174,6 +174,27 @@ cn.missevan
 
 `com.kugou.android.lite` 已由 Ghost 使用，不作 parallel test identity。
 
+### 2026-09-03 package collision scan
+
+Runner 實機掃描確認以下候選在 V2329A 上全部未安裝、沒有 package collision：
+
+```text
+FREE com.apple.android.music
+FREE com.spotify.music
+FREE cn.kuwo.player
+FREE cmccwm.mobilemusic
+FREE com.kugou.android.elder
+FREE app.podcast.cosmos
+FREE fm.qingting.qtradio
+FREE com.yibasan.lizhifm
+FREE com.luna.music
+FREE com.hiby.music
+FREE com.tencent.blackkey
+FREE cn.missevan
+```
+
+因此第一顆 A/B build 優先使用 `com.apple.android.music`。理由不是名稱本身，而是它在 exact OriginPlayer 6.2.7.1 內屬於 framework-support / lock-cooperation 路線，且目前沒有 collision。測試版必須與現有 `app.revanced.android.youtube` 並存；目標只驗證 package identity 是否足以把 YouTube 從 generic `z2` 路徑帶到完整音樂播放器路徑。
+
 ---
 
 ## MiCTS / Google Circle to Search
