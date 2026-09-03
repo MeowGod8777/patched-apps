@@ -32,7 +32,7 @@ Shell 操作工具: Runner
 
 主體缺口已從「大量 OriginOS / Google / media integration 問題」縮小到少數剩餘工作：
 
-1. **patched YouTube Music**：下一條最合理的日用主線；需要獨立 framework-support identity，避免與 YouTube `com.apple.android.music` collision。
+1. **patched YouTube Music**：已完成第一顆 `com.luna.music` non-root 候選 build，待實機驗證 OriginPlayer / 登入 / 日用行為。
 2. **Instagram HDR**：仍是實質未解功能缺口；Android / vivo HDR display path 已證明正常，真正問題仍在 Instagram / Meta HDR request eligibility / device classification / rendition delivery gate。此路線難度高，且不保證純 non-root APK patch 可完全解決。
 3. **少數 App-level polish**：LINE / Instagram / Threads 去廣告、入口精簡、通知雙卡、長標題截斷等；這類屬 App customization / cosmetic，不再視為 12 Pro 核心系統缺口。
 
@@ -156,7 +156,7 @@ Ghost Player 現在**沒有安裝**。先前因與 Wavelet 同時使用時出現
 撇除 YouTube，目前也沒有強需求要求重裝 Ghost：
 
 - Bilibili `tv.danmaku.bili` 在 exact OriginPlayer 內已有 dedicated cooperation path；
-- 未來 YT Music 可直接使用另一個 framework-support identity；
+- YT Music 可直接使用另一個 framework-support identity；
 - Ghost 仍會增加額外 MediaSession / audio-activity bridge，且與 Wavelet 已有實機衝突紀錄。
 
 **目前結論：Ghost 保留為概念上的備援工具，但不安裝、不修、不列主線。**
@@ -165,17 +165,67 @@ Ghost Player 現在**沒有安裝**。先前因與 Wavelet 同時使用時出現
 
 ---
 
-# 下一條：patched YouTube Music
+# patched YouTube Music / Luna identity
 
-Bilibili 音樂整理 / 歌單搬運由使用者另外處理，**不再與 12 Pro YT Music patch 綁成同一條工作**。
+Bilibili 音樂整理 / 歌單搬運由使用者另外處理，**不與 12 Pro YT Music patch 綁成同一條工作**。
 
-12 Pro 這邊只處理 patched YouTube Music 本身與 OriginPlayer integration：
+## Build candidate
 
-1. YouTube 目前使用 `com.apple.android.music`。
-2. YT Music **必須使用不同 package identity**，避免 collision。
-3. 第一候選暫定 `com.luna.music`：exact OriginPlayer 6.2.7.1 已確認它屬 framework-support 候選，且先前實機 collision scan 為 FREE。
-4. `com.spotify.music` 等也可用，但若未來要裝真 Spotify 會直接 collision，因此不是第一選擇。
-5. 目標是讓 patched YT Music 自身的 MediaSession 直接走 vivo richer OriginPlayer / lockscreen / media-island path，不重新引入 Ghost。
+已建立第一顆可實機驗證的 12 Pro non-root build：
+
+```text
+stock package: com.google.android.apps.youtube.music
+stock version: 9.15.51
+arch: arm64-v8a
+patched identity: com.luna.music
+GmsCore vendor: app.revanced
+patches: anddea/revanced-patches 4.2.0
+CLI: Morphe Desktop 1.14.0
+build run: 33729902415
+artifact id: 9883451275
+APK SHA256: 0b1b61ad6bd87dacc88517adf19c1115085d529e63847d50d587476efa4ce307
+```
+
+Build config：`ytmusic-originplayer-luna.toml`
+
+Workflow：`.github/workflows/build-ytmusic-originplayer-luna.yml`
+
+使用 package-scoped Morphe options file 寫入 `packageNameYouTubeMusic=com.luna.music`；先前單純 `-O packageNameYouTubeMusic=...` 會落回 `anddea.youtube.music`，已確認不可作為 Luna build 的有效證據。
+
+最終候選 APK 靜態驗證：
+
+- Manifest string pool **存在 `com.luna.music`**；
+- provider / permission identities 已可見 `com.luna.music.*`；
+- GmsCore reference 為 `app.revanced.android.gms`；
+- 不再使用 `anddea.youtube.music` 作 package identity。
+
+本輪選入 / 可用功能包括：
+
+- GmsCore support；
+- Hide ads；
+- Remove background playback restrictions；
+- Force original audio；
+- Return YouTube Dislike；
+- SponsorBlock；
+- Video playback / custom playback speeds；
+- Bitrate default value（mobile / Wi-Fi 預設 Always High）；
+- Sanitize sharing links；
+- Third-party lyrics；
+- 以及 Anddea 4.2.0 對 YT Music 9.15.51 的正常依賴 / default patches。
+
+使用者 YouTube 習慣可對應者另外提供 preset：`ytmusic-12pro-settings-2026-09-03.json`。
+
+注意：YT Music 版 SponsorBlock 的 category behavior **沒有 YouTube 版 `manual-skip`**，只有 `skip` / `skip-once` / `ignore`。為避免把使用者原本「不要自動跳 sponsor」的偏好改成自動跳，本 preset 對 `sb_sponsor` 使用 `ignore`。
+
+目前仍為 **RUNTIME VALIDATION PENDING**。下一步實機只需驗：
+
+1. 安裝 / GmsCore 登入；
+2. 播放歌曲；
+3. 是否在沒有 Runner whitelist / Isle 手動加入的情況下自動進入 richer OriginPlayer、鎖屏、媒體島；
+4. 背景播放 / Cast / session 清理；
+5. Wavelet 並用是否正常。
+
+若上述通過，YT Music 可直接列為完成，non-root 日用修補主線基本可封箱。
 
 ---
 
@@ -219,7 +269,7 @@ LINE / Instagram / Threads 的去廣告、入口隱藏、外部連結、push 等
 
 ## 目前優先序
 
-1. **patched YouTube Music**：下一條主線；使用獨立 framework-support identity，首選暫定 `com.luna.music`。
+1. **patched YouTube Music / `com.luna.music` runtime validation**。
 2. **YouTube `com.apple.android.music` 日用觀察**：已可使用；只做必要 polish，不再花時間追求舊 ReVanced 設定 1:1 複製。
 3. **Instagram HDR**：YT Music 完成後，若仍有需求，再回到 Meta HDR eligibility / rendition gate。
 4. **LINE / IG / Threads 等 App patch**：有明確痛點再維護。
@@ -232,5 +282,5 @@ LINE / Instagram / Threads 的去廣告、入口隱藏、外部連結、push 等
 - GitHub repo 為修補專案 source of truth。
 - 已結案項目不要因新對話再次從頭診斷。
 - Runner 是 V2329A shell 執行工具。
-- 對候選修補先看日用價值，不因公開存在方案就自動列入主線。
+- 對候選修補先看日用價值，不因公開存在方案就自動納入。
 - non-root 日用修補已接近飽和；新項目若只是「能做」，但沒有實際缺口或收益，不自動納入。
