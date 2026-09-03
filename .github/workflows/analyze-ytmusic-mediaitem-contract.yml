@@ -1,0 +1,44 @@
+name: Inspect YT Music MediaItem contract
+
+on:
+  push:
+    paths:
+      - .github/workflows/analyze-ytmusic-mediaitem-contract.yml
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  inspect:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - name: Download and decode validated Luna base
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p input tools out
+          gh release download ytmusic-originplayer-luna-33729902415 --pattern '*.apk' --dir input
+          mv input/*.apk input/base.apk
+          curl -L --fail --retry 3 -o tools/apktool.jar https://github.com/iBotPeaches/Apktool/releases/download/v3.0.3/apktool_3.0.3.jar
+          java -jar tools/apktool.jar d -f input/base.apk -o decoded
+          for rel in \
+            'android/support/v4/media/MediaDescriptionCompat.smali' \
+            'android/support/v4/media/MediaBrowserCompat$MediaItem.smali' \
+            'android/support/v4/media/session/MediaSessionCompat$QueueItem.smali' \
+            'iq.smali' 'ia.smali' 'ig.smali' 'bazk.smali'; do
+            f=$(find decoded -type f -path "*/$rel" -print -quit || true)
+            if [ -n "$f" ]; then cp "$f" "out/$(basename "$rel")"; fi
+          done
+          grep -RniE 'MediaDescriptionCompat;->|MediaBrowserCompat\$MediaItem;->|MediaSessionCompat\$QueueItem;->' decoded/smali_classes5/kyi.smali decoded/smali*/ii.smali 2>/dev/null | tee out/producer-refs.txt || true
+      - name: Upload inspection
+        uses: actions/upload-artifact@v4
+        with:
+          name: ytmusic-mediaitem-contract-inspection
+          path: out/
+          if-no-files-found: error
+          retention-days: 14
