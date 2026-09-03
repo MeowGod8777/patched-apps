@@ -1,0 +1,60 @@
+name: Analyze YT Music metadata hook
+
+on:
+  push:
+    paths:
+      - '.github/workflows/analyze-ytmusic-metadata-hook.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  analyze:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/setup-java@v5
+        with:
+          distribution: zulu
+          java-version: '21'
+      - uses: actions/checkout@v6
+      - name: Download validated Luna YT Music and apktool
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          set -euxo pipefail
+          mkdir -p input tools out
+          gh release download ytmusic-originplayer-luna-33729902415 --pattern '*.apk' --dir input
+          mv input/*.apk input/base.apk
+          curl -L --fail --retry 3 -o tools/apktool.jar https://github.com/iBotPeaches/Apktool/releases/download/v3.0.3/apktool_3.0.3.jar
+          java -jar tools/apktool.jar d -f -r input/base.apk -o decoded
+      - name: Find metadata publication boundary
+        shell: bash
+        run: |
+          set -euxo pipefail
+          : > out/hits.txt
+          grep -RIn --include='*.smali' -E \
+            'MediaSessionCompat;->setMetadata\(|MediaMetadataCompat\$Builder;->(putLong|putString|build)\(|Landroid/media/MediaMetadata\$Builder;->(putLong|build)\(|MediaMetadataCompat;->getMediaMetadata\(' \
+            decoded/smali* | tee out/hits.txt || true
+          echo '===== setMetadata callers ====='
+          grep -RIl --include='*.smali' 'MediaSessionCompat;->setMetadata' decoded/smali* | tee out/setmetadata_files.txt || true
+          echo '===== exact caller contexts ====='
+          while IFS= read -r f; do
+            [ -f "$f" ] || continue
+            echo "===== $f ====="
+            grep -n -A80 -B80 'MediaSessionCompat;->setMetadata' "$f" || true
+          done < out/setmetadata_files.txt | tee out/setmetadata_context.txt
+          echo '===== framework metadata builder files ====='
+          grep -RIl --include='*.smali' 'Landroid/media/MediaMetadata\$Builder;->build' decoded/smali* | tee out/framework_builder_files.txt || true
+          while IFS= read -r f; do
+            [ -f "$f" ] || continue
+            echo "===== $f ====="
+            grep -n -A60 -B60 'Landroid/media/MediaMetadata\$Builder;->build' "$f" || true
+          done < out/framework_builder_files.txt | head -n 12000 | tee out/framework_builder_context.txt
+      - name: Upload analysis
+        uses: actions/upload-artifact@v4
+        with:
+          name: ytmusic-metadata-hook-analysis
+          path: out
+          retention-days: 7
