@@ -1,0 +1,49 @@
+name: Extract Luna Vivo remote-control package
+
+on:
+  push:
+    paths:
+      - .github/workflows/extract-luna-vivo-remote-package.yml
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  extract:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - name: Download classes22 and JADX
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p work/apk work/out work/jadx
+          UA='Mozilla/5.0 (Linux; Android 16; V2329A) AppleWebKit/537.36 Chrome/143 Mobile Safari/537.36'
+          curl -L --retry 3 --connect-timeout 15 --max-time 240 -A "$UA" 'https://ugapk.com/GMg3' -o work/luna.apk
+          unzip -q work/luna.apk classes22.dex -d work/apk
+          curl -L --fail --retry 3 'https://github.com/skylot/jadx/releases/download/v1.5.6/jadx-1.5.6.zip' -o work/jadx.zip
+          unzip -q work/jadx.zip -d work/jadx
+          chmod +x work/jadx/bin/jadx
+      - name: Decompile classes22
+        run: work/jadx/bin/jadx --no-res --show-bad-code --threads-count 2 -d work/jadx22 work/apk/classes22.dex
+      - name: Save whole remote-control package and focused hits
+        shell: bash
+        run: |
+          set -euo pipefail
+          SRC=work/jadx22/sources
+          PKG="$SRC/com/luna/biz/playing/player/remote/control"
+          test -d "$PKG"
+          mkdir -p work/out/remote
+          cp -a "$PKG"/. work/out/remote/
+          grep -RIn --binary-files=without-match -E 'GET_LIST|LIST_CURRENT|LIST_FAVORITE|LIST_LOCAL|PLAY_INDEX|MUSICS_BY_CURRENT|VIVO_MEDIA_|vivomusicmix|sendSessionEvent|onCommand|onCustomAction|onPlayFromMediaId|ResultReceiver|MediaBrowser|MediaItem' "$PKG" > work/out/focused_hits.txt || true
+          find work/out/remote -type f -printf '%P\n' | sort > work/out/files.txt
+          du -sh work/out/remote
+          wc -l work/out/files.txt work/out/focused_hits.txt
+      - name: Upload package
+        uses: actions/upload-artifact@v4
+        with:
+          name: luna-vivo-remote-package
+          path: work/out
+          retention-days: 7
