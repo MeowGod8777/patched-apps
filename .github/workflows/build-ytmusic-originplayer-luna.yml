@@ -25,6 +25,24 @@ jobs:
           fetch-depth: 0
           submodules: true
 
+      - name: Generate package-scoped Morphe options
+        run: |
+          mkdir -p .ytmusic-tools
+          curl -L --fail --retry 3 \
+            -o .ytmusic-tools/morphe-desktop.jar \
+            https://github.com/MorpheApp/morphe-desktop/releases/download/v1.14.0/morphe-desktop-1.14.0-all.jar
+          curl -L --fail --retry 3 \
+            -o .ytmusic-tools/patches.mpp \
+            https://github.com/anddea/revanced-patches/releases/download/v4.2.0/patches-4.2.0.mpp
+          java -jar .ytmusic-tools/morphe-desktop.jar options-create \
+            -p .ytmusic-tools/patches.mpp \
+            -o ytmusic-options.json \
+            -f com.google.android.apps.youtube.music
+          jq 'walk(if type == "object" and (.options? | type == "object") and (.options | has("packageNameYouTubeMusic")) then .options.packageNameYouTubeMusic = "com.luna.music" else . end)' \
+            ytmusic-options.json > ytmusic-options.tmp.json
+          mv ytmusic-options.tmp.json ytmusic-options.json
+          grep -F 'com.luna.music' ytmusic-options.json
+
       - name: Build YT Music APK
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -53,5 +71,5 @@ jobs:
         run: |
           gh release create "$TAG" build/*.apk \
             --title "YT Music OriginPlayer Luna build" \
-            --notes "iQOO 12 Pro / OriginOS 6 non-root YT Music build. GmsCore support enabled; package identity com.luna.music for VivoMusicWidgetMix framework-support routing. Stock version is selected from the patch-compatible/downloadable set." \
+            --notes "iQOO 12 Pro / OriginOS 6 non-root YT Music 9.15.51. GmsCore support enabled; package identity com.luna.music for VivoMusicWidgetMix framework-support routing." \
             --prerelease
