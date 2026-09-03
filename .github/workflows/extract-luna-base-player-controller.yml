@@ -1,0 +1,48 @@
+name: Extract Luna BasePlayerControllerService
+
+on:
+  push:
+    paths:
+      - .github/workflows/extract-luna-base-player-controller.yml
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  extract:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - name: Download Luna classes22 and JADX
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p work/apk work/out work/jadx
+          UA='Mozilla/5.0 (Linux; Android 16; V2329A) AppleWebKit/537.36 Chrome/143 Mobile Safari/537.36'
+          curl -L --retry 3 --connect-timeout 15 --max-time 240 -A "$UA" 'https://ugapk.com/GMg3' -o work/luna.apk
+          unzip -q work/luna.apk classes22.dex -d work/apk
+          curl -L --fail --retry 3 'https://github.com/skylot/jadx/releases/download/v1.5.6/jadx-1.5.6.zip' -o work/jadx.zip
+          unzip -q work/jadx.zip -d work/jadx
+          chmod +x work/jadx/bin/jadx
+      - name: Decompile classes22
+        run: work/jadx/bin/jadx --no-res --show-bad-code --threads-count 2 -d work/jadx22 work/apk/classes22.dex
+      - name: Save controller package
+        shell: bash
+        run: |
+          set -euo pipefail
+          SRC=work/jadx22/sources
+          PKG="$SRC/com/luna/common/player/controller"
+          test -d "$PKG"
+          mkdir -p work/out/controller
+          cp -a "$PKG"/. work/out/controller/
+          grep -RIn --binary-files=without-match -E 'class BasePlayerControllerService|MediaBrowserServiceCompat|onGetRoot|onLoadChildren|MediaBrowserCompat.MediaItem|BrowserRoot|setSessionToken|notifyChildrenChanged|onCustomAction|Result<' "$PKG" > work/out/hits.txt || true
+          find work/out/controller -type f -printf '%P\n' | sort > work/out/files.txt
+          cat work/out/hits.txt
+      - name: Upload controller sources
+        uses: actions/upload-artifact@v4
+        with:
+          name: luna-base-player-controller
+          path: work/out
+          retention-days: 7
