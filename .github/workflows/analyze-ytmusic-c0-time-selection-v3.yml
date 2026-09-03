@@ -1,0 +1,73 @@
+name: Analyze YT Music c0 time and selection v3 hooks
+
+on:
+  push:
+    paths:
+      - .github/workflows/analyze-ytmusic-c0-time-selection-v3.yml
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  analyze:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Download validated Luna base and apktool
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p input tools out
+          gh release download ytmusic-originplayer-luna-33729902415 --pattern '*.apk' --dir input
+          mv input/*.apk input/base.apk
+          curl -L --fail --retry 3 -o tools/apktool.jar https://github.com/iBotPeaches/Apktool/releases/download/v3.0.3/apktool_3.0.3.jar
+          sha256sum input/base.apk | tee out/base-sha256.txt
+
+      - name: Decode and inspect timing and callback hooks
+        shell: bash
+        run: |
+          set -euo pipefail
+          java -jar tools/apktool.jar d -f input/base.apk -o decoded
+
+          ID=$(find decoded -type f -name 'id.smali' -print | while read f; do grep -q 'onPlayFromMediaId(Ljava/lang/String;Landroid/os/Bundle;)V' "$f" && echo "$f" && break; done)
+          II=$(find decoded -type f -name 'ii.smali' -print | while read f; do grep -q 'setPlaybackState(Landroid/media/session/PlaybackState;)V' "$f" && grep -q 'setMetadata(Landroid/media/MediaMetadata;)V' "$f" && echo "$f" && break; done)
+          test -n "$ID"
+          test -n "$II"
+          cp "$ID" out/id.smali
+          cp "$II" out/ii.smali
+
+          {
+            echo '=== exact callback methods ==='
+            grep -n -A60 -B8 'onPlayFromMediaId(Ljava/lang/String;Landroid/os/Bundle;)V' "$ID" || true
+            grep -n -A50 -B8 'onSkipToQueueItem(J)V' "$ID" || true
+            echo
+            echo '=== exact ii metadata/playback sinks ==='
+            grep -n -A220 -B30 '^\.method public final m(Landroid/support/v4/media/MediaMetadataCompat;)V' "$II" || true
+            grep -n -A340 -B30 '^\.method public final n(Landroid/support/v4/media/session/PlaybackStateCompat;)V' "$II" || true
+            echo
+            echo '=== DURATION literal references ==='
+            grep -RniF 'android.media.metadata.DURATION' decoded/smali* 2>/dev/null | head -n 800 || true
+            echo
+            echo '=== MediaMetadataCompat.Builder duration puts ==='
+            grep -RniE 'putLong\(Ljava/lang/String;J\)|MediaMetadataCompat\$Builder|android.media.metadata.DURATION' decoded/smali* 2>/dev/null | grep -Ei 'DURATION|MediaMetadataCompat\$Builder' | head -n 1600 || true
+          } > out/timing-selection-inspection.txt
+
+          grep -RlF 'android.media.metadata.DURATION' decoded/smali* 2>/dev/null | head -n 120 > out/duration-class-files.txt || true
+          mkdir -p out/duration_classes
+          while IFS= read -r f; do
+            [ -f "$f" ] || continue
+            cp "$f" "out/duration_classes/$(echo "$f" | tr '/' '_')"
+          done < out/duration-class-files.txt
+
+      - name: Upload analysis
+        uses: actions/upload-artifact@v4
+        with:
+          name: ytmusic-c0-time-selection-v3-analysis
+          path: out/
+          if-no-files-found: error
+          retention-days: 14
