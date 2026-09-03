@@ -1,0 +1,57 @@
+name: Build YT Music OriginPlayer Luna
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+    paths:
+      - ytmusic-originplayer-luna.toml
+
+jobs:
+  build:
+    permissions:
+      contents: write
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/setup-java@v5
+        with:
+          distribution: zulu
+          java-version: "21"
+
+      - name: Checkout
+        uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+          submodules: true
+
+      - name: Build YT Music APK
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_REPOSITORY: ${{ github.repository }}
+          NEXT_VER_CODE: ${{ github.run_number }}
+        run: ./build.sh ytmusic-originplayer-luna.toml
+
+      - name: Show outputs
+        run: |
+          cat build.md || true
+          ls -lah build
+          sha256sum build/*.apk
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: ytmusic-originplayer-luna
+          path: build/*.apk
+          if-no-files-found: error
+          retention-days: 14
+
+      - name: Publish prerelease
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          TAG: ytmusic-originplayer-luna-${{ github.run_id }}
+        run: |
+          gh release create "$TAG" build/*.apk \
+            --title "YT Music OriginPlayer Luna build" \
+            --notes "iQOO 12 Pro / OriginOS 6 non-root YT Music build. GmsCore support enabled; package identity com.luna.music for VivoMusicWidgetMix framework-support routing. Stock version is selected from the patch-compatible/downloadable set." \
+            --prerelease
