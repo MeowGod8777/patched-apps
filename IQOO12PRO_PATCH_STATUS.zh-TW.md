@@ -105,7 +105,7 @@ tv.danmaku.bili -> controller/g
 otherwise -> controller/z2 generic
 ```
 
-4. 因此目前路徑實際上是：
+4. 因此原先路徑實際上是：
 
 ```text
 Ghost / com.kugou.android.lite -> framework-support -> o0
@@ -113,7 +113,7 @@ Bilibili / tv.danmaku.bili     -> dedicated g
 patched YouTube                -> generic z2
 ```
 
-這是目前最強的 exact-build 證據，可直接解釋為什麼 patched YouTube 即使透過 `musicwidget_list_pkg_type_key` 進 OriginPlayer，鎖屏仍比 Ghost 的正式音樂播放器模板簡單。
+這是目前最強的 exact-build 靜態證據，可直接解釋為什麼 patched YouTube 即使透過 `musicwidget_list_pkg_type_key` 進 OriginPlayer，鎖屏仍比 Ghost 的正式音樂播放器模板簡單。
 
 ### Secure lock whitelist / custom insert
 
@@ -129,71 +129,72 @@ APK 另確認：
 
 ### Ghost Player 的定位
 
-Ghost Player **不排除**。
+Ghost Player **不排除**，但 package-identity A/B 已證明它不是取得完整播放器 UI 的必要條件。
 
-目前它的價值不是單純讓 YouTube 進 OriginPlayer，而是：
+Ghost 的核心價值來自：
 
-- Ghost package `com.kugou.android.lite` 在 exact APK 中本來就是 framework-support + lock cooperation 身份。
-- 因此 Ghost 天生會走 `controller/o0`，與普通手動加入 allow-list 的 YouTube 不同。
-- 鎖屏播放器模板更完整，主觀上也更好看。
+- package `com.kugou.android.lite` 在 exact APK 中本來就是 framework-support + lock cooperation 身份；
+- 因此 Ghost 天生會走 `controller/o0`。
 
 已知問題：
 
 - Ghost Player 與 Wavelet 同時使用時曾出現影片無聲。
 - 停止播放後曾出現島 / 播放狀態殘留。
 
-目前不急著修 Ghost，因為 Wavelet 使用頻率已降低。
+因 framework-support identity 已可直接套在真正 YouTube 上，Ghost 後續降為備援，不再是主線依賴。
 
-### Player 主線修正
+### 2026-09-03 framework-support identity A/B：SUCCESS
 
-先前曾把「改 YouTube package identity」視為與 `musicwidget_list_pkg_type_key` 大致重複；**exact APK 反編譯後此結論已修正。**
-
-如果目標是不用 Ghost、直接讓真正 YouTube 取得更接近 Ghost 的完整 OriginPlayer / lockscreen path，目前最合理的測試是：
-
-1. 保留現有 `app.revanced.android.youtube` 不動。
-2. 做一顆可並存的 YouTube test build。
-3. 測試版使用一個目前未占用、同時位於 `framework_support_list` + `lock_cooperation_list` 的 package identity。
-4. 先只驗證播放、MediaSession、OriginPlayer 鎖屏 UI、MicroG 登入與外部 intent，不碰 system APK。
-
-候選身份：
+第一顆可並存測試版使用：
 
 ```text
-com.apple.android.music
-com.spotify.music
-cn.kuwo.player
-cmccwm.mobilemusic
-com.kugou.android.elder
-app.podcast.cosmos
-fm.qingting.qtradio
-com.yibasan.lizhifm
-com.luna.music
-com.hiby.music
-com.tencent.blackkey
-cn.missevan
+stock app: YouTube
+selected version: 20.51.39
+patched package identity: com.apple.android.music
+patches: anddea/revanced-patches 4.2.0
+CLI: Morphe Desktop 1.14.0
 ```
 
-`com.kugou.android.lite` 已由 Ghost 使用，不作 parallel test identity。
+實機驗證條件：
 
-### 2026-09-03 package collision scan
+- 未把 `com.apple.android.music` 手動加入 Origin Isle / 原子通知白名單；
+- 未依賴原本對 `app.revanced.android.youtube` 的 `musicwidget_list_pkg_type_key` 寫入；
+- 僅安裝測試 APK 並給一般所需權限後播放 YouTube。
 
-Runner 實機掃描確認以下候選在 V2329A 上全部未安裝、沒有 package collision：
+結果：
+
+- **PASS：OriginPlayer 自動識別並出現。**
+- **PASS：桌面 / 展開播放器取得完整 artwork、進度、上一首 / 播放暫停 / 下一首、收藏等 richer music-player template。**
+- **PASS：鎖屏直接出現完整音樂播放器卡，而非原本 generic YouTube 簡化樣式。**
+- **PASS：OriginOS 上方媒體島 / 展開媒體卡亦自動出現；這次沒有另外把測試 package 加進 Isle。**
+- **OBSERVED：通知中心同時可看到 vivo richer media card 與 YouTube 自身 media notification，存在雙卡顯示。**
+
+因此目前可把核心因果關係提升為實機驗證：
 
 ```text
-FREE com.apple.android.music
-FREE com.spotify.music
-FREE cn.kuwo.player
-FREE cmccwm.mobilemusic
-FREE com.kugou.android.elder
-FREE app.podcast.cosmos
-FREE fm.qingting.qtradio
-FREE com.yibasan.lizhifm
-FREE com.luna.music
-FREE com.hiby.music
-FREE com.tencent.blackkey
-FREE cn.missevan
+YouTube MediaSession
+    + framework-support / lock-cooperation package identity
+    -> VivoMusicWidgetMix framework-support classification
+    -> controller/o0-like richer player path
+    -> full OriginPlayer / lockscreen / media-island presentation
 ```
 
-因此第一顆 A/B build 優先使用 `com.apple.android.music`。理由不是名稱本身，而是它在 exact OriginPlayer 6.2.7.1 內屬於 framework-support / lock-cooperation 路線，且目前沒有 collision。測試版必須與現有 `app.revanced.android.youtube` 並存；目標只驗證 package identity 是否足以把 YouTube 從 generic `z2` 路徑帶到完整音樂播放器路徑。
+這表示先前的 `musicwidget_list_pkg_type_key` 只能讓 generic package 被 OriginPlayer 納入；**它不是取得完整合作播放器模板的關鍵。package identity 才是本輪 A/B 中改變 UI path 的關鍵變數。**
+
+目前不再需要優先研究 dummy service / custom-insert bypass，也不需要靠 Ghost 轉發 MediaSession 才能拿到完整模板。
+
+### 仍需做的 production validation
+
+視覺路徑已通；下一步不是再找白名單，而是驗證把此身份當日用 YouTube 是否有副作用：
+
+1. 外部 `youtube.com` / `youtu.be` intent 與預設開啟行為。
+2. MicroG 登入、帳號持久化、push / 通知。
+3. 背景播放、PiP、Cast、播放佇列與上一首 / 下一首控制。
+4. 暫停 / force-stop / 滑掉後 OriginPlayer 與媒體島是否正常清除，不殘留 session。
+5. 通知中心雙卡是否可接受，或能否只保留 vivo richer card 而不破壞 MediaSession。
+6. 長標題 / 非音樂影片 metadata 在 richer music template 下是否有截斷或控制語意不匹配。
+
+如果上述日用驗證通過，`com.apple.android.music` 可作為目前 V2329A 的 production identity；若日後要安裝真正 Apple Music，再換另一個同屬 framework-support + lock-cooperation 且無 collision 的 identity 即可。
 
 ---
 
@@ -241,10 +242,11 @@ FREE cn.missevan
 
 ## 目前優先序
 
-1. **OriginPlayer framework-support identity A/B**：確認 patched YouTube 直接使用 framework-support package 身份後，能否取得 Ghost 類完整鎖屏模板。
-2. **Ghost Player**：保留；Wavelet 衝突目前非高優先。
-3. **MiCTS**：已有可用方案，暫停研究。
-4. 其餘低價值候選目前不做。
+1. **OriginPlayer production validation**：framework-support identity A/B 已成功；現在驗證 `com.apple.android.music` 身份的日用副作用與 session 清理，不再重做白名單研究。
+2. **通知雙卡 / 控制語意收尾**：若 production validation 其餘都正常，再決定是否值得處理。
+3. **Ghost Player**：降為備援；Wavelet 衝突目前非高優先。
+4. **MiCTS**：已有可用方案，暫停研究。
+5. 其餘低價值候選目前不做。
 
 ## 操作原則
 
