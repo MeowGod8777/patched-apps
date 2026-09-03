@@ -12,3 +12,5 @@ jobs:
     steps:
       - name: Smoke
         run: echo "c0 workflow runner OK"
+
+# trigger: 2026-09-03T19:58+08:00
