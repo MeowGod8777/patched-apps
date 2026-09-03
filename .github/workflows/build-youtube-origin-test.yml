@@ -1,0 +1,57 @@
+name: Build YouTube OriginPlayer Test
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+    paths:
+      - originplayer-test.toml
+
+jobs:
+  build:
+    permissions:
+      contents: write
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/setup-java@v5
+        with:
+          distribution: zulu
+          java-version: "21"
+
+      - name: Checkout
+        uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+          submodules: true
+
+      - name: Build test APK
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_REPOSITORY: ${{ github.repository }}
+          NEXT_VER_CODE: ${{ github.run_number }}
+        run: ./build.sh originplayer-test.toml
+
+      - name: Show outputs
+        run: |
+          cat build.md || true
+          ls -lah build
+          sha256sum build/*.apk
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: youtube-originplayer-applemusic-test
+          path: build/*.apk
+          if-no-files-found: error
+          retention-days: 14
+
+      - name: Publish prerelease
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          TAG: originplayer-test-${{ github.run_id }}
+        run: |
+          gh release create "$TAG" build/*.apk \
+            --title "YouTube OriginPlayer AppleMusic identity test" \
+            --notes "One-off iQOO 12 Pro / OriginOS 6 A/B build. YouTube 20.40.45, package identity com.apple.android.music. Do not treat as production release." \
+            --prerelease
