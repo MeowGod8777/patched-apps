@@ -1,0 +1,50 @@
+name: Extract Luna Vivo support helpers
+
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - '.github/workflows/extract-luna-vivo-support.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  extract:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - name: Download official Luna and JADX
+        shell: bash
+        run: |
+          set -euxo pipefail
+          mkdir -p work/out
+          UA='Mozilla/5.0 (Linux; Android 16; V2329A) AppleWebKit/537.36 Chrome/143 Mobile Safari/537.36'
+          curl -L --retry 3 --connect-timeout 15 --max-time 240 -A "$UA" 'https://ugapk.com/GMg3' -o work/luna.apk
+          curl -L --retry 3 'https://github.com/skylot/jadx/releases/download/v1.5.6/jadx-1.5.6.zip' -o work/jadx.zip
+          unzip -q work/jadx.zip -d work/jadx
+          chmod +x work/jadx/bin/jadx
+      - name: Extract helper classes
+        shell: bash
+        run: |
+          set -euxo pipefail
+          J=work/jadx/bin/jadx
+          APK=work/luna.apk
+          for cls in \
+            'com.luna.biz.playing.player.remote.control.VIVOSupportUtil' \
+            'com.luna.common.arch.constant.os.vivo.VivoConstantKt' \
+            'com.luna.biz.playing.player.remote.control.RemoteControl' \
+            'com.luna.biz.playing.player.remote.control.IRemoteControlAdapter' \
+            'com.luna.biz.playing.player.remote.control.RemoteControlContext'; do
+            safe=$(echo "$cls" | tr '.' '_')
+            "$J" --no-res --single-class "$cls" --single-class-output "work/out/${safe}.java" "$APK" || true
+          done
+          grep -RInE 'support_event|LOOP_MODE|vivomusicmix|playlist|queue|event|VIVO|vivo|setExtras|MediaMetadata|PlaybackState|sendCommand|customAction' work/out | tee work/out/hits.txt || true
+      - name: Upload helper classes
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: luna-vivo-support-helpers
+          path: work/out
+          retention-days: 7
