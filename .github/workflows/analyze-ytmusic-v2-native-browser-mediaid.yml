@@ -1,0 +1,116 @@
+name: Analyze YT Music V2 native browser mediaId encoding
+
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - .github/workflows/analyze-ytmusic-v2-native-browser-mediaid.yml
+
+permissions:
+  contents: read
+  actions: read
+
+jobs:
+  analyze:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Decode exact V2 runtime-PASS APK
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p input tools out
+          gh api /repos/${GITHUB_REPOSITORY}/actions/artifacts/9896185089/zip > input/v2.zip
+          unzip -q input/v2.zip -d input/v2
+          V2=$(find input/v2 -maxdepth 1 -name '*.apk' -print -quit)
+          curl -L --fail --retry 3 -o tools/apktool.jar https://github.com/iBotPeaches/Apktool/releases/download/v3.0.3/apktool_3.0.3.jar
+          java -jar tools/apktool.jar d -f "$V2" -o decoded
+
+      - name: Extract aveu/avev codec
+        shell: bash
+        run: |
+          set -euo pipefail
+          for cls in aveu avev; do
+            P=$(find decoded -type f -name "$cls.smali" -print -quit)
+            test -n "$P"
+            cp "$P" "out/$cls.smali"
+            grep -n '^\.class\|^\.super\|^\.field\|^\.method' "$P" > "out/$cls-structure.txt" || true
+          done
+          grep -R -n -E 'Laveu;->|Lavev;->' decoded/smali* > out/codec-call-hits.txt || true
+          python3 - <<'PY'
+          from pathlib import Path
+          with open('out/codec-call-contexts.txt','w') as o:
+              for p in Path('decoded').glob('smali*/**/*.smali'):
+                  try: lines=p.read_text(errors='ignore').splitlines()
+                  except: continue
+                  for i,l in enumerate(lines):
+                      if 'Laveu;->' in l:
+                          o.write(f'===== {p}:{i+1} =====\n')
+                          o.write('\n'.join(lines[max(0,i-30):min(len(lines),i+45)])+'\n')
+          PY
+
+      - name: Find native MediaBrowser item builders
+        shell: bash
+        run: |
+          set -euo pipefail
+          grep -R -n -E 'MediaBrowserCompat\$MediaItem;-><init>|MediaDescriptionCompat;-><init>' decoded/smali* > out/mediaitem-constructor-hits.txt || true
+          python3 - <<'PY'
+          from pathlib import Path
+          with open('out/mediaitem-constructor-contexts.txt','w') as o:
+              for p in Path('decoded').glob('smali*/**/*.smali'):
+                  try: lines=p.read_text(errors='ignore').splitlines()
+                  except: continue
+                  for i,l in enumerate(lines):
+                      if 'MediaBrowserCompat$MediaItem;-><init>' in l:
+                          o.write(f'===== {p}:{i+1} =====\n')
+                          o.write('\n'.join(lines[max(0,i-100):min(len(lines),i+45)])+'\n')
+          PY
+
+      - name: Trace Llkg browse implementation and result builders
+        shell: bash
+        run: |
+          set -euo pipefail
+          P=$(find decoded -type f -name 'lkg.smali' -print -quit)
+          if [ -n "$P" ]; then cp "$P" out/lkg.smali; grep -n '^\.class\|^\.super\|^\.field\|^\.method' "$P" > out/lkg-structure.txt; fi
+          python3 - <<'PY'
+          from pathlib import Path
+          impl=[]
+          for p in Path('decoded').glob('smali*/**/*.smali'):
+              try: s=p.read_text(errors='ignore')
+              except: continue
+              if '.implements Llkg;' in s:
+                  impl.append(p)
+          with open('out/lkg-implementors.txt','w') as o:
+              for p in impl:o.write(str(p)+'\n')
+          with open('out/lkg-implementor-bodies.txt','w') as o:
+              for p in impl:o.write(f'===== {p} =====\n{p.read_text(errors="ignore")}\n')
+          PY
+
+      - name: Search WatchEndpoint-like queue data to Lavev conversion
+        shell: bash
+        run: |
+          set -euo pipefail
+          grep -R -n -E 'Lnot;|Lnod;|Lavev;|Laveu;' decoded/smali* > out/not-avev-hits.txt || true
+          python3 - <<'PY'
+          from pathlib import Path
+          with open('out/not-avev-contexts.txt','w') as o:
+              for p in Path('decoded').glob('smali*/**/*.smali'):
+                  try: lines=p.read_text(errors='ignore').splitlines()
+                  except: continue
+                  for i,l in enumerate(lines):
+                      if ('Lnot;' in l or 'Lnod;' in l) and any('Lave' in x for x in lines[max(0,i-30):min(len(lines),i+45)]):
+                          o.write(f'===== {p}:{i+1} =====\n')
+                          o.write('\n'.join(lines[max(0,i-35):min(len(lines),i+55)])+'\n')
+          PY
+
+      - name: Upload native mediaId evidence
+        uses: actions/upload-artifact@v4
+        with:
+          name: ytmusic-v2-native-browser-mediaid
+          path: out/
+          if-no-files-found: error
+          retention-days: 14
