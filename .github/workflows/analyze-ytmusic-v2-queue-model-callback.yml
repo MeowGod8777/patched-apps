@@ -1,0 +1,140 @@
+name: Analyze YT Music V2 queue model and callback subclass
+
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - .github/workflows/analyze-ytmusic-v2-queue-model-callback.yml
+
+permissions:
+  contents: read
+  actions: read
+
+jobs:
+  analyze:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Decode exact V2 runtime-PASS APK
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p input tools out
+          gh api /repos/${GITHUB_REPOSITORY}/actions/artifacts/9896185089/zip > input/v2.zip
+          unzip -q input/v2.zip -d input/v2
+          V2=$(find input/v2 -maxdepth 1 -name '*.apk' -print -quit)
+          curl -L --fail --retry 3 -o tools/apktool.jar https://github.com/iBotPeaches/Apktool/releases/download/v3.0.3/apktool_3.0.3.jar
+          java -jar tools/apktool.jar d -f "$V2" -o decoded
+
+      - name: Extract queue model interfaces and producer
+        shell: bash
+        run: |
+          set -euo pipefail
+          for cls in noq nog kyi; do
+            P=$(find decoded -type f -name "$cls.smali" -print -quit)
+            test -n "$P"
+            cp "$P" "out/$cls.smali"
+            grep -n '^\.class\|^\.super\|^\.implements\|^\.field\|^\.method' "$P" > "out/$cls-structure.txt" || true
+          done
+          python3 - <<'PY'
+          from pathlib import Path
+          import re
+          p=Path('out/kyi.smali'); s=p.read_text(errors='ignore')
+          lines=s.splitlines()
+          hits=[i for i,l in enumerate(lines) if 'MediaSessionCompat$QueueItem;-><init>' in l]
+          with open('out/kyi-queue-methods.txt','w') as o:
+              for i in hits:
+                  start=i
+                  while start>=0 and not lines[start].startswith('.method '): start-=1
+                  end=i
+                  while end<len(lines) and lines[end] != '.end method': end+=1
+                  o.write(f'===== constructor line {i+1}; method starts {start+1} =====\n')
+                  o.write('\n'.join(lines[start:min(len(lines),end+1)])+'\n')
+          PY
+
+      - name: Find noq and nog implementations with method bodies
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          from pathlib import Path
+          out=Path('out')
+          implementations=[]
+          for p in Path('decoded').glob('smali*/**/*.smali'):
+              try: s=p.read_text(errors='ignore')
+              except: continue
+              if '.implements Lnoq;' in s or '.implements Lnog;' in s:
+                  implementations.append(p)
+          with (out/'queue-model-implementors.txt').open('w') as o:
+              for p in implementations: o.write(str(p)+'\n')
+          with (out/'queue-model-implementor-bodies.txt').open('w') as o:
+              for p in implementations:
+                  s=p.read_text(errors='ignore')
+                  o.write(f'===== {p} =====\n{s}\n')
+          print('implementors',len(implementations))
+          PY
+
+      - name: Find all calls to noq/nog methods around queue construction
+        shell: bash
+        run: |
+          set -euo pipefail
+          grep -R -n -E 'Lnoq;->|Lnog;->' decoded/smali* > out/noq-nog-call-hits.txt || true
+          python3 - <<'PY'
+          from pathlib import Path
+          with open('out/noq-nog-call-contexts.txt','w') as o:
+              for p in Path('decoded').glob('smali*/**/*.smali'):
+                  try: lines=p.read_text(errors='ignore').splitlines()
+                  except: continue
+                  for i,l in enumerate(lines):
+                      if 'Lnoq;->' in l or 'Lnog;->' in l:
+                          o.write(f'===== {p}:{i+1} =====\n')
+                          o.write('\n'.join(lines[max(0,i-15):min(len(lines),i+25)])+'\n')
+          PY
+
+      - name: Trace actual Lie subclass installed on Liq
+        shell: bash
+        run: |
+          set -euo pipefail
+          grep -R -n -E 'Liq;->g\(Lie;\)V|Liq;->h\(Lie;Landroid/os/Handler;\)V' decoded/smali* > out/liq-callback-setter-hits.txt || true
+          python3 - <<'PY'
+          from pathlib import Path
+          out=Path('out')
+          with (out/'liq-callback-setter-contexts.txt').open('w') as o:
+              for p in Path('decoded').glob('smali*/**/*.smali'):
+                  try: lines=p.read_text(errors='ignore').splitlines()
+                  except: continue
+                  for i,l in enumerate(lines):
+                      if 'Liq;->g(Lie;)V' in l or 'Liq;->h(Lie;Landroid/os/Handler;)V' in l:
+                          o.write(f'===== {p}:{i+1} =====\n')
+                          o.write('\n'.join(lines[max(0,i-45):min(len(lines),i+35)])+'\n')
+          subclasses=[]
+          for p in Path('decoded').glob('smali*/**/*.smali'):
+              try: s=p.read_text(errors='ignore')
+              except: continue
+              if '.super Lie;' in s:
+                  subclasses.append(p)
+          with (out/'lie-subclasses.txt').open('w') as o:
+              for p in subclasses: o.write(str(p)+'\n')
+          with (out/'lie-subclass-bodies.txt').open('w') as o:
+              for p in subclasses:
+                  o.write(f'===== {p} =====\n{p.read_text(errors="ignore")}\n')
+          print('Lie subclasses',len(subclasses))
+          PY
+
+      - name: Search candidate playable IDs in queue model implementors
+        shell: bash
+        run: |
+          set -euo pipefail
+          grep -n -E 'Ljava/lang/String;|video|Video|media|Media|play|Play|id|Id|ID|watch|Watch|Uri|Bundle' out/queue-model-implementor-bodies.txt > out/queue-model-id-candidates.txt || true
+
+      - name: Upload queue model/callback evidence
+        uses: actions/upload-artifact@v4
+        with:
+          name: ytmusic-v2-queue-model-callback
+          path: out/
+          if-no-files-found: error
+          retention-days: 14
