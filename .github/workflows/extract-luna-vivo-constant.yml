@@ -1,0 +1,46 @@
+name: Extract Luna Vivo media support constants
+
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - '.github/workflows/extract-luna-vivo-constant.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  extract:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - name: Download official Luna and JADX
+        shell: bash
+        run: |
+          set -euxo pipefail
+          mkdir -p work/out work/jadx
+          UA='Mozilla/5.0 (Linux; Android 16; V2329A) AppleWebKit/537.36 Chrome/143 Mobile Safari/537.36'
+          curl -L --retry 3 --connect-timeout 15 --max-time 240 -A "$UA" 'https://ugapk.com/GMg3' -o work/luna.apk
+          curl -L --retry 3 'https://github.com/skylot/jadx/releases/download/v1.5.6/jadx-1.5.6.zip' -o work/jadx.zip
+          unzip -q work/jadx.zip -d work/jadx
+          chmod +x work/jadx/bin/jadx
+      - name: Extract VivoConstant
+        shell: bash
+        run: |
+          set -euxo pipefail
+          work/jadx/bin/jadx --no-res --show-bad-code --threads-count 4 -d work/jadx-out work/luna.apk >/dev/null 2>&1 || true
+          SRC=work/jadx-out/sources
+          find "$SRC" -type f -path '*com/luna/common/arch/constant/os/vivo/VivoConstant*.java' -print | tee work/out/files.txt
+          while IFS= read -r f; do
+            [ -f "$f" ] || continue
+            cp "$f" "work/out/$(basename "$f")"
+          done < work/out/files.txt
+          grep -RInE 'MediaSupportEvent|PLAY|PAUSE|NEXT|PREV|COLLECT|LIKE|FAVOR|LIST|QUEUE|LYRIC|LOOP|SHUFFLE|value|long' work/out | tee work/out/hits.txt || true
+          test -s work/out/files.txt
+      - name: Upload constants
+        uses: actions/upload-artifact@v4
+        with:
+          name: luna-vivo-media-support-constants
+          path: work/out
+          retention-days: 7
