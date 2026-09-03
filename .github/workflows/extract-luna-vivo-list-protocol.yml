@@ -1,0 +1,80 @@
+name: Extract Luna Vivo list protocol
+
+on:
+  push:
+    paths:
+      - '.github/workflows/extract-luna-vivo-list-protocol.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  extract:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v4
+      - name: Download official Luna and locate protocol dexes
+        shell: bash
+        run: |
+          set -euxo pipefail
+          mkdir -p work/apk work/out work/jadx
+          UA='Mozilla/5.0 (Linux; Android 16; V2329A) AppleWebKit/537.36 Chrome/143 Mobile Safari/537.36'
+          curl -L --retry 3 --connect-timeout 15 --max-time 240 -A "$UA" 'https://ugapk.com/GMg3' -o work/luna.apk
+          unzip -q work/luna.apk 'classes*.dex' -d work/apk
+          : > work/out/target_dexes.txt
+          for f in work/apk/classes*.dex; do
+            if grep -aq 'vivomusicmix.extra.get_list' "$f" || \
+               grep -aq 'vivomusicmix.extra.play_index' "$f" || \
+               grep -aq 'vivomusicmix.extra.key.list_data' "$f" || \
+               grep -aq 'vivomusicmix.extra.key.list_index' "$f"; then
+              echo "$f" | tee -a work/out/target_dexes.txt
+            fi
+          done
+          sort -u -o work/out/target_dexes.txt work/out/target_dexes.txt
+          cat work/out/target_dexes.txt
+          test -s work/out/target_dexes.txt
+      - name: Download JADX
+        shell: bash
+        run: |
+          set -euxo pipefail
+          curl -L --retry 3 'https://github.com/skylot/jadx/releases/download/v1.5.6/jadx-1.5.6.zip' -o work/jadx.zip
+          unzip -q work/jadx.zip -d work/jadx
+          chmod +x work/jadx/bin/jadx
+      - name: Decompile target dexes and extract handlers
+        shell: bash
+        run: |
+          set -euxo pipefail
+          : > work/out/protocol_hits.txt
+          : > work/out/exact_files.txt
+          n=0
+          while IFS= read -r dex; do
+            n=$((n+1))
+            out="work/jadx_$n"
+            mkdir -p "$out"
+            work/jadx/bin/jadx --no-res --show-bad-code --threads-count 2 -d "$out" "$dex"
+            SRC="$out/sources"
+            grep -RIn --binary-files=without-match \
+              -E 'vivomusicmix\.extra\.(get_list|play_index)|vivomusicmix\.extra\.key\.(list_data|list_index)|VIVO_KEY_LIST_DATA|VIVO_KEY_LIST_INDEX|ACTION_GET_LIST|ACTION_PLAY_INDEX' "$SRC" \
+              | tee -a work/out/protocol_hits.txt || true
+            while IFS= read -r f; do
+              [ -f "$f" ] || continue
+              echo "$f" >> work/out/exact_files.txt
+              rel="${f#$SRC/}"
+              mkdir -p "work/out/sources/$(dirname "$rel")"
+              cp "$f" "work/out/sources/$rel"
+            done < <(grep -Rl --binary-files=without-match \
+              -E 'vivomusicmix\.extra\.(get_list|play_index)|vivomusicmix\.extra\.key\.(list_data|list_index)|VIVO_KEY_LIST_DATA|VIVO_KEY_LIST_INDEX|ACTION_GET_LIST|ACTION_PLAY_INDEX' "$SRC" || true)
+          done < work/out/target_dexes.txt
+          sort -u -o work/out/exact_files.txt work/out/exact_files.txt
+          echo '===== PROTOCOL HITS ====='
+          cat work/out/protocol_hits.txt
+          echo '===== FILES ====='
+          cat work/out/exact_files.txt
+      - name: Upload protocol handlers
+        uses: actions/upload-artifact@v4
+        with:
+          name: luna-vivo-list-protocol
+          path: work/out
+          retention-days: 7
