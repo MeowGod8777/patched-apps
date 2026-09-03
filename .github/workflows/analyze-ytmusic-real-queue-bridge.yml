@@ -1,0 +1,74 @@
+name: Analyze YT Music real queue bridge candidates
+
+on:
+  push:
+    paths:
+      - .github/workflows/analyze-ytmusic-real-queue-bridge.yml
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  analyze:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Download validated Luna base and apktool
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p input tools out
+          gh release download ytmusic-originplayer-luna-33729902415 --pattern '*.apk' --dir input
+          mv input/*.apk input/base.apk
+          curl -L --fail --retry 3 -o tools/apktool.jar https://github.com/iBotPeaches/Apktool/releases/download/v3.0.3/apktool_3.0.3.jar
+          sha256sum input/base.apk | tee out/base-sha256.txt
+
+      - name: Decode and locate queue/session/browser paths
+        shell: bash
+        run: |
+          set -euo pipefail
+          java -jar tools/apktool.jar d -f input/base.apk -o decoded
+
+          BROWSER=$(find decoded -type f -path '*/com/google/android/apps/youtube/music/mediabrowser/MusicBrowserService.smali' -print -quit)
+          test -n "$BROWSER"
+          cp "$BROWSER" out/MusicBrowserService.smali
+
+          for cls in kxt bzu bze aveu avev lkg; do
+            f=$(find decoded -type f -name "$cls.smali" -print -quit || true)
+            if [ -n "$f" ]; then cp "$f" "out/$cls.smali"; fi
+          done
+
+          {
+            echo '=== setQueue-like references ==='
+            grep -RniE 'setQueue|onQueueChanged|QueueItem|queueTitle|setQueueTitle|MEDIA_SESSION|MediaSessionCompat' decoded/smali* 2>/dev/null | head -n 2500 || true
+            echo
+            echo '=== likely browser/current queue strings ==='
+            grep -RniE 'queue|now.?playing|current.?list|up.?next|next.?queue|playlist' decoded/smali* 2>/dev/null | grep -Ei 'mediabrowser|mediasession|queue|playback' | head -n 2500 || true
+            echo
+            echo '=== MusicBrowserService dependencies ==='
+            grep -nE 'L[a-zA-Z0-9_$]+;->|const-string' "$BROWSER" | head -n 2500 || true
+          } > out/queue-search.txt
+
+          # Copy concrete classes that directly reference queue item APIs or setQueue-like symbols.
+          grep -RlE 'MediaSessionCompat\$QueueItem|MediaSession\$QueueItem|setQueue|setQueueTitle' decoded/smali* 2>/dev/null | head -n 120 > out/queue-class-files.txt || true
+          mkdir -p out/queue_classes
+          while IFS= read -r f; do
+            [ -f "$f" ] || continue
+            cp "$f" "out/queue_classes/$(echo "$f" | tr '/' '_')"
+          done < out/queue-class-files.txt
+
+          # List all classes that reference the exact MusicBrowserService or its parser/provider types.
+          grep -RlE 'Lcom/google/android/apps/youtube/music/mediabrowser/MusicBrowserService;|Llkg;|Laveu;|Lavev;' decoded/smali* 2>/dev/null | head -n 300 > out/browser-related-files.txt || true
+
+      - name: Upload analysis
+        uses: actions/upload-artifact@v4
+        with:
+          name: ytmusic-real-queue-bridge-analysis
+          path: out/
+          if-no-files-found: error
+          retention-days: 14
