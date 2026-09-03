@@ -106,3 +106,5 @@ jobs:
           path: out/
           if-no-files-found: error
           retention-days: 14
+
+# retrigger: 2026-09-04T00:07+08:00
