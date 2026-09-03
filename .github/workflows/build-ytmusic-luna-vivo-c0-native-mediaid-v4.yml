@@ -1,0 +1,200 @@
+name: Build YT Music Luna Vivo c0 native mediaId v4
+
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - .github/workflows/build-ytmusic-luna-vivo-c0-native-mediaid-v4.yml
+      - tools/ytmusic_vivo_c0_native_mediaid_v4.py
+      - tools/ytmusic_vivo_c0_real_queue_v2.py
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Download validated Luna base and tools
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p input tools out
+          gh release download ytmusic-originplayer-luna-33729902415 --pattern '*.apk' --dir input
+          mv input/*.apk input/base.apk
+          curl -L --fail --retry 3 -o tools/apktool.jar \
+            https://github.com/iBotPeaches/Apktool/releases/download/v3.0.3/apktool_3.0.3.jar
+          curl -L --fail --retry 3 -o tools/bcprov.jar \
+            https://repo1.maven.org/maven2/org/bouncycastle/bcprov-jdk18on/1.82/bcprov-jdk18on-1.82.jar
+          sha256sum input/base.apk tools/apktool.jar tools/bcprov.jar | tee out/input-sha256.txt
+          grep -q '^0b1b61ad6bd87dacc88517adf19c1115085d529e63847d50d587476efa4ce307  input/base.apk$' out/input-sha256.txt
+
+      - name: Decode and patch proven V2 plus native-mediaId sidecar
+        shell: bash
+        run: |
+          set -euo pipefail
+          java -jar tools/apktool.jar d -f input/base.apk -o decoded
+
+          ID_SMALI=$(grep -Rl 'onPlayFromMediaId(Ljava/lang/String;Landroid/os/Bundle;)V' decoded/smali*/id.smali | head -n1)
+          II_SMALI=$(grep -Rl 'setMetadata(Landroid/media/MediaMetadata;)V' decoded/smali*/ii.smali | head -n1)
+          test -n "$ID_SMALI"; test -n "$II_SMALI"
+          sha256sum "$ID_SMALI" | tee out/id-before.sha256
+          python3 - "$II_SMALI" out/ii-m-before.txt <<'PY'
+          from pathlib import Path
+          import re,sys
+          s=Path(sys.argv[1]).read_text()
+          m=re.search(r'(?ms)^\.method public final m\(Landroid/support/v4/media/MediaMetadataCompat;\)V\n.*?^\.end method',s)
+          assert m
+          Path(sys.argv[2]).write_text(m.group(0))
+          PY
+
+          python3 tools/ytmusic_vivo_c0_native_mediaid_v4.py decoded
+
+          BROWSER_SMALI=$(find decoded -type f -path '*/com/google/android/apps/youtube/music/mediabrowser/MusicBrowserService.smali' -print -quit)
+          KYI_SMALI=$(grep -Rl 'MediaSessionCompat$QueueItem;-><init>' decoded/smali*/kyi.smali | head -n1)
+          test -n "$BROWSER_SMALI"; test -n "$KYI_SMALI"
+
+          # Regression guard: framework callback adapter must be byte-identical to validated base.
+          sha256sum "$ID_SMALI" | tee out/id-after.sha256
+          diff -u out/id-before.sha256 out/id-after.sha256
+
+          # Regression guard: MediaMetadata sink ii.m must be byte-identical to validated base.
+          python3 - "$II_SMALI" out/ii-m-after.txt <<'PY'
+          from pathlib import Path
+          import re,sys
+          s=Path(sys.argv[1]).read_text()
+          m=re.search(r'(?ms)^\.method public final m\(Landroid/support/v4/media/MediaMetadataCompat;\)V\n.*?^\.end method',s)
+          assert m
+          Path(sys.argv[2]).write_text(m.group(0))
+          PY
+          diff -u out/ii-m-before.txt out/ii-m-after.txt
+
+          grep -n -A160 -B12 'vivoNativeIds' "$BROWSER_SMALI" | tee out/native-sidecar-context.txt
+          grep -n -A40 -B12 'vivoCaptureNativeId' "$KYI_SMALI" | tee out/native-capture-context.txt
+          grep -n -A85 -B12 'vivomusicmix_current_list' "$BROWSER_SMALI" | tee out/current-list-context.txt
+          grep -n -A16 -B4 'com.vivo.musicwidgetmix.support.service' decoded/AndroidManifest.xml | tee out/manifest-context.txt
+
+          grep -q 'field public static volatile vivoNativeIds:Ljava/util/Map;' "$BROWSER_SMALI"
+          grep -q 'Lazck;->o()Lboht;' "$BROWSER_SMALI"
+          grep -q 'Llgl;->d(Lboht;)Ljava/lang/String;' "$BROWSER_SMALI"
+          grep -q 'vivoNativeId(J)Ljava/lang/String;' "$BROWSER_SMALI"
+          grep -q 'vivoCaptureNativeId(Lnoq;)V' "$KYI_SMALI"
+          grep -q 'vivoResetNativeIds()V' "$KYI_SMALI"
+          grep -q 'vivomusicmix_current_list' "$BROWSER_SMALI"
+          ! grep -R -q 'vivo_qid_' decoded/smali*
+          ! grep -R -q 'vivomusicmix.media.metadata.support_event' decoded/smali*
+
+      - name: Rebuild and 16K align
+        shell: bash
+        run: |
+          set -euo pipefail
+          java -jar tools/apktool.jar b decoded -o out/unsigned.apk
+          BUILD_TOOLS="${ANDROID_HOME}/build-tools/$(ls "${ANDROID_HOME}/build-tools" | sort -V | tail -1)"
+          "$BUILD_TOOLS/zipalign" -P 16 -f 4 out/unsigned.apk out/aligned.apk
+          "$BUILD_TOOLS/zipalign" -c -P 16 -v 4 out/aligned.apk | tee out/zipalign-before-sign.txt
+
+      - name: Sign with validated ReVanced certificate and verify
+        shell: bash
+        run: |
+          set -euo pipefail
+          norm() { tr -d ':[:space:]' | tr '[:upper:]' '[:lower:]'; }
+          BASE_CERT=$(java -jar bin/apksigner.jar verify --print-certs input/base.apk \
+            | sed -n 's/^Signer #1 certificate SHA-256 digest: //p' | norm)
+          BKS_CERT=$(keytool -list -v \
+            -keystore ks.keystore -storetype BKS -storepass 123456789 \
+            -alias andrewliang \
+            -providerclass org.bouncycastle.jce.provider.BouncyCastleProvider \
+            -providerpath tools/bcprov.jar \
+            | sed -n 's/^[[:space:]]*SHA256: //p' | norm)
+          echo "base=$BASE_CERT" | tee out/cert.txt
+          echo "bks=$BKS_CERT" | tee -a out/cert.txt
+          test -n "$BASE_CERT"
+          test "$BASE_CERT" = "$BKS_CERT"
+          test "$BASE_CERT" = "7762ee243d1157ef3d6de884690ff70a385fc251fe8f491eb6c71f6a8e392e2c"
+
+          keytool -importkeystore \
+            -srckeystore ks.keystore -srcstoretype BKS -srcstorepass 123456789 \
+            -srcalias andrewliang -srckeypass 123456789 \
+            -destkeystore out/signer.p12 -deststoretype PKCS12 \
+            -deststorepass 123456789 -destkeypass 123456789 \
+            -destalias andrewliang -noprompt \
+            -providerclass org.bouncycastle.jce.provider.BouncyCastleProvider \
+            -providerpath tools/bcprov.jar
+
+          OUT_APK=out/YouTube_Music_9.15.51_Luna_VIVO_C0_NATIVE_MEDIAID_V4.apk
+          java -jar bin/apksigner.jar sign \
+            --ks out/signer.p12 --ks-type PKCS12 \
+            --ks-pass pass:123456789 --key-pass pass:123456789 \
+            --ks-key-alias andrewliang \
+            --out "$OUT_APK" out/aligned.apk
+          rm -f out/*.idsig
+
+          java -jar bin/apksigner.jar verify --verbose --print-certs "$OUT_APK" | tee out/signature-verify.txt
+          grep -q 'Verified using v2 scheme (APK Signature Scheme v2): true' out/signature-verify.txt
+          grep -q 'Verified using v3 scheme (APK Signature Scheme v3): true' out/signature-verify.txt
+          OUT_CERT=$(java -jar bin/apksigner.jar verify --print-certs "$OUT_APK" \
+            | sed -n 's/^Signer #1 certificate SHA-256 digest: //p' | norm)
+          echo "out=$OUT_CERT" | tee -a out/cert.txt
+          test "$OUT_CERT" = "$BASE_CERT"
+
+          BUILD_TOOLS="${ANDROID_HOME}/build-tools/$(ls "${ANDROID_HOME}/build-tools" | sort -V | tail -1)"
+          "$BUILD_TOOLS/zipalign" -c -P 16 -v 4 "$OUT_APK" | tee out/zipalign-final.txt
+          sha256sum "$OUT_APK" | tee out/SHA256.txt
+
+          python3 - <<'PY' | tee out/native-libs.txt
+          import zipfile
+          apk='out/YouTube_Music_9.15.51_Luna_VIVO_C0_NATIVE_MEDIAID_V4.apk'
+          with zipfile.ZipFile(apk) as z:
+              libs=[i for i in z.infolist() if i.filename.startswith('lib/arm64-v8a/') and i.filename.endswith('.so')]
+              print('arm64_so_count=',len(libs))
+              for i in libs: print(i.filename,'compress_type=',i.compress_type,'size=',i.file_size)
+              assert len(libs)==21
+              assert all(i.compress_type==zipfile.ZIP_STORED for i in libs)
+          PY
+
+      - name: Static manifest and final regression verification
+        shell: bash
+        run: |
+          set -euo pipefail
+          OUT_APK=out/YouTube_Music_9.15.51_Luna_VIVO_C0_NATIVE_MEDIAID_V4.apk
+          BUILD_TOOLS="${ANDROID_HOME}/build-tools/$(ls "${ANDROID_HOME}/build-tools" | sort -V | tail -1)"
+          "$BUILD_TOOLS/aapt" dump badging "$OUT_APK" | tee out/badging.txt
+          grep -q "package: name='com.luna.music'" out/badging.txt
+          grep -q "versionName='9.15.51'" out/badging.txt
+          "$BUILD_TOOLS/aapt" dump xmltree "$OUT_APK" AndroidManifest.xml | tee out/manifest-xmltree.txt
+          grep -q 'com.vivo.musicwidgetmix.support.service' out/manifest-xmltree.txt
+          grep -q 'com.google.android.apps.youtube.music.mediabrowser.MusicBrowserService' out/manifest-xmltree.txt
+          grep -q 'Llgl;->d(Lboht;)Ljava/lang/String;' out/native-sidecar-context.txt
+          grep -q 'vivoNativeId(J)Ljava/lang/String;' out/current-list-context.txt
+          ! grep -q 'vivo_qid_' out/current-list-context.txt
+
+      - name: Upload native-mediaId V4 APK
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: ytmusic-luna-vivo-c0-native-mediaid-v4
+          path: |
+            out/YouTube_Music_9.15.51_Luna_VIVO_C0_NATIVE_MEDIAID_V4.apk
+            out/SHA256.txt
+            out/input-sha256.txt
+            out/cert.txt
+            out/signature-verify.txt
+            out/zipalign-final.txt
+            out/native-libs.txt
+            out/badging.txt
+            out/manifest-xmltree.txt
+            out/native-sidecar-context.txt
+            out/native-capture-context.txt
+            out/current-list-context.txt
+            out/manifest-context.txt
+            out/id-before.sha256
+            out/id-after.sha256
+            out/ii-m-before.txt
+            out/ii-m-after.txt
+          if-no-files-found: warn
+          retention-days: 14
