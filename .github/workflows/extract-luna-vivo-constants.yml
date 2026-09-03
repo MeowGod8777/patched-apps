@@ -1,0 +1,61 @@
+name: Extract Luna Vivo constants
+
+on:
+  push:
+    paths:
+      - '.github/workflows/extract-luna-vivo-constants.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  extract:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - name: Download official Luna and target dex
+        shell: bash
+        run: |
+          set -euxo pipefail
+          mkdir -p work/apk work/out work/jadx
+          UA='Mozilla/5.0 (Linux; Android 16; V2329A) AppleWebKit/537.36 Chrome/143 Mobile Safari/537.36'
+          curl -L --retry 3 --connect-timeout 15 --max-time 240 -A "$UA" 'https://ugapk.com/GMg3' -o work/luna.apk
+          unzip -q work/luna.apk 'classes*.dex' -d work/apk
+          : > work/out/target_dexes.txt
+          for f in work/apk/classes*.dex; do
+            if grep -aq 'MediaSupportEvent' "$f" || grep -aq 'VivoConstant' "$f"; then
+              echo "$f" | tee -a work/out/target_dexes.txt
+            fi
+          done
+          test -s work/out/target_dexes.txt
+      - name: Download JADX
+        shell: bash
+        run: |
+          set -euxo pipefail
+          curl -L --retry 3 'https://github.com/skylot/jadx/releases/download/v1.5.6/jadx-1.5.6.zip' -o work/jadx.zip
+          unzip -q work/jadx.zip -d work/jadx
+          chmod +x work/jadx/bin/jadx
+      - name: Decompile target dexes and extract constants
+        shell: bash
+        run: |
+          set -euxo pipefail
+          n=0
+          while IFS= read -r dex; do
+            n=$((n+1))
+            out="work/jadx_$n"
+            mkdir -p "$out"
+            work/jadx/bin/jadx --no-res --show-bad-code --threads-count 2 -d "$out" "$dex"
+            find "$out/sources" -type f \( -path '*com/luna/common/arch/constant/os/vivo/VivoConstant.java' -o -path '*com/luna/common/arch/constant/os/vivo/VivoConstantKt.java' \) -print | while IFS= read -r f; do
+              cp "$f" "work/out/$(basename "$f")"
+            done
+          done < work/out/target_dexes.txt
+          test -s work/out/VivoConstant.java
+          sed -n '1,500p' work/out/VivoConstant.java | tee work/out/VivoConstant_excerpt.txt
+      - name: Upload constants
+        uses: actions/upload-artifact@v4
+        with:
+          name: luna-vivo-constants
+          path: work/out
+          retention-days: 7
