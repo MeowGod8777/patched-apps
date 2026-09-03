@@ -1,4 +1,4 @@
-name: Analyze YT Music MediaSession queue
+name: Build YT Music Luna queue-bit A/B
 
 on:
   workflow_dispatch:
@@ -8,60 +8,158 @@ on:
       - .github/workflows/analyze-ytmusic-queue.yml
 
 jobs:
-  analyze:
+  build:
     runs-on: ubuntu-latest
     permissions:
-      contents: read
+      contents: write
     steps:
+      - uses: actions/setup-java@v5
+        with:
+          distribution: zulu
+          java-version: "21"
+
       - uses: actions/checkout@v6
 
-      - name: Download Luna APK and JADX
+      - name: Download current Luna APK and Apktool
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           mkdir -p input tools out
           gh release download ytmusic-originplayer-luna-33729902415 \
             --pattern '*.apk' --dir input
+          mv input/*.apk input/base.apk
           curl -L --fail --retry 3 \
-            -o tools/jadx.zip \
-            https://github.com/skylot/jadx/releases/download/v1.5.6/jadx-1.5.6.zip
-          unzip -q tools/jadx.zip -d tools/jadx
-          chmod +x tools/jadx/bin/jadx
-          ls -lh input/*.apk
+            -o tools/apktool.jar \
+            https://github.com/iBotPeaches/Apktool/releases/download/v3.0.3/apktool_3.0.3.jar
+          sha256sum input/base.apk tools/apktool.jar
 
-      - name: Decompile code only
+      - name: Decode smali only
         run: |
-          tools/jadx/bin/jadx --no-res --show-bad-code -d out input/*.apk >/tmp/jadx.log 2>&1 || true
-          tail -40 /tmp/jadx.log
+          java -jar tools/apktool.jar d -f -r input/base.apk -o decoded
+          find decoded -path '*/defpackage/ii.smali' -print
 
-      - name: Locate MediaSession queue paths
+      - name: Add ACTION_SKIP_TO_QUEUE_ITEM capability only
         run: |
-          echo '===== onSkipToQueueItem ====='
-          grep -R -n -F 'onSkipToQueueItem' out/sources | head -40 || true
-          echo '===== skipToQueueItem ====='
-          grep -R -n -F 'skipToQueueItem' out/sources | head -80 || true
-          echo '===== setActions ====='
-          grep -R -n -F '.setActions(' out/sources | head -120 || true
-          echo '===== ACTION_SKIP_TO_QUEUE_ITEM ====='
-          grep -R -n -E 'ACTION_SKIP_TO_QUEUE_ITEM|4096L|4096' out/sources | head -120 || true
-          echo '===== MediaSessionCompat Callback subclasses ====='
-          grep -R -n -E 'extends MediaSessionCompat\.Callback|extends MediaSession\.Callback' out/sources | head -80 || true
+          python3 - <<'PY'
+          from pathlib import Path
+          import re
 
-      - name: Save candidate source snippets
+          files = list(Path('decoded').glob('smali*/defpackage/ii.smali'))
+          if len(files) != 1:
+              raise SystemExit(f'Expected exactly one ii.smali, got {files}')
+          p = files[0]
+          s = p.read_text(encoding='utf-8')
+
+          # Method identified from JADX: ii.n(PlaybackStateCompat), which converts
+          # PlaybackStateCompat to framework PlaybackState and calls Builder.setActions(long).
+          mh = re.search(r'(?ms)^\.method[^\n]*\sn\(Landroid/support/v4/media/session/PlaybackStateCompat;\)V\n(.*?)^\.end method', s)
+          if not mh:
+              raise SystemExit('Could not locate ii.n(PlaybackStateCompat)')
+          body = mh.group(0)
+          if '->setActions(J)Landroid/media/session/PlaybackState$Builder;' not in body:
+              raise SystemExit('setActions call not found in ii.n')
+          if 'const-wide/16' in body and '0x1000' in body:
+              raise SystemExit('Method appears already queue-bit patched')
+
+          regm = re.search(r'(?m)^\s*\.(locals|registers)\s+(\d+)\s*$', body)
+          if not regm:
+              raise SystemExit('No .locals/.registers directive')
+          kind, count_s = regm.group(1), regm.group(2)
+          count = int(count_s)
+          if kind == 'locals':
+              tmp = count
+              new_count = count + 2
+          else:
+              # p0 + p1 consume two registers in this instance method.
+              tmp = count - 2
+              new_count = count + 2
+          if tmp < 0 or tmp + 1 > 255:
+              raise SystemExit(f'Unsafe temporary register allocation: v{tmp}/v{tmp+1}')
+
+          # Locate the long actions load immediately before setActions.
+          lines = body.splitlines()
+          set_i = next(i for i,l in enumerate(lines) if '->setActions(J)Landroid/media/session/PlaybackState$Builder;' in l)
+          load_i = None
+          actions_reg = None
+          for i in range(set_i - 1, max(-1, set_i - 12), -1):
+              m = re.search(r'\biget-wide\s+(v\d+),\s*p1,\s*Landroid/support/v4/media/session/PlaybackStateCompat;->e:J', lines[i])
+              if m:
+                  load_i = i
+                  actions_reg = m.group(1)
+                  break
+          if load_i is None:
+              raise SystemExit('Could not locate PlaybackStateCompat.e iget-wide before setActions')
+
+          lines[1:] = lines[1:]  # explicit no-op for readability
+          # Update register count inside the method only.
+          body2 = '\n'.join(lines)
+          body2 = re.sub(
+              rf'(?m)^(\s*\.{kind}\s+){count}(\s*)$',
+              rf'\g<1>{new_count}\g<2>',
+              body2,
+              count=1,
+          )
+          lines = body2.splitlines()
+          # Re-find load after directive rewrite, then inject exactly two instructions.
+          set_i = next(i for i,l in enumerate(lines) if '->setActions(J)Landroid/media/session/PlaybackState$Builder;' in l)
+          load_i = None
+          for i in range(set_i - 1, max(-1, set_i - 12), -1):
+              m = re.search(r'\biget-wide\s+(v\d+),\s*p1,\s*Landroid/support/v4/media/session/PlaybackStateCompat;->e:J', lines[i])
+              if m:
+                  load_i = i
+                  actions_reg = m.group(1)
+                  break
+          indent = re.match(r'\s*', lines[load_i]).group(0)
+          inject = [
+              f'{indent}const-wide/16 v{tmp}, 0x1000',
+              f'{indent}or-long {actions_reg}, {actions_reg}, v{tmp}',
+          ]
+          lines[load_i+1:load_i+1] = inject
+          patched_body = '\n'.join(lines)
+          patched = s[:mh.start()] + patched_body + s[mh.end():]
+          p.write_text(patched, encoding='utf-8')
+
+          print(f'Patched {p}: +ACTION_SKIP_TO_QUEUE_ITEM using v{tmp}/v{tmp+1}')
+          for i,l in enumerate(lines):
+              if '->setActions(J)' in l:
+                  lo=max(0,i-8); hi=min(len(lines),i+3)
+                  print('\n'.join(lines[lo:hi]))
+                  break
+          PY
+
+      - name: Rebuild and sign with existing project key
         run: |
-          mkdir -p analysis
-          grep -R -l -E 'onSkipToQueueItem|skipToQueueItem|\.setActions\(' out/sources > analysis/candidate-files.txt || true
-          while IFS= read -r f; do
-            [ -f "$f" ] || continue
-            rel="${f#out/sources/}"
-            dest="analysis/${rel//\//__}"
-            cp "$f" "$dest"
-          done < analysis/candidate-files.txt
-          wc -l analysis/candidate-files.txt
-          sed -n '1,120p' analysis/candidate-files.txt
+          java -jar tools/apktool.jar b decoded -o out/unsigned.apk
+          java -jar bin/apksigner.jar sign \
+            --ks ks.keystore \
+            --ks-pass pass:123456789 \
+            --key-pass pass:123456789 \
+            --ks-key-alias andrewliang \
+            --out out/YouTube_Music_9.15.51_Luna_QUEUE_BIT_AB.apk \
+            out/unsigned.apk
+          rm -f out/*.idsig
+          java -jar bin/apksigner.jar verify --verbose --print-certs out/YouTube_Music_9.15.51_Luna_QUEUE_BIT_AB.apk
+          sha256sum out/YouTube_Music_9.15.51_Luna_QUEUE_BIT_AB.apk
 
-      - uses: actions/upload-artifact@v4
+      - name: Verify package strings and patched bit
+        run: |
+          grep -R -n -A4 -B4 'const-wide/16 .*0x1000' decoded/smali*/defpackage/ii.smali
+          unzip -p out/YouTube_Music_9.15.51_Luna_QUEUE_BIT_AB.apk AndroidManifest.xml | strings | grep -F 'com.luna.music' | head -20 || true
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
         with:
-          name: ytmusic-queue-analysis
-          path: analysis
-          retention-days: 7
+          name: ytmusic-luna-queue-bit-ab
+          path: out/YouTube_Music_9.15.51_Luna_QUEUE_BIT_AB.apk
+          if-no-files-found: error
+          retention-days: 14
+
+      - name: Publish prerelease
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          TAG: ytmusic-luna-queue-bit-ab-${{ github.run_id }}
+        run: |
+          gh release create "$TAG" out/YouTube_Music_9.15.51_Luna_QUEUE_BIT_AB.apk \
+            --title "YT Music Luna queue-bit A/B" \
+            --notes "Single-variable A/B over the validated com.luna.music build. Adds PlaybackState ACTION_SKIP_TO_QUEUE_ITEM (0x1000) immediately before framework Builder.setActions(). Existing MediaSession.Callback.onSkipToQueueItem(long) is already present in the APK. No package/GmsCore/queue/UI changes." \
+            --prerelease
