@@ -42,9 +42,7 @@ jobs:
           done
           python3 - <<'PY'
           from pathlib import Path
-          import re
-          p=Path('out/kyi.smali'); s=p.read_text(errors='ignore')
-          lines=s.splitlines()
+          p=Path('out/kyi.smali'); lines=p.read_text(errors='ignore').splitlines()
           hits=[i for i,l in enumerate(lines) if 'MediaSessionCompat$QueueItem;-><init>' in l]
           with open('out/kyi-queue-methods.txt','w') as o:
               for i in hits:
@@ -138,3 +136,5 @@ jobs:
           path: out/
           if-no-files-found: error
           retention-days: 14
+
+# retrigger: 2026-09-04T00:09+08:00
