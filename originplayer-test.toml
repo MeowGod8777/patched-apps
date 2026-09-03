@@ -1,0 +1,20 @@
+enable-module-update = false
+parallel-jobs = 1
+
+[YouTube-OriginPlayer-AppleMusic-Test]
+enabled = true
+app-name = "YouTube OriginTest"
+rv-brand = "OriginPlayerTest"
+build-mode = "apk"
+version = "20.40.45"
+arch = "all"
+include-stock = "auto"
+pkg-name = "com.google.android.youtube"
+patches-source = "anddea/revanced-patches"
+patches-version = "latest"
+cli-source = "MorpheApp/morphe-cli"
+cli-version = "latest"
+patcher-args = "-O packageNameYouTube=com.apple.android.music"
+archive-dlurl = "https://archive.org/download/crimsonman/apks/com.google.android.youtube"
+apkmirror-dlurl = "https://www.apkmirror.com/apk/google-inc/youtube"
+uptodown-dlurl = "https://youtube.en.uptodown.com/android"
