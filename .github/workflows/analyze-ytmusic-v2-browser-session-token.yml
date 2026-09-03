@@ -48,10 +48,8 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          grep -R -n -E 'setSessionToken|SessionToken|MediaSessionCompat\$Token|Landroid/media/session/MediaSession\$Token|setCallback\(|MediaSessionCompat;->|Landroid/media/session/MediaSession;->setCallback' decoded/smali* \
-            > out/global-session-token-hits.txt || true
-          grep -R -n -E 'Lid;|new-instance [vp][0-9]+, Lid;|Lii;|new-instance [vp][0-9]+, Lii;' decoded/smali* \
-            > out/id-ii-reference-hits.txt || true
+          grep -R -n -E 'setSessionToken|SessionToken|MediaSessionCompat\$Token|Landroid/media/session/MediaSession\$Token|setCallback\(|MediaSessionCompat;->|Landroid/media/session/MediaSession;->setCallback' decoded/smali* > out/global-session-token-hits.txt || true
+          grep -R -n -E 'Lid;|new-instance [vp][0-9]+, Lid;|Lii;|new-instance [vp][0-9]+, Lii;' decoded/smali* > out/id-ii-reference-hits.txt || true
 
       - name: Extract id and ii complete classes
         shell: bash
@@ -131,3 +129,5 @@ jobs:
           path: out/
           if-no-files-found: error
           retention-days: 14
+
+# retrigger: 2026-09-04T00:03+08:00
