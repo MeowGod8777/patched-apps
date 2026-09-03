@@ -1,0 +1,43 @@
+name: Extract Luna PlayerService MediaBrowser
+
+on:
+  push:
+    paths:
+      - .github/workflows/extract-luna-player-service.yml
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  extract:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - name: Download and decompile classes22
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p work/apk work/out work/jadx
+          UA='Mozilla/5.0 (Linux; Android 16; V2329A) AppleWebKit/537.36 Chrome/143 Mobile Safari/537.36'
+          curl -L --retry 3 --connect-timeout 15 --max-time 240 -A "$UA" 'https://ugapk.com/GMg3' -o work/luna.apk
+          unzip -q work/luna.apk classes22.dex -d work/apk
+          curl -L --fail --retry 3 'https://github.com/skylot/jadx/releases/download/v1.5.6/jadx-1.5.6.zip' -o work/jadx.zip
+          unzip -q work/jadx.zip -d work/jadx
+          chmod +x work/jadx/bin/jadx
+          work/jadx/bin/jadx --no-res --show-bad-code --threads-count 2 -d work/jadx22 work/apk/classes22.dex
+      - name: Save PlayerService
+        shell: bash
+        run: |
+          set -euo pipefail
+          F=work/jadx22/sources/com/luna/biz/playing/player/PlayerService.java
+          test -f "$F"
+          cp "$F" work/out/PlayerService.java
+          sed -n '340,525p' "$F" | tee work/out/PlayerService_browser_excerpt.txt
+          grep -n -E 'onLoadChildren|onGetRoot|VIVO_MUSIC_MIX_ROOT|toMediaItem|MediaDescriptionCompat|PlayableId|getRealQueue|isVivo|clientPackageName' "$F" | tee work/out/hits.txt
+      - uses: actions/upload-artifact@v4
+        with:
+          name: luna-player-service
+          path: work/out
+          retention-days: 7
