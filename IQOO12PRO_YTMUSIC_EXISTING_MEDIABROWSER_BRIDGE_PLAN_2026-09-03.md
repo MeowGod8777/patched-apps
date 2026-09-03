@@ -1,6 +1,6 @@
 # iQOO 12 Pro / YT Music existing MediaBrowser -> Vivo c0 bridge plan
 
-更新：2026-09-03 19:42 +08:00
+更新：2026-09-03 20:00 +08:00
 
 此檔是 `IQOO12PRO_YTMUSIC_LUNA_COOPERATION_RE_2026-09-03.md` 的後續 narrow checkpoint。建立本檔後才產出下一顆 APK。
 
@@ -176,3 +176,34 @@ C. onLoadChildren
 若 probe item 能出現，下一顆再把 static item 換成 real current MediaSession queue；若 list 可顯示但點 item 不動，再單獨做 `playFromMediaId` bridge。
 
 這樣每一輪都保持可歸因，不再用 MediaSession action-bit 猜測。
+
+## Build bootstrap checkpoint
+
+第一版新 workflow：
+
+```text
+.github/workflows/build-ytmusic-luna-vivo-c0-browser-probe-v0.yml
+commit c8c5d55d1750727ccb671cc772c1a74b7dfa46d2
+run 33752115800
+```
+
+GitHub 對該 run 直接回：
+
+```text
+status=completed
+conclusion=failure
+jobs=[]
+```
+
+也就是 workflow 尚未進入任何 runner job，因此**沒有產出 APK，也不能把它算成 patch/build failure**；這是 Actions workflow bootstrap / registration 層失敗。
+
+另建最小 smoke workflow 後，push trigger 也沒有正常出現在該 commit 的 workflow runs；同時 repo 內數個舊 workflow 會在每次 push 立即產生 `jobs=[]` failure。因目前 API 沒有提供更進一步的 workflow-parser annotation，下一步改用已知在本輪稍早成功執行過的既有 workflow slot：
+
+```text
+.github/workflows/extract-luna-vivo-protocol-classes25.yml
+previous successful run: 33749338695
+```
+
+把該已驗證可進 runner 的 workflow 暫時改造成 c0 probe builder，避免把「新 workflow registration 問題」和「APK patch 本身」混在一起。
+
+只有 runner 真正開始並完成 rebuild / zipalign / signer verification 後，才會把 APK 提供實機測試。
