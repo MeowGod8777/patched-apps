@@ -1,0 +1,131 @@
+name: Analyze Luna Vivo Origin direct
+
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - '.github/workflows/analyze-luna-vivo-origin-direct.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  analyze:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Download official Luna Android APK
+        shell: bash
+        run: |
+          set -euxo pipefail
+          mkdir -p work/out
+          UA='Mozilla/5.0 (Linux; Android 16; V2329A) AppleWebKit/537.36 Chrome/143 Mobile Safari/537.36'
+          # Current Android link embedded in the official qishui.douyin.com production JS.
+          # JS mapping: Hr=https://ugapk.com/GMg3; click_android -> Hr.
+          curl -L --retry 3 --connect-timeout 15 --max-time 240 -A "$UA" \
+            'https://ugapk.com/GMg3' -o work/Luna_official.apk
+          file work/Luna_official.apk
+          test "$(head -c 4 work/Luna_official.apk | xxd -p)" = '504b0304'
+          unzip -l work/Luna_official.apk | grep -qE '(^|[[:space:]])classes([0-9]*)?\.dex$'
+          sha256sum work/Luna_official.apk | tee work/out/apk.sha256
+
+      - name: Verify package and signing identity
+        shell: bash
+        run: |
+          set -euxo pipefail
+          AAPT="${ANDROID_HOME}/build-tools/$(ls "${ANDROID_HOME}/build-tools" | sort -V | tail -1)/aapt"
+          APKSIGNER="${ANDROID_HOME}/build-tools/$(ls "${ANDROID_HOME}/build-tools" | sort -V | tail -1)/apksigner"
+          "$AAPT" dump badging work/Luna_official.apk | tee work/out/badging.txt
+          grep -q "package: name='com.luna.music'" work/out/badging.txt
+          "$APKSIGNER" verify --print-certs work/Luna_official.apk | tee work/out/signing.txt
+          "$AAPT" dump xmltree work/Luna_official.apk AndroidManifest.xml > work/out/manifest.txt || true
+          grep -Ein 'BachMediaButtonReceiver|VivoOrigin|vivo|origin|MediaButton|receiver|service|permission' \
+            work/out/manifest.txt | head -n 2000 > work/out/manifest_hits.txt || true
+
+      - name: Download JADX
+        shell: bash
+        run: |
+          set -euxo pipefail
+          curl -L --retry 3 \
+            'https://github.com/skylot/jadx/releases/download/v1.5.6/jadx-1.5.6.zip' \
+            -o work/jadx.zip
+          unzip -q work/jadx.zip -d work/jadx
+          chmod +x work/jadx/bin/jadx
+
+      - name: Decompile Luna
+        shell: bash
+        run: |
+          set -euxo pipefail
+          mkdir -p work/jadx-out
+          work/jadx/bin/jadx --no-res --show-bad-code --threads-count 4 \
+            -d work/jadx-out work/Luna_official.apk || true
+          test -d work/jadx-out/sources
+
+      - name: Recover Vivo Origin cooperation layer
+        shell: bash
+        run: |
+          set -euxo pipefail
+          SRC=work/jadx-out/sources
+          OUT=work/out
+
+          grep -RIn --binary-files=without-match \
+            -E 'VivoOriginRemoteControl|BachMediaButtonReceiver' "$SRC" \
+            | tee "$OUT/exact_hits.txt" || true
+
+          # Find all files that mention either exact symbol, vivo/origin cooperation,
+          # media custom actions, playlist/queue, or package/signature checks.
+          grep -Rl --binary-files=without-match \
+            -E 'VivoOriginRemoteControl|BachMediaButtonReceiver|VivoOrigin|vivo.*origin|origin.*vivo' "$SRC" \
+            | sort -u > "$OUT/candidate_files.txt" || true
+
+          while IFS= read -r f; do
+            [ -f "$f" ] || continue
+            rel="${f#$SRC/}"
+            mkdir -p "$OUT/sources/$(dirname "$rel")"
+            cp "$f" "$OUT/sources/$rel"
+          done < "$OUT/candidate_files.txt"
+
+          grep -RIn --binary-files=without-match \
+            -E 'playlist|queue|play.?list|MediaSession|MediaController|PlaybackState|sendCommand|sendCustomAction|customAction|setExtras|getExtras|Bundle|BroadcastReceiver|sendBroadcast|startActivity|PendingIntent|Intent\(|Uri\.parse|signature|certificate|checkSign|permission|skipToQueueItem|onSkipToQueueItem' \
+            "$OUT/sources" > "$OUT/protocol_hits.txt" || true
+
+          # Preserve neighboring player/remote-control classes imported/referenced by
+          # the exact Vivo class, plus the Bach receiver package, for call-graph recovery.
+          python3 - <<'PY'
+          import re, shutil
+          from pathlib import Path
+          src=Path('work/jadx-out/sources')
+          out=Path('work/out/context')
+          seeds=list(Path('work/out/sources').rglob('*.java'))
+          names=set()
+          for p in seeds:
+              s=p.read_text(errors='ignore')
+              names.update(re.findall(r'import\s+([\w.]+);',s))
+              names.update(re.findall(r'com\.luna\.biz\.playing\.[\w.$]+',s))
+          copied=[]
+          for name in sorted(names):
+              base=name.split('$')[0]
+              p=src / (base.replace('.','/')+'.java')
+              if p.exists():
+                  dst=out / p.relative_to(src)
+                  dst.parent.mkdir(parents=True,exist_ok=True)
+                  shutil.copy2(p,dst); copied.append(str(p.relative_to(src)))
+          Path('work/out/context_files.txt').write_text('\n'.join(copied))
+          PY
+
+          echo '===== EXACT HITS ====='
+          cat "$OUT/exact_hits.txt" || true
+          echo '===== CANDIDATE FILES ====='
+          cat "$OUT/candidate_files.txt" || true
+          echo '===== PROTOCOL HITS ====='
+          sed -n '1,4000p' "$OUT/protocol_hits.txt" || true
+
+      - name: Upload RE bundle
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: luna-vivo-origin-direct-re
+          path: work/out
+          retention-days: 7
