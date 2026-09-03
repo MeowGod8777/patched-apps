@@ -1,0 +1,116 @@
+name: Analyze YT Music V2 vs V3S APK diff
+
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - .github/workflows/analyze-ytmusic-v2-v3s-apk-diff.yml
+
+permissions:
+  contents: read
+  actions: read
+
+jobs:
+  analyze:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Download exact V2 PASS and V3S FAIL artifacts
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p input/v2 input/v3s tools out
+          gh api /repos/${GITHUB_REPOSITORY}/actions/artifacts/9896185089/zip > input/v2.zip
+          gh api /repos/${GITHUB_REPOSITORY}/actions/artifacts/9898283280/zip > input/v3s.zip
+          unzip -q input/v2.zip -d input/v2
+          unzip -q input/v3s.zip -d input/v3s
+          V2=$(find input/v2 -maxdepth 1 -name '*.apk' -print -quit)
+          V3=$(find input/v3s -maxdepth 1 -name '*.apk' -print -quit)
+          test -n "$V2"; test -n "$V3"
+          echo "V2=$V2" >> "$GITHUB_ENV"
+          echo "V3=$V3" >> "$GITHUB_ENV"
+          sha256sum "$V2" "$V3" | tee out/apk-sha256.txt
+          cp input/v2/SHA256.txt out/v2-ci-sha256.txt
+          cp input/v3s/SHA256.txt out/v3s-ci-sha256.txt
+          cp input/v2/cert.txt out/v2-cert.txt
+          cp input/v3s/cert.txt out/v3s-cert.txt
+
+      - name: Compare APK entry inventory and hashes
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - "$V2" "$V3" <<'PY' | tee out/entry-diff.txt
+          import zipfile, hashlib, sys
+          def read(path):
+              with zipfile.ZipFile(path) as z:
+                  return {i.filename:(i.CRC,i.file_size,i.compress_size,i.compress_type,hashlib.sha256(z.read(i.filename)).hexdigest()) for i in z.infolist()}
+          a=read(sys.argv[1]); b=read(sys.argv[2])
+          onlya=sorted(set(a)-set(b)); onlyb=sorted(set(b)-set(a)); both=sorted(set(a)&set(b)); diff=[n for n in both if a[n]!=b[n]]
+          print('v2_entries',len(a)); print('v3s_entries',len(b))
+          print('only_v2',len(onlya)); [print('ONLY_V2',x) for x in onlya]
+          print('only_v3s',len(onlyb)); [print('ONLY_V3S',x) for x in onlyb]
+          print('changed',len(diff))
+          for n in diff:
+              print('CHANGED',n,'v2_size',a[n][1],'v3s_size',b[n][1],'v2_sha',a[n][4],'v3s_sha',b[n][4])
+          non_sig=[n for n in diff if not n.startswith('META-INF/')]
+          print('non_signature_changed',len(non_sig))
+          [print('NON_SIG_CHANGED',x) for x in non_sig]
+          PY
+
+      - name: Download apktool and decode both finished APKs
+        shell: bash
+        run: |
+          set -euo pipefail
+          curl -L --fail --retry 3 -o tools/apktool.jar https://github.com/iBotPeaches/Apktool/releases/download/v3.0.3/apktool_3.0.3.jar
+          java -jar tools/apktool.jar d -f "$V2" -o decoded-v2
+          java -jar tools/apktool.jar d -f "$V3" -o decoded-v3s
+
+      - name: Diff decoded outputs and isolate smali changes
+        shell: bash
+        run: |
+          set -euo pipefail
+          diff -ruN --exclude=apktool.yml decoded-v2 decoded-v3s > out/full-decoded.diff || true
+          grep '^diff -ruN ' out/full-decoded.diff | tee out/changed-files.txt || true
+          python3 - <<'PY' | tee out/changed-file-summary.txt
+          from pathlib import Path
+          lines=Path('out/changed-files.txt').read_text(errors='ignore').splitlines() if Path('out/changed-files.txt').exists() else []
+          files=[]
+          for line in lines:
+              p=line.split()[-2]
+              if p.startswith('decoded-v2/'):
+                  p=p[len('decoded-v2/'):]
+              files.append(p)
+          print('changed_decoded_files',len(files))
+          for x in files: print(x)
+          smali=[x for x in files if x.endswith('.smali')]
+          print('changed_smali_files',len(smali))
+          for x in smali: print('SMALI',x)
+          PY
+          for f in $(grep '^SMALI ' out/changed-file-summary.txt | cut -d' ' -f2-); do
+            echo "===== $f =====" >> out/smali-diffs.txt
+            diff -u "decoded-v2/$f" "decoded-v3s/$f" >> out/smali-diffs.txt || true
+          done
+
+      - name: Extract id.smali callback context from both
+        shell: bash
+        run: |
+          set -euo pipefail
+          V2ID=$(grep -Rl 'onPlayFromMediaId(Ljava/lang/String;Landroid/os/Bundle;)V' decoded-v2/smali*/id.smali | head -n1)
+          V3ID=$(grep -Rl 'onPlayFromMediaId(Ljava/lang/String;Landroid/os/Bundle;)V' decoded-v3s/smali*/id.smali | head -n1)
+          echo "V2ID=$V2ID" | tee out/id-paths.txt
+          echo "V3ID=$V3ID" | tee -a out/id-paths.txt
+          grep -n -A80 -B10 'onPlayFromMediaId(Ljava/lang/String;Landroid/os/Bundle;)V' "$V2ID" > out/v2-id-context.txt
+          grep -n -A110 -B10 'onPlayFromMediaId(Ljava/lang/String;Landroid/os/Bundle;)V' "$V3ID" > out/v3s-id-context.txt
+          diff -u out/v2-id-context.txt out/v3s-id-context.txt > out/id-context.diff || true
+
+      - name: Upload diff evidence
+        uses: actions/upload-artifact@v4
+        with:
+          name: ytmusic-v2-v3s-apk-diff
+          path: out/
+          if-no-files-found: error
+          retention-days: 14
