@@ -1,0 +1,107 @@
+name: Analyze YT Music V2 callback provider targeted
+
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - .github/workflows/analyze-ytmusic-v2-callback-provider-targeted.yml
+
+permissions:
+  contents: read
+  actions: read
+
+jobs:
+  analyze:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Decode exact V2 runtime-PASS APK
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p input tools out
+          gh api /repos/${GITHUB_REPOSITORY}/actions/artifacts/9896185089/zip > input/v2.zip
+          unzip -q input/v2.zip -d input/v2
+          V2=$(find input/v2 -maxdepth 1 -name '*.apk' -print -quit)
+          curl -L --fail --retry 3 -o tools/apktool.jar https://github.com/iBotPeaches/Apktool/releases/download/v3.0.3/apktool_3.0.3.jar
+          java -jar tools/apktool.jar d -f "$V2" -o decoded
+
+      - name: Extract bazk provider chain and Llag construction
+        shell: bash
+        run: |
+          set -euo pipefail
+          for cls in bazk bazh bazp lag lai; do
+            P=$(find decoded -type f -name "$cls.smali" -print -quit)
+            if [ -n "$P" ]; then cp "$P" "out/$cls.smali"; fi
+          done
+          grep -R -n -E 'new-instance .*Llag;|Llag;-><init>|new-instance .*Lbazp;|Lbazp;-><init>|Lbazk;->h\(Lbazp;\)V|Lbazh;-><init>|Lbazh;->gG\(\)Ljava/lang/Object;' decoded/smali* > out/provider-hits.txt || true
+          python3 - <<'PY'
+          from pathlib import Path
+          pats=['new-instance','Llag;-><init>','Lbazp;-><init>','Lbazk;->h(Lbazp;)V','Lbazh;-><init>','Lbazh;->gG()Ljava/lang/Object;']
+          with open('out/provider-contexts.txt','w') as o:
+              for p in Path('decoded').glob('smali*/**/*.smali'):
+                  try: lines=p.read_text(errors='ignore').splitlines()
+                  except: continue
+                  for i,l in enumerate(lines):
+                      if ('Llag;' in l and ('new-instance' in l or '-><init>' in l)) or 'Lbazp;-><init>' in l or 'Lbazk;->h(Lbazp;)V' in l or 'Lbazh;->gG()Ljava/lang/Object;' in l:
+                          o.write(f'===== {p}:{i+1} =====\n')
+                          o.write('\n'.join(lines[max(0,i-55):min(len(lines),i+75)])+'\n')
+          PY
+          grep -n '^\.class\|^\.super\|^\.field\|^\.method' out/bazh.smali > out/bazh-structure.txt || true
+          cat out/bazh.smali > out/bazh-full.txt || true
+          grep -n '^\.class\|^\.super\|^\.field\|^\.method' out/bazp.smali > out/bazp-structure.txt || true
+          cat out/bazp.smali > out/bazp-full.txt || true
+
+      - name: Extract queue model inherited interfaces and ID methods
+        shell: bash
+        run: |
+          set -euo pipefail
+          for cls in noq npb azcf azck azcj npa nox; do
+            P=$(find decoded -type f -name "$cls.smali" -print -quit)
+            if [ -n "$P" ]; then cp "$P" "out/$cls.smali"; grep -n '^\.class\|^\.super\|^\.implements\|^\.field\|^\.method' "$P" > "out/$cls-structure.txt" || true; fi
+          done
+          python3 - <<'PY'
+          from pathlib import Path
+          for cls in ['npa','nox']:
+              p=Path('out')/(cls+'.smali')
+              if not p.exists(): continue
+              lines=p.read_text(errors='ignore').splitlines()
+              with open(Path('out')/(cls+'-id-methods.txt'),'w') as o:
+                  for target in ['k()Ljava/util/List;','l()Lnot;','m()J','q()Ljava/lang/String;','r()Ljava/lang/String;','s()Ljava/lang/String;','t()Ljava/lang/String;']:
+                      for i,l in enumerate(lines):
+                          if l.startswith('.method') and target in l:
+                              j=i
+                              while j<len(lines) and lines[j] != '.end method': j+=1
+                              o.write(f'===== {l} =====\n'+'\n'.join(lines[i:j+1])+'\n')
+                              break
+          PY
+
+      - name: Find call sites of candidate ID methods
+        shell: bash
+        run: |
+          set -euo pipefail
+          grep -R -n -E 'Lnpb;->|Lazcf;->|Lazck;->|Lazcj;->|Lnoq;->m\(\)J|Lnoq;->k\(\)Ljava/util/List;' decoded/smali* > out/id-call-hits.txt || true
+          python3 - <<'PY'
+          from pathlib import Path
+          toks=['Lnpb;->','Lazcf;->','Lazck;->','Lazcj;->','Lnoq;->m()J','Lnoq;->k()Ljava/util/List;']
+          with open('out/id-call-contexts.txt','w') as o:
+              for p in Path('decoded').glob('smali*/**/*.smali'):
+                  try: lines=p.read_text(errors='ignore').splitlines()
+                  except: continue
+                  for i,l in enumerate(lines):
+                      if any(t in l for t in toks):
+                          o.write(f'===== {p}:{i+1} =====\n')
+                          o.write('\n'.join(lines[max(0,i-25):min(len(lines),i+35)])+'\n')
+          PY
+
+      - name: Upload targeted evidence
+        uses: actions/upload-artifact@v4
+        with:
+          name: ytmusic-v2-callback-provider-targeted
+          path: out/
+          if-no-files-found: error
+          retention-days: 14
