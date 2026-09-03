@@ -1,0 +1,133 @@
+name: Analyze YT Music V2 browser session token wiring
+
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - .github/workflows/analyze-ytmusic-v2-browser-session-token.yml
+
+permissions:
+  contents: read
+  actions: read
+
+jobs:
+  analyze:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Download exact V2 runtime-PASS artifact and apktool
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p input tools out
+          gh api /repos/${GITHUB_REPOSITORY}/actions/artifacts/9896185089/zip > input/v2.zip
+          unzip -q input/v2.zip -d input/v2
+          V2=$(find input/v2 -maxdepth 1 -name '*.apk' -print -quit)
+          test -n "$V2"
+          echo "V2=$V2" >> "$GITHUB_ENV"
+          curl -L --fail --retry 3 -o tools/apktool.jar https://github.com/iBotPeaches/Apktool/releases/download/v3.0.3/apktool_3.0.3.jar
+          java -jar tools/apktool.jar d -f "$V2" -o decoded
+
+      - name: Extract MusicBrowserService and direct references
+        shell: bash
+        run: |
+          set -euo pipefail
+          SVC=$(find decoded -type f -path '*/com/google/android/apps/youtube/music/mediabrowser/MusicBrowserService.smali' -print -quit)
+          test -n "$SVC"
+          echo "$SVC" | tee out/service-path.txt
+          cp "$SVC" out/MusicBrowserService.smali
+          sed -n '1,220p' "$SVC" > out/service-head.txt
+          grep -n '^\.method' "$SVC" | tee out/service-methods.txt
+          grep -n -E 'session|Session|token|Token|setSession|setCallback|MediaSession|MediaController|callback|Callback|Lb[a-z]+;' "$SVC" | tee out/service-session-hits.txt || true
+
+      - name: Trace session-token setter calls globally
+        shell: bash
+        run: |
+          set -euo pipefail
+          grep -R -n -E 'setSessionToken|SessionToken|MediaSessionCompat\$Token|Landroid/media/session/MediaSession\$Token|setCallback\(|MediaSessionCompat;->|Landroid/media/session/MediaSession;->setCallback' decoded/smali* \
+            > out/global-session-token-hits.txt || true
+          grep -R -n -E 'Lid;|new-instance [vp][0-9]+, Lid;|Lii;|new-instance [vp][0-9]+, Lii;' decoded/smali* \
+            > out/id-ii-reference-hits.txt || true
+
+      - name: Extract id and ii complete classes
+        shell: bash
+        run: |
+          set -euo pipefail
+          ID=$(grep -Rl 'onPlayFromMediaId(Ljava/lang/String;Landroid/os/Bundle;)V' decoded/smali*/id.smali | head -n1)
+          II=$(grep -Rl 'setMetadata(Landroid/media/MediaMetadata;)V' decoded/smali*/ii.smali | head -n1)
+          test -n "$ID"; test -n "$II"
+          echo "ID=$ID" | tee out/id-ii-paths.txt
+          echo "II=$II" | tee -a out/id-ii-paths.txt
+          cp "$ID" out/id.smali
+          cp "$II" out/ii.smali
+          grep -n -A60 -B15 'onPlayFromMediaId(Ljava/lang/String;Landroid/os/Bundle;)V' "$ID" > out/id-playfrommediaid-context.txt
+          grep -n -A50 -B15 'onSkipToQueueItem(J)V' "$ID" > out/id-skiptoqueue-context.txt
+          grep -n '^\.field\|^\.method' "$II" > out/ii-structure.txt
+
+      - name: Find constructors and registrations referencing id callback
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          from pathlib import Path
+          out=Path('out')
+          hits=[]
+          for p in Path('decoded').glob('smali*/**/*.smali'):
+              try: s=p.read_text(errors='ignore')
+              except: continue
+              if 'Lid;' in s:
+                  hits.append(p)
+          with (out/'classes-referencing-id.txt').open('w') as f:
+              for p in hits:
+                  f.write(str(p)+'\n')
+          with (out/'id-registration-contexts.txt').open('w') as f:
+              for p in hits:
+                  s=p.read_text(errors='ignore').splitlines()
+                  for i,line in enumerate(s):
+                      if 'Lid;' in line:
+                          f.write(f'===== {p}:{i+1} =====\n')
+                          for x in s[max(0,i-18):min(len(s),i+35)]: f.write(x+'\n')
+          PY
+
+      - name: Search BrowserService token implementation in superclass chain
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          from pathlib import Path
+          import re
+          svc=Path('out/MusicBrowserService.smali').read_text(errors='ignore')
+          m=re.search(r'^\.super (L[^;]+;)',svc,re.M)
+          assert m
+          cur=m.group(1)
+          print('service_super',cur)
+          roots=list(Path('decoded').glob('smali*'))
+          with open('out/superclass-chain.txt','w') as o:
+              for depth in range(10):
+                  name=cur[1:-1]+'.smali'
+                  found=None
+                  for r in roots:
+                      p=r/name
+                      if p.exists(): found=p; break
+                  o.write(f'{depth}: {cur} -> {found}\n')
+                  if not found: break
+                  s=found.read_text(errors='ignore')
+                  for line in s.splitlines():
+                      if any(k in line for k in ['Token','token','Session','session']):
+                          o.write('  '+line+'\n')
+                  mm=re.search(r'^\.super (L[^;]+;)',s,re.M)
+                  if not mm: break
+                  cur=mm.group(1)
+          PY
+
+      - name: Upload session wiring evidence
+        uses: actions/upload-artifact@v4
+        with:
+          name: ytmusic-v2-browser-session-token-wiring
+          path: out/
+          if-no-files-found: error
+          retention-days: 14
