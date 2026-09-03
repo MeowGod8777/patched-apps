@@ -22,7 +22,7 @@ jobs:
         run: |
           set -euxo pipefail
           sudo apt-get update
-          sudo apt-get install -y curl unzip zip jq file grep sed gawk
+          sudo apt-get install -y curl unzip zip jq file grep sed gawk xxd
           mkdir -p work/site work/out
 
       - name: Discover official Luna Android APK URL
@@ -31,16 +31,11 @@ jobs:
           set -euxo pipefail
           UA='Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 Chrome/143 Safari/537.36'
 
-          # Start from the official ByteDance/Douyin-hosted Luna site. We intentionally
-          # inspect the site's JS bundles instead of trusting third-party APK mirrors.
           curl -L --retry 3 -A "$UA" 'https://qishui.douyin.com/' -o work/site/index.html
           curl -L --retry 3 -A "$UA" 'https://www.qishui.com/' -o work/site/index2.html || true
 
-          cat work/site/index.html work/site/index2.html 2>/dev/null \
-            | grep -Eo 'https?://[^"'"' <>]+' \
-            | sort -u > work/site/raw_urls.txt || true
-
-          # Resolve script src values, including relative paths.
+          # Parse HTML without shell-regex quoting hazards. Resolve all script/link
+          # assets so APK/download URLs embedded inside production JS can be found.
           python3 - <<'PY'
           from pathlib import Path
           from html.parser import HTMLParser
@@ -52,38 +47,61 @@ jobs:
               def handle_starttag(self, tag, attrs):
                   d=dict(attrs)
                   if tag == 'script' and d.get('src'):
-                      self.urls.append(urljoin(self.base,d['src']))
+                      self.urls.append(urljoin(self.base, d['src']))
                   if tag == 'link' and d.get('href'):
-                      self.urls.append(urljoin(self.base,d['href']))
+                      self.urls.append(urljoin(self.base, d['href']))
 
           out=[]
-          for fn,base in [('work/site/index.html','https://qishui.douyin.com/'),('work/site/index2.html','https://www.qishui.com/')]:
+          for fn,base in [
+              ('work/site/index.html','https://qishui.douyin.com/'),
+              ('work/site/index2.html','https://www.qishui.com/')]:
               pth=Path(fn)
-              if not pth.exists(): continue
-              p=P(base); p.feed(pth.read_text(errors='ignore')); out += p.urls
+              if not pth.exists():
+                  continue
+              p=P(base)
+              p.feed(pth.read_text(errors='ignore'))
+              out += p.urls
           Path('work/site/assets.txt').write_text('\n'.join(sorted(set(out))))
           PY
 
           i=0
           while IFS= read -r u; do
+            [ -n "$u" ] || continue
             case "$u" in
-              *.js*|*javascript*|*assets*|*static*)
+              *.js*|*javascript*|*assets*|*static*|*bytegoofy*|*douyinstatic*)
                 i=$((i+1))
-                curl -L --retry 2 --connect-timeout 10 -A "$UA" "$u" -o "work/site/asset_$i" || true
+                curl -L --retry 2 --connect-timeout 10 --max-time 90 -A "$UA" "$u" -o "work/site/asset_$i" || true
                 ;;
             esac
           done < work/site/assets.txt
 
-          # Extract candidate APK/download URLs from raw HTML + JS bundles.
-          grep -RhaoE 'https?://[^"'"' <>()]+' work/site \
-            | sed 's/&amp;/\&/g' \
-            | grep -Ei '(\.apk([?#].*)?$|android|download|release|luna)' \
-            | sort -u > work/site/candidates.txt || true
+          python3 - <<'PY'
+          import html, re
+          from pathlib import Path
+
+          urls=set()
+          # URL token extraction is intentionally permissive; candidates are later
+          # validated by ZIP magic and presence of classes*.dex before being trusted.
+          rx=re.compile(r'''https?://[^\s"'<>()[\]{}]+''')
+          for p in Path('work/site').glob('*'):
+              if not p.is_file():
+                  continue
+              try:
+                  text=p.read_text(errors='ignore')
+              except Exception:
+                  continue
+              text=html.unescape(text).replace('\\u002F','/').replace('\\/','/')
+              for u in rx.findall(text):
+                  low=u.lower()
+                  if ('.apk' in low or 'android' in low or 'download' in low or
+                      'release' in low or 'qishui' in low or 'luna' in low):
+                      urls.add(u.rstrip('.,;'))
+          Path('work/site/candidates.txt').write_text('\n'.join(sorted(urls)))
+          PY
 
           echo '===== candidate URLs ====='
           cat work/site/candidates.txt || true
 
-          # Test candidates for actual APK magic. APK is a ZIP starting PK\003\004.
           found=''
           n=0
           while IFS= read -r u; do
@@ -103,8 +121,8 @@ jobs:
             rm -f "$tmp"
           done < work/site/candidates.txt
 
-          # Fallback: Uptodown endpoints sometimes directly redirect to the current APK
-          # when hit by a normal browser UA. Treat only a ZIP with classes*.dex as valid.
+          # Fallback mirrors are discovery-only. We verify package identity and APK
+          # contents below; no file is accepted merely because the mirror returned 200.
           if [ -z "$found" ]; then
             for u in \
               'https://qishui.cn.uptodown.com/android/download' \
@@ -122,8 +140,7 @@ jobs:
           fi
 
           if [ -z "$found" ]; then
-            echo 'Could not automatically obtain the official APK.'
-            echo 'Keeping site/JS discovery artifact for manual URL recovery.'
+            echo 'Could not automatically obtain the Luna APK.'
             exit 22
           fi
 
@@ -140,7 +157,8 @@ jobs:
           if [ ! -x "$AAPT" ]; then
             AAPT="${ANDROID_HOME}/build-tools/$(ls "${ANDROID_HOME}/build-tools" | sort -V | tail -1)/aapt2"
           fi
-          "$AAPT" dump badging work/Luna_official.apk | tee work/out/badging.txt || true
+          "$AAPT" dump badging work/Luna_official.apk | tee work/out/badging.txt
+          grep -q "package: name='com.luna.music'" work/out/badging.txt
           "$AAPT" dump xmltree work/Luna_official.apk AndroidManifest.xml > work/out/manifest.txt || true
           grep -Ein 'package|versionName|versionCode|BachMediaButtonReceiver|VivoOrigin|vivo|origin|media' work/out/manifest.txt \
             | head -n 500 > work/out/manifest_hits.txt || true
@@ -177,19 +195,15 @@ jobs:
           SRC=work/jadx-out/sources
           OUT=work/out
 
-          # Exact known integration symbols.
           grep -RIn --binary-files=without-match \
             -E 'VivoOriginRemoteControl|BachMediaButtonReceiver' "$SRC" \
             | tee "$OUT/exact_symbol_hits.txt" || true
 
-          # Nearby protocol hints: actions, extras, intents, bundles, content providers,
-          # broadcasts, package/signature checks, queue/playlist methods.
           grep -RIn --binary-files=without-match \
             -E 'vivo|Vivo|origin|Origin|playlist|queue|play.?list|MediaSession|MediaController|sendCommand|sendCustomAction|setExtras|getExtras|Bundle|BroadcastReceiver|sendBroadcast|startActivity|Intent\(|Uri\.parse|signature|certificate|checkSign|permission' "$SRC" \
             | grep -Ei 'luna|playing|player|remote|vivo|origin|playlist|queue|media' \
             | head -n 12000 > "$OUT/protocol_hits.txt" || true
 
-          # Copy exact classes plus directly adjacent package for offline inspection.
           while IFS= read -r f; do
             [ -f "$f" ] || continue
             rel="${f#$SRC/}"
@@ -198,8 +212,6 @@ jobs:
           done < <(grep -Rl --binary-files=without-match \
             -E 'VivoOriginRemoteControl|BachMediaButtonReceiver' "$SRC" || true)
 
-          # If exact classes were renamed/obfuscated, preserve the whole remote/control
-          # and player packages that contain Vivo/Origin strings.
           while IFS= read -r f; do
             [ -f "$f" ] || continue
             rel="${f#$SRC/}"
