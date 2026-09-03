@@ -90,10 +90,12 @@ jobs:
           print('changed_smali_files',len(smali))
           for x in smali: print('SMALI',x)
           PY
-          for f in $(grep '^SMALI ' out/changed-file-summary.txt | cut -d' ' -f2-); do
+          : > out/smali-diffs.txt
+          while IFS= read -r f; do
+            [ -n "$f" ] || continue
             echo "===== $f =====" >> out/smali-diffs.txt
             diff -u "decoded-v2/$f" "decoded-v3s/$f" >> out/smali-diffs.txt || true
-          done
+          done < <(grep '^SMALI ' out/changed-file-summary.txt | sed 's/^SMALI //')
 
       - name: Extract id.smali callback context from both
         shell: bash
@@ -114,3 +116,5 @@ jobs:
           path: out/
           if-no-files-found: error
           retention-days: 14
+
+# retrigger: 2026-09-03T23:58+08:00
