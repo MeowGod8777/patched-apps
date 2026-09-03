@@ -1,10 +1,6 @@
 name: YT Music c0 Actions smoke
 
-on:
-  push:
-    paths:
-      - '.github/workflows/ytmusic-c0-actions-smoke.yml'
-  workflow_dispatch:
+on: [push, workflow_dispatch]
 
 jobs:
   smoke:
@@ -12,5 +8,3 @@ jobs:
     steps:
       - name: Smoke
         run: echo "c0 workflow runner OK"
-
-# trigger: 2026-09-03T19:58+08:00
