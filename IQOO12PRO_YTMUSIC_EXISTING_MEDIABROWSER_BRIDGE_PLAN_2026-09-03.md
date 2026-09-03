@@ -1,6 +1,6 @@
 # iQOO 12 Pro / YT Music existing MediaBrowser -> Vivo c0 bridge plan
 
-更新：2026-09-03 20:05 +08:00
+更新：2026-09-03 20:08 +08:00
 
 此檔是 `IQOO12PRO_YTMUSIC_LUNA_COOPERATION_RE_2026-09-03.md` 的後續 narrow checkpoint。建立本檔後才產出下一顆 APK。
 
@@ -177,11 +177,13 @@ C. onLoadChildren
 
 這樣每一輪都保持可歸因，不再用 MediaSession action-bit 猜測。
 
-## Build checkpoint：workflow 已真正進 runner，第一個 failure 已定位
+## Build checkpoint
 
-第一版新 workflow run `33752115800` 曾在 workflow bootstrap 層直接 `jobs=[]` failure，因此未產出任何 APK。
+### 1. New-workflow bootstrap
 
-為排除 registration 問題，改用本輪稍早已成功過的既有 workflow slot：
+第一版新 workflow run `33752115800` 在 workflow bootstrap 層 `jobs=[]` failure，因此沒有 APK。
+
+為排除 registration 問題，改用本輪稍早已成功的既有 workflow slot：
 
 ```text
 .github/workflows/extract-luna-vivo-protocol-classes25.yml
@@ -189,44 +191,81 @@ workflow id: 349274710
 previous success: 33749338695
 ```
 
-重新改造成 builder 後，run：
+### 2. Raw descriptor correction
+
+Builder run：
 
 ```text
 33752953035
-job: 100640510283
+job 100640510283
 ```
 
-已正常進入 Ubuntu runner，並成功：
-
-```text
-checkout ✅
-download validated base ✅
-base SHA256 = 0b1b61ad6bd87dacc88517adf19c1115085d529e63847d50d587476efa4ce307 ✅
-apktool 3.0.3 download ✅
-apktool full decode / baksmali classes.dex..classes10.dex ✅
-```
-
-第一個真實 patch failure：
+成功完成 base download / hash / Apktool full decode，第一個真實 failure 是：
 
 ```text
 method not found:
 public final f(Ljava/lang/String;Landroid/os/Bundle;)Ldefpackage/bze;
 ```
 
-這不是 RE hypothesis 失敗，而是 **JADX 顯示用 alias 與 raw DEX/smali descriptor 不同**：
+確認是 JADX `defpackage.*` 顯示 alias；raw smali 使用 no-package descriptor：
 
 ```text
-JADX Java UI: defpackage.bze / defpackage.bzu
-raw DEX smali: no-package descriptors，應為 Lbze; / Lbzu;
+Lbze;
+Lbzu;
 ```
 
-因此 patcher 下一版要把：
+patcher 已修正。
+
+### 3. Injection 已命中，第二個 failure 是 invoke register encoding
+
+修 descriptor 後 run：
 
 ```text
-Ldefpackage/bze; -> Lbze;
-Ldefpackage/bzu; -> Lbzu;
+33753312578
+job 100641676540
 ```
 
-並同步修改 injected constructor / result descriptor。
+已成功：
+
+```text
+manifest support.service injection ✅
+onGetRoot VIVO_MUSIC_MIX_ROOT injection ✅
+onLoadChildren vivo_probe_1 injection ✅
+```
+
+Apktool smali output 也直接確認：
+
+```text
+MusicBrowserService.smali
+new-instance v0, Lbze;
+const-string v1, "VIVO_MUSIC_MIX_ROOT"
+...
+const-string v2, "vivo_probe_1"
+...
+invoke-virtual {p2, v0}, Lbzu;->c(Ljava/lang/Object;)V
+```
+
+Rebuild failure：
+
+```text
+MusicBrowserService.smali[768,4]
+Invalid register: v19. Must be between v0 and v15, inclusive.
+```
+
+根因：原 `onGetRoot` 是高 register-count method，`p1` 映射到 `v19+`；注入中的普通 `invoke-virtual {v0, p1}` 使用 35c encoding，只允許低 register。這不是 protocol / class / method mismatch。
+
+修法：在 invoke 前先：
+
+```smali
+move-object/from16 v1, p1
+```
+
+再用：
+
+```smali
+invoke-virtual {v0, v1}, ...
+```
+
+`onLoadChildren` 也對 `p1/p2` 做同樣 low-register staging，避免下一步才撞同一類問題。
 
 只有 rebuild、16K zipalign、same-signer verification 全部通過後才把 APK 提供實機測試。
