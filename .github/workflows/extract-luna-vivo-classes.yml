@@ -1,0 +1,55 @@
+name: Extract Luna Vivo integration classes
+
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - '.github/workflows/extract-luna-vivo-classes.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  extract:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - name: Download official Luna and JADX
+        shell: bash
+        run: |
+          set -euxo pipefail
+          mkdir -p work/out
+          UA='Mozilla/5.0 (Linux; Android 16; V2329A) AppleWebKit/537.36 Chrome/143 Mobile Safari/537.36'
+          curl -L --retry 3 --connect-timeout 15 --max-time 240 -A "$UA" 'https://ugapk.com/GMg3' -o work/luna.apk
+          curl -L --retry 3 'https://github.com/skylot/jadx/releases/download/v1.5.6/jadx-1.5.6.zip' -o work/jadx.zip
+          unzip -q work/jadx.zip -d work/jadx
+          chmod +x work/jadx/bin/jadx
+          AAPT="${ANDROID_HOME}/build-tools/$(ls "${ANDROID_HOME}/build-tools" | sort -V | tail -1)/aapt"
+          "$AAPT" dump badging work/luna.apk | tee work/out/badging.txt
+          grep -q "package: name='com.luna.music'" work/out/badging.txt
+      - name: Extract exact classes
+        shell: bash
+        run: |
+          set -euxo pipefail
+          J=work/jadx/bin/jadx
+          APK=work/luna.apk
+          for cls in \
+            'com.luna.biz.playing.player.remote.control.VivoOriginRemoteControl' \
+            'com.luna.biz.playing.player.BachMediaButtonReceiver'; do
+            safe=$(echo "$cls" | tr '.' '_')
+            "$J" --no-res --single-class "$cls" --single-class-output "work/out/${safe}.java" "$APK" || true
+          done
+          echo '===== FILES ====='
+          find work/out -type f -maxdepth 1 -printf '%f %s\n'
+          echo '===== VIVO ====='
+          cat work/out/com_luna_biz_playing_player_remote_control_VivoOriginRemoteControl.java || true
+          echo '===== BACH ====='
+          cat work/out/com_luna_biz_playing_player_BachMediaButtonReceiver.java || true
+      - name: Upload exact classes
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: luna-vivo-exact-classes
+          path: work/out
+          retention-days: 7
