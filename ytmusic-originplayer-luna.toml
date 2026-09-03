@@ -1,0 +1,34 @@
+enable-module-update = false
+parallel-jobs = 1
+
+[YouTube-Music-OriginPlayer-Luna]
+enabled = true
+app-name = "YouTube Music"
+build-mode = "apk"
+version = "auto"
+arch = "all"
+include-stock = "auto"
+pkg-name = "com.google.android.apps.youtube.music"
+patches-source = "anddea/revanced-patches"
+patches-version = "latest"
+cli-source = "MorpheApp/morphe-cli"
+cli-version = "latest"
+
+included-patches = """\
+  'GmsCore support' \
+  'Hide ads' \
+  'Remove background playback restrictions' \
+  'Force original audio' \
+  'Return YouTube Dislike' \
+  'SponsorBlock' \
+  'Video playback' \
+  'Bitrate default value' \
+  'Sanitize sharing links' \
+  'Third-party lyrics' \
+  """
+
+patcher-args = "-O packageNameYouTubeMusic=com.luna.music"
+
+archive-dlurl = "https://archive.org/download/crimsonman/apks/com.google.android.apps.youtube.music"
+apkmirror-dlurl = "https://www.apkmirror.com/apk/google-inc/youtube-music"
+uptodown-dlurl = "https://youtube-music.en.uptodown.com/android"
