@@ -1,4 +1,4 @@
-name: Build YT Music Luna queue-bit A/B
+name: Build YT Music Luna Vivo-event A/B
 
 on:
   workflow_dispatch:
@@ -41,7 +41,7 @@ jobs:
           java -jar tools/apktool.jar d -f -r input/base.apk -o decoded
           find decoded -path '*/ii.smali' -print | head -30
 
-      - name: Add ACTION_SKIP_TO_QUEUE_ITEM capability only
+      - name: Add official Vivo support-event metadata
         run: |
           python3 - <<'PY'
           from pathlib import Path
@@ -52,72 +52,33 @@ jobs:
               raise SystemExit(f'Expected exactly one ii.smali, got {files}')
           p = files[0]
           s = p.read_text(encoding='utf-8')
+          key = 'vivomusicmix.media.metadata.support_event'
+          if key in s:
+              raise SystemExit('Method appears already Vivo-event patched')
 
-          mh = re.search(r'(?ms)^\.method[^\n]*\sn\(Landroid/support/v4/media/session/PlaybackStateCompat;\)V\n(.*?)^\.end method', s)
+          mh = re.search(r'(?ms)^\.method[^\n]*\sm\(Landroid/support/v4/media/MediaMetadataCompat;\)V\n(.*?)^\.end method', s)
           if not mh:
-              raise SystemExit('Could not locate ii.n(PlaybackStateCompat)')
+              raise SystemExit('Could not locate ii.m(MediaMetadataCompat)')
           body = mh.group(0)
-          if '->setActions(J)Landroid/media/session/PlaybackState$Builder;' not in body:
-              raise SystemExit('setActions call not found in ii.n')
-          if 'const-wide/16' in body and '0x1000' in body:
-              raise SystemExit('Method appears already queue-bit patched')
+          needle = '    invoke-virtual {v0}, Landroid/media/MediaMetadata$Builder;->build()Landroid/media/MediaMetadata;'
+          if body.count(needle) != 1:
+              raise SystemExit(f'Expected exactly one MediaMetadata.Builder.build(), got {body.count(needle)}')
 
-          regm = re.search(r'(?m)^\s*\.(locals|registers)\s+(\d+)\s*$', body)
-          if not regm:
-              raise SystemExit('No .locals/.registers directive')
-          kind, count_s = regm.group(1), regm.group(2)
-          count = int(count_s)
-          if kind == 'locals':
-              tmp = count
-              new_count = count + 2
-          else:
-              tmp = count - 2
-              new_count = count + 2
-          if tmp < 0 or tmp + 1 > 255:
-              raise SystemExit(f'Unsafe temporary register allocation: v{tmp}/v{tmp+1}')
-
-          lines = body.splitlines()
-          set_i = next(i for i,l in enumerate(lines) if '->setActions(J)Landroid/media/session/PlaybackState$Builder;' in l)
-          load_i = None
-          actions_reg = None
-          for i in range(set_i - 1, max(-1, set_i - 12), -1):
-              m = re.search(r'\biget-wide\s+(v\d+),\s*p1,\s*Landroid/support/v4/media/session/PlaybackStateCompat;->e:J', lines[i])
-              if m:
-                  load_i = i
-                  actions_reg = m.group(1)
-                  break
-          if load_i is None:
-              raise SystemExit('Could not locate PlaybackStateCompat.e iget-wide before setActions')
-
-          body2 = '\n'.join(lines)
-          body2 = re.sub(
-              rf'(?m)^(\s*\.{kind}\s+){count}(\s*)$',
-              rf'\g<1>{new_count}\g<2>',
-              body2,
-              count=1,
-          )
-          lines = body2.splitlines()
-          set_i = next(i for i,l in enumerate(lines) if '->setActions(J)Landroid/media/session/PlaybackState$Builder;' in l)
-          for i in range(set_i - 1, max(-1, set_i - 12), -1):
-              m = re.search(r'\biget-wide\s+(v\d+),\s*p1,\s*Landroid/support/v4/media/session/PlaybackStateCompat;->e:J', lines[i])
-              if m:
-                  load_i = i
-                  actions_reg = m.group(1)
-                  break
-          indent = re.match(r'\s*', lines[load_i]).group(0)
-          lines[load_i+1:load_i+1] = [
-              f'{indent}const-wide/16 v{tmp}, 0x1000',
-              f'{indent}or-long {actions_reg}, {actions_reg}, v{tmp}',
-          ]
-          patched_body = '\n'.join(lines)
+          inject = '\n'.join([
+              '    const-string v3, "vivomusicmix.media.metadata.support_event"',
+              '',
+              '    const-wide/16 v4, 0x9df',
+              '',
+              '    invoke-virtual {v0, v3, v4, v5}, Landroid/media/MediaMetadata$Builder;->putLong(Ljava/lang/String;J)Landroid/media/MediaMetadata$Builder;',
+              '',
+          ]) + '\n'
+          patched_body = body.replace(needle, inject + needle, 1)
           patched = s[:mh.start()] + patched_body + s[mh.end():]
           p.write_text(patched, encoding='utf-8')
 
-          print(f'Patched {p}: +ACTION_SKIP_TO_QUEUE_ITEM using v{tmp}/v{tmp+1}')
-          for i,l in enumerate(lines):
-              if '->setActions(J)' in l:
-                  print('\n'.join(lines[max(0,i-8):min(len(lines),i+3)]))
-                  break
+          print(f'Patched {p}: Vivo support_event=0x9df / 2527')
+          idx = patched_body.index(key)
+          print(patched_body[max(0, idx - 350):idx + 650])
           PY
 
       - name: Rebuild APK
@@ -155,35 +116,45 @@ jobs:
             --ks out/signer.p12 --ks-type PKCS12 \
             --ks-pass pass:123456789 --key-pass pass:123456789 \
             --ks-key-alias andrewliang \
-            --out out/YouTube_Music_9.15.51_Luna_QUEUE_BIT_AB.apk \
+            --out out/YouTube_Music_9.15.51_Luna_VIVO_EVENT_AB.apk \
             out/unsigned.apk
           rm -f out/*.idsig
 
           java -jar bin/apksigner.jar verify --verbose --print-certs \
-            out/YouTube_Music_9.15.51_Luna_QUEUE_BIT_AB.apk
+            out/YouTube_Music_9.15.51_Luna_VIVO_EVENT_AB.apk
           OUT_CERT=$(java -jar bin/apksigner.jar verify --print-certs \
-            out/YouTube_Music_9.15.51_Luna_QUEUE_BIT_AB.apk \
+            out/YouTube_Music_9.15.51_Luna_VIVO_EVENT_AB.apk \
             | sed -n 's/^Signer #1 certificate SHA-256 digest: //p' | norm)
           [ "$OUT_CERT" = "$BASE_CERT" ] || { echo 'Output signer mismatch' >&2; exit 1; }
-          sha256sum out/YouTube_Music_9.15.51_Luna_QUEUE_BIT_AB.apk
+          sha256sum out/YouTube_Music_9.15.51_Luna_VIVO_EVENT_AB.apk | tee out/SHA256.txt
 
-      - name: Verify patched bit
-        run: grep -R -n -A4 -B4 'const-wide/16 .*0x1000' decoded/smali*/ii.smali
+      - name: Verify patched metadata
+        run: |
+          grep -R -n -A6 -B6 'vivomusicmix.media.metadata.support_event' decoded/smali*/ii.smali | tee out/patch-context.txt
+          grep -q 'const-wide/16 v4, 0x9df' decoded/smali*/ii.smali
+          AAPT="${ANDROID_HOME}/build-tools/$(ls "${ANDROID_HOME}/build-tools" | sort -V | tail -1)/aapt"
+          "$AAPT" dump badging out/YouTube_Music_9.15.51_Luna_VIVO_EVENT_AB.apk | tee out/badging.txt
+          grep -q "package: name='com.luna.music'" out/badging.txt
+          grep -q "versionName='9.15.51'" out/badging.txt
 
       - name: Upload artifact
         uses: actions/upload-artifact@v4
         with:
-          name: ytmusic-luna-queue-bit-ab
-          path: out/YouTube_Music_9.15.51_Luna_QUEUE_BIT_AB.apk
+          name: ytmusic-luna-vivo-event-ab
+          path: |
+            out/YouTube_Music_9.15.51_Luna_VIVO_EVENT_AB.apk
+            out/SHA256.txt
+            out/patch-context.txt
+            out/badging.txt
           if-no-files-found: error
           retention-days: 14
 
       - name: Publish prerelease
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          TAG: ytmusic-luna-queue-bit-ab-${{ github.run_id }}
+          TAG: ytmusic-luna-vivo-event-ab-${{ github.run_id }}
         run: |
-          gh release create "$TAG" out/YouTube_Music_9.15.51_Luna_QUEUE_BIT_AB.apk \
-            --title "YT Music Luna queue-bit A/B" \
-            --notes "Single-variable A/B over the validated com.luna.music build. Adds PlaybackState ACTION_SKIP_TO_QUEUE_ITEM (0x1000) immediately before framework Builder.setActions(). Existing MediaSession.Callback.onSkipToQueueItem(long) is already present. ReVanced BKS signer is converted to PKCS12 only for apksigner compatibility, and certificate SHA-256 is verified identical to the base Luna APK." \
+          gh release create "$TAG" out/YouTube_Music_9.15.51_Luna_VIVO_EVENT_AB.apk \
+            --title "YT Music Luna Vivo-event A/B" \
+            --notes "Single-variable A/B over the validated com.luna.music build. Injects the official Luna private MediaMetadata support_event mask 2527 (0x9DF) at the MediaMetadataCompat to framework MediaMetadata boundary. Queue and PlaybackState are otherwise unchanged. Certificate SHA-256 is verified identical to baseline." \
             --prerelease
