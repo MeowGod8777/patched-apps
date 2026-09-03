@@ -1,6 +1,6 @@
 # iQOO 12 Pro / YT Music existing MediaBrowser -> Vivo c0 bridge plan
 
-更新：2026-09-03 20:00 +08:00
+更新：2026-09-03 20:05 +08:00
 
 此檔是 `IQOO12PRO_YTMUSIC_LUNA_COOPERATION_RE_2026-09-03.md` 的後續 narrow checkpoint。建立本檔後才產出下一顆 APK。
 
@@ -177,33 +177,56 @@ C. onLoadChildren
 
 這樣每一輪都保持可歸因，不再用 MediaSession action-bit 猜測。
 
-## Build bootstrap checkpoint
+## Build checkpoint：workflow 已真正進 runner，第一個 failure 已定位
 
-第一版新 workflow：
+第一版新 workflow run `33752115800` 曾在 workflow bootstrap 層直接 `jobs=[]` failure，因此未產出任何 APK。
 
-```text
-.github/workflows/build-ytmusic-luna-vivo-c0-browser-probe-v0.yml
-commit c8c5d55d1750727ccb671cc772c1a74b7dfa46d2
-run 33752115800
-```
-
-GitHub 對該 run 直接回：
-
-```text
-status=completed
-conclusion=failure
-jobs=[]
-```
-
-也就是 workflow 尚未進入任何 runner job，因此**沒有產出 APK，也不能把它算成 patch/build failure**；這是 Actions workflow bootstrap / registration 層失敗。
-
-另建最小 smoke workflow 後，push trigger 也沒有正常出現在該 commit 的 workflow runs；同時 repo 內數個舊 workflow 會在每次 push 立即產生 `jobs=[]` failure。因目前 API 沒有提供更進一步的 workflow-parser annotation，下一步改用已知在本輪稍早成功執行過的既有 workflow slot：
+為排除 registration 問題，改用本輪稍早已成功過的既有 workflow slot：
 
 ```text
 .github/workflows/extract-luna-vivo-protocol-classes25.yml
-previous successful run: 33749338695
+workflow id: 349274710
+previous success: 33749338695
 ```
 
-把該已驗證可進 runner 的 workflow 暫時改造成 c0 probe builder，避免把「新 workflow registration 問題」和「APK patch 本身」混在一起。
+重新改造成 builder 後，run：
 
-只有 runner 真正開始並完成 rebuild / zipalign / signer verification 後，才會把 APK 提供實機測試。
+```text
+33752953035
+job: 100640510283
+```
+
+已正常進入 Ubuntu runner，並成功：
+
+```text
+checkout ✅
+download validated base ✅
+base SHA256 = 0b1b61ad6bd87dacc88517adf19c1115085d529e63847d50d587476efa4ce307 ✅
+apktool 3.0.3 download ✅
+apktool full decode / baksmali classes.dex..classes10.dex ✅
+```
+
+第一個真實 patch failure：
+
+```text
+method not found:
+public final f(Ljava/lang/String;Landroid/os/Bundle;)Ldefpackage/bze;
+```
+
+這不是 RE hypothesis 失敗，而是 **JADX 顯示用 alias 與 raw DEX/smali descriptor 不同**：
+
+```text
+JADX Java UI: defpackage.bze / defpackage.bzu
+raw DEX smali: no-package descriptors，應為 Lbze; / Lbzu;
+```
+
+因此 patcher 下一版要把：
+
+```text
+Ldefpackage/bze; -> Lbze;
+Ldefpackage/bzu; -> Lbzu;
+```
+
+並同步修改 injected constructor / result descriptor。
+
+只有 rebuild、16K zipalign、same-signer verification 全部通過後才把 APK 提供實機測試。
