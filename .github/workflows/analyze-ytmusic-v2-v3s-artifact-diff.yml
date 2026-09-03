@@ -1,0 +1,101 @@
+name: Analyze YT Music V2 vs V3S artifact diff
+
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - .github/workflows/analyze-ytmusic-v2-v3s-artifact-diff.yml
+
+permissions:
+  actions: read
+  contents: read
+
+jobs:
+  diff:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Download exact V2 PASS and V3S artifacts
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p artifacts/v2 artifacts/v3s out tools
+          gh run download 33762673544 -n ytmusic-luna-vivo-c0-real-queue-v2 -D artifacts/v2
+          gh run download 33767682476 -n ytmusic-luna-vivo-c0-selection-v3s -D artifacts/v3s
+          find artifacts -maxdepth 2 -type f -printf '%p\n' | sort | tee out/artifact-files.txt
+          V2=$(find artifacts/v2 -maxdepth 1 -name '*.apk' -print -quit)
+          V3=$(find artifacts/v3s -maxdepth 1 -name '*.apk' -print -quit)
+          test -n "$V2"; test -n "$V3"
+          sha256sum "$V2" "$V3" | tee out/apk-sha256.txt
+          echo "$V2" > out/v2-path.txt
+          echo "$V3" > out/v3s-path.txt
+
+      - name: Compare APK ZIP entries byte-for-byte
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY' | tee out/zip-entry-diff.txt
+          import zipfile, hashlib
+          from pathlib import Path
+          v2=Path(Path('out/v2-path.txt').read_text().strip())
+          v3=Path(Path('out/v3s-path.txt').read_text().strip())
+          def load(p):
+              with zipfile.ZipFile(p) as z:
+                  d={}
+                  for i in z.infolist():
+                      if i.is_dir(): continue
+                      b=z.read(i.filename)
+                      d[i.filename]=(len(b), hashlib.sha256(b).hexdigest(), i.compress_type, i.CRC)
+                  return d
+          a,b=load(v2),load(v3)
+          only_a=sorted(set(a)-set(b)); only_b=sorted(set(b)-set(a))
+          diff=sorted(k for k in set(a)&set(b) if a[k][1] != b[k][1])
+          print('only_v2=',len(only_a)); [print('ONLY_V2',x) for x in only_a]
+          print('only_v3s=',len(only_b)); [print('ONLY_V3S',x) for x in only_b]
+          print('content_diff_common=',len(diff))
+          for k in diff:
+              print('DIFF',k,'v2_size=',a[k][0],'v2_sha=',a[k][1],'v3s_size=',b[k][0],'v3s_sha=',b[k][1])
+          PY
+
+      - name: Decode exact APKs and diff all decoded output
+        shell: bash
+        run: |
+          set -euo pipefail
+          curl -L --fail --retry 3 -o tools/apktool.jar https://github.com/iBotPeaches/Apktool/releases/download/v3.0.3/apktool_3.0.3.jar
+          V2=$(cat out/v2-path.txt)
+          V3=$(cat out/v3s-path.txt)
+          java -jar tools/apktool.jar d -f "$V2" -o decoded-v2 >/dev/null
+          java -jar tools/apktool.jar d -f "$V3" -o decoded-v3s >/dev/null
+
+          diff -rq decoded-v2 decoded-v3s | tee out/decoded-files-differ.txt || true
+          diff -ru decoded-v2 decoded-v3s > out/decoded-full.diff || true
+
+          python3 - <<'PY' | tee out/decoded-summary.txt
+          from pathlib import Path
+          import hashlib
+          A=Path('decoded-v2'); B=Path('decoded-v3s')
+          def h(p): return hashlib.sha256(p.read_bytes()).hexdigest()
+          aa={str(p.relative_to(A)):h(p) for p in A.rglob('*') if p.is_file()}
+          bb={str(p.relative_to(B)):h(p) for p in B.rglob('*') if p.is_file()}
+          onlya=sorted(set(aa)-set(bb)); onlyb=sorted(set(bb)-set(aa)); diff=sorted(k for k in set(aa)&set(bb) if aa[k]!=bb[k])
+          print('only_v2_decoded',len(onlya)); [print('ONLY_V2',x) for x in onlya]
+          print('only_v3s_decoded',len(onlyb)); [print('ONLY_V3S',x) for x in onlyb]
+          print('different_decoded',len(diff)); [print('DIFF',x) for x in diff]
+          PY
+
+          grep -n -A40 -B10 'onPlayFromMediaId(Ljava/lang/String;Landroid/os/Bundle;)V' decoded-v2/smali*/id.smali > out/v2-onPlayFromMediaId.txt || true
+          grep -n -A60 -B10 'onPlayFromMediaId(Ljava/lang/String;Landroid/os/Bundle;)V' decoded-v3s/smali*/id.smali > out/v3s-onPlayFromMediaId.txt || true
+          grep -n -A24 -B12 'vivomusicmix.media.metadata.support_event' decoded-v2/smali*/ii.smali > out/v2-support-event.txt || true
+          grep -n -A24 -B12 'vivomusicmix.media.metadata.support_event' decoded-v3s/smali*/ii.smali > out/v3s-support-event.txt || true
+
+      - name: Upload diff evidence
+        uses: actions/upload-artifact@v4
+        with:
+          name: ytmusic-v2-v3s-artifact-diff
+          path: out/
+          if-no-files-found: error
+          retention-days: 14
