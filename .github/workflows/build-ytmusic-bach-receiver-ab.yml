@@ -53,7 +53,6 @@ jobs:
           set -euo pipefail
           python3 - <<'PY'
           from pathlib import Path
-          import re
 
           manifest = Path('decoded/AndroidManifest.xml')
           s = manifest.read_text(encoding='utf-8')
@@ -66,7 +65,6 @@ jobs:
           s = s.replace(old, new)
           manifest.write_text(s, encoding='utf-8')
 
-          # Add a receiver class that delegates all behavior to AndroidX MediaButtonReceiver.
           p = Path('decoded/smali/com/luna/biz/playing/player/BachMediaButtonReceiver.smali')
           p.parent.mkdir(parents=True, exist_ok=True)
           p.write_text('''.class public Lcom/luna/biz/playing/player/BachMediaButtonReceiver;\n.super Landroidx/media/session/MediaButtonReceiver;\n.source "BachMediaButtonReceiver.java"\n\n.method public constructor <init>()V\n    .locals 0\n\n    invoke-direct {p0}, Landroidx/media/session/MediaButtonReceiver;-><init>()V\n\n    return-void\n.end method\n''', encoding='utf-8')
@@ -80,9 +78,12 @@ jobs:
       - name: Rebuild and align APK
         run: |
           set -euo pipefail
+          ZIPALIGN="$(find "$ANDROID_HOME/build-tools" -maxdepth 2 -type f -name zipalign | sort -V | tail -1)"
+          [ -x "$ZIPALIGN" ] || { echo 'zipalign not found' >&2; exit 1; }
+          echo "Using zipalign: $ZIPALIGN"
           java -jar tools/apktool.jar b decoded -o out/unsigned.apk
-          zipalign -P 16 -f -v 4 out/unsigned.apk out/aligned.apk
-          zipalign -c -P 16 -v 4 out/aligned.apk
+          "$ZIPALIGN" -P 16 -f -v 4 out/unsigned.apk out/aligned.apk
+          "$ZIPALIGN" -c -P 16 -v 4 out/aligned.apk
 
       - name: Preserve ReVanced signer and sign
         shell: bash
@@ -128,6 +129,8 @@ jobs:
       - name: Verify output receiver and native alignment
         run: |
           set -euo pipefail
+          ZIPALIGN="$(find "$ANDROID_HOME/build-tools" -maxdepth 2 -type f -name zipalign | sort -V | tail -1)"
+          [ -x "$ZIPALIGN" ] || { echo 'zipalign not found' >&2; exit 1; }
           rm -rf verify-decoded
           java -jar tools/apktool.jar d -f out/YouTube_Music_9.15.51_Luna_BACH_RECEIVER_AB.apk -o verify-decoded >/dev/null
           grep -n -A8 -B4 -F 'com.luna.biz.playing.player.BachMediaButtonReceiver' verify-decoded/AndroidManifest.xml
@@ -136,7 +139,7 @@ jobs:
             echo 'Old AndroidX receiver still declared in manifest' >&2
             exit 1
           fi
-          zipalign -c -P 16 -v 4 out/YouTube_Music_9.15.51_Luna_BACH_RECEIVER_AB.apk
+          "$ZIPALIGN" -c -P 16 -v 4 out/YouTube_Music_9.15.51_Luna_BACH_RECEIVER_AB.apk
 
       - name: Upload artifact
         uses: actions/upload-artifact@v4
