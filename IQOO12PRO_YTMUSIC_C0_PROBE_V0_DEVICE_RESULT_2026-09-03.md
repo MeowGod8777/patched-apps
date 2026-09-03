@@ -12,7 +12,7 @@ Date: 2026-09-03 (+08:00)
 - workflow run: `33755186029`
 - workflow artifact: `9893179077`
 
-## First real-device observation
+## Real-device observation
 
 Device:
 
@@ -20,39 +20,74 @@ Device:
 - Android 16 / OriginOS 6
 - exact build `PD2329B_A_16.2.19.1.W10.V0101L17`
 
-Observed after installing probe v0 and tapping the OriginPlayer playlist button:
+Observed in the user-recorded screen capture after installing probe v0:
 
-- Before probe: playlist button was completely inert.
-- With probe v0: tapping the playlist button now **does produce a playlist/UI transition**, but it **immediately crashes / exits**.
-- The static `vivo_probe_1 / YT Music Vivo Bridge` row has not yet been confirmed visible long enough to count as a successful browse render.
+- Before probe: OriginPlayer playlist button was completely inert.
+- With probe v0: tapping the playlist button now opens Vivo's dedicated playlist UI.
+- The playlist UI visibly remains at a `載入中` / loading spinner state for multiple frames.
+- The injected static `vivo_probe_1 / YT Music Vivo Bridge` row is not rendered.
+- The later transition back to notification center / launcher is NOT sufficient by itself to classify this as a crash; no crash stack or explicit crash dialog is present in the video.
 
-A user-recorded screen capture shows the patched YT Music session active immediately before the failure and the app returning to the launcher immediately after the attempted playlist open.
+## What is now device-validated
 
-## Interpretation
+The A/B result proves a real state transition:
 
-This is a positive partial result but NOT an end-to-end pass.
+`playlist button inert` -> `Vivo playlist UI opens`
 
-The behavioral A/B strongly indicates that adding the Vivo cooperation surface changed the OriginPlayer playlist path from `inert` to `active`, so the previous hypothesis that `support.service + c0/cooperation` is the missing path remains viable.
+This strongly validates the first cooperation gate:
 
-However, this result does **not** yet prove all of the following:
+`com.vivo.musicwidgetmix.support.service` -> Vivo custom-insert / c0 playlist UI activation
 
-- that `com.vivo.musicwidgetmix` successfully completed MediaBrowser root negotiation,
-- that `VIVO_MUSIC_MIX_ROOT` was accepted,
-- that `vivomusicmix_current_list` reached the injected branch,
-- that the injected `MediaBrowserCompat.MediaItem` list was accepted by the receiver,
-- that the crash is in `com.luna.music` rather than the Vivo side.
+Therefore the previous theory that the missing OriginPlayer playlist backend is the Vivo cooperation path remains supported, and the probe has crossed the pre-cooperation UI gate.
 
-The immediate next step is therefore crash-log capture, not another speculative protocol rewrite.
+## What is NOT yet proven
 
-## Next diagnostic step
+Because `vivo_probe_1` never appears, this is NOT an end-to-end MediaBrowser pass.
 
-Collect the Android crash buffer immediately after reproduction and identify the exact throwing process / exception / stack trace.
+Still unresolved:
 
-Priority hypotheses to resolve from the stack, without treating any as confirmed before evidence:
+- whether c0 successfully binds the existing YT Music `MusicBrowserService`;
+- whether `onGetRoot()` is invoked by `com.vivo.musicwidgetmix`;
+- whether the returned `VIVO_MUSIC_MIX_ROOT` is accepted;
+- whether c0 sends a browse request whose parent contains `vivomusicmix_current_list`;
+- whether the injected `onLoadChildren()` branch executes;
+- whether `result.sendResult()` / the service's concrete result wrapper accepts and delivers the injected list;
+- whether Vivo rejects/parses the returned MediaItem after delivery.
 
-1. injected current-list callback returns an object/list element type incompatible with the concrete YT Music MediaBrowser implementation;
-2. `Lbzu;->c(Ljava/lang/Object;)V` result contract is being satisfied with the wrong MediaItem family (`android.support.v4.media.MediaBrowserCompat$MediaItem` vs framework/internal type expected by this service implementation);
-3. Vivo c0 accepts the service/root but crashes while parsing an incomplete probe item / missing metadata required by its UI;
-4. a YT Music client/service lifecycle invariant is violated by the early-return injected branch.
+## Current failure boundary
 
-Do not add real queue or `playFromMediaId` until this crash is localized.
+Verified:
+
+`support.service -> custom-insert/c0 playlist UI activation` ✅
+
+Unverified / current boundary:
+
+`MediaBrowser bind -> root negotiation -> current-list browse -> result delivery/render` ❓
+
+Observed terminal state:
+
+`playlist UI -> loading spinner; no probe item`
+
+This is a narrower failure boundary than the original inert-button state and is not evidence that the overall c0 architecture hypothesis failed.
+
+## Immediate next step
+
+Do not add real queue or `playFromMediaId` yet.
+
+First collect a focused runtime trace from this same probe to distinguish:
+
+1. service never binds;
+2. service binds but root/client-package negotiation differs from the injected assumption;
+3. root succeeds but actual parentId differs from `vivomusicmix_current_list`;
+4. current-list hook executes but result delivery throws/fails;
+5. item is delivered but rejected by Vivo's parser/UI.
+
+Start with ordinary logcat / service state. If it does not expose the callback boundary clearly enough, the next APK should be a single-variable diagnostic probe with temporary explicit log markers around:
+
+- `onGetRoot(clientPackageName, clientUid, rootHints)` entry;
+- Vivo-client branch hit and root returned;
+- `onLoadChildren(parentId, result)` entry;
+- current-list branch hit;
+- immediately before/after result delivery.
+
+Only after the static MediaItem renders should the project proceed to real queue mapping and then `playFromMediaId`.
