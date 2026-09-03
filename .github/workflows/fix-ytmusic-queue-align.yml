@@ -1,0 +1,109 @@
+name: Fix YT Music Luna queue-bit APK alignment
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - .github/workflows/fix-ytmusic-queue-align.yml
+
+jobs:
+  fix:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/setup-java@v5
+        with:
+          distribution: zulu
+          java-version: "21"
+
+      - uses: actions/checkout@v6
+
+      - name: Download bad queue-bit APK and signer tools
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          set -euo pipefail
+          mkdir -p input out tools
+          gh release download ytmusic-luna-queue-bit-ab-33733638867 \
+            --pattern '*.apk' --dir input
+          mv input/*.apk input/queue-bit-bad.apk
+          curl -L --fail --retry 3 \
+            -o tools/bcprov.jar \
+            https://repo1.maven.org/maven2/org/bouncycastle/bcprov-jdk18on/1.82/bcprov-jdk18on-1.82.jar
+          sha256sum input/queue-bit-bad.apk tools/bcprov.jar
+
+      - name: Zipalign native libraries before signing
+        shell: bash
+        run: |
+          set -euo pipefail
+          ZIPALIGN=$(find "$ANDROID_HOME/build-tools" -type f -name zipalign | sort -V | tail -1)
+          echo "Using $ZIPALIGN"
+          "$ZIPALIGN" -P 16 -f -v 4 \
+            input/queue-bit-bad.apk \
+            out/queue-bit-aligned.apk
+          "$ZIPALIGN" -c -P 16 -v 4 out/queue-bit-aligned.apk
+
+      - name: Convert ReVanced BKS signer and sign aligned APK
+        shell: bash
+        run: |
+          set -euo pipefail
+          norm() { tr -d ':[:space:]' | tr '[:upper:]' '[:lower:]'; }
+          BASE_CERT=$(java -jar bin/apksigner.jar verify --print-certs input/queue-bit-bad.apk \
+            | sed -n 's/^Signer #1 certificate SHA-256 digest: //p' | norm)
+          BKS_CERT=$(keytool -list -v \
+            -keystore ks.keystore -storetype BKS -storepass 123456789 \
+            -alias andrewliang \
+            -providerclass org.bouncycastle.jce.provider.BouncyCastleProvider \
+            -providerpath tools/bcprov.jar \
+            | sed -n 's/^[[:space:]]*SHA256: //p' | norm)
+          echo "input cert: $BASE_CERT"
+          echo "BKS cert  : $BKS_CERT"
+          [ "$BKS_CERT" = "$BASE_CERT" ] || { echo 'BKS signer mismatch' >&2; exit 1; }
+
+          rm -f out/signer.p12
+          keytool -importkeystore \
+            -srckeystore ks.keystore -srcstoretype BKS -srcstorepass 123456789 \
+            -srcalias andrewliang -srckeypass 123456789 \
+            -destkeystore out/signer.p12 -deststoretype PKCS12 -deststorepass 123456789 \
+            -destkeypass 123456789 -destalias andrewliang -noprompt \
+            -providerclass org.bouncycastle.jce.provider.BouncyCastleProvider \
+            -providerpath tools/bcprov.jar
+
+          java -jar bin/apksigner.jar sign \
+            --ks out/signer.p12 --ks-type PKCS12 \
+            --ks-pass pass:123456789 --key-pass pass:123456789 \
+            --ks-key-alias andrewliang \
+            --out out/YouTube_Music_9.15.51_Luna_QUEUE_BIT_AB_ALIGNED.apk \
+            out/queue-bit-aligned.apk
+          rm -f out/*.idsig
+
+          java -jar bin/apksigner.jar verify --verbose --print-certs \
+            out/YouTube_Music_9.15.51_Luna_QUEUE_BIT_AB_ALIGNED.apk
+          OUT_CERT=$(java -jar bin/apksigner.jar verify --print-certs \
+            out/YouTube_Music_9.15.51_Luna_QUEUE_BIT_AB_ALIGNED.apk \
+            | sed -n 's/^Signer #1 certificate SHA-256 digest: //p' | norm)
+          [ "$OUT_CERT" = "$BASE_CERT" ] || { echo 'Output signer mismatch' >&2; exit 1; }
+
+          ZIPALIGN=$(find "$ANDROID_HOME/build-tools" -type f -name zipalign | sort -V | tail -1)
+          "$ZIPALIGN" -c -P 16 -v 4 out/YouTube_Music_9.15.51_Luna_QUEUE_BIT_AB_ALIGNED.apk
+          sha256sum out/YouTube_Music_9.15.51_Luna_QUEUE_BIT_AB_ALIGNED.apk
+
+      - name: Upload fixed artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: ytmusic-luna-queue-bit-ab-aligned
+          path: out/YouTube_Music_9.15.51_Luna_QUEUE_BIT_AB_ALIGNED.apk
+          if-no-files-found: error
+          retention-days: 14
+
+      - name: Publish fixed prerelease
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          TAG: ytmusic-luna-queue-bit-ab-aligned-${{ github.run_id }}
+        run: |
+          gh release create "$TAG" out/YouTube_Music_9.15.51_Luna_QUEUE_BIT_AB_ALIGNED.apk \
+            --title "YT Music Luna queue-bit A/B aligned" \
+            --notes "Repair of the queue-bit A/B APK after Apktool rebuild stripped native-library ZIP alignment. zipalign -P 16 -f -v 4 is applied before re-signing; signer certificate is verified identical to the validated Luna build. Queue-bit code change itself is unchanged." \
+            --prerelease
