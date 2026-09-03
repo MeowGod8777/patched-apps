@@ -1,0 +1,39 @@
+name: Extract Luna vivomusicmix strings
+
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - '.github/workflows/extract-luna-vivomusicmix-strings.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  extract:
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@v4
+      - name: Extract strings
+        shell: bash
+        run: |
+          set -euxo pipefail
+          mkdir -p work/apk work/out
+          UA='Mozilla/5.0 (Linux; Android 16; V2329A) AppleWebKit/537.36 Chrome/143 Mobile Safari/537.36'
+          curl -L --retry 3 --connect-timeout 15 --max-time 240 -A "$UA" 'https://ugapk.com/GMg3' -o work/luna.apk
+          unzip -q work/luna.apk 'classes*.dex' -d work/apk
+          : > work/out/vivomusicmix_strings.txt
+          : > work/out/action_strings.txt
+          for f in work/apk/classes*.dex; do
+            strings -a "$f" | grep -Ei 'vivomusicmix|vivo.*(list|play|favorite|loop|lyric)|get.?list|play.?index' | sed "s#^#$f: #" >> work/out/vivomusicmix_strings.txt || true
+            strings -a "$f" | grep -Ei 'action.*(get|list|play|index|favorite|seek|mode)|list.*(data|index|current)|media.*support.*event' | sed "s#^#$f: #" >> work/out/action_strings.txt || true
+          done
+          sort -u -o work/out/vivomusicmix_strings.txt work/out/vivomusicmix_strings.txt
+          sort -u -o work/out/action_strings.txt work/out/action_strings.txt
+          cat work/out/vivomusicmix_strings.txt
+      - uses: actions/upload-artifact@v4
+        with:
+          name: luna-vivomusicmix-strings
+          path: work/out
+          retention-days: 7
