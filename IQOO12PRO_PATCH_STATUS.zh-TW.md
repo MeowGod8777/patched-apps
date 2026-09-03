@@ -19,6 +19,27 @@ Shell 操作工具: Runner
 
 ---
 
+# 當前總結：non-root 日用修補已接近飽和
+
+以目前限制：
+
+- locked bootloader；
+- 無 persistent root；
+- 日常以 Runner / user-space APK patch / system settings / vivo 公開與可觀察介面為主；
+- 目標是提升中國版 OriginOS 6 的日用完整度，不是為修而修；
+
+目前 12 Pro **可修、值得修、且對日用有明顯收益的 non-root 項目已經接近做完**。
+
+主體缺口已從「大量 OriginOS / Google / media integration 問題」縮小到少數剩餘工作：
+
+1. **patched YouTube Music**：下一條最合理的日用主線；需要獨立 framework-support identity，避免與 YouTube `com.apple.android.music` collision。
+2. **Instagram HDR**：仍是實質未解功能缺口；Android / vivo HDR display path 已證明正常，真正問題仍在 Instagram / Meta HDR request eligibility / device classification / rendition delivery gate。此路線難度高，且不保證純 non-root APK patch 可完全解決。
+3. **少數 App-level polish**：LINE / Instagram / Threads 去廣告、入口精簡、通知雙卡、長標題截斷等；這類屬 App customization / cosmetic，不再視為 12 Pro 核心系統缺口。
+
+**Temporary Root / Scene root mode / scheduler / thermal / 續航研究不算本條 non-root 修補的未完成項目。** 若 temp root 日後真正可用，會進入另一個權限層級與研究專案，不應拿來判定目前日用修補是否「還缺很多」。
+
+---
+
 ## 已結案 / 已打通
 
 - Google Quick Share：結案；LocalSend 作跨平台備援。
@@ -116,16 +137,11 @@ YouTube MediaSession
 
 ## YouTube 日用決策
 
-`com.apple.android.music` build **升級為日用候選，可以直接開始日用**。
+`com.apple.android.music` build **已可直接日用**。
 
-但目前尚未做 Google 帳號登入，因此在刪除原本 `app.revanced.android.youtube` 前，至少補完：
+ReVanced 舊版設定匯入新版後存在 defaults / schema / host-version 差異，無法靠 sparse export 完整重建舊體驗；使用者已決定自行手動調整新版設定，不再把這件事當修補主線。
 
-1. MicroG / GmsCore 帳號登入；
-2. 重開機後帳號仍存在；
-3. `youtube.com` / `youtu.be` 外部連結可正常進入這顆；
-4. 平常有使用的背景播放 / PiP / Cast 再各驗一次。
-
-以上不是系統風險 gate，而是 production polish。此 build 本質仍是普通 user APK，出問題可卸載；現階段最合理做法是**先直接日用，但暫時保留舊 YouTube 當 fallback**。
+目前仍建議暫時保留舊 `app.revanced.android.youtube` 作 fallback，直到日用確認帳號登入、外部連結、背景播放 / PiP / Cast 等個人常用功能均正常。
 
 若未來要裝真正 Apple Music，需改用另一個尚未占用的 framework-support + lock-cooperation identity。
 
@@ -149,19 +165,45 @@ Ghost Player 現在**沒有安裝**。先前因與 Wavelet 同時使用時出現
 
 ---
 
-# 下一條：patched YT Music + Bilibili 音樂整合
+# 下一條：patched YouTube Music
 
-使用者下一步打算安裝 / 製作 patched YouTube Music，並把 Bilibili 音樂來源整合到 YT Music；目前尚未安裝與實作。
+Bilibili 音樂整理 / 歌單搬運由使用者另外處理，**不再與 12 Pro YT Music patch 綁成同一條工作**。
 
-OriginPlayer 方向已經很明確：
+12 Pro 這邊只處理 patched YouTube Music 本身與 OriginPlayer integration：
 
-1. YouTube 保留 `com.apple.android.music`。
+1. YouTube 目前使用 `com.apple.android.music`。
 2. YT Music **必須使用不同 package identity**，避免 collision。
 3. 第一候選暫定 `com.luna.music`：exact OriginPlayer 6.2.7.1 已確認它屬 framework-support 候選，且先前實機 collision scan 為 FREE。
 4. `com.spotify.music` 等也可用，但若未來要裝真 Spotify 會直接 collision，因此不是第一選擇。
-5. 如果 Bilibili 音樂實際是在 YT Music App 內播放、MediaSession owner 仍是 patched YT Music，那 OriginPlayer 只需要認 YT Music 的 framework-support identity；這會比再引入 Ghost 更乾淨。
+5. 目標是讓 patched YT Music 自身的 MediaSession 直接走 vivo richer OriginPlayer / lockscreen / media-island path，不重新引入 Ghost。
 
-在選定 Bilibili 音樂整合 patch / source 之前，不先假定其內部實作方式。下一輪先確認 patched YT Music 的來源、版本與 integration 機制，再建立獨立 identity build。
+---
+
+# 仍有價值但不是目前必做的項目
+
+## Instagram HDR
+
+仍屬真正功能缺口，不是 cosmetic。
+
+已知基線：
+
+- YouTube HDR / Android / vivo HDR display path 正常；
+- Instagram Reels 實際問題已定位到 Meta / Instagram HDR request eligibility / device classification / rendition delivery gate；
+- 若繼續研究，應直接找可修改的 eligibility / request / rendition path，而不是重做 display capability 診斷。
+
+此項仍值得研究，但難度與不確定性遠高於 OriginPlayer / package identity patch；完成 YT Music 後再決定是否回頭硬啃。
+
+## App-level customization
+
+LINE / Instagram / Threads 的去廣告、入口隱藏、外部連結、push 等仍可持續維護，但應視為**通用 App patching**，不再視為 iQOO 12 Pro / OriginOS 核心修補未完成。
+
+## OriginPlayer cosmetic polish
+
+- vivo richer card + YouTube 自身通知可能雙卡；
+- 超長 YouTube 標題在 music template 可能截斷；
+- 控制語意（收藏、playlist 等）不一定完全對應 YouTube video semantics。
+
+只有實際日用覺得煩再修，不主動投入時間。
 
 ---
 
@@ -177,11 +219,13 @@ OriginPlayer 方向已經很明確：
 
 ## 目前優先序
 
-1. **YouTube `com.apple.android.music` 日用**：直接開始使用；補帳號登入 / 重啟持久化 / 外部連結驗證後即可正式替代舊 build。
-2. **patched YT Music + Bilibili 音樂整合**：下一條主線；使用獨立 framework-support identity，首選暫定 `com.luna.music`。
-3. **通知雙卡 / 長標題 UI**：只有日用真的覺得煩再處理。
-4. **Ghost Player**：目前不安裝、不修；僅備援。
-5. **MiCTS**：已有可用方案，暫停研究。
+1. **patched YouTube Music**：下一條主線；使用獨立 framework-support identity，首選暫定 `com.luna.music`。
+2. **YouTube `com.apple.android.music` 日用觀察**：已可使用；只做必要 polish，不再花時間追求舊 ReVanced 設定 1:1 複製。
+3. **Instagram HDR**：YT Music 完成後，若仍有需求，再回到 Meta HDR eligibility / rendition gate。
+4. **LINE / IG / Threads 等 App patch**：有明確痛點再維護。
+5. **通知雙卡 / 長標題 UI**：cosmetic，低優先。
+6. **Ghost Player**：不安裝、不修；僅備援。
+7. **MiCTS**：已有可用方案，暫停研究。
 
 ## 操作原則
 
@@ -189,3 +233,4 @@ OriginPlayer 方向已經很明確：
 - 已結案項目不要因新對話再次從頭診斷。
 - Runner 是 V2329A shell 執行工具。
 - 對候選修補先看日用價值，不因公開存在方案就自動列入主線。
+- non-root 日用修補已接近飽和；新項目若只是「能做」，但沒有實際缺口或收益，不自動納入。
