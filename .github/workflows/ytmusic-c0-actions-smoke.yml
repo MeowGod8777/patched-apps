@@ -1,0 +1,14 @@
+name: YT Music c0 Actions smoke
+
+on:
+  push:
+    paths:
+      - '.github/workflows/ytmusic-c0-actions-smoke.yml'
+  workflow_dispatch:
+
+jobs:
+  smoke:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Smoke
+        run: echo "c0 workflow runner OK"
