@@ -1,0 +1,166 @@
+name: Build YT Music Luna Vivo c0 v3 selection and time
+
+on:
+  push:
+    paths:
+      - .github/workflows/build-ytmusic-luna-vivo-c0-v3-selection-time.yml
+      - tools/ytmusic_vivo_c0_v3_selection_time.py
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Download validated Luna base and tools
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p input tools out
+          gh release download ytmusic-originplayer-luna-33729902415 --pattern '*.apk' --dir input
+          mv input/*.apk input/base.apk
+          curl -L --fail --retry 3 -o tools/apktool.jar \
+            https://github.com/iBotPeaches/Apktool/releases/download/v3.0.3/apktool_3.0.3.jar
+          curl -L --fail --retry 3 -o tools/bcprov.jar \
+            https://repo1.maven.org/maven2/org/bouncycastle/bcprov-jdk18on/1.82/bcprov-jdk18on-1.82.jar
+          sha256sum input/base.apk tools/apktool.jar tools/bcprov.jar | tee out/input-sha256.txt
+
+      - name: Decode and apply validated v2 plus v3 selection/time overlay
+        shell: bash
+        run: |
+          set -euo pipefail
+          java -jar tools/apktool.jar d -f input/base.apk -o decoded
+          python3 tools/ytmusic_vivo_c0_real_queue_v2.py decoded
+          python3 tools/ytmusic_vivo_c0_v3_selection_time.py decoded
+
+          BROWSER_SMALI=$(find decoded -type f -path '*/com/google/android/apps/youtube/music/mediabrowser/MusicBrowserService.smali' -print -quit)
+          QUEUE_SMALI=$(find decoded -type f -name 'ii.smali' -print -quit)
+          CALLBACK_SMALI=$(find decoded -type f -name 'id.smali' -print | while read f; do grep -q 'onPlayFromMediaId(Ljava/lang/String;Landroid/os/Bundle;)V' "$f" && echo "$f" && break; done)
+          test -n "$BROWSER_SMALI"
+          test -n "$QUEUE_SMALI"
+          test -n "$CALLBACK_SMALI"
+
+          grep -n -A16 -B4 'com.vivo.musicwidgetmix.support.service' decoded/AndroidManifest.xml | tee out/patched-manifest-context.txt
+          grep -n -A28 -B4 'VIVO_MUSIC_MIX_ROOT' "$BROWSER_SMALI" | tee out/patched-root-context.txt
+          grep -n -A130 -B8 'vivo_qid_' "$BROWSER_SMALI" | tee out/patched-real-queue-context.txt
+          grep -n -A35 -B10 'vivomusicmix.media.metadata.support_event' "$QUEUE_SMALI" | tee out/patched-time-context.txt
+          grep -n -A80 -B10 'vivo_qid_' "$CALLBACK_SMALI" | tee out/patched-selection-context.txt
+
+          grep -q 'field public static volatile vivoQueue:Ljava/util/List;' "$BROWSER_SMALI"
+          grep -q 'vivo_qid_' "$BROWSER_SMALI"
+          grep -q 'MusicBrowserService;->vivoQueue:Ljava/util/List;' "$QUEUE_SMALI"
+          grep -q 'vivomusicmix.media.metadata.support_event' "$QUEUE_SMALI"
+          grep -q 'const-wide/16 v4, 0x10' "$QUEUE_SMALI"
+          grep -q 'or-long/2addr v2, v4' "$QUEUE_SMALI"
+          grep -q 'Ljava/lang/Long;->parseLong(Ljava/lang/String;)J' "$CALLBACK_SMALI"
+          grep -q 'Lie;->t(J)V' "$CALLBACK_SMALI"
+
+      - name: Rebuild and 16K align
+        shell: bash
+        run: |
+          set -euo pipefail
+          java -jar tools/apktool.jar b decoded -o out/unsigned.apk
+          BUILD_TOOLS="${ANDROID_HOME}/build-tools/$(ls "${ANDROID_HOME}/build-tools" | sort -V | tail -1)"
+          "$BUILD_TOOLS/zipalign" -P 16 -f 4 out/unsigned.apk out/aligned.apk
+          "$BUILD_TOOLS/zipalign" -c -P 16 -v 4 out/aligned.apk | tee out/zipalign-before-sign.txt
+
+      - name: Sign with validated ReVanced certificate and verify
+        shell: bash
+        run: |
+          set -euo pipefail
+          norm() { tr -d ':[:space:]' | tr '[:upper:]' '[:lower:]'; }
+          BASE_CERT=$(java -jar bin/apksigner.jar verify --print-certs input/base.apk \
+            | sed -n 's/^Signer #1 certificate SHA-256 digest: //p' | norm)
+          BKS_CERT=$(keytool -list -v \
+            -keystore ks.keystore -storetype BKS -storepass 123456789 \
+            -alias andrewliang \
+            -providerclass org.bouncycastle.jce.provider.BouncyCastleProvider \
+            -providerpath tools/bcprov.jar \
+            | sed -n 's/^[[:space:]]*SHA256: //p' | norm)
+          echo "base=$BASE_CERT" | tee out/cert.txt
+          echo "bks=$BKS_CERT" | tee -a out/cert.txt
+          test -n "$BASE_CERT"
+          test "$BASE_CERT" = "$BKS_CERT"
+
+          keytool -importkeystore \
+            -srckeystore ks.keystore -srcstoretype BKS -srcstorepass 123456789 \
+            -srcalias andrewliang -srckeypass 123456789 \
+            -destkeystore out/signer.p12 -deststoretype PKCS12 \
+            -deststorepass 123456789 -destkeypass 123456789 \
+            -destalias andrewliang -noprompt \
+            -providerclass org.bouncycastle.jce.provider.BouncyCastleProvider \
+            -providerpath tools/bcprov.jar
+
+          OUT_APK=out/YouTube_Music_9.15.51_Luna_VIVO_C0_V3_SELECTION_TIME.apk
+          java -jar bin/apksigner.jar sign \
+            --ks out/signer.p12 --ks-type PKCS12 \
+            --ks-pass pass:123456789 --key-pass pass:123456789 \
+            --ks-key-alias andrewliang \
+            --out "$OUT_APK" out/aligned.apk
+          rm -f out/*.idsig
+
+          java -jar bin/apksigner.jar verify --verbose --print-certs "$OUT_APK" | tee out/signature-verify.txt
+          OUT_CERT=$(java -jar bin/apksigner.jar verify --print-certs "$OUT_APK" \
+            | sed -n 's/^Signer #1 certificate SHA-256 digest: //p' | norm)
+          test "$OUT_CERT" = "$BASE_CERT"
+
+          BUILD_TOOLS="${ANDROID_HOME}/build-tools/$(ls "${ANDROID_HOME}/build-tools" | sort -V | tail -1)"
+          "$BUILD_TOOLS/zipalign" -c -P 16 -v 4 "$OUT_APK" | tee out/zipalign-final.txt
+          sha256sum "$OUT_APK" | tee out/SHA256.txt
+
+          python3 - <<'PY' | tee out/native-libs.txt
+          import zipfile
+          apk='out/YouTube_Music_9.15.51_Luna_VIVO_C0_V3_SELECTION_TIME.apk'
+          with zipfile.ZipFile(apk) as z:
+              libs=[i for i in z.infolist() if i.filename.startswith('lib/arm64-v8a/') and i.filename.endswith('.so')]
+              print('arm64_so_count=', len(libs))
+              for i in libs:
+                  print(i.filename, 'compress_type=', i.compress_type, 'size=', i.file_size)
+              assert libs
+              assert all(i.compress_type == zipfile.ZIP_STORED for i in libs)
+          PY
+
+      - name: Static manifest and smali verification
+        shell: bash
+        run: |
+          set -euo pipefail
+          OUT_APK=out/YouTube_Music_9.15.51_Luna_VIVO_C0_V3_SELECTION_TIME.apk
+          BUILD_TOOLS="${ANDROID_HOME}/build-tools/$(ls "${ANDROID_HOME}/build-tools" | sort -V | tail -1)"
+          "$BUILD_TOOLS/aapt" dump badging "$OUT_APK" | tee out/badging.txt
+          grep -q "package: name='com.luna.music'" out/badging.txt
+          grep -q "versionName='9.15.51'" out/badging.txt
+          "$BUILD_TOOLS/aapt" dump xmltree "$OUT_APK" AndroidManifest.xml | tee out/manifest-xmltree.txt
+          grep -q 'com.vivo.musicwidgetmix.support.service' out/manifest-xmltree.txt
+          grep -q 'com.google.android.apps.youtube.music.mediabrowser.MusicBrowserService' out/manifest-xmltree.txt
+          grep -q 'vivo_qid_' out/patched-real-queue-context.txt
+          grep -q 'vivomusicmix.media.metadata.support_event' out/patched-time-context.txt
+          grep -q 'Lie;->t(J)V' out/patched-selection-context.txt
+
+      - name: Upload c0 v3 APK
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: ytmusic-luna-vivo-c0-v3-selection-time
+          path: |
+            out/YouTube_Music_9.15.51_Luna_VIVO_C0_V3_SELECTION_TIME.apk
+            out/SHA256.txt
+            out/cert.txt
+            out/signature-verify.txt
+            out/zipalign-final.txt
+            out/native-libs.txt
+            out/badging.txt
+            out/manifest-xmltree.txt
+            out/patched-manifest-context.txt
+            out/patched-root-context.txt
+            out/patched-real-queue-context.txt
+            out/patched-time-context.txt
+            out/patched-selection-context.txt
+          if-no-files-found: warn
+          retention-days: 14
