@@ -1,8 +1,1 @@
-{
-  "custom_playback_speeds": "0.25\n0.5\n0.75\n0.9\n0.95\n1.0\n1.05\n1.1\n1.15\n1.20\n1.25\n1.5\n1.75\n2.0\n3.0\n4.0\n5.0",
-  "force_original_audio": false,
-  "hide_cast_button": false,
-  "ryd_compact_layout": true,
-  "ryd_dislike_percentage": true,
-  "sb_sponsor": "ignore"
-}
+"custom_playback_speeds":"0.25\n0.5\n0.75\n0.9\n0.95\n1.0\n1.05\n1.1\n1.15\n1.20\n1.25\n1.5\n1.75\n2.0\n3.0\n4.0\n5.0","force_original_audio":false,"hide_cast_button":false,"ryd_compact_layout":true,"ryd_dislike_percentage":true,"sb_sponsor":"ignore"
