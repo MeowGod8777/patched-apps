@@ -20,7 +20,7 @@ jobs:
 
       - uses: actions/checkout@v6
 
-      - name: Download current Luna APK and Apktool
+      - name: Download current Luna APK and tools
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
@@ -31,7 +31,10 @@ jobs:
           curl -L --fail --retry 3 \
             -o tools/apktool.jar \
             https://github.com/iBotPeaches/Apktool/releases/download/v3.0.3/apktool_3.0.3.jar
-          sha256sum input/base.apk tools/apktool.jar
+          curl -L --fail --retry 3 \
+            -o tools/bcprov.jar \
+            https://repo1.maven.org/maven2/org/bouncycastle/bcprov-jdk18on/1.82/bcprov-jdk18on-1.82.jar
+          sha256sum input/base.apk tools/apktool.jar tools/bcprov.jar
 
       - name: Decode smali only
         run: |
@@ -118,45 +121,39 @@ jobs:
           PY
 
       - name: Rebuild APK
-        run: |
-          java -jar tools/apktool.jar b decoded -o out/unsigned.apk
+        run: java -jar tools/apktool.jar b decoded -o out/unsigned.apk
 
-      - name: Select matching signer and sign
+      - name: Convert ReVanced BKS signer and preserve certificate
         shell: bash
         run: |
           set -euo pipefail
           norm() { tr -d ':[:space:]' | tr '[:upper:]' '[:lower:]'; }
-
           BASE_CERT=$(java -jar bin/apksigner.jar verify --print-certs input/base.apk \
             | sed -n 's/^Signer #1 certificate SHA-256 digest: //p' | norm)
-          JKS_CERT=$(keytool -list -v -keystore ks.keystore -storetype JKS \
-            -storepass 123456789 -alias andrewliang 2>/dev/null \
-            | sed -n 's/^[[:space:]]*SHA256: //p' | norm || true)
-          P12_CERT=$(keytool -list -v -keystore ks-p12.keystore -storetype PKCS12 \
-            -storepass 123456789 -alias andrewliang 2>/dev/null \
-            | sed -n 's/^[[:space:]]*SHA256: //p' | norm || true)
 
-          echo "base cert : $BASE_CERT"
-          echo "JKS cert  : ${JKS_CERT:-unreadable}"
-          echo "P12 cert  : ${P12_CERT:-unreadable}"
+          BKS_CERT=$(keytool -list -v \
+            -keystore ks.keystore -storetype BKS -storepass 123456789 \
+            -alias andrewliang \
+            -providerclass org.bouncycastle.jce.provider.BouncyCastleProvider \
+            -providerpath tools/bcprov.jar \
+            | sed -n 's/^[[:space:]]*SHA256: //p' | norm)
 
-          if [ -n "$JKS_CERT" ] && [ "$JKS_CERT" = "$BASE_CERT" ]; then
-            KS=ks.keystore
-            KSTYPE=JKS
-          elif [ -n "$P12_CERT" ] && [ "$P12_CERT" = "$BASE_CERT" ]; then
-            KS=ks-p12.keystore
-            KSTYPE=PKCS12
-          else
-            echo 'No project keystore matches the currently installed/base Luna APK signer.' >&2
-            exit 1
-          fi
+          echo "base APK cert: $BASE_CERT"
+          echo "BKS key cert : $BKS_CERT"
+          [ "$BKS_CERT" = "$BASE_CERT" ] || { echo 'BKS signer does not match base Luna APK' >&2; exit 1; }
 
-          echo "Signing with $KS ($KSTYPE)"
+          rm -f out/signer.p12
+          keytool -importkeystore \
+            -srckeystore ks.keystore -srcstoretype BKS -srcstorepass 123456789 \
+            -srcalias andrewliang -srckeypass 123456789 \
+            -destkeystore out/signer.p12 -deststoretype PKCS12 -deststorepass 123456789 \
+            -destkeypass 123456789 -destalias andrewliang -noprompt \
+            -providerclass org.bouncycastle.jce.provider.BouncyCastleProvider \
+            -providerpath tools/bcprov.jar
+
           java -jar bin/apksigner.jar sign \
-            --ks "$KS" \
-            --ks-type "$KSTYPE" \
-            --ks-pass pass:123456789 \
-            --key-pass pass:123456789 \
+            --ks out/signer.p12 --ks-type PKCS12 \
+            --ks-pass pass:123456789 --key-pass pass:123456789 \
             --ks-key-alias andrewliang \
             --out out/YouTube_Music_9.15.51_Luna_QUEUE_BIT_AB.apk \
             out/unsigned.apk
@@ -171,8 +168,7 @@ jobs:
           sha256sum out/YouTube_Music_9.15.51_Luna_QUEUE_BIT_AB.apk
 
       - name: Verify patched bit
-        run: |
-          grep -R -n -A4 -B4 'const-wide/16 .*0x1000' decoded/smali*/ii.smali
+        run: grep -R -n -A4 -B4 'const-wide/16 .*0x1000' decoded/smali*/ii.smali
 
       - name: Upload artifact
         uses: actions/upload-artifact@v4
@@ -189,5 +185,5 @@ jobs:
         run: |
           gh release create "$TAG" out/YouTube_Music_9.15.51_Luna_QUEUE_BIT_AB.apk \
             --title "YT Music Luna queue-bit A/B" \
-            --notes "Single-variable A/B over the validated com.luna.music build. Adds PlaybackState ACTION_SKIP_TO_QUEUE_ITEM (0x1000) immediately before framework Builder.setActions(). Existing MediaSession.Callback.onSkipToQueueItem(long) is already present in the APK. Output signer is verified identical to the base Luna build." \
+            --notes "Single-variable A/B over the validated com.luna.music build. Adds PlaybackState ACTION_SKIP_TO_QUEUE_ITEM (0x1000) immediately before framework Builder.setActions(). Existing MediaSession.Callback.onSkipToQueueItem(long) is already present. ReVanced BKS signer is converted to PKCS12 only for apksigner compatibility, and certificate SHA-256 is verified identical to the base Luna APK." \
             --prerelease
