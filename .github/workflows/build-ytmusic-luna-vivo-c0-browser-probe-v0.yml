@@ -1,0 +1,303 @@
+name: Build YT Music Luna Vivo c0 browser probe v0
+
+on:
+  push:
+    paths:
+      - '.github/workflows/build-ytmusic-luna-vivo-c0-browser-probe-v0.yml'
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    permissions:
+      contents: write
+
+    steps:
+      - uses: actions/setup-java@v5
+        with:
+          distribution: zulu
+          java-version: '21'
+
+      - uses: actions/checkout@v6
+
+      - name: Download validated Luna base and tools
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        shell: bash
+        run: |
+          set -euxo pipefail
+          mkdir -p input tools out
+          gh release download ytmusic-originplayer-luna-33729902415 \
+            --pattern '*.apk' --dir input
+          mv input/*.apk input/base.apk
+          curl -L --fail --retry 3 \
+            -o tools/apktool.jar \
+            https://github.com/iBotPeaches/Apktool/releases/download/v3.0.3/apktool_3.0.3.jar
+          curl -L --fail --retry 3 \
+            -o tools/bcprov.jar \
+            https://repo1.maven.org/maven2/org/bouncycastle/bcprov-jdk18on/1.82/bcprov-jdk18on-1.82.jar
+          sha256sum input/base.apk tools/apktool.jar tools/bcprov.jar
+
+      - name: Decode APK
+        shell: bash
+        run: |
+          set -euxo pipefail
+          java -jar tools/apktool.jar d -f -r input/base.apk -o decoded
+          if ! grep -q 'com.google.android.apps.youtube.music.mediabrowser.MusicBrowserService' decoded/AndroidManifest.xml 2>/dev/null; then
+            echo 'Manifest was not decoded sufficiently with -r; retrying full decode.'
+            rm -rf decoded
+            java -jar tools/apktool.jar d -f input/base.apk -o decoded
+          fi
+          grep -n -A14 -B3 'com.google.android.apps.youtube.music.mediabrowser.MusicBrowserService' decoded/AndroidManifest.xml | tee out/base-service-manifest.txt
+          BROWSER_SMALI=$(find decoded -type f -path '*/com/google/android/apps/youtube/music/mediabrowser/MusicBrowserService.smali' -print -quit)
+          test -n "$BROWSER_SMALI"
+          echo "$BROWSER_SMALI" | tee out/browser-smali-path.txt
+          grep -n -A18 -B2 '^\.method public final f(Ljava/lang/String;Landroid/os/Bundle;)Ldefpackage/bze;' "$BROWSER_SMALI" | head -80 | tee out/base-root-method.txt
+          grep -n -A18 -B2 '^\.method public final b(Ljava/lang/String;Ldefpackage/bzu;Landroid/os/Bundle;)V' "$BROWSER_SMALI" | head -80 | tee out/base-children-method.txt
+
+      - name: Inject Vivo c0 cooperation probe
+        shell: bash
+        run: |
+          set -euxo pipefail
+          python3 - <<'PY'
+          from pathlib import Path
+          import re
+
+          manifest = Path('decoded/AndroidManifest.xml')
+          m = manifest.read_text(encoding='utf-8')
+          action = 'com.vivo.musicwidgetmix.support.service'
+          if action in m:
+              raise SystemExit('Vivo support.service action already present before probe patch')
+
+          service_re = re.compile(
+              r'(?ms)(<service\b[^>]*android:name="com\.google\.android\.apps\.youtube\.music\.mediabrowser\.MusicBrowserService"[^>]*>)(.*?)(</service>)'
+          )
+          sm = service_re.search(m)
+          if not sm:
+              raise SystemExit('Could not find MusicBrowserService manifest block')
+          block = sm.group(0)
+          if block.count('<intent-filter') != 1:
+              raise SystemExit(f'Expected one intent-filter in MusicBrowserService block, got {block.count("<intent-filter")}')
+          block2 = block.replace(
+              '</intent-filter>',
+              '                <action android:name="com.vivo.musicwidgetmix.support.service"/>\n            </intent-filter>',
+              1,
+          )
+          m = m[:sm.start()] + block2 + m[sm.end():]
+          manifest.write_text(m, encoding='utf-8')
+
+          paths = list(Path('decoded').glob('smali*/com/google/android/apps/youtube/music/mediabrowser/MusicBrowserService.smali'))
+          if len(paths) != 1:
+              raise SystemExit(f'Expected exactly one MusicBrowserService.smali, got {paths}')
+          p = paths[0]
+          s = p.read_text(encoding='utf-8')
+          if 'VIVO_MUSIC_MIX_ROOT' in s or 'vivo_probe_1' in s:
+              raise SystemExit('Probe markers already present before patch')
+
+          def patch_method(src, signature, min_locals, injection):
+              pat = re.compile(r'(?ms)^\.method ' + re.escape(signature) + r'\n(.*?)^\.end method')
+              mm = pat.search(src)
+              if not mm:
+                  raise SystemExit(f'Could not locate method: {signature}')
+              method = mm.group(0)
+              lm = re.search(r'(?m)^\s*\.locals\s+(\d+)\s*$', method)
+              if lm:
+                  n = int(lm.group(1))
+                  if n < min_locals:
+                      method = method[:lm.start()] + re.sub(r'\.locals\s+\d+', f'.locals {min_locals}', lm.group(0), count=1) + method[lm.end():]
+                      lm = re.search(r'(?m)^\s*\.locals\s+(\d+)\s*$', method)
+                  insert_at = lm.end()
+              else:
+                  rm = re.search(r'(?m)^\s*\.registers\s+(\d+)\s*$', method)
+                  if not rm:
+                      raise SystemExit(f'No .locals/.registers in method: {signature}')
+                  # Keep p-register count intact by increasing total registers by required v-register delta.
+                  old = int(rm.group(1))
+                  # f has 3 parameter registers; b has 4. Caller supplies required total below.
+                  params = 3 if ' f(' in (' ' + signature) else 4
+                  need_total = params + min_locals
+                  if old < need_total:
+                      method = method[:rm.start()] + re.sub(r'\.registers\s+\d+', f'.registers {need_total}', rm.group(0), count=1) + method[rm.end():]
+                      rm = re.search(r'(?m)^\s*\.registers\s+(\d+)\s*$', method)
+                  insert_at = rm.end()
+              method2 = method[:insert_at] + '\n\n' + injection.rstrip() + '\n' + method[insert_at:]
+              return src[:mm.start()] + method2 + src[mm.end():]
+
+          root_inject = r'''
+    const-string v0, "com.vivo.musicwidgetmix"
+    invoke-virtual {v0, p1}, Ljava/lang/String;->equals(Ljava/lang/Object;)Z
+    move-result v0
+    if-eqz v0, :vivo_probe_original_root
+
+    new-instance v0, Ldefpackage/bze;
+    const-string v1, "VIVO_MUSIC_MIX_ROOT"
+    const/4 v2, 0x0
+    invoke-direct {v0, v1, v2}, Ldefpackage/bze;-><init>(Ljava/lang/String;Landroid/os/Bundle;)V
+    return-object v0
+
+    :vivo_probe_original_root
+'''
+
+          children_inject = r'''
+    const-string v0, "vivomusicmix_current_list"
+    invoke-virtual {p1, v0}, Ljava/lang/String;->contains(Ljava/lang/CharSequence;)Z
+    move-result v0
+    if-eqz v0, :vivo_probe_original_children
+
+    new-instance v0, Ljava/util/ArrayList;
+    invoke-direct {v0}, Ljava/util/ArrayList;-><init>()V
+
+    new-instance v1, Landroid/support/v4/media/MediaDescriptionCompat$Builder;
+    invoke-direct {v1}, Landroid/support/v4/media/MediaDescriptionCompat$Builder;-><init>()V
+
+    const-string v2, "vivo_probe_1"
+    invoke-virtual {v1, v2}, Landroid/support/v4/media/MediaDescriptionCompat$Builder;->setMediaId(Ljava/lang/String;)Landroid/support/v4/media/MediaDescriptionCompat$Builder;
+
+    const-string v2, "YT Music Vivo Bridge"
+    invoke-virtual {v1, v2}, Landroid/support/v4/media/MediaDescriptionCompat$Builder;->setTitle(Ljava/lang/CharSequence;)Landroid/support/v4/media/MediaDescriptionCompat$Builder;
+
+    const-string v2, "c0 cooperation probe"
+    invoke-virtual {v1, v2}, Landroid/support/v4/media/MediaDescriptionCompat$Builder;->setSubtitle(Ljava/lang/CharSequence;)Landroid/support/v4/media/MediaDescriptionCompat$Builder;
+
+    invoke-virtual {v1}, Landroid/support/v4/media/MediaDescriptionCompat$Builder;->build()Landroid/support/v4/media/MediaDescriptionCompat;
+    move-result-object v2
+
+    new-instance v3, Landroid/support/v4/media/MediaBrowserCompat$MediaItem;
+    const/4 v4, 0x2
+    invoke-direct {v3, v2, v4}, Landroid/support/v4/media/MediaBrowserCompat$MediaItem;-><init>(Landroid/support/v4/media/MediaDescriptionCompat;I)V
+
+    invoke-virtual {v0, v3}, Ljava/util/ArrayList;->add(Ljava/lang/Object;)Z
+    invoke-virtual {p2, v0}, Ldefpackage/bzu;->c(Ljava/lang/Object;)V
+    return-void
+
+    :vivo_probe_original_children
+'''
+
+          s = patch_method(
+              s,
+              'public final f(Ljava/lang/String;Landroid/os/Bundle;)Ldefpackage/bze;',
+              3,
+              root_inject,
+          )
+          s = patch_method(
+              s,
+              'public final b(Ljava/lang/String;Ldefpackage/bzu;Landroid/os/Bundle;)V',
+              5,
+              children_inject,
+          )
+          p.write_text(s, encoding='utf-8')
+
+          assert action in manifest.read_text(encoding='utf-8')
+          assert 'VIVO_MUSIC_MIX_ROOT' in s
+          assert 'vivo_probe_1' in s
+          assert 'vivomusicmix_current_list' in s
+          print('Patched manifest + MusicBrowserService root/list probe:', p)
+          PY
+
+          grep -n -A16 -B4 'com.vivo.musicwidgetmix.support.service' decoded/AndroidManifest.xml | tee out/patched-manifest-context.txt
+          BROWSER_SMALI=$(cat out/browser-smali-path.txt)
+          grep -n -A30 -B4 'VIVO_MUSIC_MIX_ROOT' "$BROWSER_SMALI" | tee out/patched-root-context.txt
+          grep -n -A80 -B5 'vivo_probe_1' "$BROWSER_SMALI" | tee out/patched-list-context.txt
+
+      - name: Rebuild and 16K-align
+        shell: bash
+        run: |
+          set -euxo pipefail
+          java -jar tools/apktool.jar b decoded -o out/unsigned.apk
+          BUILD_TOOLS="${ANDROID_HOME}/build-tools/$(ls "${ANDROID_HOME}/build-tools" | sort -V | tail -1)"
+          "$BUILD_TOOLS/zipalign" -P 16 -f -v 4 out/unsigned.apk out/aligned.apk
+          "$BUILD_TOOLS/zipalign" -c -P 16 -v 4 out/aligned.apk | tee out/zipalign-check-before-sign.txt
+
+      - name: Sign with validated ReVanced BKS certificate
+        shell: bash
+        run: |
+          set -euxo pipefail
+          norm() { tr -d ':[:space:]' | tr '[:upper:]' '[:lower:]'; }
+
+          BASE_CERT=$(java -jar bin/apksigner.jar verify --print-certs input/base.apk \
+            | sed -n 's/^Signer #1 certificate SHA-256 digest: //p' | norm)
+          BKS_CERT=$(keytool -list -v \
+            -keystore ks.keystore -storetype BKS -storepass 123456789 \
+            -alias andrewliang \
+            -providerclass org.bouncycastle.jce.provider.BouncyCastleProvider \
+            -providerpath tools/bcprov.jar \
+            | sed -n 's/^[[:space:]]*SHA256: //p' | norm)
+          echo "base APK cert: $BASE_CERT"
+          echo "BKS key cert : $BKS_CERT"
+          [ -n "$BASE_CERT" ]
+          [ "$BKS_CERT" = "$BASE_CERT" ]
+
+          keytool -importkeystore \
+            -srckeystore ks.keystore -srcstoretype BKS -srcstorepass 123456789 \
+            -srcalias andrewliang -srckeypass 123456789 \
+            -destkeystore out/signer.p12 -deststoretype PKCS12 \
+            -deststorepass 123456789 -destkeypass 123456789 \
+            -destalias andrewliang -noprompt \
+            -providerclass org.bouncycastle.jce.provider.BouncyCastleProvider \
+            -providerpath tools/bcprov.jar
+
+          java -jar bin/apksigner.jar sign \
+            --ks out/signer.p12 --ks-type PKCS12 \
+            --ks-pass pass:123456789 --key-pass pass:123456789 \
+            --ks-key-alias andrewliang \
+            --out out/YouTube_Music_9.15.51_Luna_VIVO_C0_BROWSER_PROBE_V0.apk \
+            out/aligned.apk
+          rm -f out/*.idsig
+
+          java -jar bin/apksigner.jar verify --verbose --print-certs \
+            out/YouTube_Music_9.15.51_Luna_VIVO_C0_BROWSER_PROBE_V0.apk \
+            | tee out/signature-verify.txt
+          OUT_CERT=$(java -jar bin/apksigner.jar verify --print-certs \
+            out/YouTube_Music_9.15.51_Luna_VIVO_C0_BROWSER_PROBE_V0.apk \
+            | sed -n 's/^Signer #1 certificate SHA-256 digest: //p' | norm)
+          [ "$OUT_CERT" = "$BASE_CERT" ]
+
+          BUILD_TOOLS="${ANDROID_HOME}/build-tools/$(ls "${ANDROID_HOME}/build-tools" | sort -V | tail -1)"
+          "$BUILD_TOOLS/zipalign" -c -P 16 -v 4 \
+            out/YouTube_Music_9.15.51_Luna_VIVO_C0_BROWSER_PROBE_V0.apk \
+            | tee out/zipalign-check-final.txt
+          sha256sum out/YouTube_Music_9.15.51_Luna_VIVO_C0_BROWSER_PROBE_V0.apk | tee out/SHA256.txt
+
+      - name: Static verification
+        shell: bash
+        run: |
+          set -euxo pipefail
+          BUILD_TOOLS="${ANDROID_HOME}/build-tools/$(ls "${ANDROID_HOME}/build-tools" | sort -V | tail -1)"
+          AAPT="$BUILD_TOOLS/aapt"
+          "$AAPT" dump badging out/YouTube_Music_9.15.51_Luna_VIVO_C0_BROWSER_PROBE_V0.apk | tee out/badging.txt
+          grep -q "package: name='com.luna.music'" out/badging.txt
+          grep -q "versionName='9.15.51'" out/badging.txt
+          "$AAPT" dump xmltree out/YouTube_Music_9.15.51_Luna_VIVO_C0_BROWSER_PROBE_V0.apk AndroidManifest.xml \
+            | tee out/manifest-xmltree.txt
+          grep -q 'com.vivo.musicwidgetmix.support.service' out/manifest-xmltree.txt
+          grep -q 'com.google.android.apps.youtube.music.mediabrowser.MusicBrowserService' out/manifest-xmltree.txt
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: ytmusic-luna-vivo-c0-browser-probe-v0
+          path: |
+            out/YouTube_Music_9.15.51_Luna_VIVO_C0_BROWSER_PROBE_V0.apk
+            out/SHA256.txt
+            out/badging.txt
+            out/manifest-xmltree.txt
+            out/signature-verify.txt
+            out/zipalign-check-final.txt
+            out/patched-manifest-context.txt
+            out/patched-root-context.txt
+            out/patched-list-context.txt
+          if-no-files-found: error
+          retention-days: 14
+
+      - name: Publish prerelease
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          TAG: ytmusic-luna-vivo-c0-browser-probe-v0-${{ github.run_id }}
+        shell: bash
+        run: |
+          gh release create "$TAG" \
+            out/YouTube_Music_9.15.51_Luna_VIVO_C0_BROWSER_PROBE_V0.apk \
+            --title 'YT Music Luna Vivo c0 browser probe v0' \
+            --notes 'Cooperation-layer probe over the validated YT Music 9.15.51 / com.luna.music base. Reuses YT Music existing exported MusicBrowserService, adds com.vivo.musicwidgetmix.support.service, explicitly accepts com.vivo.musicwidgetmix with VIVO_MUSIC_MIX_ROOT, and returns one static playable MediaItem for vivomusicmix_current_list. No playFromMediaId bridge yet. Purpose: verify Vivo custom-insert/c0 binding and playlist browse UI before bridging the real YT Music queue. APK is 16K zipaligned and signed with the same validated ReVanced BKS certificate.' \
+            --prerelease
