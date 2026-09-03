@@ -1,0 +1,80 @@
+name: Inspect Luna Android download site
+
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - '.github/workflows/inspect-luna-download-site.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  inspect:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - name: Fetch current official site assets
+        shell: bash
+        run: |
+          set -euxo pipefail
+          mkdir -p out
+          UA='Mozilla/5.0 (Linux; Android 16; V2329A) AppleWebKit/537.36 Chrome/143 Mobile Safari/537.36'
+          curl -L --retry 3 -A "$UA" 'https://qishui.douyin.com/' -o out/home.html
+          curl -L --retry 3 -A "$UA" 'https://www.qishui.com/download' -o out/download.html
+          python3 - <<'PY'
+          from html.parser import HTMLParser
+          from urllib.parse import urljoin
+          from pathlib import Path
+          class P(HTMLParser):
+              def __init__(self,base): super().__init__(); self.base=base; self.urls=[]
+              def handle_starttag(self,tag,attrs):
+                  d=dict(attrs)
+                  if tag=='script' and d.get('src'): self.urls.append(urljoin(self.base,d['src']))
+          urls=[]
+          for fn,base in [('out/home.html','https://qishui.douyin.com/'),('out/download.html','https://www.qishui.com/download')]:
+              p=P(base); p.feed(Path(fn).read_text(errors='ignore')); urls += p.urls
+          Path('out/scripts.txt').write_text('\n'.join(sorted(set(urls))))
+          PY
+          i=0
+          while IFS= read -r u; do
+            [ -n "$u" ] || continue
+            i=$((i+1))
+            curl -L --retry 2 -A "$UA" "$u" -o "out/script_$i.js" || true
+            printf '%s\t%s\n' "$i" "$u" >> out/script_map.txt
+          done < out/scripts.txt
+      - name: Extract Android download logic
+        shell: bash
+        run: |
+          set -euxo pipefail
+          python3 - <<'PY'
+          from pathlib import Path
+          terms=['.apk','apk','android','download','qrcode','qrCode','appInfo','versionName','versionCode','downloadUrl','download_url','schema','m.douyin.com/qishui','luna-release']
+          lines=[]
+          for p in sorted(Path('out').glob('script_*.js')):
+              s=p.read_text(errors='ignore')
+              low=s.lower()
+              for term in terms:
+                  start=0; needle=term.lower()
+                  while True:
+                      i=low.find(needle,start)
+                      if i<0: break
+                      a=max(0,i-600); b=min(len(s),i+1400)
+                      lines.append(f'===== {p.name} term={term} offset={i} =====\n{s[a:b]}\n')
+                      start=i+len(needle)
+                      if sum(1 for x in lines if f'{p.name} term={term}' in x) >= 20: break
+          Path('out/android_download_context.txt').write_text('\n'.join(lines))
+          PY
+          grep -Eo 'https?://[^"[:space:]<>]+' out/android_download_context.txt | sort -u > out/context_urls.txt || true
+          echo '===== SCRIPT MAP ====='
+          cat out/script_map.txt || true
+          echo '===== CONTEXT ====='
+          sed -n '1,3000p' out/android_download_context.txt || true
+      - name: Upload inspection
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: luna-download-site-inspection
+          path: out
+          retention-days: 3
