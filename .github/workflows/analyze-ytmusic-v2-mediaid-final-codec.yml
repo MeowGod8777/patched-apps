@@ -1,0 +1,127 @@
+name: Analyze YT Music V2 mediaId final codec
+
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - .github/workflows/analyze-ytmusic-v2-mediaid-final-codec.yml
+
+permissions:
+  contents: read
+  actions: read
+
+jobs:
+  analyze:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Decode exact V2 runtime-PASS APK
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p input tools out
+          gh api /repos/${GITHUB_REPOSITORY}/actions/artifacts/9896185089/zip > input/v2.zip
+          unzip -q input/v2.zip -d input/v2
+          V2=$(find input/v2 -maxdepth 1 -name '*.apk' -print -quit)
+          curl -L --fail --retry 3 -o tools/apktool.jar https://github.com/iBotPeaches/Apktool/releases/download/v3.0.3/apktool_3.0.3.jar
+          java -jar tools/apktool.jar d -f "$V2" -o decoded
+
+      - name: Extract Lavev lazy parser
+        shell: bash
+        run: |
+          set -euo pipefail
+          for cls in avet avev aveu; do
+            P=$(find decoded -type f -name "$cls.smali" -print -quit)
+            test -n "$P"
+            cp "$P" "out/$cls.smali"
+          done
+          grep -n '^\.class\|^\.super\|^\.field\|^\.method' out/avet.smali > out/avet-structure.txt
+          cat out/avet.smali > out/avet-full.txt
+
+      - name: Extract Llbg mediaId-to-playback conversion
+        shell: bash
+        run: |
+          set -euo pipefail
+          P=$(find decoded -type f -name 'lbg.smali' -print -quit)
+          test -n "$P"
+          cp "$P" out/lbg.smali
+          grep -n '^\.class\|^\.super\|^\.field\|^\.method' "$P" > out/lbg-structure.txt
+          python3 - <<'PY'
+          from pathlib import Path
+          lines=Path('out/lbg.smali').read_text(errors='ignore').splitlines()
+          with open('out/lbg-avev-methods.txt','w') as o:
+              for i,l in enumerate(lines):
+                  if l.startswith('.method') and ('(Lavev;)' in l or 'Lavev;' in l):
+                      j=i
+                      while j<len(lines) and lines[j] != '.end method': j+=1
+                      o.write(f'===== {l} =====\n'+'\n'.join(lines[i:j+1])+'\n')
+          PY
+
+      - name: Extract native getVideoId browser-item construction methods
+        shell: bash
+        run: |
+          set -euo pipefail
+          grep -R -n 'getVideoId()Ljava/lang/String;' decoded/smali* > out/getvideoid-hits.txt || true
+          python3 - <<'PY'
+          from pathlib import Path
+          with open('out/getvideoid-methods.txt','w') as o:
+              for p in Path('decoded').glob('smali*/**/*.smali'):
+                  try: lines=p.read_text(errors='ignore').splitlines()
+                  except: continue
+                  hitidx=[i for i,l in enumerate(lines) if 'getVideoId()Ljava/lang/String;' in l]
+                  for i in hitidx:
+                      # retain only methods that also construct MediaDescription/MediaItem
+                      start=i
+                      while start>=0 and not lines[start].startswith('.method '): start-=1
+                      end=i
+                      while end<len(lines) and lines[end] != '.end method': end+=1
+                      body='\n'.join(lines[start:min(len(lines),end+1)])
+                      if 'MediaDescriptionCompat;-><init>' in body or 'MediaBrowserCompat$MediaItem;-><init>' in body:
+                          o.write(f'===== {p}:{i+1} =====\n{body}\n')
+          PY
+
+      - name: Find Lavev constructor from nonconstant strings
+        shell: bash
+        run: |
+          set -euo pipefail
+          grep -R -n 'Lavev;-><init>(Ljava/lang/String;)V' decoded/smali* > out/avev-constructor-hits.txt || true
+          python3 - <<'PY'
+          from pathlib import Path
+          with open('out/avev-constructor-contexts.txt','w') as o:
+              for p in Path('decoded').glob('smali*/**/*.smali'):
+                  try: lines=p.read_text(errors='ignore').splitlines()
+                  except: continue
+                  for i,l in enumerate(lines):
+                      if 'Lavev;-><init>(Ljava/lang/String;)V' in l:
+                          o.write(f'===== {p}:{i+1} =====\n')
+                          o.write('\n'.join(lines[max(0,i-35):min(len(lines),i+30)])+'\n')
+          PY
+
+      - name: Search mediaId encoding helpers near Buyd
+        shell: bash
+        run: |
+          set -euo pipefail
+          grep -R -n -E 'Lbuyd;|Base64|base64|encodeToString|decode\(' decoded/smali* > out/buyd-base64-hits.txt || true
+          python3 - <<'PY'
+          from pathlib import Path
+          with open('out/buyd-base64-contexts.txt','w') as o:
+              for p in Path('decoded').glob('smali*/**/*.smali'):
+                  try: lines=p.read_text(errors='ignore').splitlines()
+                  except: continue
+                  for i,l in enumerate(lines):
+                      if 'Lbuyd;' in l and any(('Base64' in x or 'encodeToString' in x or 'toByteArray' in x) for x in lines[max(0,i-25):min(len(lines),i+35)]):
+                          o.write(f'===== {p}:{i+1} =====\n')
+                          o.write('\n'.join(lines[max(0,i-35):min(len(lines),i+50)])+'\n')
+          PY
+
+      - name: Upload final mediaId codec evidence
+        uses: actions/upload-artifact@v4
+        with:
+          name: ytmusic-v2-mediaid-final-codec
+          path: out/
+          if-no-files-found: error
+          retention-days: 14
