@@ -1,0 +1,157 @@
+name: Build YT Music Luna Bach receiver A/B
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - .github/workflows/build-ytmusic-bach-receiver-ab.yml
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/setup-java@v5
+        with:
+          distribution: zulu
+          java-version: "21"
+
+      - uses: actions/checkout@v6
+
+      - name: Download validated Luna APK and tools
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          set -euo pipefail
+          mkdir -p input tools out
+          gh release download ytmusic-originplayer-luna-33729902415 \
+            --pattern '*.apk' --dir input
+          mv input/*.apk input/base.apk
+          curl -L --fail --retry 3 \
+            -o tools/apktool.jar \
+            https://github.com/iBotPeaches/Apktool/releases/download/v3.0.3/apktool_3.0.3.jar
+          curl -L --fail --retry 3 \
+            -o tools/bcprov.jar \
+            https://repo1.maven.org/maven2/org/bouncycastle/bcprov-jdk18on/1.82/bcprov-jdk18on-1.82.jar
+          sha256sum input/base.apk
+
+      - name: Decode APK and inspect existing media button receiver
+        run: |
+          set -euo pipefail
+          java -jar tools/apktool.jar d -f input/base.apk -o decoded
+          echo '===== EXISTING RECEIVER ====='
+          grep -n -A8 -B4 -F 'androidx.media.session.MediaButtonReceiver' decoded/AndroidManifest.xml || true
+          if grep -R -q -F 'Lcom/luna/biz/playing/player/BachMediaButtonReceiver;' decoded/smali* 2>/dev/null; then
+            echo 'BachMediaButtonReceiver already exists unexpectedly' >&2
+            exit 1
+          fi
+
+      - name: Replace receiver identity with Luna BachMediaButtonReceiver
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          from pathlib import Path
+          import re
+
+          manifest = Path('decoded/AndroidManifest.xml')
+          s = manifest.read_text(encoding='utf-8')
+          old = 'androidx.media.session.MediaButtonReceiver'
+          new = 'com.luna.biz.playing.player.BachMediaButtonReceiver'
+          count = s.count(old)
+          print('manifest old receiver occurrences:', count)
+          if count != 1:
+              raise SystemExit(f'Expected exactly one {old} in manifest, got {count}')
+          s = s.replace(old, new)
+          manifest.write_text(s, encoding='utf-8')
+
+          # Add a receiver class that delegates all behavior to AndroidX MediaButtonReceiver.
+          p = Path('decoded/smali/com/luna/biz/playing/player/BachMediaButtonReceiver.smali')
+          p.parent.mkdir(parents=True, exist_ok=True)
+          p.write_text('''.class public Lcom/luna/biz/playing/player/BachMediaButtonReceiver;\n.super Landroidx/media/session/MediaButtonReceiver;\n.source "BachMediaButtonReceiver.java"\n\n.method public constructor <init>()V\n    .locals 0\n\n    invoke-direct {p0}, Landroidx/media/session/MediaButtonReceiver;-><init>()V\n\n    return-void\n.end method\n''', encoding='utf-8')
+          print('Added', p)
+          PY
+
+          echo '===== PATCHED RECEIVER ====='
+          grep -n -A8 -B4 -F 'com.luna.biz.playing.player.BachMediaButtonReceiver' decoded/AndroidManifest.xml
+          cat decoded/smali/com/luna/biz/playing/player/BachMediaButtonReceiver.smali
+
+      - name: Rebuild and align APK
+        run: |
+          set -euo pipefail
+          java -jar tools/apktool.jar b decoded -o out/unsigned.apk
+          zipalign -P 16 -f -v 4 out/unsigned.apk out/aligned.apk
+          zipalign -c -P 16 -v 4 out/aligned.apk
+
+      - name: Preserve ReVanced signer and sign
+        shell: bash
+        run: |
+          set -euo pipefail
+          norm() { tr -d ':[:space:]' | tr '[:upper:]' '[:lower:]'; }
+          BASE_CERT=$(java -jar bin/apksigner.jar verify --print-certs input/base.apk \
+            | sed -n 's/^Signer #1 certificate SHA-256 digest: //p' | norm)
+          BKS_CERT=$(keytool -list -v \
+            -keystore ks.keystore -storetype BKS -storepass 123456789 \
+            -alias andrewliang \
+            -providerclass org.bouncycastle.jce.provider.BouncyCastleProvider \
+            -providerpath tools/bcprov.jar \
+            | sed -n 's/^[[:space:]]*SHA256: //p' | norm)
+          echo "base APK cert: $BASE_CERT"
+          echo "BKS key cert : $BKS_CERT"
+          [ "$BKS_CERT" = "$BASE_CERT" ] || { echo 'BKS signer mismatch' >&2; exit 1; }
+
+          keytool -importkeystore \
+            -srckeystore ks.keystore -srcstoretype BKS -srcstorepass 123456789 \
+            -srcalias andrewliang -srckeypass 123456789 \
+            -destkeystore out/signer.p12 -deststoretype PKCS12 -deststorepass 123456789 \
+            -destkeypass 123456789 -destalias andrewliang -noprompt \
+            -providerclass org.bouncycastle.jce.provider.BouncyCastleProvider \
+            -providerpath tools/bcprov.jar
+
+          java -jar bin/apksigner.jar sign \
+            --ks out/signer.p12 --ks-type PKCS12 \
+            --ks-pass pass:123456789 --key-pass pass:123456789 \
+            --ks-key-alias andrewliang \
+            --out out/YouTube_Music_9.15.51_Luna_BACH_RECEIVER_AB.apk \
+            out/aligned.apk
+          rm -f out/*.idsig
+
+          java -jar bin/apksigner.jar verify --verbose --print-certs \
+            out/YouTube_Music_9.15.51_Luna_BACH_RECEIVER_AB.apk
+          OUT_CERT=$(java -jar bin/apksigner.jar verify --print-certs \
+            out/YouTube_Music_9.15.51_Luna_BACH_RECEIVER_AB.apk \
+            | sed -n 's/^Signer #1 certificate SHA-256 digest: //p' | norm)
+          [ "$OUT_CERT" = "$BASE_CERT" ] || { echo 'Output signer mismatch' >&2; exit 1; }
+          sha256sum out/YouTube_Music_9.15.51_Luna_BACH_RECEIVER_AB.apk
+
+      - name: Verify output receiver and native alignment
+        run: |
+          set -euo pipefail
+          rm -rf verify-decoded
+          java -jar tools/apktool.jar d -f out/YouTube_Music_9.15.51_Luna_BACH_RECEIVER_AB.apk -o verify-decoded >/dev/null
+          grep -n -A8 -B4 -F 'com.luna.biz.playing.player.BachMediaButtonReceiver' verify-decoded/AndroidManifest.xml
+          grep -R -n -F '.class public Lcom/luna/biz/playing/player/BachMediaButtonReceiver;' verify-decoded/smali*
+          if grep -Fq 'androidx.media.session.MediaButtonReceiver"' verify-decoded/AndroidManifest.xml; then
+            echo 'Old AndroidX receiver still declared in manifest' >&2
+            exit 1
+          fi
+          zipalign -c -P 16 -v 4 out/YouTube_Music_9.15.51_Luna_BACH_RECEIVER_AB.apk
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: ytmusic-luna-bach-receiver-ab
+          path: out/YouTube_Music_9.15.51_Luna_BACH_RECEIVER_AB.apk
+          if-no-files-found: error
+          retention-days: 14
+
+      - name: Publish prerelease
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          TAG: ytmusic-luna-bach-receiver-ab-${{ github.run_id }}
+        run: |
+          gh release create "$TAG" out/YouTube_Music_9.15.51_Luna_BACH_RECEIVER_AB.apk \
+            --title "YT Music Luna Bach receiver A/B" \
+            --notes "Single-variable A/B over validated YT Music 9.15.51 com.luna.music build. Replaces the manifest ACTION_MEDIA_BUTTON receiver identity from androidx.media.session.MediaButtonReceiver to com.luna.biz.playing.player.BachMediaButtonReceiver, implemented as a thin subclass of the AndroidX receiver. No queue-bit patch. Native libs are 16K zipaligned before signing; certificate SHA-256 is verified identical to the validated Luna build." \
+            --prerelease
