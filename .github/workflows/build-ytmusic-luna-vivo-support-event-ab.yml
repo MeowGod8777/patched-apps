@@ -1,0 +1,185 @@
+name: Build YT Music Luna Vivo support-event A/B
+
+on:
+  push:
+    paths:
+      - '.github/workflows/build-ytmusic-luna-vivo-support-event-ab.yml'
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/setup-java@v5
+        with:
+          distribution: zulu
+          java-version: '21'
+
+      - uses: actions/checkout@v6
+
+      - name: Download validated Luna YT Music and tools
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        shell: bash
+        run: |
+          set -euxo pipefail
+          mkdir -p input tools out
+          gh release download ytmusic-originplayer-luna-33729902415 \
+            --pattern '*.apk' --dir input
+          mv input/*.apk input/base.apk
+          curl -L --fail --retry 3 \
+            -o tools/apktool.jar \
+            https://github.com/iBotPeaches/Apktool/releases/download/v3.0.3/apktool_3.0.3.jar
+          curl -L --fail --retry 3 \
+            -o tools/bcprov.jar \
+            https://repo1.maven.org/maven2/org/bouncycastle/bcprov-jdk18on/1.82/bcprov-jdk18on-1.82.jar
+          sha256sum input/base.apk tools/apktool.jar tools/bcprov.jar
+
+      - name: Decode APK
+        shell: bash
+        run: |
+          set -euxo pipefail
+          java -jar tools/apktool.jar d -f -r input/base.apk -o decoded
+          test -f decoded/smali/ii.smali
+
+      - name: Inject official Vivo support-event metadata
+        shell: bash
+        run: |
+          set -euxo pipefail
+          python3 - <<'PY'
+          from pathlib import Path
+          import re
+
+          p = Path('decoded/smali/ii.smali')
+          s = p.read_text(encoding='utf-8')
+          key = 'vivomusicmix.media.metadata.support_event'
+          if key in s:
+              raise SystemExit('support_event key already present before A/B patch')
+
+          mh = re.search(
+              r'(?ms)^\.method public final m\(Landroid/support/v4/media/MediaMetadataCompat;\)V\n(.*?)^\.end method',
+              s,
+          )
+          if not mh:
+              raise SystemExit('Could not locate ii.m(MediaMetadataCompat)')
+          body = mh.group(0)
+
+          needle = 'invoke-virtual {v0}, Landroid/media/MediaMetadata$Builder;->build()Landroid/media/MediaMetadata;'
+          if body.count(needle) != 1:
+              raise SystemExit(f'Expected one framework MediaMetadata.Builder.build in ii.m, got {body.count(needle)}')
+
+          # The validated 9.15.51 method already uses v0=Builder, v3=metadata key,
+          # and v4/v5=long value at this exact conversion boundary. Reuse those
+          # dead-at-this-point registers so no register count or control flow changes.
+          inject = '''    const-string v3, "vivomusicmix.media.metadata.support_event"
+
+    const-wide/16 v4, 0x9df
+
+    invoke-virtual {v0, v3, v4, v5}, Landroid/media/MediaMetadata$Builder;->putLong(Ljava/lang/String;J)Landroid/media/MediaMetadata$Builder;
+
+'''
+          body2 = body.replace('    ' + needle, inject + '    ' + needle, 1)
+          patched = s[:mh.start()] + body2 + s[mh.end():]
+          p.write_text(patched, encoding='utf-8')
+
+          # 0x9df = 2527, matching official Luna normal track support when
+          # play control + info + image + lyrics + seek + favorite + loop mode
+          # + current-list + play-index are all available.
+          assert key in patched
+          assert 'const-wide/16 v4, 0x9df' in body2
+          print('Patched ii.m with Vivo support_event=0x9df (2527)')
+          idx = body2.index(key)
+          print(body2[max(0, idx-500):idx+900])
+          PY
+
+      - name: Rebuild APK
+        shell: bash
+        run: |
+          set -euxo pipefail
+          java -jar tools/apktool.jar b decoded -o out/unsigned.apk
+
+      - name: Preserve validated ReVanced signing certificate
+        shell: bash
+        run: |
+          set -euxo pipefail
+          norm() { tr -d ':[:space:]' | tr '[:upper:]' '[:lower:]'; }
+
+          BASE_CERT=$(java -jar bin/apksigner.jar verify --print-certs input/base.apk \
+            | sed -n 's/^Signer #1 certificate SHA-256 digest: //p' | norm)
+          BKS_CERT=$(keytool -list -v \
+            -keystore ks.keystore -storetype BKS -storepass 123456789 \
+            -alias andrewliang \
+            -providerclass org.bouncycastle.jce.provider.BouncyCastleProvider \
+            -providerpath tools/bcprov.jar \
+            | sed -n 's/^[[:space:]]*SHA256: //p' | norm)
+          echo "base APK cert: $BASE_CERT"
+          echo "BKS key cert : $BKS_CERT"
+          [ -n "$BASE_CERT" ]
+          [ "$BKS_CERT" = "$BASE_CERT" ]
+
+          keytool -importkeystore \
+            -srckeystore ks.keystore -srcstoretype BKS -srcstorepass 123456789 \
+            -srcalias andrewliang -srckeypass 123456789 \
+            -destkeystore out/signer.p12 -deststoretype PKCS12 \
+            -deststorepass 123456789 -destkeypass 123456789 \
+            -destalias andrewliang -noprompt \
+            -providerclass org.bouncycastle.jce.provider.BouncyCastleProvider \
+            -providerpath tools/bcprov.jar
+
+          java -jar bin/apksigner.jar sign \
+            --ks out/signer.p12 --ks-type PKCS12 \
+            --ks-pass pass:123456789 --key-pass pass:123456789 \
+            --ks-key-alias andrewliang \
+            --out out/YouTube_Music_9.15.51_Luna_VIVO_SUPPORT_EVENT_AB.apk \
+            out/unsigned.apk
+          rm -f out/*.idsig
+
+          java -jar bin/apksigner.jar verify --verbose --print-certs \
+            out/YouTube_Music_9.15.51_Luna_VIVO_SUPPORT_EVENT_AB.apk
+          OUT_CERT=$(java -jar bin/apksigner.jar verify --print-certs \
+            out/YouTube_Music_9.15.51_Luna_VIVO_SUPPORT_EVENT_AB.apk \
+            | sed -n 's/^Signer #1 certificate SHA-256 digest: //p' | norm)
+          [ "$OUT_CERT" = "$BASE_CERT" ]
+          sha256sum out/YouTube_Music_9.15.51_Luna_VIVO_SUPPORT_EVENT_AB.apk \
+            | tee out/SHA256.txt
+
+      - name: Static verification
+        shell: bash
+        run: |
+          set -euxo pipefail
+          grep -R -n -A8 -B8 \
+            'vivomusicmix.media.metadata.support_event' decoded/smali/ii.smali \
+            | tee out/patch-context.txt
+          grep -q 'const-wide/16 v4, 0x9df' decoded/smali/ii.smali
+          AAPT="${ANDROID_HOME}/build-tools/$(ls "${ANDROID_HOME}/build-tools" | sort -V | tail -1)/aapt"
+          "$AAPT" dump badging out/YouTube_Music_9.15.51_Luna_VIVO_SUPPORT_EVENT_AB.apk \
+            | tee out/badging.txt
+          grep -q "package: name='com.luna.music'" out/badging.txt
+          grep -q "versionName='9.15.51'" out/badging.txt
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: ytmusic-luna-vivo-support-event-ab
+          path: |
+            out/YouTube_Music_9.15.51_Luna_VIVO_SUPPORT_EVENT_AB.apk
+            out/SHA256.txt
+            out/badging.txt
+            out/patch-context.txt
+          if-no-files-found: error
+          retention-days: 14
+
+      - name: Publish prerelease
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          TAG: ytmusic-luna-vivo-support-event-ab-${{ github.run_id }}
+        shell: bash
+        run: |
+          gh release create "$TAG" \
+            out/YouTube_Music_9.15.51_Luna_VIVO_SUPPORT_EVENT_AB.apk \
+            --title 'YT Music Luna Vivo support-event A/B' \
+            --notes 'Single-variable A/B over validated YT Music 9.15.51 / com.luna.music. Injects official Luna private MediaMetadata capability key vivomusicmix.media.metadata.support_event=2527 (0x9DF) at the sole MediaMetadataCompat -> framework MediaMetadata publication boundary. Queue is otherwise untouched. Signing certificate is verified identical to the validated base APK.' \
+            --prerelease
