@@ -53,5 +53,5 @@ jobs:
         run: |
           gh release create "$TAG" build/*.apk \
             --title "YouTube OriginPlayer AppleMusic identity test" \
-            --notes "One-off iQOO 12 Pro / OriginOS 6 A/B build. YouTube 20.40.45, package identity com.apple.android.music. Do not treat as production release." \
+            --notes "One-off iQOO 12 Pro / OriginOS 6 A/B build. YouTube version is selected automatically from the supported/downloadable set; package identity is com.apple.android.music. Do not treat as a production release." \
             --prerelease
