@@ -74,7 +74,6 @@ jobs:
                   except: continue
                   hitidx=[i for i,l in enumerate(lines) if 'getVideoId()Ljava/lang/String;' in l]
                   for i in hitidx:
-                      # retain only methods that also construct MediaDescription/MediaItem
                       start=i
                       while start>=0 and not lines[start].startswith('.method '): start-=1
                       end=i
@@ -125,3 +124,5 @@ jobs:
           path: out/
           if-no-files-found: error
           retention-days: 14
+
+# retrigger: 2026-09-04T07:36+08:00
