@@ -36,7 +36,7 @@ jobs:
       - name: Decode smali only
         run: |
           java -jar tools/apktool.jar d -f -r input/base.apk -o decoded
-          find decoded -path '*/defpackage/ii.smali' -print
+          find decoded -path '*/ii.smali' -print | head -30
 
       - name: Add ACTION_SKIP_TO_QUEUE_ITEM capability only
         run: |
@@ -44,14 +44,14 @@ jobs:
           from pathlib import Path
           import re
 
-          files = list(Path('decoded').glob('smali*/defpackage/ii.smali'))
+          # JADX calls default-package classes "defpackage.*"; smali stores them at
+          # the root of each smali directory, so ii is smali*/ii.smali.
+          files = list(Path('decoded').glob('smali*/ii.smali'))
           if len(files) != 1:
               raise SystemExit(f'Expected exactly one ii.smali, got {files}')
           p = files[0]
           s = p.read_text(encoding='utf-8')
 
-          # Method identified from JADX: ii.n(PlaybackStateCompat), which converts
-          # PlaybackStateCompat to framework PlaybackState and calls Builder.setActions(long).
           mh = re.search(r'(?ms)^\.method[^\n]*\sn\(Landroid/support/v4/media/session/PlaybackStateCompat;\)V\n(.*?)^\.end method', s)
           if not mh:
               raise SystemExit('Could not locate ii.n(PlaybackStateCompat)')
@@ -70,13 +70,11 @@ jobs:
               tmp = count
               new_count = count + 2
           else:
-              # p0 + p1 consume two registers in this instance method.
-              tmp = count - 2
+              tmp = count - 2  # p0 + p1
               new_count = count + 2
           if tmp < 0 or tmp + 1 > 255:
               raise SystemExit(f'Unsafe temporary register allocation: v{tmp}/v{tmp+1}')
 
-          # Locate the long actions load immediately before setActions.
           lines = body.splitlines()
           set_i = next(i for i,l in enumerate(lines) if '->setActions(J)Landroid/media/session/PlaybackState$Builder;' in l)
           load_i = None
@@ -90,8 +88,6 @@ jobs:
           if load_i is None:
               raise SystemExit('Could not locate PlaybackStateCompat.e iget-wide before setActions')
 
-          lines[1:] = lines[1:]  # explicit no-op for readability
-          # Update register count inside the method only.
           body2 = '\n'.join(lines)
           body2 = re.sub(
               rf'(?m)^(\s*\.{kind}\s+){count}(\s*)$',
@@ -100,9 +96,7 @@ jobs:
               count=1,
           )
           lines = body2.splitlines()
-          # Re-find load after directive rewrite, then inject exactly two instructions.
           set_i = next(i for i,l in enumerate(lines) if '->setActions(J)Landroid/media/session/PlaybackState$Builder;' in l)
-          load_i = None
           for i in range(set_i - 1, max(-1, set_i - 12), -1):
               m = re.search(r'\biget-wide\s+(v\d+),\s*p1,\s*Landroid/support/v4/media/session/PlaybackStateCompat;->e:J', lines[i])
               if m:
@@ -110,11 +104,10 @@ jobs:
                   actions_reg = m.group(1)
                   break
           indent = re.match(r'\s*', lines[load_i]).group(0)
-          inject = [
+          lines[load_i+1:load_i+1] = [
               f'{indent}const-wide/16 v{tmp}, 0x1000',
               f'{indent}or-long {actions_reg}, {actions_reg}, v{tmp}',
           ]
-          lines[load_i+1:load_i+1] = inject
           patched_body = '\n'.join(lines)
           patched = s[:mh.start()] + patched_body + s[mh.end():]
           p.write_text(patched, encoding='utf-8')
@@ -122,8 +115,7 @@ jobs:
           print(f'Patched {p}: +ACTION_SKIP_TO_QUEUE_ITEM using v{tmp}/v{tmp+1}')
           for i,l in enumerate(lines):
               if '->setActions(J)' in l:
-                  lo=max(0,i-8); hi=min(len(lines),i+3)
-                  print('\n'.join(lines[lo:hi]))
+                  print('\n'.join(lines[max(0,i-8):min(len(lines),i+3)]))
                   break
           PY
 
@@ -141,10 +133,9 @@ jobs:
           java -jar bin/apksigner.jar verify --verbose --print-certs out/YouTube_Music_9.15.51_Luna_QUEUE_BIT_AB.apk
           sha256sum out/YouTube_Music_9.15.51_Luna_QUEUE_BIT_AB.apk
 
-      - name: Verify package strings and patched bit
+      - name: Verify patched bit
         run: |
-          grep -R -n -A4 -B4 'const-wide/16 .*0x1000' decoded/smali*/defpackage/ii.smali
-          unzip -p out/YouTube_Music_9.15.51_Luna_QUEUE_BIT_AB.apk AndroidManifest.xml | strings | grep -F 'com.luna.music' | head -20 || true
+          grep -R -n -A4 -B4 'const-wide/16 .*0x1000' decoded/smali*/ii.smali
 
       - name: Upload artifact
         uses: actions/upload-artifact@v4
