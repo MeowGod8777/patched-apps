@@ -1,0 +1,72 @@
+name: Trace Luna MediaBrowser for Vivo list protocol
+
+on:
+  push:
+    paths:
+      - .github/workflows/extract-luna-media-browser.yml
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  extract:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v4
+      - name: Download Luna and locate browser dexes
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p work/apk work/out work/jadx
+          UA='Mozilla/5.0 (Linux; Android 16; V2329A) AppleWebKit/537.36 Chrome/143 Mobile Safari/537.36'
+          curl -L --retry 3 --connect-timeout 15 --max-time 240 -A "$UA" 'https://ugapk.com/GMg3' -o work/luna.apk
+          unzip -q work/luna.apk 'classes*.dex' -d work/apk
+          : > work/out/scan.txt
+          : > work/out/target_dexes.txt
+          for f in work/apk/classes*.dex; do
+            hits=$(strings -a "$f" | grep -E 'BasePlayerControllerService|MediaBrowserServiceCompat|onLoadChildren|VIVO_MEDIA_ID_ROOT_MIX|VIVO_MEDIA_ID_MUSICS_BY_CURRENT|VIVO_KEY_MEDIA_PAGE|VIVO_MEDIA_KEY_LIST' || true)
+            if [ -n "$hits" ]; then
+              echo "===== $f =====" >> work/out/scan.txt
+              printf '%s\n' "$hits" >> work/out/scan.txt
+              echo "$f" >> work/out/target_dexes.txt
+            fi
+          done
+          sort -u -o work/out/target_dexes.txt work/out/target_dexes.txt
+          cat work/out/scan.txt
+          echo TARGETS
+          cat work/out/target_dexes.txt
+          test -s work/out/target_dexes.txt
+          curl -L --fail --retry 3 'https://github.com/skylot/jadx/releases/download/v1.5.6/jadx-1.5.6.zip' -o work/jadx.zip
+          unzip -q work/jadx.zip -d work/jadx
+          chmod +x work/jadx/bin/jadx
+      - name: Decompile matches and save relevant classes
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p work/out/sources
+          : > work/out/hits.txt
+          n=0
+          while IFS= read -r dex; do
+            n=$((n+1))
+            out="work/jadx_$n"
+            work/jadx/bin/jadx --no-res --show-bad-code --threads-count 2 -d "$out" "$dex"
+            SRC="$out/sources"
+            grep -RIn --binary-files=without-match -E 'BasePlayerControllerService|MediaBrowserServiceCompat|onLoadChildren|onGetRoot|MediaBrowserCompat.MediaItem|VIVO_MEDIA_ID_ROOT_MIX|VIVO_MEDIA_ID_MUSICS_BY_CURRENT|VIVO_KEY_MEDIA_PAGE|VIVO_MEDIA_KEY_LIST|vivomusicmix' "$SRC" >> work/out/hits.txt || true
+            while IFS= read -r f; do
+              [ -f "$f" ] || continue
+              rel="${f#$SRC/}"
+              dest="work/out/sources/dex${n}/$rel"
+              mkdir -p "$(dirname "$dest")"
+              cp "$f" "$dest"
+            done < <(grep -Rl --binary-files=without-match -E 'BasePlayerControllerService|MediaBrowserServiceCompat|onLoadChildren|onGetRoot|VIVO_MEDIA_ID_ROOT_MIX|VIVO_MEDIA_ID_MUSICS_BY_CURRENT|VIVO_KEY_MEDIA_PAGE|VIVO_MEDIA_KEY_LIST|vivomusicmix' "$SRC" || true)
+          done < work/out/target_dexes.txt
+          sed -n '1,5000p' work/out/hits.txt
+      - name: Upload browser trace
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: luna-media-browser-vivo-trace
+          path: work/out
+          retention-days: 7
