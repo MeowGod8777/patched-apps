@@ -48,7 +48,11 @@ def inject_after_registers(src: str, signature: str, min_locals: int, param_regs
     pat = re.compile(r'(?ms)^\.method ' + re.escape(signature) + r'\n(.*?)^\.end method')
     mm = pat.search(src)
     if not mm:
-        raise SystemExit(f"method not found: {signature}")
+        methods = "\n".join(
+            line for line in src.splitlines()
+            if line.startswith(".method") and (" f(" in line or " b(" in line)
+        )
+        raise SystemExit(f"method not found: {signature}\nnearby candidates:\n{methods}")
     method = mm.group(0)
 
     lm = re.search(r'(?m)^\s*\.locals\s+(\d+)\s*$', method)
@@ -81,10 +85,10 @@ root_inject = r'''
     move-result v0
     if-eqz v0, :vivo_probe_original_root
 
-    new-instance v0, Ldefpackage/bze;
+    new-instance v0, Lbze;
     const-string v1, "VIVO_MUSIC_MIX_ROOT"
     const/4 v2, 0x0
-    invoke-direct {v0, v1, v2}, Ldefpackage/bze;-><init>(Ljava/lang/String;Landroid/os/Bundle;)V
+    invoke-direct {v0, v1, v2}, Lbze;-><init>(Ljava/lang/String;Landroid/os/Bundle;)V
     return-object v0
 
     :vivo_probe_original_root
@@ -119,7 +123,7 @@ children_inject = r'''
     invoke-direct {v3, v2, v4}, Landroid/support/v4/media/MediaBrowserCompat$MediaItem;-><init>(Landroid/support/v4/media/MediaDescriptionCompat;I)V
 
     invoke-virtual {v0, v3}, Ljava/util/ArrayList;->add(Ljava/lang/Object;)Z
-    invoke-virtual {p2, v0}, Ldefpackage/bzu;->c(Ljava/lang/Object;)V
+    invoke-virtual {p2, v0}, Lbzu;->c(Ljava/lang/Object;)V
     return-void
 
     :vivo_probe_original_children
@@ -127,21 +131,20 @@ children_inject = r'''
 
 s = inject_after_registers(
     s,
-    "public final f(Ljava/lang/String;Landroid/os/Bundle;)Ldefpackage/bze;",
+    "public final f(Ljava/lang/String;Landroid/os/Bundle;)Lbze;",
     min_locals=3,
     param_regs=3,
     injection=root_inject,
 )
 s = inject_after_registers(
     s,
-    "public final b(Ljava/lang/String;Ldefpackage/bzu;Landroid/os/Bundle;)V",
+    "public final b(Ljava/lang/String;Lbzu;Landroid/os/Bundle;)V",
     min_locals=5,
     param_regs=4,
     injection=children_inject,
 )
 p.write_text(s, encoding="utf-8")
 
-# Hard assertions: do not silently produce an ambiguous APK.
 manifest_after = manifest.read_text(encoding="utf-8")
 assert ACTION in manifest_after
 assert SERVICE in manifest_after
