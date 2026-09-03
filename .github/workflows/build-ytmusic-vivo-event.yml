@@ -80,6 +80,15 @@ jobs:
       - name: Rebuild APK
         run: java -jar tools/apktool.jar b decoded -o out/unsigned.apk
 
+      - name: Zipalign native libraries before signing
+        shell: bash
+        run: |
+          set -euo pipefail
+          ZIPALIGN=$(find "$ANDROID_HOME/build-tools" -type f -name zipalign | sort -V | tail -1)
+          echo "Using $ZIPALIGN"
+          "$ZIPALIGN" -P 16 -f -v 4 out/unsigned.apk out/aligned.apk
+          "$ZIPALIGN" -c -P 16 -v 4 out/aligned.apk
+
       - name: Convert ReVanced BKS signer and preserve certificate
         shell: bash
         run: |
@@ -112,33 +121,36 @@ jobs:
             --ks out/signer.p12 --ks-type PKCS12 \
             --ks-pass pass:123456789 --key-pass pass:123456789 \
             --ks-key-alias andrewliang \
-            --out out/YouTube_Music_9.15.51_Luna_VIVO_EVENT_AB.apk \
-            out/unsigned.apk
+            --out out/YouTube_Music_9.15.51_Luna_VIVO_EVENT_AB_ALIGNED.apk \
+            out/aligned.apk
           rm -f out/*.idsig
 
           java -jar bin/apksigner.jar verify --verbose --print-certs \
-            out/YouTube_Music_9.15.51_Luna_VIVO_EVENT_AB.apk
+            out/YouTube_Music_9.15.51_Luna_VIVO_EVENT_AB_ALIGNED.apk
           OUT_CERT=$(java -jar bin/apksigner.jar verify --print-certs \
-            out/YouTube_Music_9.15.51_Luna_VIVO_EVENT_AB.apk \
+            out/YouTube_Music_9.15.51_Luna_VIVO_EVENT_AB_ALIGNED.apk \
             | sed -n 's/^Signer #1 certificate SHA-256 digest: //p' | norm)
           [ "$OUT_CERT" = "$BASE_CERT" ] || { echo 'Output signer mismatch' >&2; exit 1; }
-          sha256sum out/YouTube_Music_9.15.51_Luna_VIVO_EVENT_AB.apk | tee out/SHA256.txt
+
+          ZIPALIGN=$(find "$ANDROID_HOME/build-tools" -type f -name zipalign | sort -V | tail -1)
+          "$ZIPALIGN" -c -P 16 -v 4 out/YouTube_Music_9.15.51_Luna_VIVO_EVENT_AB_ALIGNED.apk
+          sha256sum out/YouTube_Music_9.15.51_Luna_VIVO_EVENT_AB_ALIGNED.apk | tee out/SHA256.txt
 
       - name: Verify patch and identity
         run: |
           grep -R -n -A6 -B6 'vivomusicmix.media.metadata.support_event' decoded/smali/ii.smali | tee out/patch-context.txt
           grep -q 'const-wide/16 v4, 0x9df' decoded/smali/ii.smali
           AAPT="${ANDROID_HOME}/build-tools/$(ls "${ANDROID_HOME}/build-tools" | sort -V | tail -1)/aapt"
-          "$AAPT" dump badging out/YouTube_Music_9.15.51_Luna_VIVO_EVENT_AB.apk | tee out/badging.txt
+          "$AAPT" dump badging out/YouTube_Music_9.15.51_Luna_VIVO_EVENT_AB_ALIGNED.apk | tee out/badging.txt
           grep -q "package: name='com.luna.music'" out/badging.txt
           grep -q "versionName='9.15.51'" out/badging.txt
 
       - name: Upload artifact
         uses: actions/upload-artifact@v4
         with:
-          name: ytmusic-luna-vivo-event-ab
+          name: ytmusic-luna-vivo-event-ab-aligned
           path: |
-            out/YouTube_Music_9.15.51_Luna_VIVO_EVENT_AB.apk
+            out/YouTube_Music_9.15.51_Luna_VIVO_EVENT_AB_ALIGNED.apk
             out/SHA256.txt
             out/patch-context.txt
             out/badging.txt
@@ -148,9 +160,9 @@ jobs:
       - name: Publish prerelease
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          TAG: ytmusic-luna-vivo-event-ab-${{ github.run_id }}
+          TAG: ytmusic-luna-vivo-event-ab-aligned-${{ github.run_id }}
         run: |
-          gh release create "$TAG" out/YouTube_Music_9.15.51_Luna_VIVO_EVENT_AB.apk \
-            --title "YT Music Luna Vivo-event A/B" \
-            --notes "Validated com.luna.music baseline plus the official Luna private MediaMetadata support_event capability mask 2527 (0x9DF). Queue and PlaybackState are otherwise unchanged. Signing certificate is verified identical to baseline." \
+          gh release create "$TAG" out/YouTube_Music_9.15.51_Luna_VIVO_EVENT_AB_ALIGNED.apk \
+            --title "YT Music Luna Vivo-event A/B aligned" \
+            --notes "Validated com.luna.music baseline plus official Luna private MediaMetadata support_event mask 2527 (0x9DF), including LIST_CURRENT=256 and PLAY_INDEX=2048. 16K zipalign is applied before signing; signing certificate is verified identical to baseline. Queue and PlaybackState are otherwise unchanged." \
             --prerelease
