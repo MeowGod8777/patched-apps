@@ -81,7 +81,8 @@ def inject_after_registers(src: str, signature: str, min_locals: int, param_regs
 
 root_inject = r'''
     const-string v0, "com.vivo.musicwidgetmix"
-    invoke-virtual {v0, p1}, Ljava/lang/String;->equals(Ljava/lang/Object;)Z
+    move-object/from16 v1, p1
+    invoke-virtual {v0, v1}, Ljava/lang/String;->equals(Ljava/lang/Object;)Z
     move-result v0
     if-eqz v0, :vivo_probe_original_root
 
@@ -95,8 +96,10 @@ root_inject = r'''
 '''
 
 children_inject = r'''
+    move-object/from16 v3, p1
+    move-object/from16 v4, p2
     const-string v0, "vivomusicmix_current_list"
-    invoke-virtual {p1, v0}, Ljava/lang/String;->contains(Ljava/lang/CharSequence;)Z
+    invoke-virtual {v3, v0}, Ljava/lang/String;->contains(Ljava/lang/CharSequence;)Z
     move-result v0
     if-eqz v0, :vivo_probe_original_children
 
@@ -119,11 +122,11 @@ children_inject = r'''
     move-result-object v2
 
     new-instance v3, Landroid/support/v4/media/MediaBrowserCompat$MediaItem;
-    const/4 v4, 0x2
-    invoke-direct {v3, v2, v4}, Landroid/support/v4/media/MediaBrowserCompat$MediaItem;-><init>(Landroid/support/v4/media/MediaDescriptionCompat;I)V
+    const/4 v1, 0x2
+    invoke-direct {v3, v2, v1}, Landroid/support/v4/media/MediaBrowserCompat$MediaItem;-><init>(Landroid/support/v4/media/MediaDescriptionCompat;I)V
 
     invoke-virtual {v0, v3}, Ljava/util/ArrayList;->add(Ljava/lang/Object;)Z
-    invoke-virtual {p2, v0}, Lbzu;->c(Ljava/lang/Object;)V
+    invoke-virtual {v4, v0}, Lbzu;->c(Ljava/lang/Object;)V
     return-void
 
     :vivo_probe_original_children
