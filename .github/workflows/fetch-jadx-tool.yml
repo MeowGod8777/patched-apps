@@ -1,0 +1,24 @@
+name: Fetch JADX tool
+
+on:
+  push:
+    paths:
+      - .github/workflows/fetch-jadx-tool.yml
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  fetch:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Download JADX
+        run: |
+          curl -L --fail --retry 3 'https://github.com/skylot/jadx/releases/download/v1.5.6/jadx-1.5.6.zip' -o jadx-1.5.6.zip
+          sha256sum jadx-1.5.6.zip
+      - uses: actions/upload-artifact@v4
+        with:
+          name: jadx-1.5.6
+          path: jadx-1.5.6.zip
+          retention-days: 1
