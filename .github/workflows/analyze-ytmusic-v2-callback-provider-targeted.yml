@@ -41,7 +41,6 @@ jobs:
           grep -R -n -E 'new-instance .*Llag;|Llag;-><init>|new-instance .*Lbazp;|Lbazp;-><init>|Lbazk;->h\(Lbazp;\)V|Lbazh;-><init>|Lbazh;->gG\(\)Ljava/lang/Object;' decoded/smali* > out/provider-hits.txt || true
           python3 - <<'PY'
           from pathlib import Path
-          pats=['new-instance','Llag;-><init>','Lbazp;-><init>','Lbazk;->h(Lbazp;)V','Lbazh;-><init>','Lbazh;->gG()Ljava/lang/Object;']
           with open('out/provider-contexts.txt','w') as o:
               for p in Path('decoded').glob('smali*/**/*.smali'):
                   try: lines=p.read_text(errors='ignore').splitlines()
@@ -105,3 +104,5 @@ jobs:
           path: out/
           if-no-files-found: error
           retention-days: 14
+
+# retrigger: 2026-09-04T07:31+08:00
