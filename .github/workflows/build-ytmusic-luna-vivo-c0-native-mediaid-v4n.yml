@@ -30,7 +30,6 @@ jobs:
           BASE_SHA=$(sha256sum input/base.apk | awk '{print $1}')
           echo "base_sha256=$BASE_SHA" | tee out/input-sha256.txt
           test "$BASE_SHA" = "0b1b61ad6bd87dacc88517adf19c1115085d529e63847d50d587476efa4ce307"
-
           curl -L --fail --retry 3 -o tools/apktool.jar https://github.com/iBotPeaches/Apktool/releases/download/v3.0.3/apktool_3.0.3.jar
           curl -L --fail --retry 3 -o tools/bcprov.jar https://repo1.maven.org/maven2/org/bouncycastle/bcprov-jdk18on/1.82/bcprov-jdk18on-1.82.jar
 
@@ -39,7 +38,6 @@ jobs:
         run: |
           set -euo pipefail
           java -jar tools/apktool.jar d -f input/base.apk -o decoded
-
           CALLBACK=$(grep -Rl 'onPlayFromMediaId(Ljava/lang/String;Landroid/os/Bundle;)V' decoded/smali*/id.smali | head -n1)
           II=$(grep -Rl 'setMetadata(Landroid/media/MediaMetadata;)V' decoded/smali*/ii.smali | head -n1)
           test -n "$CALLBACK"; test -n "$II"
@@ -52,16 +50,12 @@ jobs:
           assert m, 'ii.m missing in base'
           Path(sys.argv[2]).write_text(m.group(0))
           PY
-
           python3 tools/ytmusic_vivo_c0_native_mediaid_v4n.py decoded
-
           BROWSER=$(find decoded -type f -path '*/com/google/android/apps/youtube/music/mediabrowser/MusicBrowserService.smali' -print -quit)
           KYI=$(grep -Rl '^\.method public final j()V' decoded/smali*/kyi.smali | head -n1)
           CALLBACK2=$(grep -Rl 'onPlayFromMediaId(Ljava/lang/String;Landroid/os/Bundle;)V' decoded/smali*/id.smali | head -n1)
           II2=$(grep -Rl 'setMetadata(Landroid/media/MediaMetadata;)V' decoded/smali*/ii.smali | head -n1)
           test -n "$BROWSER"; test -n "$KYI"; test -n "$CALLBACK2"; test -n "$II2"
-
-          # Strong regression guards: callback and metadata publisher remain exact base bytes.
           cmp -s out/base-id.smali "$CALLBACK2"
           echo 'PASS: Lid callback byte-for-byte unchanged from validated base' | tee out/lid-regression-guard.txt
           python3 - "$II2" out/patched-ii-m.smali <<'PY'
@@ -74,23 +68,18 @@ jobs:
           PY
           cmp -s out/base-ii-m.smali out/patched-ii-m.smali
           echo 'PASS: Lii.m metadata method byte-for-byte unchanged from validated base' | tee out/metadata-regression-guard.txt
-
-          # Intended V4N markers.
           grep -n -A100 -B15 'vivoNativeIds' "$BROWSER" | tee out/patched-browser-nativeid-context.txt
           grep -n -A90 -B20 'Llgl;->d(Lboht;)Ljava/lang/String;' "$KYI" | tee out/patched-kyi-nativeid-context.txt
           grep -q 'field public static volatile vivoNativeIds:Ljava/util/concurrent/ConcurrentHashMap;' "$BROWSER"
           grep -q 'ConcurrentHashMap;->get(Ljava/lang/Object;)Ljava/lang/Object;' "$BROWSER"
-          grep -q 'vivo_qid_' "$BROWSER"  # render-only fallback retained
+          grep -q 'vivo_qid_' "$BROWSER"
           grep -q 'Lnoq;->o()Lboht;' "$KYI"
           grep -q 'Llgl;->d(Lboht;)Ljava/lang/String;' "$KYI"
           grep -q 'ConcurrentHashMap;->put(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;' "$KYI"
-
-          # Rejected approaches must be absent.
           ! grep -q 'vivo_v3' "$CALLBACK2"
           ! grep -q 'vivo_qid_' "$CALLBACK2"
           ! grep -q 'Long;->parseLong(Ljava/lang/String;)J' "$CALLBACK2"
           ! grep -R -q 'vivomusicmix.media.metadata.support_event' decoded/smali*
-
           grep -n -A16 -B4 'com.vivo.musicwidgetmix.support.service' decoded/AndroidManifest.xml | tee out/patched-manifest-context.txt
           grep -n -A28 -B4 'VIVO_MUSIC_MIX_ROOT' "$BROWSER" | tee out/patched-root-context.txt
 
@@ -114,9 +103,7 @@ jobs:
           echo "bks=$BKS_CERT" | tee -a out/cert.txt
           test "$BASE_CERT" = "7762ee243d1157ef3d6de884690ff70a385fc251fe8f491eb6c71f6a8e392e2c"
           test "$BASE_CERT" = "$BKS_CERT"
-
           keytool -importkeystore -srckeystore ks.keystore -srcstoretype BKS -srcstorepass 123456789 -srcalias andrewliang -srckeypass 123456789 -destkeystore out/signer.p12 -deststoretype PKCS12 -deststorepass 123456789 -destkeypass 123456789 -destalias andrewliang -noprompt -providerclass org.bouncycastle.jce.provider.BouncyCastleProvider -providerpath tools/bcprov.jar
-
           OUT_APK=out/YouTube_Music_9.15.51_Luna_VIVO_C0_NATIVE_MEDIAID_V4N.apk
           java -jar bin/apksigner.jar sign --ks out/signer.p12 --ks-type PKCS12 --ks-pass pass:123456789 --key-pass pass:123456789 --ks-key-alias andrewliang --out "$OUT_APK" out/aligned.apk
           rm -f out/*.idsig
@@ -126,11 +113,9 @@ jobs:
           OUT_CERT=$(java -jar bin/apksigner.jar verify --print-certs "$OUT_APK" | sed -n 's/^Signer #1 certificate SHA-256 digest: //p' | norm)
           echo "out=$OUT_CERT" | tee -a out/cert.txt
           test "$OUT_CERT" = "$BASE_CERT"
-
           BUILD_TOOLS="${ANDROID_HOME}/build-tools/$(ls "${ANDROID_HOME}/build-tools" | sort -V | tail -1)"
           "$BUILD_TOOLS/zipalign" -c -P 16 -v 4 "$OUT_APK" | tee out/zipalign-final.txt
           sha256sum "$OUT_APK" | tee out/SHA256.txt
-
           python3 - <<'PY' | tee out/native-libs.txt
           import zipfile
           apk='out/YouTube_Music_9.15.51_Luna_VIVO_C0_NATIVE_MEDIAID_V4N.apk'
@@ -178,3 +163,5 @@ jobs:
             out/patched-kyi-nativeid-context.txt
           if-no-files-found: warn
           retention-days: 14
+
+# retrigger: 2026-09-04T07:49+08:00
