@@ -44,8 +44,6 @@ jobs:
           from pathlib import Path
           import re
 
-          # JADX calls default-package classes "defpackage.*"; smali stores them at
-          # the root of each smali directory, so ii is smali*/ii.smali.
           files = list(Path('decoded').glob('smali*/ii.smali'))
           if len(files) != 1:
               raise SystemExit(f'Expected exactly one ii.smali, got {files}')
@@ -70,7 +68,7 @@ jobs:
               tmp = count
               new_count = count + 2
           else:
-              tmp = count - 2  # p0 + p1
+              tmp = count - 2
               new_count = count + 2
           if tmp < 0 or tmp + 1 > 255:
               raise SystemExit(f'Unsafe temporary register allocation: v{tmp}/v{tmp+1}')
@@ -119,18 +117,57 @@ jobs:
                   break
           PY
 
-      - name: Rebuild and sign with existing project key
+      - name: Rebuild APK
         run: |
           java -jar tools/apktool.jar b decoded -o out/unsigned.apk
+
+      - name: Select matching signer and sign
+        shell: bash
+        run: |
+          set -euo pipefail
+          norm() { tr -d ':[:space:]' | tr '[:upper:]' '[:lower:]'; }
+
+          BASE_CERT=$(java -jar bin/apksigner.jar verify --print-certs input/base.apk \
+            | sed -n 's/^Signer #1 certificate SHA-256 digest: //p' | norm)
+          JKS_CERT=$(keytool -list -v -keystore ks.keystore -storetype JKS \
+            -storepass 123456789 -alias andrewliang 2>/dev/null \
+            | sed -n 's/^[[:space:]]*SHA256: //p' | norm || true)
+          P12_CERT=$(keytool -list -v -keystore ks-p12.keystore -storetype PKCS12 \
+            -storepass 123456789 -alias andrewliang 2>/dev/null \
+            | sed -n 's/^[[:space:]]*SHA256: //p' | norm || true)
+
+          echo "base cert : $BASE_CERT"
+          echo "JKS cert  : ${JKS_CERT:-unreadable}"
+          echo "P12 cert  : ${P12_CERT:-unreadable}"
+
+          if [ -n "$JKS_CERT" ] && [ "$JKS_CERT" = "$BASE_CERT" ]; then
+            KS=ks.keystore
+            KSTYPE=JKS
+          elif [ -n "$P12_CERT" ] && [ "$P12_CERT" = "$BASE_CERT" ]; then
+            KS=ks-p12.keystore
+            KSTYPE=PKCS12
+          else
+            echo 'No project keystore matches the currently installed/base Luna APK signer.' >&2
+            exit 1
+          fi
+
+          echo "Signing with $KS ($KSTYPE)"
           java -jar bin/apksigner.jar sign \
-            --ks ks.keystore \
+            --ks "$KS" \
+            --ks-type "$KSTYPE" \
             --ks-pass pass:123456789 \
             --key-pass pass:123456789 \
             --ks-key-alias andrewliang \
             --out out/YouTube_Music_9.15.51_Luna_QUEUE_BIT_AB.apk \
             out/unsigned.apk
           rm -f out/*.idsig
-          java -jar bin/apksigner.jar verify --verbose --print-certs out/YouTube_Music_9.15.51_Luna_QUEUE_BIT_AB.apk
+
+          java -jar bin/apksigner.jar verify --verbose --print-certs \
+            out/YouTube_Music_9.15.51_Luna_QUEUE_BIT_AB.apk
+          OUT_CERT=$(java -jar bin/apksigner.jar verify --print-certs \
+            out/YouTube_Music_9.15.51_Luna_QUEUE_BIT_AB.apk \
+            | sed -n 's/^Signer #1 certificate SHA-256 digest: //p' | norm)
+          [ "$OUT_CERT" = "$BASE_CERT" ] || { echo 'Output signer mismatch' >&2; exit 1; }
           sha256sum out/YouTube_Music_9.15.51_Luna_QUEUE_BIT_AB.apk
 
       - name: Verify patched bit
@@ -152,5 +189,5 @@ jobs:
         run: |
           gh release create "$TAG" out/YouTube_Music_9.15.51_Luna_QUEUE_BIT_AB.apk \
             --title "YT Music Luna queue-bit A/B" \
-            --notes "Single-variable A/B over the validated com.luna.music build. Adds PlaybackState ACTION_SKIP_TO_QUEUE_ITEM (0x1000) immediately before framework Builder.setActions(). Existing MediaSession.Callback.onSkipToQueueItem(long) is already present in the APK. No package/GmsCore/queue/UI changes." \
+            --notes "Single-variable A/B over the validated com.luna.music build. Adds PlaybackState ACTION_SKIP_TO_QUEUE_ITEM (0x1000) immediately before framework Builder.setActions(). Existing MediaSession.Callback.onSkipToQueueItem(long) is already present in the APK. Output signer is verified identical to the base Luna build." \
             --prerelease
