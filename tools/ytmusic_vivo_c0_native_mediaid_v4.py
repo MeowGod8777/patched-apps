@@ -225,3 +225,5 @@ for needle in (
 print(f"V4 native-mediaId browser patched: {browser_path}")
 print(f"V4 native-mediaId queue sidecar:  {kyi_path}")
 print("V4 leaves Lid and MediaMetadata timing path untouched")
+
+# retrigger: 2026-09-04T07:43+08:00
