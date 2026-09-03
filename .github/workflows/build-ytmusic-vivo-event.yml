@@ -61,13 +61,14 @@ jobs:
           if body.count(needle) != 1:
               raise SystemExit(f'Expected exactly one MediaMetadata.Builder.build(), got {body.count(needle)}')
 
-          inject = '''    const-string v3, "vivomusicmix.media.metadata.support_event"
-
-    const-wide/16 v4, 0x9df
-
-    invoke-virtual {v0, v3, v4, v5}, Landroid/media/MediaMetadata$Builder;->putLong(Ljava/lang/String;J)Landroid/media/MediaMetadata$Builder;
-
-'''
+          inject = '\n'.join([
+              '    const-string v3, "vivomusicmix.media.metadata.support_event"',
+              '',
+              '    const-wide/16 v4, 0x9df',
+              '',
+              '    invoke-virtual {v0, v3, v4, v5}, Landroid/media/MediaMetadata$Builder;->putLong(Ljava/lang/String;J)Landroid/media/MediaMetadata$Builder;',
+              '',
+          ]) + '\n'
           body2 = body.replace(needle, inject + needle, 1)
           patched = s[:mh.start()] + body2 + s[mh.end():]
           p.write_text(patched, encoding='utf-8')
