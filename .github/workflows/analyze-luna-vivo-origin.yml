@@ -1,0 +1,226 @@
+name: Analyze official Luna Vivo Origin integration
+
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - '.github/workflows/analyze-luna-vivo-origin.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  analyze:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Prepare tools
+        shell: bash
+        run: |
+          set -euxo pipefail
+          sudo apt-get update
+          sudo apt-get install -y curl unzip zip jq file grep sed gawk
+          mkdir -p work/site work/out
+
+      - name: Discover official Luna Android APK URL
+        shell: bash
+        run: |
+          set -euxo pipefail
+          UA='Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 Chrome/143 Safari/537.36'
+
+          # Start from the official ByteDance/Douyin-hosted Luna site. We intentionally
+          # inspect the site's JS bundles instead of trusting third-party APK mirrors.
+          curl -L --retry 3 -A "$UA" 'https://qishui.douyin.com/' -o work/site/index.html
+          curl -L --retry 3 -A "$UA" 'https://www.qishui.com/' -o work/site/index2.html || true
+
+          cat work/site/index.html work/site/index2.html 2>/dev/null \
+            | grep -Eo 'https?://[^"'"' <>]+' \
+            | sort -u > work/site/raw_urls.txt || true
+
+          # Resolve script src values, including relative paths.
+          python3 - <<'PY'
+          from pathlib import Path
+          from html.parser import HTMLParser
+          from urllib.parse import urljoin
+
+          class P(HTMLParser):
+              def __init__(self, base):
+                  super().__init__(); self.base=base; self.urls=[]
+              def handle_starttag(self, tag, attrs):
+                  d=dict(attrs)
+                  if tag == 'script' and d.get('src'):
+                      self.urls.append(urljoin(self.base,d['src']))
+                  if tag == 'link' and d.get('href'):
+                      self.urls.append(urljoin(self.base,d['href']))
+
+          out=[]
+          for fn,base in [('work/site/index.html','https://qishui.douyin.com/'),('work/site/index2.html','https://www.qishui.com/')]:
+              pth=Path(fn)
+              if not pth.exists(): continue
+              p=P(base); p.feed(pth.read_text(errors='ignore')); out += p.urls
+          Path('work/site/assets.txt').write_text('\n'.join(sorted(set(out))))
+          PY
+
+          i=0
+          while IFS= read -r u; do
+            case "$u" in
+              *.js*|*javascript*|*assets*|*static*)
+                i=$((i+1))
+                curl -L --retry 2 --connect-timeout 10 -A "$UA" "$u" -o "work/site/asset_$i" || true
+                ;;
+            esac
+          done < work/site/assets.txt
+
+          # Extract candidate APK/download URLs from raw HTML + JS bundles.
+          grep -RhaoE 'https?://[^"'"' <>()]+' work/site \
+            | sed 's/&amp;/\&/g' \
+            | grep -Ei '(\.apk([?#].*)?$|android|download|release|luna)' \
+            | sort -u > work/site/candidates.txt || true
+
+          echo '===== candidate URLs ====='
+          cat work/site/candidates.txt || true
+
+          # Test candidates for actual APK magic. APK is a ZIP starting PK\003\004.
+          found=''
+          n=0
+          while IFS= read -r u; do
+            [ -n "$u" ] || continue
+            n=$((n+1))
+            tmp="work/site/candidate_$n.bin"
+            echo "Trying $u"
+            curl -L --retry 2 --connect-timeout 15 --max-time 180 -A "$UA" "$u" -o "$tmp" || { rm -f "$tmp"; continue; }
+            if [ "$(head -c 4 "$tmp" | xxd -p)" = '504b0304' ]; then
+              if unzip -l "$tmp" 2>/dev/null | grep -qE '(^|[[:space:]])classes([0-9]*)?\.dex$'; then
+                mv "$tmp" work/Luna_official.apk
+                echo "$u" > work/site/selected_url.txt
+                found=1
+                break
+              fi
+            fi
+            rm -f "$tmp"
+          done < work/site/candidates.txt
+
+          # Fallback: Uptodown endpoints sometimes directly redirect to the current APK
+          # when hit by a normal browser UA. Treat only a ZIP with classes*.dex as valid.
+          if [ -z "$found" ]; then
+            for u in \
+              'https://qishui.cn.uptodown.com/android/download' \
+              'https://qishui.en.uptodown.com/android/download'; do
+              echo "Fallback trying $u"
+              curl -L --retry 2 --connect-timeout 15 --max-time 180 -A "$UA" "$u" -o work/site/fallback.bin || continue
+              if [ "$(head -c 4 work/site/fallback.bin | xxd -p)" = '504b0304' ] && unzip -l work/site/fallback.bin 2>/dev/null | grep -qE '(^|[[:space:]])classes([0-9]*)?\.dex$'; then
+                mv work/site/fallback.bin work/Luna_official.apk
+                echo "$u" > work/site/selected_url.txt
+                found=1
+                break
+              fi
+              rm -f work/site/fallback.bin
+            done
+          fi
+
+          if [ -z "$found" ]; then
+            echo 'Could not automatically obtain the official APK.'
+            echo 'Keeping site/JS discovery artifact for manual URL recovery.'
+            exit 22
+          fi
+
+          file work/Luna_official.apk
+          sha256sum work/Luna_official.apk | tee work/out/Luna_official.sha256
+          cat work/site/selected_url.txt | tee work/out/selected_url.txt
+
+      - name: Verify APK identity and manifest clues
+        if: success()
+        shell: bash
+        run: |
+          set -euxo pipefail
+          AAPT="${ANDROID_HOME}/build-tools/$(ls "${ANDROID_HOME}/build-tools" | sort -V | tail -1)/aapt"
+          if [ ! -x "$AAPT" ]; then
+            AAPT="${ANDROID_HOME}/build-tools/$(ls "${ANDROID_HOME}/build-tools" | sort -V | tail -1)/aapt2"
+          fi
+          "$AAPT" dump badging work/Luna_official.apk | tee work/out/badging.txt || true
+          "$AAPT" dump xmltree work/Luna_official.apk AndroidManifest.xml > work/out/manifest.txt || true
+          grep -Ein 'package|versionName|versionCode|BachMediaButtonReceiver|VivoOrigin|vivo|origin|media' work/out/manifest.txt \
+            | head -n 500 > work/out/manifest_hits.txt || true
+
+      - name: Download JADX
+        if: success()
+        shell: bash
+        run: |
+          set -euxo pipefail
+          curl -L --retry 3 \
+            'https://github.com/skylot/jadx/releases/download/v1.5.6/jadx-1.5.6.zip' \
+            -o work/jadx.zip
+          unzip -q work/jadx.zip -d work/jadx
+          chmod +x work/jadx/bin/jadx
+
+      - name: Decompile official Luna
+        if: success()
+        shell: bash
+        run: |
+          set -euxo pipefail
+          mkdir -p work/jadx-out
+          work/jadx/bin/jadx \
+            --no-res \
+            --show-bad-code \
+            --threads-count 4 \
+            -d work/jadx-out \
+            work/Luna_official.apk
+
+      - name: Extract Vivo Origin integration implementation
+        if: success()
+        shell: bash
+        run: |
+          set -euxo pipefail
+          SRC=work/jadx-out/sources
+          OUT=work/out
+
+          # Exact known integration symbols.
+          grep -RIn --binary-files=without-match \
+            -E 'VivoOriginRemoteControl|BachMediaButtonReceiver' "$SRC" \
+            | tee "$OUT/exact_symbol_hits.txt" || true
+
+          # Nearby protocol hints: actions, extras, intents, bundles, content providers,
+          # broadcasts, package/signature checks, queue/playlist methods.
+          grep -RIn --binary-files=without-match \
+            -E 'vivo|Vivo|origin|Origin|playlist|queue|play.?list|MediaSession|MediaController|sendCommand|sendCustomAction|setExtras|getExtras|Bundle|BroadcastReceiver|sendBroadcast|startActivity|Intent\(|Uri\.parse|signature|certificate|checkSign|permission' "$SRC" \
+            | grep -Ei 'luna|playing|player|remote|vivo|origin|playlist|queue|media' \
+            | head -n 12000 > "$OUT/protocol_hits.txt" || true
+
+          # Copy exact classes plus directly adjacent package for offline inspection.
+          while IFS= read -r f; do
+            [ -f "$f" ] || continue
+            rel="${f#$SRC/}"
+            mkdir -p "$OUT/sources/$(dirname "$rel")"
+            cp "$f" "$OUT/sources/$rel"
+          done < <(grep -Rl --binary-files=without-match \
+            -E 'VivoOriginRemoteControl|BachMediaButtonReceiver' "$SRC" || true)
+
+          # If exact classes were renamed/obfuscated, preserve the whole remote/control
+          # and player packages that contain Vivo/Origin strings.
+          while IFS= read -r f; do
+            [ -f "$f" ] || continue
+            rel="${f#$SRC/}"
+            mkdir -p "$OUT/context/$(dirname "$rel")"
+            cp "$f" "$OUT/context/$rel"
+          done < <(grep -Rl --binary-files=without-match \
+            -E 'VivoOrigin|vivo.*origin|origin.*vivo' "$SRC" | head -n 300 || true)
+
+          echo '===== exact symbols ====='
+          cat "$OUT/exact_symbol_hits.txt" || true
+          echo '===== likely protocol hits ====='
+          sed -n '1,1200p' "$OUT/protocol_hits.txt" || true
+
+      - name: Upload analysis bundle
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: luna-vivo-origin-analysis
+          path: |
+            work/out
+            work/site/*.txt
+            work/site/index*.html
+          if-no-files-found: warn
+          retention-days: 7
