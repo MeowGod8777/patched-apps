@@ -65,6 +65,38 @@ app.revanced.android.youtube
 
 這條設定可以讓 vivo OriginPlayer 直接讀取 YouTube；因此「再做一個改 package name 的 YouTube-OriginPlayer build」目前不是主線，除非之後證明 package identity 能帶來不同且必要的 UI / policy 行為。
 
+### Exact OriginPlayer baseline（2026-09-03）
+
+V2329A exact build 上的 OriginPlayer / `VivoMusicWidgetMix`：
+
+```text
+package: com.vivo.musicwidgetmix
+versionCode: 6271
+versionName: 6.2.7.1
+minSdk: 34
+targetSdk: 34
+path: /system/app/VivoMusicWidgetMix/VivoMusicWidgetMix.apk
+```
+
+當次實機 `settings list system | grep -Ei 'musicwidget|music_widget'` 基線：
+
+```text
+music_widget_mix_panel_show=0
+music_widget_mix_play_control_pkg_key=com.android.bbkmusic.local
+music_widget_play_local_key=0
+musicwidget_list_pkg_other_type_key=[]
+musicwidget_list_pkg_type_key=["com.android.bbkmusic","com.android.bbkmusic.local"]
+musicwidgetmix_agree_statement_system_key=1
+musicwidgetmix_service_and_statement_key=0
+```
+
+重要觀察：
+
+1. exact build 上除了 `musicwidget_list_pkg_type_key`，確實還存在 `musicwidget_list_pkg_other_type_key` 與 `music_widget_mix_play_control_pkg_key`。
+2. `musicwidget_list_pkg_other_type_key` 在當次基線為空陣列 `[]`，因此不能先假定它就是「完整鎖屏卡模板白名單」；需要 APK 靜態分析或受控 A/B 才能定義語義。
+3. `music_widget_mix_play_control_pkg_key=com.android.bbkmusic.local` 看起來像目前 / 預設播放控制來源，但目前只記為觀察，不先當成模板分類證據。
+4. 當次讀回的 `musicwidget_list_pkg_type_key` 已回到 stock-like 值 `com.android.bbkmusic` + `com.android.bbkmusic.local`，沒有先前手動加入的 Bilibili / patched YouTube。這表示先前 allow-list 寫入至少「當次並未持續存在」；原因可能是後續重設、系統重寫或其他流程覆蓋，尚未判定。後續若再測必須同時記錄寫入前 / 寫入後 / 重開機後值，不能把一次成功寫入當成永久設定。
+
 ### Ghost Player 的定位
 
 Ghost Player **不排除**。
@@ -91,8 +123,12 @@ Ghost Player **不排除**。
 需要區分：
 
 1. `musicwidget_list_pkg_type_key` 只負責 eligibility，還是也影響模板分類。
-2. 完整鎖屏模板是否另依 package identity、audio playback activity、MediaSession metadata shape、vivo 私有 allow-list / app type 決定。
-3. 若無法直接取得完整模板，則 Ghost 保留作鎖屏 UI bridge。
+2. `musicwidget_list_pkg_other_type_key` 的真實用途。
+3. `music_widget_mix_play_control_pkg_key` 是單純 current/default source，還是會參與 UI / control routing。
+4. 完整鎖屏模板是否另依 package identity、audio playback activity、MediaSession metadata shape、vivo 私有 allow-list / app type 決定。
+5. 若無法直接取得完整模板，則 Ghost 保留作鎖屏 UI bridge。
+
+下一步優先取得 exact `/system/app/VivoMusicWidgetMix/VivoMusicWidgetMix.apk` 做靜態分析，直接搜尋上述三個 settings key 的 reader / branch / template selection；在靜態語義確定前，不盲寫 `other_type_key`。
 
 ---
 
