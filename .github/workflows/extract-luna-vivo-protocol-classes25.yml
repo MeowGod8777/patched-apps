@@ -1,0 +1,66 @@
+name: Extract Luna Vivo protocol classes25
+
+on:
+  push:
+    paths:
+      - .github/workflows/extract-luna-vivo-protocol-classes25.yml
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  extract:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Download official Luna classes25.dex and JADX
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p work/apk work/out work/jadx
+          UA='Mozilla/5.0 (Linux; Android 16; V2329A) AppleWebKit/537.36 Chrome/143 Mobile Safari/537.36'
+          curl -L --retry 3 --connect-timeout 15 --max-time 240 -A "$UA" 'https://ugapk.com/GMg3' -o work/luna.apk
+          unzip -q work/luna.apk classes25.dex -d work/apk
+          curl -L --fail --retry 3 'https://github.com/skylot/jadx/releases/download/v1.5.6/jadx-1.5.6.zip' -o work/jadx.zip
+          unzip -q work/jadx.zip -d work/jadx
+          chmod +x work/jadx/bin/jadx
+
+      - name: Decompile target dex only
+        shell: bash
+        run: |
+          set -euo pipefail
+          work/jadx/bin/jadx --no-res --show-bad-code --threads-count 2 -d work/jadx25 work/apk/classes25.dex
+
+      - name: Extract exact Vivo protocol source
+        shell: bash
+        run: |
+          set -uo pipefail
+          SRC=work/jadx25/sources
+          mkdir -p work/out/sources
+          : > work/out/hits.txt
+          : > work/out/files.txt
+          grep -RIn --binary-files=without-match -E 'vivomusicmix|VIVO_MEDIA_|VivoOriginRemoteControl|VivoRemoteControlListener|VIVOSupportUtil|VivoConstant' "$SRC" > work/out/hits.txt 2>/dev/null || true
+          grep -Rl --binary-files=without-match -E 'vivomusicmix|VIVO_MEDIA_|VivoOriginRemoteControl|VivoRemoteControlListener|VIVOSupportUtil|VivoConstant' "$SRC" > work/out/files.txt 2>/dev/null || true
+          while IFS= read -r f; do
+            [ -f "$f" ] || continue
+            rel="${f#$SRC/}"
+            mkdir -p "work/out/sources/$(dirname "$rel")"
+            cp "$f" "work/out/sources/$rel"
+          done < work/out/files.txt
+          strings -a work/apk/classes25.dex | grep -Ei 'vivomusicmix|VIVO_MEDIA_|vivo.*(list|play|media)' | sort -u > work/out/strings.txt || true
+          echo '===== MATCHED FILES ====='
+          cat work/out/files.txt || true
+          echo '===== EXACT HITS ====='
+          cat work/out/hits.txt || true
+          test -s work/out/files.txt
+
+      - name: Upload exact protocol sources
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: luna-vivo-protocol-classes25
+          path: work/out
+          retention-days: 7
