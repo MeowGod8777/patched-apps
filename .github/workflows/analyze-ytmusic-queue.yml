@@ -1,0 +1,67 @@
+name: Analyze YT Music MediaSession queue
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - .github/workflows/analyze-ytmusic-queue.yml
+
+jobs:
+  analyze:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@v6
+
+      - name: Download Luna APK and JADX
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          mkdir -p input tools out
+          gh release download ytmusic-originplayer-luna-33729902415 \
+            --pattern '*.apk' --dir input
+          curl -L --fail --retry 3 \
+            -o tools/jadx.zip \
+            https://github.com/skylot/jadx/releases/download/v1.5.6/jadx-1.5.6.zip
+          unzip -q tools/jadx.zip -d tools/jadx
+          chmod +x tools/jadx/bin/jadx
+          ls -lh input/*.apk
+
+      - name: Decompile code only
+        run: |
+          tools/jadx/bin/jadx --no-res --show-bad-code -d out input/*.apk >/tmp/jadx.log 2>&1 || true
+          tail -40 /tmp/jadx.log
+
+      - name: Locate MediaSession queue paths
+        run: |
+          echo '===== onSkipToQueueItem ====='
+          grep -R -n -F 'onSkipToQueueItem' out/sources | head -40 || true
+          echo '===== skipToQueueItem ====='
+          grep -R -n -F 'skipToQueueItem' out/sources | head -80 || true
+          echo '===== setActions ====='
+          grep -R -n -F '.setActions(' out/sources | head -120 || true
+          echo '===== ACTION_SKIP_TO_QUEUE_ITEM ====='
+          grep -R -n -E 'ACTION_SKIP_TO_QUEUE_ITEM|4096L|4096' out/sources | head -120 || true
+          echo '===== MediaSessionCompat Callback subclasses ====='
+          grep -R -n -E 'extends MediaSessionCompat\.Callback|extends MediaSession\.Callback' out/sources | head -80 || true
+
+      - name: Save candidate source snippets
+        run: |
+          mkdir -p analysis
+          grep -R -l -E 'onSkipToQueueItem|skipToQueueItem|\.setActions\(' out/sources > analysis/candidate-files.txt || true
+          while IFS= read -r f; do
+            [ -f "$f" ] || continue
+            rel="${f#out/sources/}"
+            dest="analysis/${rel//\//__}"
+            cp "$f" "$dest"
+          done < analysis/candidate-files.txt
+          wc -l analysis/candidate-files.txt
+          sed -n '1,120p' analysis/candidate-files.txt
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: ytmusic-queue-analysis
+          path: analysis
+          retention-days: 7
