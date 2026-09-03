@@ -1,0 +1,87 @@
+name: Extract full Luna Vivo media protocol
+
+on:
+  push:
+    paths:
+      - .github/workflows/extract-luna-vivo-protocol-full.yml
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  extract:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Download official Luna APK
+        shell: bash
+        run: |
+          set -euxo pipefail
+          mkdir -p work/apk work/out work/jadx
+          UA='Mozilla/5.0 (Linux; Android 16; V2329A) AppleWebKit/537.36 Chrome/143 Mobile Safari/537.36'
+          curl -L --retry 3 --connect-timeout 15 --max-time 240 -A "$UA" 'https://ugapk.com/GMg3' -o work/luna.apk
+          unzip -q work/luna.apk 'classes*.dex' -d work/apk
+          ls -lh work/luna.apk
+
+      - name: Dump Vivo protocol strings and locate dexes
+        shell: bash
+        run: |
+          set -euxo pipefail
+          : > work/out/vivo_strings.txt
+          : > work/out/target_dexes.txt
+          for f in work/apk/classes*.dex; do
+            strings -a "$f" | grep -Ei 'vivomusicmix|vivo[_\.].*(list|play|media|lyric|favorite|loop)|media\.action|session\.event|media[_\.]id|list[_\.]' | sed "s#^#$f: #" >> work/out/vivo_strings.txt || true
+            if strings -a "$f" | grep -Eiq 'vivomusicmix|VIVO_MEDIA_ID_MUSICS_BY_CURRENT|MediaCustomAction|MediaSupportEvent|VivoRemoteControl'; then
+              echo "$f" >> work/out/target_dexes.txt
+            fi
+          done
+          sort -u -o work/out/vivo_strings.txt work/out/vivo_strings.txt
+          sort -u -o work/out/target_dexes.txt work/out/target_dexes.txt
+          echo '===== VIVO STRINGS ====='
+          cat work/out/vivo_strings.txt
+          echo '===== TARGET DEXES ====='
+          cat work/out/target_dexes.txt
+          test -s work/out/target_dexes.txt
+
+      - name: Download JADX
+        run: |
+          curl -L --fail --retry 3 'https://github.com/skylot/jadx/releases/download/v1.5.6/jadx-1.5.6.zip' -o work/jadx.zip
+          unzip -q work/jadx.zip -d work/jadx
+          chmod +x work/jadx/bin/jadx
+
+      - name: Decompile and recover Vivo protocol handlers
+        shell: bash
+        run: |
+          set -euxo pipefail
+          : > work/out/hits.txt
+          : > work/out/files.txt
+          n=0
+          while IFS= read -r dex; do
+            n=$((n+1))
+            out="work/jadx_$n"
+            mkdir -p "$out"
+            work/jadx/bin/jadx --no-res --show-bad-code --threads-count 2 -d "$out" "$dex"
+            SRC="$out/sources"
+            grep -RIn --binary-files=without-match -E 'vivomusicmix|VivoRemoteControl|VIVOSupportUtil|VivoConstant|onCustomAction|onPlayFromMediaId|MediaBrowser|onLoadChildren|sendSessionEvent|setExtras|LIST_CURRENT|PLAY_INDEX|GET_LIST|MUSICS_BY_CURRENT|MEDIA_KEY_LIST|key_action|action_param|error_code' "$SRC" | tee -a work/out/hits.txt || true
+            while IFS= read -r f; do
+              [ -f "$f" ] || continue
+              echo "$f" >> work/out/files.txt
+              rel="${f#$SRC/}"
+              mkdir -p "work/out/sources/$(dirname "$rel")"
+              cp "$f" "work/out/sources/$rel"
+            done < <(grep -Rl --binary-files=without-match -E 'vivomusicmix|VivoRemoteControl|VIVOSupportUtil|VivoConstant|LIST_CURRENT|PLAY_INDEX|GET_LIST|MUSICS_BY_CURRENT|MEDIA_KEY_LIST' "$SRC" || true)
+          done < work/out/target_dexes.txt
+          sort -u -o work/out/files.txt work/out/files.txt
+          echo '===== FILES ====='
+          cat work/out/files.txt
+          echo '===== HITS HEAD ====='
+          sed -n '1,6000p' work/out/hits.txt
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: luna-vivo-protocol-full
+          path: work/out
+          retention-days: 7
