@@ -38,28 +38,52 @@ V2 (`REAL_QUEUE_V2`, SHA256 `639a99a109ea853eda2c53238626d4caab45b410dccfe968cd3
 3. V4 and V4N share an additional producer-side operation inside `Lkyi.j()` that V2 does not perform:
    - `Lnoq.o() -> Lboht`
    - `Llgl.d(Lboht) -> native mediaId`
-4. A suspected V4N smali scratch-register clobber was checked against the patched `Lkyi.j()` context and **disproved**. The affected scratch registers are redefined by the original method before subsequent use; this is not the current root cause.
-5. Prior stock-code static traces already show YouTube Music itself calling `Llgl.d(Lboht)` when assembling `MediaBrowserCompat$MediaItemInfo` media IDs from a playback endpoint (`Lavev.a() -> Lboht`). Therefore `Llgl.d()` is an existing stock media-ID encoder, not an invented V4N-only codec. This reduces, but does not yet eliminate, the probability of encoder-side mutation.
+4. A suspected V4N smali scratch-register clobber was checked against the patched `Lkyi.j()` context and **disproved**. The affected scratch registers are redefined by the original method before subsequent use.
+5. Exact validated-base inspection found only two concrete `Lnoq` implementors used by this code family: `Lnox` and `Lnpa`. In both, `o()Lboht;` is a pure protobuf field getter: it checks the presence bit and returns the stored `Lbxxg.q:Lboht` or the default `Lboht.a`. It performs no queue mutation, callback, session operation or state write.
+6. Exact `Llgl.d(Lboht)` implementation was recovered. It only:
+   - creates an `Lbuyd` protobuf builder,
+   - stores the supplied `Lboht` in field `Lbuyd.e` and sets its presence bit,
+   - builds the protobuf,
+   - calls `Llgl.g(Lbuyd)`.
+7. Exact `Llgl.g(Lbuyd)` only calls `toByteArray()` and `android.util.Base64.encodeToString(bytes, 8)`. It performs no MediaSession, queue, controller, callback, cache or mutable global-state operation.
+8. Stock YouTube Music contains at least five independent `Llgl.d(Lboht)` call sites (`Llgp`, `Lmxt` x3, `Lplq`), including direct helper paths and stock `MediaBrowserCompat.MediaItem` creation. Therefore this encoder is a normal stock media-ID codec.
+9. Stock `Llgp.q()` demonstrates that a valid native-ID `MediaBrowserCompat.MediaItem` can use the `Llgl.d()` media ID with normal title/subtitle and **null extras**. Therefore a blanket claim that every native ID requires companion MediaDescription extras is false.
 
-## Current narrowed root-cause branches
+## Branch A status — ELIMINATED
 
-### Branch A — producer capture side effect
+The V4N regression is **not** caused by producer-side side effects from `Lnoq.o()` or `Llgl.d()`.
 
-The additional `Lnoq.o()` / `Llgl.d()` work performed in the hot `Lkyi.j()` queue producer may perturb queue/session state or invoke a concrete `Lnoq.o()` implementation with non-trivial semantics. This must be checked at the implementation level; `Lnoq` itself is abstract.
+Both components are pure with respect to playback/session state, and the encoder is used normally by stock YouTube Music. No evidence remains for the prior producer-mutation hypothesis.
 
-### Branch B — Vivo consumer semantic branch
+## Remaining root-cause problem
 
-V2 already supplies non-empty synthetic media IDs without breaking OriginPlayer metadata, so the regression is not explained by merely making `MediaItem.mediaId` non-null. Supplying a native/decodeable-looking YouTube Music media ID may cause Vivo c0 / OriginPlayer to take a different cooperation/control branch with additional expectations. That branch may suppress or replace the normal MediaSession metadata/progress path while still failing to dispatch a usable selection request.
+The regression must be downstream of the encoded ID being exposed through the Vivo cooperation browse/selection path, or in the concrete V4N browse-item / callback interaction.
 
-## Required next analysis
+Important constraints:
 
-Do **not** make another feature APK yet.
+- Merely having a non-null MediaItem ID is not the trigger: V2 already has non-null synthetic `vivo_qid_*` IDs and remains metadata-stable.
+- Vivo c0 current-list selection is known to take the selected `MediaItem.mediaId` and issue `playFromMediaId(mediaId, Bundle{"vivomusicmix_key_list"="vivomusicmix_current_list"})` through the cooperation controller.
+- Untouched YT Music `Llag.g(String, Bundle)` decodes its input via `Laveu.b(String)`, resolves an `Lboht` via `Llbg.a(Lavev)`, and sends it into the native playback path via `Llbg.o(...)`.
 
-Before another candidate is built, statically recover and compare:
+This creates a stronger possibility that the V4N row click is **not actually inert**: a decodeable native ID may enter `Llag.g()` and partially perturb/replace playback/session state before failing to complete the requested song switch. That would explain why V2 synthetic IDs remain harmless while V4/V4N lose OriginPlayer metadata/progress after interaction.
 
-1. Concrete `Lnoq` subclass(es) used by `Lkyi.j()` and the actual implementation of `o()Lboht;`.
-2. Full `Llgl.d(Lboht)` implementation.
-3. Stock call sites that use `Llgl.d()` for `MediaBrowserCompat$MediaItemInfo`, including any companion extras/root semantics that V4N did not reproduce.
-4. Vivo c0 / Music Mix handling of returned `MediaItem.mediaId` and its row-click dispatch path, especially any branch that distinguishes synthetic/opaque IDs from native-looking IDs.
+This is not yet promoted to VERIFIED because the current device report did not separately timestamp the metadata/progress regression as occurring before vs. after the first playlist-row click.
 
-No V5 candidate should be handed to the device until at least one of Branch A or Branch B is eliminated or positively identified.
+## Required next step
+
+Do **not** build another feature candidate.
+
+The next runtime work, if required, must be a single observation-oriented trace with V2 behavior preserved or otherwise no selection rewrite. It must answer in one pass:
+
+1. Does Vivo c0 row click actually reach untouched `Llag.g()`?
+2. What exact mediaId and extras reach `Llag.g()`?
+3. Does `Laveu.b(mediaId)` decode to a non-empty `Lavev`?
+4. Does `Llbg.a(Lavev)` recover the intended `Lboht`?
+5. Is the OriginPlayer metadata/progress loss before the first row click or only after that callback enters the native playback path?
+
+Hard guards remain:
+
+- **DO NOT PATCH `Lid` AGAIN.**
+- **DO NOT map queueId to `onSkipToQueueItem`.**
+- **DO NOT mix the time-display patch into selection work.**
+- No V5 feature APK should be handed to the device until the callback/interaction boundary is positively located.
