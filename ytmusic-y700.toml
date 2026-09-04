@@ -1,0 +1,42 @@
+# Lenovo Legion Y700 4th gen / ColorOS 16 generic rooted YouTube Music.
+# Product goal: daily-use ReVanced/RVX Music only.
+# Intentionally NO Vivo/OriginPlayer package identity or cooperation delta:
+# - keep com.google.android.apps.youtube.music
+# - no com.luna.music
+# - no VivoMusicWidgetMix service/controller/c0/current-list/mediaId/support_event bridge
+# Root module mode makes the builder automatically exclude the GmsCore/MicroG support patch.
+
+enable-module-update = false
+parallel-jobs = 1
+
+[YouTube-Music-Y700]
+enabled = true
+app-name = "YouTube Music"
+build-mode = "module"
+version = "9.15.51"
+arch = "arm64-v8a"
+include-stock = "auto"
+pkg-name = "com.google.android.apps.youtube.music"
+patches-source = "anddea/revanced-patches"
+patches-version = "v4.2.0"
+cli-source = "MorpheApp/morphe-cli"
+cli-version = "latest"
+
+# Reuse the already-validated generic RVX Music capability set from the iQOO build,
+# without its Vivo-only package/options/RE delta. Runtime toggles remain user settings.
+included-patches = """\
+  'Hide ads' \
+  'Remove background playback restrictions' \
+  'Force original audio' \
+  'Return YouTube Dislike' \
+  'SponsorBlock' \
+  'Video playback' \
+  'Bitrate default value' \
+  'Sanitize sharing links' \
+  'Third-party lyrics' \
+  """
+
+direct-dlurl = "https://github.com/peternmuller/YTYTM-APK/releases/download/1/com.google.android.apps.youtube.music-9.15.51-arm64-v8a.apk"
+archive-dlurl = "https://archive.org/download/crimsonman/apks/com.google.android.apps.youtube.music"
+apkmirror-dlurl = "https://www.apkmirror.com/apk/google-inc/youtube-music"
+uptodown-dlurl = "https://youtube-music.en.uptodown.com/android"
