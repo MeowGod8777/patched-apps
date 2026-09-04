@@ -37,11 +37,7 @@ jobs:
               printf '%s\n' "$f" > "out/${cls}-path.txt"
             fi
           }
-
-          # Descriptor Llgl; maps to lgl.smali. Likewise Laves; -> aves.smali.
-          for cls in lgl lgp lgk mxt plq kyi noq nox npa aveu avev aves lag lai lbg lkq id; do
-            copy_class "$cls"
-          done
+          for cls in lgl lgp lgk mxt plq kyi noq nox npa aveu avev aves lag lai lbg lkq id; do copy_class "$cls"; done
 
           grep -RIl '^\.implements Lnoq;' decoded/smali* 2>/dev/null | sort | tee out/lnoq-implementors.txt || true
           : > out/lnoq-o-m-bodies.txt
@@ -52,6 +48,24 @@ jobs:
             sed -n '/^\.method .* o()Lboht;$/,/^\.end method$/p' "$f" >> out/lnoq-o-m-bodies.txt
           done < out/lnoq-implementors.txt
 
+          # Exact all-stock uses of queue IDs and queue playback endpoints.
+          grep -RniF 'Lnoq;->o()Lboht;' decoded/smali* | tee out/lnoq-o-call-hits.txt || true
+          grep -RniF 'Lnoq;->m()J' decoded/smali* | tee out/lnoq-m-call-hits.txt || true
+          : > out/lnoq-o-call-contexts.txt
+          while IFS=: read -r f n rest; do
+            [ -n "$f" ] || continue
+            start=$(( n > 180 ? n-180 : 1 )); end=$(( n+320 ))
+            echo "===== $f:$n =====" >> out/lnoq-o-call-contexts.txt
+            sed -n "${start},${end}p" "$f" >> out/lnoq-o-call-contexts.txt
+          done < out/lnoq-o-call-hits.txt
+          : > out/lnoq-m-call-contexts.txt
+          while IFS=: read -r f n rest; do
+            [ -n "$f" ] || continue
+            start=$(( n > 140 ? n-140 : 1 )); end=$(( n+260 ))
+            echo "===== $f:$n =====" >> out/lnoq-m-call-contexts.txt
+            sed -n "${start},${end}p" "$f" >> out/lnoq-m-call-contexts.txt
+          done < out/lnoq-m-call-hits.txt
+
           grep -RniF 'Llgl;->d(Lboht;)Ljava/lang/String;' decoded/smali* | tee out/llgl-d-call-hits.txt || true
           : > out/llgl-d-call-contexts.txt
           while IFS=: read -r f n rest; do
@@ -61,7 +75,6 @@ jobs:
             sed -n "${start},${end}p" "$f" >> out/llgl-d-call-contexts.txt
           done < out/llgl-d-call-hits.txt
 
-          # Exact playFromMediaId dispatch contract.
           : > out/playfrommediaid-contract.txt
           LAG=$(find decoded -type f -name lag.smali -print -quit)
           LAI=$(find decoded -type f -name lai.smali -print -quit)
@@ -82,14 +95,10 @@ jobs:
             echo '===== Llbg.o(...) =====' >> out/playfrommediaid-contract.txt
             sed -n '/^\.method .* o(Lckob;Lboht;Landroid\/os\/Bundle;)V$/,/^\.end method$/p' "$LBG" >> out/playfrommediaid-contract.txt
           fi
-
-          # Find every key consumed near media-controller bundle handling.
-          grep -RniE 'media_item_from_search|vivomusicmix_key_list|android\.media\.|EXTRA_|playFromMediaId' "$LAG" "$LAI" "$LBG" 2>/dev/null | tee out/playfrommediaid-key-hits.txt || true
+          grep -RniE 'media_item_from_search|vivomusicmix_key_list|com\.google\.android\.apps\.youtube\.music\.mediabrowser\.caller_package_name|playFromMediaId' "$LAG" "$LAI" "$LBG" 2>/dev/null | tee out/playfrommediaid-key-hits.txt || true
 
           grep -RniE 'MediaBrowserCompat\$MediaItem;-><init>|MediaDescriptionCompat;-><init>|onPlayFromMediaId|Laveu;->b\(Ljava/lang/String;\)Lavev;' decoded/smali* \
-            | grep -E '/(lgp|lgk|mxt|plq|kyi|lag|id)\.smali:' \
-            | tee out/relevant-mediaitem-callback-hits.txt || true
-
+            | grep -E '/(lgp|lgk|mxt|plq|kyi|lag|id)\.smali:' | tee out/relevant-mediaitem-callback-hits.txt || true
           grep -RniE 'MediaDescriptionCompat;->|MediaBrowserCompat\$MediaItem;->|MediaSessionCompat\$QueueItem;->' decoded/smali_classes5/kyi.smali decoded/smali*/ii.smali 2>/dev/null | tee out/producer-refs.txt || true
 
       - name: Upload inspection
