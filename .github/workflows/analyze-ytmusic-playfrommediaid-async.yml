@@ -21,6 +21,7 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
+          # Exact product base guard; this workflow is static RE only and never builds an APK.
           EXPECTED_BASE='0b1b61ad6bd87dacc88517adf19c1115085d529e63847d50d587476efa4ce307'
           mkdir -p input tools out
           gh release download ytmusic-originplayer-luna-33729902415 --pattern '*.apk' --dir input
