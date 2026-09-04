@@ -1,0 +1,271 @@
+name: Build YT Music Luna Vivo c0 playable mediaId V5
+
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - .github/workflows/build-ytmusic-luna-vivo-c0-playable-mediaid-v5.yml
+      - tools/ytmusic_vivo_c0_playable_mediaid_v5.py
+      - tools/ytmusic_vivo_c0_native_mediaid_v4n.py
+      - tools/ytmusic_vivo_c0_real_queue_v2.py
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Download exact validated Luna base and tools
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p input tools out
+          gh release download ytmusic-originplayer-luna-33729902415 --pattern '*.apk' --dir input
+          mv input/*.apk input/base.apk
+          BASE_SHA=$(sha256sum input/base.apk | awk '{print $1}')
+          echo "base_sha256=$BASE_SHA" | tee out/input-sha256.txt
+          test "$BASE_SHA" = "0b1b61ad6bd87dacc88517adf19c1115085d529e63847d50d587476efa4ce307"
+          curl -L --fail --retry 3 -o tools/apktool.jar https://github.com/iBotPeaches/Apktool/releases/download/v3.0.3/apktool_3.0.3.jar
+          curl -L --fail --retry 3 -o tools/bcprov.jar https://repo1.maven.org/maven2/org/bouncycastle/bcprov-jdk18on/1.82/bcprov-jdk18on-1.82.jar
+
+      - name: Decode, snapshot hard guards, and apply playable endpoint V5
+        shell: bash
+        run: |
+          set -euo pipefail
+          java -jar tools/apktool.jar d -f input/base.apk -o decoded
+
+          CALLBACK=$(grep -Rl 'onPlayFromMediaId(Ljava/lang/String;Landroid/os/Bundle;)V' decoded/smali*/id.smali | head -n1)
+          LAG=$(grep -Rl '^\.method public final g(Ljava/lang/String;Landroid/os/Bundle;)V' decoded/smali*/lag.smali | head -n1)
+          II=$(grep -Rl 'setMetadata(Landroid/media/MediaMetadata;)V' decoded/smali*/ii.smali | head -n1)
+          test -n "$CALLBACK"; test -n "$LAG"; test -n "$II"
+          cp "$CALLBACK" out/base-id.smali
+          cp "$LAG" out/base-lag.smali
+          python3 - "$II" out/base-ii-m.smali <<'PY'
+          from pathlib import Path
+          import re,sys
+          s=Path(sys.argv[1]).read_text()
+          m=re.search(r'(?ms)^\.method public final m\(Landroid/support/v4/media/MediaMetadataCompat;\)V\n.*?^\.end method',s)
+          assert m, 'ii.m missing in base'
+          Path(sys.argv[2]).write_text(m.group(0))
+          PY
+
+          python3 tools/ytmusic_vivo_c0_playable_mediaid_v5.py decoded
+
+          BROWSER=$(find decoded -type f -path '*/com/google/android/apps/youtube/music/mediabrowser/MusicBrowserService.smali' -print -quit)
+          KYI=$(grep -Rl '^\.method public final j()V' decoded/smali*/kyi.smali | head -n1)
+          CALLBACK2=$(grep -Rl 'onPlayFromMediaId(Ljava/lang/String;Landroid/os/Bundle;)V' decoded/smali*/id.smali | head -n1)
+          LAG2=$(grep -Rl '^\.method public final g(Ljava/lang/String;Landroid/os/Bundle;)V' decoded/smali*/lag.smali | head -n1)
+          II2=$(grep -Rl 'setMetadata(Landroid/media/MediaMetadata;)V' decoded/smali*/ii.smali | head -n1)
+          test -n "$BROWSER"; test -n "$KYI"; test -n "$CALLBACK2"; test -n "$LAG2"; test -n "$II2"
+
+          cmp -s out/base-id.smali "$CALLBACK2"
+          echo 'PASS: Lid byte-for-byte unchanged from validated base' | tee out/lid-regression-guard.txt
+          cmp -s out/base-lag.smali "$LAG2"
+          echo 'PASS: Llag callback implementation byte-for-byte unchanged from validated base' | tee out/lag-regression-guard.txt
+
+          python3 - "$II2" out/patched-ii-m.smali <<'PY'
+          from pathlib import Path
+          import re,sys
+          s=Path(sys.argv[1]).read_text()
+          m=re.search(r'(?ms)^\.method public final m\(Landroid/support/v4/media/MediaMetadataCompat;\)V\n.*?^\.end method',s)
+          assert m, 'ii.m missing after patch'
+          Path(sys.argv[2]).write_text(m.group(0))
+          PY
+          cmp -s out/base-ii-m.smali out/patched-ii-m.smali
+          echo 'PASS: Lii.m byte-for-byte unchanged from validated base' | tee out/metadata-regression-guard.txt
+
+          python3 - "$KYI" <<'PY' | tee out/playable-endpoint-guard.txt
+          from pathlib import Path
+          import re,sys
+          s=Path(sys.argv[1]).read_text()
+          m=re.search(r'(?ms)^\.method public final j\(\)V\n.*?^\.end method',s)
+          assert m, 'kyi.j missing'
+          j=m.group(0)
+          assert j.count('Lnoq;->n()Lazmi;') == 1, j.count('Lnoq;->n()Lazmi;')
+          assert j.count('Lazmi;->b:Lboht;') == 1, j.count('Lazmi;->b:Lboht;')
+          assert j.count('Llgl;->d(Lboht;)Ljava/lang/String;') == 1
+          assert 'Lnoq;->o()Lboht;' not in j, 'DELETE endpoint leaked into V5 mapping'
+          assert 'Lnoq;->p()Lboht;' not in j, 'secondary queue endpoint leaked into V5 mapping'
+          print('PASS: V5 uses Lnoq.n()->Lazmi.b playable endpoint only')
+          PY
+
+          grep -q 'field public static volatile vivoNativeIds:Ljava/util/concurrent/ConcurrentHashMap;' "$BROWSER"
+          grep -q 'ConcurrentHashMap;->get(Ljava/lang/Object;)Ljava/lang/Object;' "$BROWSER"
+          grep -q 'vivo_qid_' "$BROWSER"
+          grep -q 'ConcurrentHashMap;->put(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;' "$KYI"
+          ! grep -q 'vivo_v3' "$CALLBACK2"
+          ! grep -q 'vivo_qid_' "$CALLBACK2"
+          ! grep -q 'Long;->parseLong(Ljava/lang/String;)J' "$CALLBACK2"
+          ! grep -R -q 'vivomusicmix.media.metadata.support_event' decoded/smali*
+          ! grep -R -q 'YTM_C0TRACE' decoded/smali*
+          ! grep -R -q 'VivoC0Trace;' decoded/smali*
+
+          grep -n -A120 -B20 'vivoNativeIds' "$BROWSER" | tee out/patched-browser-nativeid-context.txt
+          grep -n -A80 -B25 'Lnoq;->n()Lazmi;' "$KYI" | tee out/patched-kyi-playable-context.txt
+          grep -n -A16 -B4 'com.vivo.musicwidgetmix.support.service' decoded/AndroidManifest.xml | tee out/patched-manifest-context.txt
+          grep -n -A28 -B4 'VIVO_MUSIC_MIX_ROOT' "$BROWSER" | tee out/patched-root-context.txt
+
+      - name: Rebuild and 16K align
+        shell: bash
+        run: |
+          set -euo pipefail
+          java -jar tools/apktool.jar b decoded -o out/unsigned.apk
+          BUILD_TOOLS="${ANDROID_HOME}/build-tools/$(ls "${ANDROID_HOME}/build-tools" | sort -V | tail -1)"
+          "$BUILD_TOOLS/zipalign" -P 16 -f 4 out/unsigned.apk out/aligned.apk
+          "$BUILD_TOOLS/zipalign" -c -P 16 -v 4 out/aligned.apk | tee out/zipalign-before-sign.txt
+
+      - name: Sign with validated Morphe signer and verify
+        shell: bash
+        run: |
+          set -euo pipefail
+          norm() { tr -d ':[:space:]' | tr '[:upper:]' '[:lower:]'; }
+          BASE_CERT=$(java -jar bin/apksigner.jar verify --print-certs input/base.apk | sed -n 's/^Signer #1 certificate SHA-256 digest: //p' | norm)
+          BKS_CERT=$(keytool -list -v -keystore ks.keystore -storetype BKS -storepass 123456789 -alias andrewliang -providerclass org.bouncycastle.jce.provider.BouncyCastleProvider -providerpath tools/bcprov.jar | sed -n 's/^[[:space:]]*SHA256: //p' | norm)
+          echo "base=$BASE_CERT" | tee out/cert.txt
+          echo "bks=$BKS_CERT" | tee -a out/cert.txt
+          test "$BASE_CERT" = "7762ee243d1157ef3d6de884690ff70a385fc251fe8f491eb6c71f6a8e392e2c"
+          test "$BASE_CERT" = "$BKS_CERT"
+          keytool -importkeystore -srckeystore ks.keystore -srcstoretype BKS -srcstorepass 123456789 -srcalias andrewliang -srckeypass 123456789 -destkeystore out/signer.p12 -deststoretype PKCS12 -deststorepass 123456789 -destkeypass 123456789 -destalias andrewliang -noprompt -providerclass org.bouncycastle.jce.provider.BouncyCastleProvider -providerpath tools/bcprov.jar
+          OUT_APK=out/YouTube_Music_9.15.51_Luna_VIVO_C0_PLAYABLE_MEDIAID_V5.apk
+          java -jar bin/apksigner.jar sign --ks out/signer.p12 --ks-type PKCS12 --ks-pass pass:123456789 --key-pass pass:123456789 --ks-key-alias andrewliang --out "$OUT_APK" out/aligned.apk
+          rm -f out/*.idsig
+          java -jar bin/apksigner.jar verify --verbose --print-certs "$OUT_APK" | tee out/signature-verify.txt
+          grep -q 'Verified using v2 scheme (APK Signature Scheme v2): true' out/signature-verify.txt
+          grep -q 'Verified using v3 scheme (APK Signature Scheme v3): true' out/signature-verify.txt
+          OUT_CERT=$(java -jar bin/apksigner.jar verify --print-certs "$OUT_APK" | sed -n 's/^Signer #1 certificate SHA-256 digest: //p' | norm)
+          echo "out=$OUT_CERT" | tee -a out/cert.txt
+          test "$OUT_CERT" = "$BASE_CERT"
+          BUILD_TOOLS="${ANDROID_HOME}/build-tools/$(ls "${ANDROID_HOME}/build-tools" | sort -V | tail -1)"
+          "$BUILD_TOOLS/zipalign" -c -P 16 -v 4 "$OUT_APK" | tee out/zipalign-final.txt
+          APK_SHA=$(sha256sum "$OUT_APK" | awk '{print $1}')
+          echo "$APK_SHA  $OUT_APK" | tee out/SHA256.txt
+          echo "APK_SHA=$APK_SHA" >> "$GITHUB_ENV"
+          python3 - <<'PY' | tee out/native-libs.txt
+          import zipfile
+          apk='out/YouTube_Music_9.15.51_Luna_VIVO_C0_PLAYABLE_MEDIAID_V5.apk'
+          with zipfile.ZipFile(apk) as z:
+              libs=[i for i in z.infolist() if i.filename.startswith('lib/arm64-v8a/') and i.filename.endswith('.so')]
+              print('arm64_so_count=',len(libs))
+              for i in libs: print(i.filename,'compress_type=',i.compress_type,'size=',i.file_size)
+              assert len(libs)==21, len(libs)
+              assert all(i.compress_type==zipfile.ZIP_STORED for i in libs)
+          PY
+
+      - name: Static manifest/package verification
+        shell: bash
+        run: |
+          set -euo pipefail
+          OUT_APK=out/YouTube_Music_9.15.51_Luna_VIVO_C0_PLAYABLE_MEDIAID_V5.apk
+          BUILD_TOOLS="${ANDROID_HOME}/build-tools/$(ls "${ANDROID_HOME}/build-tools" | sort -V | tail -1)"
+          "$BUILD_TOOLS/aapt" dump badging "$OUT_APK" | tee out/badging.txt
+          grep -q "package: name='com.luna.music'" out/badging.txt
+          grep -q "versionName='9.15.51'" out/badging.txt
+          "$BUILD_TOOLS/aapt" dump xmltree "$OUT_APK" AndroidManifest.xml | tee out/manifest-xmltree.txt
+          grep -q 'com.vivo.musicwidgetmix.support.service' out/manifest-xmltree.txt
+          grep -q 'com.google.android.apps.youtube.music.mediabrowser.MusicBrowserService' out/manifest-xmltree.txt
+
+      - name: Upload V5 candidate and evidence
+        id: upload
+        uses: actions/upload-artifact@v4
+        with:
+          name: ytmusic-luna-vivo-c0-playable-mediaid-v5
+          path: |
+            out/YouTube_Music_9.15.51_Luna_VIVO_C0_PLAYABLE_MEDIAID_V5.apk
+            out/SHA256.txt
+            out/input-sha256.txt
+            out/cert.txt
+            out/signature-verify.txt
+            out/zipalign-final.txt
+            out/native-libs.txt
+            out/badging.txt
+            out/manifest-xmltree.txt
+            out/lid-regression-guard.txt
+            out/lag-regression-guard.txt
+            out/metadata-regression-guard.txt
+            out/playable-endpoint-guard.txt
+            out/patched-manifest-context.txt
+            out/patched-root-context.txt
+            out/patched-browser-nativeid-context.txt
+            out/patched-kyi-playable-context.txt
+          if-no-files-found: error
+          retention-days: 14
+
+      - name: Commit build-success checkpoint
+        env:
+          RUN_ID: ${{ github.run_id }}
+          ARTIFACT_ID: ${{ steps.upload.outputs.artifact-id }}
+          ARTIFACT_URL: ${{ steps.upload.outputs.artifact-url }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          FILE=IQOO12PRO_YTMUSIC_V5_PLAYABLE_MEDIAID_BUILD_SUCCESS_CHECKPOINT_2026-09-04.md
+          cat > "$FILE" <<EOF
+          # iQOO 12 Pro / OriginOS 6 — YouTube Music V5 playable-mediaId build-success checkpoint
+
+          Date: 2026-09-04
+
+          ## Identity
+
+          - APK: \`YouTube_Music_9.15.51_Luna_VIVO_C0_PLAYABLE_MEDIAID_V5.apk\`
+          - Workflow: \`Build YT Music Luna Vivo c0 playable mediaId V5\`
+          - Run: \`${RUN_ID}\`
+          - Artifact: \`${ARTIFACT_ID}\`
+          - Artifact URL: \`${ARTIFACT_URL}\`
+          - APK SHA256: \`${APK_SHA}\`
+          - Base SHA256: \`0b1b61ad6bd87dacc88517adf19c1115085d529e63847d50d587476efa4ce307\`
+          - Signer SHA256: \`7762ee243d1157ef3d6de884690ff70a385fc251fe8f491eb6c71f6a8e392e2c\`
+
+          ## Root-cause correction
+
+          V5 replaces only the disproven V4/V4N selection payload source:
+
+          \`Lnoq.o() / Lazck.o() / Lbxxg.q\` (stock queue DELETE endpoint)
+
+          with the exact stock playable queue representation used by \`Llag.onSkipToQueueItem\`:
+
+          \`Lnoq.n() -> Lazmi.b:Lboht -> Llgl.d(Lboht)\`.
+
+          ## Mandatory verification
+
+          - validated Luna base identity: PASS
+          - V2/V4N c0 queue/browser architecture retained: PASS
+          - playable endpoint guard (n -> Lazmi.b): PASS
+          - rejected o()/p() selection endpoints absent from V5 mapping: PASS
+          - \`Lid\` byte-for-byte unchanged from validated base: PASS
+          - \`Llag\` byte-for-byte unchanged from validated base: PASS
+          - \`Lii.m()\` byte-for-byte unchanged from validated base: PASS
+          - trace/result instrumentation absent: PASS
+          - rejected timing metadata patch absent: PASS
+          - v2 signature: PASS
+          - v3 signature: PASS
+          - signer matches validated Morphe signer: PASS
+          - final 16K zipalign: PASS
+          - 21 arm64 native libraries stored/uncompressed: PASS
+          - package \`com.luna.music\`, version \`9.15.51\`: PASS
+          - Vivo support.service / MusicBrowserService manifest checks: PASS
+
+          ## Runtime status
+
+          NOT YET TESTED. This is the first functional correction after the endpoint-role root cause was VERIFIED; it is not a speculative transport change.
+          EOF
+
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git fetch origin main
+          git checkout main
+          git pull --rebase origin main
+          if [ -e "$FILE" ] && git ls-files --error-unmatch "$FILE" >/dev/null 2>&1; then
+            echo "checkpoint already tracked after rebase; refusing overwrite"
+            exit 1
+          fi
+          git add "$FILE"
+          git commit -m 'Checkpoint YT Music V5 playable mediaId build success'
+          git push origin HEAD:main
