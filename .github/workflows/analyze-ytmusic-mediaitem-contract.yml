@@ -38,11 +38,11 @@ jobs:
             fi
           }
 
-          for cls in llgl lgp lgk kyi noq nox npa aveu avev lag id; do
+          # Descriptor Llgl; maps to file lgl.smali.
+          for cls in lgl lgp lgk mxt plq kyi noq nox npa aveu avev lag id; do
             copy_class "$cls"
           done
 
-          # All implementors of Lnoq and their exact o()/m() bodies.
           grep -RIl '^\.implements Lnoq;' decoded/smali* 2>/dev/null | sort | tee out/lnoq-implementors.txt || true
           : > out/lnoq-o-m-bodies.txt
           while IFS= read -r f; do
@@ -52,22 +52,20 @@ jobs:
             sed -n '/^\.method .* o()Lboht;$/,/^\.end method$/p' "$f" >> out/lnoq-o-m-bodies.txt
           done < out/lnoq-implementors.txt
 
-          # Full native encoder and every stock call site with broad context.
           grep -RniF 'Llgl;->d(Lboht;)Ljava/lang/String;' decoded/smali* | tee out/llgl-d-call-hits.txt || true
           : > out/llgl-d-call-contexts.txt
           while IFS=: read -r f n rest; do
             [ -n "$f" ] || continue
-            start=$(( n > 120 ? n-120 : 1 )); end=$(( n+220 ))
+            start=$(( n > 180 ? n-180 : 1 )); end=$(( n+420 ))
             echo "===== $f:$n =====" >> out/llgl-d-call-contexts.txt
             sed -n "${start},${end}p" "$f" >> out/llgl-d-call-contexts.txt
           done < out/llgl-d-call-hits.txt
 
-          # MediaBrowser item creation and decode/playFromMediaId neighborhood.
+          # Preserve full producer + browser helpers where stock native IDs are actually assembled.
           grep -RniE 'MediaBrowserCompat\$MediaItem;-><init>|MediaDescriptionCompat;-><init>|onPlayFromMediaId|Laveu;->b\(Ljava/lang/String;\)Lavev;' decoded/smali* \
-            | grep -E '/(lgp|lgk|kyi|lag|id)\.smali:' \
+            | grep -E '/(lgp|lgk|mxt|plq|kyi|lag|id)\.smali:' \
             | tee out/relevant-mediaitem-callback-hits.txt || true
 
-          # Producer references retained for comparison with prior V2/V4N work.
           grep -RniE 'MediaDescriptionCompat;->|MediaBrowserCompat\$MediaItem;->|MediaSessionCompat\$QueueItem;->' decoded/smali_classes5/kyi.smali decoded/smali*/ii.smali 2>/dev/null | tee out/producer-refs.txt || true
 
       - name: Upload inspection
