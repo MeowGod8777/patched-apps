@@ -16,9 +16,6 @@ if not v5.is_file():
     raise SystemExit(f"missing V5 patcher: {v5}")
 subprocess.run([sys.executable, str(v5), str(ROOT)], check=True)
 
-TAG = "YTM_V5STATE"
-HELPER_DESC = "Lcom/google/android/apps/youtube/music/mediabrowser/VivoV5StateTrace;"
-
 browser_hits = list(ROOT.glob("smali*/com/google/android/apps/youtube/music/mediabrowser/MusicBrowserService.smali"))
 lag_hits = [p for p in ROOT.glob("smali*/lag.smali") if ".method public final g(Ljava/lang/String;Landroid/os/Bundle;)V" in p.read_text(encoding="utf-8")]
 ii_hits = [p for p in ROOT.glob("smali*/ii.smali") if ".method public final m(Landroid/support/v4/media/MediaMetadataCompat;)V" in p.read_text(encoding="utf-8") and ".method public final n(Landroid/support/v4/media/session/PlaybackStateCompat;)V" in p.read_text(encoding="utf-8")]
@@ -85,14 +82,14 @@ helper = r'''.class public final Lcom/google/android/apps/youtube/music/mediabro
     invoke-virtual {v0, v2}, Landroid/os/Bundle;->get(Ljava/lang/String;)Ljava/lang/Object;
     move-result-object v2
 
-    const-string v3, "android.media.metadata.DURATION"
-    const-wide/16 v4, -0x1
-    invoke-virtual {v0, v3, v4, v5}, Landroid/os/BaseBundle;->getLong(Ljava/lang/String;J)J
+    const-string v7, "android.media.metadata.DURATION"
+    const-wide/16 v5, -0x1
+    invoke-virtual {v0, v7, v5, v6}, Landroid/os/BaseBundle;->getLong(Ljava/lang/String;J)J
     move-result-wide v3
 
-    const-string v6, "vivomusicmix.media.metadata.support_event"
-    const-wide/16 v4, -0x1
-    invoke-virtual {v0, v6, v4, v5}, Landroid/os/BaseBundle;->getLong(Ljava/lang/String;J)J
+    const-string v7, "vivomusicmix.media.metadata.support_event"
+    const-wide/16 v5, -0x1
+    invoke-virtual {v0, v7, v5, v6}, Landroid/os/BaseBundle;->getLong(Ljava/lang/String;J)J
     move-result-wide v5
 
     new-instance v0, Ljava/lang/StringBuilder;
@@ -119,7 +116,7 @@ helper = r'''.class public final Lcom/google/android/apps/youtube/music/mediabro
 .end method
 
 .method public static state(Landroid/support/v4/media/session/PlaybackStateCompat;)V
-    .locals 8
+    .locals 9
     if-nez p0, :state_nonnull
     const-string v0, "STATE null"
     invoke-static {v0}, Lcom/google/android/apps/youtube/music/mediabrowser/VivoV5StateTrace;->log(Ljava/lang/String;)V
@@ -154,15 +151,11 @@ helper = r'''.class public final Lcom/google/android/apps/youtube/music/mediabro
     return-void
 .end method
 '''
-
-# Fix one wide-register range in the handwritten helper before writing it. The
-# state method intentionally uses v7/v8, so it needs nine locals (v0..v8).
-helper = helper.replace('.method public static state(Landroid/support/v4/media/session/PlaybackStateCompat;)V\n    .locals 8', '.method public static state(Landroid/support/v4/media/session/PlaybackStateCompat;)V\n    .locals 9')
 HELPER.write_text(helper, encoding="utf-8")
 
 
 def method_block(src: str, signature: str):
-    pat = re.compile(r'(?ms)^\\.method ' + re.escape(signature) + r'\\n.*?^\\.end method')
+    pat = re.compile(r'(?ms)^\.method ' + re.escape(signature) + r'\n.*?^\.end method')
     m = pat.search(src)
     if not m:
         raise SystemExit(f"method not found: {signature}")
@@ -170,7 +163,7 @@ def method_block(src: str, signature: str):
 
 
 def inject_entry(method: str, call: str) -> str:
-    reg = re.search(r'(?m)^\\s*\\.(?:locals|registers)\\s+\\d+\\s*$', method)
+    reg = re.search(r'(?m)^\s*\.(?:locals|registers)\s+\d+\s*$', method)
     if not reg:
         raise SystemExit("method register directive missing")
     return method[:reg.end()] + "\n\n" + call + "\n" + method[reg.end():]
@@ -195,23 +188,26 @@ ii = ii[:nm.start()] + nbody2 + ii[nm.end():]
 II.write_text(ii, encoding="utf-8")
 
 # Hard non-perturbation / architecture guards.
-id_text = ID.read_text(encoding="utf-8")nkyi = KYI.read_text(encoding="utf-8")
+id_text = ID.read_text(encoding="utf-8")
+kyi = KYI.read_text(encoding="utf-8")
 if "vivo_qid_" in id_text or "Long;->parseLong(Ljava/lang/String;)J" in id_text or "vivo_v3" in id_text:
     raise SystemExit("rejected queueId selection hook leaked into Lid")
 if kyi.count("Lnoq;->n()Lazmi;") != 1 or kyi.count("Lazmi;->b:Lboht;") != 1:
     raise SystemExit("V5 playable endpoint mapping missing")
-if "Lnoq;->o()Lboht;" in re.search(r'(?ms)^\\.method public final j\\(\\)V\\n.*?^\\.end method', kyi).group(0):
+jm = re.search(r'(?ms)^\.method public final j\(\)V\n.*?^\.end method', kyi)
+if not jm:
+    raise SystemExit("Lkyi.j missing after V5 patch")
+j = jm.group(0)
+if "Lnoq;->o()Lboht;" in j:
     raise SystemExit("rejected DELETE endpoint leaked into V5 mapping")
-if "Lnoq;->p()Lboht;" in re.search(r'(?ms)^\\.method public final j\\(\\)V\\n.*?^\\.end method', kyi).group(0):
+if "Lnoq;->p()Lboht;" in j:
     raise SystemExit("rejected secondary endpoint leaked into V5 mapping")
 
-all_smali = []
 for p in ROOT.glob("smali*/**/*.smali"):
     try:
         t = p.read_text(encoding="utf-8")
     except Exception:
         continue
-    all_smali.append((p, t))
     if "YTM_C0TRACE" in t or "VivoC0Trace;" in t:
         raise SystemExit(f"old V4N trace leaked into V5 state probe: {p}")
     if "vivomusicmix.media.metadata.support_event" in t and p != HELPER:
