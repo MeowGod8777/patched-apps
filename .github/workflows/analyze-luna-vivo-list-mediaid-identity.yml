@@ -12,7 +12,7 @@ permissions:
 jobs:
   analyze:
     runs-on: ubuntu-latest
-    timeout-minutes: 20
+    timeout-minutes: 15
     steps:
       - uses: actions/setup-java@v5
         with:
@@ -35,53 +35,45 @@ jobs:
         shell: bash
         run: |
           set -euxo pipefail
-          D=work/decoded
-          O=work/out
-          grep -RIn --include='*.smali' -E 'vivomusicmix_current_list|VIVO_MUSIC_MIX_ROOT|com\.vivo\.musicwidgetmix|setMediaId|getPlayableId|MediaDescriptionCompat\$Builder|MediaBrowserCompat\$MediaItem' "$D" > "$O/all-hits.txt" || true
-
-          grep -RIl --include='*.smali' -E 'vivomusicmix_current_list|VIVO_MUSIC_MIX_ROOT|com\.vivo\.musicwidgetmix' "$D" | sort -u > "$O/vivo-browser-files.txt" || true
-          : > "$O/vivo-browser-full.txt"
-          while IFS= read -r f; do
-            [ -f "$f" ] || continue
-            echo "===== $f =====" >> "$O/vivo-browser-full.txt"
-            cat "$f" >> "$O/vivo-browser-full.txt"
-          done < "$O/vivo-browser-files.txt"
-
-          # Capture every method that contains both a MediaDescription/MediaItem ID write
-          # and a playable-ID read; this is the exact identity join we need.
           python3 - <<'PY'
           from pathlib import Path
           import re
           root=Path('work/decoded')
-          out=Path('work/out/identity-methods.txt')
-          rows=[]
+          out=Path('work/out')
+          keys=('vivomusicmix_current_list','VIVO_MUSIC_MIX_ROOT','com.vivo.musicwidgetmix')
+          browser=[]; joined=[]; hits=[]
           for p in root.glob('smali*/**/*.smali'):
               try: s=p.read_text(errors='ignore')
               except Exception: continue
-              for m in re.finditer(r'(?ms)^\.method .*?^\.end method', s):
-                  b=m.group(0)
-                  if ('getPlayableId()Ljava/lang/String;' in b and
-                      ('setMediaId(Ljava/lang/String;)' in b or
-                       'android.media.metadata.MEDIA_ID' in b or
-                       'MediaBrowserCompat$MediaItem' in b)):
-                      rows.append(f'===== {p} =====\n{b}\n')
-          out.write_text('\n'.join(rows))
+              if any(k in s for k in keys):
+                  browser.append((p,s))
+              if ('getPlayableId()Ljava/lang/String;' in s and
+                  ('setMediaId(Ljava/lang/String;)' in s or 'MediaBrowserCompat$MediaItem' in s or 'android.media.metadata.MEDIA_ID' in s)):
+                  for m in re.finditer(r'(?ms)^\.method .*?^\.end method',s):
+                      b=m.group(0)
+                      if ('getPlayableId()Ljava/lang/String;' in b and
+                          ('setMediaId(Ljava/lang/String;)' in b or 'MediaBrowserCompat$MediaItem' in b or 'android.media.metadata.MEDIA_ID' in b)):
+                          joined.append((p,b))
+              if ('getPlayableId()Ljava/lang/String;' in s or 'setMediaId(Ljava/lang/String;)' in s):
+                  for i,line in enumerate(s.splitlines(),1):
+                      if 'getPlayableId()Ljava/lang/String;' in line or 'setMediaId(Ljava/lang/String;)' in line:
+                          hits.append(f'{p}:{i}:{line.strip()}')
+          (out/'vivo-browser-files.txt').write_text('\n'.join(str(p) for p,_ in browser))
+          (out/'vivo-browser-full.txt').write_text('\n'.join(f'===== {p} =====\n{s}' for p,s in browser))
+          (out/'identity-methods.txt').write_text('\n'.join(f'===== {p} =====\n{b}' for p,b in joined))
+          (out/'id-hits.txt').write_text('\n'.join(hits))
+          print('browser files:', len(browser))
+          for p,_ in browser: print('BROWSER',p)
+          print('joined methods:', len(joined))
+          for p,b in joined:
+              print('===== JOIN',p,'=====')
+              print(b[:12000])
           PY
-
-          grep -RIn --include='*.smali' -B80 -A140 -E 'vivomusicmix_current_list|VIVO_MUSIC_MIX_ROOT' "$D" > "$O/current-list-context.txt" || true
-          grep -RIn --include='*.smali' -B100 -A160 -E 'setMediaId\(Ljava/lang/String;\)|getPlayableId\(\)Ljava/lang/String;' "$D" | grep -Ei 'vivo|browser|media|queue|remote|support' > "$O/id-context.txt" || true
-
-          echo '===== browser files ====='
-          cat "$O/vivo-browser-files.txt" || true
-          echo '===== current-list context ====='
-          sed -n '1,1200p' "$O/current-list-context.txt" || true
-          echo '===== joined identity methods ====='
-          sed -n '1,1600p' "$O/identity-methods.txt" || true
 
       - name: Upload identity RE
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: luna-vivo-list-mediaid-identity
+          name: luna-vivo-list-mediaid-identity-fast
           path: work/out
           retention-days: 7
