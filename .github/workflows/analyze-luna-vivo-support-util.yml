@@ -1,0 +1,51 @@
+name: Analyze Luna Vivo support util
+
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - '.github/workflows/analyze-luna-vivo-support-util.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  analyze:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/setup-java@v5
+        with:
+          distribution: zulu
+          java-version: '21'
+      - uses: actions/checkout@v4
+      - name: Decode official Luna smali
+        shell: bash
+        run: |
+          set -euxo pipefail
+          mkdir -p work/out work/tools
+          UA='Mozilla/5.0 (Linux; Android 16; V2329A) AppleWebKit/537.36 Chrome/143 Mobile Safari/537.36'
+          curl -L --retry 3 --connect-timeout 15 --max-time 240 -A "$UA" 'https://ugapk.com/GMg3' -o work/Luna_official.apk
+          test "$(head -c 4 work/Luna_official.apk | xxd -p)" = '504b0304'
+          sha256sum work/Luna_official.apk | tee work/out/apk.sha256
+          curl -L --fail --retry 3 -o work/tools/apktool.jar 'https://github.com/iBotPeaches/Apktool/releases/download/v3.0.3/apktool_3.0.3.jar'
+          java -jar work/tools/apktool.jar d -f -r work/Luna_official.apk -o work/decoded
+      - name: Extract support util and Vivo command semantics
+        shell: bash
+        run: |
+          set -euxo pipefail
+          D=work/decoded
+          O=work/out
+          find "$D" -type f -name '*.smali' | grep -E '/com/luna/biz/playing/player/remote/control/(VIVOSupportUtil|VivoRemoteControlListener|VivoOriginRemoteControl).*\.smali$|/com/luna/common/arch/constant/os/vivo/VivoConstant.*\.smali$' | sort -u > "$O/files.txt"
+          : > "$O/full.txt"
+          while IFS= read -r f; do echo "===== $f =====" >> "$O/full.txt"; cat "$f" >> "$O/full.txt"; done < "$O/files.txt"
+          grep -RIn --include='*.smali' -E 'vivomusicmix|VIVO_MUSIC|support_event|PLAY_INDEX|LIST_CURRENT|MUSIC_INFO|onPlayFromMediaId|playFromMediaId|skipToQueueItem|QueueItem|mediaId' "$D" | grep -E 'luna/biz/playing/player/remote/control|luna/common/arch/constant/os/vivo' > "$O/hits.txt" || true
+          : > "$O/hit-context.txt"
+          cut -d: -f1 "$O/hits.txt" | sort -u | while IFS= read -r f; do [ -f "$f" ] || continue; echo "===== $f =====" >> "$O/hit-context.txt"; grep -n -A120 -B120 -E 'vivomusicmix|support_event|PLAY_INDEX|LIST_CURRENT|MUSIC_INFO|onPlayFromMediaId|playFromMediaId|skipToQueueItem|mediaId' "$f" >> "$O/hit-context.txt" || true; done
+      - name: Upload support-util RE
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: luna-vivo-support-util
+          path: work/out
+          retention-days: 7
