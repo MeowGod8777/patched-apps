@@ -1,0 +1,87 @@
+name: Verify Luna Vivo list mediaId identity
+
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - '.github/workflows/analyze-luna-vivo-list-mediaid-identity.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  analyze:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/setup-java@v5
+        with:
+          distribution: zulu
+          java-version: '21'
+      - uses: actions/checkout@v4
+      - name: Decode official Luna smali
+        shell: bash
+        run: |
+          set -euxo pipefail
+          mkdir -p work/out work/tools
+          UA='Mozilla/5.0 (Linux; Android 16; V2329A) AppleWebKit/537.36 Chrome/143 Mobile Safari/537.36'
+          curl -L --retry 3 --connect-timeout 15 --max-time 240 -A "$UA" 'https://ugapk.com/GMg3' -o work/Luna_official.apk
+          test "$(head -c 4 work/Luna_official.apk | xxd -p)" = '504b0304'
+          sha256sum work/Luna_official.apk | tee work/out/apk.sha256
+          curl -L --fail --retry 3 -o work/tools/apktool.jar 'https://github.com/iBotPeaches/Apktool/releases/download/v3.0.3/apktool_3.0.3.jar'
+          java -jar work/tools/apktool.jar d -f -r work/Luna_official.apk -o work/decoded
+
+      - name: Join browser row ID to playable ID
+        shell: bash
+        run: |
+          set -euxo pipefail
+          D=work/decoded
+          O=work/out
+          grep -RIn --include='*.smali' -E 'vivomusicmix_current_list|VIVO_MUSIC_MIX_ROOT|com\.vivo\.musicwidgetmix|setMediaId|getPlayableId|MediaDescriptionCompat\$Builder|MediaBrowserCompat\$MediaItem' "$D" > "$O/all-hits.txt" || true
+
+          grep -RIl --include='*.smali' -E 'vivomusicmix_current_list|VIVO_MUSIC_MIX_ROOT|com\.vivo\.musicwidgetmix' "$D" | sort -u > "$O/vivo-browser-files.txt" || true
+          : > "$O/vivo-browser-full.txt"
+          while IFS= read -r f; do
+            [ -f "$f" ] || continue
+            echo "===== $f =====" >> "$O/vivo-browser-full.txt"
+            cat "$f" >> "$O/vivo-browser-full.txt"
+          done < "$O/vivo-browser-files.txt"
+
+          # Capture every method that contains both a MediaDescription/MediaItem ID write
+          # and a playable-ID read; this is the exact identity join we need.
+          python3 - <<'PY'
+          from pathlib import Path
+          import re
+          root=Path('work/decoded')
+          out=Path('work/out/identity-methods.txt')
+          rows=[]
+          for p in root.glob('smali*/**/*.smali'):
+              try: s=p.read_text(errors='ignore')
+              except Exception: continue
+              for m in re.finditer(r'(?ms)^\.method .*?^\.end method', s):
+                  b=m.group(0)
+                  if ('getPlayableId()Ljava/lang/String;' in b and
+                      ('setMediaId(Ljava/lang/String;)' in b or
+                       'android.media.metadata.MEDIA_ID' in b or
+                       'MediaBrowserCompat$MediaItem' in b)):
+                      rows.append(f'===== {p} =====\n{b}\n')
+          out.write_text('\n'.join(rows))
+          PY
+
+          grep -RIn --include='*.smali' -B80 -A140 -E 'vivomusicmix_current_list|VIVO_MUSIC_MIX_ROOT' "$D" > "$O/current-list-context.txt" || true
+          grep -RIn --include='*.smali' -B100 -A160 -E 'setMediaId\(Ljava/lang/String;\)|getPlayableId\(\)Ljava/lang/String;' "$D" | grep -Ei 'vivo|browser|media|queue|remote|support' > "$O/id-context.txt" || true
+
+          echo '===== browser files ====='
+          cat "$O/vivo-browser-files.txt" || true
+          echo '===== current-list context ====='
+          sed -n '1,1200p' "$O/current-list-context.txt" || true
+          echo '===== joined identity methods ====='
+          sed -n '1,1600p' "$O/identity-methods.txt" || true
+
+      - name: Upload identity RE
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: luna-vivo-list-mediaid-identity
+          path: work/out
+          retention-days: 7
