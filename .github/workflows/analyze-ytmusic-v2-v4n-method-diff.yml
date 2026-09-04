@@ -1,0 +1,102 @@
+name: Exact YT Music V2 V4N smali diff
+
+on:
+  push:
+    paths:
+      - .github/workflows/analyze-ytmusic-v2-v4n-method-diff.yml
+  workflow_dispatch:
+
+permissions:
+  actions: read
+  contents: read
+
+jobs:
+  diff:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v4
+      - name: Download V2 and V4N build artifacts
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p work/v2-art work/v4n-art out tools
+          gh run download 33762673544 -D work/v2-art
+          gh run download 33819154154 -D work/v4n-art
+          V2_APK=$(find work/v2-art -type f -name '*.apk' -print -quit)
+          V4N_APK=$(find work/v4n-art -type f -name '*.apk' -print -quit)
+          test -n "$V2_APK" && test -n "$V4N_APK"
+          cp "$V2_APK" work/v2.apk
+          cp "$V4N_APK" work/v4n.apk
+          sha256sum work/v2.apk work/v4n.apk | tee out/apk-sha256.txt
+
+      - name: Decode exact APKs
+        shell: bash
+        run: |
+          set -euo pipefail
+          curl -L --fail --retry 3 -o tools/apktool.jar https://github.com/iBotPeaches/Apktool/releases/download/v3.0.3/apktool_3.0.3.jar
+          java -jar tools/apktool.jar d -f work/v2.apk -o work/v2
+          java -jar tools/apktool.jar d -f work/v4n.apk -o work/v4n
+
+      - name: Generate exact smali delta
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          from pathlib import Path
+          import hashlib, difflib
+
+          roots={'v2':Path('work/v2'),'v4n':Path('work/v4n')}
+          def smalis(root):
+              return {p.relative_to(root).as_posix():p for p in root.glob('smali*/**/*.smali')}
+          a=smalis(roots['v2']); b=smalis(roots['v4n'])
+          allp=sorted(set(a)|set(b))
+          changed=[]; added=[]; removed=[]
+          for rel in allp:
+              if rel not in a: added.append(rel); continue
+              if rel not in b: removed.append(rel); continue
+              if a[rel].read_bytes()!=b[rel].read_bytes(): changed.append(rel)
+          Path('out/changed-smali-files.txt').write_text('\n'.join(changed)+'\n')
+          Path('out/added-smali-files.txt').write_text('\n'.join(added)+'\n')
+          Path('out/removed-smali-files.txt').write_text('\n'.join(removed)+'\n')
+
+          with Path('out/changed-smali-diff.txt').open('w') as o:
+              for rel in changed:
+                  x=a[rel].read_text(errors='replace').splitlines(True)
+                  y=b[rel].read_text(errors='replace').splitlines(True)
+                  o.write(f'\n===== {rel} =====\n')
+                  o.writelines(difflib.unified_diff(x,y,fromfile='V2/'+rel,tofile='V4N/'+rel,n=25))
+          with Path('out/added-smali-full.txt').open('w') as o:
+              for rel in added:
+                  o.write(f'\n===== {rel} =====\n')
+                  o.write(b[rel].read_text(errors='replace'))
+
+          # Extract the exact methods/classes known to be on the cooperation path.
+          targets=('kyi.smali','MusicBrowserService.smali','id.smali','lag.smali','ii.smali')
+          with Path('out/target-class-locations.txt').open('w') as o:
+              for label,root in roots.items():
+                  for name in targets:
+                      hits=list(root.glob(f'smali*/**/{name}'))
+                      for h in hits: o.write(f'{label}\t{name}\t{h.relative_to(root)}\n')
+          PY
+
+          # Dex-level changes too: guards against hidden non-smali/resource drift.
+          unzip -Z1 work/v2.apk | grep '^classes[0-9]*\.dex$' | sort > /tmp/dexlist
+          : > out/dex-sha256.txt
+          while read -r d; do
+            unzip -p work/v2.apk "$d" | sha256sum | sed "s#  -#  V2/$d#" >> out/dex-sha256.txt
+            unzip -p work/v4n.apk "$d" | sha256sum | sed "s#  -#  V4N/$d#" >> out/dex-sha256.txt
+          done < /tmp/dexlist
+
+          diff -u work/v2/AndroidManifest.xml work/v4n/AndroidManifest.xml > out/manifest-diff.txt || true
+          diff -qr work/v2/res work/v4n/res > out/resources-diff.txt || true
+
+      - name: Upload exact diff
+        uses: actions/upload-artifact@v4
+        with:
+          name: ytmusic-v2-v4n-exact-smali-diff
+          path: out/
+          if-no-files-found: error
+          retention-days: 14
