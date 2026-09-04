@@ -1,4 +1,5 @@
 name: Build YT Music Luna Vivo c0 V4N trace probe
+# Trigger after hardening the smali result locators.
 
 on:
   workflow_dispatch:
