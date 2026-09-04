@@ -1,0 +1,97 @@
+name: Analyze Luna Vivo MUSIC_INFO refresh contract
+
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - '.github/workflows/analyze-luna-vivo-music-info-refresh.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  analyze:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Download official Luna APK and jadx
+        shell: bash
+        run: |
+          set -euxo pipefail
+          mkdir -p work/out work/jadx-out
+          UA='Mozilla/5.0 (Linux; Android 16; V2329A) AppleWebKit/537.36 Chrome/143 Mobile Safari/537.36'
+          curl -L --retry 3 --connect-timeout 15 --max-time 240 -A "$UA" 'https://ugapk.com/GMg3' -o work/Luna_official.apk
+          test "$(head -c 4 work/Luna_official.apk | xxd -p)" = '504b0304'
+          unzip -l work/Luna_official.apk | grep -qE '(^|[[:space:]])classes([0-9]*)?\.dex$'
+          AAPT="${ANDROID_HOME}/build-tools/$(ls "${ANDROID_HOME}/build-tools" | sort -V | tail -1)/aapt"
+          "$AAPT" dump badging work/Luna_official.apk | tee work/out/badging.txt
+          grep -q "package: name='com.luna.music'" work/out/badging.txt
+          sha256sum work/Luna_official.apk | tee work/out/apk.sha256
+          curl -L --retry 3 'https://github.com/skylot/jadx/releases/download/v1.5.6/jadx-1.5.6.zip' -o work/jadx.zip
+          unzip -q work/jadx.zip -d work/jadx
+          chmod +x work/jadx/bin/jadx
+          work/jadx/bin/jadx --no-res --show-bad-code --threads-count 4 -d work/jadx-out work/Luna_official.apk || true
+          test -d work/jadx-out/sources
+
+      - name: Recover vendor metadata refresh semantics
+        shell: bash
+        run: |
+          set -euxo pipefail
+          SRC=work/jadx-out/sources
+          OUT=work/out
+
+          grep -RIn --binary-files=without-match -E 'vivomusicmix\.|VivoOriginRemoteControl|MUSIC_INFO|MUSIC_IMAGE|SEEK_POSITION|support_event|MediaMetadata|setMetadata|sendSessionEvent|sendEvent|notify|update\(' "$SRC" \
+            | tee "$OUT/all_hits.txt" || true
+
+          grep -Rl --binary-files=without-match -E 'vivomusicmix\.|VivoOriginRemoteControl|MUSIC_INFO|support_event' "$SRC" \
+            | sort -u > "$OUT/candidate_files.txt" || true
+
+          mkdir -p "$OUT/sources"
+          while IFS= read -r f; do
+            [ -f "$f" ] || continue
+            rel="${f#$SRC/}"
+            mkdir -p "$OUT/sources/$(dirname "$rel")"
+            cp "$f" "$OUT/sources/$rel"
+          done < "$OUT/candidate_files.txt"
+
+          python3 - <<'PY'
+          from pathlib import Path
+          import re, shutil
+          src=Path('work/jadx-out/sources')
+          out=Path('work/out/context')
+          out.mkdir(parents=True, exist_ok=True)
+          seeds=list(Path('work/out/sources').rglob('*.java'))
+          names=set()
+          for p in seeds:
+              s=p.read_text(errors='ignore')
+              names.update(re.findall(r'import\s+([\w.]+);', s))
+              names.update(re.findall(r'com\.luna\.[\w.$]+', s))
+          copied=[]
+          for name in sorted(names):
+              base=name.split('$')[0]
+              p=src/(base.replace('.','/')+'.java')
+              if p.exists():
+                  dst=out/p.relative_to(src)
+                  dst.parent.mkdir(parents=True, exist_ok=True)
+                  shutil.copy2(p,dst)
+                  copied.append(str(p.relative_to(src)))
+          Path('work/out/context_files.txt').write_text('\n'.join(copied))
+          PY
+
+          grep -RIn --binary-files=without-match -E 'put(String|Long)|android.media.metadata.(TITLE|ARTIST|DURATION)|support_event|MUSIC_INFO|MUSIC_IMAGE|sendSessionEvent|setMetadata|update\(' "$OUT/sources" "$OUT/context" \
+            | tee "$OUT/focused_hits.txt" || true
+
+          echo '===== candidate files ====='
+          cat "$OUT/candidate_files.txt" || true
+          echo '===== focused hits ====='
+          sed -n '1,5000p' "$OUT/focused_hits.txt" || true
+
+      - name: Upload MUSIC_INFO refresh RE
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: luna-vivo-music-info-refresh-re
+          path: work/out
+          retention-days: 7
