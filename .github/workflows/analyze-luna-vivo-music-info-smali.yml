@@ -1,0 +1,75 @@
+name: Analyze Luna Vivo MUSIC_INFO refresh smali
+
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - '.github/workflows/analyze-luna-vivo-music-info-smali.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  analyze:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/setup-java@v5
+        with:
+          distribution: zulu
+          java-version: '21'
+      - uses: actions/checkout@v4
+      - name: Decode official Luna smali
+        shell: bash
+        run: |
+          set -euxo pipefail
+          mkdir -p work/out work/tools
+          UA='Mozilla/5.0 (Linux; Android 16; V2329A) AppleWebKit/537.36 Chrome/143 Mobile Safari/537.36'
+          curl -L --retry 3 --connect-timeout 15 --max-time 240 -A "$UA" 'https://ugapk.com/GMg3' -o work/Luna_official.apk
+          test "$(head -c 4 work/Luna_official.apk | xxd -p)" = '504b0304'
+          AAPT="${ANDROID_HOME}/build-tools/$(ls "${ANDROID_HOME}/build-tools" | sort -V | tail -1)/aapt"
+          "$AAPT" dump badging work/Luna_official.apk | tee work/out/badging.txt
+          grep -q "package: name='com.luna.music'" work/out/badging.txt
+          sha256sum work/Luna_official.apk | tee work/out/apk.sha256
+          curl -L --fail --retry 3 -o work/tools/apktool.jar 'https://github.com/iBotPeaches/Apktool/releases/download/v3.0.3/apktool_3.0.3.jar'
+          java -jar work/tools/apktool.jar d -f -r work/Luna_official.apk -o work/decoded
+
+      - name: Extract Vivo metadata producers and event calls
+        shell: bash
+        run: |
+          set -euxo pipefail
+          D=work/decoded
+          O=work/out
+          : > "$O/hits.txt"
+          grep -RIn --include='*.smali' -E 'vivomusicmix\.|support_event|MUSIC_INFO|MUSIC_IMAGE|SEEK_POSITION|sendSessionEvent|setMetadata\(Landroid/media/MediaMetadata;\)|MediaMetadata\$Builder;->put|MediaSession;->setMetadata|MediaSessionCompat;->setMetadata' "$D" \
+            | tee "$O/hits.txt" || true
+
+          grep -RIl --include='*.smali' -E 'vivomusicmix\.|support_event|MUSIC_INFO|MUSIC_IMAGE|SEEK_POSITION' "$D" \
+            | sort -u | tee "$O/vendor-files.txt" || true
+
+          : > "$O/vendor-context.txt"
+          while IFS= read -r f; do
+            [ -f "$f" ] || continue
+            echo "===== $f =====" >> "$O/vendor-context.txt"
+            cat "$f" >> "$O/vendor-context.txt"
+          done < "$O/vendor-files.txt"
+
+          grep -RIl --include='*.smali' -E 'sendSessionEvent|setMetadata\(Landroid/media/MediaMetadata;\)|MediaSession;->setMetadata' "$D" \
+            | sort -u | tee "$O/session-files.txt" || true
+          : > "$O/session-context.txt"
+          while IFS= read -r f; do
+            [ -f "$f" ] || continue
+            echo "===== $f =====" >> "$O/session-context.txt"
+            grep -n -A100 -B100 -E 'sendSessionEvent|setMetadata\(Landroid/media/MediaMetadata;\)|MediaSession;->setMetadata' "$f" >> "$O/session-context.txt" || true
+          done < "$O/session-files.txt"
+
+          grep -RIn --include='*.smali' -E 'android.media.metadata.(TITLE|ARTIST|ALBUM|DURATION)|android.media.metadata.DISPLAY_(TITLE|SUBTITLE|DESCRIPTION)' "$D" \
+            | tee "$O/standard-metadata-hits.txt" || true
+
+      - name: Upload smali RE
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: luna-vivo-music-info-refresh-smali
+          path: work/out
+          retention-days: 7
