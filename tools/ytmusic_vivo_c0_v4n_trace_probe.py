@@ -16,7 +16,6 @@ if not v4n.is_file():
 subprocess.run([sys.executable, str(v4n), str(ROOT)], check=True)
 
 TRACE_DESC = "Lcom/google/android/apps/youtube/music/mediabrowser/VivoC0Trace;"
-TRACE_TAG = "YTM_C0TRACE"
 
 browser_hits = list(ROOT.glob("smali*/com/google/android/apps/youtube/music/mediabrowser/MusicBrowserService.smali"))
 kyi_hits = [p for p in ROOT.glob("smali*/kyi.smali") if ".method public final j()V" in p.read_text(encoding="utf-8")]
@@ -51,7 +50,7 @@ helper = r'''.class public final Lcom/google/android/apps/youtube/music/mediabro
 .end method
 
 .method public static browse(Ljava/lang/String;Landroid/os/Bundle;)V
-    .locals 3
+    .locals 2
     const-string v0, "BROWSE parent="
     invoke-static {p0}, Ljava/lang/String;->valueOf(Ljava/lang/Object;)Ljava/lang/String;
     move-result-object v1
@@ -69,7 +68,7 @@ helper = r'''.class public final Lcom/google/android/apps/youtube/music/mediabro
 .end method
 
 .method public static queue(JLjava/lang/String;)V
-    .locals 3
+    .locals 2
     const-string v0, "QUEUE qid="
     invoke-static {p0, p1}, Ljava/lang/Long;->toString(J)Ljava/lang/String;
     move-result-object v1
@@ -106,7 +105,7 @@ helper = r'''.class public final Lcom/google/android/apps/youtube/music/mediabro
 .end method
 
 .method public static entry(Ljava/lang/String;Landroid/os/Bundle;)V
-    .locals 3
+    .locals 2
     const-string v0, "ENTRY mediaId="
     invoke-static {p0}, Ljava/lang/String;->valueOf(Ljava/lang/Object;)Ljava/lang/String;
     move-result-object v1
@@ -124,14 +123,8 @@ helper = r'''.class public final Lcom/google/android/apps/youtube/music/mediabro
 .end method
 
 .method public static decoded(Lavev;)V
-    .locals 3
-    sget-object v0, Lavev;->a:Lavev;
-    if-ne p0, v0, :decoded_nondefault
-    const-string v0, "DECODE default=true value="
-    goto :decoded_prefix_done
-    :decoded_nondefault
-    const-string v0, "DECODE default=false value="
-    :decoded_prefix_done
+    .locals 2
+    const-string v0, "DECODE value="
     invoke-static {p0}, Ljava/lang/String;->valueOf(Ljava/lang/Object;)Ljava/lang/String;
     move-result-object v1
     invoke-virtual {v0, v1}, Ljava/lang/String;->concat(Ljava/lang/String;)Ljava/lang/String;
@@ -141,14 +134,8 @@ helper = r'''.class public final Lcom/google/android/apps/youtube/music/mediabro
 .end method
 
 .method public static endpoint(Lboht;)V
-    .locals 3
-    sget-object v0, Lboht;->a:Lboht;
-    if-ne p0, v0, :endpoint_nondefault
-    const-string v0, "ENDPOINT default=true value="
-    goto :endpoint_prefix_done
-    :endpoint_nondefault
-    const-string v0, "ENDPOINT default=false value="
-    :endpoint_prefix_done
+    .locals 2
+    const-string v0, "ENDPOINT value="
     invoke-static {p0}, Ljava/lang/String;->valueOf(Ljava/lang/Object;)Ljava/lang/String;
     move-result-object v1
     invoke-virtual {v0, v1}, Ljava/lang/String;->concat(Ljava/lang/String;)Ljava/lang/String;
@@ -187,6 +174,43 @@ def inject_entry(method: str, call: str) -> str:
     if not reg:
         raise SystemExit("method register directive missing")
     return method[:reg.end()] + "\n\n" + call + "\n" + method[reg.end():]
+
+
+def inject_after_object_result(method: str, needle: str, trace_call_fmt: str, max_scan: int = 30) -> str:
+    """Find one invoke by descriptor, then the first move-result-object after it.
+
+    apktool may place .line/.local/labels/comments between invoke and move-result.
+    We accept only non-executable metadata while scanning; another real opcode means
+    the assumed result boundary is unsafe and the build must fail.
+    """
+    lines = method.splitlines()
+    hits = [i for i, line in enumerate(lines) if needle in line and line.lstrip().startswith("invoke-")]
+    if len(hits) != 1:
+        raise SystemExit(f"call count for {needle}: {len(hits)}")
+    i = hits[0]
+    for j in range(i + 1, min(len(lines), i + 1 + max_scan)):
+        stripped = lines[j].strip()
+        m = re.fullmatch(r'move-result-object\s+(\S+)', stripped)
+        if m:
+            reg = m.group(1)
+            lines.insert(j + 1, trace_call_fmt.format(reg=reg))
+            return "\n".join(lines)
+        if not stripped or stripped.startswith((".", ":", "#")):
+            continue
+        raise SystemExit(f"unexpected executable before move-result for {needle}: {stripped}")
+    raise SystemExit(f"move-result-object not found after {needle}")
+
+
+def wrap_single_invoke(method: str, needle: str, before: str, after: str) -> str:
+    lines = method.splitlines()
+    hits = [i for i, line in enumerate(lines) if needle in line and line.lstrip().startswith("invoke-")]
+    if len(hits) != 1:
+        raise SystemExit(f"dispatch call count for {needle}: {len(hits)}")
+    i = hits[0]
+    lines.insert(i, before)
+    lines.insert(i + 2, after)
+    return "\n".join(lines)
+
 
 # 1) Browse entry marker — no locals/register count changes.
 browser = BROWSER.read_text(encoding="utf-8")
@@ -234,38 +258,22 @@ g = inject_entry(
     g,
     "    invoke-static {p1, p2}, Lcom/google/android/apps/youtube/music/mediabrowser/VivoC0Trace;->entry(Ljava/lang/String;Landroid/os/Bundle;)V",
 )
-
-decode_re = re.compile(
-    r'(\s*invoke-static \{[^\n}]+\}, Laveu;->b\(Ljava/lang/String;\)Lavev;\n\s*move-result-object\s+(\S+)\n)'
+g = inject_after_object_result(
+    g,
+    "Laveu;->b(Ljava/lang/String;)Lavev;",
+    "    invoke-static {{{reg}}}, Lcom/google/android/apps/youtube/music/mediabrowser/VivoC0Trace;->decoded(Lavev;)V",
 )
-dm = decode_re.search(g)
-if not dm:
-    raise SystemExit("Llag.g Laveu.b decode anchor missing")
-dec_reg = dm.group(2)
-g = g[:dm.end()] + f"    invoke-static {{{dec_reg}}}, {TRACE_DESC}->decoded(Lavev;)V\n" + g[dm.end():]
-
-endpoint_re = re.compile(
-    r'(\s*invoke-static \{[^\n}]+\}, Llbg;->a\(Lavev;\)Lboht;\n\s*move-result-object\s+(\S+)\n)'
+g = inject_after_object_result(
+    g,
+    "Llbg;->a(Lavev;)Lboht;",
+    "    invoke-static {{{reg}}}, Lcom/google/android/apps/youtube/music/mediabrowser/VivoC0Trace;->endpoint(Lboht;)V",
 )
-em = endpoint_re.search(g)
-if not em:
-    raise SystemExit("Llag.g Llbg.a endpoint anchor missing")
-end_reg = em.group(2)
-g = g[:em.end()] + f"    invoke-static {{{end_reg}}}, {TRACE_DESC}->endpoint(Lboht;)V\n" + g[em.end():]
-
-dispatch_re = re.compile(
-    r'(?m)^(\s*invoke-(?:static|virtual|direct)(?:/range)?\s+\{[^\n}]*\},\s+Llbg;->o\(Lckob;Lboht;Landroid/os/Bundle;\)V\s*)$'
+g = wrap_single_invoke(
+    g,
+    "Llbg;->o(Lckob;Lboht;Landroid/os/Bundle;)V",
+    "    invoke-static {}, Lcom/google/android/apps/youtube/music/mediabrowser/VivoC0Trace;->beforeDispatch()V",
+    "    invoke-static {}, Lcom/google/android/apps/youtube/music/mediabrowser/VivoC0Trace;->afterDispatch()V",
 )
-dsp = dispatch_re.search(g)
-if not dsp:
-    raise SystemExit("Llag.g Llbg.o dispatch anchor missing")
-dispatch_line = dsp.group(1)
-wrapped = (
-    "    invoke-static {}, Lcom/google/android/apps/youtube/music/mediabrowser/VivoC0Trace;->beforeDispatch()V\n"
-    + dispatch_line
-    + "\n    invoke-static {}, Lcom/google/android/apps/youtube/music/mediabrowser/VivoC0Trace;->afterDispatch()V"
-)
-g = g[:dsp.start()] + wrapped + g[dsp.end():]
 
 for marker in ("->entry(", "->decoded(", "->endpoint(", "->beforeDispatch()", "->afterDispatch()"):
     if g.count(marker) != 1:
