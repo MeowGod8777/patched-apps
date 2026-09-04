@@ -4,6 +4,7 @@ import re
 import subprocess
 import sys
 
+# Workflow-registration trigger; no functional delta.
 ROOT = Path(sys.argv[1] if len(sys.argv) > 1 else "decoded")
 if not ROOT.is_dir():
     raise SystemExit(f"missing decoded root: {ROOT}")
