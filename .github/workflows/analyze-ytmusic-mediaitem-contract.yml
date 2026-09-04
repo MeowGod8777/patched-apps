@@ -24,21 +24,56 @@ jobs:
           mkdir -p input tools out
           gh release download ytmusic-originplayer-luna-33729902415 --pattern '*.apk' --dir input
           mv input/*.apk input/base.apk
+          sha256sum input/base.apk | tee out/base-sha256.txt
           curl -L --fail --retry 3 -o tools/apktool.jar https://github.com/iBotPeaches/Apktool/releases/download/v3.0.3/apktool_3.0.3.jar
           java -jar tools/apktool.jar d -f input/base.apk -o decoded
-          for rel in \
-            'android/support/v4/media/MediaDescriptionCompat.smali' \
-            'android/support/v4/media/MediaBrowserCompat$MediaItem.smali' \
-            'android/support/v4/media/session/MediaSessionCompat$QueueItem.smali' \
-            'iq.smali' 'ia.smali' 'ig.smali' 'bazk.smali'; do
-            f=$(find decoded -type f -path "*/$rel" -print -quit || true)
-            if [ -n "$f" ]; then cp "$f" "out/$(basename "$rel")"; fi
+
+          copy_class() {
+            local cls="$1"
+            local f
+            f=$(find decoded -type f -name "${cls}.smali" -print -quit || true)
+            if [ -n "$f" ]; then
+              cp "$f" "out/${cls}.smali"
+              printf '%s\n' "$f" > "out/${cls}-path.txt"
+            fi
+          }
+
+          for cls in llgl lgp lgk kyi noq nox npa aveu avev lag id; do
+            copy_class "$cls"
           done
+
+          # All implementors of Lnoq and their exact o()/m() bodies.
+          grep -RIl '^\.implements Lnoq;' decoded/smali* 2>/dev/null | sort | tee out/lnoq-implementors.txt || true
+          : > out/lnoq-o-m-bodies.txt
+          while IFS= read -r f; do
+            [ -n "$f" ] || continue
+            echo "===== $f =====" >> out/lnoq-o-m-bodies.txt
+            sed -n '/^\.method .* m()J$/,/^\.end method$/p' "$f" >> out/lnoq-o-m-bodies.txt
+            sed -n '/^\.method .* o()Lboht;$/,/^\.end method$/p' "$f" >> out/lnoq-o-m-bodies.txt
+          done < out/lnoq-implementors.txt
+
+          # Full native encoder and every stock call site with broad context.
+          grep -RniF 'Llgl;->d(Lboht;)Ljava/lang/String;' decoded/smali* | tee out/llgl-d-call-hits.txt || true
+          : > out/llgl-d-call-contexts.txt
+          while IFS=: read -r f n rest; do
+            [ -n "$f" ] || continue
+            start=$(( n > 120 ? n-120 : 1 )); end=$(( n+220 ))
+            echo "===== $f:$n =====" >> out/llgl-d-call-contexts.txt
+            sed -n "${start},${end}p" "$f" >> out/llgl-d-call-contexts.txt
+          done < out/llgl-d-call-hits.txt
+
+          # MediaBrowser item creation and decode/playFromMediaId neighborhood.
+          grep -RniE 'MediaBrowserCompat\$MediaItem;-><init>|MediaDescriptionCompat;-><init>|onPlayFromMediaId|Laveu;->b\(Ljava/lang/String;\)Lavev;' decoded/smali* \
+            | grep -E '/(lgp|lgk|kyi|lag|id)\.smali:' \
+            | tee out/relevant-mediaitem-callback-hits.txt || true
+
+          # Producer references retained for comparison with prior V2/V4N work.
           grep -RniE 'MediaDescriptionCompat;->|MediaBrowserCompat\$MediaItem;->|MediaSessionCompat\$QueueItem;->' decoded/smali_classes5/kyi.smali decoded/smali*/ii.smali 2>/dev/null | tee out/producer-refs.txt || true
+
       - name: Upload inspection
         uses: actions/upload-artifact@v4
         with:
-          name: ytmusic-mediaitem-contract-inspection
+          name: ytmusic-mediaitem-rootcause-inspection
           path: out/
           if-no-files-found: error
           retention-days: 14
