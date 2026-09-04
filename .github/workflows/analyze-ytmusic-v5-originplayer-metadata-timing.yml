@@ -1,5 +1,6 @@
 name: Inspect YT Music V5 OriginPlayer metadata timing
 
+# Static RE only. No APK is built or modified.
 on:
   push:
     paths:
@@ -51,25 +52,19 @@ jobs:
           curl -L --fail --retry 3 -o tools/apktool.jar https://github.com/iBotPeaches/Apktool/releases/download/v3.0.3/apktool_3.0.3.jar
           java -jar tools/apktool.jar d -f input/v2.apk -o decoded-v2 >/dev/null
           java -jar tools/apktool.jar d -f input/v5.apk -o decoded-v5 >/dev/null
-
           find decoded-v2 -type f -name '*.smali' | sed 's#^decoded-v2/##' | sort > out/v2-smali-files.txt
           find decoded-v5 -type f -name '*.smali' | sed 's#^decoded-v5/##' | sort > out/v5-smali-files.txt
           comm -3 out/v2-smali-files.txt out/v5-smali-files.txt > out/smali-file-presence-diff.txt || true
-
           : > out/changed-smali.txt
           while IFS= read -r rel; do
             [ -f "decoded-v5/$rel" ] || continue
-            if ! cmp -s "decoded-v2/$rel" "decoded-v5/$rel"; then
-              echo "$rel" >> out/changed-smali.txt
-            fi
+            if ! cmp -s "decoded-v2/$rel" "decoded-v5/$rel"; then echo "$rel" >> out/changed-smali.txt; fi
           done < out/v2-smali-files.txt
-
           : > out/changed-smali-unified.diff
           while IFS= read -r rel; do
             echo "===== $rel =====" >> out/changed-smali-unified.diff
             diff -u "decoded-v2/$rel" "decoded-v5/$rel" >> out/changed-smali-unified.diff || true
           done < out/changed-smali.txt
-
           sha256sum decoded-v2/smali*/id.smali decoded-v5/smali*/id.smali 2>/dev/null | tee out/id-sha256.txt || true
           sha256sum decoded-v2/smali*/lag.smali decoded-v5/smali*/lag.smali 2>/dev/null | tee out/lag-sha256.txt || true
           sha256sum decoded-v2/smali*/ii.smali decoded-v5/smali*/ii.smali 2>/dev/null | tee out/ii-sha256.txt || true
@@ -81,11 +76,8 @@ jobs:
           : > out/mediasession-metadata-hits.txt
           for root in decoded-v2 decoded-v5; do
             echo "===== $root =====" >> out/mediasession-metadata-hits.txt
-            grep -RniE 'MediaMetadataCompat|MediaMetadata;|METADATA_KEY_(TITLE|ARTIST|ALBUM|DURATION|MEDIA_ID)|android\.media\.metadata\.(TITLE|ARTIST|ALBUM|DURATION|MEDIA_ID)|setMetadata|setPlaybackState|PlaybackStateCompat|PlaybackState;|getCurrentPosition|setState\(' "$root"/smali* 2>/dev/null \
-              | head -10000 >> out/mediasession-metadata-hits.txt || true
+            grep -RniE 'MediaMetadataCompat|MediaMetadata;|METADATA_KEY_(TITLE|ARTIST|ALBUM|DURATION|MEDIA_ID)|android\.media\.metadata\.(TITLE|ARTIST|ALBUM|DURATION|MEDIA_ID)|setMetadata|setPlaybackState|PlaybackStateCompat|PlaybackState;|getCurrentPosition|setState\(' "$root"/smali* 2>/dev/null | head -10000 >> out/mediasession-metadata-hits.txt || true
           done
-
-          # Capture full classes containing the strongest metadata publication calls.
           : > out/metadata-publisher-classes.txt
           for root in decoded-v2 decoded-v5; do
             grep -RIlE 'MediaSessionCompat;->setMetadata|MediaSession;->setMetadata|android\.media\.metadata\.TITLE|METADATA_KEY_TITLE|android\.media\.metadata\.DURATION|METADATA_KEY_DURATION' "$root"/smali* 2>/dev/null | sort -u | while IFS= read -r f; do
@@ -102,19 +94,12 @@ jobs:
           : > out/vivo-c0-contract-hits.txt
           for root in decoded-v2 decoded-v5; do
             echo "===== $root =====" >> out/vivo-c0-contract-hits.txt
-            grep -RniE 'vivomusicmix|com_vivo_music_widget_backend_url|support_event|duration|position|mediaid|media_id|current_position|currentPosition|EXTRA_DURATION|METADATA_KEY_DURATION' "$root"/smali* 2>/dev/null \
-              | head -20000 >> out/vivo-c0-contract-hits.txt || true
+            grep -RniE 'vivomusicmix|com_vivo_music_widget_backend_url|support_event|duration|position|mediaid|media_id|current_position|currentPosition|EXTRA_DURATION|METADATA_KEY_DURATION' "$root"/smali* 2>/dev/null | head -20000 >> out/vivo-c0-contract-hits.txt || true
           done
-
-          # ii is the known Vivo framework-support bridge; save full exact V2/V5 bodies.
           for root in decoded-v2 decoded-v5; do
             II=$(find "$root" -type f -name ii.smali -print -quit || true)
-            if [ -n "$II" ]; then
-              cp "$II" "out/${root}-ii.smali"
-            fi
+            if [ -n "$II" ]; then cp "$II" "out/${root}-ii.smali"; fi
           done
-
-          # Find all callsites into Lii and all integer constants around those callsites.
           : > out/ii-call-contexts.txt
           for root in decoded-v2 decoded-v5; do
             grep -RniE 'Lii;->[a-zA-Z].*\(' "$root"/smali* 2>/dev/null | head -5000 | while IFS=: read -r f n rest; do
@@ -137,8 +122,7 @@ jobs:
               grep -niE 'MediaSession|MediaMetadata|PlaybackState|setMetadata|setPlaybackState|vivomusicmix|support_event|duration|position|title|artist' "decoded-v5/$rel" >> out/changed-class-main-card-markers.txt || true
             fi
           done < out/changed-smali.txt
-
-          diff -ru decoded-v2/AndroidManifest.xml decoded-v5/AndroidManifest.xml > out/manifest.diff || true
+          diff -u decoded-v2/AndroidManifest.xml decoded-v5/AndroidManifest.xml > out/manifest.diff || true
 
       - name: Upload metadata timing inspection
         uses: actions/upload-artifact@v4
