@@ -1,0 +1,48 @@
+name: Build YT Music Y700 generic root
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+    paths:
+      - ytmusic-y700.toml
+      - .github/workflows/build-ytmusic-y700.yml
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/setup-java@v5
+        with:
+          distribution: zulu
+          java-version: "21"
+
+      - name: Checkout
+        uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+          submodules: true
+
+      - name: Build generic rooted Y700 YouTube Music
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_REPOSITORY: ${{ github.repository }}
+          NEXT_VER_CODE: ${{ github.run_number }}
+        run: ./build.sh ytmusic-y700.toml
+
+      - name: Verify expected output shape
+        run: |
+          cat build.md || true
+          ls -lah build
+          test "$(find build -maxdepth 1 -type f -name 'youtube-music-*-module-v9.15.51-arm64-v8a.zip' | wc -l)" -eq 1
+          test "$(find build -maxdepth 1 -type f -name '*.apk' | wc -l)" -eq 0
+          sha256sum build/*.zip
+
+      - name: Upload root module artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: ytmusic-y700-generic-root
+          path: build/*.zip
+          if-no-files-found: error
+          retention-days: 14
