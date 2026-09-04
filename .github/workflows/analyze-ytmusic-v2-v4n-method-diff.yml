@@ -22,6 +22,7 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
+          # Exact runtime-tested artifacts; no rebuild substitution.
           mkdir -p work/v2-art work/v4n-art out tools
           gh run download 33762673544 -D work/v2-art
           gh run download 33819154154 -D work/v4n-art
@@ -46,14 +47,12 @@ jobs:
           set -euo pipefail
           python3 - <<'PY'
           from pathlib import Path
-          import hashlib, difflib
-
+          import difflib
           roots={'v2':Path('work/v2'),'v4n':Path('work/v4n')}
           def smalis(root):
               return {p.relative_to(root).as_posix():p for p in root.glob('smali*/**/*.smali')}
           a=smalis(roots['v2']); b=smalis(roots['v4n'])
-          allp=sorted(set(a)|set(b))
-          changed=[]; added=[]; removed=[]
+          allp=sorted(set(a)|set(b)); changed=[]; added=[]; removed=[]
           for rel in allp:
               if rel not in a: added.append(rel); continue
               if rel not in b: removed.append(rel); continue
@@ -61,7 +60,6 @@ jobs:
           Path('out/changed-smali-files.txt').write_text('\n'.join(changed)+'\n')
           Path('out/added-smali-files.txt').write_text('\n'.join(added)+'\n')
           Path('out/removed-smali-files.txt').write_text('\n'.join(removed)+'\n')
-
           with Path('out/changed-smali-diff.txt').open('w') as o:
               for rel in changed:
                   x=a[rel].read_text(errors='replace').splitlines(True)
@@ -72,24 +70,19 @@ jobs:
               for rel in added:
                   o.write(f'\n===== {rel} =====\n')
                   o.write(b[rel].read_text(errors='replace'))
-
-          # Extract the exact methods/classes known to be on the cooperation path.
           targets=('kyi.smali','MusicBrowserService.smali','id.smali','lag.smali','ii.smali')
           with Path('out/target-class-locations.txt').open('w') as o:
               for label,root in roots.items():
                   for name in targets:
-                      hits=list(root.glob(f'smali*/**/{name}'))
-                      for h in hits: o.write(f'{label}\t{name}\t{h.relative_to(root)}\n')
+                      for h in root.glob(f'smali*/**/{name}'):
+                          o.write(f'{label}\t{name}\t{h.relative_to(root)}\n')
           PY
-
-          # Dex-level changes too: guards against hidden non-smali/resource drift.
           unzip -Z1 work/v2.apk | grep '^classes[0-9]*\.dex$' | sort > /tmp/dexlist
           : > out/dex-sha256.txt
           while read -r d; do
             unzip -p work/v2.apk "$d" | sha256sum | sed "s#  -#  V2/$d#" >> out/dex-sha256.txt
             unzip -p work/v4n.apk "$d" | sha256sum | sed "s#  -#  V4N/$d#" >> out/dex-sha256.txt
           done < /tmp/dexlist
-
           diff -u work/v2/AndroidManifest.xml work/v4n/AndroidManifest.xml > out/manifest-diff.txt || true
           diff -qr work/v2/res work/v4n/res > out/resources-diff.txt || true
 
