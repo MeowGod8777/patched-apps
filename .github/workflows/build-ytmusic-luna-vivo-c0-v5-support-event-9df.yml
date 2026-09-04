@@ -1,0 +1,131 @@
+name: Build YT Music Luna Vivo c0 V5 support-event 0x9DF
+
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - .github/workflows/build-ytmusic-luna-vivo-c0-v5-support-event-9df.yml
+      - tools/ytmusic_vivo_c0_v5_support_event_9df.py
+      - tools/ytmusic_vivo_c0_playable_mediaid_v5.py
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-java@v5
+        with:
+          distribution: zulu
+          java-version: '21'
+
+      - name: Build exact V5 plus support-event 0x9DF
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p input ci-tools out
+          gh release download ytmusic-originplayer-luna-33729902415 --pattern '*.apk' --dir input
+          mv input/*.apk input/base.apk
+          test "$(sha256sum input/base.apk | awk '{print $1}')" = '0b1b61ad6bd87dacc88517adf19c1115085d529e63847d50d587476efa4ce307'
+          curl -L --fail --retry 3 -o ci-tools/apktool.jar https://github.com/iBotPeaches/Apktool/releases/download/v3.0.3/apktool_3.0.3.jar
+          curl -L --fail --retry 3 -o ci-tools/bcprov.jar https://repo1.maven.org/maven2/org/bouncycastle/bcprov-jdk18on/1.82/bcprov-jdk18on/1.82/bcprov-jdk18on-1.82.jar || curl -L --fail --retry 3 -o ci-tools/bcprov.jar https://repo1.maven.org/maven2/org/bouncycastle/bcprov-jdk18on/1.82/bcprov-jdk18on-1.82.jar
+          java -jar ci-tools/apktool.jar d -f input/base.apk -o decoded
+
+          ID=$(grep -Rl 'onPlayFromMediaId(Ljava/lang/String;Landroid/os/Bundle;)V' decoded/smali*/id.smali | head -n1)
+          cp "$ID" out/base-id.smali
+          python3 tools/ytmusic_vivo_c0_v5_support_event_9df.py decoded
+
+          KYI=$(grep -Rl '^\.method public final j()V' decoded/smali*/kyi.smali | head -n1)
+          ID2=$(grep -Rl 'onPlayFromMediaId(Ljava/lang/String;Landroid/os/Bundle;)V' decoded/smali*/id.smali | head -n1)
+          II=$(grep -Rl 'vivomusicmix.media.metadata.support_event' decoded/smali*/ii.smali | head -n1)
+          test -n "$KYI"; test -n "$ID2"; test -n "$II"
+          cmp -s out/base-id.smali "$ID2"
+          grep -q 'Lnoq;->n()Lazmi;' "$KYI"
+          grep -q 'Lazmi;->b:Lboht;' "$KYI"
+          ! grep -q 'Lnoq;->o()Lboht;' "$KYI"
+          ! grep -q 'Lnoq;->p()Lboht;' "$KYI"
+          grep -q 'vivomusicmix.media.metadata.support_event' "$II"
+          grep -q 'const-wide/16 v4, 0x9df' "$II"
+          ! grep -R -q 'YTM_V5STATE' decoded/smali*
+          ! grep -R -q 'YTM_C0TRACE' decoded/smali*
+
+          java -jar ci-tools/apktool.jar b decoded -o out/unsigned.apk
+          BT="${ANDROID_HOME}/build-tools/$(ls "${ANDROID_HOME}/build-tools" | sort -V | tail -1)"
+          "$BT/zipalign" -P 16 -f 4 out/unsigned.apk out/aligned.apk
+          "$BT/zipalign" -c -P 16 -v 4 out/aligned.apk > out/zipalign-before-sign.txt
+
+          BASE_CERT=$(java -jar bin/apksigner.jar verify --print-certs input/base.apk | sed -n 's/^Signer #1 certificate SHA-256 digest: //p' | tr -d ':[:space:]' | tr '[:upper:]' '[:lower:]')
+          test "$BASE_CERT" = '7762ee243d1157ef3d6de884690ff70a385fc251fe8f491eb6c71f6a8e392e2c'
+          keytool -importkeystore -srckeystore ks.keystore -srcstoretype BKS -srcstorepass 123456789 -srcalias andrewliang -srckeypass 123456789 -destkeystore out/signer.p12 -deststoretype PKCS12 -deststorepass 123456789 -destkeypass 123456789 -destalias andrewliang -noprompt -providerclass org.bouncycastle.jce.provider.BouncyCastleProvider -providerpath ci-tools/bcprov.jar
+
+          OUT=out/YouTube_Music_9.15.51_Luna_VIVO_C0_V5_SUPPORT_EVENT_9DF.apk
+          java -jar bin/apksigner.jar sign --ks out/signer.p12 --ks-type PKCS12 --ks-pass pass:123456789 --key-pass pass:123456789 --ks-key-alias andrewliang --out "$OUT" out/aligned.apk
+          rm -f out/*.idsig
+          java -jar bin/apksigner.jar verify --verbose --print-certs "$OUT" | tee out/signature.txt
+          grep -q 'Verified using v2 scheme (APK Signature Scheme v2): true' out/signature.txt
+          grep -q 'Verified using v3 scheme (APK Signature Scheme v3): true' out/signature.txt
+          OUT_CERT=$(java -jar bin/apksigner.jar verify --print-certs "$OUT" | sed -n 's/^Signer #1 certificate SHA-256 digest: //p' | tr -d ':[:space:]' | tr '[:upper:]' '[:lower:]')
+          test "$OUT_CERT" = "$BASE_CERT"
+          "$BT/zipalign" -c -P 16 -v 4 "$OUT" > out/zipalign-final.txt
+          "$BT/aapt" dump badging "$OUT" | tee out/badging.txt
+          grep -q "package: name='com.luna.music'" out/badging.txt
+          grep -q "versionName='9.15.51'" out/badging.txt
+          "$BT/aapt" dump xmltree "$OUT" AndroidManifest.xml > out/manifest.txt
+          grep -q 'com.vivo.musicwidgetmix.support.service' out/manifest.txt
+          grep -q 'com.google.android.apps.youtube.music.mediabrowser.MusicBrowserService' out/manifest.txt
+
+          python3 - "$OUT" <<'PY' | tee out/native-libs.txt
+          import sys,zipfile
+          with zipfile.ZipFile(sys.argv[1]) as z:
+              xs=[i for i in z.infolist() if i.filename.startswith('lib/arm64-v8a/') and i.filename.endswith('.so')]
+              print('count',len(xs)); assert len(xs)==21
+              assert all(i.compress_type==zipfile.ZIP_STORED for i in xs)
+          PY
+          sha256sum "$OUT" | tee out/SHA256.txt
+          grep -n -A8 -B8 'vivomusicmix.media.metadata.support_event' "$II" > out/support-event-context.txt
+
+      - name: Upload V5 support-event A/B
+        id: upload
+        uses: actions/upload-artifact@v4
+        with:
+          name: ytmusic-luna-vivo-c0-v5-support-event-9df
+          path: out/
+          if-no-files-found: error
+          retention-days: 14
+
+      - name: Commit build-success checkpoint
+        env:
+          RUN_ID: ${{ github.run_id }}
+          ARTIFACT_ID: ${{ steps.upload.outputs.artifact-id }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          APK_SHA=$(awk '{print $1}' out/SHA256.txt)
+          cat > IQOO12PRO_YTMUSIC_V5_SUPPORT_EVENT_9DF_BUILD_SUCCESS_2026-09-04.md <<EOF
+          # iQOO 12 Pro / OriginOS 6 — YouTube Music V5 + support-event 0x9DF build success
+
+          Date: 2026-09-04
+
+          - APK: \`YouTube_Music_9.15.51_Luna_VIVO_C0_V5_SUPPORT_EVENT_9DF.apk\`
+          - Run: \`${RUN_ID}\`
+          - Artifact: \`${ARTIFACT_ID}\`
+          - APK SHA256: \`${APK_SHA}\`
+          - Base SHA256: \`0b1b61ad6bd87dacc88517adf19c1115085d529e63847d50d587476efa4ce307\`
+          - Signer SHA256: \`7762ee243d1157ef3d6de884690ff70a385fc251fe8f491eb6c71f6a8e392e2c\`
+
+          Functional delta over exact V5: only \`vivomusicmix.media.metadata.support_event=0x9DF\` at the final framework MediaMetadata publication boundary.
+
+          V5 playable endpoint selection retained; Lid unchanged; rejected queueId parser absent; standard TITLE/ARTIST/DURATION and PlaybackState untouched; no trace instrumentation; v2/v3 signature verification PASS; 16K zipalign PASS; 21 stored arm64 libraries PASS; package/version/manifest identity PASS.
+          EOF
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add IQOO12PRO_YTMUSIC_V5_SUPPORT_EVENT_9DF_BUILD_SUCCESS_2026-09-04.md
+          git commit -m 'Checkpoint YT Music V5 support-event 0x9DF build success'
+          git push
