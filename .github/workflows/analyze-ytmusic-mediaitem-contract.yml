@@ -38,8 +38,8 @@ jobs:
             fi
           }
 
-          # Descriptor Llgl; maps to file lgl.smali.
-          for cls in lgl lgp lgk mxt plq kyi noq nox npa aveu avev lag id; do
+          # Descriptor Llgl; maps to lgl.smali. Likewise Laves; -> aves.smali.
+          for cls in lgl lgp lgk mxt plq kyi noq nox npa aveu avev aves lag lai lbg lkq id; do
             copy_class "$cls"
           done
 
@@ -61,7 +61,31 @@ jobs:
             sed -n "${start},${end}p" "$f" >> out/llgl-d-call-contexts.txt
           done < out/llgl-d-call-hits.txt
 
-          # Preserve full producer + browser helpers where stock native IDs are actually assembled.
+          # Exact playFromMediaId dispatch contract.
+          : > out/playfrommediaid-contract.txt
+          LAG=$(find decoded -type f -name lag.smali -print -quit)
+          LAI=$(find decoded -type f -name lai.smali -print -quit)
+          LBG=$(find decoded -type f -name lbg.smali -print -quit)
+          if [ -n "$LAG" ]; then
+            echo '===== Llag.g(String,Bundle) =====' >> out/playfrommediaid-contract.txt
+            sed -n '/^\.method public final g(Ljava\/lang\/String;Landroid\/os\/Bundle;)V$/,/^\.end method$/p' "$LAG" >> out/playfrommediaid-contract.txt
+            echo '===== Llag.w(Bundle,Z) =====' >> out/playfrommediaid-contract.txt
+            sed -n '/^\.method .* w(Landroid\/os\/Bundle;Z)Llkq;$/,/^\.end method$/p' "$LAG" >> out/playfrommediaid-contract.txt
+          fi
+          if [ -n "$LAI" ]; then
+            echo '===== Llai.b(Laves,Bundle) =====' >> out/playfrommediaid-contract.txt
+            sed -n '/^\.method .* static b(Laves;Landroid\/os\/Bundle;)Landroid\/os\/Bundle;$/,/^\.end method$/p' "$LAI" >> out/playfrommediaid-contract.txt
+          fi
+          if [ -n "$LBG" ]; then
+            echo '===== Llbg.a(Lavev) =====' >> out/playfrommediaid-contract.txt
+            sed -n '/^\.method .* static a(Lavev;)Lboht;$/,/^\.end method$/p' "$LBG" >> out/playfrommediaid-contract.txt
+            echo '===== Llbg.o(...) =====' >> out/playfrommediaid-contract.txt
+            sed -n '/^\.method .* o(Lckob;Lboht;Landroid\/os\/Bundle;)V$/,/^\.end method$/p' "$LBG" >> out/playfrommediaid-contract.txt
+          fi
+
+          # Find every key consumed near media-controller bundle handling.
+          grep -RniE 'media_item_from_search|vivomusicmix_key_list|android\.media\.|EXTRA_|playFromMediaId' "$LAG" "$LAI" "$LBG" 2>/dev/null | tee out/playfrommediaid-key-hits.txt || true
+
           grep -RniE 'MediaBrowserCompat\$MediaItem;-><init>|MediaDescriptionCompat;-><init>|onPlayFromMediaId|Laveu;->b\(Ljava/lang/String;\)Lavev;' decoded/smali* \
             | grep -E '/(lgp|lgk|mxt|plq|kyi|lag|id)\.smali:' \
             | tee out/relevant-mediaitem-callback-hits.txt || true
