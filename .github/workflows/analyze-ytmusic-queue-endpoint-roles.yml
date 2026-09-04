@@ -1,0 +1,111 @@
+name: Inspect YT Music queue endpoint roles
+
+on:
+  push:
+    paths:
+      - .github/workflows/analyze-ytmusic-queue-endpoint-roles.yml
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  inspect:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - name: Decode exact validated Luna base and map queue endpoint roles
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          EXPECTED_BASE='0b1b61ad6bd87dacc88517adf19c1115085d529e63847d50d587476efa4ce307'
+          mkdir -p input tools out
+          gh release download ytmusic-originplayer-luna-33729902415 --pattern '*.apk' --dir input
+          mv input/*.apk input/base.apk
+          ACTUAL=$(sha256sum input/base.apk | awk '{print $1}')
+          printf '%s  input/base.apk\n' "$ACTUAL" | tee out/base-sha256.txt
+          test "$ACTUAL" = "$EXPECTED_BASE"
+          curl -L --fail --retry 3 -o tools/apktool.jar https://github.com/iBotPeaches/Apktool/releases/download/v3.0.3/apktool_3.0.3.jar
+          java -jar tools/apktool.jar d -f input/base.apk -o decoded
+
+          copy_class() {
+            local cls="$1" f
+            f=$(find decoded -type f -name "${cls}.smali" -print -quit || true)
+            if [ -n "$f" ]; then
+              cp "$f" "out/${cls}.smali"
+              printf '%s\n' "$f" > "out/${cls}-path.txt"
+            else
+              printf 'MISSING %s\n' "$cls" >> out/missing-classes.txt
+            fi
+          }
+          for cls in noq nox npa azcf npb azck azcj azmi azmh bxxg omt oms plq mxt lgp lgk kyi; do copy_class "$cls"; done
+
+          # Exact queue implementation method bodies.
+          : > out/queue-implementor-endpoints.txt
+          for cls in nox npa; do
+            f=$(find decoded -type f -name "${cls}.smali" -print -quit || true)
+            [ -n "$f" ] || continue
+            echo "===== $f =====" >> out/queue-implementor-endpoints.txt
+            for sig in 'n()Lazmi;' 'o()Lboht;' 'p()Lboht;' 'j()Z' 'r()Ljava/lang/String;' 's()Ljava/lang/String;' 't()Lazcn;'; do
+              sed -n "/^\\.method .* ${sig//\//\\/}$/,/^\\.end method$/p" "$f" >> out/queue-implementor-endpoints.txt || true
+            done
+          done
+
+          # Which parent interface owns n/o/p and what the declared contracts are.
+          : > out/queue-parent-interfaces.txt
+          for cls in noq azcf npb azck azcj azmi; do
+            f=$(find decoded -type f -name "${cls}.smali" -print -quit || true)
+            [ -n "$f" ] || continue
+            echo "===== $f =====" >> out/queue-parent-interfaces.txt
+            sed -n '1,260p' "$f" >> out/queue-parent-interfaces.txt
+          done
+
+          # Raw protobuf fields backing the three endpoint roles.
+          grep -RniF 'Lbxxg;->l:Lboht;' decoded/smali* | tee out/field-l-hits.txt || true
+          grep -RniF 'Lbxxg;->q:Lboht;' decoded/smali* | tee out/field-q-hits.txt || true
+          grep -RniF 'Lbxxg;->r:Lboht;' decoded/smali* | tee out/field-r-hits.txt || true
+          grep -RniF 'Lazmi;->b:Lboht;' decoded/smali* | tee out/azmi-b-hits.txt || true
+
+          # Call sites through interfaces / concrete queue types. We deliberately search
+          # every parent interface because Lnoq inherits n/o/p rather than declaring them.
+          : > out/queue-endpoint-call-hits.txt
+          for owner in Lnoq Lazcf Lnpb Lazck Lazcj Lnox Lnpa; do
+            grep -RniE "${owner};->(n\\(\\)Lazmi;|o\\(\\)Lboht;|p\\(\\)Lboht;)" decoded/smali* >> out/queue-endpoint-call-hits.txt || true
+          done
+          sort -u out/queue-endpoint-call-hits.txt -o out/queue-endpoint-call-hits.txt
+
+          contexts() {
+            local infile="$1" outfile="$2" before="$3" after="$4"
+            : > "$outfile"
+            while IFS=: read -r f n rest; do
+              [ -n "$f" ] || continue
+              start=$(( n > before ? n-before : 1 )); end=$(( n+after ))
+              echo "===== $f:$n =====" >> "$outfile"
+              sed -n "${start},${end}p" "$f" >> "$outfile"
+            done < "$infile"
+          }
+          contexts out/field-l-hits.txt out/field-l-contexts.txt 160 260
+          contexts out/field-q-hits.txt out/field-q-contexts.txt 160 260
+          contexts out/field-r-hits.txt out/field-r-contexts.txt 160 260
+          contexts out/azmi-b-hits.txt out/azmi-b-contexts.txt 160 260
+          contexts out/queue-endpoint-call-hits.txt out/queue-endpoint-call-contexts.txt 220 420
+
+          # Playback/selection semantics around those endpoint-bearing objects.
+          grep -RniE 'Lazmi;->|Lazcf;->|Lnpb;->|Lazck;->|Lazcj;->' decoded/smali* \
+            | grep -E 'n\(\)Lazmi;|o\(\)Lboht;|p\(\)Lboht;|->b:Lboht;|play|queue|seek|skip|select' \
+            | tee out/semantic-nearby-hits.txt || true
+
+          # Native mediaId encoder call sites for correlation with the endpoint role feeding it.
+          grep -RniF 'Llgl;->d(Lboht;)Ljava/lang/String;' decoded/smali* | tee out/llgl-d-hits.txt || true
+          contexts out/llgl-d-hits.txt out/llgl-d-contexts.txt 220 420
+
+      - name: Upload endpoint-role inspection
+        uses: actions/upload-artifact@v4
+        with:
+          name: ytmusic-queue-endpoint-role-inspection
+          path: out/
+          if-no-files-found: error
+          retention-days: 14
