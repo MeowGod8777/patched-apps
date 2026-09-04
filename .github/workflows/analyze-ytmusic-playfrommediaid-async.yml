@@ -21,7 +21,6 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          # Exact product base guard; this workflow is static RE only and never builds an APK.
           EXPECTED_BASE='0b1b61ad6bd87dacc88517adf19c1115085d529e63847d50d587476efa4ce307'
           mkdir -p input tools out
           gh release download ytmusic-originplayer-luna-33729902415 --pattern '*.apk' --dir input
@@ -29,7 +28,6 @@ jobs:
           ACTUAL=$(sha256sum input/base.apk | awk '{print $1}')
           printf '%s  input/base.apk\n' "$ACTUAL" | tee out/base-sha256.txt
           test "$ACTUAL" = "$EXPECTED_BASE"
-
           curl -L --fail --retry 3 -o tools/apktool.jar https://github.com/iBotPeaches/Apktool/releases/download/v3.0.3/apktool_3.0.3.jar
           java -jar tools/apktool.jar d -f input/base.apk -o decoded
 
@@ -43,8 +41,7 @@ jobs:
               printf 'MISSING %s\n' "$cls" >> out/missing-classes.txt
             fi
           }
-
-          for cls in law lax lam lbg lag lai lkq ckob kym omu omt nrj niu njl; do copy_class "$cls"; done
+          for cls in law lax lam lbg lag lai lkq ckob kym omu omt nrj niu njl avgi avfk kxu kxs avej avek kzx kzy bupb bunq buns; do copy_class "$cls"; done
 
           LBG=$(find decoded -type f -name lbg.smali -print -quit)
           LAW=$(find decoded -type f -name law.smali -print -quit)
@@ -53,12 +50,9 @@ jobs:
           test -n "$LBG" && test -n "$LAW" && test -n "$LAX" && test -n "$LAM"
 
           {
-            echo '===== Llaw full class ====='
-            cat "$LAW"
-            echo '===== Llax full class ====='
-            cat "$LAX"
-            echo '===== Llam full class ====='
-            cat "$LAM"
+            echo '===== Llaw full class ====='; cat "$LAW"
+            echo '===== Llax full class ====='; cat "$LAX"
+            echo '===== Llam full class ====='; cat "$LAM"
             echo '===== Llbg.i(Lboht,Bundle) ====='
             sed -n '/^\.method public final i(Lboht;Landroid\/os\/Bundle;)Lbupb;$/,/^\.end method$/p' "$LBG"
             echo '===== Llbg.o(Lckob,Lboht,Bundle) ====='
@@ -67,9 +61,6 @@ jobs:
 
           grep -RniF 'Llbg;->i(Lboht;Landroid/os/Bundle;)Lbupb;' decoded/smali* | tee out/lbg-i-call-hits.txt || true
           grep -RniF 'Llbg;->o(Lckob;Lboht;Landroid/os/Bundle;)V' decoded/smali* | tee out/lbg-o-call-hits.txt || true
-          grep -RniF 'Llaw;-><init>' decoded/smali* | tee out/law-constructor-hits.txt || true
-          grep -RniF 'Llax;-><init>' decoded/smali* | tee out/lax-constructor-hits.txt || true
-          grep -RniF 'Llam;-><init>' decoded/smali* | tee out/lam-constructor-hits.txt || true
 
           contexts() {
             local infile="$1" outfile="$2" before="$3" after="$4"
@@ -84,18 +75,23 @@ jobs:
           contexts out/lbg-i-call-hits.txt out/lbg-i-call-contexts.txt 160 260
           contexts out/lbg-o-call-hits.txt out/lbg-o-call-contexts.txt 160 260
 
-          # Find result/status handling around Lbupb and callback object Lckob.
-          grep -RniE 'Lbupb;|Lckob;->|Lkym;->[a-zA-Z]' "$LAW" "$LAX" "$LBG" decoded/smali* 2>/dev/null \
-            | head -5000 > out/result-callback-hits.txt || true
+          grep -RIl '^\.implements Lkxu;' decoded/smali* 2>/dev/null | sort | tee out/kxu-implementors.txt || true
+          : > out/kxu-implementor-bodies.txt
+          while IFS= read -r f; do
+            [ -n "$f" ] || continue
+            echo "===== $f =====" >> out/kxu-implementor-bodies.txt
+            cat "$f" >> out/kxu-implementor-bodies.txt
+          done < out/kxu-implementors.txt
 
-          # Bundle/source/referrer inputs that may make external MediaSession playback differ from stock UI playback.
-          grep -RniE 'caller_package_name|EXTRA_REFERRER_APP|EXTRA_START_PAUSED|skip_entitlement_check|LEGACY_STREAM_TYPE|intent_extra_command_bundle|command_bundle_key|media_item_from_search|playFromMediaId|Bundle;->(get|put)' \
-            "$LAW" "$LAX" "$LAM" "$LBG" $(find decoded -type f \( -name lag.smali -o -name lai.smali \) -print) \
-            | tee out/async-bundle-key-hits.txt || true
+          grep -RniE 'caller_package_name|EXTRA_REFERRER_APP|EXTRA_START_PAUSED|skip_entitlement_check|LEGACY_STREAM_TYPE|intent_extra_command_bundle|command_bundle_key|media_item_from_search|playFromMediaId|android\.media\.session\.MediaController|com\.vivo\.musicwidgetmix' decoded/smali* \
+            | tee out/source-bundle-key-hits.txt || true
 
-          # Identify every direct user-facing playback/command path involving the same endpoint type.
-          grep -RniE 'Llbg;->(i|o)\(Lboht;|Llbg;->i\(Lboht;|Llbg;->o\(Lckob;Lboht;|Lboht;.*Landroid/os/Bundle' decoded/smali* \
-            | tee out/endpoint-playback-hits.txt || true
+          grep -RniE 'Lkxu;->b\(Lavgi;Landroid/os/Bundle;\)Laves;|Lkxs;->(a|b)\(\)Laves;|Lavfk;->a\(Ljava/lang/String;\)Lavgi;' decoded/smali* \
+            | tee out/source-classification-hits.txt || true
+          contexts out/source-classification-hits.txt out/source-classification-contexts.txt 120 220
+
+          grep -RniE 'Lkym;->[a-f]:Lbupb;|Lbupb;->(c:Z|d:I)|Llag;->x\(Llkq;Ljava/lang/String;Lbupb;\)V' decoded/smali* \
+            | tee out/result-status-hits.txt || true
 
       - name: Upload async inspection
         uses: actions/upload-artifact@v4
