@@ -1,9 +1,10 @@
 #!/system/bin/sh
-# iQOO 12 Pro Scene battery ledger - deterministic one-session worker v2.1
-# Every process starts from the exported Scene launcher ActivityMain on the Function tab,
-# discovers the clickable power-stat entry by resource-id, opens History, captures exactly one
-# finalized >=30 min session, commits it to the manifest, then exits.
-# No Back-based state recovery and no dependency on the previous worker's UI state.
+# iQOO 12 Pro Scene battery ledger - deterministic one-session worker v2.2
+# Every process starts from the exported Scene launcher ActivityMain, explicitly selects
+# the Function tab in UI, discovers the clickable power-stat entry by resource-id,
+# opens History, captures exactly one finalized >=30 min session, commits it to the
+# manifest, then exits.
+# No Back-based state recovery and no dependency on ActivityMain HOT/COLD tab state.
 
 BASE=/sdcard/SceneBattery
 OUTDIR="$BASE/sync_raw"
@@ -26,11 +27,28 @@ get_bounds_for_id() {
   nodes "$GB_FILE" | grep "resource-id=\"$GB_ID\"" | head -n1 | sed -n 's/.*bounds="\[\([0-9]*\),\([0-9]*\)\]\[\([0-9]*\),\([0-9]*\)\]".*/\1 \2 \3 \4/p'
 }
 
+get_bounds_for_text_id() {
+  GT_FILE="$1"
+  GT_ID="$2"
+  GT_TEXT="$3"
+  nodes "$GT_FILE" | grep "resource-id=\"$GT_ID\"" | grep "text=\"$GT_TEXT\"" | head -n1 | sed -n 's/.*bounds="\[\([0-9]*\),\([0-9]*\)\]\[\([0-9]*\),\([0-9]*\)\]".*/\1 \2 \3 \4/p'
+}
+
 tap_id() {
   TI_FILE="$1"
   TI_ID="$2"
   TI_B="$(get_bounds_for_id "$TI_FILE" "$TI_ID")"
   set -- $TI_B
+  [ "$#" -eq 4 ] || return 1
+  input tap $(( ($1 + $3) / 2 )) $(( ($2 + $4) / 2 )) >/dev/null 2>&1
+}
+
+tap_text_id() {
+  TT_FILE="$1"
+  TT_ID="$2"
+  TT_TEXT="$3"
+  TT_B="$(get_bounds_for_text_id "$TT_FILE" "$TT_ID" "$TT_TEXT")"
+  set -- $TT_B
   [ "$#" -eq 4 ] || return 1
   input tap $(( ($1 + $3) / 2 )) $(( ($2 + $4) / 2 )) >/dev/null 2>&1
 }
@@ -47,19 +65,29 @@ top_history_ready() {
 }
 
 prepare_history_from_launcher() {
-  # ActivityPowerStat itself is non-exported. Start the exported launcher activity explicitly
-  # on TAB_NAV (select_tab=0), then use the verified clickable nav_power_utilization resource-id.
-  am start -W -a android.intent.action.MAIN -c android.intent.category.LAUNCHER -n com.omarea.vtools/.activities.ActivityMain --ei select_tab 0 >/dev/null 2>&1 || {
+  # ActivityPowerStat is non-exported. ActivityMain is exported/shell-launchable, but its
+  # selected tab is stateful when the task is HOT. Therefore do not rely on select_tab;
+  # explicitly tap the visible Function tab every worker run.
+  am start -W -a android.intent.action.MAIN -c android.intent.category.LAUNCHER -n com.omarea.vtools/.activities.ActivityMain >/dev/null 2>&1 || {
     PREP_ERR=activity_main_start_failed
     return 1
   }
-  sleep 2
+  sleep 1
 
   MAIN="$TMP/main.xml"
   dump "$MAIN" || { PREP_ERR=main_dump_failed; return 1; }
   grep -q 'package="com.omarea.vtools"' "$MAIN" || { PREP_ERR=scene_main_not_foreground; return 1; }
-  grep -q 'resource-id="com.omarea.vtools:id/nav_power_utilization"' "$MAIN" || { PREP_ERR=power_entry_not_found; return 1; }
-  tap_id "$MAIN" 'com.omarea.vtools:id/nav_power_utilization' || { PREP_ERR=power_entry_bad_bounds; return 1; }
+
+  tap_text_id "$MAIN" 'com.omarea.vtools:id/ItemTitle' '功能' || {
+    PREP_ERR=function_tab_not_found
+    return 1
+  }
+  sleep 1
+
+  FUNC="$TMP/function.xml"
+  dump "$FUNC" || { PREP_ERR=function_dump_failed; return 1; }
+  grep -q 'resource-id="com.omarea.vtools:id/nav_power_utilization"' "$FUNC" || { PREP_ERR=power_entry_not_found_after_function_tab; return 1; }
+  tap_id "$FUNC" 'com.omarea.vtools:id/nav_power_utilization' || { PREP_ERR=power_entry_bad_bounds; return 1; }
   sleep 2
 
   POWER="$TMP/power.xml"
@@ -74,13 +102,13 @@ prepare_history_from_launcher() {
   return 0
 }
 
-echo '# iQOO 12 Pro Scene capture-next worker v2.1'
+echo '# iQOO 12 Pro Scene capture-next worker v2.2'
 PREP_ERR=''
 prepare_history_from_launcher || {
   echo "ERROR prepare_history reason=${PREP_ERR:-unknown}"
   exit 10
 }
-echo 'History top verified. mode=launcher_function_tab_resource_id'
+echo 'History top verified. mode=launcher_tap_function_tab_resource_id'
 
 FOUND=0
 TARGET=''
