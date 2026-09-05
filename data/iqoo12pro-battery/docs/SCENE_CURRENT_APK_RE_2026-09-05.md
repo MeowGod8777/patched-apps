@@ -104,7 +104,7 @@ Therefore:
 
 > **Scene History timestamp = session start timestamp (`beginTime`).**
 
-It is not the session end timestamp.
+It is not the session end timestamp. The UI string itself has minute resolution even though the underlying `beginTime` is a `long` timestamp.
 
 ## History two-duration semantics
 
@@ -152,6 +152,63 @@ Scene-valid screen-on duration / whole-session wall-clock span
 ```
 
 The second value is **not theoretical runtime**.
+
+## Exact History `x.xh` formatting / precision
+
+Both History duration values are passed to obfuscated utility method `xj0.d(double)`, whose parameter is minutes.
+
+Re-disassembly of that method shows the following effective calculation:
+
+```text
+shown_hours = floor(minutes / 6) / 10.0
+shown_text  = shown_hours + "h"
+```
+
+The bytecode sequence is effectively:
+
+1. divide input minutes by `6.0`
+2. convert the result to integer, truncating toward zero (all relevant durations are non-negative)
+3. convert back to double
+4. divide by `10.0`
+5. append `"h"`
+
+Therefore History duration display is **downward quantization in 0.1 h / 6-minute buckets**, not conventional decimal rounding.
+
+Examples:
+
+```text
+84 min  -> floor(84 / 6) / 10 = 1.4h
+89 min  -> floor(89 / 6) / 10 = 1.4h
+90 min  -> 1.5h
+```
+
+For any displayed History value `D h`:
+
+```text
+D h <= actual duration < (D + 0.1) h
+```
+
+or in seconds:
+
+```text
+shown_seconds <= actual_seconds < shown_seconds + 360
+```
+
+This applies independently to:
+
+- the first History value derived from `used × 3000 ms`
+- the second History value derived from `endTime - beginTime`
+
+Canonical implication: a History-list duration alone must not be recorded as an exact second count. Preserve the displayed value and/or its lower/upper bounds. Detail-page `h/m/s` evidence is preferred for exact Scene screen-on duration.
+
+Because the History start timestamp is itself shown only to the minute, an end time inferred from only the History row has combined UI uncertainty: the underlying start may be up to <60 seconds later than the displayed minute, and the wall duration may be up to <360 seconds larger than its displayed bucket. A safe bound from History UI alone is therefore:
+
+```text
+end_lower = displayed_start + shown_wall_duration
+end_upper_exclusive = displayed_start + shown_wall_duration + 420 s
+```
+
+assuming the device timezone represented by the screenshot is known and unchanged.
 
 ## Average-power semantics
 
@@ -241,7 +298,7 @@ Scene's modern History feature is session-based. Public Scene changelog evidence
 Previously referenced public source:
 
 - repo: `ramabondanp/vtools_en`
-- commit: `faeab044b68fb4f1b9187c6020c01c88330523b9`
+- commit `faeab044b68fb4f1b9187c6020c01c88330523b9`
 - DB: `battery-history3`
 - table: `battery_io`
 - older sampling behavior: 6 seconds in the referenced UI/statistics code
@@ -269,6 +326,7 @@ For Scene `9.3.8` / this APK hash:
 - `history_time_semantics = start`
 - `history_session_at = beginTime`
 - `screen_on_duration = valid screen-on sample count × 3 s`
+- History first/second `x.xh` values are downward-truncated 6-minute buckets
 - `wall_duration = endTime - beginTime`
 - `avg_power = average current × voltage over valid screen-on discharge/not-charging samples`
 - theoretical runtime is workload-normalized and includes the implementation's `0.9` correction
@@ -276,4 +334,4 @@ For Scene `9.3.8` / this APK hash:
 - do not confuse History second duration with theoretical runtime
 - do not attach current-page battery header state to old History sessions
 
-The production route for the current device is therefore the low-interference History/detail screenshot path, with static APK RE supplying the field semantics.
+The production route for the current device is therefore the low-interference History/detail screenshot path, with static APK RE supplying field semantics and precision bounds.
