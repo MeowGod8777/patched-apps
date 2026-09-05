@@ -1,0 +1,14 @@
+capture_at,scene,network,navigation,average_power_w,used,theoretical_runtime,battery_temp_c,apps,notes
+2026-07-18T12:36:00+08:00,mixed_unknown_legacy,unknown,,2.48,2h35m,7h08m,,,Legacy archive
+2026-07-21T23:43:00+08:00,mixed_unknown_legacy,unknown,,3.73,1h50m,4h45m,,,Legacy archive
+2026-07-25T12:48:00+08:00,mixed_unknown_legacy,unknown,,3.09,1h40m,5h43m,,,Legacy archive
+2026-07-26T11:04:00+08:00,mixed_unknown_legacy,unknown,,3.54,3h45m,5h00m,,,Legacy archive
+2026-07-27T10:20:00+08:00,mixed_unknown_legacy,unknown,,3.70,1h59m,4h46m,,,Legacy archive
+2026-07-29T13:56:00+08:00,mixed_unknown_legacy,unknown,,3.01,1h08m,5h52m,,,Legacy archive
+2026-08-05T22:57:00+08:00,mixed_unknown_legacy,unknown,,3.98,1h09m,4h27m,,,Legacy archive
+2026-08-06T23:29:00+08:00,mixed_unknown_legacy,unknown,,2.57,1h42m,6h54m,,,Legacy archive
+2026-08-08T21:54:00+08:00,mixed_unknown_legacy,unknown,,2.51,1h07m,7h03m,,,Legacy archive
+2026-08-31T00:00:00+08:00,home_wifi,wifi,false,1.97,5h17m,9h00m,33.6,"ChatGPT 3h29m; Instagram 34m45s; LINE 19m23s","Capture time not preserved in baseline"
+2026-09-01T00:00:00+08:00,home_wifi,wifi,false,2.31,2h20m,7h39m,37.8,"ChatGPT 1h36m","Capture time not preserved in baseline"
+2026-09-02T00:00:00+08:00,home_wifi,wifi,false,2.31,1h36m,7h39m,27.6,"ChatGPT 31m45s; Threads 9m35s; LINE 6m57s","Approx. 80% Wi-Fi; capture time not preserved in baseline"
+2026-09-05T00:00:00+08:00,out_4g,4g,true,3.38,1h24m,5h14m,32.8,"Google Maps 48m45s; 酷安 10m50s; Threads 8m24s; EZ Way 7m57s","Approx. 10% indoor + 90% daytime outdoor; capture time not preserved in baseline"
