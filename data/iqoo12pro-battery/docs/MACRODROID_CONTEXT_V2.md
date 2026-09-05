@@ -110,13 +110,20 @@ If Wi-Fi is reported connected but SSID cannot be determined reliably, prefer `u
 
 ## 6. Home SSID set
 
-Current confirmed home SSID from the pilot timeline:
+Confirmed home SSIDs on 2026-09-05:
 
 ```text
+DaFengLi
 DaFengLi_5G
+An's 3F TP LINK 256B 2.4G
+An's 3F TP LINK 256B 5G
 ```
 
-If additional home SSIDs are used later, add them to the same home set. Unrelated trusted Wi-Fi remains `other_wifi`.
+All four classify as `home_wifi`.
+
+Other saved networks visible on the device are **not** automatically home merely because they are saved. In particular, `2F` and `AS-3f` remain outside the home set unless separately confirmed by the user.
+
+If additional home SSIDs are confirmed later, add them to this same explicit set. Unrelated trusted Wi-Fi remains `other_wifi`.
 
 ## 7. Trigger set
 
@@ -156,7 +163,7 @@ classify current state once
 
 Do not retain the legacy 30-second rule that directly labels departure as `out_4g`.
 
-If natural-use logs later show noisy duplicate transitions, deduplicate identical consecutive state observations during ingestion rather than adding long delays that may hide real short transitions.
+Natural-use testing showed that multiple connectivity triggers can fire for the same final state. The generated v2.2+ candidate therefore tracks `state + SSID` and suppresses identical transition rows while keeping hourly heartbeat rows unconditional. Ingestion must still tolerate duplicate historical/legacy rows because earlier versions did not suppress them.
 
 ## 9. Event file
 
@@ -184,6 +191,7 @@ Rows conceptually:
 
 ```text
 <epoch_ms>,transition,home_wifi,DaFengLi_5G,macrodroid_v2
+<epoch_ms>,transition,home_wifi,An's 3F TP LINK 256B 5G,macrodroid_v2
 <epoch_ms>,transition,mobile,,macrodroid_v2
 <epoch_ms>,heartbeat,mobile,,macrodroid_v2
 <epoch_ms>,startup,unknown,,macrodroid_v2
@@ -197,9 +205,10 @@ The epoch field must contain a real numeric Unix epoch in milliseconds, never a 
 
 After classification:
 
-- append a `transition` row
-- duplicate identical states are acceptable and may be deduplicated during ingestion
-- correctness is preferred over clever suppression
+- build a transition identity from `state + SSID`
+- append a `transition` row only when that identity differs from the last retained transition identity
+- update the stored last identity after a successful write
+- ingestion remains duplicate-tolerant because earlier candidate versions could emit redundant identical rows
 
 ### Heartbeat
 
@@ -224,7 +233,7 @@ When Wi-Fi is connected and the SSID is available, retain `{ssid}`.
 Expected:
 
 ```text
-home_wifi  -> DaFengLi_5G
+home_wifi  -> one of the four confirmed home SSIDs
 other_wifi -> actual current SSID
 mobile     -> empty
 unknown    -> empty or a diagnostic value if it explains uncertainty
@@ -307,7 +316,7 @@ After enabling v2, use naturally for several days before tuning thresholds or ad
 
 Check:
 
-- home Wi-Fi -> `home_wifi`
+- all four confirmed home SSIDs -> `home_wifi`
 - another known Wi-Fi -> `other_wifi`
 - Wi-Fi absent + usable mobile connectivity -> `mobile`
 - airplane/no-data -> `unknown`
