@@ -1,10 +1,12 @@
 #!/system/bin/sh
-# iQOO 12 Pro Scene battery ledger full local sync v0.4-resilient
+# iQOO 12 Pro Scene battery ledger full local sync v0.5-resilient
 # - Retries transient UIAutomator/History failures.
 # - Waits for Scene recovery instead of requiring a whole-script restart.
 # - Always normalizes History to the top before indexing/searching.
 # - Rejects live today rows by post-filtering for full YYYY-MM-DD HH:MM titles.
 # - Detail captures are committed only when complete.
+# - v0.5: History page extraction uses the proven broad Item* matcher, validates
+#   that each dumped page actually exposes History rows, and retries empty pages.
 # GitHub upload is intentionally NOT included yet.
 
 BASE=/sdcard/SceneBattery
@@ -19,6 +21,7 @@ MAX_DETAIL_PAGES=${SCENE_BATTERY_MAX_DETAIL_PAGES:-8}
 MAX_NEW_SESSIONS=${SCENE_BATTERY_MAX_NEW_SESSIONS:-0}
 RECOVERY_WAIT_SECONDS=${SCENE_BATTERY_RECOVERY_WAIT_SECONDS:-60}
 UI_RETRIES=${SCENE_BATTERY_UI_RETRIES:-3}
+PAGE_ROW_RETRIES=${SCENE_BATTERY_PAGE_ROW_RETRIES:-4}
 TAB="$(printf '\t')"
 
 now_iso() { date '+%Y-%m-%dT%H:%M:%S%z'; }
@@ -80,8 +83,15 @@ history_to_top() {
     input swipe 720 650 720 2900 320 >/dev/null 2>&1
     I=$((I+1))
   done
-  sleep 1
+  sleep 2
   return 0
+}
+
+extract_history_nodes() {
+  XML="$1"; N="$2"
+  # This exact broad matcher mirrors the manual command proven to work on-device.
+  sed 's/></>\n</g' "$XML" | grep -E 'ItemTitle|ItemStart|ItemCenter|ItemEnd|NewTag|dialogTitle' > "$N" || :
+  grep -qE 'id/(ItemTitle|ItemStart|ItemCenter|ItemEnd)"' "$N"
 }
 
 capture_history_pages() {
@@ -89,11 +99,22 @@ capture_history_pages() {
   history_to_top || return 1
   while [ "$PAGE" -lt "$MAX_HISTORY_PAGES" ]; do
     XML="$TMP/h-$PAGE.xml"; N="$TMP/h-$PAGE.nodes"
-    dump_ui "$XML" || return 1
-    grep -q 'package="com.omarea.vtools"' "$XML" || return 1
-    grep -q 'text="历史记录"' "$XML" || return 1
-    sed 's/></>\n</g' "$XML" | grep -E 'resource-id="com.omarea.vtools:id/(dialogTitle|NewTag|ItemTitle|ItemStart|ItemCenter|ItemEnd)"' > "$N"
-    H="$(sha256sum "$N" 2>/dev/null | awk '{print $1}')"
+    ROWTRY=1
+    GOT_ROWS=0
+    while [ "$ROWTRY" -le "$PAGE_ROW_RETRIES" ]; do
+      dump_ui "$XML" || { ROWTRY=$((ROWTRY+1)); sleep 1; continue; }
+      grep -q 'package="com.omarea.vtools"' "$XML" || return 1
+      grep -q 'text="历史记录"' "$XML" || return 1
+      if extract_history_nodes "$XML" "$N"; then
+        GOT_ROWS=1
+        break
+      fi
+      echo "WARN: History page $PAGE exposed no rows (try $ROWTRY/$PAGE_ROW_RETRIES); waiting..."
+      ROWTRY=$((ROWTRY+1)); sleep 1
+    done
+    [ "$GOT_ROWS" -eq 1 ] || { echo "ERROR: History page $PAGE remained row-empty"; return 1; }
+
+    H="$(cksum "$N" 2>/dev/null | awk '{print $1":"$2}')"
     [ -n "$PREV" ] && [ "$H" = "$PREV" ] && break
     printf '\n===== PAGE %02d =====\n' "$PAGE" >> "$OUT"; cat "$N" >> "$OUT"
     PREV="$H"; PAGE=$((PAGE+1)); [ "$PAGE" -ge "$MAX_HISTORY_PAGES" ] && break
@@ -122,7 +143,6 @@ parse_history_candidates() {
     }
   ' "$SRC" | awk -F '\t' '!seen[$1]++' > "$ALL"
 
-  # Live row title is only HH:MM:SS. Finalized rows always start with YYYY-MM-DD HH:MM.
   grep -E '^[0-9][0-9][0-9][0-9]-[0-9][0-9]-[0-9][0-9] [0-9][0-9]:[0-9][0-9][[:space:]]' "$ALL" > "$OUT" || :
 }
 
@@ -131,7 +151,7 @@ find_row_on_screen() {
   dump_ui "$XML" || return 2
   grep -q 'package="com.omarea.vtools"' "$XML" || return 2
   grep -q 'text="历史记录"' "$XML" || return 2
-  sed 's/></>\n</g' "$XML" | grep -E 'resource-id="com.omarea.vtools:id/(ItemTitle|NewTag|ItemStart|ItemCenter|ItemEnd)"' > "$N"
+  sed 's/></>\n</g' "$XML" | grep -E 'ItemTitle|ItemStart|ItemCenter|ItemEnd|NewTag|dialogTitle' > "$N" || :
   LINE="$(grep -F "text=\"$TARGET\"" "$N" | head -n1)"; [ -n "$LINE" ] || return 1
   B="$(printf '%s' "$LINE" | sed -n 's/.*bounds="\[\([0-9]*\),\([0-9]*\)\]\[\([0-9]*\),\([0-9]*\)\]".*/\1 \2 \3 \4/p')"
   set -- $B; [ "$#" -eq 4 ] || return 1; TAP_Y=$((($2+$4)/2)); return 0
@@ -173,8 +193,8 @@ capture_detail_full() {
     dump_ui "$XML" || { rm -f "$PART"; return 1; }
     grep -q 'package="com.omarea.vtools"' "$XML" || { rm -f "$PART"; return 1; }
     grep -q 'text="历史记录"' "$XML" && { rm -f "$PART"; return 1; }
-    sed 's/></>\n</g' "$XML" | grep -E 'resource-id="com.omarea.vtools:id/(battery_capacity|battery_size|battery_temperature|battery_voltage|battery_status|avg_power|screen_on_duration|predict_time|itemTitle|itemAvgIO|itemTemperature|itemCounts)"' > "$N"
-    H="$(sha256sum "$N" 2>/dev/null | awk '{print $1}')"; [ -n "$PREV" ] && [ "$H" = "$PREV" ] && break
+    sed 's/></>\n</g' "$XML" | grep -E 'battery_capacity|battery_size|battery_temperature|battery_voltage|battery_status|avg_power|screen_on_duration|predict_time|itemTitle|itemAvgIO|itemTemperature|itemCounts' > "$N" || :
+    H="$(cksum "$N" 2>/dev/null | awk '{print $1":"$2}')"; [ -n "$PREV" ] && [ "$H" = "$PREV" ] && break
     printf '\n===== DETAIL PAGE %02d =====\n' "$PAGE" >> "$PART"; cat "$N" >> "$PART"
     PREV="$H"; PAGE=$((PAGE+1)); [ "$PAGE" -ge "$MAX_DETAIL_PAGES" ] && break
     input swipe 720 2800 720 900 650 >/dev/null 2>&1; sleep 1
@@ -202,12 +222,13 @@ done
 
 CAND="$TMP/candidates.tsv"; parse_history_candidates "$HRAW" "$CAND"
 CAND_COUNT="$(wc -l < "$CAND" 2>/dev/null | tr -d ' ')"
-echo "history_pages=$HISTORY_PAGES candidate_rows=${CAND_COUNT:-0}"
+INDEX_LINES="$(wc -l < "$HRAW" 2>/dev/null | tr -d ' ')"
+echo "history_pages=$HISTORY_PAGES history_index_lines=${INDEX_LINES:-0} candidate_rows=${CAND_COUNT:-0}"
 echo 'Eligible finalized sessions:'
 awk -F '\t' -v m="$MIN_FINAL_MINUTES" '($2*60)>=m {print "  "$1"  used="$2"h  avg="$4"W  predict="$6"h"}' "$CAND"
 if [ "${CAND_COUNT:-0}" -eq 0 ]; then
-  echo 'DEBUG: no finalized candidates parsed; first History titles were:'
-  grep 'id/ItemTitle"' "$HRAW" | head -n 8
+  echo 'DEBUG: no finalized candidates parsed; first captured History nodes were:'
+  head -n 20 "$HRAW"
 fi
 
 COUNT=0
