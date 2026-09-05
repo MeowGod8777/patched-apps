@@ -1,10 +1,9 @@
 #!/system/bin/sh
-# iQOO 12 Pro Scene battery ledger - deterministic one-session worker v2.2
-# Every process starts from the exported Scene launcher ActivityMain, explicitly selects
-# the Function tab in UI, discovers the clickable power-stat entry by resource-id,
-# opens History, captures exactly one finalized >=30 min session, commits it to the
-# manifest, then exits.
-# No Back-based state recovery and no dependency on ActivityMain HOT/COLD tab state.
+# iQOO 12 Pro Scene battery ledger - deterministic one-session worker v2.3
+# Preserve the v2.1 path that already proved it can open PowerStat and capture a session.
+# Start ActivityMain with select_tab=0; if nav_power_utilization is already present, use it
+# immediately. Only if it is absent (HOT task ignored the extra) do we tap the Function tab
+# as a fallback. This avoids the v2.2 regression from always re-tapping the Function tab.
 
 BASE=/sdcard/SceneBattery
 OUTDIR="$BASE/sync_raw"
@@ -65,34 +64,48 @@ top_history_ready() {
 }
 
 prepare_history_from_launcher() {
-  # ActivityPowerStat is non-exported. ActivityMain is exported/shell-launchable, but its
-  # selected tab is stateful when the task is HOT. Therefore do not rely on select_tab;
-  # explicitly tap the visible Function tab every worker run.
-  am start -W -a android.intent.action.MAIN -c android.intent.category.LAUNCHER -n com.omarea.vtools/.activities.ActivityMain >/dev/null 2>&1 || {
+  am start -W -a android.intent.action.MAIN -c android.intent.category.LAUNCHER -n com.omarea.vtools/.activities.ActivityMain --ei select_tab 0 >/dev/null 2>&1 || {
     PREP_ERR=activity_main_start_failed
     return 1
   }
-  sleep 1
+  sleep 2
 
   MAIN="$TMP/main.xml"
   dump "$MAIN" || { PREP_ERR=main_dump_failed; return 1; }
   grep -q 'package="com.omarea.vtools"' "$MAIN" || { PREP_ERR=scene_main_not_foreground; return 1; }
 
-  tap_text_id "$MAIN" 'com.omarea.vtools:id/ItemTitle' '功能' || {
-    PREP_ERR=function_tab_not_found
+  ENTRY_XML="$MAIN"
+  ENTRY_MODE=select_tab_direct
+
+  if ! grep -q 'resource-id="com.omarea.vtools:id/nav_power_utilization"' "$ENTRY_XML"; then
+    tap_text_id "$MAIN" 'com.omarea.vtools:id/ItemTitle' '功能' || {
+      PREP_ERR=function_tab_not_found
+      return 1
+    }
+    sleep 2
+
+    FUNC="$TMP/function.xml"
+    dump "$FUNC" || { PREP_ERR=function_dump_failed; return 1; }
+    grep -q 'resource-id="com.omarea.vtools:id/nav_power_utilization"' "$FUNC" || {
+      PREP_ERR=power_entry_not_found_after_function_fallback
+      return 1
+    }
+    ENTRY_XML="$FUNC"
+    ENTRY_MODE=function_tab_fallback
+  fi
+
+  tap_id "$ENTRY_XML" 'com.omarea.vtools:id/nav_power_utilization' || {
+    PREP_ERR=power_entry_bad_bounds
     return 1
   }
-  sleep 1
-
-  FUNC="$TMP/function.xml"
-  dump "$FUNC" || { PREP_ERR=function_dump_failed; return 1; }
-  grep -q 'resource-id="com.omarea.vtools:id/nav_power_utilization"' "$FUNC" || { PREP_ERR=power_entry_not_found_after_function_tab; return 1; }
-  tap_id "$FUNC" 'com.omarea.vtools:id/nav_power_utilization' || { PREP_ERR=power_entry_bad_bounds; return 1; }
   sleep 2
 
   POWER="$TMP/power.xml"
   dump "$POWER" || { PREP_ERR=power_dump_failed; return 1; }
-  grep -q 'resource-id="com.omarea.vtools:id/action_history"' "$POWER" || { PREP_ERR=powerstat_not_open; return 1; }
+  grep -q 'resource-id="com.omarea.vtools:id/action_history"' "$POWER" || {
+    PREP_ERR="powerstat_not_open_${ENTRY_MODE}"
+    return 1
+  }
   tap_id "$POWER" 'com.omarea.vtools:id/action_history' || { PREP_ERR=history_button_bad_bounds; return 1; }
   sleep 2
 
@@ -102,13 +115,14 @@ prepare_history_from_launcher() {
   return 0
 }
 
-echo '# iQOO 12 Pro Scene capture-next worker v2.2'
+echo '# iQOO 12 Pro Scene capture-next worker v2.3'
 PREP_ERR=''
+ENTRY_MODE=''
 prepare_history_from_launcher || {
   echo "ERROR prepare_history reason=${PREP_ERR:-unknown}"
   exit 10
 }
-echo 'History top verified. mode=launcher_tap_function_tab_resource_id'
+echo "History top verified. mode=$ENTRY_MODE"
 
 FOUND=0
 TARGET=''
@@ -186,7 +200,6 @@ grep -q 'resource-id="com.omarea.vtools:id/avg_power"' "$VERIFY" || { echo 'ERRO
 grep -q 'text="历史记录"' "$VERIFY" && { echo 'ERROR still_on_history'; exit 33; }
 
 SAFE="$(printf '%s' "$TARGET" | tr ' :' '--')"
-# Raw captures are immutable: every successful acquisition receives a capture-id-qualified path.
 DEST="$OUTDIR/detail-$SAFE-$RUN_ID.txt"
 PART="$DEST.partial"
 : > "$PART"
