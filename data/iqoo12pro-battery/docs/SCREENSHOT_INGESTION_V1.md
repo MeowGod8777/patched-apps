@@ -4,7 +4,10 @@ Status: **production collection contract for current Scene 9.3.8 lineage**
 
 This workflow is intentionally manual-at-capture and automated-at-ingestion. The user should not need daily Runner commands, UIAutomator, OCR, or private-DB access.
 
-Current semantic authority: `SCENE_CURRENT_APK_RE_2026-09-05.md`.
+Current semantic authority:
+
+- `SCENE_CURRENT_APK_RE_2026-09-05.md`
+- `SCENE_CURRENT_APK_APP_ROWS_RE_2026-09-05.md`
 
 ## 1. User-side routine
 
@@ -146,14 +149,12 @@ If a screenshot date and the embedded History date differ, use the embedded Hist
 
 ## 6. Detail metric precedence
 
-For finalized canonical session metrics:
-
 ### Screen-on duration
 
 Priority:
 
 1. exact detail `h/m/s` value
-2. History first `x.xh` only as bounded/rounded evidence
+2. History first `x.xh` only as bounded/quantized evidence
 
 ### Wall duration
 
@@ -175,20 +176,43 @@ Use the Scene detail value as the canonical displayed estimate. It remains separ
 
 ## 7. App attribution
 
-Future per-session app evidence should be retained granularly rather than only aggregated.
+Current Scene 9.3.8 groups per-app statistics by:
 
-Target `app_sessions.csv` row fields:
+```text
+package + Scene mode
+```
+
+The underlying query is restricted to valid screen-on discharge/not-charging samples and uses `count(current)` for duration attribution. The current app adapter converts that count using:
+
+```text
+duration_seconds = count × 3
+```
+
+Therefore current per-app duration semantics are:
+
+```text
+scene_valid_app_samples_3s
+```
+
+The same package may legitimately appear multiple times within one session under different Scene modes. **Do not merge those rows merely because their app label/package matches.**
+
+Future `app_sessions.csv` should retain granular rows with at least:
 
 - `session_id`
 - `package_name` when available
 - `app_label`
+- `mode`
 - `duration_seconds`
-- `avg_power_w`
-- `avg_temp_c` only if genuinely session-specific
+- `duration_semantics = scene_valid_app_samples_3s`
+- `avg_power_w` when available
+- `avg_current_ma` when available
+- `avg_temp_c` when genuinely session-specific
 - `max_temp_c`
 - `source_ref`
 
-Do not reverse-engineer historical per-session app rows from `app_summary.csv`. The old 436 deduped rows were not retained as a granular repository artifact.
+Scene may show power or current depending on display settings; absent metrics remain blank rather than reconstructed.
+
+Do not reverse-engineer historical per-session app rows from `app_summary.csv`. The old 436 deduped rows and their referenced `sync_raw/detail-*` source files were not retained as granular repository artifacts.
 
 ## 8. Context joining
 
@@ -225,6 +249,7 @@ The assistant should handle:
 - deduplication
 - provisional/final reconciliation
 - canonical append
+- granular app-row retention for future genuine detail evidence
 - rolling scene/workload statistics
 
 The user should not be asked to restate old ledger history or re-upload already-ingested screenshots.
