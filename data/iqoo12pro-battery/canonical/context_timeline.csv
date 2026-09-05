@@ -1,0 +1,8 @@
+line_no,raw_timestamp,timestamp_local,scene,ssid,valid
+1,<目前日期時間>,,home_wifi,DaFengLi_5G,false
+2,<目前日期時間>,,out_4g,,false
+3,<目前日期時間>,,home_wifi,DaFengLi_5G,false
+4,<1788583243>,2026-09-05T12:40:43+08:00,out_4g,,true
+5,<1788583282>,2026-09-05T12:41:22+08:00,home_wifi,DaFengLi_5G,true
+6,<1788592476>,2026-09-05T15:14:36+08:00,out_4g,,true
+7,<1788602681>,2026-09-05T18:04:41+08:00,home_wifi,DaFengLi_5G,true
