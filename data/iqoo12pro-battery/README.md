@@ -5,76 +5,74 @@ Long-term natural-usage battery ledger for iQOO 12 Pro / V2329A using Scene (`co
 ## Measurement model
 
 - This is **not** a fixed-workload laboratory benchmark.
-- Scene `理论续航` / theoretical runtime is treated as a **workload-normalized endurance indicator**, not pure screen-on time.
+- Scene `理论续航` / theoretical runtime is a **workload-normalized endurance indicator**, not pure screen-on time.
 - Scene `已使用` is not assumed to equal pure SOT.
 - A discharge session does not need to start at 100% or end at 0%.
-- Scene History is preferred as the session source of truth when a stable history timestamp is available.
-- Network changes are analysis segments/context inside a Scene session, not independent battery sessions.
+- Scene History timestamp is the preferred session identity.
+- Network changes are context/segments inside a Scene session, not independent battery sessions.
+- Live `today HH:MM:SS` rows and intermediate snapshots are provisional; they are never finalized merely because W/runtime values look unique.
 
 ## Primary scene classes
 
 - `home_wifi`: connected through one of the user's home Wi-Fi networks.
 - `out_4g`: cellular-use segment outside the home-Wi-Fi context; malls, restaurants and ordinary outdoor use are intentionally grouped together.
 - `mixed`: a Scene session containing materially significant time in both `home_wifi` and `out_4g`.
-- `unknown`: fallback only when transport/context cannot be determined reliably.
+- `unknown`: fallback when transport/context cannot be determined reliably.
 
-`navigation` is a modifier rather than a third top-level scene class.
+`navigation` is a modifier rather than a top-level scene class.
 
 ## Data layers
 
-- `baseline.csv`: confirmed historical records supplied by the user before automation.
-- `raw/`: immutable automated evidence. Raw network timelines and Scene History captures are preserved even if excluded from statistics.
-- Generated session/segment ledgers must deduplicate / merge raw evidence without deleting it.
+- `baseline.csv`: confirmed historical/context records supplied before automation.
+- raw device evidence: immutable Scene detail captures, invalid diagnostics and MacroDroid network timeline.
+- `generated/`: canonical/session summaries derived without deleting or mutating raw evidence.
 
-## Eligibility rule (provisional v0)
+## Eligibility rule
 
-Scene History records are ingested first, then filtered deterministically:
+Canonical eligibility is based on exact detail `screen_on_duration`, not the rounded History list:
 
-- `< 20 min` Scene `已使用`: retained raw, excluded from the primary endurance ledger.
-- `20–30 min`: provisional / reviewable sample.
-- `>= 30 min`: eligible for the primary ledger.
+- `< 20 min`: retained raw, excluded from primary ledger.
+- `20–30 min`: provisional / reviewable.
+- `>= 30 min`: main ledger.
 
-These thresholds are intentionally reversible because raw data is retained.
+Acquisition may use a lower rounded-History prefilter to avoid losing boundary samples; final classification always uses exact detail time.
 
 ## Duplicate/session rule
 
-Do not deduplicate on average watts alone. Prefer Scene History timestamp/session identity when available. Otherwise consider timestamp/history date, Scene `已使用`, theoretical runtime, battery level, app-duration distribution and monotonic progression. A later snapshot with longer `已使用` and mostly-continuing app counters is normally the same session, not a new record.
+Do not deduplicate on average watts alone. Prefer Scene History timestamp/session identity. Otherwise consider history date/time, exact used time, theoretical runtime and app-duration progression. A later snapshot with longer used time and continuing app counters is normally the same session.
 
-## v0 pilot
+## 2026-09-05 canonical ingestion
 
-The pilot deliberately separates collection from interpretation:
+Stored under `generated/2026-09-05/`.
 
-1. `network_watch_v0.sh` records only transport-state changes at low frequency/overhead.
-2. `history_capture_v0.sh` captures Scene History UI data with automatic scrolling while preserving raw node lines.
-3. GitHub ingestion / generated ledgers will be layered on after the raw format and OEM network reporting are validated on-device.
+- `session_ledger.csv`: **41 finalized Scene History detail sessions**.
+- `app_summary.csv`: accumulated app-duration and duration-weighted app power from the finalized automated set.
+- `network_timeline_normalized.csv`: MacroDroid transitions with invalid placeholder timestamps marked.
+- `live_snapshots.csv`: provisional observations of the ongoing 2026-09-05 outdoor 4G/navigation session; excluded from finalized statistics.
+- `accepted_missing_backlog.csv`: 12 older eligible History rows intentionally left uncaptured after acquisition was stopped.
+- `CORRECTIONS_V2.md`: audit corrections to the first ingestion interpretation.
+- `INGESTION_REPORT.md`: provenance, quality checks, network coverage limits and descriptive statistics.
 
-This avoids losing evidence while the first real-world bugs are still being discovered.
+Important quality notes:
 
-## 2026-09-05 ingestion snapshot
-
-The first canonical ingestion is stored under `generated/2026-09-05/`.
-
-- `session_ledger.csv`: 41 valid automated Scene History detail captures plus one unmatched baseline-only 2026-09-05 sample.
-- `app_summary.csv`: accumulated app-duration and duration-weighted app power summary from the automated detail set.
-- `network_timeline_normalized.csv`: MacroDroid network transitions with invalid placeholder timestamps explicitly marked.
-- `INGESTION_REPORT.md`: provenance, quality checks, scene/network coverage limits, and descriptive statistics.
-
-Important quality notes for this snapshot:
-
-- `sync_manifest.csv` is append-only and latest state is authoritative; old all-`Scene` / unresolved captures are excluded if a later healthy capture exists.
-- All 41 automated canonical detail sessions have exact `screen_on_duration >= 30 min`.
-- `2026-07-23 20:53` has only 56.9% app-duration coverage, so its session-level power/runtime remain usable but its app breakdown is flagged partial.
-- MacroDroid's first valid transition is 2026-09-05 12:40:43 +08:00, later than all finalized automated History sessions in this archive; no transport class is inferred from missing timeline coverage.
-- The user intentionally stopped the old backlog at `2026-07-18 12:36`. Twelve older `>=30 min` History rows remain intentionally uncollected: `2026-07-18 03:33`, `2026-07-17 07:51`, `2026-07-16 10:49`, `2026-07-15 12:16`, four rows on `2026-07-14`, three rows on `2026-07-13`, and `2026-07-11 22:28`.
-- Most historical v1.4 detail raws do not expose battery header fields because the detail page was not normalized to the top before capture. Session power / exact used time / theoretical runtime and app rows are still valid, but battery remaining / temperature / voltage are sparse in this snapshot.
+- `sync_manifest.csv` is append-only and latest state is authoritative; old all-`Scene` / unresolved captures are excluded when a later healthy capture exists.
+- All 41 finalized captured sessions have exact `screen_on_duration >= 30 min`.
+- `2026-07-23 20:53` has only 56.9% app-duration coverage; session power/runtime remain usable but app breakdown is partial.
+- MacroDroid's first valid transition is 2026-09-05 12:40:43 +08:00, later than all 41 finalized History sessions in the archive; historical transport is not inferred from missing timeline coverage.
+- Scene `ActivityPowerUtilization` battery capacity/status/voltage/temperature fields are **current-page `GlobalStatus` values**, not historical-session attributes. Do not attach them to an older History timestamp merely because they appear in a detail-page UI dump.
 
 ## Ongoing incremental workflow
 
-Do not run the deep backlog drainer for routine use. The ongoing design is deliberately split:
+Do **not** use the deep backlog drainer for routine operation.
 
 1. MacroDroid continuously appends `home_wifi` / `out_4g` transitions to `/sdcard/SceneBattery/network_timeline_md.csv`.
-2. Once per day or every 1-2 days, run `capture_recent_v2.sh` from Shizuku Runner with Scene in the foreground. It scans only the recent History window, captures a small number of new finalized sessions, skips existing healthy manifest entries, and does not descend into the intentionally-abandoned July backlog.
-3. `capture_recent_v2.sh` first normalizes each detail page to the top so Scene battery header fields can be captured when exposed, then reuses the v1.4 attribution-health gate for app labels.
-4. Periodically export `sync_manifest.csv`, `sync_raw/`, `sync_raw_invalid/`, and `network_timeline_md.csv` as a tar archive for canonical ingestion / GitHub update.
+2. Once per day or every 1–2 days, use `capture_recent_v3.sh` from Shizuku Runner with Scene in the foreground. It scans only the recent window and captures at most two new sessions per run.
+3. `capture_recent_v3.sh` deliberately does not normalize to the top just to capture battery header values, because those fields are current state rather than historical-session state.
+4. It uses a 15-minute rounded-History acquisition prefilter so potential 20–30 minute samples are not lost; canonical ingestion later applies the exact `<20 / 20–30 / >=30` rule.
+5. Periodically export `sync_manifest.csv`, `sync_raw/`, `sync_raw_invalid/`, and `network_timeline_md.csv` for canonical ingestion/GitHub update.
 
-Current limitations: Scene UI/backend can still become unhealthy under repeated UIAutomator interaction. Routine incremental runs are intentionally shallow to minimize this. A label/backend failure should not be treated as a valid capture; reopen Scene and retry later.
+Current limitation: Scene UI/backend can become unhealthy under repeated UIAutomator interaction. Incremental runs are intentionally shallow. A label/backend failure must not be accepted as valid; reopen Scene and retry later.
+
+## Full-auto research path
+
+Scene source uses a private SQLite history database (`battery-history3` in the referenced source tree). If the installed Scene build is debuggable and `run-as com.omarea.vtools` can access its private files, future capture can bypass UIAutomator and export/query the database directly. This must be verified on the actual installed APK before treating DB export as available.
