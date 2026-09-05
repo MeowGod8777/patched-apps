@@ -8,12 +8,14 @@ This note records static reverse-engineering results from the APK copied directl
 
 - source: current installed Scene APK copied from the device
 - package: `com.omarea.vtools`
+- versionName: `9.3.8`
 - local analysis filename: `Scene_current.apk`
-- size: about 7.0 MiB
-- SHA-256: `0ed83e956f9e6050cc3459a46ea80dfa7083bedb4f195051644fe19e28423d80`
-- DEX layout: single `classes.dex`
+- size: `7,292,507` bytes
+- APK SHA-256: `0ed83e956f9e6050cc3459a46ea80dfa7083bedb4f195051644fe19e28423d80`
+- `classes.dex` SHA-256: `b2e36578ad3f0f2d54e0eedc236798d0b504bbea274e183f60e8afad8b96830f`
+- main app DEX layout: single `classes.dex` (`res/raw/rish_shizuku.dex` is a separate embedded helper payload)
 
-The exact app version string was not asserted because the available analysis environment did not decode the binary Android manifest reliably. The SHA-256 is the authoritative artifact identity for this note.
+The APK SHA-256 is the authoritative artifact identity for this note.
 
 ## Current storage model
 
@@ -65,7 +67,17 @@ left join (
 on a.s = b.s
 ```
 
-Recovered cursor mapping:
+The model fields recovered from `PowerStatSession` are:
+
+```text
+avgPower : double
+beginTime: long
+endTime  : long
+session  : int
+used     : int
+```
+
+Recovered cursor-to-model mapping:
 
 - column 0 `session` -> `PowerStatSession.session`
 - column 1 `min(time)` -> `PowerStatSession.beginTime`
@@ -82,7 +94,7 @@ endTime   = max(records.time)
 
 ## History timestamp semantics
 
-The History selector formats `PowerStatSession.beginTime` with:
+The History-selector adapter formats `PowerStatSession.beginTime` with:
 
 ```text
 yyyy-MM-dd HH:mm
@@ -98,13 +110,15 @@ It is not the session end timestamp.
 
 The current APK uses a 3000 ms sampling interval for the History/session duration calculation.
 
-The first History duration is:
+The first History duration is implemented as:
 
 ```text
 used * 3000 ms
 ```
 
-where `used` is the count of rows satisfying:
+The adapter bytecode loads `PowerStatSession.used`, converts it to `long`, multiplies it by the literal `3000`, converts to `double`, and divides by `60000.0` before passing the result to the duration formatter.
+
+`used` itself comes from the SQL count of rows satisfying:
 
 ```sql
 screen_on = 1
@@ -117,11 +131,13 @@ Therefore the first History duration is:
 
 This is Scene's own sampled screen-on metric. It should not be renamed Android framework SOT without separate evidence.
 
-The second History duration is:
+The second History duration is implemented from:
 
 ```text
 endTime - beginTime
 ```
+
+The adapter loads `PowerStatSession.endTime`, subtracts `PowerStatSession.beginTime`, converts the result to minutes, and passes it to the same duration formatter.
 
 Therefore a History row such as:
 
@@ -152,7 +168,15 @@ screen_on = 1
 AND status IN (DISCHARGING, NOT_CHARGING)
 ```
 
-A separate single-session query follows the same screen-on/status restriction.
+A separate single-session query follows the same screen-on/status restriction:
+
+```sql
+select avg(current * voltage) AS power
+from records
+where session = ?
+  and status in (?, ?)
+  and screen_on = 1
+```
 
 Therefore Scene's session average power is a **screen-on workload-normalized device-power average**, not a wall-session average that includes the entire screen-off standby interval.
 
@@ -160,29 +184,53 @@ This is why Scene theoretical runtime is useful as a workload-normalized indicat
 
 ## Theoretical-runtime calculation
 
-Static RE recovered the core relationship:
+Static RE of the current History/detail adapter recovers the following sequence:
 
 ```text
-theoretical runtime ~= batteryEnergy / abs(avgPower) * 0.9
+batteryEnergy / abs(avgPower) * 60 * 0.9
 ```
 
-The current APK derives battery energy from battery capacity and a nominal voltage of approximately `3.785097 V`, with a doubled-energy branch for a detected higher-voltage / dual-cell-series condition.
-
-Conceptually:
+The result is passed to a formatter that expects minutes. Equivalently, in hours:
 
 ```text
-batteryEnergy_mWh ~= capacity_mAh * 3.785097
+theoretical_runtime_hours ~= batteryEnergy / abs(avgPower) * 0.9
 ```
 
-or, for the detected doubled-energy case:
+### Battery-energy helper
+
+The current APK's battery-energy helper uses a nominal voltage literal of **`3.86 V`**.
+
+Its effective logic is:
 
 ```text
-batteryEnergy_mWh ~= capacity_mAh * 3.785097 * 2
+energy = batteryCapacity * 3.86
 ```
 
-Since `current(mA) * voltage(V)` is `mW`, `mWh / mW` yields hours. The implementation then applies the `0.9` correction factor.
+with a doubled-energy branch when both of the following are true:
 
-Treat this as implementation semantics tied to this APK hash, not as a generic formula for all Scene versions.
+```text
+batteryCapacity <= 2510
+reported/detected battery voltage > 5.0 V
+```
+
+In that branch:
+
+```text
+energy = batteryCapacity * 3.86 * 2
+```
+
+The capacity helper is populated through Scene's battery-capacity path; the APK also contains reflective use of:
+
+```text
+com.android.internal.os.PowerProfile
+getBatteryCapacity
+```
+
+For dimensional interpretation, the implementation is consistent with treating capacity as mAh and the nominal voltage factor as V, yielding mWh, while `current(mA) * voltage(V)` yields mW. Thus `mWh / mW` yields hours before the `0.9` correction.
+
+Important correction: an earlier oral/static-RE note incorrectly stated approximately `3.785097 V`. Re-disassembly of the actual `ha0.l()` bytecode shows the literal double is **exactly `3.86`** for this APK. `3.86 V` is the authoritative value for APK SHA-256 `0ed83e956f9e6050cc3459a46ea80dfa7083bedb4f195051644fe19e28423d80`.
+
+Treat this formula as implementation semantics tied to this APK hash/version, not as a generic formula for all Scene versions.
 
 ## Session boundary implications
 
@@ -216,7 +264,7 @@ No additional private-DB validation is required for these implementation definit
 
 ## Canonical consequences
 
-For this APK lineage:
+For Scene `9.3.8` / this APK hash:
 
 - `history_time_semantics = start`
 - `history_session_at = beginTime`
@@ -224,6 +272,7 @@ For this APK lineage:
 - `wall_duration = endTime - beginTime`
 - `avg_power = average current × voltage over valid screen-on discharge/not-charging samples`
 - theoretical runtime is workload-normalized and includes the implementation's `0.9` correction
+- current theoretical-runtime energy helper uses nominal `3.86 V`, with the conditional doubled-energy branch described above
 - do not confuse History second duration with theoretical runtime
 - do not attach current-page battery header state to old History sessions
 
