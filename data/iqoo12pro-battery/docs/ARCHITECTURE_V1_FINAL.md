@@ -1,71 +1,170 @@
 # iQOO 12 Pro battery ledger — architecture v1 FINAL
 
-Status: **design frozen for the next implementation phase**
+Status: **production route and Scene semantics resolved on 2026-09-05**
 
-This document defines the product goal, data model, source hierarchy, collection policy, and next-step priorities. It supersedes the earlier UIAutomator-first / screenshot-first drafts as the architectural source of truth.
+This document defines the product goal, data model, source hierarchy, collection policy, and implementation priorities for the iQOO 12 Pro natural-use battery ledger. It supersedes earlier UIAutomator-first / screenshot-first drafts where they conflict.
+
+Current Scene implementation semantics are grounded in static RE of the APK copied directly from the user's installed `com.omarea.vtools` on 2026-09-05. See `SCENE_CURRENT_APK_RE_2026-09-05.md`.
 
 ## 1. Product goal
 
 Build a **low-interference, long-term natural-usage battery ledger** for the user's iQOO 12 Pro / V2329A.
 
-The ledger must eventually support questions such as:
+The ledger should support:
 
-- What is the phone's normal natural-use endurance distribution now?
-- How do home Wi-Fi, cellular/out-of-home use, mixed use, and navigation differ?
-- Which app/workload patterns explain high or low power sessions?
-- Is endurance changing over time as the battery ages?
-- Did an OriginOS build, resolution/refresh change, scheduling/root modification, or other device-state change materially affect endurance?
+- normal natural-use endurance distribution over time
+- home Wi-Fi / mobile / mixed / other-Wi-Fi comparisons when context evidence exists
+- navigation vs non-navigation comparisons
+- app/workload explanations for high- and low-power sessions
+- battery-aging trends
+- OriginOS / resolution / refresh / root / scheduler / other device-state comparisons
 
-This is **not** a fixed-workload laboratory benchmark. A session does not need to be 100% -> 0%.
+This is **not** a fixed-workload laboratory benchmark. Sessions do not need to be 100% -> 0%.
 
 ## 2. Non-goals
 
-- Do not optimize for collecting the maximum number of Scene rows.
-- Do not require daily Runner commands or brittle UI automation.
-- Do not treat Scene theoretical runtime as pure SOT.
-- Do not infer context or historical battery header values when evidence is missing.
-- Do not let automation cost exceed the manual action it is replacing.
+- do not maximize row count at the cost of user effort or selection bias
+- do not require daily Runner commands
+- do not develop another routine UIAutomator capture version
+- do not use OCR for Scene UI
+- do not treat Scene theoretical runtime as pure SOT or whole-session wall endurance
+- do not infer environmental context when evidence is missing
+- do not attach current-page battery header values to old History sessions
+- do not bypass Android private-data permissions to obtain Scene's database
 
-## 3. Measurement semantics
+## 3. Current Scene implementation semantics
 
-Scene remains the primary power/workload source.
+Authoritative current-artifact identity:
 
-Canonical session metrics:
+```text
+package: com.omarea.vtools
+SHA-256: 0ed83e956f9e6050cc3459a46ea80dfa7083bedb4f195051644fe19e28423d80
+```
 
-- Scene History timestamp / stable session identity
-- average power
-- exact detail `screen_on_duration`
-- theoretical runtime
-- History wall-duration / elapsed-span value when available
-- per-session app attribution
+### 3.1 Current private storage model
 
-Rules:
+Current APK uses private SQLite database `power8`, table `records`:
 
-- `<20 min` exact `screen_on_duration`: retain evidence, exclude from primary ledger
-- `20–30 min`: provisional
-- `>=30 min`: main ledger
-- do not deduplicate on average watts alone
-- repeated current/live screenshots are provisional observations of one session until reconciled with a stable History identity
+```sql
+create table records(
+    time text primary key,
+    session int,
+    temperature REAL default(-1),
+    status int default(-1),
+    mode text,
+    current int default(-1),
+    voltage int,
+    package text,
+    screen_on INTEGER,
+    capacity INTEGER
+)
+```
 
-Important correction: Scene `ActivityPowerUtilization` battery capacity/status/voltage/temperature header values are **current-page GlobalStatus**, not historical-session metadata. They must not be attached to an old History row.
+The previously referenced `battery-history3` / `battery_io` / 6-second implementation belongs to an older public-source lineage and is **legacy implementation evidence only**.
+
+### 3.2 Scene History identity and interval
+
+Current APK groups History by `records.session` and maps:
+
+```text
+beginTime = min(records.time)
+endTime   = max(records.time)
+```
+
+The History selector formats **`beginTime`** as `yyyy-MM-dd HH:mm`.
+
+Therefore:
+
+- Scene History timestamp semantics = **session start**
+- `history_session_at` = `beginTime`
+- session wall duration = `endTime - beginTime` when the second History duration is captured
+
+The previous rule forbidding interval derivation because timestamp semantics were unknown is retired.
+
+When only rounded History UI evidence exists, `history_session_at + wall_duration` may be used as an approximate end time, with precision explicitly marked as UI-rounded. Do not invent wall duration for older captures that did not preserve it.
+
+### 3.3 Scene History two durations
+
+Current sampling interval for this History implementation is **3 seconds**.
+
+History first duration:
+
+```text
+used × 3 s
+```
+
+where `used` counts records satisfying:
+
+```sql
+screen_on = 1
+AND status IN (DISCHARGING, NOT_CHARGING)
+```
+
+Canonical meaning:
+
+> **Scene-valid screen-on sampled duration**
+
+It is Scene's own screen-on statistic, not automatically Android framework SOT.
+
+History second duration:
+
+```text
+endTime - beginTime
+```
+
+Canonical meaning:
+
+> **whole-session wall-clock span**
+
+Therefore `1.4h / 2.5h` means approximately screen-on sampled duration / whole-session wall duration. The second value is **not theoretical runtime**.
+
+### 3.4 Average power
+
+Scene session average power is calculated from valid screen-on discharge/not-charging samples using:
+
+```sql
+avg(current * voltage)
+```
+
+Therefore `avg_power_w` is a **screen-on workload-normalized device-power metric**, not the entire session's wall-clock average including screen-off standby.
+
+### 3.5 Theoretical runtime
+
+Current APK implements the core relationship approximately as:
+
+```text
+theoretical_runtime ~= batteryEnergy / abs(avgPower) × 0.9
+```
+
+Battery energy is derived from battery capacity and a nominal voltage around `3.785097 V`, with a doubled-energy branch for a detected higher-voltage / dual-cell-series case.
+
+This metric is workload-normalized. It must not be relabeled pure SOT or whole-session endurance.
+
+### 3.6 Historical current-page header values remain invalid
+
+Scene `ActivityPowerUtilization` capacity/status/voltage/temperature header values describe **current page/global device state**, not the selected old History session. They must not be copied onto historical sessions.
 
 ## 4. Source hierarchy
 
 ### 4.1 Scene — battery/workload source
 
-Preferred order:
+For the current installed package/build:
 
-1. **Direct Scene private-history database export/query**, if the installed build can be accessed lawfully from shell (`run-as`/debuggable or another verified read-only route).
-2. Scene History/detail screenshots as the production fallback.
-3. UIAutomator capture scripts only for exceptional forensic/backlog recovery.
+1. **Production source: Scene History/detail screenshots**
+2. Current installed APK static RE for field semantics
+3. UIAutomator only for exceptional historical forensic recovery, never routine collection
 
-Known source-tree fact: the referenced Scene source stores samples in private SQLite database `battery-history3` with fields including time, temperature, status, mode, io, package, screen_on, and capacity.
+A lawful read-only `run-as com.omarea.vtools` probe returned:
 
-Direct DB access is not assumed available until verified on the installed APK.
+```text
+STOP: run-as unavailable
+```
+
+Therefore direct private-DB access is **closed as a production route** for this current build. Do not retry private-data access variants or permission-bypass approaches.
 
 ### 4.2 MacroDroid — environmental context source
 
-MacroDroid does not capture Scene metrics. Its role is to continuously record low-cost context events.
+MacroDroid does not capture Scene metrics. It records low-cost environmental events.
 
 Target network states:
 
@@ -76,26 +175,24 @@ Target network states:
 
 Target additional events:
 
-- context coverage / heartbeat
+- coverage / heartbeat
 - navigation `on/off` after a reliable signal is designed and validated
 
-The existing two-state `home_wifi` / `out_4g` macros are useful pilot evidence but are **not the final context model**, because leaving home Wi-Fi is not equivalent to being on mobile data.
+The existing pilot `home_wifi` / `out_4g` logic is not final because `not home Wi-Fi != confirmed mobile`.
 
-### 4.3 Device-state timeline — configuration source
+### 4.3 Device-state timeline
 
-Long-term comparisons require a sparse event log of device/configuration changes.
-
-Examples:
+Maintain a sparse append-only timeline for changes such as:
 
 - OriginOS exact build
 - resolution
 - refresh rate
-- battery health / cycle snapshot
+- battery health / cycles snapshot
 - root state
 - scheduler / governor / performance profile
-- major power-related system setting change
+- major power-related system-setting changes
 
-Only changes need new rows. Sessions inherit the effective device state for their date/time during analysis.
+Only changes need new rows.
 
 ## 5. Canonical data model
 
@@ -112,70 +209,74 @@ data/iqoo12pro-battery/
 ├─ generated/YYYY-MM-DD/
 │  └─ immutable ingestion snapshots / reports / provisional observations
 ├─ docs/
-│  └─ architecture / schema / handoff documentation
+│  └─ architecture / RE / schema / handoff documentation
 └─ legacy/
-   └─ old UIAutomator / backlog tooling when migration is performed
+   └─ old UIAutomator / backlog tooling if/when migrated
 ```
 
 ### 5.1 `sessions.csv`
 
 One finalized Scene History session per row.
 
-Required/target fields:
+Target fields:
 
 - `session_id`
 - `history_session_at`
-- `history_time_semantics` (`unknown` until verified, then e.g. start/end)
-- `wall_duration_seconds` (nullable)
-- `interval_start` (nullable until semantics verified)
-- `interval_end` (nullable until semantics verified)
+- `history_time_semantics` = `start`
+- `history_timezone`
+- `wall_duration_seconds` (nullable if old evidence did not preserve it)
+- `interval_start`
+- `interval_end` (nullable if wall duration is unavailable)
+- `interval_precision`
 - `avg_power_w`
 - `screen_on_duration_seconds`
+- `screen_on_semantics` = `scene_valid_screen_on_samples_3s`
 - `theoretical_runtime_seconds`
 - `eligibility`
+- `scene`
+- `network`
+- `navigation`
 - `app_attribution_quality`
 - `context_quality`
 - `source_type`
 - `source_ref`
 - `notes`
 
-Do not derive a wall-clock interval from History timestamp + duration until the timestamp and second History duration semantics are verified.
+Historical migration must be lossless: if an old capture did not retain History wall duration, leave `wall_duration_seconds` / `interval_end` blank. Never substitute theoretical runtime.
 
 ### 5.2 `app_sessions.csv`
 
-Per-session app evidence. This is canonical; aggregate app summaries are derived.
+Per-session app evidence. Aggregate app summaries are derived outputs.
 
 Target fields:
 
 - `session_id`
-- `package_name` (when available)
+- `package_name` when available
 - `app_label`
 - `duration_seconds`
 - `avg_power_w`
-- `avg_temp_c` (only if Scene's app row genuinely represents that session)
+- `avg_temp_c` only when the Scene row genuinely represents that session
 - `max_temp_c`
 - `source_ref`
 
+Do not reconstruct per-session rows from an aggregate `app_summary.csv` if the original granular rows were not retained.
+
 ### 5.3 `context_events.csv`
 
-Append-only environmental event stream.
-
-Target fields:
+Append-only environmental event stream:
 
 - `event_at`
-- `event_type` (`network_state`, `navigation_state`, `coverage_heartbeat`, etc.)
+- `event_type`
 - `state`
 - `source`
 - `detail`
 - `valid`
 
-Session scene classification is derived from overlap with this timeline; it is not manually guessed.
+Session scene classification is derived from overlap with a verified session interval; it is not inferred from watts or app names.
 
 ### 5.4 `device_state_events.csv`
 
-Sparse configuration-change event stream.
-
-Target fields:
+Sparse configuration-change event stream:
 
 - `effective_at`
 - `key`
@@ -183,55 +284,61 @@ Target fields:
 - `source`
 - `notes`
 
-## 6. Derived outputs
+## 6. Eligibility and deduplication
 
-The following are derived and must not replace canonical granular evidence:
+Exact detail `screen_on_duration` remains the eligibility criterion:
 
-- app aggregate summary
-- home-Wi-Fi vs mobile statistics
-- navigation vs non-navigation statistics
-- build/config comparison summaries
-- long-term rolling power/endurance trend
-- dashboard/XLSX outputs
+- `<20 min`: evidence only / excluded
+- `20–30 min`: provisional
+- `>=30 min`: main ledger
 
-## 7. Session-context classification
+Deduplication must use multiple signals, not average watts alone:
 
-Final classification depends on a verified session wall-clock interval.
+- History start timestamp
+- average power
+- screen-on duration
+- wall duration when captured
+- theoretical runtime
+- date / curve evidence
+- app distribution
 
-Desired scene labels:
+Repeated live/current screenshots are provisional observations of one ongoing session until reconciled with finalized History.
 
-- `home_wifi`
-- `out_mobile`
-- `mixed`
-- `other_wifi`
-- `unknown`
+## 7. Production screenshot workflow
 
-`navigation` remains an independent modifier.
+The production route for the current build is deliberately low-interference.
 
-If context timeline coverage is incomplete, classify as `unknown` or partial coverage. Never infer a scene simply from average watts or app names.
+### Periodic History capture
 
-## 8. Production collection policy
+Take recent History-list screenshots periodically rather than only when a session looks interesting. The list can supply:
 
-The production workflow is not finalized until the direct-DB feasibility test is complete.
+- stable session start timestamp
+- rounded Scene-valid screen-on duration
+- rounded wall duration
+- other visible History summary values
 
-Decision tree:
+This reduces selection bias and avoids repeated automation.
 
-### Route A — direct DB access succeeds
+### Detail capture
 
-Use a small read-only export/query path to capture new finalized Scene data with minimal user interaction. Pair it with MacroDroid context events and sparse device-state events. This becomes the preferred production route.
+For a new finalized eligible session, open its detail when needed to capture:
 
-### Route B — direct DB access fails
+- exact Scene `screen_on_duration`
+- average power
+- theoretical runtime
+- per-app attribution
 
-Use a deliberately low-effort screenshot workflow:
+Current/live detail screenshots remain provisional until matched to a finalized History identity.
 
-- periodic recent History screenshot(s), not cherry-picked only when power looks interesting
-- detail screenshot only when needed for exact metrics/app attribution
-- MacroDroid context file uploaded periodically
-- no routine UIAutomator/Runner retries
+### Forbidden routine workflow
 
-This avoids selection bias and keeps user effort lower than the failed automation path.
+- no UIAutomator capture loop
+- no OCR
+- no force-stop / CLEAR_TASK state machine
+- no background Runner process
+- no repeated private-DB access probes
 
-## 9. Existing evidence status (2026-09-05)
+## 8. Existing evidence status (2026-09-05)
 
 Accepted historical foundation:
 
@@ -239,31 +346,34 @@ Accepted historical foundation:
 - all 41 have exact `screen_on_duration >=30 min`
 - 12 older eligible History rows intentionally left uncaptured
 - one known partial app-attribution session: `2026-07-23 20:53` (56.9% duration coverage)
-- one provisional 2026-09-05 live session group, not a finalized canonical session
+- one provisional 2026-09-05 live session group, not finalized canonical data
 - first valid MacroDroid context transition: `2026-09-05T12:40:43+08:00`
 
-The 41-session set is useful as a cross-scene historical baseline, but most rows lack reliable network context and must not be presented as home-Wi-Fi/mobile comparisons.
+The 41-session set is useful as a cross-scene historical baseline, but most rows lack reliable network context and must not be presented as Wi-Fi/mobile comparisons.
 
-## 10. Legacy tooling policy
+Older captures did not preserve the History-list wall-duration field in the current canonical ledger. Do not backfill it from theoretical runtime or assumptions.
 
-All `capture_*`, `full_sync_*`, probe and backlog scripts created for the old recovery effort are **legacy forensic tooling**.
+## 9. Legacy tooling and source policy
 
-- Do not use them for routine logging.
-- Do not delete them until migration/audit is complete.
-- Future repository cleanup may move them under `legacy/` without changing their historical meaning.
+All `capture_*`, `full_sync_*`, probe and backlog scripts from the old recovery effort are **legacy forensic tooling**.
 
-## 11. Next implementation order
+- do not use them for routine logging
+- do not delete them merely because a later architecture supersedes them
+- move under `legacy/` only when an audit-safe migration is performed
 
-The next conversation should proceed in this order and should not skip ahead:
+The old public `battery-history3` / 6-second source remains lineage/reference material only. For current Scene semantics, the current installed APK RE note is authoritative.
 
-1. verify exact installed Scene package/build properties relevant to direct DB access;
-2. test read-only `run-as com.omarea.vtools` / debuggable feasibility;
-3. if accessible, locate/inspect `battery-history3` and verify schema/semantics without modifying it;
-4. verify Scene History timestamp semantics and the second History duration value;
-5. migrate current canonical data into final `sessions.csv` + `app_sessions.csv` schema;
-6. redesign MacroDroid context events into `home_wifi/mobile/other_wifi/unknown` + coverage signal;
-7. add initial `device_state_events.csv` baseline;
-8. only then consider navigation automation;
-9. if DB access fails, finalize the low-effort screenshot fallback.
+## 10. Current implementation order
 
-No new UIAutomator capture version should be developed unless a specific historical-recovery need justifies it.
+The previous DB-semantics blocker is resolved. Proceed in this order:
+
+1. preserve the current installed APK RE findings in GitHub — **done**
+2. migrate session-level canonical data into the resolved `sessions.csv` schema without inventing missing wall-duration values
+3. preserve `session_ledger.csv` as the historical intermediate source rather than rewriting its 41 rows in place
+4. create `app_sessions.csv` only from genuine retained per-session app evidence; do not reverse aggregate `app_summary.csv`
+5. finalize the low-effort History/detail screenshot ingestion workflow
+6. redesign MacroDroid context events into `home_wifi/mobile/other_wifi/unknown` plus coverage signal
+7. add initial `device_state_events.csv` baseline
+8. only then consider navigation automation
+
+No additional `run-as`/private-DB validation step is required for the current APK semantics.
