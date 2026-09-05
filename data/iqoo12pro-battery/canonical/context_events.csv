@@ -3,3 +3,7 @@ event_at,event_type,state,ssid,source,detail,valid
 2026-09-05T12:41:22+08:00,legacy_transition,home_wifi,DaFengLi_5G,macrodroid_pilot,"raw_state=home_wifi",true
 2026-09-05T15:14:36+08:00,legacy_transition,unknown,,macrodroid_pilot,"raw_state=out_4g; not-home-WiFi does not prove mobile",true
 2026-09-05T18:04:41+08:00,legacy_transition,home_wifi,DaFengLi_5G,macrodroid_pilot,"raw_state=home_wifi",true
+2026-09-05T22:52:49.910+08:00,test_observation,home_wifi,"An's 3F TP LINK 256B 5G",macrodroid_v2_test,"raw_state=other_wifi; early v2 candidate had incomplete home SSID set; normalized from explicitly confirmed home SSID; duplicate test rows suppressed",true
+2026-09-05T23:00:38.903+08:00,heartbeat,home_wifi,"An's 3F TP LINK 256B 5G",macrodroid_v2_test,"heartbeat observed during acceptance testing",true
+2026-09-05T23:10:59.071+08:00,transition,offline,,macrodroid_v2_5,"explicit Wi-Fi-off plus no usable data state; v2.5 offline semantics accepted",true
+2026-09-05T23:12:34.841+08:00,transition,home_wifi,"An's 3F TP LINK 256B 5G",macrodroid_v2_5,"offline-to-home-WiFi return accepted; persistent transition dedupe already verified separately",true
