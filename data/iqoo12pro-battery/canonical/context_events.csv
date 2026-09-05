@@ -1,0 +1,5 @@
+event_at,event_type,state,ssid,source,detail,valid
+2026-09-05T12:40:43+08:00,legacy_transition,unknown,,macrodroid_pilot,"raw_state=out_4g; not-home-WiFi does not prove mobile",true
+2026-09-05T12:41:22+08:00,legacy_transition,home_wifi,DaFengLi_5G,macrodroid_pilot,"raw_state=home_wifi",true
+2026-09-05T15:14:36+08:00,legacy_transition,unknown,,macrodroid_pilot,"raw_state=out_4g; not-home-WiFi does not prove mobile",true
+2026-09-05T18:04:41+08:00,legacy_transition,home_wifi,DaFengLi_5G,macrodroid_pilot,"raw_state=home_wifi",true
