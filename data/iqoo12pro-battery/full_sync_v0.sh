@@ -1,10 +1,12 @@
 #!/system/bin/sh
-# iQOO 12 Pro Scene battery ledger full local sync v0.2-resilient
+# iQOO 12 Pro Scene battery ledger full local sync v0.3-resilient
 # - Retries transient UIAutomator/History failures.
 # - If Scene leaves foreground or is killed, waits for the user to reopen
 #   Scene -> 耗电统计 instead of forcing a whole-script restart.
 # - Avoids blind BACK presses which could leave Scene.
 # - Detail captures are committed only when complete; interrupted captures remain retryable.
+# - Rejects the live "today" row by requiring finalized History titles to contain
+#   a full YYYY-MM-DD HH:MM timestamp.
 # GitHub upload is intentionally NOT included yet.
 
 BASE=/sdcard/SceneBattery
@@ -84,7 +86,6 @@ open_history() {
     KIND="$(screen_kind)"
     [ "$KIND" = history ] && return 0
 
-    # Battery/detail page: history action is at the same toolbar position on this device.
     input tap 1125 255 >/dev/null 2>&1
     P=0
     while [ "$P" -lt 6 ]; do
@@ -131,7 +132,7 @@ parse_history_candidates() {
   awk '
     function textval(line,  x){ x=line; sub(/^.*text="/,"",x); sub(/" resource-id=.*$/,"",x); return x }
     /id\/ItemTitle"/ { title=textval($0); next }
-    /id\/NewTag"/   { title="today"; next }
+    /id\/NewTag"/   { live_row=1; next }
     /id\/ItemStart"/ {
       v=textval($0); split(v,a,"W"); avg=a[1]; gsub(/^ +| +$/,"",avg);
       pct=v; sub(/^.*W +/,"",pct); sub(/%\/h.*$/,"",pct); gsub(/^-/,"",pct); next
@@ -142,8 +143,11 @@ parse_history_candidates() {
     }
     /id\/ItemEnd"/ {
       v=textval($0); p=v; sub(/^.*: /,"",p); sub(/h$/,"",p);
-      if (title != "" && title != "today") print title "\t" used "\t" elapsed "\t" avg "\t" pct "\t" p;
-      title=""; used=""; elapsed=""; avg=""; pct=""; p=""; next
+      # Only finalized History rows have a full calendar timestamp. This also
+      # rejects the live today row whose ItemTitle is only HH:MM:SS.
+      if (!live_row && title ~ /^[0-9][0-9][0-9][0-9]-[0-9][0-9]-[0-9][0-9] [0-9][0-9]:[0-9][0-9]$/)
+        print title "\t" used "\t" elapsed "\t" avg "\t" pct "\t" p;
+      title=""; used=""; elapsed=""; avg=""; pct=""; p=""; live_row=0; next
     }
   ' "$SRC" | awk -F '\t' '!seen[$1]++' > "$OUT"
 }
@@ -166,11 +170,11 @@ find_row_on_screen() {
 
 locate_history_row() {
   TARGET="$1"
+  echo "Locating: $TARGET"
   TRY=1
   while [ "$TRY" -le 2 ]; do
     open_history || return 1
 
-    # Return History list to the top without leaving Scene.
     I=0
     while [ "$I" -lt 6 ]; do
       input swipe 720 700 720 2850 400 >/dev/null 2>&1
@@ -182,13 +186,14 @@ locate_history_row() {
     while [ "$P" -lt "$MAX_HISTORY_PAGES" ]; do
       find_row_on_screen "$TARGET"
       RC=$?
-      [ "$RC" -eq 0 ] && return 0
+      [ "$RC" -eq 0 ] && { echo "Located: $TARGET on history page $P"; return 0; }
       [ "$RC" -eq 2 ] && break
+      P=$((P+1))
+      echo "  scan page $P/$MAX_HISTORY_PAGES"
       input swipe 720 2750 720 800 650 >/dev/null 2>&1
       sleep 1
-      P=$((P+1))
     done
-    echo "WARN: locate interrupted for $TARGET; recovery try $TRY..."
+    echo "WARN: locate interrupted/not found for $TARGET; recovery try $TRY..."
     TRY=$((TRY+1))
   done
   return 1
