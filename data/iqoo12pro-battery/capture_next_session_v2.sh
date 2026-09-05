@@ -1,7 +1,7 @@
 #!/system/bin/sh
-# iQOO 12 Pro Scene battery ledger - deterministic one-session worker v2.0
-# Every process starts from the exported Scene launcher ActivityMain, discovers the
-# clickable power-stat entry by resource-id, opens History, captures exactly one
+# iQOO 12 Pro Scene battery ledger - deterministic one-session worker v2.1
+# Every process starts from the exported Scene launcher ActivityMain on the Function tab,
+# discovers the clickable power-stat entry by resource-id, opens History, captures exactly one
 # finalized >=30 min session, commits it to the manifest, then exits.
 # No Back-based state recovery and no dependency on the previous worker's UI state.
 
@@ -47,9 +47,9 @@ top_history_ready() {
 }
 
 prepare_history_from_launcher() {
-  # ActivityPowerStat itself is non-exported. Start the exported launcher activity,
-  # then use the verified clickable nav_power_utilization resource-id.
-  am start -W -a android.intent.action.MAIN -c android.intent.category.LAUNCHER -n com.omarea.vtools/.activities.ActivityMain >/dev/null 2>&1 || {
+  # ActivityPowerStat itself is non-exported. Start the exported launcher activity explicitly
+  # on TAB_NAV (select_tab=0), then use the verified clickable nav_power_utilization resource-id.
+  am start -W -a android.intent.action.MAIN -c android.intent.category.LAUNCHER -n com.omarea.vtools/.activities.ActivityMain --ei select_tab 0 >/dev/null 2>&1 || {
     PREP_ERR=activity_main_start_failed
     return 1
   }
@@ -74,13 +74,13 @@ prepare_history_from_launcher() {
   return 0
 }
 
-echo '# iQOO 12 Pro Scene capture-next worker v2.0'
+echo '# iQOO 12 Pro Scene capture-next worker v2.1'
 PREP_ERR=''
 prepare_history_from_launcher || {
   echo "ERROR prepare_history reason=${PREP_ERR:-unknown}"
   exit 10
 }
-echo 'History top verified. mode=launcher_resource_id'
+echo 'History top verified. mode=launcher_function_tab_resource_id'
 
 FOUND=0
 TARGET=''
