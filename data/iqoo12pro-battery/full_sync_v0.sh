@@ -1,12 +1,10 @@
 #!/system/bin/sh
-# iQOO 12 Pro Scene battery ledger full local sync v0.3-resilient
+# iQOO 12 Pro Scene battery ledger full local sync v0.4-resilient
 # - Retries transient UIAutomator/History failures.
-# - If Scene leaves foreground or is killed, waits for the user to reopen
-#   Scene -> 耗电统计 instead of forcing a whole-script restart.
-# - Avoids blind BACK presses which could leave Scene.
-# - Detail captures are committed only when complete; interrupted captures remain retryable.
-# - Rejects the live "today" row by requiring finalized History titles to contain
-#   a full YYYY-MM-DD HH:MM timestamp.
+# - Waits for Scene recovery instead of requiring a whole-script restart.
+# - Always normalizes History to the top before indexing/searching.
+# - Rejects live today rows by post-filtering for full YYYY-MM-DD HH:MM titles.
+# - Detail captures are committed only when complete.
 # GitHub upload is intentionally NOT included yet.
 
 BASE=/sdcard/SceneBattery
@@ -18,7 +16,7 @@ mkdir -p "$OUTDIR" "$TMP"
 MIN_FINAL_MINUTES=${SCENE_BATTERY_MIN_FINAL_MINUTES:-30}
 MAX_HISTORY_PAGES=${SCENE_BATTERY_MAX_HISTORY_PAGES:-12}
 MAX_DETAIL_PAGES=${SCENE_BATTERY_MAX_DETAIL_PAGES:-8}
-MAX_NEW_SESSIONS=${SCENE_BATTERY_MAX_NEW_SESSIONS:-0}   # 0 = unlimited
+MAX_NEW_SESSIONS=${SCENE_BATTERY_MAX_NEW_SESSIONS:-0}
 RECOVERY_WAIT_SECONDS=${SCENE_BATTERY_RECOVERY_WAIT_SECONDS:-60}
 UI_RETRIES=${SCENE_BATTERY_UI_RETRIES:-3}
 TAB="$(printf '\t')"
@@ -26,113 +24,89 @@ TAB="$(printf '\t')"
 now_iso() { date '+%Y-%m-%dT%H:%M:%S%z'; }
 
 dump_ui() {
-  OUT="$1"
-  I=0
+  OUT="$1"; I=0
   while [ "$I" -lt "$UI_RETRIES" ]; do
     rm -f "$OUT"
-    if uiautomator dump "$OUT" >/dev/null 2>&1 && [ -s "$OUT" ]; then
-      return 0
-    fi
-    I=$((I+1))
-    sleep 1
+    if uiautomator dump "$OUT" >/dev/null 2>&1 && [ -s "$OUT" ]; then return 0; fi
+    I=$((I+1)); sleep 1
   done
   return 1
 }
 
 screen_kind() {
   XML="$TMP/state.xml"
-  if ! dump_ui "$XML"; then
-    echo unknown
-    return
-  fi
+  if ! dump_ui "$XML"; then echo unknown; return; fi
   if grep -q 'package="com.omarea.vtools"' "$XML"; then
-    if grep -q 'text="历史记录"' "$XML"; then
-      echo history
-    elif grep -q 'text="耗电统计"' "$XML" || grep -q 'resource-id="com.omarea.vtools:id/avg_power"' "$XML"; then
-      echo battery
-    else
-      echo scene_other
-    fi
-  else
-    echo other_app
-  fi
+    if grep -q 'text="历史记录"' "$XML"; then echo history
+    elif grep -q 'text="耗电统计"' "$XML" || grep -q 'resource-id="com.omarea.vtools:id/avg_power"' "$XML"; then echo battery
+    else echo scene_other; fi
+  else echo other_app; fi
 }
 
 wait_for_scene() {
   KIND="$(screen_kind)"
   case "$KIND" in battery|history) return 0;; esac
-
   echo "WAIT: Scene is not on 耗电统计/历史记录. Reopen Scene -> 耗电统计; waiting up to ${RECOVERY_WAIT_SECONDS}s..."
   ELAPSED=0
   while [ "$ELAPSED" -lt "$RECOVERY_WAIT_SECONDS" ]; do
-    sleep 2
-    ELAPSED=$((ELAPSED+2))
-    KIND="$(screen_kind)"
-    case "$KIND" in
-      battery|history)
-        echo "RECOVERED: Scene detected ($KIND)."
-        return 0
-        ;;
-    esac
+    sleep 2; ELAPSED=$((ELAPSED+2)); KIND="$(screen_kind)"
+    case "$KIND" in battery|history) echo "RECOVERED: Scene detected ($KIND)."; return 0;; esac
   done
-  echo "ERROR: Scene recovery timeout."
-  return 1
+  echo 'ERROR: Scene recovery timeout.'; return 1
 }
 
 open_history() {
   ATTEMPT=1
   while [ "$ATTEMPT" -le 3 ]; do
     wait_for_scene || return 1
-    KIND="$(screen_kind)"
-    [ "$KIND" = history ] && return 0
-
+    KIND="$(screen_kind)"; [ "$KIND" = history ] && return 0
     input tap 1125 255 >/dev/null 2>&1
     P=0
     while [ "$P" -lt 6 ]; do
-      sleep 1
-      KIND="$(screen_kind)"
+      sleep 1; KIND="$(screen_kind)"
       [ "$KIND" = history ] && return 0
       [ "$KIND" = other_app ] && break
       P=$((P+1))
     done
-    echo "WARN: History open attempt $ATTEMPT failed; retrying..."
-    ATTEMPT=$((ATTEMPT+1))
+    echo "WARN: History open attempt $ATTEMPT failed; retrying..."; ATTEMPT=$((ATTEMPT+1))
   done
   return 1
 }
 
+history_to_top() {
+  open_history || return 1
+  I=0
+  while [ "$I" -lt 10 ]; do
+    input swipe 720 650 720 2900 320 >/dev/null 2>&1
+    I=$((I+1))
+  done
+  sleep 1
+  return 0
+}
+
 capture_history_pages() {
-  OUT="$1"
-  : > "$OUT"
-  PREV=''
-  PAGE=0
+  OUT="$1"; : > "$OUT"; PREV=''; PAGE=0
+  history_to_top || return 1
   while [ "$PAGE" -lt "$MAX_HISTORY_PAGES" ]; do
     XML="$TMP/h-$PAGE.xml"; N="$TMP/h-$PAGE.nodes"
     dump_ui "$XML" || return 1
     grep -q 'package="com.omarea.vtools"' "$XML" || return 1
     grep -q 'text="历史记录"' "$XML" || return 1
-
     sed 's/></>\n</g' "$XML" | grep -E 'resource-id="com.omarea.vtools:id/(dialogTitle|NewTag|ItemTitle|ItemStart|ItemCenter|ItemEnd)"' > "$N"
     H="$(sha256sum "$N" 2>/dev/null | awk '{print $1}')"
     [ -n "$PREV" ] && [ "$H" = "$PREV" ] && break
-    printf '\n===== PAGE %02d =====\n' "$PAGE" >> "$OUT"
-    cat "$N" >> "$OUT"
-    PREV="$H"
-    PAGE=$((PAGE+1))
-    [ "$PAGE" -ge "$MAX_HISTORY_PAGES" ] && break
-    input swipe 720 2750 720 800 650 >/dev/null 2>&1
-    sleep 1
+    printf '\n===== PAGE %02d =====\n' "$PAGE" >> "$OUT"; cat "$N" >> "$OUT"
+    PREV="$H"; PAGE=$((PAGE+1)); [ "$PAGE" -ge "$MAX_HISTORY_PAGES" ] && break
+    input swipe 720 2750 720 800 650 >/dev/null 2>&1; sleep 1
   done
-  HISTORY_PAGES="$PAGE"
-  return 0
+  HISTORY_PAGES="$PAGE"; return 0
 }
 
 parse_history_candidates() {
-  SRC="$1"; OUT="$2"
+  SRC="$1"; OUT="$2"; ALL="$TMP/candidates-all.tsv"
   awk '
     function textval(line,  x){ x=line; sub(/^.*text="/,"",x); sub(/" resource-id=.*$/,"",x); return x }
     /id\/ItemTitle"/ { title=textval($0); next }
-    /id\/NewTag"/   { live_row=1; next }
     /id\/ItemStart"/ {
       v=textval($0); split(v,a,"W"); avg=a[1]; gsub(/^ +| +$/,"",avg);
       pct=v; sub(/^.*W +/,"",pct); sub(/%\/h.*$/,"",pct); gsub(/^-/,"",pct); next
@@ -143,58 +117,39 @@ parse_history_candidates() {
     }
     /id\/ItemEnd"/ {
       v=textval($0); p=v; sub(/^.*: /,"",p); sub(/h$/,"",p);
-      # Only finalized History rows have a full calendar timestamp. This also
-      # rejects the live today row whose ItemTitle is only HH:MM:SS.
-      if (!live_row && title ~ /^[0-9][0-9][0-9][0-9]-[0-9][0-9]-[0-9][0-9] [0-9][0-9]:[0-9][0-9]$/)
-        print title "\t" used "\t" elapsed "\t" avg "\t" pct "\t" p;
-      title=""; used=""; elapsed=""; avg=""; pct=""; p=""; live_row=0; next
+      if (title != "") print title "\t" used "\t" elapsed "\t" avg "\t" pct "\t" p;
+      title=""; used=""; elapsed=""; avg=""; pct=""; p=""; next
     }
-  ' "$SRC" | awk -F '\t' '!seen[$1]++' > "$OUT"
+  ' "$SRC" | awk -F '\t' '!seen[$1]++' > "$ALL"
+
+  # Live row title is only HH:MM:SS. Finalized rows always start with YYYY-MM-DD HH:MM.
+  grep -E '^[0-9][0-9][0-9][0-9]-[0-9][0-9]-[0-9][0-9] [0-9][0-9]:[0-9][0-9][[:space:]]' "$ALL" > "$OUT" || :
 }
 
 find_row_on_screen() {
-  TARGET="$1"
-  XML="$TMP/find.xml"; N="$TMP/find.nodes"
+  TARGET="$1"; XML="$TMP/find.xml"; N="$TMP/find.nodes"
   dump_ui "$XML" || return 2
   grep -q 'package="com.omarea.vtools"' "$XML" || return 2
   grep -q 'text="历史记录"' "$XML" || return 2
   sed 's/></>\n</g' "$XML" | grep -E 'resource-id="com.omarea.vtools:id/(ItemTitle|NewTag|ItemStart|ItemCenter|ItemEnd)"' > "$N"
-  LINE="$(grep -F "text=\"$TARGET\"" "$N" | head -n1)"
-  [ -n "$LINE" ] || return 1
+  LINE="$(grep -F "text=\"$TARGET\"" "$N" | head -n1)"; [ -n "$LINE" ] || return 1
   B="$(printf '%s' "$LINE" | sed -n 's/.*bounds="\[\([0-9]*\),\([0-9]*\)\]\[\([0-9]*\),\([0-9]*\)\]".*/\1 \2 \3 \4/p')"
-  set -- $B
-  [ "$#" -eq 4 ] || return 1
-  TAP_Y=$((($2+$4)/2))
-  return 0
+  set -- $B; [ "$#" -eq 4 ] || return 1; TAP_Y=$((($2+$4)/2)); return 0
 }
 
 locate_history_row() {
-  TARGET="$1"
-  echo "Locating: $TARGET"
-  TRY=1
+  TARGET="$1"; echo "Locating: $TARGET"; TRY=1
   while [ "$TRY" -le 2 ]; do
-    open_history || return 1
-
-    I=0
-    while [ "$I" -lt 6 ]; do
-      input swipe 720 700 720 2850 400 >/dev/null 2>&1
-      I=$((I+1))
-    done
-    sleep 1
-
+    history_to_top || return 1
     P=0
     while [ "$P" -lt "$MAX_HISTORY_PAGES" ]; do
-      find_row_on_screen "$TARGET"
-      RC=$?
+      find_row_on_screen "$TARGET"; RC=$?
       [ "$RC" -eq 0 ] && { echo "Located: $TARGET on history page $P"; return 0; }
       [ "$RC" -eq 2 ] && break
-      P=$((P+1))
-      echo "  scan page $P/$MAX_HISTORY_PAGES"
-      input swipe 720 2750 720 800 650 >/dev/null 2>&1
-      sleep 1
+      P=$((P+1)); echo "  scan page $P/$MAX_HISTORY_PAGES"
+      input swipe 720 2750 720 800 650 >/dev/null 2>&1; sleep 1
     done
-    echo "WARN: locate interrupted/not found for $TARGET; recovery try $TRY..."
-    TRY=$((TRY+1))
+    echo "WARN: locate interrupted/not found for $TARGET; recovery try $TRY..."; TRY=$((TRY+1))
   done
   return 1
 }
@@ -203,119 +158,69 @@ wait_for_detail() {
   P=0
   while [ "$P" -lt 8 ]; do
     XML="$TMP/verify-detail.xml"
-    if dump_ui "$XML" && grep -q 'package="com.omarea.vtools"' "$XML" && grep -q 'resource-id="com.omarea.vtools:id/avg_power"' "$XML" && ! grep -q 'text="历史记录"' "$XML"; then
-      return 0
-    fi
-    sleep 1
-    P=$((P+1))
+    if dump_ui "$XML" && grep -q 'package="com.omarea.vtools"' "$XML" && grep -q 'resource-id="com.omarea.vtools:id/avg_power"' "$XML" && ! grep -q 'text="历史记录"' "$XML"; then return 0; fi
+    sleep 1; P=$((P+1))
   done
   return 1
 }
 
 capture_detail_full() {
-  TITLE="$1"
-  SAFE="$(printf '%s' "$TITLE" | tr ' :' '--')"
-  OUT="$OUTDIR/detail-$SAFE.txt"
-  PART="$OUT.partial"
-  : > "$PART"
-  printf 'session_title=%s\ncapture_at=%s\n' "$TITLE" "$(now_iso)" >> "$PART"
-  PREV=''
-  PAGE=0
-
+  TITLE="$1"; SAFE="$(printf '%s' "$TITLE" | tr ' :' '--')"; OUT="$OUTDIR/detail-$SAFE.txt"; PART="$OUT.partial"
+  : > "$PART"; printf 'session_title=%s\ncapture_at=%s\n' "$TITLE" "$(now_iso)" >> "$PART"
+  PREV=''; PAGE=0
   while [ "$PAGE" -lt "$MAX_DETAIL_PAGES" ]; do
     XML="$TMP/d-$PAGE.xml"; N="$TMP/d-$PAGE.nodes"
     dump_ui "$XML" || { rm -f "$PART"; return 1; }
     grep -q 'package="com.omarea.vtools"' "$XML" || { rm -f "$PART"; return 1; }
     grep -q 'text="历史记录"' "$XML" && { rm -f "$PART"; return 1; }
-
     sed 's/></>\n</g' "$XML" | grep -E 'resource-id="com.omarea.vtools:id/(battery_capacity|battery_size|battery_temperature|battery_voltage|battery_status|avg_power|screen_on_duration|predict_time|itemTitle|itemAvgIO|itemTemperature|itemCounts)"' > "$N"
-    H="$(sha256sum "$N" 2>/dev/null | awk '{print $1}')"
-    [ -n "$PREV" ] && [ "$H" = "$PREV" ] && break
-    printf '\n===== DETAIL PAGE %02d =====\n' "$PAGE" >> "$PART"
-    cat "$N" >> "$PART"
-    PREV="$H"
-    PAGE=$((PAGE+1))
-    [ "$PAGE" -ge "$MAX_DETAIL_PAGES" ] && break
-    input swipe 720 2800 720 900 650 >/dev/null 2>&1
-    sleep 1
+    H="$(sha256sum "$N" 2>/dev/null | awk '{print $1}')"; [ -n "$PREV" ] && [ "$H" = "$PREV" ] && break
+    printf '\n===== DETAIL PAGE %02d =====\n' "$PAGE" >> "$PART"; cat "$N" >> "$PART"
+    PREV="$H"; PAGE=$((PAGE+1)); [ "$PAGE" -ge "$MAX_DETAIL_PAGES" ] && break
+    input swipe 720 2800 720 900 650 >/dev/null 2>&1; sleep 1
   done
-
-  mv "$PART" "$OUT"
-  DETAIL_FILE="$OUT"
-  return 0
+  mv "$PART" "$OUT"; DETAIL_FILE="$OUT"; return 0
 }
 
-is_already_done() {
-  TITLE="$1"
-  [ -f "$MANIFEST" ] && grep -Fq "\"$TITLE\",captured" "$MANIFEST"
-}
-
+is_already_done() { TITLE="$1"; [ -f "$MANIFEST" ] && grep -Fq "\"$TITLE\",captured" "$MANIFEST"; }
 mark_manifest() {
   TITLE="$1"; STATE="$2"; FILE="$3"
   [ -f "$MANIFEST" ] || printf 'session_title,state,file,updated_at\n' > "$MANIFEST"
   printf '"%s",%s,"%s",%s\n' "$TITLE" "$STATE" "$FILE" "$(now_iso)" >> "$MANIFEST"
 }
 
-echo 'Switch to Scene -> 耗电统计 within 7 seconds...'
-sleep 7
-
+echo 'Switch to Scene -> 耗电统计 within 7 seconds...'; sleep 7
 open_history || { echo 'ERROR: could not verify/open History after retries'; exit 1; }
 echo 'History verified. Capturing index...'
 HRAW="$OUTDIR/history-index-$(date '+%Y%m%d-%H%M%S').txt"
-
 INDEX_TRY=1
 while [ "$INDEX_TRY" -le 2 ]; do
-  if capture_history_pages "$HRAW"; then
-    break
-  fi
-  echo "WARN: History capture interrupted; recovery try $INDEX_TRY..."
-  open_history || { echo 'ERROR: History recovery failed'; exit 1; }
-  INDEX_TRY=$((INDEX_TRY+1))
+  if capture_history_pages "$HRAW"; then break; fi
+  echo "WARN: History capture interrupted; recovery try $INDEX_TRY..."; open_history || { echo 'ERROR: History recovery failed'; exit 1; }; INDEX_TRY=$((INDEX_TRY+1))
 done
 [ "$INDEX_TRY" -le 2 ] || { echo 'ERROR: History capture failed twice'; exit 1; }
 
-CAND="$TMP/candidates.tsv"
-parse_history_candidates "$HRAW" "$CAND"
-echo "history_pages=$HISTORY_PAGES"
+CAND="$TMP/candidates.tsv"; parse_history_candidates "$HRAW" "$CAND"
+CAND_COUNT="$(wc -l < "$CAND" 2>/dev/null | tr -d ' ')"
+echo "history_pages=$HISTORY_PAGES candidate_rows=${CAND_COUNT:-0}"
 echo 'Eligible finalized sessions:'
 awk -F '\t' -v m="$MIN_FINAL_MINUTES" '($2*60)>=m {print "  "$1"  used="$2"h  avg="$4"W  predict="$6"h"}' "$CAND"
+if [ "${CAND_COUNT:-0}" -eq 0 ]; then
+  echo 'DEBUG: no finalized candidates parsed; first History titles were:'
+  grep 'id/ItemTitle"' "$HRAW" | head -n 8
+fi
 
 COUNT=0
 while IFS="$TAB" read -r TITLE USED_H ELAPSED_H AVG PCT PRED; do
   [ -n "$TITLE" ] || continue
-  USED_MIN="$(awk -v h="$USED_H" 'BEGIN{printf "%d", h*60+0.5}')"
-  [ "$USED_MIN" -ge "$MIN_FINAL_MINUTES" ] || continue
-
-  if is_already_done "$TITLE"; then
-    echo "SKIP already captured: $TITLE"
-    continue
-  fi
-  if [ "$MAX_NEW_SESSIONS" -gt 0 ] && [ "$COUNT" -ge "$MAX_NEW_SESSIONS" ]; then
-    echo "Pilot limit reached: $MAX_NEW_SESSIONS"
-    break
-  fi
-
-  if ! locate_history_row "$TITLE"; then
-    echo "WARN could not locate after recovery: $TITLE"
-    mark_manifest "$TITLE" locate_failed ''
-    continue
-  fi
-
-  echo "Opening: $TITLE (used=${USED_H}h)"
-  input tap 700 "$TAP_Y" >/dev/null 2>&1
-  if ! wait_for_detail; then
-    echo "WARN detail verify failed/interrupted: $TITLE (left retryable)"
-    mark_manifest "$TITLE" detail_interrupted ''
-    continue
-  fi
-
-  if capture_detail_full "$TITLE"; then
-    mark_manifest "$TITLE" captured "$DETAIL_FILE"
-    COUNT=$((COUNT+1))
-  else
-    echo "WARN detail capture interrupted: $TITLE (left retryable)"
-    mark_manifest "$TITLE" detail_interrupted ''
-  fi
+  USED_MIN="$(awk -v h="$USED_H" 'BEGIN{printf "%d", h*60+0.5}')"; [ "$USED_MIN" -ge "$MIN_FINAL_MINUTES" ] || continue
+  if is_already_done "$TITLE"; then echo "SKIP already captured: $TITLE"; continue; fi
+  if [ "$MAX_NEW_SESSIONS" -gt 0 ] && [ "$COUNT" -ge "$MAX_NEW_SESSIONS" ]; then echo "Pilot limit reached: $MAX_NEW_SESSIONS"; break; fi
+  if ! locate_history_row "$TITLE"; then echo "WARN could not locate after recovery: $TITLE"; mark_manifest "$TITLE" locate_failed ''; continue; fi
+  echo "Opening: $TITLE (used=${USED_H}h)"; input tap 700 "$TAP_Y" >/dev/null 2>&1
+  if ! wait_for_detail; then echo "WARN detail verify failed/interrupted: $TITLE (left retryable)"; mark_manifest "$TITLE" detail_interrupted ''; continue; fi
+  if capture_detail_full "$TITLE"; then mark_manifest "$TITLE" captured "$DETAIL_FILE"; COUNT=$((COUNT+1))
+  else echo "WARN detail capture interrupted: $TITLE (left retryable)"; mark_manifest "$TITLE" detail_interrupted ''; fi
 done < "$CAND"
 
 echo "DONE captured_new=$COUNT"
