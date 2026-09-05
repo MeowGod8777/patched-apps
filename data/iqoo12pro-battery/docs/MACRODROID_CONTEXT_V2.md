@@ -44,20 +44,22 @@ Existing historical `out_4g` rows remain preserved as legacy observations but ar
 
 ## 3. Classifier precedence
 
-All network-related triggers call one shared classifier/action block.
+All network-related triggers use one shared classification routine.
+
+Before the final branch, run MacroDroid **Connectivity Check** and store the result in a boolean such as `ctx_online`. This asks whether a data connection is currently usable and avoids using the mobile-data toggle or cellular service registration as a proxy for transport.
 
 Classifier order:
 
 ```text
 1. Wi-Fi connected AND SSID is a configured home SSID -> home_wifi
 2. Wi-Fi connected to any other SSID                  -> other_wifi
-3. Wi-Fi disconnected AND data connectivity available -> mobile
+3. Wi-Fi disconnected AND ctx_online = true           -> mobile
 4. otherwise                                           -> unknown
 ```
 
 The Wi-Fi branches must run before the mobile branch.
 
-`mobile` means MacroDroid reports data connectivity available while Wi-Fi is disconnected. It does not mean “mobile data toggle is enabled” and it is not inferred from cellular signal/service alone.
+`mobile` therefore means: no Wi-Fi connection is active, but MacroDroid's connectivity check reports usable data connectivity. It does not mean “mobile data toggle is enabled” and it is not inferred from cellular signal/service alone.
 
 ## 4. Home SSID set
 
@@ -71,7 +73,7 @@ If additional home SSIDs are used later, add them to the same home set. Do not e
 
 ## 5. Trigger set
 
-Use one context-classification macro/action block called conceptually:
+Use one context-classification routine called conceptually:
 
 ```text
 Battery Context Classify v2
@@ -84,7 +86,7 @@ Invoke it from these triggers:
 3. Data Connectivity Change -> Data Available
 4. Data Connectivity Change -> No Connection
 5. Regular Interval -> every 1 hour
-6. device/MacroDroid startup trigger if available/reliable on the device
+6. MacroDroid Initialised and/or Device Boot if reliable on the device
 
 The hourly trigger is a coverage heartbeat, not a polling requirement for network state accuracy. Network changes are primarily captured by event triggers.
 
@@ -92,7 +94,7 @@ The hourly trigger is a coverage heartbeat, not a polling requirement for networ
 
 Wi-Fi handoff can produce brief disconnected states before the next transport is ready.
 
-For connectivity-change triggers, wait approximately **5 seconds** before classification. Then classify the current state once.
+For connectivity-change triggers, wait approximately **5 seconds** before running Connectivity Check and classifying the current state once.
 
 Do not retain the legacy 30-second rule that directly labels departure as `out_4g`.
 
@@ -109,33 +111,36 @@ Target device file:
 Header:
 
 ```csv
-epoch_s,event_type,state,ssid,source
+epoch_ms,event_type,state,ssid,source
 ```
 
-Rows:
+Use MacroDroid's native current system-time-in-milliseconds magic text (`{system_time_ms}`) directly. No shell `date` command is required.
+
+Rows conceptually look like:
 
 ```text
-<epoch>,transition,home_wifi,DaFengLi_5G,macrodroid_v2
-<epoch>,transition,mobile,,macrodroid_v2
-<epoch>,heartbeat,mobile,,macrodroid_v2
+<epoch_ms>,transition,home_wifi,DaFengLi_5G,macrodroid_v2
+<epoch_ms>,transition,mobile,,macrodroid_v2
+<epoch_ms>,heartbeat,mobile,,macrodroid_v2
 ```
 
-`epoch_s` must be a real Unix epoch value, not a literal placeholder such as `<目前日期時間>`.
+The epoch field must contain a real numeric Unix epoch in milliseconds, never a literal placeholder such as `<目前日期時間>`.
 
 ## 8. Append behavior
 
-### Transition trigger
+### Transition triggers
 
 After classification:
 
-- append a `transition` row only if the newly classified state differs from the last known v2 state;
-- update the local/global last-state variable.
+- append a `transition` row when the network-trigger macro runs;
+- duplicate identical states are acceptable and may be deduplicated during ingestion;
+- if a reliable last-state variable is already in use, identical consecutive transitions may optionally be suppressed, but correctness is preferred over clever suppression.
 
 ### Heartbeat trigger
 
 Every hour:
 
-- re-run the same classifier;
+- run the same Connectivity Check + classifier;
 - append one `heartbeat` row even if state is unchanged.
 
 This provides an explicit observation/coverage signal.
@@ -145,12 +150,11 @@ This provides an explicit observation/coverage signal.
 On first run or after MacroDroid/device restart:
 
 - classify immediately;
-- append a `startup` row;
-- initialize the last-state variable.
+- append a `startup` row.
 
 ## 9. SSID handling
 
-When Wi-Fi is connected, retain the current SSID in the event row.
+When Wi-Fi is connected, retain MacroDroid's current Wi-Fi SSID magic text in the event row.
 
 Expected examples:
 
@@ -163,7 +167,13 @@ unknown    -> empty unless a diagnostically useful value exists
 
 If Android/MacroDroid cannot expose the SSID reliably at a particular event, do not guess it.
 
-## 10. Coverage interpretation
+## 10. File-writing method
+
+Use MacroDroid's native **Write to File** action in append mode. The action supports append/prepend/overwrite directly, so routine context logging does not require a shell script.
+
+The existing `/sdcard/SceneBattery/` location may be retained. Create the CSV header once during setup; subsequent macros append data rows only.
+
+## 11. Coverage interpretation
 
 A state transition remains valid until another transition changes it, but session context quality also depends on heartbeat coverage.
 
@@ -175,7 +185,7 @@ Recommended ingestion quality labels:
 
 Exact heartbeat-gap thresholds can be tuned after several days of natural use. Do not overfit them before real v2 data exists.
 
-## 11. Session classification
+## 12. Session classification
 
 Once a Scene session has a usable wall interval, intersect it with v2 network events.
 
@@ -191,7 +201,7 @@ Do not force a dominant state when meaningful mixed use occurred.
 
 Exact dominance/mixed thresholds should be based on interval coverage after v2 data exists; do not invent a threshold before enough natural-use sessions are available.
 
-## 12. Legacy migration
+## 13. Legacy migration
 
 Existing pilot file:
 
@@ -211,9 +221,9 @@ invalid placeholder timestamps remain invalid
 
 Do not rewrite the legacy pilot file in place.
 
-## 13. No Shizuku dependency
+## 14. No Shizuku dependency
 
-The v2 classifier should use MacroDroid's native Wi-Fi state/SSID and data-connectivity facilities rather than Shizuku shell commands.
+The v2 classifier uses MacroDroid's native Wi-Fi state/SSID, Connectivity Check, system-time magic text, and Write to File facilities rather than Shizuku shell commands.
 
 Reasons:
 
@@ -223,7 +233,7 @@ Reasons:
 
 Shizuku remains available for other device tasks but is not part of this context timeline contract.
 
-## 14. Validation period
+## 15. Validation period
 
 After enabling v2, use it naturally for several days before changing thresholds or adding navigation automation.
 
