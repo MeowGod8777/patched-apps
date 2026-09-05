@@ -1,87 +1,47 @@
-# Screenshot + MacroDroid workflow
+# Screenshot + MacroDroid workflow — SUPERSEDED
 
-This is the routine operating procedure. It deliberately avoids Scene UIAutomator for normal daily logging.
+Status: **legacy workflow retained for provenance only**
 
-## Goal
+This document described the first screenshot/MacroDroid pilot. It is no longer the production operating procedure.
 
-The user should normally do only two things:
+Current authoritative workflow documents:
 
-1. take/send Scene screenshots when a battery sample is worth keeping;
-2. occasionally upload the MacroDroid context CSV.
+1. `../docs/ARCHITECTURE_V1_FINAL.md`
+2. `../docs/SCREENSHOT_INGESTION_V1.md`
+3. `../docs/MACRODROID_CONTEXT_V2.md`
+4. `../docs/SCENE_CURRENT_APK_RE_2026-09-05.md`
 
-Everything else (dedupe, eligibility, session matching, scene classification, ledger update, statistics) is done during ingestion.
+## Retired assumptions
 
-## What MacroDroid is for
+Do not continue the following pilot behavior:
 
-MacroDroid does **not** capture Scene battery metrics. Its only job is to keep an independent environment timeline so the user does not need to remember or manually type whether a sample was home Wi-Fi or cellular.
+- do not capture only when a current Scene session merely “looks worth recording”;
+- do not treat a current/live screenshot as a finalized session;
+- do not use `leave home SSID -> out_4g` as a network classifier;
+- do not interpret legacy `out_4g` as confirmed mobile data;
+- do not use UIAutomator/OCR/private-DB probing for routine collection.
 
-Current automatic events:
+## Current Scene capture rule
 
-- connect to any home SSID -> append `timestamp,home_wifi,SSID`
-- leave all home SSIDs for 30 seconds -> append `timestamp,out_4g,`
+Use periodic recent-History coverage with overlap so unseen sessions are not cherry-picked or silently missed. History rows provide start identity and both duration buckets. Open detail primarily for new main-eligible rows (`History first duration >= 0.5h`) or when exact/provisional/app evidence is specifically needed.
 
-File on device:
+Exact rules and 6-minute History quantization bounds are defined in `../docs/SCREENSHOT_INGESTION_V1.md`.
 
-`/sdcard/SceneBattery/network_timeline_md.csv`
+## Current MacroDroid rule
 
-The timeline is later intersected with Scene History timestamps. If coverage is incomplete, the ledger stays `unknown`; no scene is guessed.
+The old `home_wifi / out_4g` pilot is superseded by four-state context v2:
 
-Navigation is intentionally **not** automated yet. Until a robust Maps-navigation signal is designed, `navigation` is supplied by obvious screenshot/app evidence or user note and otherwise left unknown.
+```text
+home_wifi
+other_wifi
+mobile
+unknown
+```
 
-## Normal capture: one screenshot is enough
+plus an hourly coverage heartbeat.
 
-When a current Scene session looks worth recording:
+The v2 design, classifier precedence, event schema, and legacy normalization rules are defined in `../docs/MACRODROID_CONTEXT_V2.md`.
 
-1. Open Scene -> 耗电统计.
-2. Take a screenshot that includes, if visible: average power, used time, theoretical runtime and app list.
-3. Send the screenshot in chat. No Runner command is required.
+## Preserved legacy evidence
 
-The screenshot filename/capture time is retained as `capture_at`. A current/live screenshot is provisional, not automatically treated as a finalized History session.
-
-If Scene supports a useful long screenshot, it is preferred because it improves app attribution. If not, a normal screenshot is still accepted and app attribution can be marked partial.
-
-## Finalizing / deduplicating
-
-When convenient (not every day), send one screenshot of Scene -> 历史记录 containing the recent rows.
-
-That History screenshot provides stable timestamps used as session IDs. The ingestion step matches earlier current screenshots to finalized History rows using timestamp/date plus power, used time, theoretical runtime and app progression.
-
-This prevents repeated snapshots of one ongoing session from becoming duplicate ledger rows.
-
-## Context handoff
-
-About once every 1–2 weeks, or whenever several new screenshots have accumulated, upload this one file:
-
-`/sdcard/SceneBattery/network_timeline_md.csv`
-
-No tar, shell script or Scene automation is required.
-
-Ingestion then:
-
-1. parses new screenshots;
-2. reconciles them with recent History rows when available;
-3. applies exact eligibility (`<20m` excluded, `20–30m` provisional, `>=30m` main);
-4. deduplicates repeated snapshots;
-5. intersects the MacroDroid timeline where coverage exists;
-6. appends finalized rows to `canonical/session_ledger.csv`;
-7. updates `canonical/app_summary.csv` and `canonical/context_timeline.csv`;
-8. preserves dated evidence under `generated/YYYY-MM-DD/`.
-
-## What the user does not need to do
-
-- no routine `capture_backlog_*` or `capture_recent_*` execution;
-- no repeated Runner retries because Scene labels/backend failed;
-- no manual Wi-Fi/4G annotation when MacroDroid coverage exists;
-- no manual dedupe;
-- no need to start or end a session at 100% / 0%.
-
-## Data-state meanings
-
-- `provisional_live_snapshot`: current Scene screenshot, not yet tied to a finalized History ID.
-- `finalized`: matched to a stable History timestamp and eligible for the canonical ledger.
-- `partial_app_attribution`: session metrics are valid but the screenshot/app list is incomplete.
-- `unknown` context: MacroDroid coverage is insufficient; do not guess.
-
-## Recovery / fallback
-
-The old UIAutomator scripts remain only as forensic/backlog tools. They are not part of the normal workflow. Use them only if a large historical gap must be recovered and the expected value justifies the instability.
+The old device file and canonical pilot timeline remain provenance sources and are not rewritten in place. Valid pilot rows are normalized into `../canonical/context_events.csv`; legacy `out_4g` rows become `unknown` unless independently confirmed as mobile.
