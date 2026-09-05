@@ -40,4 +40,3 @@ session_id,history_session_at,source_type,avg_power_w,used_text,theoretical_text
 2026-09-03 22:30,2026-09-03 22:30,scene_history_detail,1.92,47m30s,9h14m,main,unknown,unknown,,none,none_before_timeline,good,sync_raw/detail-2026-09-03-22-30.txt
 2026-09-04 07:27,2026-09-04 07:27,scene_history_detail,2.69,1h56m,6h35m,main,unknown,unknown,,none,none_before_timeline,good,sync_raw/detail-2026-09-04-07-27.txt
 2026-09-04 13:23,2026-09-04 13:23,scene_history_detail,1.67,45m45s,10h35m,main,unknown,unknown,,none,none_before_timeline,good,sync_raw/detail-2026-09-04-13-23.txt
-baseline:2026-09-05,,baseline_only,3.38,1h24m,5h14m,main,out_4g,4g,true,baseline_confirmed,partial_or_none,baseline_summary,baseline.csv
