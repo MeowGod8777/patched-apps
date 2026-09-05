@@ -1,7 +1,10 @@
 #!/system/bin/sh
-# iQOO 12 Pro Scene battery ledger full local sync v0.1
-# Captures History rows, filters finalized sessions, drills into eligible rows,
-# captures detailed stats + app list, and preserves raw evidence locally.
+# iQOO 12 Pro Scene battery ledger full local sync v0.2-resilient
+# - Retries transient UIAutomator/History failures.
+# - If Scene leaves foreground or is killed, waits for the user to reopen
+#   Scene -> 耗电统计 instead of forcing a whole-script restart.
+# - Avoids blind BACK presses which could leave Scene.
+# - Detail captures are committed only when complete; interrupted captures remain retryable.
 # GitHub upload is intentionally NOT included yet.
 
 BASE=/sdcard/SceneBattery
@@ -13,24 +16,88 @@ mkdir -p "$OUTDIR" "$TMP"
 MIN_FINAL_MINUTES=${SCENE_BATTERY_MIN_FINAL_MINUTES:-30}
 MAX_HISTORY_PAGES=${SCENE_BATTERY_MAX_HISTORY_PAGES:-12}
 MAX_DETAIL_PAGES=${SCENE_BATTERY_MAX_DETAIL_PAGES:-8}
-# 0 = unlimited. Pilot runs can set this to 1 or 2.
-MAX_NEW_SESSIONS=${SCENE_BATTERY_MAX_NEW_SESSIONS:-0}
+MAX_NEW_SESSIONS=${SCENE_BATTERY_MAX_NEW_SESSIONS:-0}   # 0 = unlimited
+RECOVERY_WAIT_SECONDS=${SCENE_BATTERY_RECOVERY_WAIT_SECONDS:-60}
+UI_RETRIES=${SCENE_BATTERY_UI_RETRIES:-3}
 TAB="$(printf '\t')"
 
 now_iso() { date '+%Y-%m-%dT%H:%M:%S%z'; }
 
+dump_ui() {
+  OUT="$1"
+  I=0
+  while [ "$I" -lt "$UI_RETRIES" ]; do
+    rm -f "$OUT"
+    if uiautomator dump "$OUT" >/dev/null 2>&1 && [ -s "$OUT" ]; then
+      return 0
+    fi
+    I=$((I+1))
+    sleep 1
+  done
+  return 1
+}
+
+screen_kind() {
+  XML="$TMP/state.xml"
+  if ! dump_ui "$XML"; then
+    echo unknown
+    return
+  fi
+  if grep -q 'package="com.omarea.vtools"' "$XML"; then
+    if grep -q 'text="历史记录"' "$XML"; then
+      echo history
+    elif grep -q 'text="耗电统计"' "$XML" || grep -q 'resource-id="com.omarea.vtools:id/avg_power"' "$XML"; then
+      echo battery
+    else
+      echo scene_other
+    fi
+  else
+    echo other_app
+  fi
+}
+
+wait_for_scene() {
+  KIND="$(screen_kind)"
+  case "$KIND" in battery|history) return 0;; esac
+
+  echo "WAIT: Scene is not on 耗电统计/历史记录. Reopen Scene -> 耗电统计; waiting up to ${RECOVERY_WAIT_SECONDS}s..."
+  ELAPSED=0
+  while [ "$ELAPSED" -lt "$RECOVERY_WAIT_SECONDS" ]; do
+    sleep 2
+    ELAPSED=$((ELAPSED+2))
+    KIND="$(screen_kind)"
+    case "$KIND" in
+      battery|history)
+        echo "RECOVERED: Scene detected ($KIND)."
+        return 0
+        ;;
+    esac
+  done
+  echo "ERROR: Scene recovery timeout."
+  return 1
+}
+
 open_history() {
-  XML="$TMP/open.xml"
-  uiautomator dump "$XML" >/dev/null 2>&1 || return 1
-  N="$TMP/open.nodes"
-  sed 's/></>\n</g' "$XML" | grep -E 'text="[^"]+"|resource-id="com.omarea.vtools:id/action_history"' > "$N"
-  if grep -q 'text="历史记录"' "$N"; then return 0; fi
-  if ! grep -q 'text="耗电统计"' "$N"; then return 1; fi
-  input tap 1125 255 >/dev/null 2>&1
-  sleep 1
-  uiautomator dump "$XML" >/dev/null 2>&1 || return 1
-  sed 's/></>\n</g' "$XML" | grep -E 'text="[^"]+"' > "$N"
-  grep -q 'text="历史记录"' "$N"
+  ATTEMPT=1
+  while [ "$ATTEMPT" -le 3 ]; do
+    wait_for_scene || return 1
+    KIND="$(screen_kind)"
+    [ "$KIND" = history ] && return 0
+
+    # Battery/detail page: history action is at the same toolbar position on this device.
+    input tap 1125 255 >/dev/null 2>&1
+    P=0
+    while [ "$P" -lt 6 ]; do
+      sleep 1
+      KIND="$(screen_kind)"
+      [ "$KIND" = history ] && return 0
+      [ "$KIND" = other_app ] && break
+      P=$((P+1))
+    done
+    echo "WARN: History open attempt $ATTEMPT failed; retrying..."
+    ATTEMPT=$((ATTEMPT+1))
+  done
+  return 1
 }
 
 capture_history_pages() {
@@ -40,7 +107,10 @@ capture_history_pages() {
   PAGE=0
   while [ "$PAGE" -lt "$MAX_HISTORY_PAGES" ]; do
     XML="$TMP/h-$PAGE.xml"; N="$TMP/h-$PAGE.nodes"
-    uiautomator dump "$XML" >/dev/null 2>&1 || break
+    dump_ui "$XML" || return 1
+    grep -q 'package="com.omarea.vtools"' "$XML" || return 1
+    grep -q 'text="历史记录"' "$XML" || return 1
+
     sed 's/></>\n</g' "$XML" | grep -E 'resource-id="com.omarea.vtools:id/(dialogTitle|NewTag|ItemTitle|ItemStart|ItemCenter|ItemEnd)"' > "$N"
     H="$(sha256sum "$N" 2>/dev/null | awk '{print $1}')"
     [ -n "$PREV" ] && [ "$H" = "$PREV" ] && break
@@ -52,17 +122,14 @@ capture_history_pages() {
     input swipe 720 2750 720 800 650 >/dev/null 2>&1
     sleep 1
   done
-  echo "$PAGE"
+  HISTORY_PAGES="$PAGE"
+  return 0
 }
 
-# Build unique finalized candidate rows from captured history.
-# Output TSV: title\tused_hours\telapsed_hours\tavg_w\tpct_per_h\tpredict_h
 parse_history_candidates() {
   SRC="$1"; OUT="$2"
   awk '
-    function textval(line,  x){
-      x=line; sub(/^.*text="/,"",x); sub(/" resource-id=.*$/,"",x); return x
-    }
+    function textval(line,  x){ x=line; sub(/^.*text="/,"",x); sub(/" resource-id=.*$/,"",x); return x }
     /id\/ItemTitle"/ { title=textval($0); next }
     /id\/NewTag"/   { title="today"; next }
     /id\/ItemStart"/ {
@@ -84,7 +151,9 @@ parse_history_candidates() {
 find_row_on_screen() {
   TARGET="$1"
   XML="$TMP/find.xml"; N="$TMP/find.nodes"
-  uiautomator dump "$XML" >/dev/null 2>&1 || return 1
+  dump_ui "$XML" || return 2
+  grep -q 'package="com.omarea.vtools"' "$XML" || return 2
+  grep -q 'text="历史记录"' "$XML" || return 2
   sed 's/></>\n</g' "$XML" | grep -E 'resource-id="com.omarea.vtools:id/(ItemTitle|NewTag|ItemStart|ItemCenter|ItemEnd)"' > "$N"
   LINE="$(grep -F "text=\"$TARGET\"" "$N" | head -n1)"
   [ -n "$LINE" ] || return 1
@@ -97,20 +166,41 @@ find_row_on_screen() {
 
 locate_history_row() {
   TARGET="$1"
-  # Close History or leave detail, then reopen History deterministically.
-  input keyevent 4 >/dev/null 2>&1
-  sleep 1
-  open_history || return 1
-  I=0
-  while [ "$I" -lt 6 ]; do
-    input swipe 720 700 720 2850 400 >/dev/null 2>&1
-    I=$((I+1))
+  TRY=1
+  while [ "$TRY" -le 2 ]; do
+    open_history || return 1
+
+    # Return History list to the top without leaving Scene.
+    I=0
+    while [ "$I" -lt 6 ]; do
+      input swipe 720 700 720 2850 400 >/dev/null 2>&1
+      I=$((I+1))
+    done
+    sleep 1
+
+    P=0
+    while [ "$P" -lt "$MAX_HISTORY_PAGES" ]; do
+      find_row_on_screen "$TARGET"
+      RC=$?
+      [ "$RC" -eq 0 ] && return 0
+      [ "$RC" -eq 2 ] && break
+      input swipe 720 2750 720 800 650 >/dev/null 2>&1
+      sleep 1
+      P=$((P+1))
+    done
+    echo "WARN: locate interrupted for $TARGET; recovery try $TRY..."
+    TRY=$((TRY+1))
   done
-  sleep 1
+  return 1
+}
+
+wait_for_detail() {
   P=0
-  while [ "$P" -lt "$MAX_HISTORY_PAGES" ]; do
-    if find_row_on_screen "$TARGET"; then return 0; fi
-    input swipe 720 2750 720 800 650 >/dev/null 2>&1
+  while [ "$P" -lt 8 ]; do
+    XML="$TMP/verify-detail.xml"
+    if dump_ui "$XML" && grep -q 'package="com.omarea.vtools"' "$XML" && grep -q 'resource-id="com.omarea.vtools:id/avg_power"' "$XML" && ! grep -q 'text="历史记录"' "$XML"; then
+      return 0
+    fi
     sleep 1
     P=$((P+1))
   done
@@ -121,25 +211,33 @@ capture_detail_full() {
   TITLE="$1"
   SAFE="$(printf '%s' "$TITLE" | tr ' :' '--')"
   OUT="$OUTDIR/detail-$SAFE.txt"
-  : > "$OUT"
-  printf 'session_title=%s\ncapture_at=%s\n' "$TITLE" "$(now_iso)" >> "$OUT"
+  PART="$OUT.partial"
+  : > "$PART"
+  printf 'session_title=%s\ncapture_at=%s\n' "$TITLE" "$(now_iso)" >> "$PART"
   PREV=''
   PAGE=0
+
   while [ "$PAGE" -lt "$MAX_DETAIL_PAGES" ]; do
     XML="$TMP/d-$PAGE.xml"; N="$TMP/d-$PAGE.nodes"
-    uiautomator dump "$XML" >/dev/null 2>&1 || break
+    dump_ui "$XML" || { rm -f "$PART"; return 1; }
+    grep -q 'package="com.omarea.vtools"' "$XML" || { rm -f "$PART"; return 1; }
+    grep -q 'text="历史记录"' "$XML" && { rm -f "$PART"; return 1; }
+
     sed 's/></>\n</g' "$XML" | grep -E 'resource-id="com.omarea.vtools:id/(battery_capacity|battery_size|battery_temperature|battery_voltage|battery_status|avg_power|screen_on_duration|predict_time|itemTitle|itemAvgIO|itemTemperature|itemCounts)"' > "$N"
     H="$(sha256sum "$N" 2>/dev/null | awk '{print $1}')"
     [ -n "$PREV" ] && [ "$H" = "$PREV" ] && break
-    printf '\n===== DETAIL PAGE %02d =====\n' "$PAGE" >> "$OUT"
-    cat "$N" >> "$OUT"
+    printf '\n===== DETAIL PAGE %02d =====\n' "$PAGE" >> "$PART"
+    cat "$N" >> "$PART"
     PREV="$H"
     PAGE=$((PAGE+1))
     [ "$PAGE" -ge "$MAX_DETAIL_PAGES" ] && break
     input swipe 720 2800 720 900 650 >/dev/null 2>&1
     sleep 1
   done
-  echo "$OUT"
+
+  mv "$PART" "$OUT"
+  DETAIL_FILE="$OUT"
+  return 0
 }
 
 is_already_done() {
@@ -155,14 +253,25 @@ mark_manifest() {
 
 echo 'Switch to Scene -> 耗电统计 within 7 seconds...'
 sleep 7
-open_history || { echo 'ERROR: could not verify/open History'; exit 1; }
+
+open_history || { echo 'ERROR: could not verify/open History after retries'; exit 1; }
 echo 'History verified. Capturing index...'
 HRAW="$OUTDIR/history-index-$(date '+%Y%m%d-%H%M%S').txt"
-PAGES="$(capture_history_pages "$HRAW")"
+
+INDEX_TRY=1
+while [ "$INDEX_TRY" -le 2 ]; do
+  if capture_history_pages "$HRAW"; then
+    break
+  fi
+  echo "WARN: History capture interrupted; recovery try $INDEX_TRY..."
+  open_history || { echo 'ERROR: History recovery failed'; exit 1; }
+  INDEX_TRY=$((INDEX_TRY+1))
+done
+[ "$INDEX_TRY" -le 2 ] || { echo 'ERROR: History capture failed twice'; exit 1; }
+
 CAND="$TMP/candidates.tsv"
 parse_history_candidates "$HRAW" "$CAND"
-
-echo "history_pages=$PAGES"
+echo "history_pages=$HISTORY_PAGES"
 echo 'Eligible finalized sessions:'
 awk -F '\t' -v m="$MIN_FINAL_MINUTES" '($2*60)>=m {print "  "$1"  used="$2"h  avg="$4"W  predict="$6"h"}' "$CAND"
 
@@ -171,6 +280,7 @@ while IFS="$TAB" read -r TITLE USED_H ELAPSED_H AVG PCT PRED; do
   [ -n "$TITLE" ] || continue
   USED_MIN="$(awk -v h="$USED_H" 'BEGIN{printf "%d", h*60+0.5}')"
   [ "$USED_MIN" -ge "$MIN_FINAL_MINUTES" ] || continue
+
   if is_already_done "$TITLE"; then
     echo "SKIP already captured: $TITLE"
     continue
@@ -179,24 +289,28 @@ while IFS="$TAB" read -r TITLE USED_H ELAPSED_H AVG PCT PRED; do
     echo "Pilot limit reached: $MAX_NEW_SESSIONS"
     break
   fi
+
   if ! locate_history_row "$TITLE"; then
-    echo "WARN could not locate: $TITLE"
+    echo "WARN could not locate after recovery: $TITLE"
     mark_manifest "$TITLE" locate_failed ''
     continue
   fi
+
   echo "Opening: $TITLE (used=${USED_H}h)"
   input tap 700 "$TAP_Y" >/dev/null 2>&1
-  sleep 1
-  XML="$TMP/verify-detail.xml"
-  uiautomator dump "$XML" >/dev/null 2>&1
-  if ! grep -q 'resource-id="com.omarea.vtools:id/avg_power"' "$XML"; then
-    echo "WARN detail verify failed: $TITLE"
-    mark_manifest "$TITLE" detail_verify_failed ''
+  if ! wait_for_detail; then
+    echo "WARN detail verify failed/interrupted: $TITLE (left retryable)"
+    mark_manifest "$TITLE" detail_interrupted ''
     continue
   fi
-  FILE="$(capture_detail_full "$TITLE")"
-  mark_manifest "$TITLE" captured "$FILE"
-  COUNT=$((COUNT+1))
+
+  if capture_detail_full "$TITLE"; then
+    mark_manifest "$TITLE" captured "$DETAIL_FILE"
+    COUNT=$((COUNT+1))
+  else
+    echo "WARN detail capture interrupted: $TITLE (left retryable)"
+    mark_manifest "$TITLE" detail_interrupted ''
+  fi
 done < "$CAND"
 
 echo "DONE captured_new=$COUNT"
