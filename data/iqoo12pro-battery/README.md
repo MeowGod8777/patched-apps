@@ -49,3 +49,19 @@ The pilot deliberately separates collection from interpretation:
 3. GitHub ingestion / generated ledgers will be layered on after the raw format and OEM network reporting are validated on-device.
 
 This avoids losing evidence while the first real-world bugs are still being discovered.
+
+## 2026-09-05 ingestion snapshot
+
+The first canonical ingestion is stored under `generated/2026-09-05/`.
+
+- `session_ledger.csv`: 41 valid automated Scene History detail captures plus one unmatched baseline-only 2026-09-05 sample.
+- `app_summary.csv`: accumulated app-duration and duration-weighted app power summary from the automated detail set.
+- `network_timeline_normalized.csv`: MacroDroid network transitions with invalid placeholder timestamps explicitly marked.
+- `INGESTION_REPORT.md`: provenance, quality checks, scene/network coverage limits, and descriptive statistics.
+
+Important quality notes for this snapshot:
+
+- `sync_manifest.csv` is append-only and latest state is authoritative; old all-`Scene` / unresolved captures are excluded if a later healthy capture exists.
+- All 41 automated canonical detail sessions have exact `screen_on_duration >= 30 min`.
+- `2026-07-23 20:53` has only 56.9% app-duration coverage, so its session-level power/runtime remain usable but its app breakdown is flagged partial.
+- MacroDroid's first valid transition is 2026-09-05 12:40:43 +08:00, later than all finalized automated History sessions in this archive; no transport class is inferred from missing timeline coverage.
