@@ -1,7 +1,8 @@
 #!/system/bin/sh
-# iQOO 12 Pro Scene capture-next worker v1.1
+# iQOO 12 Pro Scene capture-next worker v1.1.1
 # One finalized session per process. No long-lived queue/recovery state.
-# Fixes v1.0 false history_not_at_top caused by brittle grep alternation.
+# v1.1.1 keeps the proven manual handoff path, adds overlapping History pagination
+# so rows cannot fall between pages, and makes raw detail captures immutable.
 
 BASE=/sdcard/SceneBattery
 OUTDIR="$BASE/sync_raw"
@@ -12,8 +13,10 @@ mkdir -p "$OUTDIR" "$TMP"
 trap 'rm -rf "$TMP" 2>/dev/null' EXIT HUP INT TERM
 
 MIN_MINUTES=${SCENE_BATTERY_MIN_FINAL_MINUTES:-30}
-MAX_HISTORY_PAGES=${SCENE_BATTERY_WORKER_HISTORY_PAGES:-3}
+MAX_HISTORY_PAGES=${SCENE_BATTERY_WORKER_HISTORY_PAGES:-12}
 MAX_DETAIL_PAGES=${SCENE_BATTERY_MAX_DETAIL_PAGES:-8}
+HISTORY_SWIPE_START=${SCENE_BATTERY_HISTORY_SWIPE_START:-2600}
+HISTORY_SWIPE_END=${SCENE_BATTERY_HISTORY_SWIPE_END:-1700}
 
 nodes() { sed 's/></>\n</g' "$1"; }
 dump() { rm -f "$1"; uiautomator dump "$1" >/dev/null 2>&1 && [ -s "$1" ]; }
@@ -57,7 +60,7 @@ open_fresh_history() {
   return 0
 }
 
-echo '# iQOO 12 Pro Scene capture-next worker v1.1'
+echo '# iQOO 12 Pro Scene capture-next worker v1.1.1'
 echo 'Switch to Scene -> 耗电统计 (or History) within 7 seconds...'
 sleep 7
 open_fresh_history
@@ -73,6 +76,7 @@ TARGET=''
 TARGET_USED=''
 TARGET_Y=''
 HP=0
+PREV_HISTORY_SIG=''
 
 while [ "$HP" -lt "$MAX_HISTORY_PAGES" ]; do
   HXML="$TMP/history-$HP.xml"
@@ -80,6 +84,12 @@ while [ "$HP" -lt "$MAX_HISTORY_PAGES" ]; do
   if [ "$HP" -gt 0 ]; then dump "$HXML" || { echo "ERROR history_dump_page_$HP"; exit 20; }; fi
   is_history "$HXML" || { echo "ERROR left_history_page_$HP"; exit 21; }
   nodes "$HXML" > "$HN"
+
+  HISTORY_SIG="$(cksum "$HN" 2>/dev/null | awk '{print $1":"$2}')"
+  if [ "$HP" -gt 0 ] && [ -n "$PREV_HISTORY_SIG" ] && [ "$HISTORY_SIG" = "$PREV_HISTORY_SIG" ]; then
+    break
+  fi
+  PREV_HISTORY_SIG="$HISTORY_SIG"
 
   ROW_TITLE=''
   ROW_BOUNDS=''
@@ -109,7 +119,9 @@ while [ "$HP" -lt "$MAX_HISTORY_PAGES" ]; do
   [ "$FOUND" -eq 1 ] && break
   HP=$((HP+1))
   [ "$HP" -ge "$MAX_HISTORY_PAGES" ] && break
-  input swipe 720 2750 720 850 700 >/dev/null 2>&1
+  # Deliberately small overlapping scroll. The old 2750->850 jump could skip
+  # entire rows at a page boundary; 2600->1700 retains a large overlap.
+  input swipe 720 "$HISTORY_SWIPE_START" 720 "$HISTORY_SWIPE_END" 550 >/dev/null 2>&1
   sleep 1
 done
 
@@ -125,10 +137,11 @@ grep -q 'resource-id="com.omarea.vtools:id/avg_power"' "$VERIFY" || { echo 'ERRO
 grep -q 'text="历史记录"' "$VERIFY" && { echo 'ERROR still_on_history'; exit 33; }
 
 SAFE="$(printf '%s' "$TARGET" | tr ' :' '--')"
-DEST="$OUTDIR/detail-$SAFE.txt"
+# Raw captures are immutable. A rerun can never overwrite a previous acquisition.
+DEST="$OUTDIR/detail-$SAFE-$RUN_ID.txt"
 PART="$DEST.partial"
 : > "$PART"
-printf 'session_title=%s\ncapture_at=%s\n' "$TARGET" "$(date '+%Y-%m-%dT%H:%M:%S%z')" >> "$PART"
+printf 'session_title=%s\ncapture_id=%s\ncapture_at=%s\n' "$TARGET" "$RUN_ID" "$(date '+%Y-%m-%dT%H:%M:%S%z')" >> "$PART"
 
 DP=0
 PREV=''
