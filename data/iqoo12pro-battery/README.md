@@ -65,3 +65,16 @@ Important quality notes for this snapshot:
 - All 41 automated canonical detail sessions have exact `screen_on_duration >= 30 min`.
 - `2026-07-23 20:53` has only 56.9% app-duration coverage, so its session-level power/runtime remain usable but its app breakdown is flagged partial.
 - MacroDroid's first valid transition is 2026-09-05 12:40:43 +08:00, later than all finalized automated History sessions in this archive; no transport class is inferred from missing timeline coverage.
+- The user intentionally stopped the old backlog at `2026-07-18 12:36`. Twelve older `>=30 min` History rows remain intentionally uncollected: `2026-07-18 03:33`, `2026-07-17 07:51`, `2026-07-16 10:49`, `2026-07-15 12:16`, four rows on `2026-07-14`, three rows on `2026-07-13`, and `2026-07-11 22:28`.
+- Most historical v1.4 detail raws do not expose battery header fields because the detail page was not normalized to the top before capture. Session power / exact used time / theoretical runtime and app rows are still valid, but battery remaining / temperature / voltage are sparse in this snapshot.
+
+## Ongoing incremental workflow
+
+Do not run the deep backlog drainer for routine use. The ongoing design is deliberately split:
+
+1. MacroDroid continuously appends `home_wifi` / `out_4g` transitions to `/sdcard/SceneBattery/network_timeline_md.csv`.
+2. Once per day or every 1-2 days, run `capture_recent_v2.sh` from Shizuku Runner with Scene in the foreground. It scans only the recent History window, captures a small number of new finalized sessions, skips existing healthy manifest entries, and does not descend into the intentionally-abandoned July backlog.
+3. `capture_recent_v2.sh` first normalizes each detail page to the top so Scene battery header fields can be captured when exposed, then reuses the v1.4 attribution-health gate for app labels.
+4. Periodically export `sync_manifest.csv`, `sync_raw/`, `sync_raw_invalid/`, and `network_timeline_md.csv` as a tar archive for canonical ingestion / GitHub update.
+
+Current limitations: Scene UI/backend can still become unhealthy under repeated UIAutomator interaction. Routine incremental runs are intentionally shallow to minimize this. A label/backend failure should not be treated as a valid capture; reopen Scene and retry later.
