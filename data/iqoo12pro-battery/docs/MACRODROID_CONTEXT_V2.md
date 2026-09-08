@@ -1,6 +1,6 @@
 # iQOO 12 Pro battery ledger — MacroDroid context v2.5
 
-Status: **production candidate / natural-use validation** as of 2026-09-05. Supersedes legacy `home_wifi / out_4g` semantics and earlier v2.1–v2.4 test candidates.
+Status: **production candidate with a known transition-coverage gap discovered during natural use on 2026-09-08**. Supersedes legacy `home_wifi / out_4g` semantics and earlier v2.1–v2.4 test candidates, but the 2026-09-06..08 raw batch is **not yet safe for wholesale canonical promotion**.
 
 MacroDroid is an environmental-context source only. It does not capture or redefine Scene battery metrics.
 
@@ -17,7 +17,7 @@ mobile
 offline
 ```
 
-`unknown` is reserved for canonical ingestion / coverage quality when the recorded evidence is insufficient; it is not the normal v2.5 classifier fallback.
+`unknown` is reserved for canonical ingestion / coverage quality when recorded evidence is insufficient; it is not the normal v2.5 classifier fallback.
 
 A periodic heartbeat is retained so ingestion can distinguish “no state change” from “MacroDroid was not reliably observing the device”.
 
@@ -91,11 +91,13 @@ Device path:
 /sdcard/SceneBattery/context_events_v2.csv
 ```
 
-Header:
+Intended header:
 
 ```csv
 epoch_ms,event_type,state,ssid,source
 ```
+
+The first natural-use file uploaded on 2026-09-08 was **headerless** because the file already existed before the one-time header seeding command; canonical ingestion must therefore parse this source as five positional fields rather than assuming the first row is a header.
 
 Examples:
 
@@ -117,7 +119,7 @@ v2.5 builds a key from:
 state + SSID
 ```
 
-and stores the last retained key in a persistent **global string variable**:
+and stores the last retained key in a persistent global string variable:
 
 ```text
 battery_ctx_last_key
@@ -137,9 +139,9 @@ For hourly heartbeat:
 
 The global scope is intentional: local variables do not reliably retain the previous key across independent macro invocations.
 
-Canonical ingestion remains duplicate-tolerant because v2.1–v2.3 test candidates emitted redundant rows before this was corrected.
+Canonical ingestion remains duplicate-tolerant because earlier candidates and occasional concurrent invocations can still produce near-simultaneous duplicate transition rows.
 
-## 8. Validation completed on 2026-09-05
+## 8. Acceptance validation completed on 2026-09-05
 
 Observed on-device results verified:
 
@@ -150,20 +152,39 @@ Observed on-device results verified:
 - hourly heartbeat output
 - repeated manual execution at unchanged state produces no new transition after the persistent global dedupe key is populated
 
-`mobile` was not deliberately forced during final v2.5 acceptance. It remains a natural-use validation item and does not block normal collection.
+`mobile` was not deliberately forced during final v2.5 acceptance.
 
-## 9. Historical test rows
+## 9. Natural-use validation finding — 2026-09-08
 
-Earlier v2 test candidates produced several rows that are useful as implementation evidence but are not authoritative classifier semantics:
+The first multi-day raw batch covers `2026-09-05T22:52:49.910+08:00` through `2026-09-08T11:03:47.107+08:00`.
+
+The batch itself shows many plausible `home_wifi` / `offline` heartbeats and transitions, but Scene screenshots captured during ordinary use expose an important coverage failure:
+
+- `2026-09-08 03:49:21`: Scene screenshot visibly shows a Wi-Fi status icon and substantial network-app use, while MacroDroid carries `offline` across the surrounding overnight observations and records no matching Wi-Fi transition.
+- `2026-09-08 08:03:16`: Scene screenshot visibly shows a Wi-Fi status icon; MacroDroid heartbeat at `08:02:25.015` says `offline`, and no Wi-Fi transition appears around the capture.
+- `2026-09-08 11:25:01`: screenshot is consistent with MacroDroid (`home_wifi / DaFengLi_5G` transition at `10:35:54.234`, heartbeat at `11:03:47.107`).
+
+The first two cases do **not** prove that the classifier branch itself always returns the wrong state; Wi-Fi could have been enabled after an `offline` heartbeat. They do prove that **short Wi-Fi-on periods can be absent from the event timeline**, which is sufficient to invalidate unconditional session-context joining from the raw file.
+
+Therefore:
+
+- do not bulk-promote the 2026-09-06..08 raw batch into `canonical/context_events.csv`
+- preserve the raw batch unchanged under `generated/2026-09-08/`
+- treat affected session context as `unknown` when screenshot/context evidence conflicts or transition coverage is missing
+- capture-instant `home_wifi` may still be used when a recent transition/heartbeat and screenshot status agree, but it must not be promoted to full-session context without a reconciled Scene interval
+
+## 10. Historical test rows
+
+Earlier v2 test candidates produced useful implementation evidence but are not authoritative classifier semantics:
 
 - v2.1 initially labelled `An's 3F TP LINK 256B 5G` as `other_wifi` because the explicit home set was incomplete
 - v2.2/v2.3 produced duplicate transition rows because dedupe state was not persistent across invocations
 
-Do not rewrite the raw device CSV. Canonical ingestion may normalize known home SSIDs and suppress redundant identical transition events while retaining provenance in `detail`.
+Do not rewrite the raw device CSV. Canonical ingestion may normalize known home SSIDs and suppress redundant identical transition representations while retaining provenance.
 
-## 10. Context joining
+## 11. Context joining
 
-Scene session intervals are intersected with canonical context observations.
+Scene session intervals are intersected only with **validated** canonical context observations.
 
 Session-level derived labels remain:
 
@@ -180,20 +201,15 @@ Do not force a dominant label when materially mixed use occurred. `unknown` mean
 
 History-only Scene intervals may have bounded start/end uncertainty; joins must respect the History quantization bounds documented in `SCREENSHOT_INGESTION_V1.md`.
 
-## 11. Natural-use phase
+## 12. Next MacroDroid change criterion
 
-No further MacroDroid tuning is required before normal use.
+v2.5 should no longer be described as “fully frozen”. The next change must specifically address missed short active-use Wi-Fi periods without turning the system into high-frequency polling.
 
-During natural use, check only for actual failures:
+A low-cost recovery trigger such as **screen-on / device-unlocked classification** is a candidate because it can re-sample context when the user actually begins active use, even if an Android background Wi-Fi transition broadcast was missed. Do not implement additional polling merely to hide this problem; validate the smallest recovery trigger against natural-use data.
 
-- first real mobile-only transition should become `mobile`
-- first non-home Wi-Fi should become `other_wifi`
-- hourly heartbeat should continue during ordinary idle/use often enough to establish coverage
-- no impossible rapid flip-flop should dominate the file
+`mobile` and `other_wifi` still require natural-use validation after the coverage fix.
 
-Do not add navigation automation or invent heartbeat-gap thresholds until several days of natural v2.5 data exist.
-
-## 12. Legacy preservation
+## 13. Legacy preservation
 
 Keep existing legacy sources unchanged:
 
