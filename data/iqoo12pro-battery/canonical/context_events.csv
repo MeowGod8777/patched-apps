@@ -7,3 +7,60 @@ event_at,event_type,state,ssid,source,detail,valid
 2026-09-05T23:00:38.903+08:00,heartbeat,home_wifi,"An's 3F TP LINK 256B 5G",macrodroid_v2_test,"heartbeat observed during acceptance testing",true
 2026-09-05T23:10:59.071+08:00,transition,offline,,macrodroid_v2_5,"explicit Wi-Fi-off plus no usable data state; v2.5 offline semantics accepted",true
 2026-09-05T23:12:34.841+08:00,transition,home_wifi,"An's 3F TP LINK 256B 5G",macrodroid_v2_5,"offline-to-home-WiFi return accepted; persistent transition dedupe already verified separately",true
+2026-09-05T23:22:13.383+08:00,transition,offline,,macrodroid_v2_5_device_csv,uploaded context_events_v2.csv; transition identity deduped,true
+2026-09-06T07:25:55.462+08:00,heartbeat,offline,,macrodroid_v2_5_device_csv,uploaded context_events_v2.csv; transition identity deduped,true
+2026-09-06T08:00:06.753+08:00,heartbeat,offline,,macrodroid_v2_5_device_csv,uploaded context_events_v2.csv; transition identity deduped,true
+2026-09-06T09:28:22.754+08:00,heartbeat,offline,,macrodroid_v2_5_device_csv,uploaded context_events_v2.csv; transition identity deduped,true
+2026-09-06T09:28:39.640+08:00,transition,home_wifi,An's 3F TP LINK 256B 5G,macrodroid_v2_5_device_csv,uploaded context_events_v2.csv; transition identity deduped,true
+2026-09-06T10:17:58.005+08:00,heartbeat,home_wifi,An's 3F TP LINK 256B 5G,macrodroid_v2_5_device_csv,uploaded context_events_v2.csv; transition identity deduped,true
+2026-09-06T11:00:55.802+08:00,heartbeat,home_wifi,An's 3F TP LINK 256B 5G,macrodroid_v2_5_device_csv,uploaded context_events_v2.csv; transition identity deduped,true
+2026-09-06T12:20:12.085+08:00,heartbeat,home_wifi,An's 3F TP LINK 256B 5G,macrodroid_v2_5_device_csv,uploaded context_events_v2.csv; transition identity deduped,true
+2026-09-06T13:18:34.243+08:00,heartbeat,home_wifi,An's 3F TP LINK 256B 5G,macrodroid_v2_5_device_csv,uploaded context_events_v2.csv; transition identity deduped,true
+2026-09-06T14:02:26.504+08:00,heartbeat,home_wifi,An's 3F TP LINK 256B 5G,macrodroid_v2_5_device_csv,uploaded context_events_v2.csv; transition identity deduped,true
+2026-09-06T15:00:35.921+08:00,heartbeat,home_wifi,An's 3F TP LINK 256B 5G,macrodroid_v2_5_device_csv,uploaded context_events_v2.csv; transition identity deduped,true
+2026-09-06T16:00:06.467+08:00,heartbeat,home_wifi,An's 3F TP LINK 256B 5G,macrodroid_v2_5_device_csv,uploaded context_events_v2.csv; transition identity deduped,true
+2026-09-06T17:05:16.860+08:00,heartbeat,home_wifi,An's 3F TP LINK 256B 5G,macrodroid_v2_5_device_csv,uploaded context_events_v2.csv; transition identity deduped,true
+2026-09-06T18:01:48.360+08:00,heartbeat,home_wifi,An's 3F TP LINK 256B 5G,macrodroid_v2_5_device_csv,uploaded context_events_v2.csv; transition identity deduped,true
+2026-09-06T19:02:45.175+08:00,heartbeat,home_wifi,An's 3F TP LINK 256B 5G,macrodroid_v2_5_device_csv,uploaded context_events_v2.csv; transition identity deduped,true
+2026-09-06T20:00:05.908+08:00,heartbeat,home_wifi,An's 3F TP LINK 256B 5G,macrodroid_v2_5_device_csv,uploaded context_events_v2.csv; transition identity deduped,true
+2026-09-06T20:31:50.076+08:00,transition,offline,,macrodroid_v2_5_device_csv,uploaded context_events_v2.csv; transition identity deduped,true
+2026-09-06T21:00:05.068+08:00,heartbeat,offline,,macrodroid_v2_5_device_csv,uploaded context_events_v2.csv; transition identity deduped,true
+2026-09-06T21:20:27.023+08:00,transition,home_wifi,An's 3F TP LINK 256B 5G,macrodroid_v2_5_device_csv,uploaded context_events_v2.csv; transition identity deduped,true
+2026-09-06T21:22:39.121+08:00,transition,offline,,macrodroid_v2_5_device_csv,uploaded context_events_v2.csv; transition identity deduped,true
+2026-09-06T21:35:43.904+08:00,transition,home_wifi,An's 3F TP LINK 256B 5G,macrodroid_v2_5_device_csv,uploaded context_events_v2.csv; transition identity deduped,true
+2026-09-06T21:46:22.416+08:00,transition,offline,,macrodroid_v2_5_device_csv,uploaded context_events_v2.csv; transition identity deduped,true
+2026-09-06T22:04:56.431+08:00,heartbeat,offline,,macrodroid_v2_5_device_csv,uploaded context_events_v2.csv; transition identity deduped,true
+2026-09-06T23:00:07.784+08:00,heartbeat,offline,,macrodroid_v2_5_device_csv,uploaded context_events_v2.csv; transition identity deduped,true
+2026-09-07T06:55:33.507+08:00,heartbeat,offline,,macrodroid_v2_5_device_csv,uploaded context_events_v2.csv; transition identity deduped,true
+2026-09-07T07:00:07.631+08:00,heartbeat,offline,,macrodroid_v2_5_device_csv,uploaded context_events_v2.csv; transition identity deduped,true
+2026-09-07T07:37:20.641+08:00,transition,home_wifi,An's 3F TP LINK 256B 5G,macrodroid_v2_5_device_csv,uploaded context_events_v2.csv; transition identity deduped,true
+2026-09-07T07:37:51.182+08:00,transition,home_wifi,DaFengLi_5G,macrodroid_v2_5_device_csv,uploaded context_events_v2.csv; transition identity deduped,true
+2026-09-07T08:02:50.833+08:00,heartbeat,home_wifi,DaFengLi_5G,macrodroid_v2_5_device_csv,uploaded context_events_v2.csv; transition identity deduped,true
+2026-09-07T08:09:29.509+08:00,transition,offline,,macrodroid_v2_5_device_csv,uploaded context_events_v2.csv; transition identity deduped,true
+2026-09-07T09:11:12.967+08:00,heartbeat,offline,,macrodroid_v2_5_device_csv,uploaded context_events_v2.csv; transition identity deduped,true
+2026-09-07T10:16:09.732+08:00,heartbeat,offline,,macrodroid_v2_5_device_csv,uploaded context_events_v2.csv; transition identity deduped,true
+2026-09-07T10:34:13.953+08:00,transition,home_wifi,DaFengLi_5G,macrodroid_v2_5_device_csv,uploaded context_events_v2.csv; transition identity deduped,true
+2026-09-07T11:05:56.952+08:00,heartbeat,home_wifi,DaFengLi_5G,macrodroid_v2_5_device_csv,uploaded context_events_v2.csv; transition identity deduped,true
+2026-09-07T11:31:03.506+08:00,transition,offline,,macrodroid_v2_5_device_csv,uploaded context_events_v2.csv; transition identity deduped,true
+2026-09-07T12:02:52.741+08:00,heartbeat,offline,,macrodroid_v2_5_device_csv,uploaded context_events_v2.csv; transition identity deduped,true
+2026-09-07T12:03:32.463+08:00,transition,home_wifi,DaFengLi_5G,macrodroid_v2_5_device_csv,uploaded context_events_v2.csv; transition identity deduped,true
+2026-09-07T12:52:16.117+08:00,transition,offline,,macrodroid_v2_5_device_csv,uploaded context_events_v2.csv; transition identity deduped,true
+2026-09-07T13:11:51.167+08:00,transition,home_wifi,DaFengLi_5G,macrodroid_v2_5_device_csv,uploaded context_events_v2.csv; transition identity deduped,true
+2026-09-07T14:02:33.912+08:00,heartbeat,home_wifi,DaFengLi_5G,macrodroid_v2_5_device_csv,uploaded context_events_v2.csv; transition identity deduped,true
+2026-09-07T15:18:19.792+08:00,heartbeat,home_wifi,DaFengLi_5G,macrodroid_v2_5_device_csv,uploaded context_events_v2.csv; transition identity deduped,true
+2026-09-07T16:06:59.993+08:00,heartbeat,home_wifi,DaFengLi_5G,macrodroid_v2_5_device_csv,uploaded context_events_v2.csv; transition identity deduped,true
+2026-09-07T16:39:39.947+08:00,transition,offline,,macrodroid_v2_5_device_csv,uploaded context_events_v2.csv; transition identity deduped,true
+2026-09-07T17:00:07.228+08:00,heartbeat,offline,,macrodroid_v2_5_device_csv,uploaded context_events_v2.csv; transition identity deduped,true
+2026-09-07T18:00:05.381+08:00,heartbeat,offline,,macrodroid_v2_5_device_csv,uploaded context_events_v2.csv; transition identity deduped,true
+2026-09-07T19:32:11.865+08:00,transition,home_wifi,DaFengLi_5G,macrodroid_v2_5_device_csv,uploaded context_events_v2.csv; transition identity deduped,true
+2026-09-07T20:02:14.735+08:00,heartbeat,home_wifi,DaFengLi_5G,macrodroid_v2_5_device_csv,uploaded context_events_v2.csv; transition identity deduped,true
+2026-09-07T21:10:31.931+08:00,heartbeat,home_wifi,DaFengLi_5G,macrodroid_v2_5_device_csv,uploaded context_events_v2.csv; transition identity deduped,true
+2026-09-07T21:51:23.299+08:00,transition,offline,,macrodroid_v2_5_device_csv,uploaded context_events_v2.csv; transition identity deduped,true
+2026-09-07T22:30:16.037+08:00,heartbeat,offline,,macrodroid_v2_5_device_csv,uploaded context_events_v2.csv; transition identity deduped,true
+2026-09-07T23:00:07.976+08:00,heartbeat,offline,,macrodroid_v2_5_device_csv,uploaded context_events_v2.csv; transition identity deduped,true
+2026-09-08T06:50:13.281+08:00,heartbeat,offline,,macrodroid_v2_5_device_csv,uploaded context_events_v2.csv; transition identity deduped,true
+2026-09-08T07:00:07.152+08:00,heartbeat,offline,,macrodroid_v2_5_device_csv,uploaded context_events_v2.csv; transition identity deduped,true
+2026-09-08T08:02:25.015+08:00,heartbeat,offline,,macrodroid_v2_5_device_csv,uploaded context_events_v2.csv; transition identity deduped,true
+2026-09-08T10:17:24.540+08:00,heartbeat,offline,,macrodroid_v2_5_device_csv,uploaded context_events_v2.csv; transition identity deduped,true
+2026-09-08T10:35:54.234+08:00,transition,home_wifi,DaFengLi_5G,macrodroid_v2_5_device_csv,uploaded context_events_v2.csv; transition identity deduped,true
+2026-09-08T11:03:47.107+08:00,heartbeat,home_wifi,DaFengLi_5G,macrodroid_v2_5_device_csv,uploaded context_events_v2.csv; transition identity deduped,true
