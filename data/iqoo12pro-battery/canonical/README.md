@@ -12,7 +12,9 @@ Everything under `generated/YYYY-MM-DD/` is an immutable dated ingestion snapsho
 - intentionally uncaptured old eligible History rows: **12**
 - one known partial app-attribution session: `2026-07-23 20:53`
 - provisional live groups remain outside finalized sessions
+- new provisional live captures on `2026-09-08`: **3** (`03:49:21`, `08:03:16`, `11:25:01`), all duration-main-eligible but awaiting History identity/reconciliation
 - first valid MacroDroid context transition: `2026-09-05T12:40:43+08:00`
+- MacroDroid v2.5 natural-use batch received through `2026-09-08T11:03:47.107+08:00`, but bulk canonical promotion is paused because screenshots revealed missed short Wi-Fi-on periods / transition-coverage gaps
 
 The `sessions.csv` migration is additive and lossless: `session_ledger.csv` was not rewritten.
 
@@ -46,15 +48,22 @@ The old public `battery-history3` / 6-second implementation is legacy lineage ev
 ## Files
 
 - `session_ledger.csv` — preserved historical/intermediate 41-session source; do not rewrite old evidence in place.
-- `sessions.csv` — normalized canonical session table.
+- `sessions.csv` — normalized canonical finalized-session table.
 - `app_summary.csv` — derived accumulated app-duration / weighted-power summary; not a substitute for per-session rows.
-- `context_timeline.csv` — current normalized MacroDroid pilot context timeline.
-
-Planned/future granular files:
-
-- `app_sessions.csv` — populate only from genuine per-session app evidence.
-- `context_events.csv` — final append-only context-event model.
+- `context_timeline.csv` — normalized MacroDroid pilot context timeline.
+- `context_events.csv` — curated append-only context-event model; **do not bulk-import the 2026-09-06..08 raw v2.5 batch until the transition-coverage gap is resolved**.
 - `device_state_events.csv` — sparse device/configuration timeline.
+
+Current dated provisional evidence:
+
+- `../generated/2026-09-08/provisional_live_sessions.csv`
+- `../generated/2026-09-08/provisional_app_rows.csv`
+- `../generated/2026-09-08/context_events_v2_uploaded_raw.csv`
+- `../generated/2026-09-08/INGEST_NOTES.md`
+
+Future granular canonical file:
+
+- `app_sessions.csv` — populate only from genuine per-session app evidence **after the provisional capture is reconciled to a finalized History session identity**.
 
 The prior 436 deduped per-app rows were not retained as a granular repo artifact, and referenced `sync_raw/detail-*` files are absent from the repository tree. Do not reconstruct historical `app_sessions.csv` from aggregate `app_summary.csv`.
 
@@ -71,6 +80,19 @@ The prior 436 deduped per-app rows were not retained as a granular repo artifact
 9. Do not infer historical battery temperature/voltage/capacity from current ActivityPowerUtilization header state.
 10. Deduplication uses timestamp + power + durations + date/curve/app evidence, never average watts alone.
 11. Old raw/invalid evidence is never deleted merely because later evidence supersedes it.
+12. A MacroDroid heartbeat/state is not sufficient when contemporaneous screenshot evidence shows the event timeline missed an active network period; conflicting intervals remain `unknown` until coverage is resolved.
+
+## 2026-09-08 provisional ingest
+
+Three distinct live Scene captures were preserved outside `sessions.csv`:
+
+- `03:49:21` — 3.13 W, 1h09m Scene-valid screen-on, 5h39m theoretical runtime, 40% remaining, app attribution 95.14%
+- `08:03:16` — 2.59 W, 55m02s, 6h50m, 53% remaining, app attribution 95.49%
+- `11:25:01` — 2.92 W, 1h13m, 6h03m, 22% remaining, app attribution 97.03%
+
+They are treated as three distinct provisional sessions. `03:49 -> 08:03` is separated by an increase in battery remaining (40% -> 53%), and `08:03 -> 11:25` has non-cumulative app attribution despite ~95–97% coverage, which is inconsistent with one accumulating Scene session.
+
+The first two screenshots also expose MacroDroid context coverage gaps: Wi-Fi is visibly present during active use while the v2.5 event timeline lacks the corresponding Wi-Fi transition and carries `offline` observations around those periods. Therefore no session-wide network label is assigned from the raw batch yet.
 
 ## Production source policy
 
