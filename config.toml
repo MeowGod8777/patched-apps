@@ -22,7 +22,6 @@ excluded-patches = """\
   '[Fix] Restore chat backup sign-in via MicroG-RE' \
   '[Fix] Restore location maps via MicroG-RE' \
   '[Fix] Restore push notifications' \
-  '[General] Redirect LINE Pay' \
   '[Tab] Hide Wallet tab' \
   """
 archive-dlurl = "https://archive.org/download/andrews-apks/apks/jp.naver.line.android"
