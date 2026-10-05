@@ -18,6 +18,7 @@ excluded-patches = """\
   '[Chat] Hide community button' \
   '[Fix] Restore push notifications' \
   '[Fix] Restore chat backup sign-in via MicroG-RE' \
+  '[Fix] Restore location maps via MicroG-RE' \
   """
 archive-dlurl = "https://archive.org/download/andrews-apks/apks/jp.naver.line.android"
 apkmirror-dlurl = "https://www.apkmirror.com/apk/line-corporation/line"
