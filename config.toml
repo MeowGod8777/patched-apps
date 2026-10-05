@@ -12,13 +12,18 @@ version = "26.14.0"
 arch = "arm64-v8a"
 include-stock = "auto"
 excluded-patches = """\
-  '[Tab] Hide Wallet tab' \
+  '[Chat] Hide Events button' \
+  '[Chat] Hide LINE GIFT button' \
   '[Chat] Hide Transfer button' \
-  '[Chat] Keep chats unread' \
+  '[Chat] Hide attach menu extra tools' \
+  '[Chat] Hide calendar buttons' \
   '[Chat] Hide community button' \
-  '[Fix] Restore push notifications' \
+  '[Chat] Keep chats unread' \
   '[Fix] Restore chat backup sign-in via MicroG-RE' \
   '[Fix] Restore location maps via MicroG-RE' \
+  '[Fix] Restore push notifications' \
+  '[General] Redirect LINE Pay' \
+  '[Tab] Hide Wallet tab' \
   """
 archive-dlurl = "https://archive.org/download/andrews-apks/apks/jp.naver.line.android"
 apkmirror-dlurl = "https://www.apkmirror.com/apk/line-corporation/line"
