@@ -51,9 +51,11 @@ jobs:
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          TAG=$(gh release list -L 1 | awk -F '\t' '{print $3}')
+          TAG=$(gh api --paginate "repos/$GITHUB_REPOSITORY/releases?per_page=100" \
+            --jq '.[] | .tag_name | select(test("^[0-9]+$"))' \
+            | sort -n | tail -n 1)
           if [ -z "$TAG" ]; then TAG=0; fi
-          echo "NEXT_VER_CODE=$((TAG + 1))" >> $GITHUB_OUTPUT
+          echo "NEXT_VER_CODE=$((TAG + 1))" >> "$GITHUB_OUTPUT"
 
       - name: Build modules/APKs
         run: if [ -f "config.json" ]; then ./build.sh config.json; else ./build.sh config.toml; fi
