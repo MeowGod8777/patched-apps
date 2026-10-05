@@ -14,8 +14,10 @@ old = """            if (inner == null) {
             }
 """
 new = """            if (inner == null) {
-                // Wallet -> LINE Pay home uses line://pay/main and has no reserve id.
-                if (isMainPay(extraUri) || isMainPay(dataString)) {
+                // Device validation shows Wallet -> LINE Pay reaches PayLaunchActivity with
+                // an unrecognized line://pay/... URI and no reserve id. Redirect that activity
+                // class directly instead of guessing the exact URI shape.
+                if (isPayLaunchActivity(activity)) {
                     if (openStandaloneMain(activity)) return;
                 }
                 Log.i(TAG, "Pay intent on " + name(activity) + ": no reserve id, skipping redirect.");
@@ -29,23 +31,20 @@ marker = """    private static String firstNonNull(String a, String b) {
         return a != null ? a : b;
     }
 """
-helper = """    private static boolean isMainPay(String url) {
-        if (url == null || url.isEmpty()) return false;
-        return url.startsWith("line://pay/main") || url.contains("/pay/main");
+helper = """    private static boolean isPayLaunchActivity(Activity activity) {
+        return activity != null &&
+            "com.linecorp.line.pay.base.PayLaunchActivity".equals(activity.getClass().getName());
     }
 
     private static boolean openStandaloneMain(Activity activity) {
         if (activity == null) return false;
         try {
-            Intent launch = activity.getPackageManager().getLaunchIntentForPackage("com.linepaytw.upay");
-            if (launch == null) {
-                launch = new Intent(Intent.ACTION_MAIN);
-                launch.addCategory(Intent.CATEGORY_LAUNCHER);
-                launch.setPackage("com.linepaytw.upay");
-            }
+            Intent launch = new Intent(Intent.ACTION_MAIN);
+            launch.addCategory(Intent.CATEGORY_LAUNCHER);
+            launch.setClassName("com.linepaytw.upay", "com.linepaytw.upay.biz.main.LaunchActivity");
             launch.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             activity.startActivity(launch);
-            Log.i(TAG, "Redirecting LINE Pay main to standalone app.");
+            Log.i(TAG, "Redirecting PayLaunchActivity to standalone LINE Pay launcher.");
             return true;
         } catch (Throwable t) {
             Log.w(TAG, "LINE Pay main redirect failed.", t);
@@ -110,7 +109,7 @@ uptodown-dlurl = "https://line.en.uptodown.com/android"
 EOF
 
 export CUSTOM_LINE_MPP=/tmp/line-mainpay-custom.mpp
-export NEXT_VER_CODE=13
+export NEXT_VER_CODE=14
 export GITHUB_REPOSITORY=MeowGod8777/patched-apps
 ./build.sh /tmp/line-config.toml
 
@@ -118,6 +117,6 @@ ZIP=build/line-andrew-module-v26.14.0-arm64-v8a.zip
 test -s "$ZIP"
 sha256sum "$ZIP" | tee "$ZIP.sha256"
 
-TAG=line-mainpay-r13
+TAG=line-mainpay-r14
 gh release delete "$TAG" --yes --cleanup-tag 2>/dev/null || true
-gh release create "$TAG"   "$ZIP"   "$ZIP.sha256"   /tmp/line-mainpay-custom.mpp   --title "LINE 26.14 Andrew R13 main-pay redirect"   --notes "Same selected patch policy as Release 12, with Redirect LINE Pay extended so Wallet -> LINE Pay (line://pay/main) launches the standalone Taiwan LINE Pay app. Merchant reserveId redirect is unchanged."
+gh release create "$TAG"   "$ZIP"   "$ZIP.sha256"   /tmp/line-mainpay-custom.mpp   --title "LINE 26.14 Andrew R14 PayLaunchActivity redirect"   --notes "Same selected patch policy as Release 12. Device logs showed Wallet -> LINE Pay enters PayLaunchActivity with an unrecognized line://pay/... URI and no reserveId. R14 redirects any no-reserveId PayLaunchActivity directly to the verified standalone Taiwan LINE Pay launcher com.linepaytw.upay/.biz.main.LaunchActivity. Merchant reserveId redirect remains unchanged."
