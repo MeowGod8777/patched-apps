@@ -1,0 +1,108 @@
+name: Build rvmm LINE Andrew compat
+
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - ".github/workflows/build-rvmm-line-andrew-compat.yml"
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Download official rvmm v10
+        shell: bash
+        run: |
+          set -euo pipefail
+          curl -L --fail --retry 3 \
+            -o rvmm-v10.zip \
+            https://github.com/j-hc/rvmm-zygisk-mount/releases/download/v10/rvmm-zygisk-mount-v10.zip
+          echo "a131cba8b8fe05307b09a98cc23490ee8494868d23fb5f3f356e79c7db585dba  rvmm-v10.zip" | sha256sum -c -
+          mkdir src
+          unzip -q rvmm-v10.zip -d src
+
+      - name: Patch for LINE Andrew bundle
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          from pathlib import Path
+
+          util = Path("src/util.sh")
+          s = util.read_text()
+
+          a = s.index("collect_rvmm() {")
+          b = s.index("\ncreate_procs_map() {", a)
+          collect = '''collect_rvmm() {
+            for RVMM in /data/adb/modules_update/*-jhc* /data/adb/modules_update/line-andrew-andrew-arm64; do
+              if ! is_valid_rvmm "$RVMM"; then continue; fi
+              MPATH=$(echo "$RVMM" | sed 's/modules_update/modules/')
+              if [ -f "$MPATH/remove" ]; then continue; fi
+              echo "$RVMM"
+            done
+
+            for RVMM in /data/adb/modules/*-jhc* /data/adb/modules/line-andrew-andrew-arm64; do
+              if ! is_valid_rvmm "$RVMM"; then continue; fi
+              if [ -f "$RVMM/remove" ]; then continue; fi
+              MUPATH=$(echo "$RVMM" | sed 's/modules/modules_update/')
+              if [ -d "$MUPATH" ]; then continue; fi
+              echo "$RVMM"
+            done
+          }
+          '''
+          s = s[:a] + collect + s[b:]
+
+          old = '''is_valid_rvmm() {
+            if [ ! -d "$1" ]; then return 1; fi
+            if ! grep -Fq "j-hc" "$1/module.prop"; then return 1; fi
+            if [ ! -f "$1/config" ]; then return 1; fi
+            return 0
+          }'''
+          new = '''is_valid_rvmm() {
+            if [ ! -d "$1" ]; then return 1; fi
+            if [ ! -f "$1/config" ]; then return 1; fi
+            case "$1" in
+              */line-andrew-andrew-arm64) return 0 ;;
+            esac
+            if ! grep -Fq "j-hc" "$1/module.prop"; then return 1; fi
+            return 0
+          }'''
+          if old not in s:
+              raise SystemExit("is_valid_rvmm block not found")
+          s = s.replace(old, new)
+
+          old = '''    if ! BASEPATH=$(pm path "$PKG_NAME" 2>&1 </dev/null) || [ -z "$BASEPATH" ]; then
+              ui_print "ERROR: $PKG_NAME is not installed. Re-flash its module and dont reboot."
+              continue
+            fi
+            RVPATH="/data/adb/rvhc/${rvmm_path##*/}.apk"
+            if [ ! -f "$RVPATH" ]; then
+              ui_print "ERROR: $RVPATH does not exist. Re-flash its module and dont reboot."
+             ÛÛ[YBBÜÈ[Ñ×ÓSQHUÐTÑTUÈÊHÈÉÉÉÂ]ÈH	ÉÉÈYHÑÔUÏI
+H]Ñ×ÓSQHHÙ]Û[
+HÈ^ÑÔUÈNÈ[ZWÜ[TÔ	Ñ×ÓSQH\ÈÝ[Ý[YKY\Ú]È[Ù[H[ÛXÛÝÛÛ[YBBTÑPTÏI
+[	É\×ÈÑÔUÈÙY[	ÜË×XÚØYÙNËÜ	ÈÜ\	ËØ\ÙK\É	ÈXY[JBYÈ^TÑPTÈNÈ[ZWÜ[TÔ\ÙK\È]ÛÝ[ÝH\ÛÛYÜ	Ñ×ÓSQHÛÛ[YBBUHÙ]KØYÜËÉÜ[WÜ]ÈÊßK\ÈYÈHYUNÈ[ZWÜ[TÔ	UÙ\ÈÝ^\ÝKY\Ú]È[Ù[H[ÛXÛÝÛÛ[YBBÜÈ[Ñ×ÓSQHUTÑPTÈÈÉÉÉÂYÛÝ[ÎZ\ÙHÞ\Ý[Q^]
+ÜX]WÜØÜ×ÛX\XÚØYÙH]ØÚÈÝÝ[BÈHË\XÙJÛ]ÊB][Ü]WÝ^
+ÊBÝ\ÝÛHH]
+ÜËØÝ\ÝÛZ^KÚBÈHÝ\ÝÛKXYÝ^
+
+BX\Ù\H	ËSÑUÝ][ÚÂ[Ù\H	ÉÉËSÑUÝ][ÚÈTSÓÈLÈÈSH[]ÈÛÛ\]X[]NÈ\ØXHHÛ\ÜÚXÈ[]È[Ý[YÜH[HYÛÝKÝ\Ù\ÜXÙH\Ý\Ü[Ù]KØYÛ[Ù[\ËÛ[KX[]ËX[]ËX\MÙ]KØYÛ[Ù[\×Ý\]KÛ[KX[]ËX[]ËX\MÈÂÈYH	Ù\ØXHÛB	ÉÉÂYX\Ù\Ý[ÎZ\ÙHÞ\Ý[Q^]
+Ý\ÝÛZ^HX\Ù\ÝÝ[BÈHË\XÙJX\Ù\[Ù\JBÝ\ÝÛKÜ]WÝ^
+ÊBÜH]
+ÜËÛ[Ù[KÜBHÜXYÝ^
+
+BH\XÙJ[YO\[K^YÚ\ÚË[[Ý[[YO\[K^YÚ\ÚË[[Ý[
+SH[]ÈÛÛ\]
+HBH\XÙJ\Ú[Û]L\Ú[Û]L[[KX[]Ë\HBH\XÙJ\ØÜ\[ÛS[Ý[ÈHSH
+][ÙY[XYÚ\ÚË[[Ù[JH[Ù[\ÈÚ]YÚ\ÚÈ\ØÜ\[Û\[HL]ÚYÜSH[]ÈÛTSÓÈLÎÈÝ\ÜÈÜ]TÈ\ÙK\È\Ù][È
+BHÚ[[HÜ[H[Ü][\Ê
+HYÝ[KÝ\ÝÚ]
+\]RÛÛHJH
+ÈÜÜ]WÝ^
+
+BBXÚÈOOOOH]ÚY][ÚOOOOHÙY[	ÌKN	ÈÜËÝ][ÚXÚÈOOOOH]ÚY[Ù[KÜOOOOHØ]ÜËÛ[Ù[KÜH[YNXÚØYÙBÚ[\Ú[Ù]Y][È\YZ[ÕUHÒUPÕÓÔÔÔPÑKÜ[K^YÚ\ÚË[[Ý[]LSSKP[]ËZTSÓÌLË\K\
+ÙÜÂ\\\ÕU
+BÚLMÝ[HÕUYHÕUÚLMH[YN\ØY\YXÝ\Ù\ÎXÝ[ÛËÝ\ØYX\YXÝÚ][YN[K^YÚ\ÚË[[Ý[]LSSKP[]ËZTSÓÌLË\B][K^YÚ\ÚË[[Ý[]LSSKP[]ËZTSÓÌLË\K\[K^YÚ\ÚË[[Ý[]LSSKP[]ËZTSÓÌLË\K\ÚLMH[YNX\ÚÝXH[X\ÙH\ÜÙ][ÒÕÒÑS	ÞÈÚ]XÚÙ[_BÚ[\Ú[Ù]Y][È\YZ[QÏH[K[[KX[]ËZ\[ÛÌLË]L\HSOH[K^YÚ\ÚË[[Ý[]LSSKP[]ËZTSÓÌLË\K\ÕSOHSKÚLMYÚ[X\ÙHY]ÈQÈK\\ÈÒUPÔTÔÒUÔHÙ]Û[NÈ[Ú[X\ÙH\ØYQÈSHÕSHKXÛØ\K\\ÈÒUPÔTÔÒUÔH[ÙBÚ[X\ÙHÜX]HQÈSHÕSHK\\ÈÒUPÔTÔÒUÔHK]]H[HLSH[]ÈTSÓÈLÈHK[Ý\È\ÙYÛZÈ[K^YÚ\ÚË[[Ý[LYÈ^XÝÝ\ÜÜ[KX[]ËX[]ËX\M[\ÛÛ\ÈSHÜ]X[H\ÙK\È\Ù][ËK[]\ÝY[ÙBB
