@@ -12,12 +12,12 @@ version = "26.14.0"
 arch = "arm64-v8a"
 include-stock = "auto"
 excluded-patches = """\
-  'Hide Wallet tab' \
-  'Hide Transfer button' \
-  'Keep chats unread' \
-  'Hide community button' \
-  'Fix push notifications' \
-  'Fix chat backup sign-in via GmsCore' \
+  '[Tab] Hide Wallet tab' \
+  '[Chat] Hide Transfer button' \
+  '[Chat] Keep chats unread' \
+  '[Chat] Hide community button' \
+  '[Fix] Restore push notifications' \
+  '[Fix] Restore chat backup sign-in via MicroG-RE' \
   """
 archive-dlurl = "https://archive.org/download/andrews-apks/apks/jp.naver.line.android"
 apkmirror-dlurl = "https://www.apkmirror.com/apk/line-corporation/line"
