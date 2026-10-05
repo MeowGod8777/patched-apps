@@ -8,6 +8,7 @@ cli-source = "MorpheApp/morphe-cli"
 rv-brand = "Andrew"
 build-mode = "module"
 version = "26.14.0"
+# Rebuild after numeric release-tag selection fix.
 arch = "arm64-v8a"
 include-stock = "auto"
 excluded-patches = """\
