@@ -1,9 +1,12 @@
 name: Build LINE 26.14 main-pay redirect R13
+
 on:
   push:
-    branches: [main]
+    branches:
+      - main
     paths:
       - .github/workflows/build-line-mainpay-r13.yml
+      - .github/scripts/build-line-mainpay-r13.sh
 
 permissions:
   contents: write
@@ -13,144 +16,12 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v6
-
       - uses: actions/setup-java@v5
         with:
           distribution: temurin
           java-version: '21'
-
-      - name: Build custom Andrew patch bundle
+      - name: Build and publish
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: |
-          set -euo pipefail
-          git clone --depth 1 https://github.com/andrewliang25/morphe-patches.git /tmp/morphe-patches
-          FILE=/tmp/morphe-patches/extensions/extension/src/main/java/app/andrewliang/extension/LinePayRedirect.java
-          python3 - <<'PY'
-          from pathlib import Path
-          p=Path("/tmp/morphe-patches/extensions/extension/src/main/java/app/andrewliang/extension/LinePayRedirect.java")
-          s=p.read_text()
-          old='''            if (inner == null) {
-                // Not a recognizable payment deep link (e.g. line://pay/main). Caller finishes.
-                Log.i(TAG, "Pay intent on " + name(activity) + ": no reserve id, skipping redirect.");
-                return;
-            }
-'''
-          new='''            if (inner == null) {
-                // The Wallet -> LINE Pay home entry is line://pay/main and has no reserve id.
-                // Open the standalone Taiwan LINE Pay app instead of silently finishing.
-                if (isMainPay(extraUri) || isMainPay(dataString)) {
-                    if (openStandaloneMain(activity)) return;
-                }
-                Log.i(TAG, "Pay intent on " + name(activity) + ": no reserve id, skipping redirect.");
-                return;
-            }
-'''
-          if old not in s:
-              raise SystemExit("target block not found")
-          s=s.replace(old,new,1)
-          marker='''    private static String firstNonNull(String a, String b) {
-        return a != null ? a : b;
-    }
-'''
-          insert='''    private static boolean isMainPay(String url) {
-        if (url == null || url.isEmpty()) return false;
-        return url.startsWith("line://pay/main") || url.contains("/pay/main");
-    }
-
-    private static boolean openStandaloneMain(Activity activity) {
-        if (activity == null) return false;
-        try {
-            Intent launch = activity.getPackageManager().getLaunchIntentForPackage("com.linepaytw.upay");
-            if (launch == null) {
-                launch = new Intent(Intent.ACTION_MAIN);
-                launch.addCategory(Intent.CATEGORY_LAUNCHER);
-                launch.setPackage("com.linepaytw.upay");
-            }
-            launch.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-            activity.startActivity(launch);
-            Log.i(TAG, "Redirecting LINE Pay main to standalone app.");
-            return true;
-        } catch (Throwable t) {
-            Log.w(TAG, "LINE Pay main redirect failed.", t);
-            return false;
-        }
-    }
-
-''' + marker
-          if marker not in s:
-              raise SystemExit("insert marker not found")
-          s=s.replace(marker,insert,1)
-          p.write_text(s)
-          PY
-          cd /tmp/morphe-patches
-          ./gradlew :patches:buildAndroid clean --no-daemon
-          MPP=$(ls patches/build/libs/patches-*.mpp | grep -Ev '(sources|javadoc)' | head -n1)
-          cp "$MPP" /tmp/line-mainpay-custom.mpp
-          sha256sum /tmp/line-mainpay-custom.mpp
-
-      - name: Prepare LINE-only build
-        run: |
-          set -euo pipefail
-          python3 - <<'PY'
-          from pathlib import Path
-          p=Path("build.sh")
-          s=p.read_text()
-          needle='read -r patches_jar cli_jar <<<"$PREBUILTS"'
-          repl=needle+'\n\tif [ "$table_name" = "LINE-Andrew" ] && [ -n "${CUSTOM_LINE_MPP-}" ]; then patches_jar="$CUSTOM_LINE_MPP"; fi'
-          if needle not in s:
-              raise SystemExit("build.sh hook point not found")
-          p.write_text(s.replace(needle,repl,1))
-          PY
-          cat > /tmp/line-config.toml <<'EOF'
-          enable-module-update = false
-          parallel-jobs = 1
-
-          [LINE-Andrew]
-          app-name = "LINE"
-          patches-source = "andrewliang25/morphe-patches"
-          cli-source = "MorpheApp/morphe-cli"
-          rv-brand = "Andrew"
-          build-mode = "module"
-          version = "26.14.0"
-          arch = "arm64-v8a"
-          include-stock = "auto"
-          excluded-patches = """\
-            '[Chat] Hide Events button' \
-            '[Chat] Hide LINE GIFT button' \
-            '[Chat] Hide Transfer button' \
-            '[Chat] Hide attach menu extra tools' \
-            '[Chat] Hide calendar buttons' \
-            '[Chat] Hide community button' \
-            '[Chat] Keep chats unread' \
-            '[Fix] Restore chat backup sign-in via MicroG-RE' \
-            '[Fix] Restore location maps via MicroG-RE' \
-            '[Fix] Restore push notifications' \
-            '[Tab] Hide Wallet tab' \
-            """
-          archive-dlurl = "https://archive.org/download/andrews-apks/apks/jp.naver.line.android"
-          apkmirror-dlurl = "https://www.apkmirror.com/apk/line-corporation/line"
-          uptodown-dlurl = "https://line.en.uptodown.com/android"
-          EOF
-
-      - name: Build LINE module with custom bundle
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          GITHUB_REPOSITORY: MeowGod8777/patched-apps
-          NEXT_VER_CODE: '13'
-          CUSTOM_LINE_MPP: /tmp/line-mainpay-custom.mpp
-        run: |
-          set -euo pipefail
-          ./build.sh /tmp/line-config.toml
-          ZIP=build/line-andrew-module-v26.14.0-arm64-v8a.zip
-          test -s "$ZIP"
-          sha256sum "$ZIP" | tee build/line-andrew-module-v26.14.0-arm64-v8a.zip.sha256
-
-      - name: Publish custom R13
-        env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: |
-          set -euo pipefail
-          TAG=line-mainpay-r13
-          gh release delete "$TAG" --yes --cleanup-tag 2>/dev/null || true
-          gh release create "$TAG"             build/line-andrew-module-v26.14.0-arm64-v8a.zip             build/line-andrew-module-v26.14.0-arm64-v8a.zip.sha256             /tmp/line-mainpay-custom.mpp             --title "LINE 26.14 Andrew R13 main-pay redirect"             --notes "Custom Andrew 26.14 root module. Same selected 17-patch policy as Release 12, with Redirect LINE Pay extended so Wallet -> LINE Pay (line://pay/main) launches the standalone Taiwan LINE Pay app. Merchant reserveId redirect remains unchanged."
+        run: bash .github/scripts/build-line-mainpay-r13.sh
