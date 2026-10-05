@@ -102,6 +102,7 @@ excluded-patches = """\
   '[Fix] Restore chat backup sign-in via MicroG-RE' \
   '[Fix] Restore location maps via MicroG-RE' \
   '[Fix] Restore push notifications' \
+  '[Premium] Disable LINE Premium' \
   '[Tab] Hide Wallet tab' \
   """
 archive-dlurl = "https://archive.org/download/andrews-apks/apks/jp.naver.line.android"
@@ -110,7 +111,7 @@ uptodown-dlurl = "https://line.en.uptodown.com/android"
 EOF
 
 export CUSTOM_LINE_MPP=/tmp/line-mainpay-custom.mpp
-export NEXT_VER_CODE=15
+export NEXT_VER_CODE=16
 export GITHUB_REPOSITORY=MeowGod8777/patched-apps
 ./build.sh /tmp/line-config.toml
 
@@ -118,6 +119,6 @@ ZIP=build/line-andrew-module-v26.14.0-arm64-v8a.zip
 test -s "$ZIP"
 sha256sum "$ZIP" | tee "$ZIP.sha256"
 
-TAG=line-mainpay-r15
+TAG=line-mainpay-r16
 gh release delete "$TAG" --yes --cleanup-tag 2>/dev/null || true
-gh release create "$TAG"   "$ZIP"   "$ZIP.sha256"   /tmp/line-mainpay-custom.mpp   --title "LINE 26.14 Andrew R15 web hand-off"   --notes "Same selected patch policy as Release 12. Device logs showed explicit component launch from patched LINE is blocked by package visibility, while ACTION_VIEW on https://web-tw-pay.line.me/R/iab?url= resolves successfully to the standalone Taiwan LINE Pay app. R15 uses that implicit verified web hand-off for no-reserveId PayLaunchActivity. Merchant reserveId redirect remains unchanged."
+gh release create "$TAG"   "$ZIP"   "$ZIP.sha256"   /tmp/line-mainpay-custom.mpp   --title "LINE 26.14 Andrew R16 no Disable-Premium"   --notes "R16 test build based on R15. Keeps the validated LINE Pay web hand-off and all other selected patches, but excludes [Premium] Disable LINE Premium while retaining [Premium] Hide premium unsend upsells. Purpose: isolate whether disabling LINE Premium causes the observed font/default-typeface change and remove the surviving broken Premium service entry behavior."
