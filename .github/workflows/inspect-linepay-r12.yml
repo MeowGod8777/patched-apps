@@ -1,0 +1,26 @@
+name: Inspect LINE Pay R12 smali
+on:
+  push:
+    branches: [main]
+    paths:
+      - .github/workflows/inspect-linepay-r12.yml
+jobs:
+  inspect:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+      - name: Download R12 module and apktool
+        run: |
+          curl -L --fail -o /tmp/line.zip https://github.com/MeowGod8777/patched-apps/releases/download/12/line-andrew-module-v26.14.0-arm64-v8a.zip
+          unzip -l /tmp/line.zip | head -80
+          curl -L --fail -o /tmp/apktool.jar https://github.com/iBotPeaches/Apktool/releases/download/v2.12.0/apktool_2.12.0.jar
+      - name: Extract APK and decode
+        run: |
+          mkdir -p /tmp/mod
+          unzip -q /tmp/line.zip -d /tmp/mod
+          APK=$(find /tmp/mod -type f -name '*.apk' | head -n1)
+          echo "APK=$APK"
+          java -jar /tmp/apktool.jar d -f "$APK" -o /tmp/decoded >/dev/null
+          SMALI=$(find /tmp/decoded -type f -path '*/app/andrewliang/extension/LinePayRedirect.smali' | head -n1)
+          echo "SMALI=$SMALI"
+          sed -n '1,280p' "$SMALI"
