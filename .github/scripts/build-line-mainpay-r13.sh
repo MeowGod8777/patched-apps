@@ -39,12 +39,13 @@ helper = """    private static boolean isPayLaunchActivity(Activity activity) {
     private static boolean openStandaloneMain(Activity activity) {
         if (activity == null) return false;
         try {
-            Intent launch = new Intent(Intent.ACTION_MAIN);
-            launch.addCategory(Intent.CATEGORY_LAUNCHER);
-            launch.setClassName("com.linepaytw.upay", "com.linepaytw.upay.biz.main.LaunchActivity");
-            launch.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-            activity.startActivity(launch);
-            Log.i(TAG, "Redirecting PayLaunchActivity to standalone LINE Pay launcher.");
+            // Device validation: explicit component launch from LINE is rejected by package
+            // visibility, while an implicit ACTION_VIEW to web-tw-pay.line.me resolves to the
+            // standalone Taiwan LINE Pay app. Use the verified web hand-off instead.
+            Intent view = new Intent(Intent.ACTION_VIEW, Uri.parse(WRAP_PREFIX));
+            view.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            activity.startActivity(view);
+            Log.i(TAG, "Redirecting PayLaunchActivity via web-tw-pay LINE Pay hand-off.");
             return true;
         } catch (Throwable t) {
             Log.w(TAG, "LINE Pay main redirect failed.", t);
@@ -109,7 +110,7 @@ uptodown-dlurl = "https://line.en.uptodown.com/android"
 EOF
 
 export CUSTOM_LINE_MPP=/tmp/line-mainpay-custom.mpp
-export NEXT_VER_CODE=14
+export NEXT_VER_CODE=15
 export GITHUB_REPOSITORY=MeowGod8777/patched-apps
 ./build.sh /tmp/line-config.toml
 
@@ -117,6 +118,6 @@ ZIP=build/line-andrew-module-v26.14.0-arm64-v8a.zip
 test -s "$ZIP"
 sha256sum "$ZIP" | tee "$ZIP.sha256"
 
-TAG=line-mainpay-r14
+TAG=line-mainpay-r15
 gh release delete "$TAG" --yes --cleanup-tag 2>/dev/null || true
-gh release create "$TAG"   "$ZIP"   "$ZIP.sha256"   /tmp/line-mainpay-custom.mpp   --title "LINE 26.14 Andrew R14 PayLaunchActivity redirect"   --notes "Same selected patch policy as Release 12. Device logs showed Wallet -> LINE Pay enters PayLaunchActivity with an unrecognized line://pay/... URI and no reserveId. R14 redirects any no-reserveId PayLaunchActivity directly to the verified standalone Taiwan LINE Pay launcher com.linepaytw.upay/.biz.main.LaunchActivity. Merchant reserveId redirect remains unchanged."
+gh release create "$TAG"   "$ZIP"   "$ZIP.sha256"   /tmp/line-mainpay-custom.mpp   --title "LINE 26.14 Andrew R15 web hand-off"   --notes "Same selected patch policy as Release 12. Device logs showed explicit component launch from patched LINE is blocked by package visibility, while ACTION_VIEW on https://web-tw-pay.line.me/R/iab?url= resolves successfully to the standalone Taiwan LINE Pay app. R15 uses that implicit verified web hand-off for no-reserveId PayLaunchActivity. Merchant reserveId redirect remains unchanged."
