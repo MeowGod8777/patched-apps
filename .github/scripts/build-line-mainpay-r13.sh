@@ -61,7 +61,7 @@ p.write_text(s)
 PY
 
 pushd /tmp/morphe-patches >/dev/null
-./gradlew :patches:buildAndroid clean --no-daemon
+./gradlew clean :patches:buildAndroid --no-daemon
 MPP=$(ls patches/build/libs/patches-*.mpp | grep -Ev '(sources|javadoc)' | head -n1)
 cp "$MPP" /tmp/line-mainpay-custom.mpp
 popd >/dev/null
