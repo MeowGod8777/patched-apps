@@ -39,13 +39,15 @@ helper = """    private static boolean isPayLaunchActivity(Activity activity) {
     private static boolean openStandaloneMain(Activity activity) {
         if (activity == null) return false;
         try {
-            // Device validation: explicit component launch from LINE is rejected by package
-            // visibility, while an implicit ACTION_VIEW to web-tw-pay.line.me resolves to the
-            // standalone Taiwan LINE Pay app. Use the verified web hand-off instead.
-            Intent view = new Intent(Intent.ACTION_VIEW, Uri.parse(WRAP_PREFIX));
-            view.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-            activity.startActivity(view);
-            Log.i(TAG, "Redirecting PayLaunchActivity via web-tw-pay LINE Pay hand-off.");
+            // HMA now explicitly exposes com.linepaytw.upay to LINE. Launch the verified
+            // standalone LINE Pay entry directly; the previous empty web wrapper
+            // (https://web-tw-pay.line.me/R/iab?url=) could open LINE Pay into a blank page.
+            Intent launch = new Intent(Intent.ACTION_MAIN);
+            launch.addCategory(Intent.CATEGORY_LAUNCHER);
+            launch.setClassName("com.linepaytw.upay", "com.linepaytw.upay.biz.main.LaunchActivity");
+            launch.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            activity.startActivity(launch);
+            Log.i(TAG, "Redirecting PayLaunchActivity to standalone LINE Pay launcher.");
             return true;
         } catch (Throwable t) {
             Log.w(TAG, "LINE Pay main redirect failed.", t);
@@ -111,7 +113,7 @@ uptodown-dlurl = "https://line.en.uptodown.com/android"
 EOF
 
 export CUSTOM_LINE_MPP=/tmp/line-mainpay-custom.mpp
-export NEXT_VER_CODE=16
+export NEXT_VER_CODE=17
 export GITHUB_REPOSITORY=MeowGod8777/patched-apps
 ./build.sh /tmp/line-config.toml
 
@@ -119,6 +121,6 @@ ZIP=build/line-andrew-module-v26.14.0-arm64-v8a.zip
 test -s "$ZIP"
 sha256sum "$ZIP" | tee "$ZIP.sha256"
 
-TAG=line-mainpay-r16
+TAG=line-mainpay-r17
 gh release delete "$TAG" --yes --cleanup-tag 2>/dev/null || true
-gh release create "$TAG"   "$ZIP"   "$ZIP.sha256"   /tmp/line-mainpay-custom.mpp   --title "LINE 26.14 Andrew R16 no Disable-Premium"   --notes "R16 test build based on R15. Keeps the validated LINE Pay web hand-off and all other selected patches, but excludes [Premium] Disable LINE Premium while retaining [Premium] Hide premium unsend upsells. Purpose: isolate whether disabling LINE Premium causes the observed font/default-typeface change and remove the surviving broken Premium service entry behavior."
+gh release create "$TAG"   "$ZIP"   "$ZIP.sha256"   /tmp/line-mainpay-custom.mpp   --title "LINE 26.14 Andrew R17 direct LINE Pay launcher"   --notes "R17 test build. HMA now explicitly exposes com.linepaytw.upay to LINE, so the main Wallet -> LINE Pay redirect uses the verified standalone launcher com.linepaytw.upay/.biz.main.LaunchActivity directly. This replaces the R15 empty web wrapper that could open LINE Pay to a blank page. Other currently selected patches remain unchanged."
