@@ -90,7 +90,7 @@ patches-source = "andrewliang25/morphe-patches"
 cli-source = "MorpheApp/morphe-cli"
 rv-brand = "Andrew"
 build-mode = "module"
-version = "26.14.0"
+version = "26.16.0"
 arch = "arm64-v8a"
 include-stock = "auto"
 excluded-patches = """\
@@ -118,10 +118,10 @@ export NEXT_VER_CODE=18
 export GITHUB_REPOSITORY=MeowGod8777/patched-apps
 ./build.sh /tmp/line-config.toml
 
-ZIP=build/line-andrew-module-v26.14.0-arm64-v8a.zip
+ZIP=build/line-andrew-module-v26.16.0-arm64-v8a.zip
 test -s "$ZIP"
 sha256sum "$ZIP" | tee "$ZIP.sha256"
 
 TAG=line-mainpay-r18
 gh release delete "$TAG" --yes --cleanup-tag 2>/dev/null || true
-gh release create "$TAG"   "$ZIP"   "$ZIP.sha256"   /tmp/line-mainpay-custom.mpp   --title "LINE 26.14 Andrew R18 / Andrew v3.10.0"   --notes "R18 refresh on Andrew morphe-patches v3.10.0, still targeting LINE 26.14.0. Preserves the device-validated direct standalone LINE Pay launcher fallback and the existing selected patch policy. Adds Andrew's Patch Setting and current upstream improvements such as the enhanced Hide Agent i and Keep unsent behavior. [General] Custom font remains excluded because this device uses the system font; [Premium] Disable LINE Premium remains excluded."
+gh release create "$TAG"   "$ZIP"   "$ZIP.sha256"   /tmp/line-mainpay-custom.mpp   --title "LINE 26.16 Andrew R18 / Andrew v3.10.0"   --notes "R18 refresh on Andrew morphe-patches v3.10.0, targeting LINE 26.16.0. Preserves the device-validated direct standalone LINE Pay launcher fallback and the existing selected patch policy. Adds Andrew's Patch Setting and current upstream improvements such as the enhanced Hide Agent i and Keep unsent behavior. [General] Custom font remains excluded because this device uses the system font; [Premium] Disable LINE Premium remains excluded."
