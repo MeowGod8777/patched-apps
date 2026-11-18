@@ -1,5 +1,7 @@
 # patched-apps — 這個 Fork 的繁中說明
 
+- **2026-11-18 歷史日用 APK／模組與 Library 保留清單**：[`VERIFIED_DAILY_APPS_AND_RETENTION_2026-11-18.zh-TW.md`](VERIFIED_DAILY_APPS_AND_RETENTION_2026-11-18.zh-TW.md)（記錄真機 PASS、條件成功、失敗與可刪前置條件；**不代表 APK binary 已備份**）。
+
 Andrew `patched-apps` 的 fork，目前主要拿來 build LINE 模塊，以及 iQOO 12 Pro 非 Root 的 Instagram / Threads patched APK。
 
 > 根目錄 upstream `README.md` / builder 文件保留原文，這份只說明我這個 fork 現在實際怎麼用。
