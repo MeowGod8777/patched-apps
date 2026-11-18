@@ -56,3 +56,16 @@
 - Y700 DP／HDMI 最後實裝模組 ZIP hash；V2329A iTheme 最後實裝版 hash。
 - LINE 26.15.0 現役 APK、Android Root profile、patch source revision、LINE Pay 日用回歸。
 - 「今天仍裝著」與「過去曾可日用」分欄維護，避免用舊日期替代現況。
+
+
+## 後續實體備份核對（同日第二輪）
+
+- **[完整 3,399 檔清理稽核與三大候選族群逐檔名單](research/LIBRARY_CLEANUP_TRIAGE_2026-11-18.md)**：紅果 13 份／3.012 GiB、Luna 21 份／1.566 GiB、Y700 顯示 61 份／1.314 GiB，另保護 boot 5 份／0.938 GiB。
+- **已證實的相同位元組**：`/红果免费短剧_7.3.9.32_去广纯净版.apk` 與同名 `(1)` 根目錄副本，SHA-256 均為 `b5f3bac192aa534a62a748130ff9fdf1c1aa790eb1fba6624e9c113beb788ff4`；保留一份可提議刪另一份（約 244.2 MiB），**未執行刪除**。
+- **Instagram Piko R8（2026-08-31）**：歷史實測 SHA 與 [Release 8](https://github.com/MeowGod8777/patched-apps/releases/tag/8) asset digest `4015b171…d529c8` 一致，為可取回的確切版本；不要以後續同名 Release 9–12 取代它並宣稱未變更。
+- **Threads Chiggi R6**：歷史實測 SHA 與 [Release 6](https://github.com/MeowGod8777/patched-apps/releases/tag/6) asset digest `f263bc3b…e115e5d4` 一致，後續同名 Release digest 不同，不能只憑名稱判定完全相同。
+- LINE [R17 / 26.14.0](https://github.com/MeowGod8777/patched-apps/releases/tag/line-mainpay-r17) 與 [R18 / 26.16.0](https://github.com/MeowGod8777/patched-apps/releases/tag/line-mainpay-r18) 確認有 Github Release ZIP，但 R18 **未因發布而升格為使用者日用 PASS**。
+- 最終 **YouTube Music `V5_MEDIA_IDENTITY` 仍無可核實的 GitHub Release 長期成品**；雖有 workflow build 與成功 log，務必保留當前 Library 最終原始 APK，直到獨立備份並檢查 SHA。
+- 紅果 `all3` 與 `installfix` 等，未找回真正成功安裝與日用證據；**不是「只留最新，其餘皆可刪」**。
+- Y700 外接顯示穩定功能成立，但完整最後的 HDMI crop-fix / B3.5 原始成品仍未在 GitHub 釘版，**不可先批量刪掉 61 顆候選 ZIP**。
+
