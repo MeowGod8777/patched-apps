@@ -169,3 +169,12 @@ GitHub [stable 目錄](https://github.com/MeowGod8777/Lenovo-Y700-4th-ColorOS16/
 **目前刪除數量：0；已證實重複且可提出刪除的量：單份 244.2 MiB；其他數字只代表待核對候選容量。**
 
 > 資安與著作權：公開 GitHub 僅上傳去識別 metadata／SHA／來源說明，不上傳第三方修改 APK 本體、私人日誌或專有 boot 映像。
+
+
+## 2026-11-18 後續清理實績（本檔初次稽核之後，非覆寫原快照）
+
+- **紅果根目錄 3 份：個人 Library `delete` 回報成功／移到垃圾桶**（兩個 `去广纯净版`／`去广纯净版(1)`，以及一個 `去广纯净_去MOD强更`）。再盤點確認已不在主 Library 清單。
+- **紅果 `/Android App Patching/` 專案 9 份：delete 全部失敗**（`project_library_mutation_unsupported`），保留待 UI/專案管理處理。另有 `红果短剧_7.3.5.32.apks` 未列本批修改測試。
+- **個人 Library 根目錄 AI 中間圖**：成功移除 16 個 `/image-gen-[數字].png` 及附有 `(n)` 的命名變體，合計 35,021,785 bytes／33.40 MiB；未觸碰具名圖片、原始照片、裝置截圖。
+- **實際再查詢**：主 Library 3380 個檔案／18.86877 GiB；圖片 1638 個／501.47 MiB；`/待分類/` 164 張 AI 圖仍佔約 201.28 MiB，受 Project mutation 限制未刪。
+- 新增完整跨領域遷移和清理規範：[ChatGPT Library → GitHub Runbook](https://github.com/MeowGod8777/Android-Root-Environment/blob/main/docs/CHATGPT_LIBRARY_MIGRATION_RUNBOOK_2026-11-18.md)。公共 repo 只留去識別成果／hash；不要公開原始對話與私密附件。
