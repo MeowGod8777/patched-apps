@@ -226,3 +226,61 @@ Therefore the current `libelements.so not found` crash is explained by the prese
 This supersedes the earlier tentative hypothesis that `Spoof video streams` alone made the historical payload intrinsically unusable. The exact same payload previously worked because the required stock native libraries had been materialized by the original module installer.
 
 Next repair scope is minimal: restore the stock arm64 native libraries into `/data/app/.../lib/arm64` with the same ownership/mode/SELinux context as `customize.sh`; do not uninstall, clear data, reboot, or rebuild yet.
+
+
+## Final YouTube Music recovery root cause and reboot verification
+
+The earlier `libelements.so` launch crash is now locally closed.
+
+The exact root-module builder/installer logic explains the failure:
+
+1. root-module build intentionally strips all native libraries from the patched APK:
+   ```sh
+   zip -d "$stock_apk_to_patch" "lib/*"
+   ```
+2. the module installer separately extracts the stock APK's ABI libraries into:
+   ```text
+   /data/app/.../lib/arm64
+   ```
+3. preservation-first PackageInstaller reconstruction restored the Google-signed stock package codePath but did not rerun that native-lib extraction stage;
+4. the patched payload therefore started with an empty native-library directory and failed on `System.loadLibrary("elements")`.
+
+The exact stock APK contains 21 arm64 native libraries. Recovery reproduced only the original installer extraction/permission stage:
+
+```text
+STAGED_COUNT=21
+TARGET_COUNT=21
+
+libelements.so
+SHA256 805d672f36cc17a790738fb470ab62fc8e8af999ba1140071c3c498a39953aba
+
+libelements2.so
+SHA256 906bbaa301aa4c55223185875f147fc01cfbdc346a3e03f5ecb5359f1dd347cf
+```
+
+After restoration, the existing patched payload:
+
+```text
+baefd91ef026e162ecec50533c9a3646a07b4e9d47251a5887ac9034b5946f3d
+```
+
+opened normally again.
+
+This local evidence supersedes the tentative interpretation that the matching upstream `Spoof video streams` issue itself explained the current regression. The upstream issue remains relevant background, but the verified local cause was missing native-library materialization after package reconstruction.
+
+A controlled normal reboot then passed:
+
+```text
+BOOT_ID=1fc770fe-4cc7-40e3-89c9-c8f8fc485683
+appId=10405
+CE inode=439750
+DE inode=301907
+YTM_ARM64_LIB_COUNT=21
+PACKAGE_COUNT=478
+```
+
+YouTube Music/ReVanced was user-verified normal after reboot.
+
+Status: **RECOVERY COMPLETE / DATA PRESERVED / NATIVE-LIB ROOT CAUSE CLOSED / POST-REBOOT PASS**.
+
+Temporary rescue artifacts were removed after successful verification; persistent module/payload/package state was kept.
