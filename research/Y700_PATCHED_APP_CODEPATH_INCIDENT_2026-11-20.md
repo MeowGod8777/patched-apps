@@ -1,0 +1,125 @@
+# Y700 patched-app package-code incident — 2026-11-20
+
+## Summary
+
+After a Y700 ColorOS 16 WFD experiment used a runtime SurfaceFlinger restart, a later audit showed a fresh kernel boot and two patched-app package-code anomalies.
+
+This file exists to preserve app-data recovery rules. It is not proof that Morphe/RVHC itself caused the reboot or package loss.
+
+## LINE 26.11.0
+
+The physical stock `/data/app` code path disappeared while PackageManager metadata and app-private data survived.
+
+Preserved state:
+
+```text
+package jp.naver.line.android
+versionCode 261100124
+versionName 26.11.0
+appId 10353
+uid u0_a353
+CE inode 53745
+DE inode 53742
+private data ≈153M
+signing lineage retained in packages.xml
+```
+
+Recovery used Release 8 stock splits only; the module ZIP was NOT reflashed.
+
+Release 8:
+
+```text
+line-andrew-module-v26.11.0-arm64-v8a.zip
+SHA256 a8251c364988bf27c14c42f4de725e80fc0cff5a92a3bdad9c8da67b14a59892
+```
+
+Stock split hashes:
+
+```text
+base.apk
+3dad00933c2f3071565efb9b533187cd6c37c779ea92c8989e53dfe095680077
+
+split_config.arm64_v8a.apk
+b73f4c6ae72a715abdde71cf7296c6af8ab90284b4840496f3cbe2028ca7d694
+
+split_config.xxhdpi.apk
+b4e93ead10f9613b2ef11fd8775f5d577a259bc029ecdc082586b8bdc96594f9
+
+split_config.xxxhdpi.apk
+d6e05dbbf3ed831bde9834675b51b05861397514d486c863f61b05cb02ba26ad
+```
+
+Safe recovery:
+
+```text
+backup CE/DE + packages.xml first
+copy stock splits to /data/local/tmp
+pm install-create --user 0 -i com.android.vending -r
+pm install-write ...
+pm install-commit
+STOP on any INSTALL_FAILED_*
+NEVER uninstall as fallback
+```
+
+Result: original appId/UID/inodes/data remained and a new valid `/data/app` code path was created.
+
+Current Y700 Andrew payload:
+
+```text
+/data/adb/rvhc/line-andrew-arm64.apk
+SHA256 8e65e24b06827d533309acea681e3f06b867e9cf8e84363fbf8444904bedd19a
+```
+
+Module Action then restored the bind mount successfully.
+
+## YouTube Music 9.15.51
+
+The same audit found:
+
+```text
+package com.google.android.apps.youtube.music
+version 9.15.51
+versionCode 91551240
+uid u0_a405
+PackageSetting present
+installed=true
+physical recorded /data/app codePath absent
+CE data ≈121M
+DE data ≈1.1M
+module description = Needs reflash: App not installed
+```
+
+The patched payload survived:
+
+```text
+SHA256 baefd91ef026e162ecec50533c9a3646a07b4e9d47251a5887ac9034b5946f3d
+```
+
+Existing build provenance:
+
+```text
+workflow Build YT Music Y700 generic root
+run 33836401680
+commit 95f40ea271b2e810cc1c38096e1de1cd32165167
+artifact 9923436810
+module youtube-music-revanced-module-v9.15.51-arm64-v8a.zip
+module SHA256 4d50b64fc48089ede0c8a2089948ead181980069ad485fdf2b56018d274579c0
+```
+
+Status on 2026-11-20: **data-preservation recovery pending**.
+
+Do not blindly flash the module. Restore the exact stock package/splits with replace-only PackageInstaller semantics first, then re-establish the patched bind mount.
+
+## General preservation rule for root-module apps
+
+When a root module reports "App not installed" after a crash/reboot but `dumpsys package` and `/data/user/0/<pkg>` still exist:
+
+1. stop before uninstalling;
+2. save CE/DE data and decoded PackageManager metadata;
+3. confirm appId/UID/version/signing lineage;
+4. recover the exact stock split set;
+5. perform replace-only install;
+6. verify UID/inodes/data are unchanged;
+7. only then restore the patched payload mount.
+
+Do not use module installers that contain automatic uninstall fallback during rescue.
