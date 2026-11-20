@@ -176,3 +176,45 @@ because:
 - the reconstructed installed native-lib directory was empty.
 
 Current root-cause classification: **PACKAGE IDENTITY RECOVERED / NATIVE-LIB MATERIALIZATION MISSING / MINIMAL RESTORE REQUIRED**.
+
+
+## 2026-11-20 final recovery closeout
+
+The post-incident launch failure was resolved without rebuilding the ReVanced payload.
+
+Verified mechanism:
+
+```text
+root-module patched APK intentionally has lib/* removed
++
+original module installer separately extracts stock arm64 libs to /data/app/.../lib/arm64
++
+replace-only package rescue restored codePath but skipped that installer extraction stage
+=
+libelements.so missing at runtime
+```
+
+The exact Google-signed stock 9.15.51 APK supplied 21 arm64 libraries. Reproducing the original installer native-lib stage restored:
+
+```text
+TARGET_COUNT=21
+libelements.so SHA256
+805d672f36cc17a790738fb470ab62fc8e8af999ba1140071c3c498a39953aba
+
+libelements2.so SHA256
+906bbaa301aa4c55223185875f147fc01cfbdc346a3e03f5ecb5359f1dd347cf
+```
+
+The existing payload `baefd91e...` then launched normally.
+
+Controlled reboot verification preserved:
+
+```text
+appId=10405
+CE inode=439750
+DE inode=301907
+21 native libs
+ReVanced launch/playback state normal
+```
+
+Final status: **HISTORICAL BUILD VALID / PACKAGE+DATA RECOVERED / NATIVE-LIB MATERIALIZATION RESTORED / POST-REBOOT VERIFIED**.
