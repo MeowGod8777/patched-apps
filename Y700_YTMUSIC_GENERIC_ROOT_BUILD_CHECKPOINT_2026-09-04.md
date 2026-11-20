@@ -71,3 +71,54 @@ Workflow fail-closed checks passed:
 Do not flash blindly if `com.google.android.apps.youtube.music` is already installed at a different version or with a non-Google signer. The module installer can replace stock when versions/signatures conflict, and a replacement can remove existing app data. First capture the minimal live package inventory and choose the preservation path.
 
 Status: **BUILD PASS / DEVICE INSTALL + LOGIN + PLAYBACK VERIFICATION PENDING**.
+
+
+## 2026-11-20 device incident update
+
+The build itself remains provenance-valid, but the Y700 daily device later entered an abnormal reboot/package-code state during unrelated WFD testing.
+
+Observed current package state:
+
+```text
+package = com.google.android.apps.youtube.music
+versionName = 9.15.51
+versionCode = 91551240
+uid = u0_a405
+PackageSetting = present
+installed = true
+recorded /data/app codePath = present in package metadata
+physical recorded codePath = missing
+CE data ≈ 121M
+DE data ≈ 1.1M
+```
+
+The module reported:
+
+```text
+description=⚠️ Needs reflash: 'App not installed: '''
+```
+
+The existing patched payload survived with SHA-256:
+
+```text
+baefd91ef026e162ecec50533c9a3646a07b4e9d47251a5887ac9034b5946f3d
+```
+
+Interpretation:
+
+- this is a package-code loss / PackageManager-codePath incident, not evidence that the app-private data was wiped;
+- it occurred in the same broader device incident that removed LINE's underlying stock code path;
+- causality must not be assigned to the YouTube Music module without further evidence.
+
+Recovery policy:
+
+1. backup CE/DE and PackageManager metadata;
+2. recover the exact Google-signed 9.15.51 stock split set;
+3. use replace-only PackageInstaller session semantics;
+4. never use uninstall fallback;
+5. verify UID/inodes/data preservation;
+6. only then restore the ReVanced/RVHC bind mount.
+
+Current status: **BUILD PASS / HISTORICAL DEVICE USE EXISTS / 2026-11-20 PACKAGE-CODE RECOVERY PENDING**.
+
+See: `research/Y700_PATCHED_APP_CODEPATH_INCIDENT_2026-11-20.md`.
