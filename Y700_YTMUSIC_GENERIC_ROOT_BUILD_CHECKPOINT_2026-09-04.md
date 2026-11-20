@@ -151,3 +151,28 @@ An upstream MorpheApp root/mount issue with the same exception reported that exc
 Do not rebuild yet solely from that upstream result: this exact Y700 payload had historical working runtime before the 2026-11-20 package-code incident. First compare the reconstructed stock install's native-library materialization (`/data/app/.../lib/arm64`) against what the module expects, especially `libelements.so`.
 
 Status: **PACKAGE IDENTITY RECOVERED / DATA PRESERVED / MOUNT PASS / LAUNCH FAIL: `libelements.so` / ROOT CAUSE UNDER NATIVE-LIB VS PATCH DIFFERENTIATION**.
+
+
+## Native-library installation invariant recovered from source
+
+The module build intentionally removes `lib/*` from the patched APK before patching. The original installer then extracts the stock APK's ABI libraries into:
+
+```text
+/data/app/<current-package-codePath>/lib/arm64
+```
+
+with owner/group `1000:1000`, mode `0755`, and SELinux context `u:object_r:apk_data_file:s0`.
+
+The 2026-11-20 replace-only package reconstruction restored PackageManager identity/data but did not execute that module installer stage, leaving the new codePath's native-lib directory empty. This exactly explains:
+
+```text
+dlopen failed: library "libelements.so" not found
+```
+
+because:
+
+- stock 9.15.51 APK contains `libelements.so`;
+- the patched root payload contains no native libraries by design;
+- the reconstructed installed native-lib directory was empty.
+
+Current root-cause classification: **PACKAGE IDENTITY RECOVERED / NATIVE-LIB MATERIALIZATION MISSING / MINIMAL RESTORE REQUIRED**.
