@@ -182,3 +182,47 @@ Important unresolved contradiction:
 - next check is whether the reconstructed stock install differs in native-library extraction/materialization under `/data/app/.../lib/arm64`, especially presence/absence of `libelements.so`.
 
 Current status: **stock package identity/data preserved; ReVanced mount restored; launch blocked by exact native-library failure; no reboot/uninstall/clear-data performed.**
+
+
+## Native-lib root cause pinned from original module installer
+
+The original 2026-09-04 module source resolves the post-recovery launch failure directly.
+
+In module build mode, `utils.sh` deliberately strips all native libraries from the APK before patching:
+
+```sh
+if [ "$build_mode" = module ]; then
+    zip -d "$stock_apk_to_patch" "lib/*" >/dev/null 2>&1 || :
+fi
+```
+
+The resulting patched payload therefore intentionally contains no `lib/arm64-v8a/*.so`.
+
+The original module `customize.sh` compensates during installation by materializing the stock native libraries into the installed package code path:
+
+```sh
+BASEPATHLIB=${BASEPATH}/lib/${ARCH}
+unzip -o -j "$MODPATH/stock/base.apk" "lib/${ARCH_LIB}/*" -d "$BASEPATHLIB"
+set_perm_recursive "${BASEPATH}/lib" 1000 1000 755 755 u:object_r:apk_data_file:s0
+```
+
+Post-recovery observation:
+
+```text
+stock APK:
+  lib/arm64-v8a/libelements.so present
+  lib/arm64-v8a/libelements2.so present
+  libcronet and libgoogle3 present
+
+patched payload:
+  no native libs by design
+
+reconstructed /data/app/.../lib:
+  empty
+```
+
+Therefore the current `libelements.so not found` crash is explained by the preservation recovery reproducing PackageInstaller replacement but not the original module installer's native-lib extraction stage.
+
+This supersedes the earlier tentative hypothesis that `Spoof video streams` alone made the historical payload intrinsically unusable. The exact same payload previously worked because the required stock native libraries had been materialized by the original module installer.
+
+Next repair scope is minimal: restore the stock arm64 native libraries into `/data/app/.../lib/arm64` with the same ownership/mode/SELinux context as `customize.sh`; do not uninstall, clear data, reboot, or rebuild yet.
