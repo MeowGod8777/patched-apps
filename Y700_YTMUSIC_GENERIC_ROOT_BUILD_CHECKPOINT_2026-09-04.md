@@ -122,3 +122,32 @@ Recovery policy:
 Current status: **BUILD PASS / HISTORICAL DEVICE USE EXISTS / 2026-11-20 PACKAGE-CODE RECOVERY PENDING**.
 
 See: `research/Y700_PATCHED_APP_CODEPATH_INCIDENT_2026-11-20.md`.
+
+
+## 2026-11-20 launch-crash correction
+
+The preservation recovery successfully reconstructed stock package identity without losing app data:
+
+```text
+stock APK SHA256 = a003ac2e673c2979b2268e5acfbfd74f88b93c4b75af5c7d604b3c7fb92768a4
+appId = 10405 (unchanged)
+CE inode = 439750 (unchanged)
+DE inode = 301907 (unchanged)
+versionCode = 91551240
+versionName = 9.15.51
+```
+
+The surviving patched payload `baefd91e...` mounted successfully, but the app now crashes immediately:
+
+```text
+java.lang.UnsatisfiedLinkError:
+dlopen failed: library "libelements.so" not found
+```
+
+The original 2026-09-04 build log is now relevant in a new way: the module build applied `Spoof video streams`.
+
+An upstream MorpheApp root/mount issue with the same exception reported that excluding `Spoof video streams` fixed launch, and upstream maintainers stated that this patch was intended for MicroG/GmsCore users rather than root mount users.
+
+Do not rebuild yet solely from that upstream result: this exact Y700 payload had historical working runtime before the 2026-11-20 package-code incident. First compare the reconstructed stock install's native-library materialization (`/data/app/.../lib/arm64`) against what the module expects, especially `libelements.so`.
+
+Status: **PACKAGE IDENTITY RECOVERED / DATA PRESERVED / MOUNT PASS / LAUNCH FAIL: `libelements.so` / ROOT CAUSE UNDER NATIVE-LIB VS PATCH DIFFERENTIATION**.
